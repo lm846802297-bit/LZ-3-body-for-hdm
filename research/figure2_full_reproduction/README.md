@@ -69,3 +69,16 @@ Detailed derivation, four benchmark tables, the (W_{\max}<m_{\chi_2}) check over
 `results/P0-4_PROPAGATOR_WIDTH_AUDIT_ZH.md`.
 
 The P0-4 report deliberately keeps the unresolved Dirac/Majorana definition and the independent (g_2) input explicit. Do not treat the running-width ansatz as the final propagator prescription.
+
+
+Reproduce the P0-4 table from the repository root:
+
+```bash
+python research/figure2_full_reproduction/run_p0_4_width_scan.py
+```
+
+This writes:
+- `results/P0-4_WIDTH_SENSITIVITY.csv`
+- `results/P0-4_GLOBAL_WMAX_CHECK.csv`
+
+See `results/P0-4_PROPAGATOR_WIDTH_AUDIT_ZH.md` for the derivation and interpretation. The running-width option remains a diagnostic approximation pending the full fermionic self-energy.
