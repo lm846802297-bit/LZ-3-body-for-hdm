@@ -4,9 +4,9 @@
 
 ## Source of truth
 
-The authoritative manuscript source is \`paper-source/main.tex\`, supplied in \`3body_for_HDM.zip\` on 2026-11-11. The earlier five-page extracted research summary is useful as a secondary note, but it is not a substitute for the actual TeX source. Where they differ, follow the TeX source and record the discrepancy.
+The authoritative manuscript source is \`paper-source/main_original.tex\`, supplied in \`3body_for_HDM.zip\` on 2026-11-11. The earlier five-page extracted research summary is useful as a secondary note, but it is not a substitute for the actual TeX source. Where they differ, follow the TeX source and record the discrepancy.
 
-## Model content actually present in main.tex
+## Model content actually present in main_original.tex
 
 ### Vector–vector branch
 
@@ -69,10 +69,10 @@ The source initializes \(T_s=T_f\), \(n_s=n_s^{\rm eq}(T_f)\), and \(n_{N_s}=\rh
 
 ## Mechanical source checks
 
-- All six \`\\cite\` keys in \`main.tex\` have matching entries in \`ref.bib\`.
+- All six \`\\cite\` keys in \`main_original.tex\` have matching entries in \`ref.bib\`.
 - All seven \`\\includegraphics\` references resolve to figure files in the supplied ZIP.
-- A local \`pdflatex -interaction=nonstopmode -halt-on-error main.tex\` pass succeeds and writes a five-page PDF. The local runtime lacks \`bibtex\`, so the citation-resolution and final multi-pass build remain unverified.
+- A local \`pdflatex -interaction=nonstopmode -halt-on-error main_original.tex\` pass succeeds and writes a five-page PDF. The local runtime lacks \`bibtex\`, so the citation-resolution and final multi-pass build remain unverified.
 
 ## Consequence for the research plan
 
-The first decision is still to choose which model is the paper's main branch. The existing cross section and plotted direct-detection spectra belong to vector–vector. The scalar–pseudoscalar interaction is currently only a second Lagrangian ansatz. Cosmology should be described using the truncated collision/source set actually present in \`main.tex\`; any restoration of omitted heavy-catalyzed or \(\chi_2\)-decay sources must be a separately derived and tested extension.
+The first decision is still to choose which model is the paper's main branch. The existing cross section and plotted direct-detection spectra belong to vector–vector. The scalar–pseudoscalar interaction is currently only a second Lagrangian ansatz. Cosmology should be described using the truncated collision/source set actually present in \`main_original.tex\`; any restoration of omitted heavy-catalyzed or \(\chi_2\)-decay sources must be a separately derived and tested extension.

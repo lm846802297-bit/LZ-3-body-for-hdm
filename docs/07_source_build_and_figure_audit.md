@@ -5,7 +5,7 @@
 ## 1. 源码完整性
 
 从用户提供的 \`3body_for_HDM.zip\` 解压后核对：
-- \`main.tex\`：17,254 bytes，SHA-256 与原 ZIP 完全一致；
+- \`main_original.tex\`：17,254 bytes，SHA-256 与原 ZIP 完全一致；
 - \`ref.bib\`：2,332 bytes，SHA-256 与原 ZIP 完全一致；
 - \`utphys28mod.bst\`：30,776 bytes，压缩后提交为 \`utphys28mod.bst.gz\`；解压可恢复原始 SHA-256。
 - 七个 figure PDF：按字节原样提交到 \`paper-source/figures/\`，校验清单见 \`paper-source/SHA256SUMS\`。
@@ -14,7 +14,7 @@
 
 ## 2. 编译发现与修复方式
 
-原始 \`main.tex\` 末尾写为：
+原始 \`main_original.tex\` 末尾写为：
 
 \`\`\`tex
 \\bibliography{ref.bib}{}
@@ -23,7 +23,7 @@
 
 RevTeX/BibTeX 将 \`ref.bib\` 当作数据库 basename 后再追加扩展名，因此会尝试读取 \`ref.bib.bib\`，造成文献数据库无法正确加载。
 
-为避免静默修改原稿，仓库增加 \`paper-source/build.sh\`：它保留原始 \`main.tex\`，生成临时 \`main_build.tex\`，只将上述命令规范化为 \`\\bibliography{ref}\`，随后执行 \`pdflatex \to bibtex8 \to pdflatex \to pdflatex\`。
+为避免静默修改原稿，仓库增加 \`paper-source/build.sh\`：它保留原始 \`main_original.tex\`，生成临时 \`main_build.tex\`，只将上述命令规范化为 \`\\bibliography{ref}\`，随后执行 \`pdflatex \to bibtex8 \to pdflatex \to pdflatex\`。
 
 ## 3. 实际编译结果
 
@@ -54,7 +54,7 @@ RevTeX/BibTeX 将 \`ref.bib\` 当作数据库 basename 后再追加扩展名，�
 
 - `revtex`：提供 `revtex4-2.cls`；
 - `bibtex8`：`build.sh` 用它跑 `.aux`；
-- `textcase`、`cases`：`main.tex` 显式 `\usepackage{cases}`，`textcase` 为 RevTeX 依赖；
+- `textcase`、`cases`：`main_original.tex` 显式 `\usepackage{cases}`，`textcase` 为 RevTeX 依赖；
 - `bbm-macros`：提供 `bbm.sty`。只装 `bbm` 只有 Metafont 字体，仍会报 `File 'bbm.sty' not found`；
 - `jknapltx`：提供 `mathrsfs.sty`；
 - `subfigure`、`orcidlink`、`comment`、`epstopdf-pkg`、`float`；
