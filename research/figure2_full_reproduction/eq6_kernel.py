@@ -76,17 +76,18 @@ ID4=np.eye(4,dtype=complex)
 def slash(p):
     return GAMMA[0]*p[0]-GAMMA[1]*p[1]-GAMMA[2]*p[2]-GAMMA[3]*p[3]
 
-def vertices(point, mchi2, width=0.):
+def vertices(point, mchi2, width=0., running_width=None):
     p,pp,k=point.p,point.p_prime,point.k
     d1=dot(p-k,p-k)-mchi2*mchi2
-    d2=point.W2-mchi2*mchi2+1j*mchi2*width
+    imag = mchi2*width if running_width is None else math.sqrt(point.W2)*running_width
+    d2=point.W2-mchi2*mchi2+1j*imag
     if abs(d1)<1e-30 or abs(d2)<1e-30: raise ZeroDivisionError("propagator pole")
     before=GAMMA[0]@(slash(p-k)+mchi2*ID4)/d1
     after=(slash(pp+k)+mchi2*ID4)@GAMMA[0]/d2
     return before,after
 
-def spin_trace(point,mchi,mchi2,width=0.):
-    before,after=vertices(point,mchi2,width)
+def spin_trace(point,mchi,mchi2,width=0.,running_width=None):
+    before,after=vertices(point,mchi2,width,running_width)
     pin=slash(point.p)+mchi*ID4; pout=slash(point.p_prime)+mchi*ID4
     def tr(G):
         Gbar=GAMMA[0]@G.conj().T@GAMMA[0]
@@ -101,27 +102,47 @@ def spin_trace(point,mchi,mchi2,width=0.):
 def lambda_dimensionless(W2,mchi,ms):
     return ((W2-(mchi+ms)**2)*(W2-(mchi-ms)**2))/(W2*W2)
 
-def chi2_width_dirac_scalar(mchi, ms, delta_m, g2):
-    """Conditional pole width for Dirac chi2 -> Dirac chi1 + scalar s.
+def chi2_width_dirac_scalar_at_mass(parent_mass, mchi, ms, g2):
+    """Conditional Dirac width for a scalar off-diagonal Yukawa vertex.
 
-    Assumes Dirac fermions, a pure scalar off-diagonal Yukawa coupling,
-    and no other open decay channels. This formula is derived from the
-    interaction; it is not explicitly printed in the current main.tex.
+    parent_mass is the invariant mass of the decaying fermion. Assumes
+    Dirac fermions, a pure scalar coupling and no other open channels.
+    This is a derived two-body width, not an explicit formula in main.tex.
     All masses and the returned width are in GeV.
     """
-    mchi2 = mchi + delta_m
-    lam = (mchi2**4 + mchi**4 + ms**4
-           - 2*mchi2*mchi2*mchi*mchi
-           - 2*mchi2*mchi2*ms*ms
+    M = float(parent_mass)
+    lam = (M**4 + mchi**4 + ms**4
+           - 2*M*M*mchi*mchi
+           - 2*M*M*ms*ms
            - 2*mchi*mchi*ms*ms)
     if lam <= 0:
         return 0.0
-    return (abs(g2)**2/(16*math.pi*mchi2**3)
-            * math.sqrt(lam) * ((mchi2+mchi)**2-ms*ms))
+    return (abs(g2)**2/(16*math.pi*M**3)
+            * math.sqrt(lam) * ((M+mchi)**2-ms*ms))
 
 
-def reduced_kernel(mchi,ms,delta_m,mA,ER,speed_kms,width=0.,nw=16,nz=16,nphi=8):
-    """Integral in Eq. (6), excluding its printed overall prefactor."""
+def chi2_width_dirac_scalar(mchi, ms, delta_m, g2):
+    """Conditional pole width evaluated at m_chi2=m_chi1+Delta m."""
+    return chi2_width_dirac_scalar_at_mass(mchi+delta_m,mchi,ms,g2)
+
+
+def reduced_kernel(mchi,ms,delta_m,mA,ER,speed_kms,width=0.,nw=16,nz=16,nphi=8,
+                   width_scheme="constant",g2=None):
+    """Integral in Eq. (6), excluding its printed overall prefactor.
+
+    width_scheme:
+      constant: use the explicit width argument (backward compatible);
+      zero: set the width to zero;
+      pole: use the derived width at m_chi2;
+      running: use Gamma(W) at W=sqrt(W2), with Im denominator W*Gamma(W).
+
+    The running-width option is a diagnostic Breit-Wigner ansatz, not a
+    substitute for a full fermionic self-energy calculation.
+    """
+    if width_scheme not in ("constant","zero","pole","running"):
+        raise ValueError("unknown width_scheme")
+    if width_scheme in ("pole","running") and g2 is None:
+        raise ValueError("g2 is required for pole/running width schemes")
     wmin,wmax=limits(mchi,ms,mA,ER,speed_kms)
     if wmax<=wmin: return 0.
     xw,ww=leggauss(nw); xz,wz=leggauss(nz); xp,wp=leggauss(nphi)
@@ -129,15 +150,25 @@ def reduced_kernel(mchi,ms,delta_m,mA,ER,speed_kms,width=0.,nw=16,nz=16,nphi=8):
     wweights=.5*(wmax-wmin)*ww
     phis=math.pi*(xp+1.); phiweights=.5*wp
     total=0.; mchi2=mchi+delta_m
+    pole_width=chi2_width_dirac_scalar(mchi,ms,delta_m,g2) if width_scheme=="pole" else None
     for W2,wwi in zip(wvals,wweights):
         lam=lambda_dimensionless(float(W2),mchi,ms)
         if lam<0: continue
+        if width_scheme=="zero":
+            width_here=0.; running_width=None
+        elif width_scheme=="pole":
+            width_here=pole_width; running_width=None
+        elif width_scheme=="running":
+            width_here=0.
+            running_width=chi2_width_dirac_scalar_at_mass(math.sqrt(float(W2)),mchi,ms,g2)
+        else:
+            width_here=width; running_width=None
         angular=0.
         for z,wzi in zip(xz,wz):
             avg=0.
-            for phi,wpi in zip(phis,phiweights):
+            for phi,wpi in zip(phis,wp):
                 pt=build_point(mchi,ms,mA,ER,speed_kms,float(W2),float(z),float(phi))
-                avg+=wpi*spin_trace(pt,mchi,mchi2,width)["total"]
+                avg+=wpi*spin_trace(pt,mchi,mchi2,width_here,running_width)["total"]
             angular+=wzi*avg
         total+=wwi*math.sqrt(lam)*angular
     return float(total)
