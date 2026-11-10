@@ -53,3 +53,19 @@ python -m unittest discover -s research/figure2_full_reproduction/tests -v
 ```
 
 The next milestone is not yet a halo scan. It is to finish the model-definition audit, establish the width convention and g2 benchmark, and independently cross-check the trace and integral over a wider kinematic grid.
+
+
+## P0-4 propagator-width audit
+
+The follow-up branch now includes a first comparison of:
+- zero width;
+- constant pole width;
+- a diagnostic running-width ansatz using the current virtual mass W.
+
+The implementation is exposed through `reduced_kernel(..., width_scheme="zero"|"pole"|"running", g2=...)`. The running-width denominator uses `i W Gamma(W)`; it is a diagnostic Breit-Wigner approximation, not a full fermionic self-energy calculation.
+
+Detailed derivation, four benchmark tables, the (W_{\max}<m_{\chi_2}) check over 544–800 km/s, and the numerical convergence comparison are recorded in:
+
+`results/P0-4_PROPAGATOR_WIDTH_AUDIT_ZH.md`.
+
+The P0-4 report deliberately keeps the unresolved Dirac/Majorana definition and the independent (g_2) input explicit. Do not treat the running-width ansatz as the final propagator prescription.
