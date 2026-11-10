@@ -34,6 +34,7 @@ RevTeX/BibTeX 将 \`ref.bib\` 当作数据库 basename 后再追加扩展名，�
 - 一处 float 无法在首次尝试位置放置；
 - 两处轻微 overfull hbox；
 - 一处 underfull hbox；
+- 一个重复的 PDF destination（figure.4），来自原稿重复图环境/标签设置；
 - hyperref 对若干数学标题书签给出 token 警告。
 
 这些是原稿排版问题，不影响本轮源码完整性核验，但正式投稿前应逐项处理。
