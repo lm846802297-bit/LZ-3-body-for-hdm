@@ -8,12 +8,12 @@
 
 ## 论文源码
 
-原始 LaTeX 工程已纳入 [paper-source/](paper-source/README.md)：
+已将原始论文的核心文本源文件加入 [paper-source/](paper-source/README.md)：
 - \`main.tex\`：PRD/RevTeX 主文件；
 - \`ref.bib\`：BibTeX 文献库；
-- \`paper-assets.tar.gz\`：图文件与 \`utphys28mod.bst\`。
+- \`utphys28mod.bst.gz\`：压缩保存的原始参考文献样式。
 
-编译前先在 \`paper-source/\` 中执行 \`tar -xzf paper-assets.tar.gz\`。主文件和文献库保持原样；图 PDF 为减小仓库体积经过 \`/prepress\` 重封装，具体哈希见 [源码资产清单](paper-source/ASSET_MANIFEST.md)。
+原始 ZIP 中的七个 figure PDF 已登记在 [源码资产清单](paper-source/ASSET_MANIFEST.md)，但尚未加入 GitHub 分支。因此当前 checkout 仍需补齐 \`figures/\` 才能独立编译。原始 ZIP 是完整源文件依据。
 
 原稿仍是研究草稿，具体 TODO 和源码审计见 [docs/06_original_source_audit.md](docs/06_original_source_audit.md)。
 
