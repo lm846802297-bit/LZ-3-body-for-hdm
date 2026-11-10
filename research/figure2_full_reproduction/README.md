@@ -82,3 +82,39 @@ This writes:
 - `results/P0-4_GLOBAL_WMAX_CHECK.csv`
 
 See `results/P0-4_PROPAGATOR_WIDTH_AUDIT_ZH.md` for the derivation and interpretation. The running-width option remains a diagnostic approximation pending the full fermionic self-energy.
+
+
+## P0-4b: one-loop chi2 scalar-channel self-energy
+
+The scalar Yukawa interaction in the manuscript,
+`g2 s bar(chi2) chi1 + h.c.`, has now been evaluated at one loop under the
+explicit Dirac-fermion / real-scalar / pure-scalar-vertex assumptions.
+
+Implementation:
+- `chi2_scalar_self_energy.py`: finite MS-bar B0/B1 functions, derivatives,
+  Sigma_V and Sigma_S, absorptive cut, real on-shell counterterms, and the
+  one-loop inverse-propagator denominator.
+- `run_p0_4b_scalar_self_energy.py`: benchmark scan.
+- `tests/test_chi2_scalar_self_energy.py`: scalar-loop and width-identity tests.
+
+Run:
+```bash
+python -m unittest discover -s research/figure2_full_reproduction/tests -v
+python research/figure2_full_reproduction/run_p0_4b_scalar_self_energy.py
+```
+
+Archived outputs:
+- `results/P0-4B_SCALAR_SELF_ENERGY.csv`
+- `results/P0-4B_OS_DENOMINATOR_COMPARISON.csv`
+- `results/P0-4B_SCALAR_SELF_ENERGY_AUDIT_ZH.md`
+
+Key result: the running-width absorptive term used in P0-4a is exactly the
+one-loop cut of the chi1+s scalar loop. The full scalar-channel propagator
+still includes both dispersive form factors Sigma_V and Sigma_S.
+
+Scope limitation: the manuscript also contains the off-diagonal vector
+interaction `g1 V_mu bar(chi2) gamma^mu chi1 + h.c.`. Its one-loop
+contribution cannot be fixed from the supplied source because mV and the
+gauge/Goldstone completion are absent. Thus the scalar channel is complete
+under its stated assumptions, but the full-model chi2 self-energy remains
+open until the vector sector is defined.
