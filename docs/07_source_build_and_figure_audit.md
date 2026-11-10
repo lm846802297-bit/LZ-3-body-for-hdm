@@ -46,6 +46,27 @@ RevTeX/BibTeX 将 \`ref.bib\` 当作数据库 basename 后再追加扩展名，�
 
 本轮只完成本地压缩候选版本的视觉比较。这些压缩候选版尚未提交到 GitHub；分支中提交的是原 ZIP 的原始图文件，不能把压缩候选版误称为已上传资源。
 
-## 5. 论文状态
+## 5. 构建依赖
+
+`paper-source/build.sh` 在 TeX Live 2026（pdfTeX 1.40.29）上验证通过。除常见宏包外，还需额外安装以下包（缺任意一个都会在构建中途停在 `File '…' not found`）：
+
+- `revtex`：提供 `revtex4-2.cls`；
+- `bibtex8`：`build.sh` 用它跑 `.aux`；
+- `textcase`、`cases`：`main.tex` 显式 `\usepackage{cases}`，`textcase` 为 RevTeX 依赖；
+- `bbm-macros`：提供 `bbm.sty`。只装 `bbm` 只有 Metafont 字体，仍会报 `File 'bbm.sty' not found`；
+- `jknapltx`：提供 `mathrsfs.sty`；
+- `subfigure`、`orcidlink`、`comment`、`epstopdf-pkg`、`float`；
+- `tools`（`dcolumn`、`array`、`verbatim`）、`graphics`（`epsfig`、`color`）。
+
+依赖装齐后脚本退出码为 0，产出 `main_build.pdf`：5 页、359,966 bytes、7 个矢量 Form XObject、0 个位图，即七张 figure PDF 以矢量形式内嵌、未被栅格化。
+
+## 6. "构建成功"不等于"字节可复现"
+
+- PDF 内嵌的 `/CreationDate`、`/ModDate`、`/ID` 每次运行都会变化，逐字节比较前须先剔除这三个字段；
+- 任何线性化/重封装步骤都会重写文件结构并改变版本行：pdfTeX 直接输出 `%PDF-1.7` 且不做线性化；`qpdf --linearize`、Ghostscript `-dFastWebView`（配 `-dCompatibilityLevel=1.5` 等）之类工具会产出 `%PDF-1.5` 并带 `/Linearized` 标记，对象数与 xref 形式也随之改变。
+
+因此重新构建出的 PDF 只能保证页数、图形结构、版面与分发版本一致；若对外分发前做过上述后处理，应在分发说明中写明，否则"由本仓库源码构建"这一结论无法用哈希逐字节核对。
+
+## 7. 论文状态
 
 视觉检查确认五页 PDF 能正常排版并显示图形，但论文仍是未完成草稿：Introduction、relic abundance、constraints、conclusion 和 supplement 仍含占位文字，若干图注仍是通用描述。因此本轮不将 PR 标记为 ready for review，也不合并。

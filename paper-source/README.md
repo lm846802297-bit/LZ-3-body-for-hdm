@@ -17,7 +17,7 @@ Restore the bibliography style with \`gzip -dc utphys28mod.bst.gz > utphys28mod.
 ./build.sh
 \`\`\`
 
-The build script uses \`pdflatex\` and \`bibtex8\`. The exact original source command \`\\bibliography{ref.bib}{}\` makes BibTeX look for \`ref.bib.bib\`; the temporary build copy changes only this command to \`\\bibliography{ref}\`. The original source file remains unchanged.
+The build script uses `pdflatex` and `bibtex8`; the TeX Live packages it needs (`revtex`, `bibtex8`, `textcase`, `cases`, `bbm-macros`, `jknapltx`, `subfigure`, `orcidlink`, `comment`, `epstopdf-pkg`, `float`, `tools`, `graphics`) are listed in [docs/07 §5](../docs/07_source_build_and_figure_audit.md). The exact original source command \`\\bibliography{ref.bib}{}\` makes BibTeX look for \`ref.bib.bib\`; the temporary build copy changes only this command to \`\\bibliography{ref}\`. The original source file remains unchanged.
 
 ## Figure assets
 

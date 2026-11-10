@@ -16,7 +16,7 @@ required_figures=(
   figures/LZ_3body_DM_signal.pdf
   figures/LZ_3body_DM_signal_2.pdf
 )
-for f in "\${required_figures[@]}"; do
+for f in "${required_figures[@]}"; do
   if [[ ! -f "$f" ]]; then
     echo "Missing source figure: $f" >&2
     echo "Restore the figures/ directory from the original 3body_for_HDM.zip." >&2
