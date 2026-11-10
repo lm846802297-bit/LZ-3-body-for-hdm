@@ -1,0 +1,55 @@
+# Independent Eq. (6) kernel — first numerical milestone
+
+## Scope
+
+This branch starts the independent numerical implementation of the paper's Eq. (6). It evaluates the fermion-line Dirac trace and the nested three-body phase-space integral over W^2, z=cos(theta*) and the azimuthal average. It deliberately does **not** perform the Galactic-halo velocity integral.
+
+The implementation uses the interaction and current written in `paper-source/main.tex`, assumes Dirac external spinors for this baseline, and takes the target-rest-frame time component Gamma^0 exactly as stated in the manuscript.
+
+## What is implemented
+
+- Exact reconstruction of p, p', k and q in the target rest frame from (v, ER, W^2, z, phi*).
+- The two manuscript diagrams:
+  `Gamma_before^0 = gamma^0 (slash(p-k)+m_chi2) / ((p-k)^2-m_chi2^2)`
+  and
+  `Gamma_after^0 = (slash(p'+k)+m_chi2) gamma^0 / (W^2-m_chi2^2+i m_chi2 Gamma_chi2)`.
+- Initial-spin average and final-spin sum:
+  `L00 = 1/2 Tr[(slash(p')+m) Gamma^0 (slash(p)+m) bar(Gamma)^0]`.
+- Explicit interference term, not an incoherent sum.
+- Gauss-Legendre integration over W^2 and z; uniform Gauss-Legendre representation of the azimuthal average.
+
+## Numerical checks performed
+
+1. Four-momentum closure and all external mass-shell conditions at a representative open-phase-space point.
+2. The trace agrees with an explicit sum over the four initial/final spin combinations to relative precision better than 5e-15 at the tested point.
+3. The decomposition before + after + interference reproduces the full trace.
+4. A closed-phase-space test for m_s=300 MeV returns exactly zero.
+5. The reduced integral converges under increasing quadrature order at the representative point.
+
+## Representative diagnostic point
+
+- m_chi1 = 1 TeV; m_A = 122 GeV (approximate Xe-131 nuclear mass).
+- m_s = 300 keV; Delta m = 1 MeV.
+- E_R = 200 keV; v = 776 km/s.
+- W_min^2 = 1,000,000.60000009 GeV^2.
+- W_max^2 = 1,000,000.69482081 GeV^2.
+- Reduced Eq. (6) integral (no overall prefactor): 8.78073e5 GeV^2 at (nW,nz,nphi)=(32,32,16).
+
+This is a numerical-kernel diagnostic, **not** a prediction for d sigma/dE_R or an event-rate point.
+
+## Important unresolved model inputs
+
+- The manuscript does not define whether chi1, chi2 are Dirac or Majorana, nor fully specify chiral/CP conventions. The current code is explicitly the Dirac-spinor implementation of the written current; a Majorana variant is not silently assumed.
+- The pole width depends on g2 separately. The Figure 2 caption only fixes (g1 g2 gVN)^2, which does not determine g2 and hence does not determine Gamma_chi2. The width is an explicit input to the kernel, not inferred from the product.
+- m_V and the numerical xenon response R_A(E_R) are needed to turn this reduced kernel into the complete cross section.
+- The original halo distribution is not needed for Eq. (6), and is intentionally excluded at this stage.
+
+## Reproduce
+
+Requires Python 3 and NumPy.
+
+```bash
+python -m unittest discover -s research/figure2_full_reproduction/tests -v
+```
+
+The next milestone is not yet a halo scan. It is to finish the model-definition audit, establish the width convention and g2 benchmark, and independently cross-check the trace and integral over a wider kinematic grid.
