@@ -1,0 +1,14 @@
+category,case,value,unit,notes
+quadrature,nW16_nz16_nphi8,878098.556739,GeV^2,zero-width reduced Eq6 integral
+quadrature,nW24_nz24_nphi16,878078.840766,GeV^2,zero-width reduced Eq6 integral
+quadrature,nW32_nz32_nphi16,878073.889583,GeV^2,zero-width reduced Eq6 integral
+quadrature,nW40_nz32_nphi20,878072.097297,GeV^2,zero-width reduced Eq6 integral
+quadrature,nW48_nz40_nphi24,878071.296772,GeV^2,zero-width reduced Eq6 integral
+width,g2_0,878078.840766,GeV^2,reduced kernel at m_s=300keV Delta_m=1MeV ER=200keV v=776km/s
+width,g2_0.1,878077.842979,GeV^2,conditional Dirac scalar width
+width,g2_1,868227.283624,GeV^2,conditional Dirac scalar width
+width,g2_3,481505.261682,GeV^2,conditional Dirac scalar width
+benchmark,ms300keV_dm1MeV,878078.840766,GeV^2,ER=200keV v=776km/s Gamma=0
+benchmark,ms300keV_dm10MeV,6998.223091,GeV^2,ER=200keV v=776km/s Gamma=0
+benchmark,ms360keV_dm1MeV,400887.426774,GeV^2,ER=300keV v=800km/s Gamma=0
+benchmark,ms360keV_dm10MeV,2967.071373,GeV^2,ER=300keV v=800km/s Gamma=0
