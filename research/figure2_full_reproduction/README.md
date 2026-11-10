@@ -81,7 +81,7 @@ This writes:
 - `results/P0-4_WIDTH_SENSITIVITY.csv`
 - `results/P0-4_GLOBAL_WMAX_CHECK.csv`
 
-See `results/P0-4_PROPAGATOR_WIDTH_AUDIT_ZH.md` for the derivation and interpretation. The running-width option remains a diagnostic approximation pending the full fermionic self-energy.
+See `results/P0-4_PROPAGATOR_WIDTH_AUDIT_ZH.md` for the derivation and interpretation. The initial P0-4 comparison treated running width as a diagnostic ansatz. P0-4b subsequently proved that its absorptive term is exactly the one-loop chi1+s cut under the Dirac / real-scalar / pure-scalar assumptions. It still omits the dispersive Sigma_V and Sigma_S terms and the vector-channel contribution.
 
 
 ## P0-4b: one-loop chi2 scalar-channel self-energy
