@@ -1,0 +1,3 @@
+# Binary figure assets must be stored and diffed as raw bytes.
+*.pdf binary
+*.gz binary
