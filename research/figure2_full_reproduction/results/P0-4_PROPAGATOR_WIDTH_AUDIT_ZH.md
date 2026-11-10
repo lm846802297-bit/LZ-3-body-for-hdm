@@ -471,3 +471,25 @@ P0-4 的第一轮数值比较已经完成。建议下一步先补齐模型和自
 \text{P0-4 第一轮诊断完成；完整自能与模型定义仍是最终定案前置条件。}
 }
 \]
+
+
+---
+
+## P0-4b 后续结果：对 running-width 解释的精确化
+
+后续的一圈自能计算已经证明：在 Dirac 费米子、实标量、纯标量 Yukawa 顶点且只保留 \\(\\chi_1+s\\) cut 的条件下，
+
+[
+-2\operatorname{Im}\left[
+W\Sigma_V(W^2)+\Sigma_S(W^2)
+\right]
+=\Gamma_{\chi_2^*(W)\to\chi_1s}.
+]
+
+因此，本报告中的 running-width 虚部 (W\Gamma(W)) 不是任意的诊断 ansatz，而是该标量道的一圈 absorptive part。
+
+但它仍然不包含 \\(\\operatorname{Re}\\Sigma_V\\)、`\\(\\operatorname{Re}\\Sigma_S\\)`、on-shell counterterms 以及完整的 Dirac 分子结构。完整推导见：
+
+`results/P0-4B_SCALAR_SELF_ENERGY_AUDIT_ZH.md`.
+
+此外，原稿另有 off-diagonal vector interaction。其一圈自能需要 (m_V) 和规范/Goldstone 完成；因此标量道结果不等于全模型总自能。
