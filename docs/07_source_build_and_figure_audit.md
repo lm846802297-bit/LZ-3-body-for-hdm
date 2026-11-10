@@ -83,7 +83,7 @@ The initial build warnings recorded above were re-tested and addressed in the cu
 - The cross-section prefactor and elastic energy-transfer integral were split across aligned lines without changing their algebra. The underfull prose line was rebalanced without changing its meaning.
 - texorpdfstring was added to the math subsection title; the hyperref math-token bookmark warnings no longer appear.
 - The current build reports no duplicate destinations, stuck floats, overfull hboxes, underfull hboxes, or math-token PDF-string warnings.
-- One non-fatal REVTeX/nameref package-initialization warning remains: nameref notes that REVTeX has changed the definition of label. It is not suppressed or patched because the build has no broken labels or unresolved references.
+- Two non-fatal notices remain: REVTeX assumes no affiliation because none is present in the source, and nameref notes that REVTeX has changed the definition of label. Neither causes broken labels or unresolved references. They are not suppressed or patched; the affiliation notice requires author confirmation.
 
 The current main.tex also contains an empty abstract environment and an Introduction outline in comments. The only source-listed author is Jia Liu; the source title 3body-for-HDM is retained as provisional. No affiliation, email, ORCID, or formal title is provided by the supplied source or repository history.
 

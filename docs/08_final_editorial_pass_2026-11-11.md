@@ -17,7 +17,7 @@ Controlled local tests showed:
 - the prose introducing the unequal-temperature integral was rebalanced, removing the underfull box;
 - texorpdfstring was added to the math subsection title, removing hyperref's math-token PDF-string warnings.
 
-The final build has no duplicate PDF destinations, stuck floats, overfull/underfull hboxes, or math-token bookmark warnings. One non-fatal REVTeX/nameref initialization warning remains and is documented rather than hidden.
+The final build has no duplicate PDF destinations, stuck floats, overfull/underfull hboxes, or math-token bookmark warnings. Two non-fatal notices remain and are documented rather than hidden: REVTeX assumes no affiliation because none is present in the supplied source, and nameref reports REVTeX's custom label definition.
 
 ## Metadata
 

@@ -43,7 +43,7 @@ The current working source builds through pdflatex -> bibtex8 -> pdflatex -> pdf
 - all six bibliography citations resolved;
 - all seven original vector PDF figures embedded without editing or rasterizing them.
 
-One non-fatal compatibility notice remains: nameref reports that REVTeX has changed the definition of label. It appears at package initialization, not as a page-layout or reference-resolution failure. It is retained transparently rather than suppressed by patching REVTeX internals.
+Two non-fatal metadata/package notices remain: REVTeX assumes no affiliation because none is present in the source, and nameref reports that REVTeX has changed the definition of label. Neither is a page-layout or reference-resolution failure. They are retained transparently rather than hidden or patched; the affiliation notice can be resolved only after the author confirms the correct institution.
 
 ## Metadata still requiring confirmation
 
