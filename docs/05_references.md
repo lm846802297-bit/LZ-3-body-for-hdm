@@ -20,10 +20,10 @@
 
    显式暗光子媒介、LZ 高能事件重铸和遗迹丰度联合分析。可用于比较完整媒介模型和宇宙学参数关联。
 
-4. “Model-independent test of inelastic dark matter for the LZ high-energy recoil,” arXiv:2609.26698 (2026).  
+4. **D. Delepine and S. Khalil**, “Model-Independent Sideband Constraints on Inelastic Dark Matter at the LZ High-Recoil Candidate,” arXiv:2609.26698 (2026).  
    <https://arxiv.org/abs/2609.26698>
 
-   可用于理解低能/高能侧带对单个高能候选事件解释的约束。正式引用前应核对最新版本的题名、作者和分析定义。
+   该文定义低能侧带 \([14,225)\,\mathrm{keV}\)、信号区 \([225,271],\mathrm{keV}\) 和高能侧带 \((271,800],\mathrm{keV}\)，并研究两体 endothermic DM 的 sideband-to-signal ratios。本文可借鉴其统计问题设置，但三体辐射模型必须重新计算自己的谱和计数。
 
 ## C. 当前五页草稿引用的理论工具
 
