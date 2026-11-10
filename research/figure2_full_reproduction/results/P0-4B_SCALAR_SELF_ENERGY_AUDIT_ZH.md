@@ -2,7 +2,7 @@
 
 > 状态：\(\chi_1+s\) 标量道的一圈自能、吸收部、MS-bar 有限部分及实 on-shell 重整化已推导并数值实现。  
 > **完整模型自能尚未闭合**：原稿另有 \(g_1V_\mu\bar\chi_2\gamma^\mu\chi_1+\mathrm{h.c.}\) 相互作用，但没有给出 \(m_V\) 和规范/Goldstone 完成，故不能唯一计算该矢量道。  
-> 基准分支：\`research/figure2-p0-4-mainline\`。  
+> 基准分支：`research/figure2-p0-4-mainline`。  
 > 单位：自然单位制；质量、动量和能量均以 GeV 输入。  
 > PV 函数采用 \(\overline{\mathrm{MS}}\) 有限部分，重整化尺度 \(\mu_R=1\) TeV。
 
@@ -596,21 +596,21 @@ q_\mu\bar\chi_2\gamma^\mu\chi_1
 
 新增程序：
 
-- \`chi2_scalar_self_energy.py\)：\(B_0,B_1\)、导数、\(\Sigma_V,\Sigma_S\)、cut 宽度和 OS counterterms；
-- \`run_p0_4b_scalar_self_energy.py\)：四组 benchmark 与三组 \(g_2\) 的扫描；
-- \`tests/test_chi2_scalar_self_energy.py\)：PV 数值、阈值、cut-width identity 和 pole renormalization 测试。
+- `chi2_scalar_self_energy.py\)：\(B_0,B_1\)、导数、\(\Sigma_V,\Sigma_S\)、cut 宽度和 OS counterterms；
+- `run_p0_4b_scalar_self_energy.py\)：四组 benchmark 与三组 \(g_2\) 的扫描；
+- `tests/test_chi2_scalar_self_energy.py\)：PV 数值、阈值、cut-width identity 和 pole renormalization 测试。
 
 运行：
 
-\`\`\`bash
+```bash
 python -m unittest discover -s research/figure2_full_reproduction/tests -v
 python research/figure2_full_reproduction/run_p0_4b_scalar_self_energy.py
-\`\`\`
+```
 
 扫描结果输出：
 
-- \`results/P0-4B_SCALAR_SELF_ENERGY.csv\)
-- \`results/P0-4B_OS_DENOMINATOR_COMPARISON.csv\)
+- `results/P0-4B_SCALAR_SELF_ENERGY.csv\)
+- `results/P0-4B_OS_DENOMINATOR_COMPARISON.csv\)
 
 本轮解析公式、阈值 cut 和数值基准已经通过独立计算交叉检查；仓库中的新增测试尚需实际运行并取得 CI 状态，不能预先标记为 CI 通过。
 
