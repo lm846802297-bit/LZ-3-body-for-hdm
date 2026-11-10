@@ -55,6 +55,38 @@ class Eq6Tests(unittest.TestCase):
             0.0
         )
 
+    def test_running_width_closes_at_threshold(self):
+        threshold = self.M + self.ms
+        self.assertEqual(
+            eq6.chi2_width_dirac_scalar_at_mass(
+                threshold, self.M, self.ms, 1.0
+            ),
+            0.0
+        )
+        self.assertGreater(
+            eq6.chi2_width_dirac_scalar_at_mass(
+                threshold + 1e-4, self.M, self.ms, 1.0
+            ),
+            0.0
+        )
+
+    def test_width_schemes_are_distinct_and_finite(self):
+        zero = eq6.reduced_kernel(
+            self.M, self.ms, self.dm, self.mA, self.ER, self.v,
+            nw=8, nz=8, nphi=4, width_scheme="zero"
+        )
+        pole = eq6.reduced_kernel(
+            self.M, self.ms, self.dm, self.mA, self.ER, self.v,
+            nw=8, nz=8, nphi=4, width_scheme="pole", g2=1.0
+        )
+        running = eq6.reduced_kernel(
+            self.M, self.ms, self.dm, self.mA, self.ER, self.v,
+            nw=8, nz=8, nphi=4, width_scheme="running", g2=1.0
+        )
+        self.assertTrue(all(math.isfinite(x) and x > 0 for x in (zero,pole,running)))
+        self.assertNotEqual(zero, pole)
+        self.assertNotEqual(pole, running)
+
     def test_quadrature_convergence(self):
         coarse=eq6.reduced_kernel(self.M,self.ms,self.dm,self.mA,self.ER,self.v,nw=16,nz=16,nphi=8)
         fine=eq6.reduced_kernel(self.M,self.ms,self.dm,self.mA,self.ER,self.v,nw=32,nz=32,nphi=16)
