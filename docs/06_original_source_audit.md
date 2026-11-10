@@ -1,3 +1,5 @@
+> Historical note (2026-11-11): this document audits the verbatim source now preserved as `paper-source/main_original.tex`. The current editorial working copy is `paper-source/main.tex`; see `paper-source/EDITORIAL_STATUS.md` for the exact cleanup scope and outstanding items.
+
 # Audit against the original LaTeX source
 
 ## Source of truth

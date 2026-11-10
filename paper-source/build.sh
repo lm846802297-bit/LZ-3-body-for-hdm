@@ -19,17 +19,12 @@ required_figures=(
 for f in "${required_figures[@]}"; do
   if [[ ! -f "$f" ]]; then
     echo "Missing source figure: $f" >&2
-    echo "Restore the figures/ directory from the original 3body_for_HDM.zip." >&2
     exit 2
   fi
 done
 
-# Keep main.tex byte-for-byte identical to the supplied source.
-# The original \bibliography{ref.bib} is interpreted by BibTeX as ref.bib.bib.
-# Build a temporary copy with the conventional database basename instead.
-sed 's/\\bibliography{ref\.bib}{}/\\bibliography{ref}/' main.tex > main_build.tex
-
-pdflatex -interaction=nonstopmode -halt-on-error main_build.tex
+# Build the cleaned manuscript without modifying either source TeX file.
+pdflatex -interaction=nonstopmode -halt-on-error -jobname=main_build main.tex
 bibtex8 main_build
-pdflatex -interaction=nonstopmode -halt-on-error main_build.tex
-pdflatex -interaction=nonstopmode -halt-on-error main_build.tex
+pdflatex -interaction=nonstopmode -halt-on-error -jobname=main_build main.tex
+pdflatex -interaction=nonstopmode -halt-on-error -jobname=main_build main.tex

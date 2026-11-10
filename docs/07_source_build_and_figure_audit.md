@@ -1,3 +1,5 @@
+> 更新说明（2026-11-11）：本文前述编译记录针对原始源码。原始文件现保存在 `paper-source/main_original.tex`，整理后的工作稿为 `paper-source/main.tex`。本轮整理及新的构建流程见 `paper-source/EDITORIAL_STATUS.md` 和 `paper-source/README.md`。
+
 # 原始论文源码编译与图像审计
 
 ## 1. 源码完整性
