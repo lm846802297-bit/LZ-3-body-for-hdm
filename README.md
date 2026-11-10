@@ -8,12 +8,13 @@
 
 ## 论文源码
 
-已将原始论文的核心文本源文件加入 [paper-source/](paper-source/README.md)：
-- \`main.tex\`：PRD/RevTeX 主文件；
-- \`ref.bib\`：BibTeX 文献库；
-- \`utphys28mod.bst.gz\`：压缩保存的原始参考文献样式。
+原始论文的核心文本源文件和编译脚本已加入 [paper-source/](paper-source/README.md)：
+- \`main.tex\`：原始 PRD/RevTeX 主文件，保持原样；
+- \`ref.bib\`：原始 BibTeX 文献库；
+- \`utphys28mod.bst.gz\`：压缩保存的原始参考文献样式；
+- \`build.sh\`：在临时副本中修正 BibTeX 数据库 basename 后编译。
 
-原始 ZIP 中的七个 figure PDF 已登记在 [源码资产清单](paper-source/ASSET_MANIFEST.md)，但尚未加入 GitHub 分支。因此当前 checkout 仍需补齐 \`figures/\` 才能独立编译。原始 ZIP 是完整源文件依据。
+原始 ZIP 中的七个 figure PDF 已登记在 [源码资产清单](paper-source/ASSET_MANIFEST.md)，但尚未加入 GitHub 分支。需要从原始 ZIP 恢复 \`paper-source/figures/\` 后，才能从 checkout 独立编译。编译和视觉审计记录见 [docs/07_source_build_and_figure_audit.md](docs/07_source_build_and_figure_audit.md)。
 
 原稿仍是研究草稿，具体 TODO 和源码审计见 [docs/06_original_source_audit.md](docs/06_original_source_audit.md)。
 
@@ -25,6 +26,7 @@
 - [草稿审计、未解决问题与执行路线](docs/04_audit_and_roadmap.md)
 - [参考文献与数据来源](docs/05_references.md)
 - [与原始 LaTeX 源码逐项对照](docs/06_original_source_audit.md)
+- [源码编译与图像审计](docs/07_source_build_and_figure_audit.md)
 
 ## 实验动机
 
