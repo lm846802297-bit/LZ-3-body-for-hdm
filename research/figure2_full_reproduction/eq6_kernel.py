@@ -101,6 +101,24 @@ def spin_trace(point,mchi,mchi2,width=0.):
 def lambda_dimensionless(W2,mchi,ms):
     return ((W2-(mchi+ms)**2)*(W2-(mchi-ms)**2))/(W2*W2)
 
+def chi2_width_dirac_scalar(mchi, ms, delta_m, g2):
+    """Conditional pole width for Dirac chi2 -> Dirac chi1 + scalar s.
+
+    Assumes a pure scalar off-diagonal Yukawa coupling, no other open decay
+    channels, and the width convention written in the manuscript's Eq. (8).
+    All masses and the returned width are in GeV.
+    """
+    mchi2 = mchi + delta_m
+    lam = (mchi2**4 + mchi**4 + ms**4
+           - 2*mchi2*mchi2*mchi*mchi
+           - 2*mchi2*mchi2*ms*ms
+           - 2*mchi*mchi*ms*ms)
+    if lam <= 0:
+        return 0.0
+    return (abs(g2)**2/(16*math.pi*mchi2**3)
+            * math.sqrt(lam) * ((mchi2+mchi)**2-ms*ms))
+
+
 def reduced_kernel(mchi,ms,delta_m,mA,ER,speed_kms,width=0.,nw=16,nz=16,nphi=8):
     """Integral in Eq. (6), excluding its printed overall prefactor."""
     wmin,wmax=limits(mchi,ms,mA,ER,speed_kms)
