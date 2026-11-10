@@ -437,7 +437,24 @@ Figure 2 图注只给出：
 
 ---
 
-## 10. 下一步建议
+## 10. 复现脚本与机器可读结果
+
+本轮宽度扫描由以下脚本统一复现：
+
+```bash
+python research/figure2_full_reproduction/run_p0_4_width_scan.py
+```
+
+脚本调用 `eq6_kernel.reduced_kernel` 的 `zero`、`pole` 和 `running` 三种宽度方案，并输出：
+
+- `results/P0-4_WIDTH_SENSITIVITY.csv`：四组 benchmark、两种 (g_2) 取值和三种宽度方案的机器可读积分结果；
+- `results/P0-4_GLOBAL_WMAX_CHECK.csv`：固定速度后对所有正 (E_R) 优化得到的全局 (W_{max}) 检查。
+
+本报告中的积分结果使用 ((n_W,n_z,n_\varphi)=(24,24,16))。最敏感 benchmark 另以 ((48,40,24)) 做高阶求积交叉检查。
+
+当前 GitHub 分支上的测试文件包含 9 项单元测试；本轮尚未取得对应 GitHub Actions CI 运行结果，因此不将代码状态表述为 CI 已通过。数值表由本轮独立 Python 计算得到，复现脚本已归档，仍需在仓库运行环境实际执行并对照 CSV，作为下一项软件验收。
+
+## 11. 下一步建议
 
 P0-4 的第一轮数值比较已经完成。建议下一步先补齐模型和自能层面的证据：
 
