@@ -6,6 +6,7 @@
 - \`main.tex\`：17,254 bytes，SHA-256 与原 ZIP 完全一致；
 - \`ref.bib\`：2,332 bytes，SHA-256 与原 ZIP 完全一致；
 - \`utphys28mod.bst\`：30,776 bytes，压缩后提交为 \`utphys28mod.bst.gz\`；解压可恢复原始 SHA-256。
+- 七个 figure PDF：按字节原样提交到 \`paper-source/figures/\`，校验清单见 \`paper-source/SHA256SUMS\`。
 
 源码文件没有进行物理内容修改。
 
@@ -43,7 +44,7 @@ RevTeX/BibTeX 将 \`ref.bib\` 当作数据库 basename 后再追加扩展名，�
 
 对七张原始 PDF 与 Ghostscript \`/prepress\` 重封装的候选压缩版本，按 180 dpi 栅格化后逐像素比较。五张较复杂的图，超过 8 灰阶级差异阈值的像素占比为 0.094%–0.245%；两张简单 Feynman 图的渲染结果完全一致。
 
-本轮只完成本地压缩候选版本的视觉比较。它们尚未提交到 GitHub；仓库中的原始图文件仍以原 ZIP 为依据，不能把压缩候选版误称为已上传资源。
+本轮只完成本地压缩候选版本的视觉比较。这些压缩候选版尚未提交到 GitHub；分支中提交的是原 ZIP 的原始图文件，不能把压缩候选版误称为已上传资源。
 
 ## 5. 论文状态
 

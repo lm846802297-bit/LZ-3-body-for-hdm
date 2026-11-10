@@ -8,8 +8,10 @@ This directory contains the paper text sources extracted from the user-supplied 
 - \`ref.bib\`: original BibTeX database, preserved byte-for-byte.
 - \`utphys28mod.bst.gz\`: gzip-compressed copy of the original bibliography style file.
 - \`build.sh\`: reproducible build script. It creates a temporary \`main_build.tex\` to normalize the bibliography basename without editing \`main.tex\`.
+- `figures/`: the seven original figure PDFs, committed byte-for-byte; see [figures/README.md](figures/README.md).
+- `SHA256SUMS`: `sha256sum -c` checksums for every file stored verbatim from the original ZIP.
 
-Restore the bibliography style with \`gzip -dc utphys28mod.bst.gz > utphys28mod.bst\`. Then restore the seven figure PDFs listed in [figures/README.md](figures/README.md) from the original ZIP and run:
+Restore the bibliography style with \`gzip -dc utphys28mod.bst.gz > utphys28mod.bst\`. The seven figure PDFs are already committed under `figures/`, so nothing else needs restoring. Then run:
 
 \`\`\`bash
 ./build.sh
@@ -19,7 +21,7 @@ The build script uses \`pdflatex\` and \`bibtex8\`. The exact original source co
 
 ## Figure assets
 
-The seven figure PDFs are inventoried with their original SHA-256 hashes in [ASSET_MANIFEST.md](ASSET_MANIFEST.md). Their binary files are not yet committed to this branch, so a checkout still needs the original \`figures/\` directory restored before the build script can run.
+The seven figure PDFs are inventoried with their original SHA-256 hashes in [ASSET_MANIFEST.md](ASSET_MANIFEST.md) and are committed byte-for-byte under `figures/`, so a checkout can run the build script directly. Confirm the committed bytes from this directory with `sha256sum -c SHA256SUMS`.
 
 ## Source status
 

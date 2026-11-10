@@ -13,8 +13,9 @@
 - \`ref.bib\`：原始 BibTeX 文献库；
 - \`utphys28mod.bst.gz\`：压缩保存的原始参考文献样式；
 - \`build.sh\`：在临时副本中修正 BibTeX 数据库 basename 后编译。
+- `figures/`：七个原始 figure PDF，按字节原样提交。
 
-原始 ZIP 中的七个 figure PDF 已登记在 [源码资产清单](paper-source/ASSET_MANIFEST.md)，但尚未加入 GitHub 分支。需要从原始 ZIP 恢复 \`paper-source/figures/\` 后，才能从 checkout 独立编译。编译和视觉审计记录见 [docs/07_source_build_and_figure_audit.md](docs/07_source_build_and_figure_audit.md)。
+原始 ZIP 中的七个 figure PDF 已按字节原样提交到 [paper-source/figures/](paper-source/figures/README.md)，原始大小与 SHA-256 记录在 [源码资产清单](paper-source/ASSET_MANIFEST.md)，可用 `sha256sum -c SHA256SUMS` 复核。因此从 checkout 即可独立编译。编译和视觉审计记录见 [docs/07_source_build_and_figure_audit.md](docs/07_source_build_and_figure_audit.md)。
 
 原稿仍是研究草稿，具体 TODO 和源码审计见 [docs/06_original_source_audit.md](docs/06_original_source_audit.md)。
 
