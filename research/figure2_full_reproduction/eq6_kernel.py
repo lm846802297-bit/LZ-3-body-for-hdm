@@ -104,8 +104,9 @@ def lambda_dimensionless(W2,mchi,ms):
 def chi2_width_dirac_scalar(mchi, ms, delta_m, g2):
     """Conditional pole width for Dirac chi2 -> Dirac chi1 + scalar s.
 
-    Assumes a pure scalar off-diagonal Yukawa coupling, no other open decay
-    channels, and the width convention written in the manuscript's Eq. (8).
+    Assumes Dirac fermions, a pure scalar off-diagonal Yukawa coupling,
+    and no other open decay channels. This formula is derived from the
+    interaction; it is not explicitly printed in the current main.tex.
     All masses and the returned width are in GeV.
     """
     mchi2 = mchi + delta_m

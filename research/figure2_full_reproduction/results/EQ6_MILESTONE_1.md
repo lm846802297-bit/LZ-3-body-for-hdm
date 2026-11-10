@@ -35,7 +35,7 @@ The last two values differ by approximately 9.1e-7 relative. This convergence st
 
 ## Width dependence is not fixed by the figure caption
 
-The paper uses a pole width in the second propagator. Under the explicitly conditional assumption of Dirac fermions, a pure scalar off-diagonal Yukawa coupling, and no other open chi2 decay channel, the draft's two-body width formula gives, for m_chi1=1 TeV, m_s=300 keV and Delta m=1 MeV:
+The paper uses a pole width in the second propagator. Under the explicitly conditional assumption of Dirac fermions, a pure scalar off-diagonal Yukawa coupling, and no other open chi2 decay channel, the two-body width derived from the written scalar interaction gives, for m_chi1=1 TeV, m_s=300 keV and Delta m=1 MeV. The current main.tex does not explicitly print this width formula:
 
 - g2=0.1: Gamma_chi2 = 1.518e-6 GeV; reduced kernel = 878077.84 GeV^2.
 - g2=1: Gamma_chi2 = 1.518e-4 GeV; reduced kernel = 868227.28 GeV^2.
