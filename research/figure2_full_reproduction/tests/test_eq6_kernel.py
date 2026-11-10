@@ -45,6 +45,16 @@ class Eq6Tests(unittest.TestCase):
                 direct+=abs(amp)**2/2.
         trace=eq6.spin_trace(pt,self.M,self.M+self.dm)["total"]
         self.assertAlmostEqual(direct/trace,1.,places=11)
+    def test_conditional_width_helper(self):
+        width = eq6.chi2_width_dirac_scalar(
+            self.M, self.ms, self.dm, 1.0
+        )
+        self.assertGreater(width, 0.0)
+        self.assertEqual(
+            eq6.chi2_width_dirac_scalar(self.M, 0.002, 0.001, 1.0),
+            0.0
+        )
+
     def test_quadrature_convergence(self):
         coarse=eq6.reduced_kernel(self.M,self.ms,self.dm,self.mA,self.ER,self.v,nw=16,nz=16,nphi=8)
         fine=eq6.reduced_kernel(self.M,self.ms,self.dm,self.mA,self.ER,self.v,nw=32,nz=32,nphi=16)
