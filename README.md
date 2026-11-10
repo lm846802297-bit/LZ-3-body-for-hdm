@@ -8,10 +8,11 @@
 
 ## 论文源码
 
-原始 LaTeX 论文工程已纳入 [paper-source/](paper-source/README.md)：
+已将原始论文的两个核心文本源文件加入 [paper-source/](paper-source/README.md)：
 - \`main.tex\`：PRD/RevTeX 主文件；
-- \`ref.bib\`：BibTeX 文献库；
-- \`paper-assets.tar.gz\`：图文件与 \`utphys28mod.bst\`。
+- \`ref.bib\`：BibTeX 文献库。
+
+原始 ZIP 中的 \`utphys28mod.bst\` 和七个 figure PDF 已登记在 [源码资产清单](paper-source/ASSET_MANIFEST.md)，目前尚未加入 GitHub 分支。因此当前仓库 checkout 还不是完整可编译源码包；原始 ZIP 是完整源文件依据。
 
 原稿仍是研究草稿，具体 TODO 和源码审计见 [docs/06_original_source_audit.md](docs/06_original_source_audit.md)。
 
