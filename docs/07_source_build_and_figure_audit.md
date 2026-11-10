@@ -72,3 +72,21 @@ RevTeX/BibTeX 将 \`ref.bib\` 当作数据库 basename 后再追加扩展名，�
 ## 7. 论文状态
 
 视觉检查确认五页 PDF 能正常排版并显示图形，但论文仍是未完成草稿：Introduction、relic abundance、constraints、conclusion 和 supplement 仍含占位文字，若干图注仍是通用描述。因此本轮不将 PR 标记为 ready for review，也不合并。
+
+
+## 8. Final editorial/layout pass (2026-11-11)
+
+The initial build warnings recorded above were re-tested and addressed in the current working copy:
+
+- Removing the unused float package eliminated the duplicate figure.1–figure.4 PDF destinations. The unused subfigure package was also removed.
+- The two Feynman diagrams and the paired contour panels are now arranged side-by-side in full-width figure* floats. The stuck-float warning no longer appears.
+- The cross-section prefactor and elastic energy-transfer integral were split across aligned lines without changing their algebra. The underfull prose line was rebalanced without changing its meaning.
+- texorpdfstring was added to the math subsection title; the hyperref math-token bookmark warnings no longer appear.
+- The current build reports no duplicate destinations, stuck floats, overfull hboxes, underfull hboxes, or math-token PDF-string warnings.
+- One non-fatal REVTeX/nameref package-initialization warning remains: nameref notes that REVTeX has changed the definition of label. It is not suppressed or patched because the build has no broken labels or unresolved references.
+
+The current main.tex also contains an empty abstract environment and an Introduction outline in comments. The only source-listed author is Jia Liu; the source title 3body-for-HDM is retained as provisional. No affiliation, email, ORCID, or formal title is provided by the supplied source or repository history.
+
+Figure 2 is not relabeled. Its original legend reads 200 keV, 300 keV, 360 MeV, and 300 MeV, while the model text assumes a sub-MeV scalar and Figs. 3–4 scan roughly 100–400 keV. The source ZIP and repository history contain no plotting code, CSV, notebook, or numerical parameter inputs, so the unit discrepancy cannot yet be assigned to the plotted data, unit conversion, or legend. See paper-source/EDITORIAL_STATUS.md.
+
+The final local build completes with exit code 0, has five pages, resolves all six bibliography citations, embeds the seven original vector PDFs unchanged, and passes all entries in paper-source/SHA256SUMS.

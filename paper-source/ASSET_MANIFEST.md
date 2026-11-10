@@ -21,7 +21,7 @@ The original bibliography style is committed as a gzip-compressed file; the seve
 | Path | Bytes | SHA-256 | Meaning |
 |---|---:|---|---|
 | `main_original.tex` | 17,254 | `da8ff06a7863da91b908b7762ba0a2f2d1889c1017b3dfca87778515a73f6687` | Byte-identical to the TeX source in the supplied ZIP |
-| `main.tex` | 17,340 | `e3ad180a0a0ffbf36b33924f5cd6f04426b3ec395dcb8e20b889d3c6665b8bd1` | Editorially cleaned working copy; physics formulae and numerical inputs were not changed |
+| `main.tex` | 18,867 | `142715b34bd1bbfea6d1f69d1ec638263f46155f2e380ac201de80a28988d8ef` | Editorially cleaned working copy; physics formulae and numerical inputs were not changed | Editorially cleaned working copy; physics formulae and numerical inputs were not changed |
 | `ref.bib` | 2,332 | `d523448224ef8d552c489855f022e7416fa8b2661b8ecd865136ea27b7d013a1` | Original BibTeX database |
 
 The compressed bibliography style file has 7,172 bytes and SHA-256 `bf32a2e17dbea69b088759d9c55af071b99e6d661d215b5fe7cd63d859067c8a`.

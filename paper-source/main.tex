@@ -14,11 +14,8 @@ superscriptaddress,notitlepage]{revtex4-2}
 \usepackage{graphicx}
 \usepackage{xcolor}
 \usepackage{array}
-\usepackage{subfigure}
-\usepackage{hyperref}
 \usepackage{mathrsfs}
 \usepackage{verbatim}
-\usepackage{float}
 \usepackage{epstopdf}
 \usepackage{color}
 \usepackage{orcidlink}
@@ -42,6 +39,7 @@ superscriptaddress,notitlepage]{revtex4-2}
 			\kern-.3em \raise.4ex \hbox{$<$}}}}
 
 \usepackage{ulem,fancyvrb}
+\usepackage{hyperref}
 \usepackage{xcolor} 
 \newcommand{\zb}[1]{{\color{blue} {#1}}}
 \newcommand{\zr}[1]{{\color{red} {#1}}}
@@ -57,12 +55,22 @@ superscriptaddress,notitlepage]{revtex4-2}
 	pdfstartview=Fit,
 	linkcolor=blue,
 	citecolor=blue,
-	urlcolor=blue}
+	urlcolor=blue,
+	pdftitle={3body-for-HDM},
+	pdfauthor={Jia Liu}}
 
 \begin{document}
-\title{3body-for-HDM}
-
+\title{3body-for-HDM} % Provisional working title; confirm the formal title.
 \author{Jia Liu}
+% No affiliation or contact information is present in the supplied source.
+% Add the verified institutional affiliation and email only after confirmation.
+
+\begin{abstract}
+% TODO: Add a source-supported summary only after the signal calculation,
+% statistical interpretation, and cosmological analysis have been verified.
+% Suggested structure: motivation; process; calculation method; key results;
+% scope and limitations.
+\end{abstract}
 
 
 
@@ -70,6 +78,13 @@ superscriptaddress,notitlepage]{revtex4-2}
 
 \maketitle
 
+
+\section{Introduction}
+% TODO: Establish the LZ experimental context using the exact analysis and
+% candidate/event definition; motivate the three-body dark-matter process;
+% summarize the research question and state the scope of this work.
+% Do not state that the model explains the LZ event until the likelihood and
+% competing constraints have been independently validated.
 
 \section{Model}
 
@@ -121,13 +136,19 @@ g_{VN} = 3 g_{Vq}
 \end{equation}
 
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.8\linewidth]{figures/LZ_3body_DM_signal}
-    \includegraphics[width=0.8\linewidth]{figures/LZ_3body_DM_signal_2}
-	\caption{Tree-level diagrams for $\chi_1 N\to\chi_1 N s$ with vector-mediator exchange, including scalar emission from the dark-fermion line before and after the exchange.}
-	\label{fig:2_to_3_feynman}
-\end{figure}
+\begin{figure*}[t]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/LZ_3body_DM_signal}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/LZ_3body_DM_signal_2}
+    \end{minipage}
+    \caption{Tree-level diagrams for $\chi_1 N\to\chi_1 N s$ with vector-mediator exchange, including scalar emission from the dark-fermion line before and after the exchange.}
+    \label{fig:2_to_3_feynman}
+\end{figure*}
 
 \section{Direct detection}
 
@@ -139,26 +160,38 @@ g_{VN} = 3 g_{Vq}
 	\label{fig:signal_spectrum}
 \end{figure}
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.8\linewidth]{figures/3_body_contour_ms_deltam_1}
-    \includegraphics[width=0.8\linewidth]{figures/3_body_contour_ms_deltam_2}
-	\caption{Confidence-level contours in the $(m_s,\Delta m)$ plane for $m_{\chi_1}=1\,\mathrm{TeV}$, with $(g_1g_2g_{VN})^2=10^{-9}$ (upper panel) and $10^{-10}$ (lower panel). The contour levels and confidence levels are indicated in the legend.}
-	\label{fig:ms_delta_m_contour}
-\end{figure}
+\begin{figure*}[t]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/3_body_contour_ms_deltam_1}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/3_body_contour_ms_deltam_2}
+    \end{minipage}
+    \caption{Confidence-level contours in the $(m_s,\Delta m)$ plane for $m_{\chi_1}=1\,\mathrm{TeV}$, with $(g_1g_2g_{VN})^2=10^{-9}$ (left panel) and $10^{-10}$ (right panel). The contour levels and confidence levels are indicated in the legend.}
+    \label{fig:ms_delta_m_contour}
+\end{figure*}
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.8\linewidth]{figures/3_body_contour_ms_coupling_1}
-    \includegraphics[width=0.8\linewidth]{figures/3_body_contour_ms_coupling_2}
-	\caption{Confidence-level contours in the $(m_s,g_1g_2g_{VN})$ plane for $m_{\chi_1}=1\,\mathrm{TeV}$, with $\Delta m=1\,\mathrm{MeV}$ (upper panel) and $10\,\mathrm{MeV}$ (lower panel). The contour levels and confidence levels are indicated in the legend.}
-	\label{fig:ms_coupling_m_contour}
-\end{figure}
+\begin{figure*}[t]
+    \centering
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/3_body_contour_ms_coupling_1}
+    \end{minipage}\hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/3_body_contour_ms_coupling_2}
+    \end{minipage}
+    \caption{Confidence-level contours in the $(m_s,g_1g_2g_{VN})$ plane for $m_{\chi_1}=1\,\mathrm{TeV}$, with $\Delta m=1\,\mathrm{MeV}$ (left panel) and $10\,\mathrm{MeV}$ (right panel). The contour levels and confidence levels are indicated in the legend.}
+    \label{fig:ms_coupling_m_contour}
+\end{figure*}
 
 
 
 
-\subsection{$2 \to 3$ cross section}
+\subsection{\texorpdfstring{$2 \to 3$}{2 to 3} cross section}
 We consider
 $\chi_1(p)+A(P)\to\chi_1(p')+A(P')+s(k)$,
 with $q=P'-P$, $t=q^2=-2m_AE_R$, and $W^2=(p'+k)^2$.
@@ -183,8 +216,10 @@ The differential cross section is
 \begin{split}
 \frac{d\sigma_A}{dE_R}
 ={}&
-\frac{m_A(g_1 g_2 g_{VN})^2\mathcal R_A(E_R)}
-{256\pi^3p_{\chi_1}^2(m_V^2+2m_AE_R)^2}
+\frac{m_A(g_1 g_2 g_{VN})^2}{256\pi^3p_{\chi_1}^2}
+\\
+&\quad\times
+\frac{\mathcal R_A(E_R)}{(m_V^2+2m_AE_R)^2}
 \\
 &\times
 \int_{W_{\min}^2}^{W_{\max}^2}dW^2\,
@@ -383,11 +418,13 @@ This motivates the momentum-transfer cross section
 \]
 After integration over the incoming orientations,
 \[
+\begin{aligned}
 Q_{\rm elastic}
-=\frac{3z_s}{32\pi^4}
-\int_{(m_V+m_s)^2}^\infty {\rm d}s\,
-s\sqrt{\lambda(s,m_V^2,m_s^2)}\,
-\sigma_T(s)\mathcal I_E(s),
+={}&\frac{3z_s}{32\pi^4}
+\int_{(m_V+m_s)^2}^\infty {\rm d}s\,s\\
+&\quad\times\sqrt{\lambda(s,m_V^2,m_s^2)}
+\sigma_T(s)\mathcal I_E(s).
+\end{aligned}
 \]
 where
 \begin{align*}
@@ -405,9 +442,8 @@ E\ge\sqrt{s},\quad aE-bP\le E_2\le aE+bP,
 a=\frac{s+m_s^2-m_V^2}{2s},\quad
 b=\frac{\sqrt{\lambda(s,m_V^2,m_s^2)}}{2}.
 \]
-Performing the remaining energy integrals in the
-unequal-temperature MB formalism~\cite{BeauchesneKats2021}
-yields
+The remaining energy integrals are evaluated in the unequal-temperature
+MB formalism of Ref.~\cite{BeauchesneKats2021}, giving
 \[
 \mathcal I_E(s)
 =\frac{s^2\lambda^{3/2}(s,m_V^2,m_s^2)}{4}
