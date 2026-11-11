@@ -70,23 +70,40 @@ class IsotopeMassSchemeTests(unittest.TestCase):
             places=16,
         )
 
+    def test_ame2020_atomic_masses_match_unrounded_mass_1_mas20(self):
+        from isotope_mass_schemes import AME2020_XE_ATOMIC_MASS_U
+        expected = {
+            124: 123.905885174,
+            126: 125.904297422,
+            128: 127.90353075341,
+            129: 128.90478085742,
+            130: 129.903509346,
+            131: 130.90508412808,
+            132: 131.90415508346,
+            134: 133.905393030,
+            136: 135.907214474,
+        }
+        self.assertEqual(set(AME2020_XE_ATOMIC_MASS_U), set(expected))
+        for A, value in expected.items():
+            self.assertAlmostEqual(AME2020_XE_ATOMIC_MASS_U[A], value, places=13)
+
     def test_ame2020_cod2022_xe131_nuclear_mass(self):
         self.assertAlmostEqual(
             isotope_mass_GeV(131, "ame2020_nuclear"),
-            121.9099223838014,
+            121.90992244721734,
             places=10,
         )
 
     def test_ame2020_scheme_includes_positive_electron_binding_correction(self):
         from isotope_mass_schemes import (
             ELECTRON_MASS_U_CODATA2022,
-            NIST_XE_ATOMIC_MASS_U,
+            AME2020_XE_ATOMIC_MASS_U,
             U_GEV_CODATA2022,
             Z_XE,
         )
         A = 131
         mass_without_binding = (
-            NIST_XE_ATOMIC_MASS_U[A] - Z_XE * ELECTRON_MASS_U_CODATA2022
+            AME2020_XE_ATOMIC_MASS_U[A] - Z_XE * ELECTRON_MASS_U_CODATA2022
         ) * U_GEV_CODATA2022
         mass_with_binding = isotope_mass_GeV(A, "ame2020_nuclear")
         self.assertAlmostEqual(
