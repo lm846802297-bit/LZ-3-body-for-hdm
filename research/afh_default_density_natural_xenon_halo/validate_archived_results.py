@@ -24,11 +24,11 @@ assert len(resp)==28
 assert len(iso)==98
 assert len(rates)==14
 
-# The currently archived AFH samples were evaluated at exact spatial q.
-# This is a legacy convention and must not be mistaken for the manuscript's
-# non-relativistic response variable y=b_A^2*m_A*E_R/2.
+# AFH defines its response argument using the spatial momentum transfer q.
+# The archived samples use the exact mass-shell value; q_NR=sqrt(2*m_A*E_R)
+# is only the small-recoil approximation.
 metadata=json.loads((R/"metadata.json").read_text(encoding="utf-8"))
-assert metadata["response_q_convention"]=="legacy_exact_spatial"
+assert metadata["response_q_convention"]=="exact_spatial"
 weights_by_A={int(r["A"]):r for r in weights}
 for sample in resp:
     A=int(sample["A"])
@@ -72,4 +72,4 @@ print(f"PASS: {len(iso)} isotope rows, {len(rates)} rate rows, "
       f"AFH abundance coverage={coverage:.6f}, "
       f"max kernel-grid delta={max(abs(float(r['rel_884_to_16168'])) for r in kc):.3e}, "
       f"max speed-grid delta={max(abs(float(r['relative_difference_nv64_to_nv32'])) for r in sc):.3e}, "
-      f"archived response q={metadata['response_q_convention']}")
+      f"AFH response q={metadata['response_q_convention']}")
