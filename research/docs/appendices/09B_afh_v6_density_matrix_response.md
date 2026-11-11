@@ -252,22 +252,37 @@ AFH 原生 Mathematica runner 和 Python/Mathematica 比较程序已经归档：
 
 但 Wolfram kernel 尚未在当前计算环境中执行。因此原生 Mathematica 逐点对照仍为待完成项目，不能把 Python 源码翻译测试称为 Mathematica 原生复算。
 
-## B.8 一个必须保留的动量转移约定差异
+## B.8 核响应动量与精确运动学动量必须分开
 
-当前 Xe-131 四 benchmark 截面替换脚本使用
-
-\[
-q_{\rm resp}^{(131)}=\sqrt{2M_AE_R},
-\]
-
-而天然氙 halo-fold 输入样本使用
+论文明确规定
 
 \[
-q_{\rm resp}^{(\rm nat)}
-=\sqrt{2m_AE_R+E_R^2}.
+y=\frac{b_A^2m_AE_R}{2},
 \]
 
-此外，AFH 响应网格本身先以 (q) 为自变量，再用 (E_R=sqrt{m_A^2+q^2}-m_A) 将网格映射到反冲能量以定位和标记极小值。四 benchmark 截面替换时则从 (E_R) 反算响应动量。前者是精确质量壳映射，后者采用非相对论反冲近似；天然氙 halo-fold 使用精确核反冲三动量。几种约定在当前 keV 反冲下差别很小，但并非相同定义。此外，固定 Xe-131 脚本使用 \(M_A=131\times0.93149410242\) GeV 的质量约定，天然氙程序则使用 NIST 原子质量减去 54 个电子质量的核质量约定。
+而 AFH 振子变量为 \(y=(qb_A/2)^2\)。因此，在论文当前写法下，固定反冲能量时的核响应查询动量是
 
-因此，跨文件比较时必须连同 \(q_{\rm resp}\) 与 \(m_A\) 约定一起报告。若要做严格逐点统一比较，应先统一两项定义并重新生成响应插值和结果表；不能把两套约定混合后宣称 bit-level 相同。
+\[
+\boxed{q_{\rm resp}^{\rm NR}=\sqrt{2m_AE_R}}.
+\]
+
+三体运动学则由核质量壳条件给出精确空间反冲动量
+
+\[
+\boxed{q_{\rm kin}^{\rm exact}=\sqrt{2m_AE_R+E_R^2}}.
+\]
+
+AFH 响应网格本身以 \(q\) 为自变量；把网格上的 \(q\) 极小值换算成物理反冲能量时，程序使用精确逆映射 \(E_R=\sqrt{m_A^2+q^2}-m_A\)。但在给定 \(E_R\) 查询论文定义的响应 \(y(E_R)\) 时，应使用 \(q_{\rm resp}^{\rm NR}\)。这两个操作应分别命名，不能用同一个未说明约定的 q 代替。
+
+当前代码约定为：
+
+- 固定 Xe-131 benchmark 和 joint Xe-131 响应查询：使用 \(q_{\rm resp}^{\rm NR}\)；
+- Eq. (6) 的三体运动学、\(W_{\max}\) 和 \(v_{\min}\)：使用 \(q_{\rm kin}^{\rm exact}\)；
+- 旧天然氙 halo 输入的 28 个 AFH response samples：实际使用 \(q_{\rm kin}^{\rm exact}\)，属于 legacy 样本，尚未按论文 \(q_{\rm resp}^{\rm NR}\) 重新生成。
+
+本轮 q 审计显示，28 个天然氙样本的 \(q_{\rm exact}-q_{\rm NR}\) 约为 0.032–0.409 keV（相对 0.20–1.14 ppm）。对 Xe-131 的 2401 点 AFH 响应表直接插值后，四个 selected recoil 点的 \(R_A(q_{\rm exact})/R_A(q_{\rm NR})-1\) 约为 -5.5 至 -212.7 ppm。完整数据和数值见附录 G。
+
+固定 Xe-131 benchmark 仍使用 \(M_A=131u\) 的历史质量约定；天然氙 halo 程序使用 NIST 原子质量减去 54 个电子质量的核质量。质量方案是另一个独立输入维度，不应与上述两个 q 的定义混为一谈。
+
+天然氙脚本现默认要求 manuscript-NR 响应样本；旧的 exact-q 样本只能通过显式的 --response-q-convention legacy_exact 复现。若所选 q 与样本不一致，程序会报错，不会仅修改 q 标签或静默复用旧 \(R_A\)。
 
