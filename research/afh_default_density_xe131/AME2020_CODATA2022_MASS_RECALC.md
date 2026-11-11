@@ -300,8 +300,8 @@ manuscript-NR response interpolation and truncated SHM:
 | 267 | \(4.39897\times10^{-15}\) | \(5.22338\times10^{-15}\) | \(5.22186\times10^{-15}\) |
 | 542 | \(1.13489\times10^{-16}\) | \(1.13236\times10^{-16}\) | \(1.13236\times10^{-16}\) |
 
-At 267 keV, the AME2020 rate is \(18.7065\\%\) above the \(A u\)
-approximation and \(0.02913\\%\) below the NIST-nuclear result. The strong
+At 267 keV, the AME2020 rate is \(18.7065\%\) above the \(A u\)
+approximation and \(0.02913\%\) below the NIST-nuclear result. The strong
 \(A u\)-versus-physical-mass difference is amplified by the steep AFH response
 minimum. By contrast, the NIST-to-AME2020 mass update is a much smaller
 correction. The rate response is not determined by \(R_A\) alone: \(m_A\)
