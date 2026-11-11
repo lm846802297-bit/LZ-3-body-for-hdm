@@ -14,7 +14,7 @@
 2. **核结构输入：** 采用 AFH/DMFormFactor v6.0 内置的 Xe-131 default density matrix，严格使用文献给出的谐振子长度处方，不把 \(b_A\) 当作拟合参数；并处理 AFH 原始 isoscalar response 与物理等质子、等中子耦合之间的因子 4。
 3. **真实天然氙靶的理论速率：** 对可用氙同位素按天然丰度求和，并对实验室系暗物质速度分布积分，得到 \(dR/dE_R\)。这一步与固定速度下的 \(d\sigma_A/dE_R\) 是不同的物理量。
 
-目前已经形成 AFH default Xe-131 响应、GCN/JJ55 对照、四组固定速度 benchmark，以及天然氙 selected-point halo-folded rate 的可复现归档。Xe-131 AFH Python 响应已通过 60 位精度 mpmath 对全部 2401 个 q 节点的独立有限和对照；原生 Mathematica 程序仍未在 Wolfram kernel 中实际运行。另已发现天然氙 28 个 AFH 响应样本采用 exact-q，而论文当前核响应定义对应 NR-q；旧速率保留为 legacy 结果，新的七同位素 NR-q 响应尚待重新生成。天然氙结果仍是理论 selected-point rates，尚不是完整的 LZ detector-level likelihood/recast。
+目前已经形成 AFH default Xe-131 响应、GCN/JJ55 对照、四组固定速度 benchmark，以及天然氙 selected-point halo-folded rate 的可复现归档。Xe-131 AFH Python 响应已通过 60 位精度 mpmath 对全部 2401 个 q 节点的独立有限和对照；原生 Mathematica 程序仍未在 Wolfram kernel 中实际运行。进一步核查 AFH 原始定义后，确认其响应变量 y=(q b_A/2)^2 中的 q 是空间动量转移；现有 28 个天然氙响应样本采用的 exact spatial q 与精确三体质量壳关系一致。此前把它们判为 legacy 的结论过于严格，现已修正：exact spatial q 作为默认，NR-q 仅作小反冲近似对照。天然氙结果仍是理论 selected-point rates，尚不是完整的 LZ detector-level likelihood/recast。
 
 ---
 
@@ -506,7 +506,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 ### 8.2 尚未完成或不能过度声称的事项
 
 1. **AFH 原生 Mathematica 验证仍待执行。** 原生 runner 和比较程序已归档，但当前执行环境没有 Wolfram kernel。mpmath 全网格验证是独立高精度数值交叉检查，不能替代官方 Mathematica 程序的原生执行。
-2. **天然氙响应 q 尚未完全统一。** 28 个旧样本采用精确 \(q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}\)，而论文当前 \(y=b_A^2m_AE_R/2\) 对应 \(q_{\rm resp}^{\rm NR}=\sqrt{2m_AE_R}\)。程序已默认要求 manuscript-NR 样本；旧速率保留为 legacy exact-q 结果，没有被改标签或重标度。重新生成七同位素 NR-q 响应仍待取得完整 AFH 输入。
+2. **AFH 空间 q 的精确与 NR 近似已经区分。** AFH 定义 y=(q b_A/2)^2，其中 q 是空间动量转移；精确质量壳关系给出 q_exact=sqrt(2m_AE_R+E_R^2)。28 个天然氙样本全部匹配 exact spatial q，现作为默认物理基线。q_NR=sqrt(2m_AE_R) 仅作为小反冲近似，其 Xe-131 响应差异已定量记录。
 3. **Xe-124/Xe-126 尚未纳入。** 缺少当前 AFH v6.0 内置 density matrix；七种可用同位素的丰度没有重归一化。
 4. **天然氙结果是 selected-point rates。** 当前不是连续完整反冲谱。
 5. **尚未加入 LZ detector response。** 没有 detector efficiency、能量分辨率、曝光、分析 cuts、背景模型或 likelihood。因此这些理论速率不能直接当作 LZ 预期观测事件数，也不能称为完整的 LZ 数据重铸。
@@ -537,7 +537,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 建议后续按以下顺序推进：
 
 1. **完成 AFH 原生 Mathematica 对照。** 在有 Wolfram kernel 的环境中执行官方 v6.0 程序，对照 Xe-131 响应曲线和选定点，形成真正独立于 Python 源码翻译的验证。
-2. **重新生成七同位素 manuscript-NR 响应。** 取得完整 AFH 七同位素响应表或官方源包，在 \(q_{\rm resp}^{\rm NR}=\sqrt{2m_AE_R}\) 处重新生成 28 个 selected-point 样本，再重算 halo fold；旧 exact-q 结果保留为 legacy 对照。
+2. **取得完整 AFH v6.0 响应输入并扩展连续反冲谱。** 当前 28 个 selected-point exact-q 响应足以支持已归档的天然氙速率；连续谱需要恢复完整七同位素 AFH 响应网格。NR-q 只作为系统性近似对照，不替代 exact-q 基线。
 3. **补全或明确缺失同位素处理。** 在没有可靠 AFH Xe-124/Xe-126 响应之前，保留当前覆盖率和不重归一化的明确限制，不用平均核响应代替。
 4. **扩展天然氙连续反冲谱。** 当前 selected points 用于验证阈值和 halo 端点；连续谱需要单独做网格和收敛检查。
 5. **最后进行 LZ detector-level 映射。** 在取得并核实效率、分辨率、曝光、cuts 和背景输入后，再计算预期事件数或构建 likelihood；当前 selected-point rate 不应提前解释成 LZ 排除或信号拟合。
