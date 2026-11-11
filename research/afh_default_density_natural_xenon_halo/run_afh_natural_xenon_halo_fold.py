@@ -9,6 +9,7 @@ from numpy.polynomial.legendre import leggauss
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "figure2_full_reproduction"))
 import eq6_kernel
+from isotope_mass_schemes import isotope_mass_GeV
 
 U_GEV = 0.93149410242
 ME_U = 0.000548579909065
@@ -96,6 +97,9 @@ def main():
     ap.add_argument("--response-q-convention",choices=("manuscript_nr","legacy_exact"),
                     default="manuscript_nr",
                     help="AFH response q convention; legacy_exact is required to reproduce the archived pre-audit samples.")
+    ap.add_argument("--mass-scheme", choices=("A_u","nist_nuclear","ame2020_nuclear"),
+                    default="nist_nuclear",
+                    help="Nuclear mass scheme. Archived 28-point AFH samples match only nist_nuclear + legacy_exact.")
     args=ap.parse_args()
     args.out_dir.mkdir(parents=True,exist_ok=True)
 
@@ -104,7 +108,7 @@ def main():
     abundance={int(r["A"]):float(r["natural_atom_fraction"]) for r in available}
     atomic_mass={int(r["A"]):float(r["atomic_mass_u"]) for r in isotope_rows}
     mean_atomic_weight=sum(float(r["atomic_mass_u"])*float(r["natural_atom_fraction"]) for r in isotope_rows)
-    nuclear_mass={A:(atomic_mass[A]-Z_XE*ME_U)*U_GEV for A in abundance}
+    nuclear_mass={A:isotope_mass_GeV(A,args.mass_scheme) for A in abundance}
 
     response={}
     response_q={}
@@ -213,7 +217,12 @@ def main():
         "abundance_source":"NIST Atomic Weights and Isotopic Compositions for Xenon",
         "abundance_convention":"natural atomic fractions; no renormalization",
         "mean_atomic_weight_g_mol":mean_atomic_weight,
-        "mass_scheme":"(NIST atomic isotope mass - 54 electron masses)*u; electronic binding neglected",
+        "mass_scheme":args.mass_scheme,
+        "mass_scheme_formula":{
+            "A_u":"A*u using the historical CODATA-2018 conversion",
+            "nist_nuclear":"(NIST neutral-atom mass - 54 electron masses)*u; electronic binding neglected",
+            "ame2020_nuclear":"(NIST neutral-atom mass - 54 electron masses)*u + AME2020 B_e(54), using CODATA 2022",
+        }[args.mass_scheme],
         "response_q_convention":args.response_q_convention,
         "response_q_formula":("sqrt(2*m_A*E_R)" if args.response_q_convention=="manuscript_nr" else "sqrt(2*m_A*E_R+E_R^2) [legacy exact-q response samples]"),
         "kinematic_q_convention":"sqrt(2*m_A*E_R+E_R^2); exact nuclear mass-shell momentum used for v_min and three-body kinematics",
