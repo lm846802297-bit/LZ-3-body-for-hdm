@@ -1,0 +1,23 @@
+{
+  "status": "pass",
+  "workflow_run_id": 43044583357,
+  "workflow_url": "https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43044583357",
+  "artifact_name": "afh-natural-xenon-exact-spatial-reproduction",
+  "artifact_id": 13866019422,
+  "artifact_sha256": "sha256:fcdbed5978bc172e717ad05839dc42102a896e3cd86faa4f7e57826614cf40e1",
+  "response_q_convention": "exact_spatial",
+  "isotope_rows_compared": 98,
+  "rate_rows_compared": 14,
+  "relative_tolerance": 5e-8,
+  "maximum_relative_differences_by_field": {
+    "abundance": 0,
+    "mA_GeV": 3.1991563695795384e-10,
+    "q_response_GeV": 2.9865753663925046e-10,
+    "R_A": 4.319098782518628e-10,
+    "vmin_km_s": 8.152916406435323e-11,
+    "J_A_GeV": 4.1144535066733135e-10,
+    "rate_contribution_events_kg_day_keV": 3.236297389311803e-10
+  },
+  "maximum_relative_total_rate_difference": 2.6716770186037274e-12,
+  "interpretation": "The exact-spatial AFH response-q mode reproduces the archived 28-sample natural-xenon selected-point results. The q_NR=sqrt(2*m_A*E_R) option is a separate small-recoil approximation."
+}
