@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit q_response versus exact q_kinematics for the AFH xenon workflow."""
+"""Audit exact AFH spatial recoil momentum against the NR recoil approximation."""
 from __future__ import annotations
 
 import argparse
@@ -24,14 +24,21 @@ def read_csv(path: Path) -> list[dict[str, str]]:
         return list(csv.DictReader(f))
 
 
-def q_response_nr(mA_GeV: float, ER_GeV: float) -> float:
-    """The manuscript's y=b_A^2*m_A*E_R/2 response convention."""
+def q_response_nr_approx(mA_GeV: float, ER_GeV: float) -> float:
+    """Small-recoil approximation q^2=2*m_A*E_R."""
     return math.sqrt(2.0 * mA_GeV * ER_GeV)
 
 
-def q_kinematic_exact(mA_GeV: float, ER_GeV: float) -> float:
+def q_response_exact_spatial(mA_GeV: float, ER_GeV: float) -> float:
     """Exact spatial recoil momentum from the nuclear mass shell."""
     return math.sqrt(2.0 * mA_GeV * ER_GeV + ER_GeV * ER_GeV)
+
+
+def write_rows(path: Path, rows: list[dict]) -> None:
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=list(rows[0]))
+        writer.writeheader()
+        writer.writerows(rows)
 
 
 def main() -> None:
@@ -61,18 +68,18 @@ def main() -> None:
         ER = ER_keV * 1.0e-6
         atom_mass_u = float(by_A[A]["atomic_mass_u"])
         mA = (atom_mass_u - Z_XE * ME_U) * U_GEV
-        q_nr = q_response_nr(mA, ER)
-        q_exact = q_kinematic_exact(mA, ER)
+        q_nr = q_response_nr_approx(mA, ER)
+        q_exact = q_response_exact_spatial(mA, ER)
         q_sample = float(sample["q_response_GeV"])
         if not math.isclose(q_sample, q_exact, rel_tol=0.0, abs_tol=2e-10):
             raise ValueError(
                 f"stored Xe-{A} {ER_keV:g} keV response q does not match "
-                f"the archived exact-q convention: sample={q_sample:.12g}, "
+                f"the exact spatial-q convention: sample={q_sample:.12g}, "
                 f"q_exact={q_exact:.12g}"
             )
         if math.isclose(q_sample, q_nr, rel_tol=0.0, abs_tol=2e-10):
             raise ValueError(
-                f"Xe-{A} {ER_keV:g} keV sample unexpectedly matches both conventions"
+                f"Xe-{A} {ER_keV:g} keV sample unexpectedly matches the NR approximation"
             )
         delta_keV = (q_exact - q_nr) * 1.0e6
         relative_ppm = (q_exact / q_nr - 1.0) * 1.0e6
@@ -82,21 +89,15 @@ def main() -> None:
             "A": A,
             "ER_keV": ER_keV,
             "mA_NIST_nuclear_GeV": mA,
-            "q_response_manuscript_NR_GeV": q_nr,
-            "q_kinematic_exact_GeV": q_exact,
+            "q_response_exact_spatial_GeV": q_exact,
+            "q_response_NR_approx_GeV": q_nr,
             "q_sample_archived_GeV": q_sample,
             "delta_q_exact_minus_NR_keV": delta_keV,
             "relative_q_shift_ppm": relative_ppm,
-            "sample_matches_exact_convention": True,
-            "sample_matches_manuscript_NR_convention": False,
+            "sample_matches_exact_spatial_convention": True,
+            "sample_matches_NR_approximation": False,
         })
-
-    with (args.outdir / "natural_xenon_q_convention_audit.csv").open(
-        "w", newline="", encoding="utf-8"
-    ) as f:
-        writer = csv.DictWriter(f, fieldnames=list(q_rows[0]))
-        writer.writeheader()
-        writer.writerows(q_rows)
+    write_rows(args.outdir / "natural_xenon_q_convention_audit.csv", q_rows)
 
     response_rows = read_csv(args.xe131_response_csv)
     q_grid = np.asarray([float(r["q_GeV"]) for r in response_rows], dtype=float)
@@ -104,52 +105,75 @@ def main() -> None:
     if len(q_grid) != 2401 or np.any(np.diff(q_grid) <= 0):
         raise ValueError("AFH Xe-131 response grid is not the expected 2401-point monotonic grid")
     interp = PchipInterpolator(q_grid, R_grid, extrapolate=False)
+
     xe131_weight = by_A[131]
-    m131 = (float(xe131_weight["atomic_mass_u"]) - Z_XE * ME_U) * U_GEV
+    m131_nist = (float(xe131_weight["atomic_mass_u"]) - Z_XE * ME_U) * U_GEV
     xe131_rows = []
     for ER_keV in RECOIL_POINTS_KEV:
         ER = ER_keV * 1.0e-6
-        q_nr = q_response_nr(m131, ER)
-        q_exact = q_kinematic_exact(m131, ER)
+        q_nr = q_response_nr_approx(m131_nist, ER)
+        q_exact = q_response_exact_spatial(m131_nist, ER)
         R_nr = float(interp(q_nr))
         R_exact = float(interp(q_exact))
         xe131_rows.append({
             "A": 131,
+            "mass_convention": "NIST atomic mass minus 54 electron masses",
             "ER_keV": ER_keV,
-            "mA_NIST_nuclear_GeV": m131,
-            "q_response_manuscript_NR_MeV": q_nr * 1000.0,
-            "q_kinematic_exact_MeV": q_exact * 1000.0,
-            "delta_q_keV": (q_exact - q_nr) * 1.0e6,
-            "R_A_at_manuscript_NR_q": R_nr,
-            "R_A_at_exact_q": R_exact,
-            "relative_response_shift_exact_vs_NR_ppm": (R_exact / R_nr - 1.0) * 1.0e6,
+            "mA_GeV": m131_nist,
+            "q_response_exact_spatial_MeV": q_exact * 1000.0,
+            "q_response_NR_approx_MeV": q_nr * 1000.0,
+            "delta_q_exact_minus_NR_keV": (q_exact - q_nr) * 1.0e6,
+            "R_A_exact_spatial": R_exact,
+            "R_A_NR_approx": R_nr,
+            "relative_response_shift_NR_approx_vs_exact_ppm": (R_nr / R_exact - 1.0) * 1.0e6,
         })
-    with (args.outdir / "xe131_afh_response_shift_NR_vs_exact.csv").open(
-        "w", newline="", encoding="utf-8"
-    ) as f:
-        writer = csv.DictWriter(f, fieldnames=list(xe131_rows[0]))
-        writer.writeheader()
-        writer.writerows(xe131_rows)
+    write_rows(args.outdir / "xe131_afh_response_shift_NR_vs_exact.csv", xe131_rows)
+
+    # The fixed-speed Figure-2 benchmark historically uses M_A=131*u.
+    m131_benchmark = 131.0 * U_GEV
+    benchmark_rows = []
+    for ER_keV in RECOIL_POINTS_KEV:
+        ER = ER_keV * 1.0e-6
+        q_nr = q_response_nr_approx(m131_benchmark, ER)
+        q_exact = q_response_exact_spatial(m131_benchmark, ER)
+        R_nr = float(interp(q_nr))
+        R_exact = float(interp(q_exact))
+        benchmark_rows.append({
+            "A": 131,
+            "mass_convention": "M_A=131*u",
+            "mA_GeV": m131_benchmark,
+            "ER_keV": ER_keV,
+            "q_response_exact_spatial_MeV": q_exact * 1000.0,
+            "q_response_NR_approx_MeV": q_nr * 1000.0,
+            "delta_q_exact_minus_NR_keV": (q_exact - q_nr) * 1.0e6,
+            "R_A_exact_spatial": R_exact,
+            "R_A_NR_approx": R_nr,
+            "relative_response_shift_NR_approx_vs_exact_ppm": (R_nr / R_exact - 1.0) * 1.0e6,
+        })
+    write_rows(args.outdir / "xe131_fixed_benchmark_q_comparison.csv", benchmark_rows)
 
     summary = {
         "status": "pass",
         "stored_natural_xenon_response_samples": len(q_rows),
         "stored_sample_convention": "q_response=sqrt(2*m_A*E_R+E_R^2), exact spatial recoil momentum",
-        "manuscript_response_convention": "q_response=sqrt(2*m_A*E_R), from y=b_A^2*m_A*E_R/2",
+        "AFH_response_definition": "y=(q*b_A/2)^2, with q the spatial momentum transfer",
+        "exact_spatial_response_convention": "q_response=sqrt(2*m_A*E_R+E_R^2), from the exact nuclear mass shell",
+        "NR_approximation_convention": "q_response=sqrt(2*m_A*E_R), valid for E_R much smaller than m_A",
         "three_body_kinematic_convention": "q_kinematic=sqrt(2*m_A*E_R+E_R^2)",
         "mass_scheme": "(NIST atomic isotope mass - 54 electron masses)*u; electronic binding neglected",
         "max_delta_q_keV_across_28_samples": max_delta_q_keV,
         "max_relative_q_shift_ppm_across_28_samples": max_relative_ppm,
-        "xe131_response_comparison": "PCHIP interpolation of the freshly regenerated 2401-point AFH default Xe-131 response grid at q_NR and q_exact, using NIST nuclear mass",
-        "xe131_max_absolute_relative_response_shift_ppm": max(
-            abs(r["relative_response_shift_exact_vs_NR_ppm"]) for r in xe131_rows
+        "xe131_response_comparison": "PCHIP interpolation of the freshly regenerated 2401-point AFH default Xe-131 response grid at exact spatial q and q_NR approximation, using NIST nuclear mass",
+        "xe131_max_absolute_relative_NR_approx_response_shift_ppm": max(
+            abs(r["relative_response_shift_NR_approx_vs_exact_ppm"]) for r in xe131_rows
         ),
+        "xe131_fixed_benchmark_mass_comparison": "PCHIP interpolation of the same response grid using the Figure-2 benchmark mass M_A=131*u",
         "interpretation": [
-            "The archived 28 natural-xenon AFH samples were evaluated at q_exact, not at the manuscript's q_response_NR.",
-            "The exact q remains the correct momentum in the three-body kinematic boundary and v_min calculation.",
-            "The archived halo rates are preserved as legacy exact-q-response results; they are not silently relabeled as manuscript-NR results.",
-            "A corrected natural-xenon AFH rate requires regenerating the seven isotope response samples at q_response_NR from the full AFH isotope response table.",
-        ],
+            "AFH defines y=(q*b_A/2)^2 with q the spatial momentum transfer; exact mass-shell kinematics gives q=sqrt(2*m_A*E_R+E_R^2).",
+            "The archived 28 natural-xenon response samples use exact spatial q and are the physically consistent choice for the exact three-body kinematics.",
+            "q_NR=sqrt(2*m_A*E_R) is a small-recoil approximation; its response impact is quantified but it does not invalidate the exact-q samples.",
+            "The archived natural-xenon halo rates therefore remain the exact-spatial-q baseline; no seven-isotope response regeneration is required to preserve this convention."
+        ]
     }
     (args.outdir / "q_convention_audit_summary.json").write_text(
         json.dumps(summary, indent=2) + "\n", encoding="utf-8"
