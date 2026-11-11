@@ -53,6 +53,7 @@ jobs:
           python research/afh_default_density_xe131/run_ame2020_xe131_halo_partial.py \
             --response-csv research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv \
             --out-dir "$RUNNER_TEMP/ame2020_xe131_partial" \
+            --mass-schemes A_u nist_nuclear ame2020_nuclear \
             --nv-orders 16 32 \
             --nw 8 --nz 8 --nphi 4 \
             --max-relative-speed-convergence 5e-3 \
