@@ -1419,39 +1419,34 @@ AFH 原生 Mathematica runner 和 Python/Mathematica 比较程序已经归档：
 
 但 Wolfram kernel 尚未在当前计算环境中执行。因此原生 Mathematica 逐点对照仍为待完成项目。全网格 mpmath 是独立高精度数值实现，不应被称为官方 Mathematica 原生复算。
 
-### B.8 核响应动量与精确运动学动量必须分开
+### B.8 AFH 空间动量与精确三体反冲
 
-论文明确规定
-
-\[
-y=\frac{b_A^2m_AE_R}{2},
-\]
-
-而 AFH 振子变量为 \(y=(qb_A/2)^2\)。因此，在论文当前写法下，固定反冲能量时的核响应查询动量是
+AFH 原始定义为
 
 \[
-\boxed{q_{\rm resp}^{\rm NR}=\sqrt{2m_AE_R}}.
+y=\left(\frac{q b_A}{2}\right)^2,
 \]
 
-三体运动学则由核质量壳条件给出精确空间反冲动量
+其中 \(q\) 是空间动量转移的大小。对初态静止的核，精确质量壳关系给出
 
 \[
-\boxed{q_{\rm kin}^{\rm exact}=\sqrt{2m_AE_R+E_R^2}}.
+q_{\rm exact}=\sqrt{2m_AE_R+E_R^2},
+\qquad
+y_{\rm exact}=\frac{b_A^2}{4}(2m_AE_R+E_R^2).
 \]
 
-AFH 响应网格本身以 \(q\) 为自变量；把网格上的 \(q\) 极小值换算成物理反冲能量时，程序使用精确逆映射 \(E_R=\sqrt{m_A^2+q^2}-m_A\)。但在给定 \(E_R\) 查询论文定义的响应 \(y(E_R)\) 时，应使用 \(q_{\rm resp}^{\rm NR}\)。这两个操作应分别命名，不能用同一个未说明约定的 q 代替。
+常见的 \(y_{\rm NR}=b_A^2m_AE_R/2\) 对应 \(q_{\rm NR}=\sqrt{2m_AE_R}\)，是 \(E_R\ll m_A\) 的近似，而不是 AFH 对空间 \(q\) 的定义本身。
 
-当前代码约定为：
+因此，本项目在精确三体运动学下统一采用 exact spatial q：
 
-- 固定 Xe-131 benchmark 和 joint Xe-131 响应查询：使用 \(q_{\rm resp}^{\rm NR}\)；
-- Eq. (6) 的三体运动学、\(W_{\max}\) 和 \(v_{\min}\)：使用 \(q_{\rm kin}^{\rm exact}\)；
-- 旧天然氙 halo 输入的 28 个 AFH response samples：实际使用 \(q_{\rm kin}^{\rm exact}\)，属于 legacy 样本，尚未按论文 \(q_{\rm resp}^{\rm NR}\) 重新生成。
+- AFH 响应插值：\(q_{\rm exact}\)；
+- 三体末态四动量、\(W_{\max}\)、\(v_{\min}\)：\(q_{\rm exact}\)；
+- 媒介子传播子：\(t=-2m_AE_R\)，故分母 \(m_V^2-t=m_V^2+2m_AE_R\)；
+- \(q_{\rm NR}\)：只作为独立的非相对论响应近似对照。
 
-本轮 q 审计显示，28 个天然氙样本的 \(q_{\rm exact}-q_{\rm NR}\) 约为 0.032–0.409 keV（相对 0.20–1.14 ppm）。对 Xe-131 的 2401 点 AFH 响应表直接插值后，四个 selected recoil 点的 \(R_A(q_{\rm exact})/R_A(q_{\rm NR})-1\) 约为 -5.5 至 -212.7 ppm。完整数据和数值见附录 G。
+28 个天然氙 AFH 响应样本全部与 exact spatial q 相符，因此不需要为当前 selected-point halo fold 重新生成响应。NR 近似的响应影响已在附录 G 中用 Xe-131 的 2401 点 AFH 响应网格定量比较。
 
-固定 Xe-131 benchmark 仍使用 \(M_A=131u\) 的历史质量约定；天然氙 halo 程序使用 NIST 原子质量减去 54 个电子质量的核质量。质量方案是另一个独立输入维度，不应与上述两个 q 的定义混为一谈。
-
-天然氙脚本现默认要求 manuscript-NR 响应样本；旧的 exact-q 样本只能通过显式的 --response-q-convention legacy_exact 复现。若所选 q 与样本不一致，程序会报错，不会仅修改 q 标签或静默复用旧 \(R_A\)。
+代码默认值现统一为 exact_spatial；nr_approx 只用于敏感性对照，legacy_exact 保留为向后兼容别名。若响应样本与所选 q 不匹配，程序会显式报错。
 
 ---
 
@@ -2008,29 +2003,23 @@ m_{\chi_1}=1\ {\rm TeV},\qquad m_V=10\ {\rm GeV},
 
 最终 halo-folded rate 的单位为 events/(kg day keV)。速率计算包括秒到天的 \(86400\) 转换，但尚未乘探测器效率或能量分辨函数。
 
-### E.3.1 核响应动量与运动学动量
+### E.3.1 AFH 响应动量与三体运动学
 
-本节中的 \(v_{\min,A}\)、\(W_{\max,A}\) 和三体 reduced kernel 使用精确的核反冲动量
-
-\[
-q_{\rm kin}^{\rm exact}=\sqrt{2m_AE_R+E_R^2}.
-\]
-
-但论文当前核响应变量
+AFH 响应函数使用空间动量转移 \(q\)，满足 \(y=(qb_A/2)^2\)。本节的精确三体质量壳关系给出
 
 \[
-y=\frac{b_A^2m_AE_R}{2}
+q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}.
 \]
 
-对应
+因此 halo fold 中 \(R_A(E_R)\)、\(W_{\max,A}\)、\(v_{\min,A}\) 和三体 reduced kernel 均使用同一个精确空间动量。常见的
 
 \[
-q_{\rm resp}^{\rm NR}=\sqrt{2m_AE_R}.
+q_{\rm NR}=\sqrt{2m_AE_R}
 \]
 
-因此 halo fold 的 \(R_A(E_R)\) 应按 \(q_{\rm resp}^{\rm NR}\) 查询 AFH 响应，而不能因为三体运动学使用精确 q，就把同一个 q 直接用于核响应。
+只是 \(E_R\ll m_A\) 的非相对论反冲近似，保留为独立的响应敏感性对照。
 
-**当前已归档的 28 个 AFH 天然氙响应样本仍是在 \(q_{\rm kin}^{\rm exact}\) 处取值。** 本附录后续的数值速率因此应理解为 legacy exact-q-response 结果，而不是已经按论文 \(y(E_R)\) 约定重新生成的最终响应样本。附录 G 给出 28 个样本的动量差异、Xe-131 响应插值影响和重新计算所需输入。
+当前归档的 28 个 AFH 天然氙响应样本全部是在 \(q_{\rm exact}\) 处取值，与精确三体运动学一致，不属于需要修正的 legacy 错误样本。附录 G 给出精确质量壳推导、28 个样本核查及 Xe-131 NR 近似的响应影响。
 
 ### E.4 101 keV 时逐同位素阈值
 
@@ -2104,34 +2093,30 @@ Green benchmark 在其他三个选定反冲能量的结果为：
 - research/afh_default_density_natural_xenon_halo/results/kernel_order_crosschecks.csv
 - research/afh_default_density_natural_xenon_halo/results/speed_quadrature_crosschecks.csv
 
-### E.7 当前 halo 结果的 q-response 状态
+### E.7 exact-spatial-q 归档与 NR 近似对照
 
-本轮已对旧 exact-q 计算执行完整回归复现：
-
-- 默认 manuscript_nr 模式已被 CI 验证会拒绝当前 exact-q 样本；
-- 显式 legacy_exact 模式重新计算 98 个逐同位素贡献和 14 个总速率；
-- 与旧归档比较，最大逐同位素贡献相对差异为 \(4.32\times10^{-10}\)，最大总速率相对差异为 \(2.67\times10^{-12}\)；
-- [CI run 43040078335](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43040078335) 全部通过。
-
-机器可读比较结果保存在 results/legacy_exact_reproduction_comparison.json。该结果证明 q 约定分离没有破坏旧 exact-q 结果的可复现性；它不等于已经得到 manuscript-NR 的新天然氙速率。
-
-当前归档的天然氙 selected-point 速率没有被本轮 q 审计重标度或覆盖。其输入样本仍采用
+当前天然氙 selected-point halo fold 使用 AFH exact spatial q：
 
 \[
-q_{\rm response}^{\rm legacy}
+q_{\rm response}=q_{\rm kin}
 =\sqrt{2m_AE_R+E_R^2}.
 \]
 
-天然氙计算程序现在将两种 q 明确分开，并默认要求论文定义的 \(q_{\rm resp}^{\rm NR}\) 样本。若要复现旧结果，必须显式传入
+当前 exact_spatial 默认模式已完成完整回归复现。CI 对照了 98 个逐同位素贡献和 14 个总速率，最大逐同位素贡献相对差异为 \(4.32\times10^{-10}\)，最大总速率相对差异为 \(2.67\times10^{-12}\)。
+
+- [exact-spatial CI run 43044583357](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43044583357)
+- 机器可读比较：results/exact_spatial_reproduction_comparison.json
+- 旧的 legacy_exact 别名回归记录仍保留在 results/legacy_exact_reproduction_comparison.json。
+
+当前代码默认 exact_spatial，可直接运行：
 
 ~~~bash
-python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \
-  --response-q-convention legacy_exact
+python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py
 ~~~
 
-不带该选项时，程序选择 manuscript_nr；由于现有 28 个样本仍是 exact-q，程序会在样本一致性检查处报错。这是有意的保护，避免旧 \(R_A\) 数值被错误地标记成 NR-q 响应。
+若显式选择 nr_approx，程序会因输入样本仍采用 exact spatial q 而报错，除非同时提供在 NR q 处重新计算的匹配响应值。该检查用于防止把一个 q 点的 \(R_A\) 错误地标记成另一个 q 点的响应。
 
-要得到论文约定下的新 halo rate，必须先重新生成七种可用同位素在 \(q_{\rm resp}^{\rm NR}\) 处的 AFH 响应样本，再重新执行逐同位素 \(I_6\) 和速度积分。精确 \(q_{\rm kin}\) 仍然用于 \(v_{\min}\) 和三体运动学。
+本节的 selected-point 速率保留 exact spatial q，不进行经验重标度。NR 近似的响应变化见附录 G；连续反冲谱仍需恢复完整七同位素 AFH 响应网格后再开展。
 
 ---
 
@@ -2258,12 +2243,11 @@ wolframscript -file research/afh_default_density_xe131/verify_afh_xe131_native.w
 天然氙 selected-point halo fold：
 
 ~~~bash
-python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \
-  --response-q-convention legacy_exact
+python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py
 python research/afh_default_density_natural_xenon_halo/validate_archived_results.py
 ~~~
 
-注意：legacy_exact 只用于复现当前已归档的 28 个 exact-q 响应样本。默认 manuscript_nr 会拒绝这些旧样本，直到七同位素 AFH 响应在 q_response=sqrt(2*m_A*E_R) 处重新生成。
+默认 exact_spatial 使用 AFH 定义的空间动量转移 (q=\sqrt{2m_AE_R+E_R^2})，与精确核质量壳关系一致。nr_approx 是 (q=\sqrt{2m_AE_R}) 的小反冲近似；当前 28 个响应样本不采用该近似，因此程序会拒绝将其与 exact-q 样本混用。legacy_exact 仍是 exact_spatial 的向后兼容别名。
 
 Eq. (6) kernel 测试：
 
@@ -2289,15 +2273,15 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 |---|---|---|---|
 | AFH 67 项密度矩阵解析 | 已完成 | 官方源解析、CSV 逐项核对、67 项计数 | 原生 Mathematica 全网格输出比较 |
 | AFH 默认 \(b_A\) | 已完成 | 公式、单位转换、Xe-131 数值回归测试 | 不需要拟合；不得用谷值调参 |
-| AFH 零动量归一化 | 已完成（含有限精度修正） | 原始 \(A^2/4\)、物理响应 \(A^2\)、偏差 \(8.2523\times10^{-5}\) | 统一所有计算文件的质量和 \(q_{\rm resp}\) 约定 |
+| AFH 零动量归一化 | 已完成（含有限精度修正） | 原始 \(A^2/4\)、物理响应 \(A^2\)、偏差 \(8.2523\times10^{-5}\) | 记录 AFH 空间 q 的精确质量壳关系，并区分 NR 近似 |
 | AFH 谷值 | 已完成 | 离散候选点、直接响应局部极小化、minima.csv | 不需要调整 \(b_A\) |
 | mpmath 独立有限和 | 已完成全网格 | 60 位精度、2401 个 q 节点；最大振幅绝对差 \(3.98\times10^{-14}\)，最大响应绝对差除以 \(A^2\) 为 \(1.22\times10^{-15}\) | 原生 Mathematica 逐点对照仍待完成 |
 | AFH 原生 Mathematica | 待完成 | WLS runner 和比较脚本已归档；Python/mPMath 全网格交叉验证已通过 | 实际运行 Wolfram kernel 并保存逐点差异 |
 | GCN/JJ55 对照 | 已完成归档 | 三种响应、四 benchmark、1920 行 long table | 对照共享既有 \(I_6\)，不是 640 次独立重算 |
 | 三体运动学/Dirac trace | 已完成代表性检查 | 壳条件、四动量闭合、显式自旋求和、干涉分解 | 扩展到更宽的参数和质量网格 |
 | 三体积分收敛 | 已有 selected-point 验证 | 六个天然氙点 \(8×8×4\) 对 \(16×16×8\)，最大差异 \(2.19×10^{-4}\)；独立 Eq. (6) 测试点 \(16×16×8\) 对 \(32×32×16\)，相对差异小于 \(5×10^{-5}\) | 连续反冲谱全网格收敛 |
-| 天然氙速度积分 | 已有 selected-point 验证（legacy q） | 五个点 32 对 64 速度节点，最大差异 \(3.31×10^{-6}\)；98 个逐同位素贡献和 14 个总速率重算后与旧档最大总速率差异 \(2.67×10^{-12}\) | 先生成 manuscript-NR 七同位素响应，再重算速率；连续谱和 halo 参数扫描 |
-| q_response / q_kinematic 分离 | 已完成审计与代码保护 | 28 个天然氙样本识别为 exact-q；Xe-131 四点响应差异约 5.5–212.7 ppm | 重新生成七同位素 manuscript-NR 响应样本并重算 halo fold |
+| 天然氙速度积分 | 已有 selected-point 验证（exact spatial q） | 五个点 32 对 64 速度节点，最大差异 \(3.31×10^{-6}\)；98 个逐同位素贡献和 14 个总速率在 exact_spatial 默认模式下复现，最大总速率差异 \(2.67×10^{-12}\)，CI run 43044583357 | 连续谱和 halo 参数扫描 |
+| AFH 空间 q 与 NR 近似 | 已完成审计与代码保护 | 28 个天然氙样本匹配 exact spatial q；Xe-131 四点 NR 近似响应差异约 5.5–225 ppm；halo fold CI run 43044583357 通过 | 连续反冲谱需要完整七同位素 AFH 响应网格 |
 | Xe-124/Xe-126 | 输入缺失 | 缺失丰度合计 0.001842 | 取得密度矩阵并补算响应、阈值和速率 |
 | LZ detector response | 尚未开展 | 当前仅有理论核反冲率 | 效率、能量分辨、曝光、选择切、背景和统计似然 |
 
@@ -2336,48 +2320,81 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 
 ---
 
-## 附录 G：核响应动量与精确三体运动学动量的约定审计
+## 附录 G：AFH 空间动量转移与非相对论反冲近似
 
-### G.1 两个 \(q\) 的物理定义
+### G.1 AFH 响应函数中的 \(q\) 是什么？
 
-论文在核响应中采用
+AFH 原始文献定义谐振子变量
 
 \[
-y=\frac{b_A^2m_AE_R}{2}.
+y=\left(\frac{qb_A}{2}\right)^2,
 \]
 
-由于 AFH 的谐振子变量为 \(y=(qb_A/2)^2\)，这对应
+其中 \(q=|\mathbf q|\) 是**空间动量转移的大小**。AFH 的核响应 \(W_M(y)\) 是这个空间动量变量的函数，而不是直接以洛伦兹不变量 \(t\) 为自变量。
+
+参考：Fitzpatrick et al., *Model-independent WIMP Scattering Responses and Event Rates*, JCAP 02 (2013) 004, arXiv:1203.3542, Secs. 4 and 7.
+
+### G.2 精确质量壳关系与常见 NR 近似
+
+靶核初态静止：
 
 \[
-\boxed{q_{\rm resp}^{\rm NR}=\sqrt{2m_AE_R}}.
+P^\mu=(m_A,\mathbf 0).
 \]
 
-另一方面，核初末态均在质量壳上：
+反冲后的核满足
 
 \[
-P^\mu=(m_A,\mathbf 0),\qquad
-P'^\mu=(m_A+E_R,\mathbf q_{\rm kin}),
-\qquad P'^2=P^2=m_A^2.
+P'^\mu=(m_A+E_R,\mathbf q),\qquad P'^2=P^2=m_A^2.
 \]
 
 因此
 
 \[
-\boxed{q_{\rm kin}^{\rm exact}
-=|\mathbf q_{\rm kin}|
-=\sqrt{2m_AE_R+E_R^2}}.
+(m_A+E_R)^2-|\mathbf q|^2=m_A^2,
 \]
 
-这两个量分别服务于不同的近似层次：
+从而得到精确的空间反冲动量
 
-- \(q_{\rm resp}^{\rm NR}\)：论文明确采用的非相对论核响应变量；
-- \(q_{\rm kin}^{\rm exact}\)：三体运动学中的精确空间反冲动量。
+\[
+\boxed{q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}}.
+\]
 
-在 \(E_R\ll m_A\) 时二者很接近，但不应在代码中共用一个没有语义区分的 q 变量。尤其不能把精确的 \(q_{\rm kin}\) 代入 \(y\) 后，仍声称严格使用了论文当前写出的 \(y=b_A^2m_AE_R/2\)。
+代入 AFH 变量：
 
-### G.2 28 个天然氙样本的实际约定
+\[
+\boxed{
+y_{\rm exact}
+=\frac{b_A^2}{4}(2m_AE_R+E_R^2)
+}.
+\]
 
-对当前七种有 AFH default density matrix 的氙同位素，以及
+在 \(E_R\ll m_A\) 时，忽略 \(E_R^2\) 项，才得到常用近似
+
+\[
+q_{\rm NR}=\sqrt{2m_AE_R},\qquad
+y_{\rm NR}=\frac{b_A^2m_AE_R}{2}.
+\]
+
+所以两种表达的关系是：
+
+| 量 | 精确三体计算 | 非相对论反冲近似 |
+|---|---|---|
+| 空间动量 | \(\sqrt{2m_AE_R+E_R^2}\) | \(\sqrt{2m_AE_R}\) |
+| AFH 变量 | \(b_A^2(2m_AE_R+E_R^2)/4\) | \(b_A^2m_AE_R/2\) |
+| 物理定位 | 质量壳精确关系 | \(E_R/m_A\) 展开最低阶 |
+
+本项目的三体运动学保留精确质量壳关系，因此采用 \(q_{\rm exact}\) 作为 AFH 响应输入。\(q_{\rm NR}\) 只作为误差对照，不应被称为唯一正确的响应动量。
+
+### G.3 28 个天然氙响应样本的约定核查
+
+对七种有 AFH default density matrix 的氙同位素
+
+\[
+A=128,129,130,131,132,134,136
+\]
+
+及
 
 \[
 E_R=101,\ 200,\ 267,\ 542\ {\rm keV},
@@ -2385,98 +2402,98 @@ E_R=101,\ 200,\ 267,\ 542\ {\rm keV},
 
 逐点读取
 
-**research/afh_default_density_natural_xenon_halo/input/afh_response_samples.csv**
+research/afh_default_density_natural_xenon_halo/input/afh_response_samples.csv
 
-并使用 NIST 核质量
+并使用 NIST 原子质量减去 54 个电子质量得到核质量。28 个样本的 q_response_GeV 全部与 \(q_{\rm exact}\) 相符。
 
-\[
-m_A=(M_{\rm atom}-54m_e)u
-\]
-
-重新计算两种动量。28 个归档样本的 q_response_GeV 均与 \(q_{\rm kin}^{\rm exact}\) 相符，而不是与论文的 \(q_{\rm resp}^{\rm NR}\) 相符。
-
-| \(E_R\) [keV] | \(\Delta q=q_{\rm exact}-q_{\rm NR}\) [keV] | 相对差异 [ppm] |
+| \(E_R\) [keV] | \(q_{\rm exact}-q_{\rm NR}\) [keV] | \((q_{\rm exact}/q_{\rm NR}-1)\) [ppm] |
 |---:|---:|---:|
 | 101 | 0.031899–0.032882 | 0.199–0.212 |
 | 200 | 0.088887–0.091626 | 0.395–0.420 |
 | 267 | 0.137106–0.141332 | 0.527–0.560 |
 | 542 | 0.396542–0.408764 | 1.071–1.138 |
 
-因此，原天然氙 halo-fold 的 \(R_A\) 样本采用了精确空间动量；不能把它们直接描述成按论文 \(y(E_R)\) 处方重新生成的 AFH 响应样本。
+结论：旧 28 点样本采用的是精确空间动量；这与 AFH 的 \(q\) 定义以及精确三体质量壳关系一致，不需要重新生成才能用于当前选定反冲点。
 
-### G.3 Xe-131 响应曲线上的直接数值影响
+### G.4 响应曲线斜率会放大微小的动量差
 
-为避免只凭 \(\Delta q/q\) 判断响应误差，使用本轮 CI 重新生成的 2401 点 AFH default Xe-131 响应表，对同一 NIST Xe-131 核质量分别在 \(q_{\rm resp}^{\rm NR}\) 和 \(q_{\rm kin}^{\rm exact}\) 处进行 PCHIP 插值。
+虽然 \(q_{\rm exact}-q_{\rm NR}\) 只有亚 keV 量级，但 Xe-131 AFH 响应在衍射谷附近变化很快。使用新生成的 2401 点 AFH default Xe-131 响应网格做 PCHIP 插值，得到：
 
-| \(E_R\) [keV] | \(q_{\rm NR}\) [MeV] | \(q_{\rm exact}\) [MeV] | \(R_A(q_{\rm NR})\) | \(R_A(q_{\rm exact})\) | \(\Delta R/R_{\rm NR}\) [ppm] |
-|---:|---:|---:|---:|---:|---:|
-| 101 | 156.925981 | 156.926013 | 0.321015586 | 0.321008412 | -22.35 |
-| 200 | 220.825469 | 220.825560 | 9.628602910 | 9.628550361 | -5.46 |
-| 267 | 255.146606 | 255.146745 | 0.006769034 | 0.006767594 | -212.68 |
-| 542 | 363.524602 | 363.525006 | 0.003280695 | 0.003280375 | -97.35 |
+### NIST Xe-131 核质量
 
-这些数值说明：
+| \(E_R\) [keV] | \(q_{\rm exact}-q_{\rm NR}\) [keV] | \(R_A(q_{\rm NR})/R_A(q_{\rm exact})-1\) [ppm] |
+|---:|---:|---:|
+| 101 | 0.032503 | +22.346 |
+| 200 | 0.090569 | +5.458 |
+| 267 | 0.139702 | +212.729 |
+| 542 | 0.404049 | +97.363 |
 
-1. 动量本身的差异只有约 \(0.2\)–\(1.1\) ppm；
-2. 在核响应斜率较大的反冲点，响应相对变化可以达到约 \(2.1\times10^{-4}\)；
-3. 这组 Xe-131 数值不能作为所有六种其他同位素的响应误差上界；
-4. 更不能仅凭小的 \(\Delta q/q\) 就断言天然氙 halo-fold 事件率完全不变。
+### Figure-2 固定 benchmark 质量 \(M_A=131u\)
 
-当前归档的七同位素事件率没有用 \(q_{\rm NR}\) 重新计算，故本附录不把上表解释为已经完成的天然氙速率修正。
+| \(E_R\) [keV] | \(q_{\rm exact}-q_{\rm NR}\) [keV] | \(R_A(q_{\rm NR})/R_A(q_{\rm exact})-1\) [ppm] |
+|---:|---:|---:|
+| 101 | 0.032487 | +21.191 |
+| 200 | 0.090526 | +5.478 |
+| 267 | 0.139636 | +224.967 |
+| 542 | 0.403857 | +89.607 |
 
-### G.4 代码中的明确分离
+这些差异是 NR 近似相对于精确空间动量的响应变化，不是对现有事件率施加的经验修正。固定 \(E_R\) 下，如果 \(I_6\) 和其他因子不变，微分截面的相对变化与 \(R_A\) 的相对变化相同。
 
-本轮代码审计和防误用改动为：
+### G.5 不要混淆空间 \(q^2\) 与不变量 \(-t\)
 
-- **research/figure2_full_reproduction/rate_kinematics.py**：momentum_transfer 保持精确 \(q_{\rm kin}^{\rm exact}\)，供三体运动学使用；
-- **research/figure2_full_reproduction/joint_xe131.py**：固定 Xe-131 响应查询使用论文定义的 \(q_{\rm resp}^{\rm NR}\)；
-- **research/afh_default_density_xe131/recompute_afh_four_benchmarks.py**：固定速度 AFH 响应插值使用 \(q_{\rm resp}^{\rm NR}\)；
-- **research/afh_default_density_xe131/compute_four_benchmark_dsigma.py**：同样使用 \(q_{\rm resp}^{\rm NR}\)；
-- **research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py**：现在将响应动量约定与三体运动学动量分开，默认选择 manuscript_nr；只有显式传入 --response-q-convention legacy_exact 才能复现旧的精确-q 样本。
-
-若选择的响应动量与样本文件中的 q 不一致，程序现在会报错，并要求重新生成 \(R_A\)，不会静默地只修改 q 标签。
-
-### G.5 为什么还没有直接更新七同位素 \(R_A\) 样本
-
-旧天然氙响应来源表的归档记录为：
-
-- 文件名：afh_xe_isotope_responses.csv
-- 数据行数：16,807（另有一行表头）
-- SHA-256：44c88f3aaf2fb212facbe68432d38389374255432eec04ce8a76437c82c1be3a
-
-这份完整七同位素响应表目前没有随 PR #7 提交；仓库只保存了 28 个 selected-point 样本和该文件的哈希。当前可直接复用的 AFH v6.0 源翻译完整响应网格只有 Xe-131。
-
-因此，不能仅把 28 个样本中的 q_response_GeV 改成 \(q_{\rm NR}\)，同时保留旧 \(R_A\) 数值；那样会把“响应在 \(q_{\rm exact}\) 处计算”错误地标记成“响应在 \(q_{\rm NR}\) 处计算”。
-
-要完成严格修正，需要重新取得七同位素的完整 AFH v6.0 响应表（或官方 AFH v6.0 源包和相应 default density matrices），在每个反冲点直接计算
+虽然 AFH 响应使用空间动量 \(q=|\mathbf q|\)，媒介子传播子使用的是四动量转移不变量：
 
 \[
-R_A^{\rm new}(E_R)
-=
-R_A\!\left(\sqrt{2m_AE_R}\right),
+t=(P'-P)^2=E_R^2-q_{\rm exact}^2=-2m_AE_R.
 \]
 
-随后重新运行逐同位素三体积分和 halo fold。旧的精确-q 结果必须保留为 legacy 对照。
+因此传播子分母
 
-### G.6 机器可读审计结果
+\[
+m_V^2-t=m_V^2+2m_AE_R
+\]
 
-本轮 CI 运行 43038372836 已通过，并保存 q-convention audit artifact。相同结果已提交到仓库：
+本身是精确的，并不意味着空间动量也必须满足 \(q^2=2m_AE_R\)。
 
-- research/afh_default_density_natural_xenon_halo/results/natural_xenon_q_convention_audit.csv（28 行逐同位素、逐反冲点动量对照）；
-- research/afh_default_density_natural_xenon_halo/results/xe131_afh_response_shift_NR_vs_exact.csv（Xe-131 四点 PCHIP 响应对照）；
-- research/afh_default_density_natural_xenon_halo/results/q_convention_audit_summary.json（机器可读汇总）。
+这是本次审计最重要的区分：
 
-[查看 CI 运行及其 artifact](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43038372836)。
+- AFH 核响应：使用空间动量 \(q_{\rm exact}\)；
+- 三体相空间、\(W_{\max}\)、\(v_{\min}\)：使用 \(q_{\rm exact}\)；
+- 媒介子传播子：使用不变量 \(t=-2m_AE_R\)；
+- \(q_{\rm NR}\)：仅是核反冲能量关系的非相对论近似。
 
-### G.7 当前状态与验收标准
+### G.6 代码约定
+
+当前统一约定：
+
+- research/figure2_full_reproduction/rate_kinematics.py：精确 \(q_{\rm exact}\)，用于三体运动学；
+- research/figure2_full_reproduction/eq6_kernel.py：精确 \(q_{\rm exact}\)，用于三体末态构造；
+- research/figure2_full_reproduction/joint_xe131.py：AFH 响应插值使用精确空间 \(q_{\rm exact}\)；
+- research/afh_default_density_xe131/recompute_afh_four_benchmarks.py：固定速度四组 benchmark 使用精确空间 \(q_{\rm exact}\)；
+- research/afh_default_density_xe131/compute_four_benchmark_dsigma.py：同样使用精确空间 \(q_{\rm exact}\)；
+- research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py：默认 exact_spatial；nr_approx 仅用于近似对照；legacy_exact 保留为向后兼容别名。
+
+若输入样本的 q 与所选约定不一致，程序会报错，不会静默复用不匹配的 \(R_A\)。
+
+### G.7 机器可读结果
+
+q 审计程序保存以下文件：
+
+- research/afh_default_density_natural_xenon_halo/results/natural_xenon_q_convention_audit.csv：28 个天然氙样本；
+- research/afh_default_density_natural_xenon_halo/results/xe131_afh_response_shift_NR_vs_exact.csv：NIST Xe-131 质量下的响应对照；
+- research/afh_default_density_natural_xenon_halo/results/xe131_fixed_benchmark_q_comparison.csv：\(M_A=131u\) 下的固定 benchmark 对照；
+- research/afh_default_density_natural_xenon_halo/results/q_convention_audit_summary.json：机器可读汇总。
+
+当前完整 16807 行的七同位素原始响应表仅保留哈希和 28 个选定点样本。对于本附录所列的 selected-point exact-q 计算，28 个样本已足够；若要扩展到连续反冲谱，则仍需恢复完整 AFH v6.0 响应输入或官方源包。
+
+### G.8 验收标准
 
 | 项目 | 状态 | 说明 |
 |---|---|---|
-| 两种 \(q\) 的解析定义 | 已完成 | \(q_{\rm resp}^{\rm NR}\) 与 \(q_{\rm kin}^{\rm exact}\) 分开 |
-| 28 个天然氙样本约定识别 | 已完成 | 归档样本全部匹配 exact-q |
-| Xe-131 的 \(R_A(q_{\rm NR})\) 与 \(R_A(q_{\rm exact})\) 对照 | 已完成 | 使用新生成的 2401 点 AFH Xe-131 表 |
-| 天然氙 halo 程序防误用与 legacy 回归 | 已完成 | 默认 NR 会拒绝旧样本；legacy_exact 重算 98 个贡献和 14 个总速率，最大总速率差异 \(2.67\times10^{-12}\)，CI 通过 |
-| 七同位素 AFH 响应样本重新生成 | 待完成 | 需要完整 AFH 七同位素响应表或源包 |
-| 七同位素三体积分与 halo fold 更新 | 待完成 | 必须在新的 \(R_A\) 样本生成后执行 |
-
-本审计不改变三体运动学中的精确 \(q_{\rm kin}\)，也不对已有 halo rate 作经验重标度。它只明确响应函数的输入约定，并阻止今后把两种不同的动量定义混用。
+| AFH 的 \(q\) 定义 | 已核实 | \(q\) 是空间动量转移 |
+| 精确质量壳关系 | 已推导 | \(q^2=2m_AE_R+E_R^2\) |
+| 28 个天然氙样本 | 已核实 | 全部匹配 exact spatial q |
+| Xe-131 NR 近似影响 | 已计算 | NIST 与 \(M_A=131u\) 两种质量约定均有对照 |
+| 天然氙 halo fold | exact-q 基线 | 98 个同位素贡献、14 个总速率复现；最大总速率差异 \(2.67\\times10^{-12}\)，CI run 43044583357 通过 |
+| 连续反冲谱 | 待完成 | 需要完整七同位素 AFH 响应输入 |
+| 原生 Mathematica 复算 | 待完成 | mpmath 全网格验证不能替代官方 Wolfram kernel 执行 |
