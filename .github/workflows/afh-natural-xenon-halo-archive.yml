@@ -35,37 +35,37 @@ jobs:
       - name: Validate archived isotope contributions, rate sums and quadrature records
         run: python research/afh_default_density_natural_xenon_halo/validate_archived_results.py
 
-      - name: Confirm manuscript-NR mode refuses the legacy exact-q samples
+      - name: Confirm the NR approximation is distinguished from exact AFH spatial q
         shell: bash
         run: |
           set +e
           output=$(python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \
-            --out-dir "$RUNNER_TEMP/should_not_run_manuscript_nr" 2>&1)
+            --response-q-convention nr_approx \
+            --out-dir "$RUNNER_TEMP/should_not_run_nr_approx" 2>&1)
           status=$?
           set -e
           if [ "$status" -eq 0 ]; then
-            echo "ERROR: manuscript_nr unexpectedly accepted the archived exact-q samples"
+            echo "ERROR: NR approximation unexpectedly accepted exact-q response samples"
             exit 1
           fi
           echo "$output"
           echo "$output" | grep -q "Regenerate R_A at the selected q"
 
-      - name: Recompute the archived legacy exact-q selected-point halo fold
+      - name: Recompute exact-spatial-q selected-point natural-xenon halo fold
         run: |
           python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \
-            --response-q-convention legacy_exact \
-            --out-dir "$RUNNER_TEMP/natural_xenon_legacy_exact"
+            --out-dir "$RUNNER_TEMP/natural_xenon_exact_spatial"
 
-      - name: Compare fresh legacy exact-q output against the archived tables
+      - name: Compare fresh exact-spatial-q output against the archived tables
         run: |
           python research/afh_default_density_natural_xenon_halo/compare_legacy_reproduction.py \
-            --reproduced-dir "$RUNNER_TEMP/natural_xenon_legacy_exact" \
+            --reproduced-dir "$RUNNER_TEMP/natural_xenon_exact_spatial" \
             --relative-tolerance 5e-8
 
-      - name: Upload legacy exact-q reproduction and comparison
+      - name: Upload exact-spatial-q reproduction and comparison
         uses: actions/upload-artifact@v4
         with:
-          name: afh-natural-xenon-legacy-exact-reproduction
-          path: ${{ runner.temp }}/natural_xenon_legacy_exact/
+          name: afh-natural-xenon-exact-spatial-reproduction
+          path: ${{ runner.temp }}/natural_xenon_exact_spatial/
           if-no-files-found: error
           retention-days: 90
