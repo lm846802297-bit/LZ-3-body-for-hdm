@@ -40,6 +40,8 @@
 - output/minima.csv：细化极小值；
 - output/figure2_dip_check.csv：101、267、542 keV 参考点；
 - output/metadata.json：源文件哈希、质量、\(b_A\)、归一化和限制；
+- output/mpmath_full_grid_summary.json：2401 点、60 位精度 mpmath 全网格验证汇总；
+- CI artifact afh-xe131-mpmath-full-grid-validation：完整逐点比较 CSV 和 JSON summary。
 - AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md：来源和归一化审计；
 - AFH_COUPLING_NORMALIZATION_MAPPING.md：接口耦合映射。
 
