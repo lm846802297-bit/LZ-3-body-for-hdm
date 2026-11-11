@@ -7,6 +7,7 @@ This directory archives the selected-point natural-xenon halo-folded three-body 
 - Natural atomic abundances are used without renormalizing the seven available isotopes.
 - The truncated Standard Halo Model is the baseline; the untruncated Maxwell-Boltzmann result is only a high-speed-tail diagnostic.
 - Rates are before detector efficiency, resolution, exposure, cuts and likelihood.
+- The 28 archived AFH response samples were evaluated at exact spatial recoil q, while the manuscript response definition y=b_A^2*m_A*E_R/2 requires q_response=sqrt(2*m_A*E_R). The current archived rates are therefore labeled legacy exact-q-response results, not the final manuscript-NR response fold.
 
 See results/NATURAL_XENON_HALO_FOLD_AUDIT.md for assumptions, results and convergence checks.
 
