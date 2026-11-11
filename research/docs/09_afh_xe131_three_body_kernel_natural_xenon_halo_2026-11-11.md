@@ -641,7 +641,9 @@ The LZ 2026 analysis reports one event compatible with a \(248\pm23\ {\rm(stat)}
 
 The current \(5\)–\(800\) keV theoretical recoil grid is intentionally wider than the high-efficiency LZ search window. For the 2026 LZ comparison, only the \(5.4\)–\(269.9\) keV interval enters the quoted WIMP-search ROI at greater than 50% efficiency. The \(270\)–\(800\) keV part remains a theoretical prediction and should not be counted as accepted LZ exposure.
 
-The next detector-level step is to obtain the numerical LZ efficiency curve and tuned NEST response from the official data release, then first calculate \(N_{\rm sig}^{\rm ROI}\). Only after validating that rate-level fold should the full two-dimensional likelihood recast be attempted.
+The next detector-level step is to obtain the numerical LZ efficiency curve and tuned NEST response from the official data release, then first calculate \(N_{\rm sig}^{\rm ROI}\). Only after validating that rate-level fold should the full two-dimensional likelihood recast be attempted. 
+
+A nuclear-response distinction is also necessary. The LZ 2026 paper states that its published theory spectra use WimPyDD with one-body density matrices developed for DMFormFactor-v6, modified as described in Ref. [31]. The continuous spectra being generated in this repository use the available GCN/JJ55 isotope-response grids as an independent nuclear-model comparison; they are not claimed to reproduce the LZ collaboration's modified nuclear-response inputs. The AFH v6.0 calculation remains a separate selected-point result until the full seven-isotope AFH response grid is recovered.
 
 **Experimental reference:** LZ Collaboration, D. S. Akerib et al., *Search for dark matter particle interactions in an extended nuclear recoil energy window with the LUX-ZEPLIN (LZ) experiment*, arXiv:2609.02823v1 (2026), data release DOI: [10.17182/hepdata.182472.v1](https://doi.org/10.17182/hepdata.182472.v1).
 
