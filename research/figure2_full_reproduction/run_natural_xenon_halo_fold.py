@@ -24,7 +24,8 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 import eq6_kernel  # noqa: E402
-from joint_xe131 import isotope_mass_GeV, load_nuclear_response  # noqa: E402
+from joint_xe131 import load_nuclear_response  # noqa: E402
+from isotope_mass_schemes import isotope_mass_GeV as isotope_mass_with_scheme  # noqa: E402
 from rate_kinematics import vmin_three_body_km_s  # noqa: E402
 from run_natural_xenon_joint import AVAILABLE, MODELS, NATURAL_ABUNDANCE  # noqa: E402
 
@@ -115,6 +116,7 @@ def compute_isotope_halo_integrals(
     A: int,
     ER_keV: float,
     halo_model: str,
+    mass_scheme: str,
     nv: int,
     mchi: float,
     ms: float,
@@ -133,7 +135,7 @@ def compute_isotope_halo_integrals(
 
     J_A = integral dv f_lab(v) beta C_A(v), with units GeV.
     """
-    mA = isotope_mass_GeV(A)
+    mA = isotope_mass_with_scheme(A, mass_scheme)
     ER = ER_keV * 1.0e-6
     vmin = vmin_three_body_km_s(mchi, ms, mA, ER)
     vmax = (
@@ -151,6 +153,7 @@ def compute_isotope_halo_integrals(
     if vmin >= vmax:
         return [{
             "A": A,
+            "mass_scheme": mass_scheme,
             "model": model.upper(),
             "halo_model": halo_model,
             "ER_keV": ER_keV,
@@ -227,6 +230,7 @@ def main() -> None:
     parser.add_argument("--response-dir", type=Path,
                         default=HERE / "results" / "anand_wm_response")
     parser.add_argument("--out-dir", type=Path, required=True)
+    parser.add_argument("--mass-scheme", choices=("A_u", "nist_nuclear"), default="A_u")
     parser.add_argument("--mchi-GeV", type=float, default=1000.0)
     parser.add_argument("--ms-MeV", type=float, default=0.3)
     parser.add_argument("--delta-m-MeV", type=float, default=1.0)
@@ -269,6 +273,7 @@ def main() -> None:
                         A=A,
                         ER_keV=ER_keV,
                         halo_model=halo_model,
+                        mass_scheme=args.mass_scheme,
                         nv=nv,
                         mchi=args.mchi_GeV,
                         ms=ms,
@@ -305,6 +310,7 @@ def main() -> None:
                         rate = rate_factor * weighted_sigma_integral
                         natural_rows.append({
                             "halo_model": halo_model,
+                            "mass_scheme": args.mass_scheme,
                             "model": model.upper(),
                             "ER_keV": ER_keV,
                             "mV_GeV": mV,
@@ -371,7 +377,11 @@ def main() -> None:
         "omitted_natural_amount_fraction": 1.0 - abundance_coverage,
         "abundance_source": "NIST isotopic amount fractions",
         "mean_target_mass_for_per_kg_normalization": "NIST standard atomic weight 131.293 g/mol",
-        "isotope_kinematic_mass": "A * 0.93149410242 GeV, consistent with previous joint calculation",
+        "mass_scheme": args.mass_scheme,
+        "isotope_kinematic_mass": (
+            "A * 0.93149410242 GeV" if args.mass_scheme == "A_u" else
+            "(NIST relative atomic mass - 54 electron masses)*u; electronic binding energy neglected"
+        ),
         "mchi_GeV": args.mchi_GeV,
         "ms_MeV": args.ms_MeV,
         "delta_m_MeV": args.delta_m_MeV,
