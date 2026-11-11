@@ -118,4 +118,4 @@ The manuscript source `paper-source/main.tex` has now been made explicit about t
 mathcal R_A(E_R)=rac{16pi}{2J_A+1}W_{M,mathrm{AFH,v6}}^{00}(y),
 qquad mathcal R_A(0)=A^2,
 ]
-while retaining the physical per-nucleon coupling (g_{VN}) in the cross-section prefactor. The factor four is therefore included exactly once, in the nuclear response.
+while retaining the physical per-nucleon coupling (g_{VN}) in the cross-section prefactor. The factor four is therefore included exactly once, in the nuclear response. The same response definition now uses the exact AFH spatial momentum \(q=|\mathbf q|\), with \(q^2=2m_AE_R+E_R^2\) from the nuclear mass shell; the common \(y=b_A^2m_AE_R/2\) form is explicitly identified as its small-recoil limit.
