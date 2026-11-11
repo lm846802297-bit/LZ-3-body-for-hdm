@@ -12,7 +12,9 @@
 - `09_afh_xe131_three_body_kernel_natural_xenon_halo_2026-11-11.md`: AFH v6.0 Xe response, Eq. (6) three-body kernel, factor-of-four normalization, natural-xenon isotope sum, and halo-folded rate discussion.
 
 ## AFH Xe-131 and natural-xenon three-body study
-- `09_afh_xe131_three_body_kernel_natural_xenon_halo_2026-11-11.md`: main report and research conclusions.
+
+The main report contains the complete A–F appendices. The six files below are synchronized standalone copies for focused search and citation.
+- `09_afh_xe131_three_body_kernel_natural_xenon_halo_2026-11-11.md`: complete main report, including the full text of Appendices A–F.
 - `appendices/09A_three_body_kinematics_amplitude.md`: three-body kinematics, phase-space limits, and Dirac amplitude.
 - `appendices/09B_afh_v6_density_matrix_response.md`: AFH v6.0 density matrix and response implementation.
 - `appendices/09C_afh_isoscalar_factor4_normalization.md`: AFH isoscalar normalization and factor-of-four mapping.
