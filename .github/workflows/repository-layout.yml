@@ -58,7 +58,7 @@ jobs:
                       )
 
           if errors:
-              print("\\n".join(f"ERROR: {item}" for item in errors))
+              print("\n".join(f"ERROR: {item}" for item in errors))
               sys.exit(1)
 
           print("Repository layout check passed.")
