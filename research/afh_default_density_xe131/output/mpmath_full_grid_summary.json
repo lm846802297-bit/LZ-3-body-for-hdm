@@ -1,0 +1,28 @@
+{
+  "status": "pass",
+  "method": "independent grouped finite-sum evaluation with mpmath.hyp1f1",
+  "reference_precision_decimal_digits": 60,
+  "grid_points": 2401,
+  "density_matrix_entries_used": 24,
+  "multipoles": [
+    0,
+    2
+  ],
+  "max_absolute_amplitude_difference": 3.9781577810204385e-14,
+  "max_relative_amplitude_difference_where_abs_reference_gt_1e_10": 8.83215921233826e-13,
+  "max_absolute_response_difference_over_A2": 1.2158813818896215e-15,
+  "max_relative_response_difference_where_R_over_A2_gt_1e_12": 1.3376020365403215e-13,
+  "amplitude_absolute_tolerance": 2e-10,
+  "response_absolute_over_A2_tolerance": 2e-11,
+  "workflow_run_id": 43038372836,
+  "artifact_name": "afh-xe131-mpmath-full-grid-validation",
+  "artifact_id": 13864466601,
+  "artifact_sha256": "sha256:11177f34afec223a70505b79ce70ade382b3329cb6008dbdb858fe49ba10c0d8",
+  "verifier_script_blob_sha": "49a18ef215269bde283eacbc96a399b90e4674b7",
+  "density_matrix_blob_sha": "7b749f295ce298784d6cdf151b02ba58f8123aef",
+  "scope": "full 2401-point Xe-131 grid; same AFH finite-sum definition and rounded source density matrix; not a native Mathematica comparison",
+  "artifact_contents": [
+    "full_grid_mpmath_comparison.csv",
+    "full_grid_mpmath_summary.json"
+  ]
+}
