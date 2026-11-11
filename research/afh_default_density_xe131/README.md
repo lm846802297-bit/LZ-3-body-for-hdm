@@ -125,7 +125,8 @@ Latest completed full-grid check:
 | Status | PASS |
 
 The machine-readable 2401-row comparison and JSON summary are uploaded as the
-GitHub Actions artifact named afh-xe131-mpmath-full-grid-validation. This is an
+GitHub Actions artifact named afh-xe131-mpmath-full-grid-validation. The compact
+summary is also committed as output/mpmath_full_grid_summary.json. This is an
 independent high-precision check of the Python finite-sum translation; it is
 not a native Mathematica execution.
 
