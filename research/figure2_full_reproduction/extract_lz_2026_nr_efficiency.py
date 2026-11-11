@@ -128,15 +128,14 @@ def main() -> None:
     args = parser.parse_args()
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
-    svg_prefix = args.out_dir / "lz_2026_figS2"
+    svg_path = args.out_dir / "lz_2026_figS2.svg"
     subprocess.run(
         [
             "pdftocairo", "-svg", "-f", "14", "-l", "14",
-            str(args.pdf), str(svg_prefix),
+            str(args.pdf), str(svg_path),
         ],
         check=True,
     )
-    svg_path = args.out_dir / "lz_2026_figS2.svg"
     points = extract_curve(svg_path)
 
     energies = sorted(set(float(i) for i in range(301)) | {5.4, 269.9})
