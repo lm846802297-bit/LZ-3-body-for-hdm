@@ -196,6 +196,30 @@ m_{\chi_1}=1\ {\rm TeV},\qquad m_V=10\ {\rm GeV},
 
 最终 halo-folded rate 的单位为 events/(kg day keV)。速率计算包括秒到天的 \(86400\) 转换，但尚未乘探测器效率或能量分辨函数。
 
+### E.3.1 核响应动量与运动学动量
+
+本节中的 \(v_{\min,A}\)、\(W_{\max,A}\) 和三体 reduced kernel 使用精确的核反冲动量
+
+\[
+q_{\rm kin}^{\rm exact}=\sqrt{2m_AE_R+E_R^2}.
+\]
+
+但论文当前核响应变量
+
+\[
+y=\frac{b_A^2m_AE_R}{2}
+\]
+
+对应
+
+\[
+q_{\rm resp}^{\rm NR}=\sqrt{2m_AE_R}.
+\]
+
+因此 halo fold 的 \(R_A(E_R)\) 应按 \(q_{\rm resp}^{\rm NR}\) 查询 AFH 响应，而不能因为三体运动学使用精确 q，就把同一个 q 直接用于核响应。
+
+**当前已归档的 28 个 AFH 天然氙响应样本仍是在 \(q_{\rm kin}^{\rm exact}\) 处取值。** 本附录后续的数值速率因此应理解为 legacy exact-q-response 结果，而不是已经按论文 \(y(E_R)\) 约定重新生成的最终响应样本。附录 G 给出 28 个样本的动量差异、Xe-131 响应插值影响和重新计算所需输入。
+
 ## E.4 101 keV 时逐同位素阈值
 
 对四组 benchmark，101 keV 处的 \(v_{\min,A}\) 如下。Green 与 Blue 的 \(m_s\) 相同，因此其运动学阈值相同；\(\Delta m\) 会改变传播子和 \(I_6\)，但不改变这个由 \(m_s,m_{\chi_1},m_A,E_R\) 决定的三体阈值。
@@ -268,3 +292,22 @@ Green benchmark 在其他三个选定反冲能量的结果为：
 - research/afh_default_density_natural_xenon_halo/results/kernel_order_crosschecks.csv
 - research/afh_default_density_natural_xenon_halo/results/speed_quadrature_crosschecks.csv
 
+## E.7 当前 halo 结果的 q-response 状态
+
+当前归档的天然氙 selected-point 速率没有被本轮 q 审计重标度或覆盖。其输入样本仍采用
+
+\[
+q_{\rm response}^{\rm legacy}
+=\sqrt{2m_AE_R+E_R^2}.
+\]
+
+天然氙计算程序现在将两种 q 明确分开，并默认要求论文定义的 \(q_{\rm resp}^{\rm NR}\) 样本。若要复现旧结果，必须显式传入
+
+~~~bash
+python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \\
+  --response-q-convention legacy_exact
+~~~
+
+不带该选项时，程序选择 manuscript_nr；由于现有 28 个样本仍是 exact-q，程序会在样本一致性检查处报错。这是有意的保护，避免旧 \(R_A\) 数值被错误地标记成 NR-q 响应。
+
+要得到论文约定下的新 halo rate，必须先重新生成七种可用同位素在 \(q_{\rm resp}^{\rm NR}\) 处的 AFH 响应样本，再重新执行逐同位素 \(I_6\) 和速度积分。精确 \(q_{\rm kin}\) 仍然用于 \(v_{\min}\) 和三体运动学。
