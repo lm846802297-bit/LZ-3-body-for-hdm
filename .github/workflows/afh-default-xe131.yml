@@ -61,7 +61,7 @@ jobs:
         run: |
           python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
             --base-csv research/afh_default_density_xe131/input/figure2_recalc_mV10_g2_1_v800_Xe131_full_5keV.csv \
-            --afh-response-csv research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv \
+            --afh-response-csv "$RUNNER_TEMP/afh_default_xe131/afh_default_xe131_WM00.csv" \
             --outdir "$RUNNER_TEMP/afh_four_benchmarks" \
             --plots
 
