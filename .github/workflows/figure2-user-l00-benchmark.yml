@@ -7,6 +7,8 @@ on:
       - research/figure2-l00-benchmark-450kev
     paths:
       - .github/workflows/figure2-user-l00-benchmark.yml
+      - research/figure2_full_reproduction/README.md
+      - research/figure2_full_reproduction/results/USER_L00_BENCHMARK_G1_G2_GVN_1_DELTA_M_450KEV.md
       - research/figure2_full_reproduction/eq6_kernel.py
       - research/figure2_full_reproduction/run_user_l00_benchmark.py
       - research/figure2_full_reproduction/tests/test_user_l00_benchmark.py
