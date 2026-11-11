@@ -122,7 +122,7 @@ cutoff is exceptionally sensitive to the instantaneous lab speed. A fixed
 \(v_E=232\) value cannot be interpreted as an annual average near this
 kinematic endpoint.
 
-## 3. Interpretation and prescription
+## 4. Interpretation and prescription
 
 - Retain the \(m_A=A u\) result as the historical baseline so existing response
   and fixed-speed outputs remain reproducible.
@@ -136,7 +136,7 @@ kinematic endpoint.
   Their thresholds are included in this audit, but their response/event-rate
   contributions are not inferred.
 
-## 4. Reproducibility
+## 5. Reproducibility
 
 - isotope_mass_schemes.py: explicit \(A u\) and NIST nuclear-mass functions.
 - run_isotope_mass_scheme_audit.py: response and \(v_{\min}\) comparison.
