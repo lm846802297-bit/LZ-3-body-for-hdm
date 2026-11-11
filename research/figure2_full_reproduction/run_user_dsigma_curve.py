@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""Fixed-speed Xe-131 d sigma/dER curve for the supplied 450 keV benchmark."""
+"""Fixed-speed Xe-131 d sigma/dER curve for the supplied 450 keV benchmark.
+
+Numerical run uses the AFH GCN/JJ55 Xe-131 response tables and the Eq. (6) kernel.
+"""
 from __future__ import annotations
 import argparse, csv, math, sys
 from pathlib import Path
