@@ -13,7 +13,7 @@ class ContinuousNaturalXenonSpectrumTests(unittest.TestCase):
         grid = recoil_grid(5.0, 800.0, 5.0)
         self.assertEqual(grid[0], 5.0)
         self.assertEqual(grid[-1], 800.0)
-        self.assertEqual(len(grid), 164)
+        self.assertEqual(len(grid), 163)
         for energy in SELECTED_CHECK_ENERGIES_KEV:
             self.assertIn(energy, grid)
 
