@@ -129,6 +129,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          git fetch origin "$GITHUB_REF_NAME"
+          git reset --hard "origin/$GITHUB_REF_NAME"
           cp "$RUNNER_TEMP/afh_default_xe131/afh_default_xe131_WM00.csv" research/afh_default_density_xe131/output/
           cp "$RUNNER_TEMP/afh_default_xe131/afh_default_xe131_WM00.png" research/afh_default_density_xe131/output/
           cp "$RUNNER_TEMP/afh_default_xe131/figure2_dip_check.csv" research/afh_default_density_xe131/output/
