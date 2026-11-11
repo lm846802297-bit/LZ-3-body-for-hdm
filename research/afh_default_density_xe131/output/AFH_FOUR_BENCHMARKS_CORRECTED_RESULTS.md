@@ -8,7 +8,7 @@ The AFH v6.0 package response has `(4 pi/(2 J_A+1))*W_M00_AFH(0)=A^2/4`. Equal p
 
 ## Numerical prescription
 
-`q_response=sqrt(2*m_A*E_R)` is used for the nuclear response. The exact recoil momentum in the three-body kinematics remains as in the archived I6 calculation. AFH is interpolated with PCHIP, without extrapolation.
+`q_response=sqrt(2*m_A*E_R+E_R^2)` is used for the AFH response, consistent with its spatial momentum-transfer definition and the exact nuclear mass shell. The NR approximation `sqrt(2*m_A*E_R)` is retained only for sensitivity comparisons. AFH is interpolated with PCHIP, without extrapolation.
 
 `dσ_AFH/dE_R = (dσ_GCN/dE_R) * R_A_AFH/R_A_GCN`; the event rate is scaled by the same response ratio. I6 is common to AFH, GCN and JJ55.
 
@@ -25,12 +25,29 @@ The AFH v6.0 package response has `(4 pi/(2 J_A+1))*W_M00_AFH(0)=A^2/4`. Equal p
 
 |   ER_keV |    R_A_AFH |     R_A_GCN |     R_A_JJ55 |   AFH/GCN |   AFH/JJ55 |
 |---------:|-----------:|------------:|-------------:|----------:|-----------:|
-|      200 | 9.56772    | 10.0454     | 10.7015      |  0.952451 |   0.894058 |
-|      265 | 0.0187407  |  0.0180934  |  0.0273235   |  1.03577  |   0.685882 |
-|      270 | 0.0018744  |  0.00178396 |  6.71541e-05 |  1.05069  |  27.9119   |
-|      540 | 0.00374433 |  0.00509011 |  0.00691365  |  0.735609 |   0.541585 |
-|      545 | 0.00271226 |  0.00248349 |  0.00292685  |  1.09212  |   0.926683 |
-|      800 | 0.0501654  |  0.057073   |  0.0653896   |  0.878968 |   0.767177 |
+|      200 | 9.567669856 | 10.04536595 | 10.70146183 | 0.9524461232 | 0.8940526079 |
+|      265 | 0.01873812446 | 0.01809342929 | 0.02732346798 | 1.035631453 | 0.6857886586 |
+|      270 | 0.001874929102 | 0.001783964806 | 6.715406078e-05 | 1.050989961 | 27.91981722 |
+|      540 | 0.003743904127 | 0.005090110737 | 0.006913653172 | 0.7355250839 | 0.5415232777 |
+|      545 | 0.002712192959 | 0.002483485866 | 0.002926853516 | 1.09209116 | 0.9266582504 |
+|      800 | 0.0501638824 | 0.05707299958 | 0.06538958073 | 0.8789424556 | 0.7671540609 |
+
+## NR-approximation sensitivity
+
+For the fixed benchmark mass \(M_A=131u\), replacing exact spatial q by
+\(q_{\rm NR}=\sqrt{2M_AE_R}\) changes the AFH response at the selected recoil
+points by:
+
+| \(E_R\) [keV] | \(q_{\rm exact}-q_{\rm NR}\) [keV] | \(R_A(q_{\rm NR})/R_A(q_{\rm exact})-1\) [ppm] |
+|---:|---:|---:|
+| 101 | 0.032487 | +21.192 |
+| 200 | 0.090526 | +5.478 |
+| 267 | 0.139636 | +225.018 |
+| 542 | 0.403857 | +89.615 |
+
+The exact-spatial-q results above are the adopted values. These differences
+are the size of the NR response approximation at these selected points; they
+are not empirical rescalings.
 
 ## Audit of the previous archive
 
