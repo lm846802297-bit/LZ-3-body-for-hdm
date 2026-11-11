@@ -207,9 +207,15 @@ Both diagrams and their interference are retained.
 
 At leading order in the non-relativistic nuclear current, vector
 exchange probes the coherent charge response.
-For equal proton and neutron couplings, $g_p=g_n=g_{VN}$, we use the response function
-$\mathcal R_A(E_R)=4\pi W_M^{00}(y)/(2J_A+1)$,
-where $y=b_A^2m_AE_R/2$ and $\mathcal R_A(0)=A^2$
+For equal physical proton and neutron couplings, $g_p=g_n=g_{VN}$, the coherent response is
+\begin{equation}
+\mathcal R_A(E_R)=\frac{16\pi}{2J_A+1}W_{M,\mathrm{AFH\,v6}}^{00}(y),
+\qquad
+y=\frac{b_A^2m_AE_R}{2},
+\qquad
+\mathcal R_A(0)=A^2.
+\end{equation}
+Here $W_{M,\mathrm{AFH\,v6}}^{00}$ denotes the raw isoscalar response returned by the AFH DMFormFactor v6.0 implementation. Its isoscalar coefficient convention is $c_1^0=c_1^p+c_1^n$, so equal physical couplings correspond to $c_1^0=2g_{VN}$. Squaring this coefficient supplies the factor of four relative to $4\pi W_{M,\mathrm{AFH\,v6}}^{00}/(2J_A+1)$, whose zero-momentum value is $A^2/4$. The response above therefore multiplies the per-nucleon coupling $g_{VN}^2$ without an additional normalization factor
 \cite{Anand:2013yka}.
 The differential cross section is
 \begin{equation}
