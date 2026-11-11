@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ame2020-codata2022-xe131-partial-halo-fold
-          path: \${{ runner.temp }}/ame2020_xe131_partial/
+          path: ${{ runner.temp }}/ame2020_xe131_partial/
           if-no-files-found: error
           retention-days: 90
 
