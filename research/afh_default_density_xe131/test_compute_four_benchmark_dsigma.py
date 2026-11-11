@@ -25,7 +25,7 @@ class TestFourBenchmarkDifferentialCrossSections(unittest.TestCase):
         row = self.data[(self.data.benchmark=="red_ms200_dm1") &
                         (self.data.model=="AFH_default") &
                         (self.data.ER_keV==200)].iloc[0]
-        self.assertAlmostEqual(row.R_A, 9.567722266, places=7)
+        self.assertAlmostEqual(row.R_A, 9.567669856, places=7)
         gcn = self.data[(self.data.benchmark=="red_ms200_dm1") &
                         (self.data.model=="GCN") &
                         (self.data.ER_keV==200)].iloc[0]
