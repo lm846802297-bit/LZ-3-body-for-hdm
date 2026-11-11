@@ -91,6 +91,20 @@ Both speed PDFs integrate to unity numerically.
 - Five representative speed checks: 32 versus 64 nodes; maximum relative difference \(3.31\times10^{-6}\).
 - Preliminary \(4\times4\times2\) results differ from final \(8\times8\times4\) rates by 0.12–0.15% at open points and are not used as final values.
 
+## Reproduction of the archived legacy exact-q rates
+
+The q-separation refactor was checked by rerunning the complete selected-point halo fold with the explicit legacy option. The default manuscript-NR mode was separately verified to reject the archived exact-q response samples.
+
+- Workflow run: [43040078335](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43040078335), PASS.
+- 98 isotope-contribution rows and 14 total-rate rows compared.
+- Comparison tolerance: \(5\times10^{-8}\) relative.
+- Maximum relative difference in any isotope contribution: \(4.32\times10^{-10}\).
+- Maximum relative difference in the 14 total rates: \(2.67\times10^{-12}\).
+
+Machine-readable comparison summary: results/legacy_exact_reproduction_comparison.json. The full recomputed output and metadata are retained in the CI artifact named afh-natural-xenon-legacy-exact-reproduction.
+
+This verifies that the new explicit q-convention handling preserves the old exact-q archive when legacy_exact is selected. It does not validate manuscript-NR samples or provide corrected NR-q rates.
+
 ## Results at \(E_R=101\) keV
 
 Rates in events/(kg day keV), before detector response:
