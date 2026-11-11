@@ -15,4 +15,6 @@ Run from the repository root:
 
     python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py --response-q-convention legacy_exact
 
-The script imports research/figure2_full_reproduction/eq6_kernel.py and reads the compact response samples and NIST isotope weights in this directory. The hash of the full AFH response input used to extract the samples is recorded in results/afh_response_input_sha256.txt.
+The script imports research/figure2_full_reproduction/eq6_kernel.py and reads the compact response samples and NIST isotope weights in this directory. The default response-q mode is manuscript_nr and intentionally rejects the archived exact-q samples until their R_A values are regenerated. Use the explicit legacy_exact option only to reproduce the historical archive. The hash of the full AFH response input used to extract the samples is recorded in results/afh_response_input_sha256.txt.
+
+The q-convention audit is archived in results/natural_xenon_q_convention_audit.csv, results/xe131_afh_response_shift_NR_vs_exact.csv and results/q_convention_audit_summary.json.
