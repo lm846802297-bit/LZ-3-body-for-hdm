@@ -19,6 +19,7 @@
 
 ## 贡献与研究规范
 
+- 仓库级强制任务规范：AGENTS.md
 - 贡献入口：CONTRIBUTING.md
 - 研究分支、目录、复现和合并规范：research/WORKFLOW.md
 - 新研究目录模板：research/_template/README.md
