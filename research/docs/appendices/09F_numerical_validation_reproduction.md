@@ -79,8 +79,10 @@ AFH Xe-131 回归测试：
 ~~~bash
 python -m unittest discover \
   -s research/afh_default_density_xe131 \
-  -p 'test_afh_default_xe131.py' -v
+  -p 'test_*.py' -v
 ~~~
+
+若只运行 AFH 响应本身的六项测试，将匹配模式改为 test_afh_default_xe131.py。
 
 AFH 原生 Mathematica 运行需要官方 dmformfactor-V6.m 和可用的 Wolfram kernel。设置环境变量 DMFormFactorPath 指向该源文件，再运行：
 
@@ -108,7 +110,16 @@ python -m unittest discover \
   -s research/figure2_full_reproduction/tests -v
 ~~~
 
-四 benchmark 截面对照脚本需要归档的 GCN/JJ55 基础 CSV 和 AFH response CSV。调用时必须保存输入文件、输出 CSV 和 metadata，不能只保留最终图像。
+四 benchmark 截面对照脚本需要归档的 GCN/JJ55 基础 CSV 和 AFH response CSV。当前归档输入的调用形式为：
+
+~~~bash
+python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
+  --base-csv research/afh_default_density_xe131/input/figure2_recalc_mV10_g2_1_v800_Xe131_full_5keV.csv \
+  --afh-response-csv research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv \
+  --outdir research/afh_default_density_xe131/output
+~~~
+
+调用时必须保存输入文件、输出 CSV 和 metadata，不能只保留最终图像。
 
 ## F.4 数值验收矩阵
 
