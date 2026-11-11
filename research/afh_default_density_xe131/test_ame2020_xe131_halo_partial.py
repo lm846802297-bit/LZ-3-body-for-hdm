@@ -61,6 +61,7 @@ class Ame2020Xe131PartialRateTests(unittest.TestCase):
             benchmark="black_ms360_dm1",
             er_keV=101.0,
             halo_model="shm_cutoff",
+            mass_scheme="ame2020_nuclear",
             nv=8,
             nw=8,
             nz=8,
