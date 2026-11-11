@@ -89,16 +89,16 @@ python -m unittest discover \
 AFH mpmath 全网格独立验证：
 
 ~~~bash
-python research/afh_default_density_xe131/verify_afh_mpmath_full_grid.py \\
-  --response-csv research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv \\
+python research/afh_default_density_xe131/verify_afh_mpmath_full_grid.py \
+  --response-csv research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv \
   --outdir research/afh_default_density_xe131/output/mpmath_full_grid
 ~~~
 
 q 约定审计（需要一份新生成的 AFH Xe-131 响应 CSV）：
 
 ~~~bash
-python research/afh_default_density_xe131/audit_response_momentum_conventions.py \\
-  --xe131-response-csv research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv \\
+python research/afh_default_density_xe131/audit_response_momentum_conventions.py \
+  --xe131-response-csv research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv \
   --outdir research/afh_default_density_xe131/output/q_convention_audit
 ~~~
 
@@ -117,12 +117,12 @@ wolframscript -file research/afh_default_density_xe131/verify_afh_xe131_native.w
 天然氙 selected-point halo fold：
 
 ~~~bash
-python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \\
+python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \
   --response-q-convention legacy_exact
 python research/afh_default_density_natural_xenon_halo/validate_archived_results.py
+~~~
 
 注意：legacy_exact 只用于复现当前已归档的 28 个 exact-q 响应样本。默认 manuscript_nr 会拒绝这些旧样本，直到七同位素 AFH 响应在 q_response=sqrt(2*m_A*E_R) 处重新生成。
-~~~
 
 Eq. (6) kernel 测试：
 
@@ -150,7 +150,7 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 | AFH 默认 \(b_A\) | 已完成 | 公式、单位转换、Xe-131 数值回归测试 | 不需要拟合；不得用谷值调参 |
 | AFH 零动量归一化 | 已完成（含有限精度修正） | 原始 \(A^2/4\)、物理响应 \(A^2\)、偏差 \(8.2523\times10^{-5}\) | 统一所有计算文件的质量和 \(q_{\rm resp}\) 约定 |
 | AFH 谷值 | 已完成 | 离散候选点、直接响应局部极小化、minima.csv | 不需要调整 \(b_A\) |
-| mpmath 独立有限和 | <badge>已完成全网格</badge> | 60 位精度、2401 个 q 节点；最大振幅绝对差 \(3.98\times10^{-14}\)，最大响应绝对差除以 \(A^2\) 为 \(1.22\times10^{-15}\) | 原生 Mathematica 逐点对照仍待完成 |
+| mpmath 独立有限和 | 已完成全网格 | 60 位精度、2401 个 q 节点；最大振幅绝对差 \(3.98\times10^{-14}\)，最大响应绝对差除以 \(A^2\) 为 \(1.22\times10^{-15}\) | 原生 Mathematica 逐点对照仍待完成 |
 | AFH 原生 Mathematica | 待完成 | WLS runner 和比较脚本已归档；Python/mPMath 全网格交叉验证已通过 | 实际运行 Wolfram kernel 并保存逐点差异 |
 | GCN/JJ55 对照 | 已完成归档 | 三种响应、四 benchmark、1920 行 long table | 对照共享既有 \(I_6\)，不是 640 次独立重算 |
 | 三体运动学/Dirac trace | 已完成代表性检查 | 壳条件、四动量闭合、显式自旋求和、干涉分解 | 扩展到更宽的参数和质量网格 |
