@@ -1,0 +1,85 @@
+name: AME2020 CODATA2022 Xe-131 mass and response-q comparison
+
+on:
+  push:
+    branches:
+      - research/ame2020-mass-q-convention-integration
+    paths:
+      - .github/workflows/ame2020-xe131-q-convention-comparison.yml
+      - research/figure2_full_reproduction/isotope_mass_schemes.py
+      - research/figure2_full_reproduction/tests/test_isotope_mass_schemes.py
+      - research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py
+      - research/afh_default_density_xe131/run_ame2020_xe131_halo_partial.py
+      - research/afh_default_density_xe131/test_ame2020_xe131_halo_partial.py
+      - research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv
+
+concurrency:
+  group: ame2020-xe131-q-convention-\${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  ame2020-xe131-q-convention-comparison:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out integrated research branch
+        uses: actions/checkout@v4
+        with:
+          ref: research/ame2020-mass-q-convention-integration
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install numerical dependencies
+        run: python -m pip install --upgrade numpy scipy
+
+      - name: Test xenon nuclear-mass schemes
+        run: |
+          python -m unittest \
+            research/figure2_full_reproduction/tests/test_isotope_mass_schemes.py -v
+
+      - name: Test AFH Xe-131 partial-rate and q-convention implementation
+        run: |
+          python -m unittest \
+            research/afh_default_density_xe131/test_ame2020_xe131_halo_partial.py -v
+
+      - name: Compute side-by-side mass and response-q comparisons
+        run: |
+          python research/afh_default_density_xe131/run_ame2020_xe131_halo_partial.py \
+            --response-csv research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv \
+            --out-dir "$RUNNER_TEMP/ame2020_xe131_q_convention" \
+            --mass-schemes A_u nist_nuclear ame2020_nuclear \
+            --response-q-conventions manuscript_nr legacy_exact \
+            --nv-orders 16 32 \
+            --nw 8 --nz 8 --nphi 4 \
+            --max-relative-speed-convergence 5e-3 \
+            --max-relative-kernel-convergence 5e-3
+
+      - name: Upload numerical artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ame2020-xe131-mass-response-q-comparison
+          path: \${{ runner.temp }}/ame2020_xe131_q_convention/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Archive validated numerical outputs
+        run: |
+          DEST=research/afh_default_density_xe131/output/ame2020_q_convention_xe131_partial
+          mkdir -p "$DEST"
+          cp "$RUNNER_TEMP"/ame2020_xe131_q_convention/* "$DEST"/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$DEST"
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive AME2020 Xe-131 mass and response-q comparisons"
+            git fetch origin research/ame2020-mass-q-convention-integration
+            git rebase origin/research/ame2020-mass-q-convention-integration
+            git push origin HEAD:research/ame2020-mass-q-convention-integration
+          fi
