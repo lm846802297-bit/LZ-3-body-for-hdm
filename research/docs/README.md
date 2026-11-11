@@ -21,4 +21,4 @@ The main report contains the complete A–G appendices. The seven files below ar
 - `appendices/09D_natural_xenon_isotope_target.md`: natural xenon isotope abundances and target normalization.
 - `appendices/09E_halo_velocity_vmin_folding.md`: halo velocity distribution, three-body minimum speed, and rate folding.
 - `appendices/09F_numerical_validation_reproduction.md`: code entry points, numerical validation, and reproduction instructions.
-- `appendices/09G_recoil_momentum_convention_audit.md`: nuclear-response versus exact three-body recoil momentum conventions and the legacy halo-sample audit.
+- `appendices/09G_recoil_momentum_convention_audit.md`: AFH spatial momentum definition, exact nuclear mass-shell mapping, and the NR recoil approximation sensitivity.
