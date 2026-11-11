@@ -230,7 +230,11 @@ def main() -> None:
     parser.add_argument("--response-dir", type=Path,
                         default=HERE / "results" / "anand_wm_response")
     parser.add_argument("--out-dir", type=Path, required=True)
-    parser.add_argument("--mass-scheme", choices=("A_u", "nist_nuclear"), default="A_u")
+    parser.add_argument(
+        "--mass-scheme",
+        choices=("A_u", "nist_nuclear", "ame2020_nuclear"),
+        default="A_u",
+    )
     parser.add_argument("--mchi-GeV", type=float, default=1000.0)
     parser.add_argument("--ms-MeV", type=float, default=0.3)
     parser.add_argument("--delta-m-MeV", type=float, default=1.0)
@@ -381,6 +385,8 @@ def main() -> None:
         "isotope_kinematic_mass": (
             "A * 0.93149410242 GeV" if args.mass_scheme == "A_u" else
             "(NIST relative atomic mass - 54 electron masses)*u; electronic binding energy neglected"
+            if args.mass_scheme == "nist_nuclear" else
+            "(NIST relative atomic mass - 54 electron masses)*u + AME2020 approximate B_e(54); CODATA 2022 constants"
         ),
         "mchi_GeV": args.mchi_GeV,
         "ms_MeV": args.ms_MeV,
