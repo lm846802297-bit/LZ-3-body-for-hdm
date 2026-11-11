@@ -40,11 +40,11 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r research/afh_default_density_xe131/requirements.txt
 
-      - name: Run AFH response regression tests
+      - name: Run AFH response and four-benchmark regression tests
         run: |
           python -m unittest discover \
             -s research/afh_default_density_xe131 \
-            -p "test_afh_default_xe131.py" -v
+            -p "test_*.py" -v
 
       - name: Recompute AFH default response
         run: |
@@ -57,10 +57,26 @@ jobs:
             --csv "$RUNNER_TEMP/afh_default_xe131/afh_default_xe131_WM00.csv" \
             --output "$RUNNER_TEMP/afh_default_xe131/afh_default_xe131_WM00.png"
 
+      - name: Recompute AFH four-benchmark cross sections
+        run: |
+          python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
+            --base-csv research/afh_default_density_xe131/input/figure2_recalc_mV10_g2_1_v800_Xe131_full_5keV.csv \
+            --afh-response-csv research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv \
+            --outdir "$RUNNER_TEMP/afh_four_benchmarks" \
+            --plots
+
       - name: Upload numerical reproduction artifact
         uses: actions/upload-artifact@v4
         with:
           name: afh-default-xe131-response
           path: ${{ runner.temp }}/afh_default_xe131/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Upload four-benchmark response-substitution artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: afh-xe131-four-benchmarks
+          path: ${{ runner.temp }}/afh_four_benchmarks/
           if-no-files-found: error
           retention-days: 90
