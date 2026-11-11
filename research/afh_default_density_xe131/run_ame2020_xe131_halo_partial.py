@@ -178,8 +178,12 @@ def compute_partial_rate(
     ER = er_keV * 1.0e-6
 
     # Keep the manuscript's AFH response momentum and exact kinematic q distinct.
-    q_response = math.sqrt(2.0 * mA * ER)
+    q_response_NR = math.sqrt(2.0 * mA * ER)
     q_kin_exact = math.sqrt(2.0 * mA * ER + ER * ER)
+    # The AFH response is a function of the physical three-momentum transfer.
+    # Use the exact elastic target mass shell, consistently with Eq. (6) limits
+    # and the natural-xenon halo-fold convention; retain q_NR as a diagnostic.
+    q_response = q_kin_exact
     if q_response < 0.0 or q_response > 0.6:
         raise ValueError(f"AFH q={q_response} GeV is outside the archived grid")
     R_A = float(response_interp(q_response))
@@ -236,7 +240,8 @@ def compute_partial_rate(
         "A": A,
         "natural_atom_fraction_Xe131": NATURAL_XE_ABUNDANCE_XE131,
         "mA_GeV": mA,
-        "q_response_NR_GeV": q_response,
+        "q_response_exact_GeV": q_response,
+        "q_response_NR_diagnostic_GeV": q_response_NR,
         "q_kinematics_exact_GeV": q_kin_exact,
         "R_A_AFH_equal_pn": R_A,
         "vmin_km_s": vmin,
@@ -412,7 +417,8 @@ def main() -> None:
             "q_grid_GeV": [float(q_grid[0]), float(q_grid[-1]), float(q_grid[1]-q_grid[0])],
             "response_normalization": "R_equal_pn(q)=A^2*R_AFH_raw(q)/R_AFH_raw(0); R_equal_pn(0)=A^2",
             "oscillator_length": "AFH default b_A prescription; unchanged",
-            "response_momentum": "q_response=sqrt(2*mA*ER)",
+            "response_momentum": "q_response=sqrt(2*mA*ER+ER^2), exact target mass shell",
+            "legacy_NR_response_momentum": "sqrt(2*mA*ER), retained only as an output diagnostic",
             "extrapolation": False,
         },
         "dark_sector": {
