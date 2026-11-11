@@ -40,7 +40,8 @@ CODATA-2022 constants used here are
 
 \[
 u c^2=931.49410372\ {\rm MeV},\qquad
-m_e c^2=0.51099895069\ {\rm MeV}.
+m_e c^2=0.51099895069\ {\rm MeV},\qquad
+m_e=5.485799090441\times10^{-4}u.
 \]
 
 The implementation is in
