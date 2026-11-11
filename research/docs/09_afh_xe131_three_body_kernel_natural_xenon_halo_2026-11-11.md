@@ -495,21 +495,22 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 
 - 从官方 AFH v6.0 源文件解析 Xe-131 的 67 项密度矩阵，并与归档 CSV 逐项比较；
 - AFH source-to-Python 翻译与源文件数据一致；
-- 独立 60 位精度 mpmath 有限和计算，在代表性振幅点与 Python 结果相符，精度优于 \(2\times10^{-11}\)；
+- **独立 60 位精度 mpmath 全网格对照已通过：** 对全部 2401 个 q 节点逐点比较，最大振幅绝对差为 \(3.98\times10^{-14}\)，最大相对振幅差（参考振幅绝对值大于 \(10^{-10}\)）为 \(8.83\times10^{-13}\)，最大响应绝对差除以 \(A^2\) 为 \(1.22\times10^{-15}\)；
 - Xe-131 AFH 脚本的 Python regression tests 通过；
 - 四组 benchmark 的 AFH/GCN/JJ55 响应替换表完成逐点重构检查；
-- 天然氙 Eq. (6) kernel 与速度积分完成网格收敛 spot checks；
-- 天然氙归档完整性验证 workflow 通过。
+- 天然氙 Eq. (6) kernel 与速度积分完成 selected-point 网格收敛检查；
+- 天然氙归档完整性验证 workflow 通过；
+- 核响应 q 与精确三体运动学 q 已完成独立审计，并增加代码防误用检查，详见附录 G。
 
 ### 8.2 尚未完成或不能过度声称的事项
 
-1. **AFH 原生 Mathematica 验证仍待执行。** 原生 runner 和比较程序已归档，但当前执行环境没有 Wolfram kernel。现阶段结果应称为“基于 AFH v6.0 源码翻译的 Python 计算，并通过独立高精度数值检查”，不能称为已经完成 Mathematica 原生复算。
-2. **Xe-124/Xe-126 尚未纳入。** 缺少当前 AFH v6.0 内置 density matrix；七种可用同位素的丰度没有重归一化。
-3. **天然氙结果是 selected-point rates。** 当前不是连续完整反冲谱。
-4. **尚未加入 LZ detector response。** 没有 detector efficiency、能量分辨率、曝光、分析 cuts、背景模型或 likelihood。因此这些理论速率不能直接当作 LZ 预期观测事件数，也不能称为完整的 LZ 数据重铸。
-5. **极点宽度是条件性的。** 只包括给定假设下的 \(\chi_2\to\chi_1s\) 标量通道，不等于完整模型的矢量加标量自能。
-6. **halo 模型依赖尚未做系统扫描。** untruncated MB 只用于高速度尾部敏感性诊断，不作为默认 halo 结果。
-7. **天然氙响应 q 约定尚未统一到论文定义。** 28 个旧样本使用精确的 (q_{\rm exact}=\sqrt{2m_AE_R+E_R^2})，而论文 (y=b_A^2m_AE_R/2) 对应 (q_{\rm resp}^{\rm NR}=\sqrt{2m_AE_R})。程序已增加显式约定和防误用检查；旧速率没有被改标签或重标度。详细数值见附录 G。
+1. **AFH 原生 Mathematica 验证仍待执行。** 原生 runner 和比较程序已归档，但当前执行环境没有 Wolfram kernel。mpmath 全网格验证是独立高精度数值交叉检查，不能替代官方 Mathematica 程序的原生执行。
+2. **天然氙响应 q 尚未完全统一。** 28 个旧样本采用精确 \(q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}\)，而论文当前 \(y=b_A^2m_AE_R/2\) 对应 \(q_{\rm resp}^{\rm NR}=\sqrt{2m_AE_R}\)。程序已默认要求 manuscript-NR 样本；旧速率保留为 legacy exact-q 结果，没有被改标签或重标度。重新生成七同位素 NR-q 响应仍待取得完整 AFH 输入。
+3. **Xe-124/Xe-126 尚未纳入。** 缺少当前 AFH v6.0 内置 density matrix；七种可用同位素的丰度没有重归一化。
+4. **天然氙结果是 selected-point rates。** 当前不是连续完整反冲谱。
+5. **尚未加入 LZ detector response。** 没有 detector efficiency、能量分辨率、曝光、分析 cuts、背景模型或 likelihood。因此这些理论速率不能直接当作 LZ 预期观测事件数，也不能称为完整的 LZ 数据重铸。
+6. **极点宽度是条件性的。** 只包括给定假设下的 \(\chi_2\to\chi_1s\) 标量通道，不等于完整模型的矢量加标量自能。
+7. **halo 模型依赖尚未做系统扫描。** untruncated MB 只用于高速度尾部敏感性诊断，不作为默认 halo 结果。
 
 ### 8.3 数据修正记录
 
@@ -535,11 +536,10 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 建议后续按以下顺序推进：
 
 1. **完成 AFH 原生 Mathematica 对照。** 在有 Wolfram kernel 的环境中执行官方 v6.0 程序，对照 Xe-131 响应曲线和选定点，形成真正独立于 Python 源码翻译的验证。
-2. **锁定 AFH 归一化实现。** 对照原始 \(W_M^{00}\)、因子 4 映射和零动量归一化，确保论文公式、Python 程序、Mathematica 程序和归档 CSV 使用同一约定。
+2. **重新生成七同位素 manuscript-NR 响应。** 取得完整 AFH 七同位素响应表或官方源包，在 \(q_{\rm resp}^{\rm NR}=\sqrt{2m_AE_R}\) 处重新生成 28 个 selected-point 样本，再重算 halo fold；旧 exact-q 结果保留为 legacy 对照。
 3. **补全或明确缺失同位素处理。** 在没有可靠 AFH Xe-124/Xe-126 响应之前，保留当前覆盖率和不重归一化的明确限制，不用平均核响应代替。
 4. **扩展天然氙连续反冲谱。** 当前 selected points 用于验证阈值和 halo 端点；连续谱需要单独做网格和收敛检查。
 5. **最后进行 LZ detector-level 映射。** 在取得并核实效率、分辨率、曝光、cuts 和背景输入后，再计算预期事件数或构建 likelihood；当前 selected-point rate 不应提前解释成 LZ 排除或信号拟合。
-
 ---
 
 ## 10. 代码、数据和文献入口
