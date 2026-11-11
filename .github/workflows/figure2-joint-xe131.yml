@@ -7,6 +7,7 @@ on:
     paths:
       - .github/workflows/figure2-joint-xe131.yml
       - research/figure2_full_reproduction/joint_xe131.py
+      - research/figure2_full_reproduction/eq6_kernel.py
       - research/figure2_full_reproduction/run_joint_xe131.py
       - research/figure2_full_reproduction/tests/test_joint_xe131.py
       - research/figure2_full_reproduction/results/anand_wm_response/xe131_GCN_WM.csv
