@@ -588,6 +588,63 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 
 ---
 
+## 10. LZ 2026 extended nuclear-recoil search: detector-level interface
+
+The relevant experimental target is the LUX-ZEPLIN (LZ) dual-phase liquid-xenon TPC. Its 2026 extended nuclear-recoil analysis uses a \(2.84\ {\rm tonne\,year}\) exposure, corresponding to 220 live days and a \(4.71\pm0.08\) tonne fiducial mass. The active TPC contains 7 tonnes of liquid xenon.
+
+The WIMP-search region of interest is defined in reconstructed observables, not directly in true recoil energy:
+
+\[
+3\le S1_c\le600\ {\rm phd},\qquad
+S2>645\ {\rm phd},\qquad
+2.75\le\log_{10}S2_c\le4.15.
+\]
+
+The final nuclear-recoil signal efficiency is energy dependent. It exceeds 50% between approximately \(5.4\) and \(269.9\) keV and averages 96% over \(14\)–\(250\) keV. The latter is an average, not a constant efficiency to apply over the entire spectrum. The analysis uses tuned NEST v2.4.5 response modeling and signal/background probability-density functions in \(\{S1_c,\log_{10}S2_c\}\) space.
+
+### 10.1 What can be compared immediately
+
+The continuous GCN/JJ55 spectra and the AFH selected-point rates are **true nuclear-recoil rates before detector response**. For a first rate-level comparison, the expected accepted signal count is
+
+\[
+N_{\rm sig}^{\rm ROI}
+=
+\mathcal E
+\int_{5.4\,{\rm keV}}^{269.9\,{\rm keV}}
+dE_R\,
+\epsilon_{\rm LZ}(E_R)
+\frac{dR}{dE_R},
+\]
+
+where
+
+\[
+\mathcal E=2.84\ {\rm tonne\,year}
+=1.03731\times10^6\ {\rm kg\,day}.
+\]
+
+This is an efficiency-weighted event-yield estimate. It is not, by itself, a 90% confidence-level exclusion or a full LZ likelihood recast.
+
+### 10.2 What is required for a genuine LZ recast
+
+The final LZ selection is applied in the two-dimensional \(S1_c\)–\(\log_{10}S2_c\) plane. A full recast therefore requires:
+
+1. the energy-dependent final efficiency and its calibration uncertainty;
+2. the tuned NEST v2.4.5 signal response, including the S1/S2 distributions and their correlations;
+3. the signal PDF generated from this model's own \(dR/dE_R\), rather than borrowing an LZ PDF for a different interaction;
+4. the science, prompt-veto and delayed-veto samples and their correlated background constraints;
+5. the published profile-likelihood construction and nuisance-parameter treatment.
+
+The LZ 2026 analysis reports one event compatible with a \(248\pm23\ {\rm(stat)}\pm23\ {\rm(sys)}\) keV nuclear recoil and a 2.6\(\sigma\) global tension with the background-only hypothesis after the look-elsewhere correction. This event is not a discovery and must not be treated as a signal count to fit by itself.
+
+### 10.3 Scope boundary for the present calculation
+
+The current \(5\)–\(800\) keV theoretical recoil grid is intentionally wider than the high-efficiency LZ search window. For the 2026 LZ comparison, only the \(5.4\)–\(269.9\) keV interval enters the quoted WIMP-search ROI at greater than 50% efficiency. The \(270\)–\(800\) keV part remains a theoretical prediction and should not be counted as accepted LZ exposure.
+
+The next detector-level step is to obtain the numerical LZ efficiency curve and tuned NEST response from the official data release, then first calculate \(N_{\rm sig}^{\rm ROI}\). Only after validating that rate-level fold should the full two-dimensional likelihood recast be attempted.
+
+**Experimental reference:** LZ Collaboration, D. S. Akerib et al., *Search for dark matter particle interactions in an extended nuclear recoil energy window with the LUX-ZEPLIN (LZ) experiment*, arXiv:2609.02823v1 (2026), data release DOI: [10.17182/hepdata.182472.v1](https://doi.org/10.17182/hepdata.182472.v1).
+
 # 技术附录（完整内容）
 
 以下 A–G 附录正文与目录 research/docs/appendices/ 中的七份独立文件保持同步。主报告保留完整附录，独立文件用于单独检索和引用。
