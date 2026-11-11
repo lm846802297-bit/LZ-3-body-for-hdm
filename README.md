@@ -17,6 +17,12 @@
 
 图 2 的标量质量图例存在 MeV/keV 不一致，但原始 ZIP、仓库历史和已检索的文件库中均未找到相应绘图脚本或数值输入，因此暂不修改图例。详见 paper-source/EDITORIAL_STATUS.md。
 
+## 贡献与研究规范
+
+- 贡献入口：CONTRIBUTING.md
+- 研究分支、目录、复现和合并规范：research/WORKFLOW.md
+- 新研究目录模板：research/_template/README.md
+
 ## 仓库结构
 
 - `paper-source/`：原始论文源码、工作稿和图件。
