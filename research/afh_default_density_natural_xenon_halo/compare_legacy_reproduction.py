@@ -41,9 +41,9 @@ def main():
     reproduced_rates = read_csv(args.reproduced_dir / "natural_xenon_halo_rates.csv")
     metadata = json.loads((args.reproduced_dir / "metadata.json").read_text(encoding="utf-8"))
 
-    if metadata.get("response_q_convention") != "legacy_exact":
+    if metadata.get("response_q_convention") not in ("exact_spatial", "legacy_exact", "legacy_exact_spatial"):
         raise AssertionError(
-            "reproduction metadata does not identify the requested legacy_exact response-q convention"
+            "reproduction metadata does not identify the exact spatial AFH response-q convention"
         )
     if len(archived) != 98 or len(reproduced) != 98:
         raise AssertionError(f"expected 98 isotope rows; got archived={len(archived)}, reproduced={len(reproduced)}")
@@ -113,7 +113,7 @@ def main():
         "relative_tolerance": args.relative_tolerance,
         "maximum_relative_differences_by_field": max_relative,
         "maximum_relative_total_rate_difference": max_rate_relative,
-        "interpretation": "The updated halo-fold code reproduces the archived legacy exact-q selected-point results; this does not validate manuscript-NR response samples.",
+        "interpretation": "The updated halo-fold code reproduces the archived selected-point results using the exact spatial AFH momentum transfer. The q_NR=sqrt(2*m_A*E_R) option is a separate non-relativistic approximation.",
     }
     (args.reproduced_dir / "legacy_reproduction_comparison.json").write_text(
         json.dumps(summary, indent=2) + "\n", encoding="utf-8"
