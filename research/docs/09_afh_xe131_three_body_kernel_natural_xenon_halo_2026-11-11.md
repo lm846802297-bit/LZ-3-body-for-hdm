@@ -641,7 +641,7 @@ The LZ 2026 analysis reports one event compatible with a \(248\pm23\ {\rm(stat)}
 
 ### 10.3 Scope boundary for the present calculation
 
-The current \(5\)–\(800\) keV theoretical recoil grid is intentionally wider than the high-efficiency LZ search window. For the 2026 LZ comparison, only the \(5.4\)–\(269.9\) keV interval enters the quoted WIMP-search ROI at greater than 50% efficiency. The \(270\)–\(800\) keV part remains a theoretical prediction and should not be counted as accepted LZ exposure.
+The current \(5\)–\(800\) keV theoretical recoil grid is intentionally wider than the high-efficiency LZ search window. The continuous numerical scan uses 5 keV spacing through 270 keV, then 20 keV spacing from 280 to 800 keV; the selected comparison points 101, 200, 267 and 542 keV are inserted explicitly. For the 2026 LZ comparison, only the \(5.4\)–\(269.9\) keV interval enters the quoted WIMP-search ROI at greater than 50% efficiency. The \(270\)–\(800\) keV part remains a theoretical prediction and should not be counted as accepted LZ exposure.
 
 The next detector-level step is to obtain the numerical LZ efficiency curve and tuned NEST response from the official data release, then first calculate \(N_{\rm sig}^{\rm ROI}\). Only after validating that rate-level fold should the full two-dimensional likelihood recast be attempted. 
 
