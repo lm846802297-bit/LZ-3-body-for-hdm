@@ -29,6 +29,13 @@ The package returns `ResponseNuclear[y,1,0,0] = W_M^{00}`. In the AFH isoscalar 
 | 365.06657 | 546.08690 | 1.561940e-07 |
 | 499.37189 | 1021.79779 | 1.670632e-08 |
 
+## Recoil-momentum convention
+
+The response grid is tabulated in the AFH spatial momentum transfer q, with
+\(y=(q b_A/2)^2\). The Figure-2 recoil-energy checks use the exact mass-shell
+mapping \(q=\sqrt{2M_AE_R+E_R^2}\). The NR approximation
+\(q_{\rm NR}=\sqrt{2M_AE_R}\) is only a small-recoil comparison; see Appendix G.
+
 ## Figure 2 recoil-energy points
 
 | E_R [keV] | q [MeV] | R/A^2 |
