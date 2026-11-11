@@ -173,6 +173,7 @@ def compute_partial_rate(
     benchmark: str,
     er_keV: float,
     halo_model: str,
+    mass_scheme: str,
     nv: int,
     nw: int,
     nz: int,
@@ -189,7 +190,7 @@ def compute_partial_rate(
     untruncated_vmax: float,
 ) -> dict:
     ms, delta_m = BENCHMARKS[benchmark]
-    mA = isotope_mass_GeV(A, "ame2020_nuclear")
+    mA = isotope_mass_GeV(A, mass_scheme)
     ER = er_keV * 1.0e-6
 
     # Keep the manuscript's AFH response momentum and exact kinematic q distinct.
@@ -250,7 +251,7 @@ def compute_partial_rate(
         "benchmark": benchmark,
         "ER_keV": er_keV,
         "halo_model": halo_model,
-        "mass_scheme": "NIST atomic masses + AME2020 electron binding + CODATA2022",
+        "mass_scheme": mass_scheme,
         "A": A,
         "natural_atom_fraction_Xe131": NATURAL_XE_ABUNDANCE_XE131,
         "mA_GeV": mA,
@@ -295,6 +296,12 @@ def main() -> None:
     parser.add_argument("--ve-km-s", type=float, default=232.0)
     parser.add_argument("--vesc-km-s", type=float, default=544.0)
     parser.add_argument("--untruncated-vmax-km-s", type=float, default=1600.0)
+    parser.add_argument(
+        "--mass-schemes",
+        nargs="+",
+        choices=("A_u", "nist_nuclear", "ame2020_nuclear"),
+        default=["A_u", "nist_nuclear", "ame2020_nuclear"],
+    )
     parser.add_argument("--nv-orders", type=int, nargs="+", default=[16, 32])
     parser.add_argument("--nw", type=int, default=8)
     parser.add_argument("--nz", type=int, default=8)
@@ -336,67 +343,74 @@ def main() -> None:
 
     all_rows = []
     by_key = {}
-    for nv in sorted(set(args.nv_orders)):
-        for benchmark, er_keV in CASES:
-            for halo_model in HALO_MODELS:
-                row = compute_partial_rate(
-                    benchmark=benchmark,
-                    er_keV=er_keV,
-                    halo_model=halo_model,
-                    nv=nv,
-                    nw=args.nw,
-                    nz=args.nz,
-                    nphi=args.nphi,
-                    response_interp=response_interp,
-                    mchi=args.mchi_GeV,
-                    mV=args.mV_GeV,
-                    coupling_product_sq=args.coupling_product_sq,
-                    g2=args.g2,
-                    rho_dm=args.rhoDM_GeV_cm3,
-                    v0=args.v0_km_s,
-                    ve=args.ve_km_s,
-                    vesc=args.vesc_km_s,
-                    untruncated_vmax=args.untruncated_vmax_km_s,
-                )
-                all_rows.append(row)
-                by_key[(benchmark, er_keV, halo_model, nv)] = row
+    nv_orders = sorted(set(args.nv_orders))
+    mass_schemes = list(dict.fromkeys(args.mass_schemes))
+    for mass_scheme in mass_schemes:
+        for nv in nv_orders:
+            for benchmark, er_keV in CASES:
+                for halo_model in HALO_MODELS:
+                    row = compute_partial_rate(
+                        benchmark=benchmark,
+                        er_keV=er_keV,
+                        halo_model=halo_model,
+                        mass_scheme=mass_scheme,
+                        nv=nv,
+                        nw=args.nw,
+                        nz=args.nz,
+                        nphi=args.nphi,
+                        response_interp=response_interp,
+                        mchi=args.mchi_GeV,
+                        mV=args.mV_GeV,
+                        coupling_product_sq=args.coupling_product_sq,
+                        g2=args.g2,
+                        rho_dm=args.rhoDM_GeV_cm3,
+                        v0=args.v0_km_s,
+                        ve=args.ve_km_s,
+                        vesc=args.vesc_km_s,
+                        untruncated_vmax=args.untruncated_vmax_km_s,
+                    )
+                    all_rows.append(row)
+                    by_key[(mass_scheme, benchmark, er_keV, halo_model, nv)] = row
 
     speed_checks = []
-    nv_orders = sorted(set(args.nv_orders))
     if len(nv_orders) >= 2:
         low_nv, high_nv = nv_orders[-2], nv_orders[-1]
-        for benchmark, er_keV in CASES:
-            for halo_model in HALO_MODELS:
-                low = by_key[(benchmark, er_keV, halo_model, low_nv)]
-                high = by_key[(benchmark, er_keV, halo_model, high_nv)]
-                rel = relative_difference(
-                    low["Xe131_partial_rate_events_kg_day_keV"],
-                    high["Xe131_partial_rate_events_kg_day_keV"],
-                )
-                speed_checks.append({
-                    "benchmark": benchmark,
-                    "ER_keV": er_keV,
-                    "halo_model": halo_model,
-                    "nv_low": low_nv,
-                    "nv_high": high_nv,
-                    "rate_low": low["Xe131_partial_rate_events_kg_day_keV"],
-                    "rate_high": high["Xe131_partial_rate_events_kg_day_keV"],
-                    "relative_difference": rel,
-                })
-                if rel > args.max_relative_speed_convergence:
-                    raise ArithmeticError(
-                        f"speed quadrature failed: {benchmark}, ER={er_keV}, "
-                        f"{halo_model}, rel={rel:.4g}"
+        for mass_scheme in mass_schemes:
+            for benchmark, er_keV in CASES:
+                for halo_model in HALO_MODELS:
+                    low = by_key[(mass_scheme, benchmark, er_keV, halo_model, low_nv)]
+                    high = by_key[(mass_scheme, benchmark, er_keV, halo_model, high_nv)]
+                    rel = relative_difference(
+                        low["Xe131_partial_rate_events_kg_day_keV"],
+                        high["Xe131_partial_rate_events_kg_day_keV"],
                     )
+                    speed_checks.append({
+                        "mass_scheme": mass_scheme,
+                        "benchmark": benchmark,
+                        "ER_keV": er_keV,
+                        "halo_model": halo_model,
+                        "nv_low": low_nv,
+                        "nv_high": high_nv,
+                        "rate_low": low["Xe131_partial_rate_events_kg_day_keV"],
+                        "rate_high": high["Xe131_partial_rate_events_kg_day_keV"],
+                        "relative_difference": rel,
+                    })
+                    if rel > args.max_relative_speed_convergence:
+                        raise ArithmeticError(
+                            f"speed quadrature failed: {mass_scheme}, {benchmark}, "
+                            f"ER={er_keV}, {halo_model}, rel={rel:.4g}"
+                        )
 
     kernel_checks = []
     high_nv = max(nv_orders)
+    reference_scheme = "ame2020_nuclear"
     for benchmark, er_keV, halo_model in KERNEL_CHECK_CASES:
-        base = by_key[(benchmark, er_keV, halo_model, high_nv)]
+        base = by_key[(reference_scheme, benchmark, er_keV, halo_model, high_nv)]
         high_order = compute_partial_rate(
             benchmark=benchmark,
             er_keV=er_keV,
             halo_model=halo_model,
+            mass_scheme=reference_scheme,
             nv=high_nv,
             nw=16,
             nz=16,
@@ -417,6 +431,7 @@ def main() -> None:
             high_order["Xe131_partial_rate_events_kg_day_keV"],
         )
         kernel_checks.append({
+            "mass_scheme": reference_scheme,
             "benchmark": benchmark,
             "ER_keV": er_keV,
             "halo_model": halo_model,
@@ -438,10 +453,38 @@ def main() -> None:
     if kernel_checks:
         write_csv(args.out_dir / "kernel_quadrature_convergence.csv", kernel_checks)
 
+    mass_comparison = []
+    if {"A_u", "nist_nuclear", "ame2020_nuclear"}.issubset(set(mass_schemes)):
+        for benchmark, er_keV in CASES:
+            for halo_model in HALO_MODELS:
+                au = by_key[("A_u", benchmark, er_keV, halo_model, high_nv)]
+                nist = by_key[("nist_nuclear", benchmark, er_keV, halo_model, high_nv)]
+                ame = by_key[("ame2020_nuclear", benchmark, er_keV, halo_model, high_nv)]
+                rate_au = au["Xe131_partial_rate_events_kg_day_keV"]
+                rate_nist = nist["Xe131_partial_rate_events_kg_day_keV"]
+                rate_ame = ame["Xe131_partial_rate_events_kg_day_keV"]
+                mass_comparison.append({
+                    "benchmark": benchmark,
+                    "ER_keV": er_keV,
+                    "halo_model": halo_model,
+                    "nv": high_nv,
+                    "rate_A_u": rate_au,
+                    "rate_nist_nuclear": rate_nist,
+                    "rate_ame2020_nuclear": rate_ame,
+                    "relative_ame_vs_A_u": relative_difference(rate_au, rate_ame),
+                    "relative_ame_vs_nist": relative_difference(rate_nist, rate_ame),
+                    "vmin_A_u_km_s": au["vmin_km_s"],
+                    "vmin_nist_nuclear_km_s": nist["vmin_km_s"],
+                    "vmin_ame2020_nuclear_km_s": ame["vmin_km_s"],
+                })
+        write_csv(args.out_dir / "mass_scheme_rate_comparison.csv", mass_comparison)
+
     mass = isotope_mass_GeV(A, "ame2020_nuclear")
     metadata = {
         "calculation": "AME2020/CODATA2022 Xe-131 partial contribution to natural-xenon halo-folded three-body rate",
         "scope": "Xe-131 isotope term only; not the total natural-xenon rate",
+        "mass_schemes_compared": mass_schemes,
+        "reference_mass_scheme": "ame2020_nuclear",
         "mass_scheme": {
             "atomic_mass_source": "NIST Atomic Weights and Isotopic Compositions for Xenon",
             "nuclear_conversion": "M_nucleus = M_neutral_atom - Z*m_e + B_e(Z)",
@@ -515,7 +558,7 @@ def main() -> None:
 
     print(f"Xe-131 AME2020/CODATA2022 nuclear mass: {mass:.12f} GeV")
     for row in all_rows:
-        if row["nv"] == high_nv:
+        if row["nv"] == high_nv and row["mass_scheme"] == "ame2020_nuclear":
             print(
                 f"{row['benchmark']:18s} ER={row['ER_keV']:6.1f} "
                 f"{row['halo_model']:14s} "
