@@ -174,11 +174,17 @@ p_{\chi_1}=\frac{m_{\chi_1}\beta}{\sqrt{1-\beta^2}}
 
 以及三体 reduced kernel \(I_6\)，而不是把某一个固定速度的截面乘以平均速度。
 
-采用的基准暗物质密度为
+采用的基准输入为
 
 \[
-\rho_\chi=0.3\ {\rm GeV/cm^3}.
+m_{\chi_1}=1\ {\rm TeV},\qquad m_V=10\ {\rm GeV},
 \]
+\[
+(g_1g_2g_{VN})^2=10^{-8},\qquad g_2=1,
+\qquad \rho_\chi=0.3\ {\rm GeV/cm^3}.
+\]
+
+这里单独给出 (g_2=1)，是因为 ((g_1g_2g_{VN})^2) 这个耦合乘积并不能单独确定 (chi_2	o\chi_1s) 的 pole width；当前宽度还采用 Dirac 费米子、实标量、纯 scalar Yukawa、单一开放衰变道的条件性假设。
 
 程序内部先以自然单位计算截面，再转换单位。对于微分截面，
 
