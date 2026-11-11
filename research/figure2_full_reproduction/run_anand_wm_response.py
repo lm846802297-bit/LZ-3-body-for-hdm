@@ -267,7 +267,7 @@ def make_plots(results: dict, natural: dict, output_dir: Path) -> None:
     ax.set_ylim(1e-7, 2)
     ax.set_yscale("log")
     ax.set_xlabel(r"$E_R$ [keV]")
-    ax.set_ylabel(r"$\\mathcal{R}_{131}(E_R)/\\mathcal{R}_{131}(0)$")
+    ax.set_ylabel(r"$\mathcal{R}_{131}(E_R)/\mathcal{R}_{131}(0)$")
     ax.legend()
     ax.grid(True, which="both", alpha=0.2)
     fig.tight_layout()
@@ -284,7 +284,7 @@ def make_plots(results: dict, natural: dict, output_dir: Path) -> None:
     ax.set_ylim(1e-7, 2)
     ax.set_yscale("log")
     ax.set_xlabel(r"$E_R$ [keV]")
-    ax.set_ylabel(r"$\\mathcal{R}_{\\rm mix}(E_R)/\\mathcal{R}_{\\rm mix}(0)$")
+    ax.set_ylabel(r"$\mathcal{R}_{\rm mix}(E_R)/\mathcal{R}_{\rm mix}(0)$")
     ax.legend()
     ax.grid(True, which="both", alpha=0.2)
     fig.tight_layout()
@@ -303,7 +303,7 @@ def main() -> None:
     output.mkdir(parents=True, exist_ok=True)
 
     q_grid = Q_MIN_GEV + np.arange(
-        int(round((Q_MAX_GEV - Q_MIN_GEV) / Q_STEP_GEV)), dtype=float
+        int(round((Q_MAX_GEV - Q_MIN_GEV) / Q_STEP_GEV)) + 1, dtype=float
     ) * Q_STEP_GEV
 
     results = {}
