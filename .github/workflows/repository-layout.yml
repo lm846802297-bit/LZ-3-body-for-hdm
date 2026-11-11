@@ -1,0 +1,65 @@
+name: Repository layout
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  layout-check:
+    name: layout-check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Check top-level structure and research indexes
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import sys
+
+          root = Path(".")
+          allowed_root_dirs = {".git", ".github", "paper-source", "research"}
+          errors = []
+
+          unexpected = sorted(
+              p.name for p in root.iterdir()
+              if p.is_dir() and p.name not in allowed_root_dirs
+          )
+          if unexpected:
+              errors.append(
+                  "Unexpected top-level directories: " + ", ".join(unexpected)
+              )
+
+          for required in (
+              Path("README.md"),
+              Path("CONTRIBUTING.md"),
+              Path("research/README.md"),
+              Path("research/WORKFLOW.md"),
+              Path("paper-source/main_original.tex"),
+          ):
+              if not required.is_file():
+                  errors.append(f"Missing required repository file: {required}")
+
+          research = Path("research")
+          if research.is_dir():
+              for directory in sorted(p for p in research.iterdir() if p.is_dir()):
+                  if not (directory / "README.md").is_file():
+                      errors.append(
+                          f"Research directory has no README.md: {directory}"
+                      )
+
+          if errors:
+              print("\\n".join(f"ERROR: {item}" for item in errors))
+              sys.exit(1)
+
+          print("Repository layout check passed.")
+          PY
