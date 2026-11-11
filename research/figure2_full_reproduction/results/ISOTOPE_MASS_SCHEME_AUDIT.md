@@ -145,4 +145,4 @@ kinematic endpoint.
   isotope-by-isotope numerical output.
 
 CI:
-https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/42953967185
+https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/42954180933
