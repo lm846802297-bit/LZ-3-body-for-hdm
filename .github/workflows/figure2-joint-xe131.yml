@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      - research/figure2-p0-4-mainline
+      - 'research/**'
     paths:
       - .github/workflows/figure2-joint-xe131.yml
       - research/figure2_full_reproduction/joint_xe131.py
