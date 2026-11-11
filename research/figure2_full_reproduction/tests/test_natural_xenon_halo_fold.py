@@ -47,6 +47,13 @@ class NaturalXenonHaloFoldTests(unittest.TestCase):
         self.assertEqual(shm_truncated_pdf(776.0, 220.0, 232.0, 544.0), 0.0)
         self.assertEqual(shm_truncated_pdf(776.001, 220.0, 232.0, 544.0), 0.0)
 
+    def test_truncated_pdf_is_continuous_at_escape_transition(self):
+        v0, ve, vesc = 220.0, 232.0, 544.0
+        transition = vesc - ve
+        left = shm_truncated_pdf(transition - 1e-7, v0, ve, vesc)
+        right = shm_truncated_pdf(transition + 1e-7, v0, ve, vesc)
+        self.assertAlmostEqual(left, right, delta=2e-10)
+
     def test_analytic_three_body_vmin_closes_phase_space(self):
         mchi, ms, ER = 1000.0, 0.0003, 101.0e-6
         for A in (131, 136):
