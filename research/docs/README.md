@@ -10,3 +10,12 @@
 - `08_chi2_decay_width.md`: analytic derivation, benchmark, and validation boundary for chi2 -> chi1 s.
 - `08_final_editorial_pass_2026-11-11.md`: final editorial pass record.
 - `09_afh_xe131_three_body_kernel_natural_xenon_halo_2026-11-11.md`: AFH v6.0 Xe response, Eq. (6) three-body kernel, factor-of-four normalization, natural-xenon isotope sum, and halo-folded rate discussion.
+
+## AFH Xe-131 and natural-xenon three-body study
+- `09_afh_xe131_three_body_kernel_natural_xenon_halo_2026-11-11.md`: main report and research conclusions.
+- `appendices/09A_three_body_kinematics_amplitude.md`: three-body kinematics, phase-space limits, and Dirac amplitude.
+- `appendices/09B_afh_v6_density_matrix_response.md`: AFH v6.0 density matrix and response implementation.
+- `appendices/09C_afh_isoscalar_factor4_normalization.md`: AFH isoscalar normalization and factor-of-four mapping.
+- `appendices/09D_natural_xenon_isotope_target.md`: natural xenon isotope abundances and target normalization.
+- `appendices/09E_halo_velocity_vmin_folding.md`: halo velocity distribution, three-body minimum speed, and rate folding.
+- `appendices/09F_numerical_validation_reproduction.md`: code entry points, numerical validation, and reproduction instructions.
