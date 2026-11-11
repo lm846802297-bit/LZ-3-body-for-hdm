@@ -588,7 +588,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 
 以下 A–F 附录正文与目录 research/docs/appendices/ 中的六份独立文件保持同步。主报告保留完整附录，独立文件用于单独检索和引用。
 
-### 附录 A：三体运动学、相空间边界与 Dirac 振幅
+## 附录 A：三体运动学、相空间边界与 Dirac 振幅
 
 ### A.1 研究对象、约定与四动量
 
@@ -1012,7 +1012,7 @@ python -m unittest discover -s research/figure2_full_reproduction/tests -v
 
 ---
 
-### 附录 B：AFH v6.0 密度矩阵、谐振子基底与响应实现
+## 附录 B：AFH v6.0 密度矩阵、谐振子基底与响应实现
 
 ### B.1 源文件、版本与 Xe-131 输入
 
@@ -1285,7 +1285,7 @@ q_{\rm resp}^{(\rm nat)}
 
 ---
 
-### 附录 C：AFH isoscalar 归一化与物理核子耦合的因子 4
+## 附录 C：AFH isoscalar 归一化与物理核子耦合的因子 4
 
 ### C.1 先区分两种不同的 \(c_0\)
 
@@ -1499,7 +1499,7 @@ https://www.escholarship.org/content/qt3ns8f1r8/qt3ns8f1r8.pdf
 
 ---
 
-### 附录 D：天然氙同位素、丰度和核靶归一化
+## 附录 D：天然氙同位素、丰度和核靶归一化
 
 ### D.1 天然氙同位素输入
 
@@ -1642,7 +1642,7 @@ M_A=131\times0.93149410242\ {\rm GeV},
 
 ---
 
-### 附录 E：实验室系速度分布、三体 \(v_{\min}\) 与 halo folding
+## 附录 E：实验室系速度分布、三体 \(v_{\min}\) 与 halo folding
 
 ### E.1 速度分布与归一化约定
 
@@ -1906,7 +1906,7 @@ Green benchmark 在其他三个选定反冲能量的结果为：
 
 ---
 
-### 附录 F：计算程序、数据文件、收敛验收和复现命令
+## 附录 F：计算程序、数据文件、收敛验收和复现命令
 
 ### F.1 计算链和程序入口
 
