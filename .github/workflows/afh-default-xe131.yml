@@ -46,6 +46,15 @@ jobs:
             -s research/afh_default_density_xe131 \
             -p "test_*.py" -v
 
+      - name: Run Figure-2 joint-response q-convention regression tests
+        run: |
+          python -m unittest discover \
+            -s research/figure2_full_reproduction/tests \
+            -p 'test_joint_xe131.py' -v
+          python -m unittest discover \
+            -s research/figure2_full_reproduction/tests \
+            -p 'test_natural_xenon_joint.py' -v
+
       - name: Recompute AFH default response
         run: |
           python research/afh_default_density_xe131/run_afh_default_xe131.py \
