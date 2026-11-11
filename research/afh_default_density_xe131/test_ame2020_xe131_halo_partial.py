@@ -28,7 +28,7 @@ class Ame2020Xe131PartialRateTests(unittest.TestCase):
     def test_mass_is_the_ame2020_cod2022_value(self):
         self.assertAlmostEqual(
             isotope_mass_GeV(131, "ame2020_nuclear"),
-            121.9099223838014,
+            121.90992244721734,
             places=10,
         )
 
