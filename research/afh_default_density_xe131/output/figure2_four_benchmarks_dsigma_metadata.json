@@ -1,0 +1,61 @@
+{
+  "calculation": "Xe-131 four benchmark differential cross sections with AFH default, GCN and JJ55 nuclear responses",
+  "target": {
+    "A": 131,
+    "Z": 54,
+    "J_A": 1.5,
+    "mA_GeV": 122.02572741702
+  },
+  "particle_inputs": {
+    "m_chi1_GeV": 1000,
+    "m_V_GeV": 10,
+    "g2": 1,
+    "(g1*g2*gVN)^2": 1e-8,
+    "speed_km_s": 800
+  },
+  "benchmarks": {
+    "red_ms200_dm1": {
+      "m_s_keV": 200,
+      "Delta_m_MeV": 1
+    },
+    "green_ms300_dm1": {
+      "m_s_keV": 300,
+      "Delta_m_MeV": 1
+    },
+    "black_ms360_dm1": {
+      "m_s_keV": 360,
+      "Delta_m_MeV": 1
+    },
+    "blue_ms300_dm10": {
+      "m_s_keV": 300,
+      "Delta_m_MeV": 10
+    }
+  },
+  "AFH": {
+    "source": "DMFormFactor v6.0 built-in sdgXe131, 67 entries",
+    "b_A_fm": 2.2923417985218975,
+    "raw_R0": "A^2/4",
+    "physical_equal_pn_R0": 17161
+  },
+  "integration": {
+    "I6_recomputed": false,
+    "reason": "I6 factorizes from nuclear response and is shared by AFH/GCN/JJ55; existing 5-keV benchmark I6 grid reused",
+    "quadrature": "16x16x8 archived; 24x24x12 vs 32x32x16 spot-check max relative difference 5.996e-6"
+  },
+  "grid_keV": {
+    "start": 5,
+    "stop": 800,
+    "step": 5
+  },
+  "units": {
+    "primary": "GeV^-3",
+    "converted": "cm^2/keV",
+    "conversion": "0.389379e-33 cm^2/keV per GeV^-3"
+  },
+  "limitations": [
+    "fixed mono-speed diagnostic, not halo-folded",
+    "conditional pole width assumes Dirac fermions, real scalar and pure scalar off-diagonal Yukawa",
+    "no event-rate spectra, natural-xenon sum, detector response or likelihood",
+    "native Mathematica execution remains pending because no Wolfram kernel is installed"
+  ]
+}
