@@ -2105,6 +2105,15 @@ Green benchmark 在其他三个选定反冲能量的结果为：
 
 ### E.7 当前 halo 结果的 q-response 状态
 
+本轮已对旧 exact-q 计算执行完整回归复现：
+
+- 默认 manuscript_nr 模式已被 CI 验证会拒绝当前 exact-q 样本；
+- 显式 legacy_exact 模式重新计算 98 个逐同位素贡献和 14 个总速率；
+- 与旧归档比较，最大逐同位素贡献相对差异为 \(4.32\times10^{-10}\)，最大总速率相对差异为 \(2.67\times10^{-12}\)；
+- [CI run 43040078335](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43040078335) 全部通过。
+
+机器可读比较结果保存在 results/legacy_exact_reproduction_comparison.json。该结果证明 q 约定分离没有破坏旧 exact-q 结果的可复现性；它不等于已经得到 manuscript-NR 的新天然氙速率。
+
 当前归档的天然氙 selected-point 速率没有被本轮 q 审计重标度或覆盖。其输入样本仍采用
 
 \[
@@ -2115,7 +2124,7 @@ q_{\rm response}^{\rm legacy}
 天然氙计算程序现在将两种 q 明确分开，并默认要求论文定义的 \(q_{\rm resp}^{\rm NR}\) 样本。若要复现旧结果，必须显式传入
 
 ~~~bash
-python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \\
+python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \
   --response-q-convention legacy_exact
 ~~~
 
@@ -2165,6 +2174,8 @@ python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_hal
 - output/minima.csv：细化极小值；
 - output/figure2_dip_check.csv：101、267、542 keV 参考点；
 - output/metadata.json：源文件哈希、质量、\(b_A\)、归一化和限制；
+- output/mpmath_full_grid_summary.json：2401 点、60 位精度 mpmath 全网格验证汇总；
+- CI artifact afh-xe131-mpmath-full-grid-validation：完整逐点比较 CSV 和 JSON summary。
 - AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md：来源和归一化审计；
 - AFH_COUPLING_NORMALIZATION_MAPPING.md：接口耦合映射。
 
@@ -2189,7 +2200,8 @@ python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_hal
 - results/metadata.json；
 - results/natural_xenon_q_convention_audit.csv；
 - results/xe131_afh_response_shift_NR_vs_exact.csv；
-- results/q_convention_audit_summary.json。
+- results/q_convention_audit_summary.json；
+- results/legacy_exact_reproduction_comparison.json（98 个同位素贡献和 14 个总速率的回归复现对照）。
 
 当前 response samples 文件包含 7 种可用同位素在 4 个选定反冲能量上的 28 个响应样本。halo fold 对 14 组 benchmark/反冲能量/halo 组合分别输出 7 个同位素贡献，共 98 行逐同位素结果。
 
@@ -2283,7 +2295,7 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 | GCN/JJ55 对照 | 已完成归档 | 三种响应、四 benchmark、1920 行 long table | 对照共享既有 \(I_6\)，不是 640 次独立重算 |
 | 三体运动学/Dirac trace | 已完成代表性检查 | 壳条件、四动量闭合、显式自旋求和、干涉分解 | 扩展到更宽的参数和质量网格 |
 | 三体积分收敛 | 已有 selected-point 验证 | 六个天然氙点 \(8×8×4\) 对 \(16×16×8\)，最大差异 \(2.19×10^{-4}\)；独立 Eq. (6) 测试点 \(16×16×8\) 对 \(32×32×16\)，相对差异小于 \(5×10^{-5}\) | 连续反冲谱全网格收敛 |
-| 天然氙速度积分 | 已有 selected-point 验证 | 五个点 32 对 64 速度节点，最大差异 \(3.31×10^{-6}\) | 连续反冲谱全网格收敛和 halo 参数扫描 |
+| 天然氙速度积分 | 已有 selected-point 验证（legacy q） | 五个点 32 对 64 速度节点，最大差异 \(3.31×10^{-6}\)；98 个逐同位素贡献和 14 个总速率重算后与旧档最大总速率差异 \(2.67×10^{-12}\) | 先生成 manuscript-NR 七同位素响应，再重算速率；连续谱和 halo 参数扫描 |
 | q_response / q_kinematic 分离 | 已完成审计与代码保护 | 28 个天然氙样本识别为 exact-q；Xe-131 四点响应差异约 5.5–212.7 ppm | 重新生成七同位素 manuscript-NR 响应样本并重算 halo fold |
 | Xe-124/Xe-126 | 输入缺失 | 缺失丰度合计 0.001842 | 取得密度矩阵并补算响应、阈值和速率 |
 | LZ detector response | 尚未开展 | 当前仅有理论核反冲率 | 效率、能量分辨、曝光、选择切、背景和统计似然 |
