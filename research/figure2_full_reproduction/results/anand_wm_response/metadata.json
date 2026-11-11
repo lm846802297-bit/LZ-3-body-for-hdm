@@ -1,0 +1,50 @@
+{
+  "dmscatter_repository": "https://github.com/ogorton/dmscatter",
+  "dmscatter_commit": "d5c4046b4d4cd715af12f1251fac40b6e25b85d5",
+  "nuclear_response_reference": "Anand, Fitzpatrick and Haxton, arXiv:1308.6288",
+  "NIST_xenon_abundance_source": "https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ascii=ascii&ele=Xe",
+  "response_definition": "R_A = 4*pi/(2J_A+1) * sum_{p,n;p,n} W_M^{ab}; equal proton/neutron coupling",
+  "zero_momentum_check": "R_A(0)=A^2",
+  "dmscatter_pnresponse": 1,
+  "fill_nuclear_core": 1,
+  "oscillator_length_prescription": "Anand, Fitzpatrick and Haxton, arXiv:1308.6288, Sec. 7.2 (SetIsotope default), explicitly repeated as hoparameter; dmscatter implements the same formula",
+  "oscillator_length_formula": "b_A[fm] = sqrt(41.467 / (45 A^(-1/3) - 25 A^(-2/3)))",
+  "oscillator_length_source_location": "AFH arXiv:1308.6288v1, Sec. 7.2, SetIsotope documentation, PDF p.24",
+  "q_grid_GeV": [
+    0.0,
+    0.6,
+    0.00025
+  ],
+  "recoil_grid_keV": [
+    0.0,
+    800.0,
+    0.5
+  ],
+  "natural_xenon_available_isotopes": [
+    128,
+    129,
+    130,
+    131,
+    132,
+    134,
+    136
+  ],
+  "natural_xenon_available_amount_fraction": 0.998158,
+  "natural_xenon_omitted_isotopes": [
+    124,
+    126
+  ],
+  "natural_xenon_omitted_amount_fraction": 0.0018420000000000103,
+  "natural_mixture_note": "Response-only isotope mixture; not the full isotope-summed three-body event rate.",
+  "figure2_dip_energies_keV": [
+    101.0,
+    267.0,
+    542.0
+  ],
+  "caveats": [
+    "The manuscript does not specify the Xe isotope mixture or b_A; this reproduction adopts the AFH Sec. 7.2 default b(A) prescription.",
+    "The AFH default is a literature-defined reference choice, not a claim that the original Figure 2 calculation used an undocumented identical input.",
+    "Xe-124 and Xe-126 are absent from the pinned dmscatter target library.",
+    "The mixture combines only the nuclear response factor at fixed E_R; full isotope-specific kinematics and the three-body integral must be evaluated before calling it a natural-xenon event-rate spectrum."
+  ]
+}

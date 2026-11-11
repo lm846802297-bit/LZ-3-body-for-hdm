@@ -1,0 +1,55 @@
+{
+  "calculation": "isotope-specific natural-xenon AFH response x Eq. (6)",
+  "available_isotopes": [
+    128,
+    129,
+    130,
+    131,
+    132,
+    134,
+    136
+  ],
+  "omitted_isotopes": [
+    124,
+    126
+  ],
+  "available_natural_amount_fraction": 0.998158,
+  "omitted_natural_amount_fraction": 0.0018420000000000103,
+  "abundance_source": "NIST xenon isotopic compositions as recorded in run_anand_wm_response.py",
+  "abundance_convention": "atomic amount fractions; not mass fractions",
+  "abundance_renormalization": "none; missing 124/126 fraction is left missing",
+  "mA_prescription": "A * 0.93149410242 GeV",
+  "mchi_GeV": 1000.0,
+  "ms_MeV": 0.3,
+  "delta_m_MeV": 1.0,
+  "speed_km_s": 776.0,
+  "speed_treatment": "single fixed incident speed; no halo integral",
+  "coupling_product_sq": 1e-08,
+  "width_scheme": "zero",
+  "mV_scan_GeV": [
+    0.05,
+    0.1,
+    0.2,
+    0.5,
+    1.0
+  ],
+  "mV_status": "exploratory parameter scan; no mV benchmark is specified in the Figure 2 caption",
+  "quadrature": {
+    "nw": 40,
+    "nz": 32,
+    "nphi": 20
+  },
+  "response_y_convention": "y=b_A^2*m_A*E_R/2; q_response=sqrt(2*m_A*E_R)",
+  "three_body_kinematics": "q_exact=sqrt(2*m_A*E_R+E_R^2)",
+  "models": [
+    "GCN",
+    "JJ55"
+  ],
+  "natural_sum": "sum_A x_A * d sigma_A/dE_R; common 1/mean xenon mass omitted",
+  "not_included": [
+    "Xe-124 and Xe-126 nuclear density matrices",
+    "halo velocity integral",
+    "detector efficiency and exposure",
+    "finite-width uncertainty from the unspecified separate g2"
+  ]
+}

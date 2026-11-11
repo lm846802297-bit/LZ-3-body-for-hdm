@@ -1,0 +1,32 @@
+{
+  "calculation": "xenon isotope mass-scheme sensitivity for q response and three-body vmin",
+  "mass_schemes": {
+    "A_u": "m_A=A*0.93149410242 GeV; retained previous calculation baseline",
+    "nist_nuclear": "m_A=(NIST relative atomic mass - 54 electron masses)*u; atomic electron binding energy neglected"
+  },
+  "nist_atomic_mass_source": "https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ascii=ascii&ele=Xe",
+  "mchi_GeV": 1000.0,
+  "ms_MeV": 0.3,
+  "ER_keV": [
+    101.0,
+    200.0,
+    267.0,
+    542.0
+  ],
+  "lab_speed_cutoff_km_s": 776.0,
+  "available_response_isotopes": [
+    128,
+    129,
+    130,
+    131,
+    132,
+    134,
+    136
+  ],
+  "missing_response_isotopes": [
+    124,
+    126
+  ],
+  "abundance_coverage": 0.998158,
+  "purpose": "Quantify how a small nuclear-mass shift changes vmin and the AFH response interpolation, especially near the 776 km/s endpoint."
+}
