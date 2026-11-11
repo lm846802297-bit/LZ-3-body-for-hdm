@@ -5,6 +5,12 @@ on:
     paths:
       - .github/workflows/afh-natural-xenon-halo-archive.yml
       - research/afh_default_density_natural_xenon_halo/**
+  push:
+    branches:
+      - research/afh-default-density-xe131-mainline
+    paths:
+      - .github/workflows/afh-natural-xenon-halo-archive.yml
+      - research/afh_default_density_natural_xenon_halo/**
   workflow_dispatch:
 
 permissions:
@@ -13,12 +19,53 @@ permissions:
 jobs:
   validate-afh-natural-xenon-halo:
     runs-on: ubuntu-latest
+    timeout-minutes: 90
     steps:
-      - name: Check out PR branch
+      - name: Check out research branch
         uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Validate isotope contributions, rate sums and quadrature records
+
+      - name: Install numerical dependency
+        run: python -m pip install --upgrade numpy
+
+      - name: Validate archived isotope contributions, rate sums and quadrature records
         run: python research/afh_default_density_natural_xenon_halo/validate_archived_results.py
+
+      - name: Confirm manuscript-NR mode refuses the legacy exact-q samples
+        shell: bash
+        run: |
+          set +e
+          output=$(python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \
+            --out-dir "$RUNNER_TEMP/should_not_run_manuscript_nr" 2>&1)
+          status=$?
+          set -e
+          if [ "$status" -eq 0 ]; then
+            echo "ERROR: manuscript_nr unexpectedly accepted the archived exact-q samples"
+            exit 1
+          fi
+          echo "$output"
+          echo "$output" | grep -q "Regenerate R_A at the selected q"
+
+      - name: Recompute the archived legacy exact-q selected-point halo fold
+        run: |
+          python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \
+            --response-q-convention legacy_exact \
+            --out-dir "$RUNNER_TEMP/natural_xenon_legacy_exact"
+
+      - name: Compare fresh legacy exact-q output against the archived tables
+        run: |
+          python research/afh_default_density_natural_xenon_halo/compare_legacy_reproduction.py \
+            --reproduced-dir "$RUNNER_TEMP/natural_xenon_legacy_exact" \
+            --relative-tolerance 5e-8
+
+      - name: Upload legacy exact-q reproduction and comparison
+        uses: actions/upload-artifact@v4
+        with:
+          name: afh-natural-xenon-legacy-exact-reproduction
+          path: ${{ runner.temp }}/natural_xenon_legacy_exact/
+          if-no-files-found: error
+          retention-days: 90
