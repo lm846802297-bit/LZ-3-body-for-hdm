@@ -1,0 +1,19 @@
+{
+  "status": "pass",
+  "workflow_run_id": 43038372836,
+  "stored_natural_xenon_response_samples": 28,
+  "stored_sample_convention": "q_response=sqrt(2*m_A*E_R+E_R^2), exact spatial recoil momentum",
+  "manuscript_response_convention": "q_response=sqrt(2*m_A*E_R), from y=b_A^2*m_A*E_R/2",
+  "three_body_kinematic_convention": "q_kinematic=sqrt(2*m_A*E_R+E_R^2)",
+  "mass_scheme": "(NIST atomic isotope mass - 54 electron masses)*u; electronic binding neglected",
+  "max_delta_q_keV_across_28_samples": 0.40876402418454916,
+  "max_relative_q_shift_ppm_across_28_samples": 1.1375670436741814,
+  "xe131_response_comparison": "PCHIP interpolation of the freshly regenerated 2401-point AFH default Xe-131 response grid at q_NR and q_exact, using NIST nuclear mass",
+  "xe131_max_absolute_relative_response_shift_ppm": 212.68411623154293,
+  "interpretation": [
+    "The archived 28 natural-xenon AFH samples were evaluated at q_exact, not at the manuscript's q_response_NR.",
+    "The exact q remains the correct momentum in the three-body kinematic boundary and v_min calculation.",
+    "The archived halo rates are preserved as legacy exact-q-response results; they are not silently relabeled as manuscript-NR results.",
+    "A corrected natural-xenon AFH rate requires regenerating the seven isotope response samples at q_response_NR from the full AFH isotope response table."
+  ]
+}
