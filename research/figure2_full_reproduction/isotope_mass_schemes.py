@@ -2,8 +2,8 @@
 
 A_u reproduces the existing mass-number approximation m_A=A*u.
 nist_nuclear uses NIST atomic isotope masses minus 54 electron rest masses.
-The latter neglects the total atomic-electron binding energy, which is a
-sub-keV correction to the nuclear mass and is negligible at the present level.
+The latter neglects the total atomic-electron binding energy (order 0.1 MeV
+for xenon), a relative correction below 1e-6 to the nuclear mass.
 """
 from __future__ import annotations
 
