@@ -107,20 +107,28 @@ For a native AFH Mathematica calculation, use
 `run_afh_default_xe131.wls` with the official package file in this directory
 or set `DMFormFactorPath`.
 
-## Scope
+## Scope and connection to the three-body calculation
 
-This is the Xe-131 nuclear response only. It is not yet the full three-body
-differential cross section, the four benchmark calculation, the natural-xenon
-isotope sum, or the halo average.
+The AFH default Xe-131 nuclear response is archived here. The four fixed-speed
+benchmark response substitutions are archived in
+`output/figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv` and
+`output/figure2_four_benchmarks_AFH_GCN_JJ55_wide_audit.csv`. They use the
+existing 5 keV-grid Eq. (6) integral and replace only the nuclear response;
+they are not a fresh independent recomputation of all 640 three-body
+integrals.
 
-The manuscript currently writes
-`R_A = 4 pi W_M^{00}/(2 J_A+1)` and `R_A(0)=A^2` while citing AFH. If
-`W_M^{00}` denotes the unmodified AFH package response, these statements
-differ by a factor of four. Before the final cross-section integration, the
-paper must either use `16 pi W_M^{00}_AFH/(2 J_A+1)` for the equal physical
-proton/neutron charge response, or explicitly carry the compensating factor
-four elsewhere in the coupling/particle-response prefactor.
+The manuscript source `paper-source/main.tex` now explicitly uses
+`R_A = 16 pi W_M00_AFH/(2 J_A+1)` for the raw AFH v6.0 response and the
+physical equal-proton/equal-neutron coupling. This gives `R_A(0)=A^2`.
+The factor four is applied exactly once, in the nuclear response. The
+independent historical code-convention check is documented in
+`AFH_COUPLING_NORMALIZATION_MAPPING.md`.
 
-The prior GCN/JJ55 files from `dmscatter` remain separate nuclear-structure
+The natural-xenon isotope sum and halo velocity integration remain separate
+follow-up calculations. The AFH native Mathematica execution also remains
+pending; the current AFH numerical table is from the source-translated Python
+implementation.
+
+The GCN/JJ55 files from `dmscatter` remain separate nuclear-structure
 calculations and are not relabeled or substituted for AFH default.
 
