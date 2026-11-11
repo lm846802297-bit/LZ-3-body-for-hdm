@@ -25,10 +25,10 @@
     }
   },
   "first_open_grid_point_keV": {
-    "black_ms360_dm1": 190.0,
-    "blue_ms300_dm10": 100.0,
-    "green_ms300_dm1": 100.0,
-    "red_ms200_dm1": 35.0
+    "black_ms360_dm1": 190,
+    "blue_ms300_dm10": 100,
+    "green_ms300_dm1": 100,
+    "red_ms200_dm1": 35
   },
   "rows": {
     "long": 1920,
@@ -40,5 +40,8 @@
     "Conditional pole width, not a full self-energy calculation.",
     "No detector efficiency, resolution, cuts, or likelihood.",
     "Native Mathematica execution of AFH v6.0 remains pending."
-  ]
+  ],
+  "response_q_convention": "exact_spatial",
+  "response_q_definition": "AFH y=(q*b_A/2)^2 with q the spatial momentum transfer",
+  "nr_approximation": "q_NR=sqrt(2*mA*ER); small-recoil comparison only"
 }
