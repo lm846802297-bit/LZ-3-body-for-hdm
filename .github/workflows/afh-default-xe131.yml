@@ -23,7 +23,7 @@ permissions:
 jobs:
   reproduce-afh-default-xe131:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - name: Check out source
         uses: actions/checkout@v4
@@ -51,6 +51,12 @@ jobs:
           python research/afh_default_density_xe131/run_afh_default_xe131.py \
             --outdir "$RUNNER_TEMP/afh_default_xe131"
 
+      - name: Run independent 60-digit mpmath comparison on all 2401 q nodes
+        run: |
+          python research/afh_default_density_xe131/verify_afh_mpmath_full_grid.py \
+            --response-csv "$RUNNER_TEMP/afh_default_xe131/afh_default_xe131_WM00.csv" \
+            --outdir "$RUNNER_TEMP/afh_mpmath_full_grid"
+
       - name: Regenerate response plot
         run: |
           python research/afh_default_density_xe131/plot_afh_default_xe131.py \
@@ -64,6 +70,14 @@ jobs:
             --afh-response-csv "$RUNNER_TEMP/afh_default_xe131/afh_default_xe131_WM00.csv" \
             --outdir "$RUNNER_TEMP/afh_four_benchmarks" \
             --plots
+
+      - name: Upload full-grid mpmath validation artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: afh-xe131-mpmath-full-grid-validation
+          path: \${{ runner.temp }}/afh_mpmath_full_grid/
+          if-no-files-found: error
+          retention-days: 90
 
       - name: Upload numerical reproduction artifact
         uses: actions/upload-artifact@v4
