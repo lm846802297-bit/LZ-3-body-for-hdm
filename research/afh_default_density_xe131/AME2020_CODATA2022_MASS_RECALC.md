@@ -214,6 +214,29 @@ v_{\max}=776\ {\rm km/s}.
 An untruncated boosted Maxwell-Boltzmann distribution is retained only as
 a high-speed-tail diagnostic. It is not used as the baseline halo model.
 
+The isotope sum and velocity integral have distinct physical roles:
+
+- The natural isotope fraction \(\xi_A\) determines how many target nuclei of
+  isotope \(A\) are present. For a one-kg natural-xenon target,
+  \(N_{T,A}=N_A^{\rm Avogadro}\,\xi_A/\bar M_{\rm Xe}\).
+- The lab-frame speed distribution \(f_{\rm lab}(v)\) weights the incident
+  dark-matter population. It is not a nuclear form factor and is not included
+  inside \(R_A\).
+- The isotope mass \(m_A\) determines the isotope-specific kinematic
+  threshold \(v_{\min,A}(E_R)\), the recoil momentum, the three-body
+  invariant-mass limits, the kernel, and the mediator denominator.
+- The nuclear response \(R_A(q)\) is evaluated separately for each isotope.
+  Replacing the isotope sum by one average nuclear mass would therefore lose
+  both isotope-dependent kinematic support and isotope-dependent nuclear
+  structure.
+
+In the code, the one-dimensional lab-frame speed PDF is already normalized.
+The velocity integral is evaluated from \(v_{\min,A}\) to the halo endpoint;
+equivalently, a Heaviside factor \(\Theta(v-v_{\min,A})\) can be inserted
+inside an integral over the full speed range. At the 101-keV benchmark above,
+only Xe-136 is open at the truncated-SHM endpoint, but the open-isotope set
+changes with \(E_R\).
+
 The mass dependence is propagated consistently through \(q_{\rm resp}\),
 \(q_{\rm kin}\), \(v_{\min}\), the three-body kernel, and the propagator
 denominator. The AFH response is re-interpolated at each mass/q prescription.
