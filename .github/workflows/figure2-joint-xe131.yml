@@ -9,7 +9,9 @@ on:
       - research/figure2_full_reproduction/joint_xe131.py
       - research/figure2_full_reproduction/eq6_kernel.py
       - research/figure2_full_reproduction/run_joint_xe131.py
+      - research/figure2_full_reproduction/compare_joint_xe131_convergence.py
       - research/figure2_full_reproduction/tests/test_joint_xe131.py
+      - research/figure2_full_reproduction/tests/test_eq6_kernel.py
       - research/figure2_full_reproduction/results/anand_wm_response/xe131_GCN_WM.csv
       - research/figure2_full_reproduction/results/anand_wm_response/xe131_JJ55_WM.csv
 
@@ -40,11 +42,11 @@ jobs:
             -s research/figure2_full_reproduction/tests \
             -p 'test_*.py' -v
 
-      - name: Compute Xe-131 GCN and JJ55 joint diagnostics
+      - name: Compute coarse Xe-131 joint diagnostics
         run: |
           python research/figure2_full_reproduction/run_joint_xe131.py \
             --response-dir research/figure2_full_reproduction/results/anand_wm_response \
-            --out-dir /tmp/joint_xe131 \
+            --out-dir /tmp/joint_xe131/coarse \
             --A 131 \
             --mchi-GeV 1000 \
             --ms-MeV 0.3 \
@@ -55,10 +57,30 @@ jobs:
             --width-scheme zero \
             --nw 16 --nz 16 --nphi 8
 
-      - name: Upload joint calculation archive
+      - name: Compute high-order Xe-131 joint diagnostics
+        run: |
+          python research/figure2_full_reproduction/run_joint_xe131.py \
+            --response-dir research/figure2_full_reproduction/results/anand_wm_response \
+            --out-dir /tmp/joint_xe131/fine \
+            --A 131 \
+            --mchi-GeV 1000 \
+            --ms-MeV 0.3 \
+            --delta-m-MeV 1 \
+            --speed-km-s 776 \
+            --coupling-product-sq 1e-8 \
+            --ER-keV 101 200 267 542 \
+            --width-scheme zero \
+            --nw 40 --nz 32 --nphi 20
+
+      - name: Compare quadrature convergence and GCN/JJ55 closure
+        run: |
+          python research/figure2_full_reproduction/compare_joint_xe131_convergence.py \
+            --results-dir /tmp/joint_xe131
+
+      - name: Upload joint calculation and convergence archive
         uses: actions/upload-artifact@v4
         with:
-          name: xe131-joint-response-threebody
+          name: xe131-joint-response-threebody-convergence
           path: /tmp/joint_xe131/
           if-no-files-found: error
           retention-days: 90
@@ -66,11 +88,11 @@ jobs:
       - name: Archive joint results on the research branch
         run: |
           mkdir -p research/figure2_full_reproduction/results/joint_xe131
-          cp /tmp/joint_xe131/* research/figure2_full_reproduction/results/joint_xe131/
+          cp -r /tmp/joint_xe131/* research/figure2_full_reproduction/results/joint_xe131/
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add research/figure2_full_reproduction/results/joint_xe131
           if ! git diff --cached --quiet; then
-            git commit -m "Archive Xe-131 joint response and three-body diagnostics"
+            git commit -m "Archive converged Xe-131 joint response and three-body diagnostics"
             git push
           fi
