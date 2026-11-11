@@ -502,6 +502,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 - 天然氙归档完整性验证 workflow 通过；
 - AFH exact_spatial 默认模式重新计算 98 个逐同位素贡献和 14 个总速率，与归档结果的最大总速率相对差异为 \\(2.67\\times10^{-12}\\)，CI run 43044583357 通过；
 - 核响应 q 与精确三体运动学 q 已完成独立审计，并增加代码防误用检查，详见附录 G。
+- AFH q 审计、NR 近似敏感性和固定 (M_A=131u) 的四点对照已由 CI run 43045857679 通过；四组 fixed-speed benchmark 已按 exact spatial q 重算并上传 artifact。
 
 ### 8.2 尚未完成或不能过度声称的事项
 
