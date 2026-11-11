@@ -20,7 +20,6 @@ from sympy.physics.wigner import wigner_3j, wigner_6j
 
 A, Z, J_A, T_ISO = 131, 54, 1.5, 11.5
 B_GEV_INV = "11.61690053236942"
-ISOSCALAR_FACTOR = mp.sqrt(mp.mpf(2) / (2 * mp.mpf(str(T_ISO)) + 1))
 
 
 def orbital_n_l(Nprincipal: int, two_j: int) -> tuple[int, int]:
@@ -52,6 +51,7 @@ def angular_exact(row: dict[str, str], rank: int, dps: int) -> mp.mpf:
 def build_grouped_coefficients(matrix_csv: Path, dps: int):
     mp.mp.dps = dps
     grouped = {0: defaultdict(mp.mpf), 2: defaultdict(mp.mpf)}
+    isoscalar_factor = mp.sqrt(mp.mpf(2) / (2 * mp.mpf(str(T_ISO)) + 1))
     with matrix_csv.open(newline="", encoding="utf-8") as f:
         rows = list(csv.DictReader(f))
 
@@ -79,7 +79,7 @@ def build_grouped_coefficients(matrix_csv: Path, dps: int):
                     * mp.gamma(lp + s + mp.mpf("1.5"))
                 )
                 a = mp.mpf(rank - lp - ell - 2*r - 2*s) / 2
-                grouped[rank][a] += ISOSCALAR_FACTOR * rho * angular * base * c1 * c2
+                grouped[rank][a] += isoscalar_factor * rho * angular * base * c1 * c2
 
     return {rank: dict(values) for rank, values in grouped.items()}
 
@@ -88,7 +88,7 @@ def amplitude_mp(q_gev: str, rank: int, grouped, b_gev_inv: mp.mpf) -> mp.mpf:
     q = mp.mpf(q_gev)
     y = (q * b_gev_inv / 2) ** 2
     prefactor = (
-        mp.mpf(2) ** rank / mp.factorial2(2*rank + 1)
+        mp.mpf(2) ** rank / mp.fac2(2*rank + 1)
         * y ** (mp.mpf(rank) / 2) * mp.exp(-y)
     )
     total = mp.mpf("0")
