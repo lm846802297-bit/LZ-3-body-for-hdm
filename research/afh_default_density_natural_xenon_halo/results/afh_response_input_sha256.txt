@@ -1,0 +1,4 @@
+AFH all-isotope response input: afh_xe_isotope_responses.csv
+SHA256: 44c88f3aaf2fb212facbe68432d38389374255432eec04ce8a76437c82c1be3a
+Rows including header: 16808
+Rows of data: 16807

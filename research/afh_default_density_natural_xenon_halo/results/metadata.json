@@ -1,0 +1,49 @@
+{
+  "calculation": "AFH-default natural-xenon isotope-specific halo-folded three-body differential rate",
+  "AFH_reference": "Anand, Fitzpatrick and Haxton, Phys. Rev. C 89 (2014) 065501, arXiv:1308.6288; DMFormFactor v6.0 built-in sdgXeA default densities",
+  "response_source_sha256": "44c88f3aaf2fb212facbe68432d38389374255432eec04ce8a76437c82c1be3a",
+  "response_input_rows": 16807,
+  "response_sample_file": "input/afh_response_samples.csv",
+  "available_isotopes": [128, 129, 130, 131, 132, 134, 136],
+  "omitted_isotopes": [124, 126],
+  "available_natural_atom_fraction": 0.998158,
+  "omitted_natural_atom_fraction": 0.001842,
+  "abundance_source": "NIST Atomic Weights and Isotopic Compositions for Xenon",
+  "abundance_url": "https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=Xe",
+  "abundance_convention": "natural atomic fractions; no renormalization of the seven available isotopes",
+  "mean_atomic_weight_for_target_number_g_mol": 131.29276144787175,
+  "isotope_nuclear_mass_scheme": "(NIST neutral-atom relative atomic mass - 54*m_e)*u; electronic binding energy neglected",
+  "u_GeV": 0.93149410242,
+  "electron_mass_u": 0.000548579909065,
+  "b_A_formula": "sqrt(41.467/(45*A^(-1/3)-25*A^(-2/3))) fm",
+  "b_A_fm": {
+    "128": 2.2845956364531257,
+    "129": 2.2871937024334894,
+    "130": 2.2897756832598466,
+    "131": 2.2923417985218975,
+    "132": 2.2948922631920268,
+    "134": 2.2999470783389384,
+    "136": 2.304941760984924
+  },
+  "m_chi1_GeV": 1000.0,
+  "benchmark_sets": {
+    "red_ms200_dm1": {"m_s_keV": 200.0, "Delta_m_MeV": 1.0},
+    "green_ms300_dm1": {"m_s_keV": 300.0, "Delta_m_MeV": 1.0},
+    "black_ms360_dm1": {"m_s_keV": 360.0, "Delta_m_MeV": 1.0},
+    "blue_ms300_dm10": {"m_s_keV": 300.0, "Delta_m_MeV": 10.0}
+  },
+  "m_V_GeV": 10.0,
+  "g2": 1.0,
+  "coupling_product_squared": 1e-8,
+  "rho_chi_GeV_cm3": 0.3,
+  "halo_models": {
+    "shm_cutoff": {"v0_km_s": 220.0, "vE_km_s": 232.0, "v_esc_km_s": 544.0, "vmax_lab_km_s": 776.0},
+    "mb_untruncated": {"v0_km_s": 220.0, "vE_km_s": 232.0, "integration_upper_km_s": 1600.0}
+  },
+  "width_scheme": "pole width for chi2 -> chi1 s; conditional on Dirac chi2, real scalar, pure scalar off-diagonal Yukawa and no other open channels",
+  "quadrature": {"speed_nodes": 32, "Eq6_kernel": [8, 8, 4], "speed_refinement_checks": [32, 64], "kernel_refinement_checks": "8x8x4 vs 16x16x8 at six representative points"},
+  "rate_units": "events/(kg day keV)",
+  "detector_response": "not applied",
+  "recoil_points_keV": [101.0, 200.0, 267.0, 542.0],
+  "native_Mathematica_validation": "pending; response samples are from the source-translated AFH v6.0 table"
+}
