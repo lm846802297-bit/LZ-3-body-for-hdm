@@ -24,17 +24,9 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 import eq6_kernel  # noqa: E402
-from joint_xe131 import (  # noqa: E402
-    incoming_momentum_GeV,
-    isotope_mass_GeV,
-    load_nuclear_response,
-)
+from joint_xe131 import isotope_mass_GeV, load_nuclear_response  # noqa: E402
 from rate_kinematics import vmin_three_body_km_s  # noqa: E402
-from run_natural_xenon_joint import (  # noqa: E402
-    AVAILABLE,
-    MODELS,
-    NATURAL_ABUNDANCE,
-)
+from run_natural_xenon_joint import AVAILABLE, MODELS, NATURAL_ABUNDANCE  # noqa: E402
 
 C_KM_S = 299_792.458
 C_CM_S = 2.99792458e10
@@ -118,11 +110,10 @@ def rate_conversion_factor(rho_dm: float, mchi: float) -> float:
     )
 
 
-def compute_isotope_halo_integral(
+def compute_isotope_halo_integrals(
     *,
     A: int,
     ER_keV: float,
-    model: str,
     halo_model: str,
     nv: int,
     mchi: float,
@@ -137,8 +128,11 @@ def compute_isotope_halo_integral(
     nw: int,
     nz: int,
     nphi: int,
-) -> dict:
-    """Return J_A = integral dv f_lab(v) beta C_A(v), with units GeV."""
+) -> list[dict]:
+    """Compute both nuclear models while evaluating the shared I6 only once.
+
+    J_A = integral dv f_lab(v) beta C_A(v), with units GeV.
+    """
     mA = isotope_mass_GeV(A)
     ER = ER_keV * 1.0e-6
     vmin = vmin_three_body_km_s(mchi, ms, mA, ER)
@@ -147,35 +141,38 @@ def compute_isotope_halo_integral(
         if halo_model == "shm_cutoff"
         else untruncated_vmax
     )
-    response_path = response_dir / f"xe{A}_{model.upper()}_WM.csv"
-    response = load_nuclear_response(response_path, A, model)
-    R_A, q_response = response.at_recoil(ER, mA)
+    responses = {}
+    for model in MODELS:
+        response_path = response_dir / f"xe{A}_{model.upper()}_WM.csv"
+        response = load_nuclear_response(response_path, A, model)
+        R_A, q_response = response.at_recoil(ER, mA)
+        responses[model] = (R_A, q_response)
 
     if vmin >= vmax:
-        return {
+        return [{
             "A": A,
             "model": model.upper(),
             "halo_model": halo_model,
             "ER_keV": ER_keV,
             "abundance": NATURAL_ABUNDANCE[A],
             "mA_GeV": mA,
-            "R_A": R_A,
-            "q_response_GeV": q_response,
+            "R_A": responses[model][0],
+            "q_response_GeV": responses[model][1],
             "vmin_km_s": vmin,
             "vmax_km_s": vmax,
             "speed_phase_space_open": False,
             "nv": nv,
             "J_A_GeV": 0.0,
-        }
+        } for model in MODELS]
 
     velocities, weights = speed_nodes(vmin, vmax, nv)
-    J_A = 0.0
+    common_integral = 0.0
     for v, weight in zip(velocities, weights):
         pdf = halo_pdf(float(v), halo_model, speed_v0, speed_ve, speed_vesc)
         if pdf == 0.0:
             continue
         beta = float(v) / C_KM_S
-        pchi = incoming_momentum_GeV(mchi, float(v))
+        pchi = mchi * beta / math.sqrt(1.0 - beta * beta)
         I6 = eq6_kernel.reduced_kernel(
             mchi,
             ms,
@@ -188,29 +185,32 @@ def compute_isotope_halo_integral(
             nphi=nphi,
             width_scheme="zero",
         )
-        C_A = (
+        common_prefactor = (
             mA * coupling_product_sq
             / (256.0 * math.pi**3 * pchi**2)
-            * R_A
             * I6
         )
-        J_A += float(weight) * pdf * beta * C_A
+        common_integral += float(weight) * pdf * beta * common_prefactor
 
-    return {
-        "A": A,
-        "model": model.upper(),
-        "halo_model": halo_model,
-        "ER_keV": ER_keV,
-        "abundance": NATURAL_ABUNDANCE[A],
-        "mA_GeV": mA,
-        "R_A": R_A,
-        "q_response_GeV": q_response,
-        "vmin_km_s": vmin,
-        "vmax_km_s": vmax,
-        "speed_phase_space_open": True,
-        "nv": nv,
-        "J_A_GeV": J_A,
-    }
+    rows = []
+    for model in MODELS:
+        R_A, q_response = responses[model]
+        rows.append({
+            "A": A,
+            "model": model.upper(),
+            "halo_model": halo_model,
+            "ER_keV": ER_keV,
+            "abundance": NATURAL_ABUNDANCE[A],
+            "mA_GeV": mA,
+            "R_A": R_A,
+            "q_response_GeV": q_response,
+            "vmin_km_s": vmin,
+            "vmax_km_s": vmax,
+            "speed_phase_space_open": True,
+            "nv": nv,
+            "J_A_GeV": common_integral * R_A,
+        })
+    return rows
 
 
 def write_csv(path: Path, rows: list[dict]) -> None:
@@ -231,6 +231,7 @@ def main() -> None:
     parser.add_argument("--ms-MeV", type=float, default=0.3)
     parser.add_argument("--delta-m-MeV", type=float, default=1.0)
     parser.add_argument("--coupling-product-sq", type=float, default=1.0e-8)
+    parser.add_argument("--rhoDM-GeV-cm3", type=float, default=RHO_DM_GEV_CM3_DEFAULT)
     parser.add_argument("--ER-keV", type=float, nargs="+",
                         default=[101.0, 200.0, 267.0, 542.0])
     parser.add_argument("--mV-scan-GeV", type=float, nargs="+",
@@ -254,7 +255,7 @@ def main() -> None:
     ms = args.ms_MeV * 1.0e-3
     delta_m = args.delta_m_MeV * 1.0e-3
     abundance_coverage = sum(NATURAL_ABUNDANCE[A] for A in AVAILABLE)
-    rate_factor = rate_conversion_factor(0.3, args.mchi_GeV)
+    rate_factor = rate_conversion_factor(args.rhoDM_GeV_cm3, args.mchi_GeV)
 
     isotope_rows: list[dict] = []
     natural_rows: list[dict] = []
@@ -264,35 +265,34 @@ def main() -> None:
         for nv in args.nv_orders:
             for A in AVAILABLE:
                 for ER_keV in args.ER_keV:
-                    for model in MODELS:
-                        row = compute_isotope_halo_integral(
-                            A=A,
-                            ER_keV=ER_keV,
-                            model=model,
-                            halo_model=halo_model,
-                            nv=nv,
-                            mchi=args.mchi_GeV,
-                            ms=ms,
-                            delta_m=delta_m,
-                            speed_v0=args.v0_km_s,
-                            speed_ve=args.ve_km_s,
-                            speed_vesc=args.vesc_km_s,
-                            untruncated_vmax=args.untruncated_vmax_km_s,
-                            coupling_product_sq=args.coupling_product_sq,
-                            response_dir=args.response_dir,
-                            nw=args.nw,
-                            nz=args.nz,
-                            nphi=args.nphi,
-                        )
+                    rows = compute_isotope_halo_integrals(
+                        A=A,
+                        ER_keV=ER_keV,
+                        halo_model=halo_model,
+                        nv=nv,
+                        mchi=args.mchi_GeV,
+                        ms=ms,
+                        delta_m=delta_m,
+                        speed_v0=args.v0_km_s,
+                        speed_ve=args.ve_km_s,
+                        speed_vesc=args.vesc_km_s,
+                        untruncated_vmax=args.untruncated_vmax_km_s,
+                        coupling_product_sq=args.coupling_product_sq,
+                        response_dir=args.response_dir,
+                        nw=args.nw,
+                        nz=args.nz,
+                        nphi=args.nphi,
+                    )
+                    for row in rows:
                         isotope_rows.append(row)
-                        intermediate[(halo_model, nv, A, ER_keV, model)] = row
+                        intermediate[(halo_model, nv, A, ER_keV, row["model"])] = row
 
             for model in MODELS:
                 for ER_keV in args.ER_keV:
                     for mV in args.mV_scan_GeV:
                         weighted_sigma_integral = 0.0
                         for A in AVAILABLE:
-                            row = intermediate[(halo_model, nv, A, ER_keV, model)]
+                            row = intermediate[(halo_model, nv, A, ER_keV, model.upper())]
                             denominator = (
                                 mV * mV
                                 + 2.0 * float(row["mA_GeV"]) * ER_keV * 1.0e-6
@@ -313,14 +313,10 @@ def main() -> None:
                             "mean_xenon_atomic_weight_g_mol": NIST_XE_STANDARD_ATOMIC_WEIGHT_G_MOL,
                             "sum_xA_halo_integral_dsigma_GeVminus3": weighted_sigma_integral,
                             "rate_events_kg_day_keV": rate,
-                            "rate_normalization": (
-                                "rhoDM=0.3 GeV/cm3; c; N_A*1000/131.293; "
-                                "1 GeV^-2=0.3893793721e-27 cm2"
-                            ),
+                            "rhoDM_GeV_cm3": args.rhoDM_GeV_cm3,
                             "detector_efficiency_resolution": "not applied",
                         })
 
-    # Compare adjacent speed-quadrature orders at each halo/model/recoil/mV.
     convergence_rows: list[dict] = []
     ordered_nv = sorted(set(args.nv_orders))
     if len(ordered_nv) >= 2:
@@ -380,7 +376,7 @@ def main() -> None:
         "ms_MeV": args.ms_MeV,
         "delta_m_MeV": args.delta_m_MeV,
         "coupling_product_sq": args.coupling_product_sq,
-        "rhoDM_GeV_cm3": 0.3,
+        "rhoDM_GeV_cm3": args.rhoDM_GeV_cm3,
         "v0_km_s": args.v0_km_s,
         "vE_km_s": args.ve_km_s,
         "vesc_km_s": args.vesc_km_s,
