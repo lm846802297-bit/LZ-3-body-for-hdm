@@ -164,7 +164,7 @@ def main() -> None:
                 "g2_for_conditional_pole_width": float(reference["g2"]),
                 "width_scheme": reference["width_scheme"],
                 "mass_scheme": reference["mass_scheme"],
-                "response_q_convention": reference["response_q_convention"],
+                "response_q_convention": "exact_spatial",
                 "detector_efficiency_applied": True,
                 "energy_resolution_smearing_applied": False,
                 "two_dimensional_signal_pdf_applied": False,
