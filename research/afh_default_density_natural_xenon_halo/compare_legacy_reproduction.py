@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare a fresh legacy-exact-q halo fold with the archived selected-point rates."""
+"""Compare a fresh exact-spatial-q halo fold with the archived selected-point rates."""
 from __future__ import annotations
 
 import argparse
