@@ -50,8 +50,8 @@ def shm_truncated_pdf(v, v0=220.0, ve=232.0, vesc=544.0):
         bracket=math.exp(-((v-ve)/v0)**2)-math.exp(-z*z)
     return v*bracket/(math.sqrt(math.pi)*v0*ve*norm)
 
-def q_response_manuscript_nr(mA, ER):
-    """Response momentum implied by manuscript y=b_A^2*m_A*E_R/2."""
+def q_response_nr_approx(mA, ER):
+    """Non-relativistic approximation q^2=2*m_A*E_R."""
     return math.sqrt(2.0*mA*ER)
 
 def q_kinematic_exact(mA, ER):
@@ -59,10 +59,10 @@ def q_kinematic_exact(mA, ER):
     return math.sqrt(2.0*mA*ER+ER*ER)
 
 def q_response_from_convention(mA, ER, convention):
-    if convention=="manuscript_nr":
-        return q_response_manuscript_nr(mA,ER)
-    if convention=="legacy_exact":
+    if convention in ("exact_spatial", "legacy_exact"):
         return q_kinematic_exact(mA,ER)
+    if convention=="nr_approx":
+        return q_response_nr_approx(mA,ER)
     raise ValueError(f"unknown response-q convention: {convention}")
 
 def vmin_three_body_km_s(mchi, ms, mA, ER):
@@ -93,9 +93,9 @@ def main():
     ap.add_argument("--nw",type=int,default=8)
     ap.add_argument("--nz",type=int,default=8)
     ap.add_argument("--nphi",type=int,default=4)
-    ap.add_argument("--response-q-convention",choices=("manuscript_nr","legacy_exact"),
-                    default="manuscript_nr",
-                    help="AFH response q convention; legacy_exact is required to reproduce the archived pre-audit samples.")
+    ap.add_argument("--response-q-convention",choices=("exact_spatial","nr_approx","legacy_exact"),
+                    default="exact_spatial",
+                    help="AFH response momentum: exact_spatial is the physical spatial transfer used by AFH and the exact three-body kinematics; nr_approx is the q^2=2*m_A*E_R approximation; legacy_exact is a backward-compatible alias.")
     args=ap.parse_args()
     args.out_dir.mkdir(parents=True,exist_ok=True)
 
@@ -201,6 +201,7 @@ def main():
         for line in hash_file.read_text(encoding="utf-8").splitlines():
             if line.startswith("SHA256:"):
                 response_sha=line.split(":",1)[1].strip()
+    canonical_response_q = ("exact_spatial" if args.response_q_convention in ("exact_spatial","legacy_exact") else "nr_approx")
     metadata={
         "calculation":"AFH-default natural-xenon isotope-specific halo-folded three-body differential rate",
         "AFH_reference":"Anand, Fitzpatrick and Haxton, Phys. Rev. C 89 (2014) 065501, arXiv:1308.6288; DMFormFactor v6.0 built-in sdgXeA default densities",
@@ -214,8 +215,9 @@ def main():
         "abundance_convention":"natural atomic fractions; no renormalization",
         "mean_atomic_weight_g_mol":mean_atomic_weight,
         "mass_scheme":"(NIST atomic isotope mass - 54 electron masses)*u; electronic binding neglected",
-        "response_q_convention":args.response_q_convention,
-        "response_q_formula":("sqrt(2*m_A*E_R)" if args.response_q_convention=="manuscript_nr" else "sqrt(2*m_A*E_R+E_R^2) [legacy exact-q response samples]"),
+        "response_q_convention":canonical_response_q,
+        "response_q_formula":("sqrt(2*m_A*E_R+E_R^2) [exact spatial transfer]" if canonical_response_q=="exact_spatial" else "sqrt(2*m_A*E_R) [non-relativistic approximation]"),
+        "requested_response_q_mode":args.response_q_convention,
         "kinematic_q_convention":"sqrt(2*m_A*E_R+E_R^2); exact nuclear mass-shell momentum used for v_min and three-body kinematics",
         "b_A_formula":"sqrt(41.467/(45*A^(-1/3)-25*A^(-2/3))) fm",
         "b_A_fm":b_values,
