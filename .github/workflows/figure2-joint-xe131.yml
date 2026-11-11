@@ -57,6 +57,21 @@ jobs:
             --width-scheme zero \
             --nw 16 --nz 16 --nphi 8
 
+      - name: Compute medium-order Xe-131 joint diagnostics
+        run: |
+          python research/figure2_full_reproduction/run_joint_xe131.py \
+            --response-dir research/figure2_full_reproduction/results/anand_wm_response \
+            --out-dir /tmp/joint_xe131/medium \
+            --A 131 \
+            --mchi-GeV 1000 \
+            --ms-MeV 0.3 \
+            --delta-m-MeV 1 \
+            --speed-km-s 776 \
+            --coupling-product-sq 1e-8 \
+            --ER-keV 101 200 267 542 \
+            --width-scheme zero \
+            --nw 24 --nz 24 --nphi 16
+
       - name: Compute high-order Xe-131 joint diagnostics
         run: |
           python research/figure2_full_reproduction/run_joint_xe131.py \
@@ -88,6 +103,8 @@ jobs:
       - name: Archive joint results on the research branch
         run: |
           mkdir -p research/figure2_full_reproduction/results/joint_xe131
+          rm -f research/figure2_full_reproduction/results/joint_xe131/xe131_*_joint_single_speed.csv
+          rm -f research/figure2_full_reproduction/results/joint_xe131/metadata.json
           cp -r /tmp/joint_xe131/* research/figure2_full_reproduction/results/joint_xe131/
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
