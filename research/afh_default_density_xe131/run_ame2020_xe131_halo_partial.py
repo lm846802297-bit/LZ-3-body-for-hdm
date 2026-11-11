@@ -23,6 +23,7 @@ sys.path.insert(0, str(HERE.parent / "figure2_full_reproduction"))
 
 import eq6_kernel  # noqa: E402
 from isotope_mass_schemes import (  # noqa: E402
+    AME2020_XE_ATOMIC_MASS_U,
     NIST_XE_ATOMIC_MASS_U,
     electron_binding_energy_eV,
     isotope_mass_GeV,
@@ -329,7 +330,8 @@ def main() -> None:
     binding_eV = electron_binding_energy_eV(54)
     mass_rows = []
     for isotope_A, abundance in NATURAL_XE_ABUNDANCES.items():
-        m_A_u = NIST_XE_ATOMIC_MASS_U[isotope_A]
+        m_A_nist_u = NIST_XE_ATOMIC_MASS_U[isotope_A]
+        m_A_ame_u = AME2020_XE_ATOMIC_MASS_U[isotope_A]
         m_A_au = isotope_A * 0.93149410242
         m_A_nist = isotope_mass_GeV(isotope_A, "nist_nuclear")
         m_A_ame = isotope_mass_GeV(isotope_A, "ame2020_nuclear")
@@ -340,12 +342,14 @@ def main() -> None:
             "A": isotope_A,
             "isotope": f"Xe-{isotope_A}",
             "natural_atom_fraction": abundance,
-            "atomic_mass_u_NIST": m_A_u,
+            "atomic_mass_u_NIST": m_A_nist_u,
+            "atomic_mass_u_AME2020": m_A_ame_u,
+            "delta_atomic_mass_AME2020_vs_NIST_u": m_A_ame_u - m_A_nist_u,
             "electron_binding_energy_keV": binding_eV * 1.0e-3,
             "mA_Au_GeV_legacy": m_A_au,
             "mA_NIST_nuclear_GeV": m_A_nist,
             "mA_AME2020_CODATA2022_GeV": m_A_ame,
-            "delta_AME2020_vs_NIST_keV": (m_A_ame - m_A_nist) * 1.0e6,
+            "delta_nuclear_mass_AME2020_vs_NIST_keV": (m_A_ame - m_A_nist) * 1.0e6,
             "delta_AME2020_vs_Au_keV": (m_A_ame - m_A_au) * 1.0e6,
             "vmin_at_ER101keV_ms300_km_s": vmin_101,
             "AFH_default_response_available": isotope_A == A,
@@ -544,9 +548,9 @@ def main() -> None:
         "reference_mass_scheme": "ame2020_nuclear",
         "reference_response_q_convention": "manuscript_nr",
         "mass_scheme": {
-            "atomic_mass_source": "NIST Atomic Weights and Isotopic Compositions for Xenon",
-            "nuclear_conversion": "M_nucleus = M_neutral_atom - Z*m_e + B_e(Z)",
-            "electron_binding_energy_source": "AME2020 atomic mass evaluation, Eq. (2)",
+            "atomic_mass_source": "Unrounded AME2020 mass_1.mas20 atomic masses; NIST values retained for the legacy nist_nuclear comparison",
+            "nuclear_conversion": "M_nucleus = M_AME2020_atom - Z*m_e + B_e(Z)",
+            "electron_binding_energy_source": "AME2020 atomic mass evaluation, Eq. (2); atomic masses from official mass_1.mas20",
             "electron_binding_energy_formula_eV": "14.4381*Z^2.39 + 1.55468e-6*Z^5.35",
             "electron_binding_energy_Xe_keV": binding_eV * 1.0e-3,
             "isotope_mass_table": "xenon_isotope_ame2020_masses.csv",
