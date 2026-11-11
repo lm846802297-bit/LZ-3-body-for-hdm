@@ -122,7 +122,17 @@ R_A\!\left(\sqrt{2m_AE_R}\right),
 
 随后重新运行逐同位素三体积分和 halo fold。旧的精确-q 结果必须保留为 legacy 对照。
 
-## G.6 当前状态与验收标准
+## G.6 机器可读审计结果
+
+本轮 CI 运行 43038372836 已通过，并保存 q-convention audit artifact。相同结果已提交到仓库：
+
+- research/afh_default_density_natural_xenon_halo/results/natural_xenon_q_convention_audit.csv（28 行逐同位素、逐反冲点动量对照）；
+- research/afh_default_density_natural_xenon_halo/results/xe131_afh_response_shift_NR_vs_exact.csv（Xe-131 四点 PCHIP 响应对照）；
+- research/afh_default_density_natural_xenon_halo/results/q_convention_audit_summary.json（机器可读汇总）。
+
+[查看 CI 运行及其 artifact](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43038372836)。
+
+## G.7 当前状态与验收标准
 
 | 项目 | 状态 | 说明 |
 |---|---|---|
