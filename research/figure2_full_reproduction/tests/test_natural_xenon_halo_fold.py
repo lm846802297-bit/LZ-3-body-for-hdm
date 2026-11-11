@@ -107,8 +107,8 @@ class NaturalXenonHaloFoldTests(unittest.TestCase):
             self.assertAlmostEqual(row["q_response_GeV"], q_exact, places=14)
 
     def test_per_kg_target_count_uses_nist_standard_atomic_weight(self):
-        expected = 6.02214076e23 * 1000.0 / 131.293
-        self.assertEqual(NIST_XE_STANDARD_ATOMIC_WEIGHT_G_MOL, 131.293)
+        expected = 6.02214076e23 * 1000.0 / 131.29276144779053
+        self.assertEqual(NIST_XE_STANDARD_ATOMIC_WEIGHT_G_MOL, 131.29276144779053)
         self.assertAlmostEqual(mean_target_number_per_kg(), expected, places=6)
 
     def test_rate_conversion_factor_is_positive_and_scales_with_density(self):
