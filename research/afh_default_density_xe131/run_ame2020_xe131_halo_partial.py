@@ -195,10 +195,9 @@ def compute_partial_rate(
     # Keep the manuscript's AFH response momentum and exact kinematic q distinct.
     q_response_NR = math.sqrt(2.0 * mA * ER)
     q_kin_exact = math.sqrt(2.0 * mA * ER + ER * ER)
-    # The AFH response is a function of the physical three-momentum transfer.
-    # Use the exact elastic target mass shell, consistently with Eq. (6) limits
-    # and the natural-xenon halo-fold convention; retain q_NR as a diagnostic.
-    q_response = q_kin_exact
+    # The manuscript defines y=b_A^2*mA*ER/2, hence q_response^2=2*mA*ER.
+    # The exact target mass-shell momentum is retained separately for kinematics.
+    q_response = q_response_NR
     if q_response < 0.0 or q_response > 0.6:
         raise ValueError(f"AFH q={q_response} GeV is outside the archived grid")
     R_A = float(response_interp(q_response))
