@@ -8,6 +8,7 @@ on:
   push:
     branches:
       - research/afh-default-density-xe131-mainline
+      - research/ame2020-mass-q-convention-integration
     paths:
       - .github/workflows/afh-natural-xenon-halo-archive.yml
       - research/afh_default_density_natural_xenon_halo/**
@@ -53,6 +54,7 @@ jobs:
       - name: Recompute the archived legacy exact-q selected-point halo fold
         run: |
           python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \
+            --mass-scheme nist_nuclear \
             --response-q-convention legacy_exact \
             --out-dir "$RUNNER_TEMP/natural_xenon_legacy_exact"
 
