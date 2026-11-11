@@ -29,6 +29,8 @@ Scientific workflow links:
 ## Repository organization
 
 - [ ] Research-specific files are under research/<topic>/.
+- [ ] The formal result is archived on main under research/<topic>/, not only on the source branch.
+- [ ] After merge, the main-branch paths and required artifacts will be checked before deciding whether to delete the source branch.
 - [ ] The study README and research/README.md index are updated if needed.
 - [ ] No temporary files, local caches, secrets, or unrelated outputs are included.
 - [ ] paper-source/ is unchanged, or every intentional manuscript-source change is identified and justified.
