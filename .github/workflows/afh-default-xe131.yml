@@ -75,7 +75,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: afh-xe131-mpmath-full-grid-validation
-          path: \${{ runner.temp }}/afh_mpmath_full_grid/
+          path: ${{ runner.temp }}/afh_mpmath_full_grid/
           if-no-files-found: error
           retention-days: 90
 
