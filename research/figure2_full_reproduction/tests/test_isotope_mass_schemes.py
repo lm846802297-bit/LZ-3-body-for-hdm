@@ -62,6 +62,14 @@ class IsotopeMassSchemeTests(unittest.TestCase):
             places=6,
         )
 
+    def test_cod2022_electron_mass_ratio_in_u(self):
+        from isotope_mass_schemes import ELECTRON_MASS_U_CODATA2022
+        self.assertAlmostEqual(
+            ELECTRON_MASS_U_CODATA2022,
+            5.485799090441e-4,
+            places=16,
+        )
+
     def test_ame2020_cod2022_xe131_nuclear_mass(self):
         self.assertAlmostEqual(
             isotope_mass_GeV(131, "ame2020_nuclear"),
