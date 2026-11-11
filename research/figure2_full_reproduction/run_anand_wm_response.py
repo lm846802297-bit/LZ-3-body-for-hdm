@@ -59,7 +59,12 @@ NIST_SOURCE = "https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?asci
 
 
 def oscillator_length_fm(A: int) -> float:
-    """Default empirical b(A) prescription in dmscatter/src/parameters.f90."""
+    """AFH default oscillator length, documented in arXiv:1308.6288, Sec. 7.2.
+
+    AFH's SetIsotope[..., bFM="default", ...] uses
+    b[fm] = sqrt(41.467 / (45 A^(-1/3) - 25 A^(-2/3))).
+    dmscatter implements the same prescription.
+    """
     return math.sqrt(41.467 / (45.0 * A ** (-1.0 / 3.0) - 25.0 * A ** (-2.0 / 3.0)))
 
 
@@ -98,8 +103,9 @@ def run_dmscatter_response(
     old_cwd = Path.cwd()
     try:
         os.chdir(workdir)
-        # Explicitly set the same empirical b(A) default as dmscatter's
-        # parameters.f90, so the run is fully specified in its control file.
+        # Explicitly set the AFH Sec. 7.2 default b(A) prescription, so the
+        # run is fully specified in its control file rather than relying on
+        # an implicit executable default.
         Wfunc = dm.NucFormFactor(
             Z=Z_XE,
             N=A - Z_XE,
@@ -390,7 +396,9 @@ def main() -> None:
         "zero_momentum_check": "R_A(0)=A^2",
         "dmscatter_pnresponse": 1,
         "fill_nuclear_core": 1,
-        "oscillator_length_prescription": "dmscatter src/parameters.f90 empirical b(A), explicitly repeated as hoparameter",
+        "oscillator_length_prescription": "Anand, Fitzpatrick and Haxton, arXiv:1308.6288, Sec. 7.2 (SetIsotope default), explicitly repeated as hoparameter; dmscatter implements the same formula",
+        "oscillator_length_formula": "b_A[fm] = sqrt(41.467 / (45 A^(-1/3) - 25 A^(-2/3)))",
+        "oscillator_length_source_location": "AFH arXiv:1308.6288v1, Sec. 7.2, SetIsotope documentation, PDF p.24",
         "q_grid_GeV": [Q_MIN_GEV, Q_MAX_GEV, Q_STEP_GEV],
         "recoil_grid_keV": [0.0, ER_MAX_KEV, ER_STEP_KEV],
         "natural_xenon_available_isotopes": list(AVAILABLE_ISOTOPES),
@@ -400,8 +408,8 @@ def main() -> None:
         "natural_mixture_note": "Response-only isotope mixture; not the full isotope-summed three-body event rate.",
         "figure2_dip_energies_keV": [101.0, 267.0, 542.0],
         "caveats": [
-            "The manuscript does not specify the Xe isotope mixture or b_A.",
-            "The empirical b(A) prescription is a documented reference choice, not claimed to be the original Figure 2 input.",
+            "The manuscript does not specify the Xe isotope mixture or b_A; this reproduction adopts the AFH Sec. 7.2 default b(A) prescription.",
+            "The AFH default is a literature-defined reference choice, not a claim that the original Figure 2 calculation used an undocumented identical input.",
             "Xe-124 and Xe-126 are absent from the pinned dmscatter target library.",
             "The mixture combines only the nuclear response factor at fixed E_R; full isotope-specific kinematics and the three-body integral must be evaluated before calling it a natural-xenon event-rate spectrum.",
         ],
@@ -469,10 +477,12 @@ def main() -> None:
         "",
         "## Input prescription",
         "",
-        "The oscillator length is the empirical default formula from",
-        "dmscatter/src/parameters.f90, explicitly supplied in each control file.",
-        "The original manuscript does not state b_A; this is a documented",
-        "reference prescription, not a recovered original plotting input.",
+        "The oscillator length follows the default prescription explicitly",
+        "documented by Anand, Fitzpatrick and Haxton, arXiv:1308.6288, Sec. 7.2:",
+        "b_A[fm] = sqrt(41.467 / (45 A^(-1/3) - 25 A^(-2/3))).",
+        "The same formula is implemented by dmscatter and is explicitly supplied",
+        "in each control file. The original target manuscript does not state b_A;",
+        "we adopt the AFH literature default rather than fit b_A to Figure 2.",
         "",
         "See metadata.json and the raw_runs directory for provenance.",
     ]
