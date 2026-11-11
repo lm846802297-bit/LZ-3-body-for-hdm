@@ -56,7 +56,7 @@ class Ame2020Xe131PartialRateTests(unittest.TestCase):
         self.assertAlmostEqual(shm_norm, 1.0, delta=2e-10)
         self.assertAlmostEqual(mb_norm, 1.0, delta=2e-10)
 
-    def test_exact_recoil_momentum_is_used_for_afh_response(self):
+    def test_manuscript_nr_momentum_is_used_for_afh_response(self):
         row = compute_partial_rate(
             benchmark="black_ms360_dm1",
             er_keV=101.0,
@@ -80,11 +80,13 @@ class Ame2020Xe131PartialRateTests(unittest.TestCase):
         ER = 101.0e-6
         q_exact = math.sqrt(2.0 * mA * ER + ER * ER)
         q_nr = math.sqrt(2.0 * mA * ER)
-        self.assertAlmostEqual(row["q_response_exact_GeV"], q_exact, places=14)
+        self.assertAlmostEqual(row["q_response_used_GeV"], q_nr, places=14)
+        self.assertAlmostEqual(row["q_response_NR_GeV"], q_nr, places=14)
+        self.assertAlmostEqual(row["q_kinematics_exact_GeV"], q_exact, places=14)
+        self.assertGreater(row["q_kinematics_exact_GeV"], row["q_response_used_GeV"])
         self.assertAlmostEqual(
-            row["q_response_NR_diagnostic_GeV"], q_nr, places=14
+            row["R_A_AFH_equal_pn"], float(self.response_interp(q_nr)), places=10
         )
-        self.assertGreater(row["q_response_exact_GeV"], row["q_response_NR_diagnostic_GeV"])
         self.assertFalse(row["speed_support_open"])
         self.assertEqual(row["Xe131_partial_rate_events_kg_day_keV"], 0.0)
 
