@@ -35,46 +35,65 @@ The abundance sum is not approximated by one average nuclear mass.
 - \(m_{\chi_1}=1\) TeV, \(m_V=10\) GeV, \(g_2=1\), \((g_1g_2g_{VN})^2=10^{-8}\), \(\rho_\chi=0.3\) GeV/cm³.
 - Pole width for \(\chi_2\to\chi_1s\), conditional on Dirac fermions, a real scalar, a pure scalar off-diagonal Yukawa and no other open channels.
 
-## Nuclear-response momentum versus exact kinematic momentum
+## AFH spatial momentum and the non-relativistic recoil approximation
 
-The manuscript currently defines the oscillator variable as
-
-\[
-y=\frac{b_A^2m_AE_R}{2},
-\]
-
-so the response interpolation at fixed recoil energy must use
+The AFH response functions are functions of
 
 \[
-q_{\rm resp}^{\rm NR}=\sqrt{2m_AE_R}.
+y=\left(\frac{q b_A}{2}\right)^2,
 \]
 
-The exact three-body kinematic momentum remains
+where \(q\) is the magnitude of the **spatial momentum transfer**. This is the definition used by the AFH formalism; see Fitzpatrick et al., JCAP 02 (2013) 004, arXiv:1203.3542, Sec. 4 and Sec. 7.
+
+For a nucleus initially at rest, the exact mass-shell relation is
 
 \[
-q_{\rm kin}^{\rm exact}=\sqrt{2m_AE_R+E_R^2},
+P^\mu=(m_A,\mathbf 0),\qquad
+P'^\mu=(m_A+E_R,\mathbf q),\qquad P'^2=P^2=m_A^2,
 \]
 
-and is used in \(W_{\max}\), \(v_{\min}\), and the final-state four-momentum construction.
+which gives
 
-**Important archive status:** the 28 AFH response samples used for the rates below were originally evaluated at \(q_{\rm kin}^{\rm exact}\). The rates in this audit are therefore retained as **legacy exact-q-response selected-point rates**. They have not been relabeled or rescaled as manuscript-NR results.
+\[
+\boxed{q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}}.
+\]
 
-The updated rate script defaults to manuscript-NR samples and rejects the current legacy samples. To reproduce the archived results, explicitly pass:
+Therefore the exact AFH response argument used in this three-body calculation is
 
-~~~bash
-python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \
-  --response-q-convention legacy_exact
-~~~
+\[
+\boxed{y_{\rm exact}=\frac{b_A^2}{4}(2m_AE_R+E_R^2)}.
+\]
 
-The 28-sample q difference is 0.032–0.409 keV (0.20–1.14 ppm). A direct PCHIP comparison on the freshly regenerated Xe-131 AFH response gives response shifts of -5.46 to -212.68 ppm at the four selected recoil energies. This is a Xe-131 diagnostic only; it is not an event-rate correction for all seven isotopes.
+The familiar expression
 
-Machine-readable outputs:
+\[
+y_{\rm NR}=\frac{b_A^2m_AE_R}{2}
+\]
 
-- results/natural_xenon_q_convention_audit.csv;
-- results/xe131_afh_response_shift_NR_vs_exact.csv;
-- results/q_convention_audit_summary.json.
+follows from the small-recoil approximation \(E_R\ll m_A\), or \(q_{\rm NR}=\sqrt{2m_AE_R}\). We retain it as a controlled approximation, not as a mandatory replacement for the exact spatial momentum.
 
-The seven-isotope AFH samples and halo rates must be regenerated after the full AFH isotope response table or source package is restored. See Appendix G in the main research report.
+**The 28 archived AFH response samples use exact spatial q.** They are therefore the appropriate samples for the exact three-body mass-shell kinematics; they are not an erroneous or obsolete response set.
+
+The q difference is very small: 0.032–0.409 keV across the 28 natural-xenon samples (0.20–1.14 ppm). Nevertheless, the AFH response can have a steep slope near its diffraction minima. On the 2401-point Xe-131 AFH grid, replacing exact q by q_NR changes the response at the four selected recoil points by a few to about 213 ppm for the NIST nuclear-mass convention. For the fixed-speed Figure-2 benchmark mass \(M_A=131u\), the corresponding NR-approximation response shifts are approximately 21.2, 5.48, 225.0 and 89.7 ppm at 101, 200, 267 and 542 keV, respectively.
+
+These are response-level comparisons, not empirical corrections to the halo rate. The adopted calculation retains exact q.
+
+Machine-readable comparisons:
+
+- results/natural_xenon_q_convention_audit.csv: all 28 natural-xenon samples;
+- results/xe131_afh_response_shift_NR_vs_exact.csv: Xe-131 with the NIST nuclear mass;
+- results/xe131_fixed_benchmark_q_comparison.csv: Xe-131 with the fixed benchmark mass \(M_A=131u\);
+- results/q_convention_audit_summary.json: machine-readable summary.
+
+The exact invariant momentum transfer entering a mediator propagator is a separate object:
+
+\[
+t=(P'-P)^2=-2m_AE_R.
+\]
+
+Thus a propagator denominator \(m_V^2-t=m_V^2+2m_AE_R\) is compatible with exact spatial q; it must not be confused with \(q_{\rm exact}^2\).
+
+The exact spatial q is used in the AFH response interpolation, the three-body phase-space construction, \(W_{\max}\), and \(v_{\min}\). The NR relation remains available only as a documented approximation.
 
 ## Halo prescriptions
 
