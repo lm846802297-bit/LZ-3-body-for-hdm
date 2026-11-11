@@ -1,7 +1,12 @@
 import math
 import unittest
 
-from calculations.chi2_decay_width import (
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from chi2_decay_width import (
     chi2_to_chi1s_width_GeV,
     chi2_to_chi1s_width_heavy_limit_GeV,
 )

@@ -3,6 +3,7 @@ name: Figure 2 Anand W_M nuclear response
 on:
   push:
     branches:
+      - main
       - research/figure2-p0-4-mainline
     paths:
       - .github/workflows/figure2-anand-wm-response.yml
@@ -16,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
-      - name: Check out research branch
+      - name: Check out source branch
         uses: actions/checkout@v4
         with:
           persist-credentials: true
@@ -49,7 +50,7 @@ jobs:
           if-no-files-found: error
           retention-days: 90
 
-      - name: Archive processed results in the research branch
+      - name: Archive processed results under research/
         run: |
           mkdir -p research/figure2_full_reproduction/results/anand_wm_response
           rsync -a --exclude='raw_runs/' /tmp/anand_wm_response/ \

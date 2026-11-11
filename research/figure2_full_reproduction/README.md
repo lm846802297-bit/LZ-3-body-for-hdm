@@ -118,3 +118,26 @@ contribution cannot be fixed from the supplied source because mV and the
 gauge/Goldstone completion are absent. Thus the scalar channel is complete
 under its stated assumptions, but the full-model chi2 self-energy remains
 open until the vector sector is defined.
+
+
+## Standalone chi2 -> chi1 s pole-width calculation
+
+The exact two-body width used to audit the pole-width input is also available as a standalone calculation:
+
+- `chi2_decay_width.py`: exact factorized two-body width and heavy-fermion limit;
+- `tests/test_chi2_decay_width.py`: eight unit tests covering the benchmark, coupling scaling, threshold closure, the keV/MeV distinction, and equivalence to the direct Kallen expression;
+- derivation and assumptions: `../docs/08_chi2_decay_width.md`.
+
+Run its unit tests from the repository root:
+
+~~~bash
+python -m unittest discover -s research/figure2_full_reproduction/tests -p 'test_chi2_decay_width.py' -v
+~~~
+
+Run the reference benchmark:
+
+~~~bash
+python research/figure2_full_reproduction/chi2_decay_width.py --mchi1 1000 --delta-m 0.001 --ms 0.0003 --g2 1
+~~~
+
+The width is conditional on the Dirac / pure-scalar / single-open-channel assumptions stated in the derivation. It is not yet folded into the integrated three-body recoil spectrum.

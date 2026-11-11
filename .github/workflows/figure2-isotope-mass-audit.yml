@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
+      - main
       - research/figure2-p0-4-mainline
     paths:
       - .github/workflows/figure2-isotope-mass-audit.yml
@@ -21,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Check out research branch
+      - name: Check out source branch
         uses: actions/checkout@v4
         with:
           persist-credentials: true
@@ -56,7 +57,7 @@ jobs:
           if-no-files-found: error
           retention-days: 90
 
-      - name: Archive mass-scheme audit on the research branch
+      - name: Archive mass-scheme audit under research/
         run: |
           mkdir -p research/figure2_full_reproduction/results/isotope_mass_scheme_audit
           cp -r /tmp/isotope_mass_scheme_audit/* research/figure2_full_reproduction/results/isotope_mass_scheme_audit/

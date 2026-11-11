@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
+      - main
       - research/figure2-p0-4-mainline
     paths:
       - .github/workflows/figure2-joint-xe131.yml
@@ -28,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
-      - name: Check out research branch
+      - name: Check out source branch
         uses: actions/checkout@v4
         with:
           persist-credentials: true
@@ -156,7 +157,7 @@ jobs:
           if-no-files-found: error
           retention-days: 90
 
-      - name: Archive joint results on the research branch
+      - name: Archive joint results under research/
         run: |
           mkdir -p research/figure2_full_reproduction/results/joint_xe131
           mkdir -p research/figure2_full_reproduction/results/natural_xenon_joint

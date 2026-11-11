@@ -17,17 +17,23 @@
 
 图 2 的标量质量图例存在 MeV/keV 不一致，但原始 ZIP、仓库历史和已检索的文件库中均未找到相应绘图脚本或数值输入，因此暂不修改图例。详见 paper-source/EDITORIAL_STATUS.md。
 
+## 仓库结构
+
+- `paper-source/`：原始论文源码、工作稿和图件。
+- `research/`：集中保存全部研究文档、计算程序、单元测试、审计记录和数值结果；目录索引见 `research/README.md`。
+- `.github/workflows/`：可复现计算与自动化验证。
+
 ## 研究记录
 
-- 模型、三体振幅与 Breit–Wigner 宽度：docs/01_model_and_amplitude.md
-- χ₂ → χ₁s pole width 的解析推导、数值结果与验证：docs/08_chi2_decay_width.md
-- 对应数值实现与单元测试：calculations/chi2_decay_width.py、tests/test_chi2_decay_width.py
-- LZ 数据、事件率与统计重铸路线：docs/02_lz_recast.md
-- 冻结出后演化与 ΔN_eff：docs/03_cosmology.md
-- 审计与研究路线：docs/04_audit_and_roadmap.md
-- 参考文献：docs/05_references.md
-- 原始源码审计：docs/06_original_source_audit.md
-- 构建与图像审计：docs/07_source_build_and_figure_audit.md
+- 模型、三体振幅与 Breit–Wigner 宽度：research/docs/01_model_and_amplitude.md
+- χ₂ → χ₁s pole width 的解析推导、数值结果与验证：research/docs/08_chi2_decay_width.md
+- 对应数值实现与单元测试：research/figure2_full_reproduction/chi2_decay_width.py、research/figure2_full_reproduction/tests/test_chi2_decay_width.py
+- LZ 数据、事件率与统计重铸路线：research/docs/02_lz_recast.md
+- 冻结出后演化与 ΔN_eff：research/docs/03_cosmology.md
+- 审计与研究路线：research/docs/04_audit_and_roadmap.md
+- 参考文献：research/docs/05_references.md
+- 原始源码审计：research/docs/06_original_source_audit.md
+- 构建与图像审计：research/docs/07_source_build_and_figure_audit.md
 
 ## 科学状态
 

@@ -186,19 +186,19 @@ The plotted coupling combination \((g_1g_2g_{VN})^2\) does **not** determine \(|
 
 Implementation:
 
-- calculations/chi2_decay_width.py
-- tests/test_chi2_decay_width.py
+- research/figure2_full_reproduction/chi2_decay_width.py
+- research/figure2_full_reproduction/tests/test_chi2_decay_width.py
 
 Run the eight standard-library unit tests from the repository root:
 
 ~~~bash
-python -m unittest discover -s tests -v
+python -m unittest discover -s research/figure2_full_reproduction/tests -p 'test_chi2_decay_width.py' -v
 ~~~
 
 Run the reference benchmark:
 
 ~~~bash
-python calculations/chi2_decay_width.py \
+python research/figure2_full_reproduction/chi2_decay_width.py \
   --mchi1 1000 --delta-m 0.001 --ms 0.0003 --g2 1
 ~~~
 
