@@ -5,19 +5,19 @@
 
 ### B.1 源文件与同位素选择
 
-本研究采用 DMFormFactor v6.0 的官方 Mathematica 源文件 \`v6/dmformfactor-V6.m\)，Xe-131 选择为
+本研究采用 DMFormFactor v6.0 的官方 Mathematica 源文件 `v6/dmformfactor-V6.m\)，Xe-131 选择为
 
 \[
 \texttt{SetIsotope[54,131,"default","default"]}.
 \]
 
-内置密度矩阵为 \`sdgXe131\`，共 67 项。官方源文件及压缩包 SHA-256 已记录在正文第 3 节。提取出的 67 项矩阵保存在
+内置密度矩阵为 `sdgXe131`，共 67 项。官方源文件及压缩包 SHA-256 已记录在正文第 3 节。提取出的 67 项矩阵保存在
 
 \[
 \texttt{research/afh\_default\_density\_xe131/afh\_default\_xe131\_density\_matrix.csv}.
 \]
 
-程序可重新解析官方 \`.m\` 文件，并将解析出的条目与 CSV 逐项核对。这里的 Python 结果来自对官方源函数的翻译，而不是把 GCN 或 JJ55 响应重新命名为 AFH。
+程序可重新解析官方 `.m` 文件，并将解析出的条目与 CSV 逐项核对。这里的 Python 结果来自对官方源函数的翻译，而不是把 GCN 或 JJ55 响应重新命名为 AFH。
 
 ### B.2 谐振子长度与无量纲变量
 
@@ -71,7 +71,7 @@ q_{\rm resp}^{(\rm nat)}
 
 ### B.3 \(W_M^{00}\) 的实现
 
-AFH 源代码的相关函数包括 \`Lnumber\`、\`Nodal\`、\`mjelement\`、\`BesselElement\`、\`FF\` 和 \`ResponseNuclear\`。本研究将这些源函数翻译为 Python 有限和实现，并计算弹性 \(M\) 响应。对于 Xe-131 当前使用的密度矩阵，响应中保留偶数多极 \(J=0,2\) 的贡献。
+AFH 源代码的相关函数包括 `Lnumber`、`Nodal`、`mjelement`、`BesselElement`、`FF` 和 `ResponseNuclear`。本研究将这些源函数翻译为 Python 有限和实现，并计算弹性 \(M\) 响应。对于 Xe-131 当前使用的密度矩阵，响应中保留偶数多极 \(J=0,2\) 的贡献。
 
 原始 AFH 输出记为 \(W_{M,\rm AFH}^{00}(y)\)。在正文所采用的物理等质子、等中子耦合约定下，不能把该原始 isoscalar 输出未经映射就直接放入截面。
 
