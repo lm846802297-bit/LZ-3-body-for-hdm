@@ -25,8 +25,8 @@
     ],
     "response_normalization": "R_equal_pn(q)=A^2*R_AFH_raw(q)/R_AFH_raw(0); R_equal_pn(0)=A^2",
     "oscillator_length": "AFH default b_A prescription; unchanged",
-    "response_momentum": "q_response=sqrt(2*mA*ER+ER^2), exact target mass shell",
-    "legacy_NR_response_momentum": "sqrt(2*mA*ER), retained only as an output diagnostic",
+    "response_momentum": "q_response=sqrt(2*mA*ER), as defined by y=b_A^2*mA*ER/2 in the manuscript",
+    "kinematic_momentum": "q_kin=sqrt(2*mA*ER+ER^2), exact target mass shell in three-body limits",
     "extrapolation": false
   },
   "dark_sector": {
@@ -83,8 +83,8 @@
       16,
       8
     ],
-    "max_relative_speed_difference": 0.00010992230150086435,
-    "max_relative_kernel_difference": 0.00020977400319444062
+    "max_relative_speed_difference": 0.00010992230150130844,
+    "max_relative_kernel_difference": 0.00020977400319455164
   },
   "rate_units": "events/(kg day keV)",
   "not_included": [
