@@ -27,6 +27,15 @@ The raw AFH isoscalar output satisfies
 \]
 For equal physical proton/neutron couplings, the response entering the cross section is four times this raw AFH response, normalized to \(R_A(0)=A^2=17161\). The factor of four is included exactly once.
 
+## AFH response momentum
+
+AFH uses \(y=(q b_A/2)^2\), where q is the spatial momentum transfer. The
+four-benchmark response interpolation uses the exact recoil momentum
+\(q=\sqrt{2M_AE_R+E_R^2}\), consistent with the exact nuclear mass shell and
+the three-body kinematics. The relation \(q_{\rm NR}=\sqrt{2M_AE_R}\) is a
+small-recoil approximation; its effect near the Xe-131 response minima is
+quantified in research/docs/appendices/09G_recoil_momentum_convention_audit.md.
+
 ## Integration and cross-section assembly
 
 The three-body integral \(I_6\) is independent of the nuclear response and therefore common to AFH, GCN and JJ55 at fixed benchmark and \(E_R\). The archived \(I_6\) grid is reused; only \(R_A(E_R)\) changes. This is an exact factorization of the stated cross-section formula, not a second independent integral for each nuclear model.
