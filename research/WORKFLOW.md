@@ -163,19 +163,32 @@ deletion after merge.
 - Prefer deterministic scripts with explicit parameters and units.
 - Store parameter sets in version-controlled text formats where practical.
 - Record the source commit, input checksums, software versions, and commands
-  used to generate important results. A small run_manifest.json or
-  equivalent record is recommended for substantial runs.
+  used to generate important results. For every substantial run, include a
+  run_manifest.json or equivalent complete record; identify the exact code,
+  inputs, environment, commands, numerical settings, outputs, and validation.
 - Keep raw inputs immutable when their provenance matters. Do not overwrite
   a historical result; write a new versioned result and explain the difference.
-- Commit small, redistributable inputs and essential machine-readable outputs.
+- Commit small, redistributable inputs and essential machine-readable outputs
+  directly in their native, uncompressed formats (CSV, JSON/JSONL, ROOT, HDF5,
+  TXT, etc.) where practical. Do not create a new ZIP/TAR archive as a
+  substitute for the extracted result files. If an upstream source is supplied
+  as an archive, extract the required files and record the original archive's
+  source/version, size, SHA-256, extraction command, and per-file checksums.
 - Do not commit secrets, credentials, private data, or files whose license
   does not permit redistribution.
-- For large datasets or generated archives, use Git LFS or a versioned GitHub
-  Release asset. Include a manifest with filename, size, source, and SHA-256.
-  Do not rely on expiring Actions artifacts as the only permanent record.
+- For files too large for ordinary GitHub Git storage, use Git LFS or a
+  versioned GitHub Release/stable external storage. Prefer individual native
+  files; do not replace results with newly generated opaque ZIP/TAR bundles.
+  Commit a manifest with exact filename, immutable location/version, size,
+  format, source, and SHA-256. Do not rely on expiring Actions artifacts as
+  the only permanent record.
 - Distinguish a diagnostic, an independently reproduced result, and a
   validated physical conclusion. Never promote one status to another merely
   because CI is green.
+- After pushing, inspect the PR diff and retrieve the committed files from
+  GitHub. Verify the expected paths, file count, sizes, and SHA-256 checksums
+  against the local submission before reporting that archival is complete.
+  A successful commit or checksum match is not scientific validation.
 
 ## 5. Main branch policy
 
