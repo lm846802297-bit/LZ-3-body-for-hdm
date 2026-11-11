@@ -85,14 +85,7 @@ jobs:
           if-no-files-found: error
           retention-days: 90
 
-      - name: Upload AFH response-momentum convention audit
-        uses: actions/upload-artifact@v4
-        with:
-          name: afh-q-convention-audit
-          path: ${{ runner.temp }}/afh_q_convention_audit/
-          if-no-files-found: error
-          retention-days: 90
-
+      - name: Upload full-grid mpmath validation artifact
         uses: actions/upload-artifact@v4
         with:
           name: afh-xe131-mpmath-full-grid-validation
