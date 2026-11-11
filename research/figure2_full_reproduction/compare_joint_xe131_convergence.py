@@ -2,12 +2,16 @@
 """Compare coarse and high-order Xe-131 joint Eq. (6) diagnostics."""
 from __future__ import annotations
 
+import argparse
 import csv
 import math
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-RESULTS = ROOT / "results" / "joint_xe131"
+parser = argparse.ArgumentParser()
+parser.add_argument("--results-dir", type=Path, default=ROOT / "results" / "joint_xe131")
+ARGS = parser.parse_args()
+RESULTS = ARGS.results_dir
 
 
 def read_rows(path: Path) -> dict[float, dict[str, str]]:
