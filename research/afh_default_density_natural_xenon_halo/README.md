@@ -17,4 +17,4 @@ Run from the repository root:
 
 The script imports research/figure2_full_reproduction/eq6_kernel.py and reads the compact response samples and NIST isotope weights in this directory. The default response-q mode is manuscript_nr and intentionally rejects the archived exact-q samples until their R_A values are regenerated. Use the explicit legacy_exact option only to reproduce the historical archive. The hash of the full AFH response input used to extract the samples is recorded in results/afh_response_input_sha256.txt.
 
-The q-convention audit is archived in results/natural_xenon_q_convention_audit.csv, results/xe131_afh_response_shift_NR_vs_exact.csv and results/q_convention_audit_summary.json.
+The q-convention audit is archived in results/natural_xenon_q_convention_audit.csv, results/xe131_afh_response_shift_NR_vs_exact.csv and results/q_convention_audit_summary.json. The legacy_exact mode was rerun in CI: all 98 isotope contributions and 14 total rates reproduce the archived tables, with a maximum total-rate relative difference of 2.67e-12; see results/legacy_exact_reproduction_comparison.json and workflow run 43040078335.
