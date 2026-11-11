@@ -66,7 +66,8 @@
 - results/metadata.json；
 - results/natural_xenon_q_convention_audit.csv；
 - results/xe131_afh_response_shift_NR_vs_exact.csv；
-- results/q_convention_audit_summary.json。
+- results/q_convention_audit_summary.json；
+- results/legacy_exact_reproduction_comparison.json（98 个同位素贡献和 14 个总速率的回归复现对照）。
 
 当前 response samples 文件包含 7 种可用同位素在 4 个选定反冲能量上的 28 个响应样本。halo fold 对 14 组 benchmark/反冲能量/halo 组合分别输出 7 个同位素贡献，共 98 行逐同位素结果。
 
