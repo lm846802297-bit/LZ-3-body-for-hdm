@@ -71,7 +71,8 @@ def recompute(base_csv: Path, afh_csv: Path) -> tuple[pd.DataFrame, pd.DataFrame
     if not np.array_equal(gcn["phase_space_open"].to_numpy(), jj55["phase_space_open"].to_numpy()):
         raise ValueError("Phase-space masks differ between GCN and JJ55")
 
-    q_response = np.sqrt(2.0 * M_A_GEV * gcn["ER_keV"].to_numpy(dtype=float) * 1e-6)
+    ER_GeV = gcn["ER_keV"].to_numpy(dtype=float) * 1e-6
+    q_response = np.sqrt(2.0 * M_A_GEV * ER_GeV + ER_GeV**2)
     if q_response.min() < q_grid.min() or q_response.max() > q_grid.max():
         raise ValueError("AFH response interpolation would require extrapolation")
     r_afh = np.asarray(interp(q_response), dtype=float)
@@ -205,7 +206,7 @@ def main() -> None:
         "mA_GeV": M_A_GEV,
         "AFH_response": "DMFormFactor v6.0 built-in sdgXe131",
         "physical_normalization": "R_A=16*pi*W_M00_AFH_v6/(2J_A+1), R_A(0)=A^2",
-        "interpolation": "PCHIP in q_response=sqrt(2*mA*ER); no extrapolation",
+        "interpolation": "PCHIP in exact spatial q_response=sqrt(2*mA*ER+ER^2); no extrapolation",
         "I6_recomputed": False,
         "benchmarks": BENCHMARKS,
         "first_open_grid_point_keV": thresholds,
