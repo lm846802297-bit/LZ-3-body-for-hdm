@@ -39,7 +39,7 @@ c^1=\frac{c^p-c^n}{2}.
 c^0=g_{VN},\qquad c^1=0
 \]
 
-是标准数学定义下的分解结果。但分布的 DMFormFactor v6.0 Mathematica 接口在其系数设置和响应构造中采用了不同的内部归一化：其 \`SetCoeffsNonrel[op,c,0]\` 接口对应的等质子、等中子输入为 \(c_p=c_n=c/2\)，而 \`ResponseNuclear[y,1,0,0]\` 返回的单个 isoscalar response 在零动量处按 \(A^2/4\) 归一化。
+是标准数学定义下的分解结果。但分布的 DMFormFactor v6.0 Mathematica 接口在其系数设置和响应构造中采用了不同的内部归一化：其 `SetCoeffsNonrel[op,c,0]` 接口对应的等质子、等中子输入为 \(c_p=c_n=c/2\)，而 `ResponseNuclear[y,1,0,0]` 返回的单个 isoscalar response 在零动量处按 \(A^2/4\) 归一化。
 
 因此，不能仅凭“标准 isospin 分解”这几个字就把接口输入 \(c\) 与论文中定义的物理单核子耦合 \(g_{VN}\) 直接等同。必须按实际包接口的定义进行映射。
 
@@ -103,7 +103,7 @@ R_A^{\rm phys}(q)
 
 ### C.5 独立文献对照
 
-Oliver C. Gorton, *Shell Model Methods, Statistical Nuclear Reactions, and Beta-delayed Neutron Emission*, UC Irvine PhD dissertation (2024), Sec. 2.2, pp. 29–30，讨论了标准 isospin 约定与分发的 \`dmformfactor-prc.m\`、\`dmformfactor-V6.m\` 脚本之间的系数约定，并给出
+Oliver C. Gorton, *Shell Model Methods, Statistical Nuclear Reactions, and Beta-delayed Neutron Emission*, UC Irvine PhD dissertation (2024), Sec. 2.2, pp. 29–30，讨论了标准 isospin 约定与分发的 `dmformfactor-prc.m`、`dmformfactor-V6.m` 脚本之间的系数约定，并给出
 
 \[
 W_M^{00}(0)=\frac{1}{4\pi}\left(\frac A2\right)^2.
