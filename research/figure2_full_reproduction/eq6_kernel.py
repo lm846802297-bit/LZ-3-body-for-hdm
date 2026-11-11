@@ -166,7 +166,7 @@ def reduced_kernel(mchi,ms,delta_m,mA,ER,speed_kms,width=0.,nw=16,nz=16,nphi=8,
         angular=0.
         for z,wzi in zip(xz,wz):
             avg=0.
-            for phi,wpi in zip(phis,wp):
+            for phi,wpi in zip(phis,phiweights):
                 pt=build_point(mchi,ms,mA,ER,speed_kms,float(W2),float(z),float(phi))
                 avg+=wpi*spin_trace(pt,mchi,mchi2,width_here,running_width)["total"]
             angular+=wzi*avg
