@@ -324,6 +324,9 @@ def main() -> None:
         "physical_R0": float(R_equal[0]), "A_squared": A*A,
         "q_grid_GeV": [0.0, Q_MAX_GEV, Q_STEP_GEV],
         "recoil_mass_convention_GeV": mass_GeV,
+        "response_q_definition": "AFH y=(b_A*q/2)^2, with q the spatial momentum transfer",
+        "response_q_from_recoil_energy": "sqrt(2*M_A*E_R+E_R^2) [exact nuclear mass shell]",
+        "response_q_NR_approximation": "sqrt(2*M_A*E_R) [small-recoil approximation only]",
         "nuclear_response_only": True,
         "no_three_body_integral_or_halo_fold": True,
         "minima": minima,
@@ -332,7 +335,7 @@ def main() -> None:
             "AFH built-in density-matrix coefficients are printed to finite decimal precision; the q=0 package response differs from A^2/4 at the 8e-5 level.",
             "The exact A^2 normalization is imposed by dividing by the computed q=0 response; this changes only the overall normalization, not the response shape.",
             "This is the nuclear response only; it is not yet the full three-body cross section or natural-xenon event rate.",
-            "The manuscript's stated R_A(0)=A^2 must be checked against the AFH isoscalar factor-of-four convention before finalizing the equation."
+            "The physical equal-proton/equal-neutron response includes the AFH isoscalar factor of four exactly once and is normalized to R_A(0)=A^2."
         ],
     }
     (args.outdir/"metadata.json").write_text(json.dumps(meta,indent=2)+"\n",encoding="utf-8")
