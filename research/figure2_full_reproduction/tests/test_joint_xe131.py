@@ -61,6 +61,12 @@ class JointXe131Tests(unittest.TestCase):
         self.assertTrue(result["phase_space_open"])
         self.assertGreater(result["chi2_pole_gap_GeV"], 0.0)
         self.assertGreater(result["R_A"], 0.0)
+        self.assertAlmostEqual(
+            result["q_response_GeV"],
+            math.sqrt(2.0 * self.mA * 200.0e-6 + (200.0e-6) ** 2),
+            places=14,
+        )
+        self.assertNotIn("q_response_NR_GeV", result)
         self.assertGreater(result["I6_GeV2"], 0.0)
         self.assertGreater(result["C_A_GeV"], 0.0)
         self.assertGreater(result["dsigma_dER_GeVminus3"], 0.0)
