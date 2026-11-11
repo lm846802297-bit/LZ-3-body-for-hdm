@@ -51,6 +51,12 @@ jobs:
           python research/afh_default_density_xe131/run_afh_default_xe131.py \
             --outdir "$RUNNER_TEMP/afh_default_xe131"
 
+      - name: Audit AFH response and exact kinematic momentum conventions
+        run: |
+          python research/afh_default_density_xe131/audit_response_momentum_conventions.py \
+            --xe131-response-csv "$RUNNER_TEMP/afh_default_xe131/afh_default_xe131_WM00.csv" \
+            --outdir "$RUNNER_TEMP/afh_q_convention_audit"
+
       - name: Run independent 60-digit mpmath comparison on all 2401 q nodes
         run: |
           python research/afh_default_density_xe131/verify_afh_mpmath_full_grid.py \
@@ -71,7 +77,22 @@ jobs:
             --outdir "$RUNNER_TEMP/afh_four_benchmarks" \
             --plots
 
-      - name: Upload full-grid mpmath validation artifact
+      - name: Upload AFH response-momentum convention audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: afh-q-convention-audit
+          path: ${{ runner.temp }}/afh_q_convention_audit/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Upload AFH response-momentum convention audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: afh-q-convention-audit
+          path: ${{ runner.temp }}/afh_q_convention_audit/
+          if-no-files-found: error
+          retention-days: 90
+
         uses: actions/upload-artifact@v4
         with:
           name: afh-xe131-mpmath-full-grid-validation
