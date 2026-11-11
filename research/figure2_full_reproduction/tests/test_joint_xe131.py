@@ -58,7 +58,7 @@ class JointXe131Tests(unittest.TestCase):
     def test_joint_cross_section_is_finite_and_factorized(self):
         result = self.evaluate(self.gcn, mV_GeV=0.1)
         self.assertTrue(result["phase_space_open"])
-        self.assertTrue(result["chi2_on_shell_closed"])
+        self.assertGreater(result["chi2_pole_gap_GeV"], 0.0)
         self.assertGreater(result["R_A"], 0.0)
         self.assertGreater(result["I6_GeV2"], 0.0)
         self.assertGreater(result["C_A_GeV"], 0.0)
