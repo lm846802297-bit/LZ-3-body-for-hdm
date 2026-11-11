@@ -22,12 +22,27 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "figure2_full_reproduction"))
 
 import eq6_kernel  # noqa: E402
-from isotope_mass_schemes import isotope_mass_GeV  # noqa: E402
+from isotope_mass_schemes import (  # noqa: E402
+    NIST_XE_ATOMIC_MASS_U,
+    electron_binding_energy_eV,
+    isotope_mass_GeV,
+)
 from rate_kinematics import vmin_three_body_km_s  # noqa: E402
 
 A = 131
 NATURAL_XE_ABUNDANCE_XE131 = 0.212324
 NATURAL_XE_MEAN_ATOMIC_WEIGHT_G_MOL = 131.29276144787175
+NATURAL_XE_ABUNDANCES = {
+    124: 0.000952,
+    126: 0.000890,
+    128: 0.019102,
+    129: 0.264006,
+    130: 0.040710,
+    131: 0.212324,
+    132: 0.269086,
+    134: 0.104357,
+    136: 0.088573,
+}
 AVOGADRO = 6.02214076e23
 C_KM_S = 299_792.458
 C_CM_S = 2.99792458e10
@@ -291,6 +306,35 @@ def main() -> None:
     args.out_dir.mkdir(parents=True, exist_ok=True)
 
     response_interp, q_grid, response_grid = load_afh_response(args.response_csv)
+
+    # Archive the full NIST -> nuclear-mass conversion table, including isotopes
+    # for which an AFH response curve is not currently available.
+    binding_eV = electron_binding_energy_eV(54)
+    mass_rows = []
+    for isotope_A, abundance in NATURAL_XE_ABUNDANCES.items():
+        m_A_u = NIST_XE_ATOMIC_MASS_U[isotope_A]
+        m_A_au = isotope_A * 0.93149410242
+        m_A_nist = isotope_mass_GeV(isotope_A, "nist_nuclear")
+        m_A_ame = isotope_mass_GeV(isotope_A, "ame2020_nuclear")
+        vmin_101 = vmin_three_body_km_s(
+            args.mchi_GeV, 300.0e-6, m_A_ame, 101.0e-6
+        )
+        mass_rows.append({
+            "A": isotope_A,
+            "isotope": f"Xe-{isotope_A}",
+            "natural_atom_fraction": abundance,
+            "atomic_mass_u_NIST": m_A_u,
+            "electron_binding_energy_keV": binding_eV * 1.0e-3,
+            "mA_Au_GeV_legacy": m_A_au,
+            "mA_NIST_nuclear_GeV": m_A_nist,
+            "mA_AME2020_CODATA2022_GeV": m_A_ame,
+            "delta_AME2020_vs_NIST_keV": (m_A_ame - m_A_nist) * 1.0e6,
+            "delta_AME2020_vs_Au_keV": (m_A_ame - m_A_au) * 1.0e6,
+            "vmin_at_ER101keV_ms300_km_s": vmin_101,
+            "AFH_default_response_available": isotope_A == A,
+        })
+    write_csv(args.out_dir / "xenon_isotope_ame2020_masses.csv", mass_rows)
+
     all_rows = []
     by_key = {}
     for nv in sorted(set(args.nv_orders)):
@@ -404,7 +448,9 @@ def main() -> None:
             "nuclear_conversion": "M_nucleus = M_neutral_atom - Z*m_e + B_e(Z)",
             "electron_binding_energy_source": "AME2020 atomic mass evaluation, Eq. (2)",
             "electron_binding_energy_formula_eV": "14.4381*Z^2.39 + 1.55468e-6*Z^5.35",
-            "electron_binding_energy_Xe_keV": 202.3782777170466,
+            "electron_binding_energy_Xe_keV": binding_eV * 1.0e-3,
+            "isotope_mass_table": "xenon_isotope_ame2020_masses.csv",
+            "natural_isotope_abundance_sum": sum(NATURAL_XE_ABUNDANCES.values()),
             "constants": "CODATA 2022",
             "u_c2_MeV": 931.49410372,
             "electron_mass_c2_MeV": 0.51099895069,
