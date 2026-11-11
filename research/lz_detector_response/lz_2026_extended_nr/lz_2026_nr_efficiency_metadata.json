@@ -1,0 +1,34 @@
+{
+  "source": "LZ Collaboration, arXiv:2609.02823v1 (2026), Fig. S2, PDF page 14",
+  "data_release_doi": "10.17182/hepdata.182472.v1",
+  "pdf_sha256": "54ae96529a3765ea5e285e9fc225b5517d594aebc4d6e272125a2d6254609dbd",
+  "extraction_method": "vector-path extraction from the black final WIMP-search ROI curve",
+  "svg_path_selector": {
+    "stroke": "rgb(0%, 0%, 0%)",
+    "parent_clip_path": "url(#clip-16)",
+    "minimum_path_data_length": 1000
+  },
+  "axis_calibration_local_svg_units": {
+    "x_0keV": 51.087864,
+    "x_300keV": 497.85035,
+    "y_efficiency_0": 62.457768,
+    "y_efficiency_1": 349.147721
+  },
+  "raw_vector_point_count": 160,
+  "sampled_csv_point_count": 303,
+  "mean_final_roi_efficiency_14_250": 0.9547104518957983,
+  "published_text_mean_efficiency_14_250": 0.96,
+  "crossings_at_50_percent_keV": [
+    5.089721891590893,
+    269.86778867044467
+  ],
+  "published_low_energy_50_percent_anchor_keV": 5.4,
+  "published_high_energy_50_percent_anchor_keV": 269.9,
+  "digitization_note": "The vector curve gives a low-energy 50% crossing near 5.09 keV, whereas the paper text/caption quotes 5.4 keV from Ref. [5]. The high-energy crossing near 269.87 keV agrees with 269.9 keV. The mean final-ROI efficiency over 14--250 keV is expected to round to the published 96%.",
+  "not_included": [
+    "efficiency uncertainty band",
+    "S1c/log10(S2c) two-dimensional signal PDFs",
+    "NEST nuisance-parameter covariance",
+    "background likelihood"
+  ]
+}
