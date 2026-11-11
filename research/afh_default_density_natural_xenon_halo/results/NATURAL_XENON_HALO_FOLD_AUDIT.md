@@ -35,6 +35,47 @@ The abundance sum is not approximated by one average nuclear mass.
 - \(m_{\chi_1}=1\) TeV, \(m_V=10\) GeV, \(g_2=1\), \((g_1g_2g_{VN})^2=10^{-8}\), \(\rho_\chi=0.3\) GeV/cm³.
 - Pole width for \(\chi_2\to\chi_1s\), conditional on Dirac fermions, a real scalar, a pure scalar off-diagonal Yukawa and no other open channels.
 
+## Nuclear-response momentum versus exact kinematic momentum
+
+The manuscript currently defines the oscillator variable as
+
+\[
+y=\frac{b_A^2m_AE_R}{2},
+\]
+
+so the response interpolation at fixed recoil energy must use
+
+\[
+q_{\rm resp}^{\rm NR}=\sqrt{2m_AE_R}.
+\]
+
+The exact three-body kinematic momentum remains
+
+\[
+q_{\rm kin}^{\rm exact}=\sqrt{2m_AE_R+E_R^2},
+\]
+
+and is used in \(W_{\max}\), \(v_{\min}\), and the final-state four-momentum construction.
+
+**Important archive status:** the 28 AFH response samples used for the rates below were originally evaluated at \(q_{\rm kin}^{\rm exact}\). The rates in this audit are therefore retained as **legacy exact-q-response selected-point rates**. They have not been relabeled or rescaled as manuscript-NR results.
+
+The updated rate script defaults to manuscript-NR samples and rejects the current legacy samples. To reproduce the archived results, explicitly pass:
+
+~~~bash
+python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \
+  --response-q-convention legacy_exact
+~~~
+
+The 28-sample q difference is 0.032–0.409 keV (0.20–1.14 ppm). A direct PCHIP comparison on the freshly regenerated Xe-131 AFH response gives response shifts of -5.46 to -212.68 ppm at the four selected recoil energies. This is a Xe-131 diagnostic only; it is not an event-rate correction for all seven isotopes.
+
+Machine-readable outputs:
+
+- results/natural_xenon_q_convention_audit.csv;
+- results/xe131_afh_response_shift_NR_vs_exact.csv;
+- results/q_convention_audit_summary.json.
+
+The seven-isotope AFH samples and halo rates must be regenerated after the full AFH isotope response table or source package is restored. See Appendix G in the main research report.
+
 ## Halo prescriptions
 
 1. Truncated SHM baseline: \(v_0=220\), \(v_E=232\), \(v_{\rm esc}=544\) km/s; \(v_{\max,\rm lab}=776\) km/s.
