@@ -317,6 +317,14 @@ afh_xe_isotope_responses.csv. The natural-xenon archive currently retains
 only 28 selected response samples, all generated with the legacy exact-q
 convention and NIST nuclear masses.
 
+The legacy exact-q / NIST-nuclear reproduction was rerun on this integrated
+branch and passed in
+[Actions run 43044031554](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43044031554).
+The archived 28-sample inputs and their derived natural-xenon total differential
+rate reproduce at a maximum relative difference of (2.67\times10^{-12}).
+This validates the legacy path only; it does not validate an AME2020 or
+manuscript-NR natural-xenon result.
+
 Those 28 samples cannot be used to reconstruct all isotope response curves
 at the new AME2020/manuscript-q points. The natural-xenon runner now exposes
 the AME2020 mass option but deliberately rejects a sample whose stored q
