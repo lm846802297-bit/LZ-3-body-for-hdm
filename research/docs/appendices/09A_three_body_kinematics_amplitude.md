@@ -265,6 +265,149 @@ I_6=
 
 \(dW^2\) 的单位是 GeV\(^2\)，\(\lambda_{\rm dim}\) 与自旋迹无量纲，因此 \(I_6\) 的单位是 GeV\(^2\)。相空间分解中的常数、Jacobian 与正文定义共同决定 Eq. (6) 的整体 \(256\pi^3\) 系数；不能在 reduced kernel 外再次重复加入已经包含在正文 prefactor 中的相空间常数。
 
+## A.4.1 从不变相空间得到 Eq. (6) 的整体前因子
+
+这一节把正文中 \(256\pi^3\) 的系数与相空间归一化联系起来。记初态总不变量为
+
+\[
+s_{\rm tot}=(p+P)^2,\qquad
+\Lambda_{\rm in}\equiv
+\sqrt{\lambda_K(s_{\rm tot},m_{\chi_1}^2,m_A^2)}.
+\]
+
+靶核静止系中
+
+\[
+\Lambda_{\rm in}=2m_Ap_{\chi_1}.
+\]
+
+不变通量因子为
+
+\[
+4\sqrt{(p\cdot P)^2-m_{\chi_1}^2m_A^2}
+=2\Lambda_{\rm in}
+=4m_Ap_{\chi_1}.
+\]
+
+所以
+
+\[
+d\sigma=
+\frac{|\mathcal M|^2}{2\Lambda_{\rm in}}d\Phi_3.
+\]
+
+利用 A.4 的相空间分解，第一段两体相空间在固定 \(t=q^2\) 下满足
+
+\[
+\frac{d\Phi_2(p+P;P',K)}{dt}
+=\frac{1}{8\pi\Lambda_{\rm in}}.
+\]
+
+由于
+
+\[
+t=-2m_AE_R,\qquad
+\left|\frac{dt}{dE_R}\right|=2m_A,
+\]
+
+得到
+
+\[
+\frac{d\Phi_2(p+P;P',K)}{dE_R}
+=
+\frac{m_A}{4\pi\Lambda_{\rm in}}
+=\frac{1}{8\pi p_{\chi_1}}.
+\]
+
+第二段两体相空间为
+
+\[
+d\Phi_2(K;p',k)
+=
+\frac{|\mathbf k_*|}{16\pi^2W}d\Omega_*
+=
+\frac{\sqrt{\lambda_{\rm dim}}}{32\pi^2}
+\,dz\,d\phi_*.
+\]
+
+因此
+
+\[
+\frac{d\Phi_3}
+{dE_R\,dW^2\,dz\,d\phi_*}
+=
+\frac{1}{2\pi}
+\frac{1}{8\pi p_{\chi_1}}
+\frac{\sqrt{\lambda_{\rm dim}}}{32\pi^2}
+=
+\frac{\sqrt{\lambda_{\rm dim}}}
+{512\pi^4p_{\chi_1}}.
+\]
+
+将方位角积分写成平均，
+
+\[
+\int_0^{2\pi}d\phi_*\,\mathcal L_{00}
+=
+2\pi\langle\mathcal L_{00}\rangle_{\phi_*},
+\]
+
+便得到
+
+\[
+\frac{d\Phi_3}{dE_R\,dW^2\,dz}
+\mathcal L_{00}
+\longrightarrow
+\frac{\sqrt{\lambda_{\rm dim}}}
+{256\pi^3p_{\chi_1}}
+\langle\mathcal L_{00}\rangle_{\phi_*}.
+\]
+
+在靶核非相对论极限，矢量核电荷流的时间分量为
+
+\[
+J_A^0\simeq 2m_A.
+\]
+
+将物理核响应 \(R_A(E_R)\)、粒子耦合和矢量传播子放入振幅平方，可写为
+
+\[
+|\mathcal M|^2
+=
+\frac{
+4m_A^2(g_1g_2g_{VN})^2R_A(E_R)
+}{
+(m_V^2+2m_AE_R)^2
+}
+\mathcal L_{00}.
+\]
+
+再乘不变通量因子 \(1/(2\Lambda_{\rm in})=1/(4m_Ap_{\chi_1})\)，得到
+
+\[
+\frac{4m_A^2}{4m_Ap_{\chi_1}}
+\frac{1}{256\pi^3p_{\chi_1}}
+=
+\frac{m_A}{256\pi^3p_{\chi_1}^2}.
+\]
+
+最终即为正文 Eq. (6)：
+
+\[
+\boxed{
+\frac{d\sigma_A}{dE_R}
+=
+\frac{
+m_A(g_1g_2g_{VN})^2R_A(E_R)
+}{
+256\pi^3p_{\chi_1}^2(m_V^2+2m_AE_R)^2
+}
+I_6
+}.
+\]
+
+这个推导采用的条件是：靶核矢量电荷流保留 leading non-relativistic 时间分量 \(2m_A\)，核结构和核自旋平均已经包含在物理响应 \(R_A\) 中，且 \(\phi_*\) 使用平均而非未归一化积分。若改变这些定义，不能继续原样沿用 \(256\pi^3\) 前因子。
+
 ## A.5 两张辐射图、振幅与干涉项
 
 正文矢量流的两个图分别对应标量在矢量交换前、后从暗物质费米子线上辐射：
