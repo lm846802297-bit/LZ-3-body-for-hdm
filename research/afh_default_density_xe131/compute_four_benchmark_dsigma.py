@@ -55,7 +55,7 @@ def build(base_csv: Path, afh_csv: Path) -> pd.DataFrame:
             raise ValueError(f"{benchmark}: phase-space masks differ")
         ER = g.ER_keV.to_numpy(float)
         ER_GeV = ER * 1e-6
-        q_response = np.sqrt(2*M_A*ER_GeV)
+        q_response = np.sqrt(2*M_A*ER_GeV + ER_GeV**2)
         R_AFH = np.asarray(interp(q_response), float)
         if not np.all(np.isfinite(R_AFH)) or np.any(R_AFH < 0):
             raise ValueError(f"{benchmark}: AFH interpolation invalid or extrapolated")
