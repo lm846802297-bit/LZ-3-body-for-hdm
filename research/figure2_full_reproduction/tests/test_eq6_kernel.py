@@ -87,6 +87,16 @@ class Eq6Tests(unittest.TestCase):
         self.assertNotEqual(zero, pole)
         self.assertNotEqual(pole, running)
 
+    def test_regression_azimuthal_average_normalization(self):
+        # Historical benchmark from the independent Eq. (6) audit.
+        # This value includes the 1/(2*pi) azimuthal average.
+        value = eq6.reduced_kernel(
+            self.M, self.ms, self.dm, 122.0, self.ER, self.v,
+            nw=16, nz=16, nphi=8, width_scheme="zero"
+        )
+        expected = 878098.5567396304
+        self.assertLess(abs(value / expected - 1.0), 2e-7)
+
     def test_quadrature_convergence(self):
         coarse=eq6.reduced_kernel(self.M,self.ms,self.dm,self.mA,self.ER,self.v,nw=16,nz=16,nphi=8)
         fine=eq6.reduced_kernel(self.M,self.ms,self.dm,self.mA,self.ER,self.v,nw=32,nz=32,nphi=16)
