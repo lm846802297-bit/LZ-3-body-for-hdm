@@ -93,5 +93,65 @@ class Ame2020Xe131PartialRateTests(unittest.TestCase):
         self.assertEqual(row["Xe131_partial_rate_events_kg_day_keV"], 0.0)
 
 
+    def test_exact_and_manuscript_response_q_are_separate_but_kinematics_identical(self):
+        common = dict(
+            benchmark="green_ms300_dm1",
+            er_keV=267.0,
+            halo_model="shm_cutoff",
+            mass_scheme="ame2020_nuclear",
+            nv=4,
+            nw=8,
+            nz=8,
+            nphi=4,
+            response_interp=self.response_interp,
+            mchi=1000.0,
+            mV=10.0,
+            coupling_product_sq=1.0e-8,
+            g2=1.0,
+            rho_dm=0.3,
+            v0=220.0,
+            ve=232.0,
+            vesc=544.0,
+            untruncated_vmax=1600.0,
+        )
+        nr = compute_partial_rate(
+            **common, response_q_convention="manuscript_nr"
+        )
+        exact = compute_partial_rate(
+            **common, response_q_convention="legacy_exact"
+        )
+        self.assertAlmostEqual(
+            nr["q_response_used_GeV"],
+            math.sqrt(2.0 * nr["mA_GeV"] * 267.0e-6),
+            places=14,
+        )
+        self.assertAlmostEqual(
+            exact["q_response_used_GeV"],
+            math.sqrt(2.0 * exact["mA_GeV"] * 267.0e-6 + (267.0e-6)**2),
+            places=14,
+        )
+        self.assertGreater(
+            exact["q_response_used_GeV"], nr["q_response_used_GeV"]
+        )
+        self.assertAlmostEqual(
+            nr["vmin_km_s"], exact["vmin_km_s"], places=12
+        )
+        self.assertAlmostEqual(
+            nr["R_A_AFH_equal_pn"],
+            float(self.response_interp(nr["q_response_used_GeV"])),
+            places=10,
+        )
+        self.assertAlmostEqual(
+            exact["R_A_AFH_equal_pn"],
+            float(self.response_interp(exact["q_response_used_GeV"])),
+            places=10,
+        )
+        self.assertNotEqual(
+            nr["R_A_AFH_equal_pn"], exact["R_A_AFH_equal_pn"]
+        )
+        self.assertTrue(nr["speed_support_open"])
+        self.assertTrue(exact["speed_support_open"])
+
+
 if __name__ == "__main__":
     unittest.main()
