@@ -20,62 +20,63 @@
   "b_A_GeV_inverse": 11.61690053236942,
   "AFH_package_R0": 4289.895955714993,
   "expected_AFH_package_R0_A2_over_4": 4290.25,
-  "AFH_package_R0_relative_error": 8.25229963306029e-05,
+  "AFH_package_R0_relative_error": 0.0000825229963306029,
   "equal_pn_normalization_factor_for_rounded_density": 1.0000825298069376,
-  "physical_R0": 17161.0,
+  "physical_R0": 17161,
   "A_squared": 17161,
   "q_grid_GeV": [
-    0.0,
+    0,
     0.6,
     0.00025
   ],
   "recoil_mass_convention_GeV": 122.02572741702,
-  "nuclear_response_only": true,  "no_three_body_integral_or_halo_fold": true,
+  "nuclear_response_only": true,
+  "no_three_body_integral_or_halo_fold": true,
   "minima": [
     {
       "q_min_MeV": 157.93577836052026,
       "ER_min_keV": 102.20672380967244,
-      "R_over_A2": 1.2363815495887309e-05,
+      "R_over_A2": 0.000012363815495887309,
       "rank0_amplitude": -0.006522592687495443,
       "rank2_amplitude": 0.25978726261641494
     },
     {
       "q_min_MeV": 256.27186761670686,
       "ER_min_keV": 269.1038976223581,
-      "R_over_A2": 6.340702395597196e-08,
-      "rank0_amplitude": 7.815974324631991e-05,
+      "R_over_A2": 6.340702395597196e-8,
+      "rank0_amplitude": 0.00007815974324631991,
       "rank2_amplitude": -0.0186098680373363
     },
     {
       "q_min_MeV": 365.066569451198,
       "ER_min_keV": 546.0868979838551,
-      "R_over_A2": 1.5619399558067342e-07,
+      "R_over_A2": 1.5619399558067342e-7,
       "rank0_amplitude": -0.0010121136491155897,
       "rank2_amplitude": 0.029191050161828134
     },
     {
       "q_min_MeV": 499.37188567194676,
       "ER_min_keV": 1021.7977856257221,
-      "R_over_A2": 1.6706317188354087e-08,
+      "R_over_A2": 1.6706317188354087e-8,
       "rank0_amplitude": 0.0002782764024993412,
       "rank2_amplitude": -0.009548484462871553
     }
   ],
   "figure2_dip_energy_checks": [
     {
-      "figure2_ER_keV": 101.0,
+      "figure2_ER_keV": 101,
       "q_MeV": 157.00065967771613,
-      "R_over_A2": 1.7791411641695228e-05
+      "R_over_A2": 0.000017791411641695228
     },
     {
-      "figure2_ER_keV": 267.0,
+      "figure2_ER_keV": 267,
       "q_MeV": 255.2681134213372,
-      "R_over_A2": 3.2607444986754353e-07
+      "R_over_A2": 3.2607444986754353e-7
     },
     {
-      "figure2_ER_keV": 542.0,
+      "figure2_ER_keV": 542,
       "q_MeV": 363.6979272473925,
-      "R_over_A2": 1.8363081868363072e-07
+      "R_over_A2": 1.8363081868363072e-7
     }
   ],
   "limitations": [
@@ -83,6 +84,9 @@
     "The exact A^2 normalization is imposed by dividing by the computed q=0 response; this changes only the overall normalization, not the response shape.",
     "This is the nuclear response only; it is not yet the full three-body cross section or natural-xenon event rate.",
     "The manuscript's stated R_A(0)=A^2 must be checked against the AFH isoscalar factor-of-four convention before finalizing the equation."
-  ]
+  ],
+  "response_q_definition": "AFH y=(q*b_A/2)^2 with q the spatial momentum transfer",
+  "response_q_formula": "sqrt(2*M_A*E_R+E_R^2)",
+  "response_q_convention": "exact_spatial",
+  "response_q_nr_approximation": "sqrt(2*M_A*E_R), small-recoil comparison only"
 }
-
