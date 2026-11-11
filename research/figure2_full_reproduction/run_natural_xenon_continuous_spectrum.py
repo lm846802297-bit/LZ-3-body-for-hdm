@@ -37,14 +37,34 @@ BENCHMARKS = {
 SELECTED_CHECK_ENERGIES_KEV = (101.0, 200.0, 267.0, 542.0)
 
 
-def recoil_grid(er_min: float, er_max: float, er_step: float) -> list[float]:
-    if not (0.0 < er_min <= er_max and er_step > 0.0):
-        raise ValueError("require 0 < ER-min <= ER-max and ER-step > 0")
-    count = int(round((er_max - er_min) / er_step))
-    values = [er_min + i * er_step for i in range(count + 1)]
-    if not math.isclose(values[-1], er_max, rel_tol=0.0, abs_tol=1e-9):
-        raise ValueError("ER range must be an integer number of ER steps")
-    return sorted(set(values).union(SELECTED_CHECK_ENERGIES_KEV))
+def recoil_grid(
+    er_min: float,
+    er_max: float,
+    er_step: float,
+    fine_max: float = 270.0,
+    high_er_step: float = 20.0,
+) -> list[float]:
+    """Use a fine grid across the LZ ROI and a coarser grid above it."""
+    if not (0.0 < er_min <= er_max and er_step > 0.0 and high_er_step > 0.0):
+        raise ValueError("require positive recoil bounds and step sizes")
+    fine_end = min(fine_max, er_max)
+    if fine_end < er_min:
+        raise ValueError("fine-grid endpoint must not be below ER-min")
+    fine_count = int(round((fine_end - er_min) / er_step))
+    fine = [er_min + i * er_step for i in range(fine_count + 1)]
+    if not math.isclose(fine[-1], fine_end, rel_tol=0.0, abs_tol=1e-9):
+        raise ValueError("fine ER range must be an integer number of fine steps")
+
+    coarse: list[float] = []
+    if er_max > fine_end:
+        coarse_start = fine_end + 0.5 * high_er_step
+        n_coarse = int(math.floor((er_max - coarse_start) / high_er_step + 1e-12))
+        coarse = [coarse_start + i * high_er_step for i in range(n_coarse + 1)]
+        if not math.isclose(coarse[-1], er_max, rel_tol=0.0, abs_tol=1e-9):
+            coarse.append(er_max)
+
+    selected = [e for e in SELECTED_CHECK_ENERGIES_KEV if er_min <= e <= er_max]
+    return sorted(set(fine).union(coarse).union(selected))
 
 
 def relative_difference(a: float, b: float) -> float:
@@ -58,7 +78,10 @@ def relative_difference(a: float, b: float) -> float:
 def run(args: argparse.Namespace) -> dict:
     args.out_dir.mkdir(parents=True, exist_ok=True)
     response_dir = args.response_dir
-    energies = recoil_grid(args.er_min_keV, args.er_max_keV, args.er_step_keV)
+    energies = recoil_grid(
+        args.er_min_keV, args.er_max_keV, args.er_step_keV,
+        args.fine_er_max_keV, args.high_er_step_keV,
+    )
     rate_factor = rate_conversion_factor(args.rhoDM_GeV_cm3, args.mchi_GeV)
     response_cache: dict = {}
 
@@ -261,8 +284,12 @@ def run(args: argparse.Namespace) -> dict:
         "recoil_grid_keV": {
             "min": args.er_min_keV,
             "max": args.er_max_keV,
-            "step": args.er_step_keV,
-            "additional_exact_comparison_points": list(SELECTED_CHECK_ENERGIES_KEV),
+            "fine_grid_max": args.fine_er_max_keV,
+            "fine_step": args.er_step_keV,
+            "high_energy_step": args.high_er_step_keV,
+            "additional_exact_comparison_points": [
+                e for e in SELECTED_CHECK_ENERGIES_KEV if args.er_min_keV <= e <= args.er_max_keV
+            ],
             "unique_point_count": len(energies),
         },
         "width_scheme": "conditional pole width for chi2 -> chi1 s",
@@ -319,6 +346,8 @@ def main() -> None:
     parser.add_argument("--er-min-keV", type=float, default=5.0)
     parser.add_argument("--er-max-keV", type=float, default=800.0)
     parser.add_argument("--er-step-keV", type=float, default=5.0)
+    parser.add_argument("--fine-er-max-keV", type=float, default=270.0)
+    parser.add_argument("--high-er-step-keV", type=float, default=20.0)
     parser.add_argument("--mchi-GeV", type=float, default=1000.0)
     parser.add_argument("--mV-GeV", type=float, default=10.0)
     parser.add_argument("--coupling-product-sq", type=float, default=1.0e-8)
