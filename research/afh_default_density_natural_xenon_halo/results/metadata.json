@@ -4,8 +4,19 @@
   "response_source_sha256": "44c88f3aaf2fb212facbe68432d38389374255432eec04ce8a76437c82c1be3a",
   "response_input_rows": 16807,
   "response_sample_file": "input/afh_response_samples.csv",
-  "available_isotopes": [128, 129, 130, 131, 132, 134, 136],
-  "omitted_isotopes": [124, 126],
+  "available_isotopes": [
+    128,
+    129,
+    130,
+    131,
+    132,
+    134,
+    136
+  ],
+  "omitted_isotopes": [
+    124,
+    126
+  ],
   "available_natural_atom_fraction": 0.998158,
   "omitted_natural_atom_fraction": 0.001842,
   "abundance_source": "NIST Atomic Weights and Isotopic Compositions for Xenon",
@@ -25,25 +36,68 @@
     "134": 2.2999470783389384,
     "136": 2.304941760984924
   },
-  "m_chi1_GeV": 1000.0,
+  "m_chi1_GeV": 1000,
   "benchmark_sets": {
-    "red_ms200_dm1": {"m_s_keV": 200.0, "Delta_m_MeV": 1.0},
-    "green_ms300_dm1": {"m_s_keV": 300.0, "Delta_m_MeV": 1.0},
-    "black_ms360_dm1": {"m_s_keV": 360.0, "Delta_m_MeV": 1.0},
-    "blue_ms300_dm10": {"m_s_keV": 300.0, "Delta_m_MeV": 10.0}
+    "red_ms200_dm1": {
+      "m_s_keV": 200,
+      "Delta_m_MeV": 1
+    },
+    "green_ms300_dm1": {
+      "m_s_keV": 300,
+      "Delta_m_MeV": 1
+    },
+    "black_ms360_dm1": {
+      "m_s_keV": 360,
+      "Delta_m_MeV": 1
+    },
+    "blue_ms300_dm10": {
+      "m_s_keV": 300,
+      "Delta_m_MeV": 10
+    }
   },
-  "m_V_GeV": 10.0,
-  "g2": 1.0,
+  "m_V_GeV": 10,
+  "g2": 1,
   "coupling_product_squared": 1e-8,
   "rho_chi_GeV_cm3": 0.3,
   "halo_models": {
-    "shm_cutoff": {"v0_km_s": 220.0, "vE_km_s": 232.0, "v_esc_km_s": 544.0, "vmax_lab_km_s": 776.0},
-    "mb_untruncated": {"v0_km_s": 220.0, "vE_km_s": 232.0, "integration_upper_km_s": 1600.0}
+    "shm_cutoff": {
+      "v0_km_s": 220,
+      "vE_km_s": 232,
+      "v_esc_km_s": 544,
+      "vmax_lab_km_s": 776
+    },
+    "mb_untruncated": {
+      "v0_km_s": 220,
+      "vE_km_s": 232,
+      "integration_upper_km_s": 1600
+    }
   },
   "width_scheme": "pole width for chi2 -> chi1 s; conditional on Dirac chi2, real scalar, pure scalar off-diagonal Yukawa and no other open channels",
-  "quadrature": {"speed_nodes": 32, "Eq6_kernel": [8, 8, 4], "speed_refinement_checks": [32, 64], "kernel_refinement_checks": "8x8x4 vs 16x16x8 at six representative points"},
+  "quadrature": {
+    "speed_nodes": 32,
+    "Eq6_kernel": [
+      8,
+      8,
+      4
+    ],
+    "speed_refinement_checks": [
+      32,
+      64
+    ],
+    "kernel_refinement_checks": "8x8x4 vs 16x16x8 at six representative points"
+  },
   "rate_units": "events/(kg day keV)",
   "detector_response": "not applied",
-  "recoil_points_keV": [101.0, 200.0, 267.0, 542.0],
-  "native_Mathematica_validation": "pending; response samples are from the source-translated AFH v6.0 table"
+  "recoil_points_keV": [
+    101,
+    200,
+    267,
+    542
+  ],
+  "native_Mathematica_validation": "pending; response samples are from the source-translated AFH v6.0 table",
+  "response_q_convention": "legacy_exact_spatial",
+  "response_q_formula": "sqrt(2*m_A*E_R+E_R^2)",
+  "kinematic_q_convention": "sqrt(2*m_A*E_R+E_R^2)",
+  "response_q_status": "legacy archived response samples; not yet regenerated using the manuscript y=b_A^2*m_A*E_R/2 convention",
+  "response_q_followup": "regenerate all seven isotope AFH response samples at q_response=sqrt(2*m_A*E_R); retain exact q only for v_min and three-body kinematics"
 }
