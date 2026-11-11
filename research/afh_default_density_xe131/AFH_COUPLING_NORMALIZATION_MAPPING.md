@@ -71,7 +71,7 @@ or, equivalently, retain (4pi W_{M,m AFH}^{00}/(2J_A+1)) and explicitly use the
 - Do not multiply by four twice: once in (mathcal R_A) and again in the coupling.
 - Do not change (g_{VN}=3g_{Vq}); this is a separate quark-to-nucleon matching relation.
 - Do not alter the AFH density matrix or (b_A) to fix a normalization convention.
-- Do not edit the manuscript formula until the exact definition of the (g_{VN}) factor in the Eq. (6) amplitude derivation is checked against this mapping.
+- The Eq. (6) manuscript definition has now been updated to use the physical AFH-v6 response with the factor four included exactly once.
 
 ## 4. Numerical normalization used for the response shape
 
@@ -91,3 +91,31 @@ This is a single overall normalization correction of (8.2523	imes10^{-5}); it do
 - The source-to-Python implementation was rerun against the supplied package and reproduced the archived response values.
 - All six Python regression tests pass.
 - The Mathematica/Wolfram native runner is committed, but has not yet been executed because no Wolfram kernel is installed in the current execution environment. This is still an independent validation task; Python source translation tests are not represented as a native Mathematica run.
+
+
+## 6. Independent literature cross-check and manuscript convention
+
+The factor-of-four interpretation is independently documented in Oliver C. Gorton's 2024 UC Irvine dissertation, *Shell Model Methods, Statistical Nuclear Reactions, and Beta-delayed Neutron Emission*, Sec. 2.2, pp. 29--30. The dissertation first states the standard isospin convention
+[
+c_i^{	au=0}=(c_i^p+c_i^n)/2,qquad
+c_i^{	au=1}=(c_i^p-c_i^n)/2,
+]
+then explicitly notes that the distributed Mathematica scripts `dmformfactor-prc.m` and `dmformfactor-V6.m` instead implement
+[
+c_i^{	au=0,1}=c_i^ppm c_i^n.
+]
+The same section gives the zero-momentum normalization
+[
+W_M^{00}(0)=rac{1}{4pi}left(rac{A}{2}ight)^2.
+]
+This is an independent source-level confirmation that the raw v6.0 package response is (A^2/4) after multiplication by (4pi/(2J_A+1)), and that the physical equal-(p,n) coupling requires the factor four.
+
+Reference: Oliver C. Gorton, UC Irvine PhD dissertation (2024), Sec. 2.2, pp. 29--30:
+https://www.escholarship.org/content/qt3ns8f1r8/qt3ns8f1r8.pdf
+
+The manuscript source `paper-source/main.tex` has now been made explicit about this convention. For the raw AFH v6.0 response it uses
+[
+mathcal R_A(E_R)=rac{16pi}{2J_A+1}W_{M,mathrm{AFH,v6}}^{00}(y),
+qquad mathcal R_A(0)=A^2,
+]
+while retaining the physical per-nucleon coupling (g_{VN}) in the cross-section prefactor. The factor four is therefore included exactly once, in the nuclear response.
