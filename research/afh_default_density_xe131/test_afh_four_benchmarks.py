@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from recompute_afh_four_benchmarks import recompute, validate
+from recompute_afh_four_benchmarks import M_A_GEV, recompute, validate
 
 HERE = Path(__file__).resolve().parent
 BASE = HERE / "input" / "figure2_recalc_mV10_g2_1_v800_Xe131_full_5keV.csv"
@@ -21,6 +21,16 @@ class TestAFHFourBenchmarks(unittest.TestCase):
         self.assertEqual(len(self.wide), 640)
         self.assertEqual(self.long["benchmark"].nunique(), 4)
         self.assertEqual(set(self.long["model"]), {"AFH_default", "GCN", "JJ55"})
+
+    def test_response_momentum_uses_exact_nuclear_mass_shell(self):
+        er_GeV = self.long["ER_keV"].to_numpy(dtype=float) * 1e-6
+        q_exact = np.sqrt(2.0 * M_A_GEV * er_GeV + er_GeV**2)
+        np.testing.assert_allclose(
+            self.long["q_response_GeV"].to_numpy(dtype=float),
+            q_exact,
+            rtol=2e-12,
+            atol=2e-14,
+        )
 
     def test_response_is_not_stale_gcn_copy(self):
         row = self.wide[self.wide["ER_keV"] == 200].iloc[0]
