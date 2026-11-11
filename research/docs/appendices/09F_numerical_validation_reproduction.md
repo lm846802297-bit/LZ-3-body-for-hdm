@@ -47,7 +47,7 @@
 - output/figure2_four_benchmarks_AFH_GCN_JJ55_wide_audit.csv；
 - FOUR_BENCHMARK_CROSS_SECTION_AUDIT.md。
 
-四组 benchmark 各有 160 个反冲能量点；三种核响应模型共形成 1920 行 long table 和 640 行 wide table。该对照固定同一组 \(I_6(E_R)\) 网格，只替换 \(R_A(E_R)\) 并重新计算 Eq. (6) 的截面前因子。因此它是受控的核响应替换比较，**不是重新独立计算 4×160 个三体积分**。
+四组 benchmark 各有 160 个反冲能量点；三种核响应模型共形成 1920 行 long table 和 640 行 wide table。该对照固定同一组 \(I_6(E_R)\) 网格，只替换 \(R_A(E_R)\) 并重新计算 Eq. (6) 的截面前因子。因此它是受控的核响应替换比较，**不是重新独立计算 4×160 个三体积分**。该脚本采用固定 \(v=800\) km/s；这一速度高于截断 SHM 的 776 km/s 端点，所以这组结果是固定速度截面诊断，不能直接当作截断 SHM 支持区间内的 halo 事件率。
 
 ### 天然氙 halo fold
 
@@ -133,7 +133,7 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 | AFH 原生 Mathematica | 待完成 | WLS runner 和比较脚本已归档 | 实际运行 Wolfram kernel 并保存逐点差异 |
 | GCN/JJ55 对照 | 已完成归档 | 三种响应、四 benchmark、1920 行 long table | 对照共享既有 \(I_6\)，不是 640 次独立重算 |
 | 三体运动学/Dirac trace | 已完成代表性检查 | 壳条件、四动量闭合、显式自旋求和、干涉分解 | 扩展到更宽的参数和质量网格 |
-| 三体积分收敛 | 已有 selected-point 验证 | 六个点 \(8×8×4\) 对 \(16×16×8\)，最大差异 \(2.19×10^{-4}\) | 连续反冲谱全网格收敛 |
+| 三体积分收敛 | 已有 selected-point 验证 | 六个天然氙点 \(8×8×4\) 对 \(16×16×8\)，最大差异 \(2.19×10^{-4}\)；独立 Eq. (6) 测试点 \(16×16×8\) 对 \(32×32×16\)，相对差异小于 \(5×10^{-5}\) | 连续反冲谱全网格收敛 |
 | 天然氙速度积分 | 已有 selected-point 验证 | 五个点 32 对 64 速度节点，最大差异 \(3.31×10^{-6}\) | 连续反冲谱全网格收敛和 halo 参数扫描 |
 | Xe-124/Xe-126 | 输入缺失 | 缺失丰度合计 0.001842 | 取得密度矩阵并补算响应、阈值和速率 |
 | LZ detector response | 尚未开展 | 当前仅有理论核反冲率 | 效率、能量分辨、曝光、选择切、背景和统计似然 |
