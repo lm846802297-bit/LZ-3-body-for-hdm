@@ -179,6 +179,16 @@ matrix.
 rate per kg of natural xenon, using the Xe-131 natural abundance 0.212324 and
 the NIST abundance-weighted mean atomic molar mass 131.2927614479 g/mol.
 
+It computes the same Xe-131 partial rate under three nuclear-mass schemes:
+- legacy (A u);
+- NIST atomic mass minus 54 electron rest masses, with electronic binding neglected;
+- the recommended AME2020 binding-energy correction with CODATA-2022 constants.
+
+The AME2020/CODATA-2022 result is the reference result. The other two
+prescriptions are retained as controlled comparisons; the mass dependence is
+propagated through (m_A), (q_{m response}), (v_{min}), the three-body
+kernel, and the propagator denominator.
+
 It uses:
 - the full 2401-point AFH v6.0 default Xe-131 response curve;
 - the new AME2020/CODATA-2022 nuclear mass in the three-body kernel;
