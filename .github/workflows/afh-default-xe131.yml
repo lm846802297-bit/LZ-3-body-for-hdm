@@ -1,5 +1,9 @@
 name: AFH default Xe-131 nuclear response
 
+concurrency:
+  group: afh-default-xe131-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   push:
     branches:
@@ -18,7 +22,7 @@ on:
       - research/afh_default_density_xe131/**
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   reproduce-afh-default-xe131:
@@ -27,6 +31,8 @@ jobs:
     steps:
       - name: Check out source
         uses: actions/checkout@v4
+        with:
+          persist-credentials: true
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -117,3 +123,39 @@ jobs:
           path: ${{ runner.temp }}/afh_four_benchmarks/
           if-no-files-found: error
           retention-days: 90
+
+      - name: Archive exact-spatial AFH outputs in the research branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/research/afh-default-density-xe131-mainline'
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp "$RUNNER_TEMP/afh_default_xe131/afh_default_xe131_WM00.csv" research/afh_default_density_xe131/output/
+          cp "$RUNNER_TEMP/afh_default_xe131/afh_default_xe131_WM00.png" research/afh_default_density_xe131/output/
+          cp "$RUNNER_TEMP/afh_default_xe131/figure2_dip_check.csv" research/afh_default_density_xe131/output/
+          cp "$RUNNER_TEMP/afh_default_xe131/minima.csv" research/afh_default_density_xe131/output/
+          cp "$RUNNER_TEMP/afh_default_xe131/metadata.json" research/afh_default_density_xe131/output/metadata.json
+          cp "$RUNNER_TEMP/afh_mpmath_full_grid/full_grid_mpmath_summary.json" research/afh_default_density_xe131/output/mpmath_full_grid_summary.json
+
+          cp "$RUNNER_TEMP/afh_four_benchmarks/figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv" research/afh_default_density_xe131/output/
+          cp "$RUNNER_TEMP/afh_four_benchmarks/figure2_four_benchmarks_AFH_GCN_JJ55_wide_audit.csv" research/afh_default_density_xe131/output/
+          cp "$RUNNER_TEMP/afh_four_benchmarks/selected_response_ratios.csv" research/afh_default_density_xe131/output/
+          cp "$RUNNER_TEMP/afh_four_benchmarks/metadata.json" research/afh_default_density_xe131/output/four_benchmark_metadata.json
+          cp "$RUNNER_TEMP/afh_four_benchmarks/"*.png research/afh_default_density_xe131/output/
+
+          cp "$RUNNER_TEMP/afh_q_convention_audit/"*.csv research/afh_default_density_natural_xenon_halo/results/
+          cp "$RUNNER_TEMP/afh_q_convention_audit/q_convention_audit_summary.json" research/afh_default_density_natural_xenon_halo/results/
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/afh_default_density_xe131/output
+          git add research/afh_default_density_natural_xenon_halo/results/natural_xenon_q_convention_audit.csv
+          git add research/afh_default_density_natural_xenon_halo/results/xe131_afh_response_shift_NR_vs_exact.csv
+          git add research/afh_default_density_natural_xenon_halo/results/xe131_fixed_benchmark_q_comparison.csv
+          git add research/afh_default_density_natural_xenon_halo/results/q_convention_audit_summary.json
+          if git diff --cached --quiet; then
+            echo "No generated AFH outputs changed."
+            exit 0
+          fi
+          git commit -m "data: archive exact-spatial AFH response and benchmark outputs [skip ci]"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
