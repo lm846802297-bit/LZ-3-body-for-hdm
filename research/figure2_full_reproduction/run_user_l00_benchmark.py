@@ -141,7 +141,7 @@ def main() -> None:
     args = parser.parse_args()
 
     result = calculate_benchmark(args.nw, args.nz, args.nphi)
-    rendered = json.dumps(result, indent=2, sort_keys=True) + "\\n"
+    rendered = json.dumps(result, indent=2, sort_keys=True) + chr(10)
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
         args.output.write_text(rendered, encoding="utf-8")
