@@ -51,7 +51,7 @@ jobs:
         with:
           name: natural-xenon-halo-folded-threebody-rates
           run-id: 42952902206
-          github-token: \${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           path: /tmp/natural_xenon_halo_fold_Au
 
       - name: Compute the NIST nuclear-mass halo fold
