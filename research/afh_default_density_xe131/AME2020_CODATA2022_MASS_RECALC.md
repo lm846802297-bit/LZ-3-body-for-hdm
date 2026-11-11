@@ -214,3 +214,18 @@ invented here.
 The rate is before detector efficiency, resolution, exposure, cuts,
 backgrounds, and likelihood. Native Mathematica execution of AFH v6.0 also
 remains a separate validation task.
+
+
+## Source references
+
+1. NIST, *Atomic Weights and Isotopic Compositions for Xenon*:
+   https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=Xe
+2. M. Wang et al., *The AME 2020 atomic mass evaluation (II). Tables, graphs and references*,
+   Chinese Physics C **45** (2021) 030003, DOI: 10.1088/1674-1137/abddaf.
+   The neutral-atom to nuclear-mass relation and approximate (B_e(Z)) formula
+   are given in Eqs. (1) and (2).
+3. P. J. Mohr, D. B. Newell, and B. N. Taylor, *CODATA recommended values of
+   the fundamental physical constants: 2022*, Rev. Mod. Phys. **97** (2025)
+   025002, DOI: 10.1103/RevModPhys.97.025002.
+   The (u c^2), (m_e c^2), and (m_e/u) values are taken from the
+   2022 CODATA tables.
