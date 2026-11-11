@@ -13,6 +13,6 @@ See results/NATURAL_XENON_HALO_FOLD_AUDIT.md for assumptions, results and conver
 
 Run from the repository root:
 
-    python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py
+    python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py --response-q-convention legacy_exact
 
 The script imports research/figure2_full_reproduction/eq6_kernel.py and reads the compact response samples and NIST isotope weights in this directory. The hash of the full AFH response input used to extract the samples is recorded in results/afh_response_input_sha256.txt.
