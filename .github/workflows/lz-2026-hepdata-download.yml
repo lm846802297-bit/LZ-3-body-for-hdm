@@ -1,0 +1,55 @@
+name: Retrieve official LZ 2026 HEPData release
+
+on:
+  push:
+    branches:
+      - research/afh-default-density-xe131-mainline
+    paths:
+      - .github/workflows/lz-2026-hepdata-download.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  retrieve-hepdata:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Retrieve HEPData YAML submission
+        shell: bash
+        run: |
+          set +e
+          mkdir -p "$RUNNER_TEMP/lz_hepdata"
+          yaml_url="https://www.hepdata.net/download/submission/ins3199115/1/yaml"
+          yaml_code=$(curl -L --max-time 120 -A "Mozilla/5.0" -sS \
+            -o "$RUNNER_TEMP/lz_hepdata/submission.yaml" -w "%{http_code}" "$yaml_url")
+          yaml_status=$?
+          if [ "$yaml_status" -eq 0 ] && [ "$yaml_code" = "200" ] && [ -s "$RUNNER_TEMP/lz_hepdata/submission.yaml" ]; then
+            echo "Downloaded HEPData YAML submission (HTTP $yaml_code)." > "$RUNNER_TEMP/lz_hepdata/DOWNLOAD_STATUS.txt"
+            sha256sum "$RUNNER_TEMP/lz_hepdata/submission.yaml" >> "$RUNNER_TEMP/lz_hepdata/DOWNLOAD_STATUS.txt"
+          else
+            json_url="https://www.hepdata.net/record/ins3199115?format=json"
+            json_code=$(curl -L --max-time 120 -A "Mozilla/5.0" -sS \
+              -o "$RUNNER_TEMP/lz_hepdata/record.json" -w "%{http_code}" "$json_url")
+            json_status=$?
+            if [ "$json_status" -eq 0 ] && [ "$json_code" = "200" ] && [ -s "$RUNNER_TEMP/lz_hepdata/record.json" ]; then
+              echo "YAML endpoint unavailable (HTTP $yaml_code); downloaded HEPData JSON record (HTTP $json_code)." > "$RUNNER_TEMP/lz_hepdata/DOWNLOAD_STATUS.txt"
+              sha256sum "$RUNNER_TEMP/lz_hepdata/record.json" >> "$RUNNER_TEMP/lz_hepdata/DOWNLOAD_STATUS.txt"
+            else
+              {
+                echo "HEPData YAML download failed: HTTP $yaml_code (curl status $yaml_status)."
+                echo "HEPData JSON download failed: HTTP $json_code (curl status $json_status)."
+                echo "The official data-release DOI is https://doi.org/10.17182/hepdata.182472.v1."
+              } > "$RUNNER_TEMP/lz_hepdata/DOWNLOAD_STATUS.txt"
+            fi
+          fi
+          cat "$RUNNER_TEMP/lz_hepdata/DOWNLOAD_STATUS.txt"
+
+      - name: Upload HEPData retrieval attempt
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-hepdata-data-release
+          path: ${{ runner.temp }}/lz_hepdata/
+          if-no-files-found: error
+          retention-days: 90
