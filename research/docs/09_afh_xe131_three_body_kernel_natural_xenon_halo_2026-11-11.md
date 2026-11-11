@@ -520,7 +520,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 - AFH CSV 中两处缺失换行，导致相邻记录拼接；现已修复，完整 2401 点表可正确解析；
 - 早期 benchmark CSV 的 AFH \(R_A\) 列曾误复制 GCN 值，而截面列已经按 AFH/GCN 响应比缩放。现已改为保存真实插值 AFH 响应，并由显示的 \(R_A\) 和 \(I_6\) 直接重构截面。
 
-修正后 AFH 开放点截面相对旧值的最大变化为 \(2.7406\times10^{-4}\)。因此引用结果时应使用 corrected archive，不应使用早期 CSV。
+修正后 AFH 开放点截面相对早期旧值的最大变化为 \(2.7406\times10^{-4}\)。此外，四组 benchmark 已从 NR-q 近似统一到 exact spatial q；在 101、200、267、542 keV 四个 selected recoil 点，Xe-131 的 NR 近似响应偏差最大约 225 ppm。引用结果时应使用当前 exact-spatial corrected archive，不应使用早期 CSV。
 
 ## 9. 当前研究决策与下一步
 
