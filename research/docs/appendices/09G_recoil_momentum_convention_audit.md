@@ -174,6 +174,6 @@ q 审计程序保存以下文件：
 | 精确质量壳关系 | 已推导 | \(q^2=2m_AE_R+E_R^2\) |
 | 28 个天然氙样本 | 已核实 | 全部匹配 exact spatial q |
 | Xe-131 NR 近似影响 | 已计算 | NIST 与 \(M_A=131u\) 两种质量约定均有对照 |
-| 天然氙 halo fold | exact-q 基线 | 不需要为当前 selected points 重新生成 AFH 响应 |
+| 天然氙 halo fold | exact-q 基线 | 98 个同位素贡献、14 个总速率复现；最大总速率差异 \(2.67\\times10^{-12}\)，CI run 43044583357 通过 |
 | 连续反冲谱 | 待完成 | 需要完整七同位素 AFH 响应输入 |
 | 原生 Mathematica 复算 | 待完成 | mpmath 全网格验证不能替代官方 Wolfram kernel 执行 |
