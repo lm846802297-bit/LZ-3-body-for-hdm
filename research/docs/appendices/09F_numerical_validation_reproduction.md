@@ -123,12 +123,11 @@ wolframscript -file research/afh_default_density_xe131/verify_afh_xe131_native.w
 天然氙 selected-point halo fold：
 
 ~~~bash
-python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \
-  --response-q-convention legacy_exact
+python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py
 python research/afh_default_density_natural_xenon_halo/validate_archived_results.py
 ~~~
 
-注意：legacy_exact 只用于复现当前已归档的 28 个 exact-q 响应样本。默认 manuscript_nr 会拒绝这些旧样本，直到七同位素 AFH 响应在 q_response=sqrt(2*m_A*E_R) 处重新生成。
+默认 exact_spatial 使用 AFH 定义的空间动量转移 (q=\sqrt{2m_AE_R+E_R^2})，与精确核质量壳关系一致。nr_approx 是 (q=\sqrt{2m_AE_R}) 的小反冲近似；当前 28 个响应样本不采用该近似，因此程序会拒绝将其与 exact-q 样本混用。legacy_exact 仍是 exact_spatial 的向后兼容别名。
 
 Eq. (6) kernel 测试：
 
@@ -154,15 +153,15 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 |---|---|---|---|
 | AFH 67 项密度矩阵解析 | 已完成 | 官方源解析、CSV 逐项核对、67 项计数 | 原生 Mathematica 全网格输出比较 |
 | AFH 默认 \(b_A\) | 已完成 | 公式、单位转换、Xe-131 数值回归测试 | 不需要拟合；不得用谷值调参 |
-| AFH 零动量归一化 | 已完成（含有限精度修正） | 原始 \(A^2/4\)、物理响应 \(A^2\)、偏差 \(8.2523\times10^{-5}\) | 统一所有计算文件的质量和 \(q_{\rm resp}\) 约定 |
+| AFH 零动量归一化 | 已完成（含有限精度修正） | 原始 \(A^2/4\)、物理响应 \(A^2\)、偏差 \(8.2523\times10^{-5}\) | 记录 AFH 空间 q 的精确质量壳关系，并区分 NR 近似 |
 | AFH 谷值 | 已完成 | 离散候选点、直接响应局部极小化、minima.csv | 不需要调整 \(b_A\) |
 | mpmath 独立有限和 | 已完成全网格 | 60 位精度、2401 个 q 节点；最大振幅绝对差 \(3.98\times10^{-14}\)，最大响应绝对差除以 \(A^2\) 为 \(1.22\times10^{-15}\) | 原生 Mathematica 逐点对照仍待完成 |
 | AFH 原生 Mathematica | 待完成 | WLS runner 和比较脚本已归档；Python/mPMath 全网格交叉验证已通过 | 实际运行 Wolfram kernel 并保存逐点差异 |
 | GCN/JJ55 对照 | 已完成归档 | 三种响应、四 benchmark、1920 行 long table | 对照共享既有 \(I_6\)，不是 640 次独立重算 |
 | 三体运动学/Dirac trace | 已完成代表性检查 | 壳条件、四动量闭合、显式自旋求和、干涉分解 | 扩展到更宽的参数和质量网格 |
 | 三体积分收敛 | 已有 selected-point 验证 | 六个天然氙点 \(8×8×4\) 对 \(16×16×8\)，最大差异 \(2.19×10^{-4}\)；独立 Eq. (6) 测试点 \(16×16×8\) 对 \(32×32×16\)，相对差异小于 \(5×10^{-5}\) | 连续反冲谱全网格收敛 |
-| 天然氙速度积分 | 已有 selected-point 验证（legacy q） | 五个点 32 对 64 速度节点，最大差异 \(3.31×10^{-6}\)；98 个逐同位素贡献和 14 个总速率重算后与旧档最大总速率差异 \(2.67×10^{-12}\) | 先生成 manuscript-NR 七同位素响应，再重算速率；连续谱和 halo 参数扫描 |
-| q_response / q_kinematic 分离 | 已完成审计与代码保护 | 28 个天然氙样本识别为 exact-q；Xe-131 四点响应差异约 5.5–212.7 ppm | 重新生成七同位素 manuscript-NR 响应样本并重算 halo fold |
+| 天然氙速度积分 | 已有 selected-point 验证（exact spatial q） | 五个点 32 对 64 速度节点，最大差异 \(3.31×10^{-6}\)；98 个逐同位素贡献和 14 个总速率重算后与旧档最大总速率差异 \(2.67×10^{-12}\) | 连续谱和 halo 参数扫描 |
+| AFH 空间 q 与 NR 近似 | 已完成审计与代码保护 | 28 个天然氙样本匹配 exact spatial q；Xe-131 四点 NR 近似响应差异约 5.5–225 ppm | 连续反冲谱需要完整七同位素 AFH 响应网格 |
 | Xe-124/Xe-126 | 输入缺失 | 缺失丰度合计 0.001842 | 取得密度矩阵并补算响应、阈值和速率 |
 | LZ detector response | 尚未开展 | 当前仅有理论核反冲率 | 效率、能量分辨、曝光、选择切、背景和统计似然 |
 
