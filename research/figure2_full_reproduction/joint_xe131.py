@@ -197,7 +197,7 @@ def differential_cross_section(
         "model": response.model,
         "mA_GeV": mA,
         "ER_GeV": ER_GeV,
-        "q_response_NR_GeV": q_response,
+        "q_response_GeV": q_response,
         "q_kinematics_exact_GeV": q_exact,
         "R_A": R_A,
         "R_A_over_A2": R_A / (A * A),
