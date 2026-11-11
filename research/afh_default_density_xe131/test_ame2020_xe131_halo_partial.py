@@ -42,16 +42,19 @@ class Ame2020Xe131PartialRateTests(unittest.TestCase):
             lambda v: shm_truncated_pdf(v, 220.0, 232.0, 544.0),
             0.0,
             776.0,
-            epsabs=1e-10,
+            epsabs=1e-12,
+            epsrel=1e-12,
+            points=[312.0],
         )[0]
         mb_norm = quad(
             lambda v: mb_untruncated_pdf(v, 220.0, 232.0),
             0.0,
             3000.0,
-            epsabs=1e-10,
+            epsabs=1e-12,
+            epsrel=1e-12,
         )[0]
-        self.assertAlmostEqual(shm_norm, 1.0, places=9)
-        self.assertAlmostEqual(mb_norm, 1.0, places=8)
+        self.assertAlmostEqual(shm_norm, 1.0, delta=2e-10)
+        self.assertAlmostEqual(mb_norm, 1.0, delta=2e-10)
 
     def test_exact_recoil_momentum_is_used_for_afh_response(self):
         row = compute_partial_rate(
