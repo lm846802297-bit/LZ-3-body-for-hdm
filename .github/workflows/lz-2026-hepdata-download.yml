@@ -46,6 +46,16 @@ jobs:
           fi
           cat "$RUNNER_TEMP/lz_hepdata/DOWNLOAD_STATUS.txt"
 
+      - name: Download the official arXiv PDF for response-curve extraction
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -L --fail --max-time 120 -A "Mozilla/5.0" \
+            -o "$RUNNER_TEMP/lz_hepdata/lz_2026_extended_nr_search.pdf" \
+            "https://arxiv.org/pdf/2609.02823"
+          sha256sum "$RUNNER_TEMP/lz_hepdata/lz_2026_extended_nr_search.pdf" \
+            >> "$RUNNER_TEMP/lz_hepdata/DOWNLOAD_STATUS.txt"
+
       - name: Upload HEPData retrieval attempt
         uses: actions/upload-artifact@v4
         with:
