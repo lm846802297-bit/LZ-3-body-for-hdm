@@ -14,7 +14,7 @@
 2. **核结构输入：** 采用 AFH/DMFormFactor v6.0 内置的 Xe-131 default density matrix，严格使用文献给出的谐振子长度处方，不把 \(b_A\) 当作拟合参数；并处理 AFH 原始 isoscalar response 与物理等质子、等中子耦合之间的因子 4。
 3. **真实天然氙靶的理论速率：** 对可用氙同位素按天然丰度求和，并对实验室系暗物质速度分布积分，得到 \(dR/dE_R\)。这一步与固定速度下的 \(d\sigma_A/dE_R\) 是不同的物理量。
 
-目前已经形成 AFH default Xe-131 响应、GCN/JJ55 对照、四组固定速度 benchmark，以及天然氙 selected-point halo-folded rate 的可复现归档。需要继续明确的边界是：AFH 原生 Mathematica 程序尚未在 Wolfram kernel 中实际运行；天然氙结果仍是理论 selected-point rates，尚不是完整的 LZ detector-level likelihood/recast。
+目前已经形成 AFH default Xe-131 响应、GCN/JJ55 对照、四组固定速度 benchmark，以及天然氙 selected-point halo-folded rate 的可复现归档。Xe-131 AFH Python 响应已通过 60 位精度 mpmath 对全部 2401 个 q 节点的独立有限和对照；原生 Mathematica 程序仍未在 Wolfram kernel 中实际运行。另已发现天然氙 28 个 AFH 响应样本采用 exact-q，而论文当前核响应定义对应 NR-q；旧速率保留为 legacy 结果，新的七同位素 NR-q 响应尚待重新生成。天然氙结果仍是理论 selected-point rates，尚不是完整的 LZ detector-level likelihood/recast。
 
 ---
 
@@ -496,7 +496,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 - 从官方 AFH v6.0 源文件解析 Xe-131 的 67 项密度矩阵，并与归档 CSV 逐项比较；
 - AFH source-to-Python 翻译与源文件数据一致；
 - 独立 60 位精度 mpmath 有限和计算，在代表性振幅点与 Python 结果相符，精度优于 \(2\times10^{-11}\)；
-- Xe-131 AFH 脚本的六项 Python regression tests 通过；
+- Xe-131 AFH 脚本的 Python regression tests 通过；
 - 四组 benchmark 的 AFH/GCN/JJ55 响应替换表完成逐点重构检查；
 - 天然氙 Eq. (6) kernel 与速度积分完成网格收敛 spot checks；
 - 天然氙归档完整性验证 workflow 通过。
@@ -509,6 +509,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 4. **尚未加入 LZ detector response。** 没有 detector efficiency、能量分辨率、曝光、分析 cuts、背景模型或 likelihood。因此这些理论速率不能直接当作 LZ 预期观测事件数，也不能称为完整的 LZ 数据重铸。
 5. **极点宽度是条件性的。** 只包括给定假设下的 \(\chi_2\to\chi_1s\) 标量通道，不等于完整模型的矢量加标量自能。
 6. **halo 模型依赖尚未做系统扫描。** untruncated MB 只用于高速度尾部敏感性诊断，不作为默认 halo 结果。
+7. **天然氙响应 q 约定尚未统一到论文定义。** 28 个旧样本使用 (q_{\rm exact}=\sqrt{2m_AE_R+E_R^2})，而论文 (y=b_A^2m_AE_R/2) 对应 (q_{\rm resp}^{\rm NR}=\sqrt{2m_AE_R})。程序已增加显式约定和防误用检查；旧速率没有被改标签或重标度。
 
 ### 8.3 数据修正记录
 
@@ -568,7 +569,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 
 ## 附录导航与独立文件
 
-主报告后文保留 A–F 六份附录的完整正文。为便于检索、单独引用和维护，同一附录还分别保存为独立 Markdown 文件；主报告正文与六份独立副本保持同步：
+主报告后文保留 A–G 七份附录的完整正文。为便于检索、单独引用和维护，同一附录还分别保存为独立 Markdown 文件；主报告正文与七份独立副本保持同步：
 
 | 附录 | 内容 | 文件 |
 |---|---|---|
@@ -578,6 +579,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 | D | 天然氙同位素、丰度和核靶归一化 | [09D_natural_xenon_isotope_target.md](appendices/09D_natural_xenon_isotope_target.md) |
 | E | 实验室系速度分布、三体最小速度与 halo folding | [09E_halo_velocity_vmin_folding.md](appendices/09E_halo_velocity_vmin_folding.md) |
 | F | 计算程序、数据文件、收敛验收和复现命令 | [09F_numerical_validation_reproduction.md](appendices/09F_numerical_validation_reproduction.md) |
+| G | 核响应动量与精确三体运动学动量的约定审计 | [09G_recoil_momentum_convention_audit.md](appendices/09G_recoil_momentum_convention_audit.md) |
 
 附录与主报告使用同一研究分支维护。程序、CSV 和机器可读结果仍保存在各自计算目录中；附录负责解释其定义、调用方式和验证边界，不复制大体积数据。
 
@@ -585,7 +587,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 
 # 技术附录（完整内容）
 
-以下 A–F 附录正文与目录 research/docs/appendices/ 中的六份独立文件保持同步。主报告保留完整附录，独立文件用于单独检索和引用。
+以下 A–G 附录正文与目录 research/docs/appendices/ 中的七份独立文件保持同步。主报告保留完整附录，独立文件用于单独检索和引用。
 
 ## 附录 A：三体运动学、相空间边界与 Dirac 振幅
 
@@ -2222,5 +2224,5 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 3. 保留 AFH raw response 与物理 equal-\(p,n\) response 两列，因子 4 只应用一次。
 4. 早期错误的 AFH response CSV 拼接换行和 benchmark CSV 中 AFH 列误复制 GCN 的版本应标记为 superseded；当前使用 corrected archive。
 5. 任何新的 \(q_{\rm resp}\)、核质量、halo 参数、宽度方案或求积阶数都应产生新的输出和 metadata，不覆盖历史结果。
-6. 主报告包含完整附录 A–F；本目录中的六份独立附录与主报告对应章节保持同步。
+6. 主报告包含完整附录 A–G；本目录中的七份独立附录与主报告对应章节保持同步。
 7. 程序、CSV、JSON 和源文件继续保存在各自计算目录，文档只解释其定义、来源、调用方式和验证边界。
