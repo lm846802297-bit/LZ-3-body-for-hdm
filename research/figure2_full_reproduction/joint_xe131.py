@@ -119,7 +119,7 @@ def differential_cross_section(
     ER_GeV: float,
     speed_km_s: float,
     coupling_product_sq: float,
-    mV_GeV: float,
+    mV_GeV: float | None = None,
     width_scheme: str = "zero",
     g2: float | None = None,
     nw: int = 16,
@@ -132,13 +132,17 @@ def differential_cross_section(
     caption. The separate g2 is required only for the conditional Dirac
     pole/running-width prescriptions in eq6_kernel.
     """
-    values = (mchi_GeV, ms_GeV, delta_m_GeV, ER_GeV, coupling_product_sq, mV_GeV)
+    values = (mchi_GeV, ms_GeV, delta_m_GeV, ER_GeV, coupling_product_sq)
     if not all(math.isfinite(float(x)) for x in values):
         raise ValueError("all scalar inputs must be finite")
+    if mV_GeV is not None and (
+        not math.isfinite(float(mV_GeV)) or float(mV_GeV) < 0.0
+    ):
+        raise ValueError("mV must be finite and non-negative when supplied")
     if mchi_GeV <= 0.0 or ms_GeV < 0.0 or delta_m_GeV < 0.0:
         raise ValueError("invalid dark-sector masses")
-    if ER_GeV <= 0.0 or coupling_product_sq < 0.0 or mV_GeV < 0.0:
-        raise ValueError("require ER>0, coupling_product_sq>=0, mV>=0")
+    if ER_GeV <= 0.0 or coupling_product_sq < 0.0:
+        raise ValueError("require ER>0 and coupling_product_sq>=0")
 
     A = response.A
     mA = isotope_mass_GeV(A)
@@ -178,8 +182,15 @@ def differential_cross_section(
         * R_A
         * I6
     )
-    propagator_denominator = (mV_GeV**2 + 2.0 * mA * ER_GeV) ** 2
-    dsigma_dER = C_A / propagator_denominator if propagator_denominator > 0.0 else float("inf")
+    if mV_GeV is None:
+        propagator_denominator = None
+        dsigma_dER = None
+    else:
+        propagator_denominator = (mV_GeV**2 + 2.0 * mA * ER_GeV) ** 2
+        dsigma_dER = (
+            C_A / propagator_denominator
+            if propagator_denominator > 0.0 else float("inf")
+        )
 
     return {
         "A": A,
