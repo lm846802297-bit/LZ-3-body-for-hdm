@@ -109,7 +109,9 @@ def run_dmscatter_response(
         Wfunc = dm.NucFormFactor(
             Z=Z_XE,
             N=A - Z_XE,
-            dres=str(dres),
+            # dmscatter's Python wrapper expects the density-matrix stem
+            # without the trailing ".dres" extension.
+            dres=str(dres.with_suffix("")),
             controlwords={
                 "usemomentum": 1,
                 "pnresponse": 1,
