@@ -115,9 +115,9 @@ $E_R=101$ keV, the AME2020 masses give:
 | Xe-134 | 781.228229 |
 | Xe-136 | 775.805285 |
 
-With the truncated-SHM endpoint (v_{max}=776) km/s, only Xe-136 is open
+With the truncated-SHM endpoint $v_{\max}=776$ km/s, only Xe-136 is open
 at this recoil energy. This does **not** imply that Xe-136 dominates the
-integrated spectrum at every (E_R); the open-isotope set changes with recoil
+integrated spectrum at every $E_R$; the open-isotope set changes with recoil
 energy and the full rate also contains the isotope-dependent AFH response.
 
 ## 3. Keep the AFH response momentum distinct from exact recoil kinematics
