@@ -160,6 +160,25 @@ calculation therefore evaluates both conventions directly from the complete
 2401-point AFH response curve rather than multiplying a rate by an empirical
 rescaling factor.
 
+For Xe-131 with the AME2020 mass, direct PCHIP interpolation of the full AFH
+curve gives the following selected-point comparison. Since the differential
+cross section is linear in (R_A), the relative response change is also the
+relative change in (d\sigma_{131}/dE_R) and (dR_{131}/dE_R) at fixed
+(E_R), before detector folding.
+
+| (E_R) [keV] | (q_{\rm resp}^{\rm NR}) [GeV] | (q_{\rm kin}) [GeV] | (R_A^{\rm NR}) | (R_A^{\rm exact}) | Exact vs NR [ppm] |
+|---:|---:|---:|---:|---:|---:|
+| 101 | 0.156926111066 | 0.156926143569 | 0.305439766781 | 0.305439762163 | -0.015 |
+| 200 | 0.220825652900 | 0.220825743470 | 9.62849643886 | 9.62844388981 | -5.458 |
+| 267 | 0.255146817709 | 0.255146957410 | 0.00676684899246 | 0.00676540962832 | -212.708 |
+| 542 | 0.363524904144 | 0.363525308193 | 0.00328045596122 | 0.00328013662691 | -97.344 |
+
+The response-q difference is most consequential at the AFH minimum near
+267 keV. The exact-q prescription lowers the Xe-131 response and differential
+rate there by (2.12708\times10^{-4}), i.e. (0.0212708\%). This is a
+local response-interpolation effect, not a change to (v_{\min}), the
+three-body phase-space support, or the halo distribution.
+
 The AFH default oscillator-length prescription \(b_A\) and the response
 normalization are unchanged. No isotope-specific \(b_A\) is fitted to a
 Figure-2 minimum.
