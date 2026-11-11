@@ -89,6 +89,39 @@ prescription is \(6.62\times10^{-7}\). The \(A u\) result independently
 reproduces the archived halo-fold output, providing a cross-check of the
 local re-evaluation.
 
+## 3. Fixed Earth-speed sensitivity at 101 keV
+
+The NIST-mass halo fold was also repeated at three fixed lab speeds, keeping
+\(v_0=220\) km/s and \(v_{\rm esc}=544\) km/s. This is a sensitivity bracket,
+not a time-averaged annual-modulation calculation.
+
+| \(v_E\) [km/s] | \(v_{\max}\) [km/s] | Open available isotopes | GCN rate | JJ55 rate |
+|---:|---:|:---|---:|---:|
+| 217 | 761 | none | 0 | 0 |
+| 232 | 776 | Xe-136 | \(2.0727\times10^{-15}\) | \(2.1410\times10^{-15}\) |
+| 247 | 791 | Xe-131, Xe-132, Xe-134, Xe-136 | \(9.7715\times10^{-9}\) | \(1.0205\times10^{-8}\) |
+
+Rates are in events/(kg day keV), at \(m_V=0.1\) GeV and zero width.
+The 247 km/s result is the full sum over all open isotopes with available
+response data—not the Xe-136-only lower bound used in the initial diagnostic.
+Xe-124 and Xe-126 remain kinematically closed throughout this speed bracket.
+
+The rate changes by approximately
+\[
+\frac{R(v_E=247)}{R(v_E=232)}
+\simeq 4.71\times10^6\quad(\mathrm{GCN}),
+\qquad
+4.77\times10^6\quad(\mathrm{JJ55}).
+\]
+At \(v_E=217\) km/s the channel is closed for every isotope in the available
+set. The 16- versus 32-node speed-quadrature differences are below
+\(6.7\times10^{-7}\) for the nonzero points.
+
+This demonstrates that the 101 keV prediction under a hard escape-speed
+cutoff is exceptionally sensitive to the instantaneous lab speed. A fixed
+\(v_E=232\) value cannot be interpreted as an annual average near this
+kinematic endpoint.
+
 ## 3. Interpretation and prescription
 
 - Retain the \(m_A=A u\) result as the historical baseline so existing response
