@@ -294,6 +294,15 @@ Green benchmark 在其他三个选定反冲能量的结果为：
 
 ## E.7 当前 halo 结果的 q-response 状态
 
+本轮已对旧 exact-q 计算执行完整回归复现：
+
+- 默认 manuscript_nr 模式已被 CI 验证会拒绝当前 exact-q 样本；
+- 显式 legacy_exact 模式重新计算 98 个逐同位素贡献和 14 个总速率；
+- 与旧归档比较，最大逐同位素贡献相对差异为 \(4.32\times10^{-10}\)，最大总速率相对差异为 \(2.67\times10^{-12}\)；
+- [CI run 43040078335](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43040078335) 全部通过。
+
+机器可读比较结果保存在 results/legacy_exact_reproduction_comparison.json。该结果证明 q 约定分离没有破坏旧 exact-q 结果的可复现性；它不等于已经得到 manuscript-NR 的新天然氙速率。
+
 当前归档的天然氙 selected-point 速率没有被本轮 q 审计重标度或覆盖。其输入样本仍采用
 
 \[
