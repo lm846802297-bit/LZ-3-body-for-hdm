@@ -6,16 +6,22 @@ on:
       - research/afh-default-density-xe131-mainline
     paths:
       - .github/workflows/lz-2026-hepdata-download.yml
+      - research/figure2_full_reproduction/extract_lz_2026_nr_efficiency.py
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   retrieve-hepdata:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - name: Check out research branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
       - name: Retrieve HEPData YAML submission
         shell: bash
         run: |
@@ -55,6 +61,40 @@ jobs:
             "https://arxiv.org/pdf/2609.02823"
           sha256sum "$RUNNER_TEMP/lz_hepdata/lz_2026_extended_nr_search.pdf" \
             >> "$RUNNER_TEMP/lz_hepdata/DOWNLOAD_STATUS.txt"
+
+      - name: Extract final NR efficiency curve from the official PDF
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+          python research/figure2_full_reproduction/extract_lz_2026_nr_efficiency.py \
+            --pdf "$RUNNER_TEMP/lz_hepdata/lz_2026_extended_nr_search.pdf" \
+            --out-dir "$RUNNER_TEMP/lz_efficiency_extracted"
+          cp "$RUNNER_TEMP/lz_efficiency_extracted/"* "$RUNNER_TEMP/lz_hepdata/"
+
+      - name: Archive efficiency curve and extraction metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin "$GITHUB_REF_NAME"
+          git reset --hard "origin/$GITHUB_REF_NAME"
+          mkdir -p research/lz_detector_response/lz_2026_extended_nr
+          cp "$RUNNER_TEMP/lz_efficiency_extracted/lz_2026_nr_efficiency_digitized.csv" \
+            research/lz_detector_response/lz_2026_extended_nr/
+          cp "$RUNNER_TEMP/lz_efficiency_extracted/lz_2026_nr_efficiency_metadata.json" \
+            research/lz_detector_response/lz_2026_extended_nr/
+          cp "$RUNNER_TEMP/lz_efficiency_extracted/lz_2026_figS2.svg" \
+            research/lz_detector_response/lz_2026_extended_nr/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/lz_detector_response/lz_2026_extended_nr
+          if git diff --cached --quiet; then
+            echo "LZ efficiency curve archive is already current."
+            exit 0
+          fi
+          git commit -m "data: archive digitized LZ 2026 NR efficiency curve [skip ci]"
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"
 
       - name: Upload HEPData retrieval attempt
         uses: actions/upload-artifact@v4
