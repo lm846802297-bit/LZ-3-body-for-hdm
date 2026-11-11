@@ -1,6 +1,12 @@
 {
   "calculation": "AME2020/CODATA2022 Xe-131 partial contribution to natural-xenon halo-folded three-body rate",
   "scope": "Xe-131 isotope term only; not the total natural-xenon rate",
+  "mass_schemes_compared": [
+    "A_u",
+    "nist_nuclear",
+    "ame2020_nuclear"
+  ],
+  "reference_mass_scheme": "ame2020_nuclear",
   "mass_scheme": {
     "atomic_mass_source": "NIST Atomic Weights and Isotopic Compositions for Xenon",
     "nuclear_conversion": "M_nucleus = M_neutral_atom - Z*m_e + B_e(Z)",
@@ -12,7 +18,7 @@
     "constants": "CODATA 2022",
     "u_c2_MeV": 931.49410372,
     "electron_mass_c2_MeV": 0.51099895069,
-    "mA_Xe131_GeV": 121.9099223838014
+    "mA_Xe131_GeV": 121.90992238380122
   },
   "AFH": {
     "source": "DMFormFactor v6.0 built-in sdgXe131, 67 density-matrix entries",
@@ -83,7 +89,7 @@
       16,
       8
     ],
-    "max_relative_speed_difference": 0.00010992230150130844,
+    "max_relative_speed_difference": 0.00010992372557061536,
     "max_relative_kernel_difference": 0.00020977400319455164
   },
   "rate_units": "events/(kg day keV)",
