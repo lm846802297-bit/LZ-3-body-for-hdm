@@ -28,6 +28,12 @@ which gives
 \[
 B_e(54)=202378.277717\ {\rm eV}
        =202.378277717\ {\rm keV}.
+
+The AME2020 paper presents this as an approximate binding-energy formula and
+notes that the precision of calculated total electronic binding energies is
+not established as precisely as the atomic-mass measurements. Accordingly,
+this correction is included for a more complete mass conversion, but its
+uncertainty is not silently treated as zero.
 \]
 
 CODATA-2022 constants used here are
