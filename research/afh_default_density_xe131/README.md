@@ -140,15 +140,20 @@ python verify_afh_mpmath_full_grid.py \
 
 ## Recoil-momentum convention
 
-For a fixed recoil energy, the manuscript's current response definition
-\(y=b_A^2m_AE_R/2\) corresponds to
-\(q_{\rm resp}^{\rm NR}=\sqrt{2m_AE_R}\). The exact three-body kinematics
-continues to use
-\(q_{\rm kin}^{\rm exact}=\sqrt{2m_AE_R+E_R^2}\). The fixed-speed response
-substitution uses the former; the exact momentum remains in the kinematic
-boundary. The natural-xenon archived response samples currently use exact q
-and are explicitly marked legacy pending their seven-isotope regeneration.
-See research/docs/appendices/09G_recoil_momentum_convention_audit.md.
+AFH defines the nuclear response variable as \(y=(q b_A/2)^2\), where \(q\) is
+the spatial momentum transfer. For a nucleus initially at rest, exact
+mass-shell kinematics gives
+
+\[
+q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}.
+\]
+
+This exact spatial q is used for the response interpolation and the three-body
+kinematic boundary. The common \(q_{\rm NR}=\sqrt{2m_AE_R}\) relation is retained
+only as a small-recoil approximation. The natural-xenon 28-point response
+archive uses exact spatial q and is consistent with the exact three-body
+kinematics. Numerical differences in the NR approximation are documented in
+research/docs/appendices/09G_recoil_momentum_convention_audit.md.
 
 ## Scope and connection to the three-body calculation
 
