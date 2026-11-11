@@ -82,7 +82,7 @@ See `output/RESULTS.md`, `output/metadata.json`, `output/minima.csv`,
 
 ## Reproduction
 
-Python dependencies: NumPy, SciPy, SymPy. From this directory:
+Python dependencies: NumPy, SciPy, SymPy, mpmath. From this directory:
 
 ```bash
 python run_afh_default_xe131.py --outdir output
@@ -106,6 +106,48 @@ python -m unittest test_afh_default_xe131.py
 For a native AFH Mathematica calculation, use
 `run_afh_default_xe131.wls` with the official package file in this directory
 or set `DMFormFactorPath`.
+
+## Independent full-grid mpmath validation
+
+The CI workflow now evaluates the AFH finite sums independently with 60-digit
+mpmath arithmetic at all 2401 momentum-grid nodes. The reference calculation
+groups the finite BesselElement sums by hypergeometric parameter and does not
+call SciPy's hyp1f1 implementation.
+
+Latest completed full-grid check:
+
+| Metric | Result |
+|---|---:|
+| q nodes | 2401 |
+| Maximum absolute amplitude difference | \(3.98\times10^{-14}\) |
+| Maximum relative amplitude difference where reference amplitude exceeds \(10^{-10}\) | \(8.83\times10^{-13}\) |
+| Maximum absolute response difference divided by \(A^2\) | \(1.22\times10^{-15}\) |
+| Status | PASS |
+
+The machine-readable 2401-row comparison and JSON summary are uploaded as the
+GitHub Actions artifact named afh-xe131-mpmath-full-grid-validation. This is an
+independent high-precision check of the Python finite-sum translation; it is
+not a native Mathematica execution.
+
+Run it with:
+
+~~~bash
+python verify_afh_mpmath_full_grid.py \
+  --response-csv output/afh_default_xe131_WM00.csv \
+  --outdir output/mpmath_full_grid
+~~~
+
+## Recoil-momentum convention
+
+For a fixed recoil energy, the manuscript's current response definition
+\(y=b_A^2m_AE_R/2\) corresponds to
+\(q_{\rm resp}^{\rm NR}=\sqrt{2m_AE_R}\). The exact three-body kinematics
+continues to use
+\(q_{\rm kin}^{\rm exact}=\sqrt{2m_AE_R+E_R^2}\). The fixed-speed response
+substitution uses the former; the exact momentum remains in the kinematic
+boundary. The natural-xenon archived response samples currently use exact q
+and are explicitly marked legacy pending their seven-isotope regeneration.
+See research/docs/appendices/09G_recoil_momentum_convention_audit.md.
 
 ## Scope and connection to the three-body calculation
 
