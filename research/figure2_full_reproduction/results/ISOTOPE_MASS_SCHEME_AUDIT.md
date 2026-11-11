@@ -70,6 +70,25 @@ The qualitative cutoff classification is unchanged: among the seven
 available response isotopes, only Xe-136 is open at 101 keV for either mass
 prescription. At 200, 267 and 542 keV, all seven available isotopes are open.
 
+A direct halo-folded 101 keV cross-check was then performed for the only open
+isotope, Xe-136, using the truncated SHM, \(m_V=0.1\) GeV,
+\(\rho_\chi=0.3\) GeV/cm\(^3\), and the zero-width kernel:
+
+| Mass prescription | GCN rate | JJ55 rate |
+|---|---:|---:|
+| \(A u\) | \(6.7922\times10^{-14}\) | \(7.0131\times10^{-14}\) |
+| NIST nuclear | \(2.0727\times10^{-15}\) | \(2.1410\times10^{-15}\) |
+
+Rates are in events/(kg day keV). Thus
+\[
+R_{\rm NIST}/R_{Au}=0.0305,
+\]
+a further suppression by a factor of about 32.8 relative to the \(A u\)
+baseline. The 16- versus 32-node speed-integral difference for the NIST
+prescription is \(6.62\times10^{-7}\). The \(A u\) result independently
+reproduces the archived halo-fold output, providing a cross-check of the
+local re-evaluation.
+
 ## 3. Interpretation and prescription
 
 - Retain the \(m_A=A u\) result as the historical baseline so existing response
