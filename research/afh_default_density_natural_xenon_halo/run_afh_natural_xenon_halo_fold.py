@@ -50,8 +50,23 @@ def shm_truncated_pdf(v, v0=220.0, ve=232.0, vesc=544.0):
         bracket=math.exp(-((v-ve)/v0)**2)-math.exp(-z*z)
     return v*bracket/(math.sqrt(math.pi)*v0*ve*norm)
 
+def q_response_manuscript_nr(mA, ER):
+    """Response momentum implied by manuscript y=b_A^2*m_A*E_R/2."""
+    return math.sqrt(2.0*mA*ER)
+
+def q_kinematic_exact(mA, ER):
+    """Exact spatial recoil momentum from the nuclear mass-shell condition."""
+    return math.sqrt(2.0*mA*ER+ER*ER)
+
+def q_response_from_convention(mA, ER, convention):
+    if convention=="manuscript_nr":
+        return q_response_manuscript_nr(mA,ER)
+    if convention=="legacy_exact":
+        return q_kinematic_exact(mA,ER)
+    raise ValueError(f"unknown response-q convention: {convention}")
+
 def vmin_three_body_km_s(mchi, ms, mA, ER):
-    q=math.sqrt(2.0*mA*ER+ER*ER)
+    q=q_kinematic_exact(mA,ER)
     a=ms+(mA*ER+0.5*ms*ms)/mchi
     beta=(q*ER+a*math.sqrt(q*q-ER*ER+a*a))/(q*q+a*a)
     return C_KM_S*beta
@@ -78,6 +93,9 @@ def main():
     ap.add_argument("--nw",type=int,default=8)
     ap.add_argument("--nz",type=int,default=8)
     ap.add_argument("--nphi",type=int,default=4)
+    ap.add_argument("--response-q-convention",choices=("manuscript_nr","legacy_exact"),
+                    default="manuscript_nr",
+                    help="AFH response q convention; legacy_exact is required to reproduce the archived pre-audit samples.")
     args=ap.parse_args()
     args.out_dir.mkdir(parents=True,exist_ok=True)
 
@@ -115,10 +133,16 @@ def main():
             isotope_partials=[]
             for A, xA in abundance.items():
                 mA=nuclear_mass[A]
-                q_response=math.sqrt(2.0*mA*ER+ER*ER)
+                q_response=q_response_from_convention(mA,ER,args.response_q_convention)
+                q_kinematic=q_kinematic_exact(mA,ER)
                 RA=response[(A,er_keV)]
                 if not math.isclose(q_response,response_q[(A,er_keV)],rel_tol=0.0,abs_tol=2e-10):
-                    raise ValueError(f"AFH q sample mismatch for Xe-{A}, ER={er_keV} keV")
+                    raise ValueError(
+                        f"AFH response sample q mismatch for Xe-{A}, ER={er_keV} keV: "
+                        f"selected convention={args.response_q_convention}, "
+                        f"computed q={q_response:.12g} GeV, sample q={response_q[(A,er_keV)]:.12g} GeV. "
+                        "Regenerate R_A at the selected q; do not relabel the old response sample."
+                    )
                 vmin=vmin_three_body_km_s(args.mchi_GeV,ms,mA,ER)
                 J=0.0
                 if vmin < vmax:
@@ -144,7 +168,7 @@ def main():
                 isotope_partials.append({
                     "benchmark":benchmark,"ER_keV":er_keV,"halo_model":halo,
                     "A":A,"abundance":xA,"mA_GeV":mA,
-                    "q_response_GeV":q_response,"R_A":RA,
+                    "q_response_GeV":q_response,"q_kinematic_GeV":q_kinematic,"R_A":RA,
                     "vmin_km_s":vmin,"vmax_km_s":vmax,
                     "open":vmin<vmax,"J_A_GeV":J,
                     "rate_contribution_events_kg_day_keV":contribution,
@@ -190,6 +214,9 @@ def main():
         "abundance_convention":"natural atomic fractions; no renormalization",
         "mean_atomic_weight_g_mol":mean_atomic_weight,
         "mass_scheme":"(NIST atomic isotope mass - 54 electron masses)*u; electronic binding neglected",
+        "response_q_convention":args.response_q_convention,
+        "response_q_formula":("sqrt(2*m_A*E_R)" if args.response_q_convention=="manuscript_nr" else "sqrt(2*m_A*E_R+E_R^2) [legacy exact-q response samples]"),
+        "kinematic_q_convention":"sqrt(2*m_A*E_R+E_R^2); exact nuclear mass-shell momentum used for v_min and three-body kinematics",
         "b_A_formula":"sqrt(41.467/(45*A^(-1/3)-25*A^(-2/3))) fm",
         "b_A_fm":b_values,
         "m_chi1_GeV":args.mchi_GeV,"m_V_GeV":args.mV_GeV,
