@@ -20,6 +20,8 @@
 ## 研究记录
 
 - 模型、三体振幅与 Breit–Wigner 宽度：docs/01_model_and_amplitude.md
+- χ₂ → χ₁s pole width 的解析推导、数值结果与验证：docs/08_chi2_decay_width.md
+- 对应数值实现与单元测试：calculations/chi2_decay_width.py、tests/test_chi2_decay_width.py
 - LZ 数据、事件率与统计重铸路线：docs/02_lz_recast.md
 - 冻结出后演化与 ΔN_eff：docs/03_cosmology.md
 - 审计与研究路线：docs/04_audit_and_roadmap.md
