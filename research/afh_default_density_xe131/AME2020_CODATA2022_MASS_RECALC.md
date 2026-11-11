@@ -138,22 +138,40 @@ the endpoint.
 
 ## Nuclear-response momentum convention
 
-The AFH response is a function of the physical three-momentum transfer.
-This branch uses the exact target mass-shell relation
+The AFH response convention follows the manuscript's nuclear variable
 
-\[
-q_{\rm response}=q_{\rm kin}
-=\sqrt{2m_AE_R+E_R^2}
-\]
+[
+y=\frac{b_A^2m_AE_R}{2},
+]
 
-when interpolating the AFH \(R_A(q)\) table. The older Xe-131 response
-substitution script used the nonrelativistic approximation
-\(\sqrt{2m_AE_R}\). Both are recorded in the new output, but only the exact
-momentum is used for the AME2020 recalculation.
+so the response momentum is
 
-The AFH table itself is stored as a function of \(q\); its 2401-point grid and
-the AFH default \(b_A\) prescription are unchanged. The new mass changes the
-mapping from \(E_R\) to \(q\), not the underlying AFH density matrix.
+[
+q_{\rm response}=\sqrt{2m_AE_R}.
+]
+
+The exact target mass-shell momentum
+
+[
+q_{\rm kin}=\sqrt{2m_AE_R+E_R^2}
+]
+
+is kept separately in the three-body kinematic limits and phase-space
+construction. This distinction is intentional: the AME2020 recalculation
+changes the nuclear mass in both expressions but does not silently change the
+nuclear-response convention.
+
+The existing Xe-131 response-substitution calculation also uses the
+nonrelativistic (q_{\rm response}) definition. By contrast, the previously
+archived AFH natural-xenon halo-fold samples record the exact (q_{\rm kin})
+as their response input. That convention mismatch must be resolved before
+those natural-xenon rates are treated as a strict like-for-like comparison.
+The new Xe-131 partial calculation follows the manuscript definition above.
+
+The AFH table itself is stored as a function of (q); its 2401-point grid and
+the AFH default (b_A) prescription are unchanged. The new mass changes the
+mapping from (E_R) to (q_{\rm response}), not the underlying AFH density
+matrix.
 
 ## Rate calculation and numerical checks
 
