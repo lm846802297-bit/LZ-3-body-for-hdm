@@ -227,22 +227,30 @@ AFH default Xe-131 物理等质子、等中子响应的细化极小值为：
 
 - 从官方 AFH v6.0 源文件解析 67 项矩阵，并与 CSV 逐项核对；
 - 检查 \(q=0\) AFH 原始 isoscalar 归一化；
-- 六个 \((q,J)\) 组合与独立 60 位精度 mpmath 有限和比较，容差为 \(2\times10^{-11}\)；
+- 六个 \((q,J)\) 代表点的 60 位精度 mpmath spot checks；
+- **全网格独立 mpmath 验证：** 重新组织 BesselElement 有限和，按超几何函数参数分组，使用 60 位精度 mpmath，而不调用 SciPy 的 hyp1f1；对完整 2401 个 q 节点逐点比较；
 - 六项 AFH Xe-131 Python 回归测试；
 - 保存完整 2401 点响应表、谷值表、Figure 2 参考点表和 metadata。
 
-六个高精度对照点为：
+全网格验收结果：
 
-| \(q\) [GeV] | \(J\) | mpmath 参考振幅 |
-|---:|---:|---:|
-| 0.15700 | 0 | 0.16587194445197020453 |
-| 0.15700 | 2 | 0.26402074701536012526 |
-| 0.25625 | 0 | -0.00073663417732777932351 |
-| 0.25625 | 2 | -0.01861327862684671077 |
-| 0.36500 | 0 | -0.00042424625191455005691 |
-| 0.36500 | 2 | 0.029211388204593898543 |
+| 指标 | 结果 |
+|---|---:|
+| 参考精度 | 60 decimal digits |
+| q 网格节点 | 2401 |
+| 最大振幅绝对差 | \(3.9782\times10^{-14}\) |
+| 最大相对振幅差（参考振幅绝对值大于 \(10^{-10}\)） | \(8.8322\times10^{-13}\) |
+| 最大响应绝对差除以 \(A^2\) | \(1.2159\times10^{-15}\) |
+| 最大相对响应差（\(R/A^2>10^{-12}\)） | \(1.3376\times10^{-13}\) |
+| 状态 | PASS |
 
-这些是六个选定点的独立高精度检查，不是对整个 2401 点网格逐点运行 mpmath。
+完整的 2401 行逐点比较表和 JSON summary 作为 GitHub Actions artifact 保存：
+
+- workflow run：**43038372836**
+- artifact：**afh-xe131-mpmath-full-grid-validation**
+- [查看完整 CI 运行和 artifact](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43038372836)
+
+此前六个代表点的 mpmath 结果仍保留为早期 spot-check 记录；现在它们已被完整 2401 点验证覆盖。
 
 AFH 原生 Mathematica runner 和 Python/Mathematica 比较程序已经归档：
 
@@ -250,7 +258,7 @@ AFH 原生 Mathematica runner 和 Python/Mathematica 比较程序已经归档：
 - verify_afh_xe131_native.wls
 - compare_afh_mathematica_python.py
 
-但 Wolfram kernel 尚未在当前计算环境中执行。因此原生 Mathematica 逐点对照仍为待完成项目，不能把 Python 源码翻译测试称为 Mathematica 原生复算。
+但 Wolfram kernel 尚未在当前计算环境中执行。因此原生 Mathematica 逐点对照仍为待完成项目。全网格 mpmath 是独立高精度数值实现，不应被称为官方 Mathematica 原生复算。
 
 ## B.8 核响应动量与精确运动学动量必须分开
 
