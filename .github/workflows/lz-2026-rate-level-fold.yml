@@ -9,7 +9,6 @@ on:
     branches:
       - research/afh-default-density-xe131-mainline
     paths:
-      - .github/workflows/lz-2026-rate-level-fold.yml
       - research/figure2_full_reproduction/fold_lz_2026_rate_level.py
       - research/figure2_full_reproduction/tests/test_lz_2026_rate_level_fold.py
       - "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/**"
