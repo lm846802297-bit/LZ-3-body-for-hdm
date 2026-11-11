@@ -295,10 +295,11 @@ q_{\rm response}=q_{\rm kin}
 =\sqrt{2m_AE_R+E_R^2}.
 \]
 
-此前完整回归运行使用了向后兼容的 legacy_exact 别名；它与现在的 exact_spatial 默认模式在数值上完全相同。CI 对照了 98 个逐同位素贡献和 14 个总速率，最大逐同位素贡献相对差异为 \(4.32\times10^{-10}\)，最大总速率相对差异为 \(2.67\times10^{-12}\)。
+当前 exact_spatial 默认模式已完成完整回归复现。CI 对照了 98 个逐同位素贡献和 14 个总速率，最大逐同位素贡献相对差异为 \(4.32\times10^{-10}\)，最大总速率相对差异为 \(2.67\times10^{-12}\)。
 
-- [此前回归 CI run 43040078335](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43040078335)
-- 机器可读旧回归比较：results/legacy_exact_reproduction_comparison.json
+- [exact-spatial CI run 43044583357](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43044583357)
+- 机器可读比较：results/exact_spatial_reproduction_comparison.json
+- 旧的 legacy_exact 别名回归记录仍保留在 results/legacy_exact_reproduction_comparison.json。
 
 当前代码默认 exact_spatial，可直接运行：
 
