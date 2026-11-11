@@ -13,9 +13,14 @@ class ContinuousNaturalXenonSpectrumTests(unittest.TestCase):
         grid = recoil_grid(5.0, 800.0, 5.0)
         self.assertEqual(grid[0], 5.0)
         self.assertEqual(grid[-1], 800.0)
-        self.assertEqual(len(grid), 163)
+        self.assertEqual(len(grid), 84)
         for energy in SELECTED_CHECK_ENERGIES_KEV:
             self.assertIn(energy, grid)
+        self.assertIn(270.0, grid)
+        self.assertIn(280.0, grid)
+        self.assertIn(300.0, grid)
+        self.assertIn(800.0, grid)
+        self.assertNotIn(275.0, grid)
 
     def test_all_four_figure2_benchmarks_are_defined(self):
         self.assertEqual(
