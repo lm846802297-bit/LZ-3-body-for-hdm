@@ -1,0 +1,37 @@
+{
+  "calculation": "Xe-131 AFH W_M response x manuscript Eq. (6)",
+  "target_A": 131,
+  "target_mass_GeV": 122.02572741702,
+  "target_mass_prescription": "A * 0.93149410242 GeV",
+  "mchi_GeV": 1000.0,
+  "ms_MeV": 0.3,
+  "delta_m_MeV": 1.0,
+  "speed_km_s": 776.0,
+  "speed_treatment": "fixed incident speed; not a halo velocity integral",
+  "coupling_product_sq": 1e-08,
+  "coupling_product_definition": "(g1*g2*gVN)^2",
+  "mV_GeV": null,
+  "mV_status": "not supplied by the Figure 2 caption; left explicit",
+  "width_scheme": "zero",
+  "g2": null,
+  "width_caveat": "Pole/running widths are conditional on the Dirac pure-scalar two-body width helper; the manuscript does not state the Dirac/Majorana realization or a separate g2 benchmark.",
+  "response_y_convention": "y=b_A^2*m_A*E_R/2 as printed in main.tex",
+  "response_momentum": "q_response=sqrt(2*m_A*E_R)",
+  "three_body_kinematic_momentum": "q_exact=sqrt(2*m_A*E_R+E_R^2)",
+  "nuclear_models": [
+    "GCN",
+    "JJ55"
+  ],
+  "quadrature": {
+    "nw": 16,
+    "nz": 16,
+    "nphi": 8
+  },
+  "ER_keV": [
+    101.0,
+    200.0,
+    267.0,
+    542.0
+  ],
+  "interpretation": "Differential cross section only when mV_GeV is supplied. Otherwise C_A_GeV is archived as the coefficient before the vector-propagator denominator. This is not an event rate."
+}
