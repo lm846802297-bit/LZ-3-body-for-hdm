@@ -24,11 +24,14 @@
   ],
   "published_low_energy_50_percent_anchor_keV": 5.4,
   "published_high_energy_50_percent_anchor_keV": 269.9,
-  "digitization_note": "The vector curve gives a low-energy 50% crossing near 5.09 keV, whereas the paper text/caption quotes 5.4 keV from Ref. [5]. The high-energy crossing near 269.87 keV agrees with 269.9 keV. The mean final-ROI efficiency over 14--250 keV is expected to round to the published 96%.",
+  "digitization_note": "The vector curve gives a low-energy 50% crossing near 5.09 keV, whereas the paper text/caption quotes 5.4 keV from Ref. [5]; the extracted curve is 57.18% at 5.4 keV. The high-energy crossing near 269.87 keV agrees with 269.9 keV. The mean final-ROI efficiency over 14--250 keV is 95.47%, about 0.53 percentage points below the paper's quoted 96%; this small difference is retained explicitly rather than rescaling the curve.",
   "not_included": [
     "efficiency uncertainty band",
     "S1c/log10(S2c) two-dimensional signal PDFs",
     "NEST nuisance-parameter covariance",
     "background likelihood"
-  ]
+  ],
+  "mean_efficiency_difference_from_published": -0.00528954810420168,
+  "mean_efficiency_difference_percentage_points": -0.528954810420168,
+  "rate_level_use": "Use the digitized black final-ROI curve for preliminary efficiency-weighted event yields; the 5.4 keV published ROI boundary and low-energy crossing discrepancy must be reported. This curve does not replace the two-dimensional S1c/log10(S2c) PDFs or likelihood."
 }
