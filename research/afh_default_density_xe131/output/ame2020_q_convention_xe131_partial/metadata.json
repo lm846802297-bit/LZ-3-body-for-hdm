@@ -1,0 +1,106 @@
+{
+  "calculation": "AME2020/CODATA2022 Xe-131 partial contribution to natural-xenon halo-folded three-body rate",
+  "scope": "Xe-131 isotope term only; not the total natural-xenon rate",
+  "mass_schemes_compared": [
+    "A_u",
+    "nist_nuclear",
+    "ame2020_nuclear"
+  ],
+  "response_q_conventions_compared": [
+    "manuscript_nr",
+    "legacy_exact"
+  ],
+  "reference_mass_scheme": "ame2020_nuclear",
+  "reference_response_q_convention": "manuscript_nr",
+  "mass_scheme": {
+    "atomic_mass_source": "Unrounded AME2020 mass_1.mas20 atomic masses; NIST values retained for the legacy nist_nuclear comparison",
+    "nuclear_conversion": "M_nucleus = M_AME2020_atom - Z*m_e + B_e(Z)",
+    "electron_binding_energy_source": "AME2020 atomic mass evaluation, Eq. (2); atomic masses from official mass_1.mas20",
+    "electron_binding_energy_formula_eV": "14.4381*Z^2.39 + 1.55468e-6*Z^5.35",
+    "electron_binding_energy_Xe_keV": 202.37827771704661,
+    "isotope_mass_table": "xenon_isotope_ame2020_masses.csv",
+    "natural_isotope_abundance_sum": 1.0,
+    "constants": "CODATA 2022",
+    "u_c2_MeV": 931.49410372,
+    "electron_mass_c2_MeV": 0.51099895069,
+    "mA_Xe131_GeV": 121.90992244721734
+  },
+  "AFH": {
+    "source": "DMFormFactor v6.0 built-in sdgXe131, 67 density-matrix entries",
+    "response_file": "research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv",
+    "response_grid_points": 2401,
+    "q_grid_GeV": [
+      0.0,
+      0.6,
+      0.00025
+    ],
+    "response_normalization": "R_equal_pn(q)=A^2*R_AFH_raw(q)/R_AFH_raw(0); R_equal_pn(0)=A^2",
+    "oscillator_length": "AFH default b_A prescription; unchanged",
+    "response_momentum": "manuscript_nr: sqrt(2*mA*ER); legacy_exact: sqrt(2*mA*ER+ER^2)",
+    "kinematic_momentum": "sqrt(2*mA*ER+ER^2), exact target mass shell in three-body limits for both response-q options",
+    "extrapolation": false
+  },
+  "dark_sector": {
+    "mchi1_GeV": 1000.0,
+    "mV_GeV": 10.0,
+    "ms_Delta_m_by_benchmark": {
+      "red_ms200_dm1": {
+        "ms_keV": 200.0,
+        "Delta_m_MeV": 1.0
+      },
+      "green_ms300_dm1": {
+        "ms_keV": 300.0,
+        "Delta_m_MeV": 1.0
+      },
+      "black_ms360_dm1": {
+        "ms_keV": 360.0,
+        "Delta_m_MeV": 1.0
+      },
+      "blue_ms300_dm10": {
+        "ms_keV": 300.0,
+        "Delta_m_MeV": 10.0
+      }
+    },
+    "coupling_product_squared": 1e-08,
+    "g2": 1.0,
+    "width": "pole width for chi2 -> chi1 s; conditional on Dirac chi2, real scalar, pure scalar off-diagonal Yukawa, and no other open channels"
+  },
+  "halo": {
+    "baseline": "truncated SHM",
+    "v0_km_s": 220.0,
+    "vE_km_s": 232.0,
+    "vesc_km_s": 544.0,
+    "vmax_lab_km_s": 776.0,
+    "alternative": "untruncated boosted Maxwell-Boltzmann tail diagnostic",
+    "untruncated_numerical_vmax_km_s": 1600.0
+  },
+  "natural_xenon_weighting": {
+    "Xe131_natural_atom_fraction": 0.212324,
+    "mean_atomic_weight_g_mol": 131.29276144787175,
+    "interpretation": "Xe-131 term per kg of natural xenon; all other isotope terms omitted"
+  },
+  "quadrature": {
+    "speed_orders": [
+      16,
+      32
+    ],
+    "kernel_baseline": [
+      8,
+      8,
+      4
+    ],
+    "kernel_crosscheck": [
+      16,
+      16,
+      8
+    ],
+    "max_relative_speed_difference": 0.00010992372557061536,
+    "max_relative_kernel_difference": 0.0002097740798649994
+  },
+  "rate_units": "events/(kg day keV)",
+  "not_included": [
+    "Xe-124, Xe-126, Xe-128, Xe-129, Xe-130, Xe-132, Xe-134, Xe-136 rate terms",
+    "detector efficiency, resolution, exposure, cuts, backgrounds, and likelihood",
+    "native Mathematica re-execution of AFH v6.0"
+  ]
+}
