@@ -1,0 +1,67 @@
+{
+  "calculation": "natural-xenon isotope-specific halo-folded three-body rate",
+  "available_isotopes": [
+    128,
+    129,
+    130,
+    131,
+    132,
+    134,
+    136
+  ],
+  "omitted_isotopes": [
+    124,
+    126
+  ],
+  "available_natural_amount_fraction": 0.998158,
+  "omitted_natural_amount_fraction": 0.0018420000000000103,
+  "abundance_source": "NIST isotopic amount fractions",
+  "mean_target_mass_for_per_kg_normalization": "NIST standard atomic weight 131.293 g/mol",
+  "isotope_kinematic_mass": "A * 0.93149410242 GeV, consistent with previous joint calculation",
+  "mchi_GeV": 1000.0,
+  "ms_MeV": 0.3,
+  "delta_m_MeV": 1.0,
+  "coupling_product_sq": 1e-08,
+  "rhoDM_GeV_cm3": 0.3,
+  "v0_km_s": 220.0,
+  "vE_km_s": 232.0,
+  "vesc_km_s": 544.0,
+  "halo_models": {
+    "mb_untruncated": {
+      "definition": "DMFormFactor untruncated lab-frame Maxwell-Boltzmann speed PDF",
+      "vmax_km_s": 1600.0
+    },
+    "shm_cutoff": {
+      "definition": "Galactic Maxwellian truncated at vesc, boosted by vE",
+      "vmax_lab_km_s": 776.0
+    }
+  },
+  "mV_scan_GeV": [
+    0.05,
+    0.1,
+    0.2,
+    0.5,
+    1.0
+  ],
+  "mV_status": "exploratory scan; not specified by direct-detection figure captions",
+  "width_scheme": "zero-width diagnostic",
+  "eq6_quadrature": {
+    "nw": 16,
+    "nz": 16,
+    "nphi": 8
+  },
+  "speed_quadrature_orders": [
+    16,
+    32
+  ],
+  "speed_convergence_tolerance": 0.005,
+  "rate_units": "events / kg / day / keV",
+  "rate_formula": "(rhoDM/mchi)*c*(N_A*1000/131.293)*(0.3893793721e-27 cm2/GeV^-2)*(1e-6 GeV/keV)*86400 times sum_A x_A integral dv f_lab(v) beta d sigma_A/dER",
+  "not_included": [
+    "Xe-124 and Xe-126 response functions and their rate contributions",
+    "detector efficiency, energy resolution, exposure and analysis cuts",
+    "annual modulation and time-dependent Earth speed",
+    "finite-width uncertainty and unspecified separate g2",
+    "uncertainty propagation of halo parameters"
+  ]
+}
