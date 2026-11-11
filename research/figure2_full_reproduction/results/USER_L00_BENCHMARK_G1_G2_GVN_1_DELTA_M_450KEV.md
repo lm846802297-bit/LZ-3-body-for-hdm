@@ -135,6 +135,26 @@ approximately \(6.54\times10^{-7}\) for the zero-width integral and
 \(6.66\times10^{-7}\) for the pole-width integral. The integral is therefore
 well converged at the quoted point for the current Dirac implementation.
 
+### 5.1 Comparison with the earlier Delta m = 1 MeV diagnostic
+
+At the same inherited kinematic point and the same
+\((n_W,n_z,n_\phi)=(24,24,16)\) quadrature, the archived
+\(\Delta m=1\) MeV diagnostic gives
+\(I_6=878078.8408\) GeV\(^2\) at zero width and
+\(I_6=868227.2836\) GeV\(^2\) with the conditional \(g_2=1\) pole width.
+
+| Benchmark | Zero-width \(I_6\) [GeV\(^2\)] | Pole-width \(I_6\) [GeV\(^2\)] |
+|---|---:|---:|
+| \(\Delta m=1\) MeV | \(8.78079\times10^5\) | \(8.68227\times10^5\) |
+| \(\Delta m=450\) keV | \(1.62182\times10^7\) | \(1.54395\times10^7\) |
+| Ratio (450 keV / 1 MeV) | 18.47 | 17.78 |
+
+The enhancement is consistent with the smaller off-shell gap:
+\(m_{\chi_2}-\sqrt{W_{\max}^2}\) falls from about 652.6 keV
+to 102.6 keV. The comparison is at the level of the reduced Eq. (6)
+integral; it does not compare complete detector rates or mediator
+normalizations.
+
 ## 6. Full prefactor with the supplied mediator and couplings
 
 For the supplied values \(g_1=g_2=g_{VN}=1\) and \(m_V=10\) GeV, the
