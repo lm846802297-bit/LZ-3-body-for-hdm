@@ -260,37 +260,32 @@ AFH 原生 Mathematica runner 和 Python/Mathematica 比较程序已经归档：
 
 但 Wolfram kernel 尚未在当前计算环境中执行。因此原生 Mathematica 逐点对照仍为待完成项目。全网格 mpmath 是独立高精度数值实现，不应被称为官方 Mathematica 原生复算。
 
-## B.8 核响应动量与精确运动学动量必须分开
+## B.8 AFH 空间动量与精确三体反冲
 
-论文明确规定
-
-\[
-y=\frac{b_A^2m_AE_R}{2},
-\]
-
-而 AFH 振子变量为 \(y=(qb_A/2)^2\)。因此，在论文当前写法下，固定反冲能量时的核响应查询动量是
+AFH 原始定义为
 
 \[
-\boxed{q_{\rm resp}^{\rm NR}=\sqrt{2m_AE_R}}.
+y=\left(\frac{q b_A}{2}\right)^2,
 \]
 
-三体运动学则由核质量壳条件给出精确空间反冲动量
+其中 \(q\) 是空间动量转移的大小。对初态静止的核，精确质量壳关系给出
 
 \[
-\boxed{q_{\rm kin}^{\rm exact}=\sqrt{2m_AE_R+E_R^2}}.
+q_{\rm exact}=\sqrt{2m_AE_R+E_R^2},
+\qquad
+y_{\rm exact}=\frac{b_A^2}{4}(2m_AE_R+E_R^2).
 \]
 
-AFH 响应网格本身以 \(q\) 为自变量；把网格上的 \(q\) 极小值换算成物理反冲能量时，程序使用精确逆映射 \(E_R=\sqrt{m_A^2+q^2}-m_A\)。但在给定 \(E_R\) 查询论文定义的响应 \(y(E_R)\) 时，应使用 \(q_{\rm resp}^{\rm NR}\)。这两个操作应分别命名，不能用同一个未说明约定的 q 代替。
+常见的 \(y_{\rm NR}=b_A^2m_AE_R/2\) 对应 \(q_{\rm NR}=\sqrt{2m_AE_R}\)，是 \(E_R\ll m_A\) 的近似，而不是 AFH 对空间 \(q\) 的定义本身。
 
-当前代码约定为：
+因此，本项目在精确三体运动学下统一采用 exact spatial q：
 
-- 固定 Xe-131 benchmark 和 joint Xe-131 响应查询：使用 \(q_{\rm resp}^{\rm NR}\)；
-- Eq. (6) 的三体运动学、\(W_{\max}\) 和 \(v_{\min}\)：使用 \(q_{\rm kin}^{\rm exact}\)；
-- 旧天然氙 halo 输入的 28 个 AFH response samples：实际使用 \(q_{\rm kin}^{\rm exact}\)，属于 legacy 样本，尚未按论文 \(q_{\rm resp}^{\rm NR}\) 重新生成。
+- AFH 响应插值：\(q_{\rm exact}\)；
+- 三体末态四动量、\(W_{\max}\)、\(v_{\min}\)：\(q_{\rm exact}\)；
+- 媒介子传播子：\(t=-2m_AE_R\)，故分母 \(m_V^2-t=m_V^2+2m_AE_R\)；
+- \(q_{\rm NR}\)：只作为独立的非相对论响应近似对照。
 
-本轮 q 审计显示，28 个天然氙样本的 \(q_{\rm exact}-q_{\rm NR}\) 约为 0.032–0.409 keV（相对 0.20–1.14 ppm）。对 Xe-131 的 2401 点 AFH 响应表直接插值后，四个 selected recoil 点的 \(R_A(q_{\rm exact})/R_A(q_{\rm NR})-1\) 约为 -5.5 至 -212.7 ppm。完整数据和数值见附录 G。
+28 个天然氙 AFH 响应样本全部与 exact spatial q 相符，因此不需要为当前 selected-point halo fold 重新生成响应。NR 近似的响应影响已在附录 G 中用 Xe-131 的 2401 点 AFH 响应网格定量比较。
 
-固定 Xe-131 benchmark 仍使用 \(M_A=131u\) 的历史质量约定；天然氙 halo 程序使用 NIST 原子质量减去 54 个电子质量的核质量。质量方案是另一个独立输入维度，不应与上述两个 q 的定义混为一谈。
-
-天然氙脚本现默认要求 manuscript-NR 响应样本；旧的 exact-q 样本只能通过显式的 --response-q-convention legacy_exact 复现。若所选 q 与样本不一致，程序会报错，不会仅修改 q 标签或静默复用旧 \(R_A\)。
+代码默认值现统一为 exact_spatial；nr_approx 只用于敏感性对照，legacy_exact 保留为向后兼容别名。若响应样本与所选 q 不匹配，程序会显式报错。
 
