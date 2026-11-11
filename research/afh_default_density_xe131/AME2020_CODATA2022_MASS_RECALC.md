@@ -252,6 +252,62 @@ The numerical tables are written to
 output/ame2020_q_convention_xe131_partial/, including separate
 mass-scheme and response-q rate-comparison CSV files.
 
+### 4.1 Numerical result and convergence
+
+The integrated workflow completed successfully in GitHub Actions run
+[43045746227](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43045746227).
+All 12 nuclear-mass tests and all 5 Xe-131 response/halo-fold tests passed.
+The speed-grid and kernel-grid comparisons give
+
+\[
+\max\delta_{\rm speed}=1.099\times10^{-4},\qquad
+\max\delta_{\rm kernel}=2.098\times10^{-4}.
+\]
+
+The largest exact-q versus manuscript-NR rate shift across the tested
+mass schemes and recoil points is \(2.250\times10^{-4}\). For the AME2020
+reference mass, the largest shift is \(2.12708\times10^{-4}\), at
+\(E_R=267\) keV.
+
+For the AME2020 mass and manuscript-NR response convention, the selected
+Xe-131 partial rates are:
+
+| Benchmark | \(E_R\) [keV] | \(v_{\min}\) [km/s] | Truncated-SHM rate | Untruncated-MB diagnostic |
+|---|---:|---:|---:|---:|
+| \(m_s=200\) keV, \(\Delta m=1\) MeV | 101 | 598.554 | \(3.86785\times10^{-12}\) | \(6.35054\times10^{-12}\) |
+| \(m_s=300\) keV, \(\Delta m=1\) MeV | 101 | 789.593 | 0 | \(9.91093\times10^{-14}\) |
+| \(m_s=360\) keV, \(\Delta m=1\) MeV | 101 | 904.216 | 0 | \(4.32454\times10^{-15}\) |
+| \(m_s=300\) keV, \(\Delta m=10\) MeV | 101 | 789.593 | 0 | \(7.93870\times10^{-16}\) |
+| \(m_s=300\) keV, \(\Delta m=1\) MeV | 200 | 711.898 | \(3.88333\times10^{-12}\) | \(3.68810\times10^{-11}\) |
+| \(m_s=300\) keV, \(\Delta m=1\) MeV | 267 | 704.458 | \(5.22186\times10^{-15}\) | \(3.91667\times10^{-14}\) |
+| \(m_s=300\) keV, \(\Delta m=1\) MeV | 542 | 748.872 | \(1.13236\times10^{-16}\) | \(1.14552\times10^{-14}\) |
+
+Rates are in events/(kg day keV). They use
+\((g_1g_2g_{VN})^2=10^{-8}\), \(g_2=1\), \(m_{\chi_1}=1\) TeV,
+\(m_V=10\) GeV, and \(\rho_\chi=0.3\ {\rm GeV\,cm^{-3}}\). They are
+reference-normalized Xe-131 contributions per kg of natural xenon, not
+detector event predictions. The untruncated-MB column is a tail diagnostic,
+not the baseline halo result.
+
+### 4.2 Mass-scheme effect at fixed response convention
+
+For the green benchmark (\(m_s=300\) keV, \(\Delta m=1\) MeV) with
+manuscript-NR response interpolation and truncated SHM:
+
+| \(E_R\) [keV] | \(A u\) | NIST nuclear | AME2020 nuclear |
+|---:|---:|---:|---:|
+| 200 | \(3.93719\times10^{-12}\) | \(3.88324\times10^{-12}\) | \(3.88333\times10^{-12}\) |
+| 267 | \(4.39897\times10^{-15}\) | \(5.22338\times10^{-15}\) | \(5.22186\times10^{-15}\) |
+| 542 | \(1.13489\times10^{-16}\) | \(1.13236\times10^{-16}\) | \(1.13236\times10^{-16}\) |
+
+At 267 keV, the AME2020 rate is \(18.7065\\%\) above the \(A u\)
+approximation and \(0.02913\\%\) below the NIST-nuclear result. The strong
+\(A u\)-versus-physical-mass difference is amplified by the steep AFH response
+minimum. By contrast, the NIST-to-AME2020 mass update is a much smaller
+correction. The rate response is not determined by \(R_A\) alone: \(m_A\)
+also changes \(q\), \(v_{\min}\), the three-body kernel and the propagator
+denominator.
+
 ## 5. Natural-xenon limitation
 
 The repository contains the complete AFH v6.0 default-density response curve
