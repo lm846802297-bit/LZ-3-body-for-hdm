@@ -57,17 +57,17 @@ The AME2020 atomic masses below are the unrounded values in mass_1.mas20.
 The abundance column retains the NIST natural atom fractions used in the
 natural-xenon target weighting.
 
-| Isotope | Natural atom fraction | AME2020 atomic mass [u] | AME2020/CODATA2022 nuclear mass [GeV] |
-|---|---:|---:|---:|
-| Xe-124 | 0.000952 | 123.905885174 | 115.390209890729 |
-| Xe-126 | 0.000890 | 125.904297422 | 117.251719116542 |
-| Xe-128 | 0.019102 | 127.90353075341 | 119.113993176711 |
-| Xe-129 | 0.264006 | 128.90478085742 | 120.046651744946 |
-| Xe-130 | 0.040710 | 129.903509346 | 120.976961443275 |
-| Xe-131 | 0.212324 | 130.90508412808 | 121.909922447217 |
-| Xe-132 | 0.269086 | 131.90415508346 | 122.840551151352 |
-| Xe-134 | 0.104357 | 133.905393030 | 124.704692498694 |
-| Xe-136 | 0.088573 | 135.907214474 | 126.569377370481 |
+| Isotope | Natural fraction | AME2020 atomic mass [u] | AME2020 nuclear mass [GeV] | AME2020 − NIST nuclear [keV] |
+|---|---:|---:|---:|---:|
+| Xe-124 | 0.000952 | 123.905885174 | 115.390209890729 | +196.181 |
+| Xe-126 | 0.000890 | 125.904297422 | 117.251719116542 | +201.724 |
+| Xe-128 | 0.019102 | 127.90353075341 | 119.113993176711 | +202.315 |
+| Xe-129 | 0.264006 | 128.90478085742 | 120.046651744946 | +202.542 |
+| Xe-130 | 0.040710 | 129.903509346 | 120.976961443275 | +202.544 |
+| Xe-131 | 0.212324 | 130.90508412808 | 121.909922447217 | +202.612 |
+| Xe-132 | 0.269086 | 131.90415508346 | 122.840551151352 | +202.548 |
+| Xe-134 | 0.104357 | 133.905393030 | 124.704692498694 | +201.034 |
+| Xe-136 | 0.088573 | 135.907214474 | 126.569377370481 | +202.546 |
 
 The three mass schemes are now:
 
@@ -97,6 +97,28 @@ about \(115.805\) MeV too large. Across the nine isotopes, the AME2020
 versus NIST-nuclear difference is approximately \(196\)–\(203\) keV;
 the small isotope dependence also reflects differences between the NIST and
 AME2020 atomic-mass inputs.
+
+### 2.2 Isotope-dependent velocity thresholds
+
+For the benchmark (m_{chi_1}=1) TeV, (m_s=300) keV and
+(E_R=101) keV, the AME2020 masses give:
+
+| Isotope | (v_{min}) [km/s] |
+|---|---:|
+| Xe-124 | 810.299895 |
+| Xe-126 | 804.208208 |
+| Xe-128 | 798.260345 |
+| Xe-129 | 795.334767 |
+| Xe-130 | 792.451024 |
+| Xe-131 | 789.592969 |
+| Xe-132 | 786.775240 |
+| Xe-134 | 781.228229 |
+| Xe-136 | 775.805285 |
+
+With the truncated-SHM endpoint (v_{max}=776) km/s, only Xe-136 is open
+at this recoil energy. This does **not** imply that Xe-136 dominates the
+integrated spectrum at every (E_R); the open-isotope set changes with recoil
+energy and the full rate also contains the isotope-dependent AFH response.
 
 ## 3. Keep the AFH response momentum distinct from exact recoil kinematics
 
