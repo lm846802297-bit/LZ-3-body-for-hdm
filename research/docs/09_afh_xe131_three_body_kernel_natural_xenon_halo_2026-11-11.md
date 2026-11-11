@@ -509,7 +509,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 4. **尚未加入 LZ detector response。** 没有 detector efficiency、能量分辨率、曝光、分析 cuts、背景模型或 likelihood。因此这些理论速率不能直接当作 LZ 预期观测事件数，也不能称为完整的 LZ 数据重铸。
 5. **极点宽度是条件性的。** 只包括给定假设下的 \(\chi_2\to\chi_1s\) 标量通道，不等于完整模型的矢量加标量自能。
 6. **halo 模型依赖尚未做系统扫描。** untruncated MB 只用于高速度尾部敏感性诊断，不作为默认 halo 结果。
-7. **天然氙响应 q 约定尚未统一到论文定义。** 28 个旧样本使用 (q_{\rm exact}=\sqrt{2m_AE_R+E_R^2})，而论文 (y=b_A^2m_AE_R/2) 对应 (q_{\rm resp}^{\rm NR}=\sqrt{2m_AE_R})。程序已增加显式约定和防误用检查；旧速率没有被改标签或重标度。
+7. **天然氙响应 q 约定尚未统一到论文定义。** 28 个旧样本使用精确的 (q_{\rm exact}=\sqrt{2m_AE_R+E_R^2})，而论文 (y=b_A^2m_AE_R/2) 对应 (q_{\rm resp}^{\rm NR}=\sqrt{2m_AE_R})。程序已增加显式约定和防误用检查；旧速率没有被改标签或重标度。详细数值见附录 G。
 
 ### 8.3 数据修正记录
 
@@ -554,6 +554,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 - 四组 benchmark 截面审计：`research/afh_default_density_xe131/output/FOUR_BENCHMARK_CROSS_SECTION_AUDIT.md`
 - 天然氙 halo fold README：`research/afh_default_density_natural_xenon_halo/README.md`
 - 天然氙 halo fold 审计：`research/afh_default_density_natural_xenon_halo/results/NATURAL_XENON_HALO_FOLD_AUDIT.md`
+- 响应 q 与精确运动学 q 审计：`research/docs/appendices/09G_recoil_momentum_convention_audit.md`
 
 ### 外部参考
 
