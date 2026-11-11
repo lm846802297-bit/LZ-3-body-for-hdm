@@ -126,6 +126,38 @@ Open a PR from the topic branch to main. The PR must state:
 The PR template supplies the checklist. Keep a PR focused on one coherent
 research topic or one repository-maintenance task.
 
+### Research branches are workspaces; main is the canonical archive
+
+A topic branch is a development workspace, not the permanent location of a
+completed research result. When a result is submitted for integration:
+
+- Put its formal, reviewable research record under
+  research/<topic>/ in the PR: the study README, relevant source code,
+  tests, configuration, provenance information, and the essential
+  machine-readable outputs and figures.
+- If a required large input or output cannot be stored in Git, keep it in a
+  versioned GitHub Release or another stable, versioned location and commit
+  its manifest, source/version, size, and SHA-256 under the study directory.
+- Do not treat a branch name, an Actions artifact that may expire, or an
+  unmerged commit as the sole archive of a result described as merged.
+- It is acceptable to merge an exploratory or incomplete study when its
+  reproducible scope, status, assumptions, and limitations are explicit.
+  The claim being merged must match the evidence actually archived.
+
+After a PR is merged, verify the merge commit on main and inspect the
+corresponding research/<topic>/ paths on main. Confirm that the README,
+code, tests, required inputs or manifests, and claimed outputs are present
+and that the documented reproduction instructions point to the main-branch
+paths. The merged result on main, not the development branch, is the
+canonical project record.
+
+A completed branch may be deleted only after this verification and after
+checking that it contains no unique, unmerged commits or follow-up work.
+If unique work remains, preserve it on the branch or move it to a separate
+topic branch before deletion. Branch deletion is a manual maintenance choice;
+there is no requirement to minimize the number of branches or enable automatic
+deletion after merge.
+
 ## 4. Reproducibility and data policy
 
 - Prefer deterministic scripts with explicit parameters and units.
