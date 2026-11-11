@@ -218,7 +218,8 @@ The isotope sum and velocity integral have distinct physical roles:
 
 - The natural isotope fraction \(\xi_A\) determines how many target nuclei of
   isotope \(A\) are present. For a one-kg natural-xenon target,
-  \(N_{T,A}=N_A^{\rm Avogadro}\,\xi_A/\bar M_{\rm Xe}\).
+  \(N_{T,A}=1000\,N_{\rm Av}\,\xi_A/\bar M_{\rm Xe}\), with
+  \(\bar M_{\rm Xe}\) in g/mol.
 - The lab-frame speed distribution \(f_{\rm lab}(v)\) weights the incident
   dark-matter population. It is not a nuclear form factor and is not included
   inside \(R_A\).
