@@ -91,7 +91,8 @@ def run_dmscatter_response(
     J = read_ground_state_spin(dres)
     b_fm = oscillator_length_fm(A)
     b_gev_inv = b_fm * FM_TO_GEV_INV
-    n_q = int(round((Q_MAX_GEV - Q_MIN_GEV) / Q_STEP_GEV))
+    # dmscatter includes both endpoints: N = (q_max-q_min)/dq + 1.
+    n_q = int(round((Q_MAX_GEV - Q_MIN_GEV) / Q_STEP_GEV)) + 1
     q_expected = Q_MIN_GEV + np.arange(n_q, dtype=float) * Q_STEP_GEV
 
     workdir = output_root / "raw_runs" / ("xe" + str(A) + "_" + model)
