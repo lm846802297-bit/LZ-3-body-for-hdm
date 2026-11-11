@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Lightweight integrity checks for the archived AFH natural-xenon halo fold."""
 from __future__ import annotations
-import csv, math
+import csv, json, math
 from pathlib import Path
 
 HERE=Path(__file__).resolve().parent
@@ -23,6 +23,23 @@ assert math.isclose(coverage,0.998158,rel_tol=0,abs_tol=1e-12)
 assert len(resp)==28
 assert len(iso)==98
 assert len(rates)==14
+
+# The currently archived AFH samples were evaluated at exact spatial q.
+# This is a legacy convention and must not be mistaken for the manuscript's
+# non-relativistic response variable y=b_A^2*m_A*E_R/2.
+metadata=json.loads((R/"metadata.json").read_text(encoding="utf-8"))
+assert metadata["response_q_convention"]=="legacy_exact_spatial"
+weights_by_A={int(r["A"]):r for r in weights}
+for sample in resp:
+    A=int(sample["A"])
+    ER=float(sample["ER_keV"])*1e-6
+    atom_mass=float(weights_by_A[A]["atomic_mass_u"])
+    mA=(atom_mass-54*0.000548579909065)*0.93149410242
+    q_nr=math.sqrt(2*mA*ER)
+    q_exact=math.sqrt(2*mA*ER+ER*ER)
+    q_sample=float(sample["q_response_GeV"])
+    assert math.isclose(q_sample,q_exact,rel_tol=0,abs_tol=2e-10)
+    assert not math.isclose(q_sample,q_nr,rel_tol=0,abs_tol=2e-10)
 
 groups={}
 for row in iso:
@@ -54,4 +71,5 @@ assert max(abs(float(r["relative_difference_nv64_to_nv32"])) for r in sc)<1e-5
 print(f"PASS: {len(iso)} isotope rows, {len(rates)} rate rows, "
       f"AFH abundance coverage={coverage:.6f}, "
       f"max kernel-grid delta={max(abs(float(r['rel_884_to_16168'])) for r in kc):.3e}, "
-      f"max speed-grid delta={max(abs(float(r['relative_difference_nv64_to_nv32'])) for r in sc):.3e}")
+      f"max speed-grid delta={max(abs(float(r['relative_difference_nv64_to_nv32'])) for r in sc):.3e}, "
+      f"archived response q={metadata['response_q_convention']}")
