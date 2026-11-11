@@ -313,7 +313,7 @@ q_{\rm response}^{\rm legacy}
 天然氙计算程序现在将两种 q 明确分开，并默认要求论文定义的 \(q_{\rm resp}^{\rm NR}\) 样本。若要复现旧结果，必须显式传入
 
 ~~~bash
-python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \\
+python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \
   --response-q-convention legacy_exact
 ~~~
 
