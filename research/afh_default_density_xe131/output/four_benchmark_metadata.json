@@ -1,89 +1,44 @@
 {
-  "calculation": "Corrected AFH-default Xe-131 response substitution in four fixed-speed benchmarks",
   "target": "Xe-131",
   "A": 131,
-  "Z": 54,
-  "J_A": 1.5,
   "mA_GeV": 122.02572741702,
-  "AFH_source": "DMFormFactor v6.0 built-in sdgXe131; 67 density-matrix entries",
-  "AFH_b_A_fm": 2.2923417985218975,
-  "normalization": {
-    "raw_package_response": "(4*pi/(2J_A+1))*W_M00_AFH_v6(q=0) = A^2/4",
-    "physical_equal_pn_response": "R_A = 16*pi*W_M00_AFH_v6/(2J_A+1)",
-    "physical_R_A_zero": "A^2",
-    "note": "The factor four follows from the v6.0 code convention c1^0=c1^p+c1^n, so gp=gn=gVN corresponds to c1^0=2*gVN."
-  },
-  "response_interpolation": {
-    "method": "PCHIP",
-    "coordinate": "q_response = sqrt(2*mA*ER)",
-    "q_min_GeV": 0,
-    "q_max_GeV": 0.6,
-    "q_step_GeV": 0.00025,
-    "extrapolation": false
-  },
-  "three_body_kernel": {
-    "input": "input/figure2_recalc_mV10_g2_1_v800_Xe131_full_5keV.csv",
-    "I6_recomputed": false,
-    "formula": "dsigma_AFH = dsigma_GCN*(R_A_AFH/R_A_GCN); rate_AFH = rate_GCN*(R_A_AFH/R_A_GCN)",
-    "scope": "Controlled nuclear-response substitution; the archived Eq.(6) I6 grid and particle/propagator prefactors are held fixed."
-  },
+  "AFH_response": "DMFormFactor v6.0 built-in sdgXe131",
+  "physical_normalization": "R_A=16*pi*W_M00_AFH_v6/(2J_A+1), R_A(0)=A^2",
+  "interpolation": "PCHIP in exact spatial q_response=sqrt(2*mA*ER+ER^2); no extrapolation",
+  "I6_recomputed": false,
   "benchmarks": {
     "red_ms200_dm1": {
       "m_s_keV": 200,
-      "Delta_m_MeV": 1,
-      "first_open_ER_keV": 35
+      "Delta_m_MeV": 1
     },
     "green_ms300_dm1": {
       "m_s_keV": 300,
-      "Delta_m_MeV": 1,
-      "first_open_ER_keV": 100
+      "Delta_m_MeV": 1
     },
     "black_ms360_dm1": {
       "m_s_keV": 360,
-      "Delta_m_MeV": 1,
-      "first_open_ER_keV": 190
+      "Delta_m_MeV": 1
     },
     "blue_ms300_dm10": {
       "m_s_keV": 300,
-      "Delta_m_MeV": 10,
-      "first_open_ER_keV": 100
+      "Delta_m_MeV": 10
     }
   },
-  "particle_inputs": {
-    "mchi1_GeV": 1000,
-    "mV_GeV": 10,
-    "g2": 1,
-    "coupling_product_squared": 1e-8,
-    "speed_km_s": 800,
-    "rho_chi_GeV_cm3": 0.3,
-    "width": "Conditional pole width from prior calculation; Dirac fermion + real scalar + pure scalar off-diagonal Yukawa; not a full self-energy width."
+  "first_open_grid_point_keV": {
+    "black_ms360_dm1": 190.0,
+    "blue_ms300_dm10": 100.0,
+    "green_ms300_dm1": 100.0,
+    "red_ms200_dm1": 35.0
   },
-  "grid": {
-    "ER_keV_min": 5,
-    "ER_keV_max": 800,
-    "step_keV": 5,
-    "points_per_benchmark": 160
-  },
-  "outputs": {
-    "long_csv": "output/figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv",
-    "wide_csv": "output/figure2_four_benchmarks_AFH_GCN_JJ55_wide_audit.csv",
-    "ratios_csv": "output/selected_response_ratios.csv",
-    "results": "output/AFH_FOUR_BENCHMARKS_CORRECTED_RESULTS.md"
-  },
-  "checks": {
-    "long_rows": 1920,
-    "wide_rows": 640,
-    "I6_identical_across_models": true,
-    "AFH_cross_section_ratio_equals_response_ratio": true,
-    "previous_AFH_R_A_field_copied_from_GCN": true,
-    "max_relative_change_from_previous_AFH_dsigma_open_points": 0.00027405968373416916,
-    "max_relative_change_from_previous_AFH_rate_open_points": 0.00027405968373427075
+  "rows": {
+    "long": 1920,
+    "wide": 640
   },
   "limitations": [
     "Fixed mono-speed v=800 km/s; no halo velocity integration.",
-    "The existing I6 grid is reused; this is not a fresh independent 640-point Eq.(6) integral.",
+    "Reuses the archived I6 grid; not a fresh three-body integral calculation.",
+    "Conditional pole width, not a full self-energy calculation.",
     "No detector efficiency, resolution, cuts, or likelihood.",
-    "The conditional width is not a full self-energy calculation.",
     "Native Mathematica execution of AFH v6.0 remains pending."
   ]
 }
