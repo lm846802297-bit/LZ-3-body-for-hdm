@@ -65,7 +65,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ame2020-xe131-mass-response-q-comparison
-          path: \${{ runner.temp }}/ame2020_xe131_q_convention/
+          path: ${{ runner.temp }}/ame2020_xe131_q_convention/
           if-no-files-found: error
           retention-days: 90
 
