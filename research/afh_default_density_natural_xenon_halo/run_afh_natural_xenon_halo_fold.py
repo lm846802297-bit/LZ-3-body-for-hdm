@@ -89,8 +89,13 @@ def main():
     nuclear_mass={A:(atomic_mass[A]-Z_XE*ME_U)*U_GEV for A in abundance}
 
     response={}
+    response_q={}
+    b_values={}
     for r in read_csv(args.response_samples):
-        response[(int(r["A"]),float(r["ER_keV"]))]=float(r["R_A"])
+        key=(int(r["A"]),float(r["ER_keV"]))
+        response[key]=float(r["R_A"])
+        response_q[key]=float(r["q_response_GeV"])
+        b_values[str(int(r["A"]))]=float(r["b_A_fm"])
     for _, er in CASES:
         for A in abundance:
             if (A,er) not in response:
@@ -112,6 +117,8 @@ def main():
                 mA=nuclear_mass[A]
                 q_response=math.sqrt(2.0*mA*ER+ER*ER)
                 RA=response[(A,er_keV)]
+                if not math.isclose(q_response,response_q[(A,er_keV)],rel_tol=0.0,abs_tol=2e-10):
+                    raise ValueError(f"AFH q sample mismatch for Xe-{A}, ER={er_keV} keV")
                 vmin=vmin_three_body_km_s(args.mchi_GeV,ms,mA,ER)
                 J=0.0
                 if vmin < vmax:
@@ -164,21 +171,40 @@ def main():
                 "open_abundance_fraction":sum(r["abundance"] for r in g if r["open"]),
             })
     write_csv(args.out_dir/"natural_xenon_halo_rates.csv",summary)
+    hash_file=HERE/"results"/"afh_response_input_sha256.txt"
+    response_sha=None
+    if hash_file.exists():
+        for line in hash_file.read_text(encoding="utf-8").splitlines():
+            if line.startswith("SHA256:"):
+                response_sha=line.split(":",1)[1].strip()
     metadata={
+        "calculation":"AFH-default natural-xenon isotope-specific halo-folded three-body differential rate",
+        "AFH_reference":"Anand, Fitzpatrick and Haxton, Phys. Rev. C 89 (2014) 065501, arXiv:1308.6288; DMFormFactor v6.0 built-in sdgXeA default densities",
+        "response_source_sha256":response_sha,
+        "response_sample_file":str(args.response_samples),
         "available_isotopes":list(abundance),
         "available_natural_atom_fraction":sum(abundance.values()),
         "omitted_isotopes":[124,126],
         "omitted_natural_atom_fraction":1.0-sum(abundance.values()),
+        "abundance_source":"NIST Atomic Weights and Isotopic Compositions for Xenon",
+        "abundance_convention":"natural atomic fractions; no renormalization",
         "mean_atomic_weight_g_mol":mean_atomic_weight,
         "mass_scheme":"(NIST atomic isotope mass - 54 electron masses)*u; electronic binding neglected",
-        "mchi_GeV":args.mchi_GeV,"mV_GeV":args.mV_GeV,
+        "b_A_formula":"sqrt(41.467/(45*A^(-1/3)-25*A^(-2/3))) fm",
+        "b_A_fm":b_values,
+        "m_chi1_GeV":args.mchi_GeV,"m_V_GeV":args.mV_GeV,
         "coupling_product_squared":args.coupling_product_squared,"g2":args.g2,
         "rho_chi_GeV_cm3":args.rho_GeV_cm3,
-        "halo_models":{"shm_cutoff":{"v0":220,"vE":232,"vesc":544,"vmax_lab":776},
-                       "mb_untruncated":{"v0":220,"vE":232,"numerical_vmax":1600}},
+        "benchmark_sets":{"red_ms200_dm1":{"m_s_keV":200,"Delta_m_MeV":1},
+                          "green_ms300_dm1":{"m_s_keV":300,"Delta_m_MeV":1},
+                          "black_ms360_dm1":{"m_s_keV":360,"Delta_m_MeV":1},
+                          "blue_ms300_dm10":{"m_s_keV":300,"Delta_m_MeV":10}},
+        "halo_models":{"shm_cutoff":{"v0_km_s":220,"vE_km_s":232,"vesc_km_s":544,"vmax_lab_km_s":776},
+                       "mb_untruncated":{"v0_km_s":220,"vE_km_s":232,"numerical_vmax_km_s":1600}},
         "width_scheme":"pole chi2 -> chi1 s; conditional Dirac/real-scalar/pure-scalar/single-channel",
         "quadrature":{"speed_nodes":args.nv,"kernel":[args.nw,args.nz,args.nphi]},
         "rate_units":"events/(kg day keV)","detector_response":"not applied",
+        "native_Mathematica_validation":"pending; response samples are from the source-translated AFH v6.0 table",
     }
     (args.out_dir/"metadata.json").write_text(json.dumps(metadata,indent=2)+"\n",encoding="utf-8")
 
