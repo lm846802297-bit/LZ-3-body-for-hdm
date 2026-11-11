@@ -91,7 +91,7 @@ v_{\min}^{\rm global}=704.4577073\ {\rm km/s}
 at
 
 \[
-E_R=267.4011101\ {\rm keV}.
+E_R=267.4011263\ {\rm keV}.
 \]
 
 At \(v=776\ {\rm km/s}\), the open recoil interval is
