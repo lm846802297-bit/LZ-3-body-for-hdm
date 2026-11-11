@@ -627,6 +627,8 @@ This is an efficiency-weighted event-yield estimate. It is not, by itself, a 90%
 
 ### 10.2 What is required for a genuine LZ recast
 
+The LZ 2026 paper's illustrative inelastic benchmark is a two-body transition \(\chi_1+A\to\chi_2+A\). The process studied here is instead the three-body reaction \(\chi_1+A\to\chi_1+A+s\), with \(\chi_2\) appearing as an internal propagator and \(s\) emitted in the final state. Consequently, the published LZ inelastic-WIMP limit is not directly transferable to this model; only the detector-response and likelihood machinery can be reused after constructing this model's own signal distribution.
+
 The final LZ selection is applied in the two-dimensional \(S1_c\)–\(\log_{10}S2_c\) plane. A full recast therefore requires:
 
 1. the energy-dependent final efficiency and its calibration uncertainty;
