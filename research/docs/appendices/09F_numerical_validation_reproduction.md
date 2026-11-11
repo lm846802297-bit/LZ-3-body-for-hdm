@@ -7,13 +7,13 @@
 
 | 任务 | 程序或目录 |
 |---|---|
-| Eq. (6) 三体 kernel | \`research/figure2_full_reproduction/eq6_kernel.py\` |
-| AFH Xe-131 response | \`research/afh_default_density_xe131/run_afh_default_xe131.py\` |
-| AFH Xe-131 benchmark 截面替换 | \`research/afh_default_density_xe131/compute_four_benchmark_dsigma.py\` |
-| AFH 天然氙 halo fold | \`research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py\` |
-| AFH Xe-131 源矩阵 | \`research/afh_default_density_xe131/afh_default_xe131_density_matrix.csv\` |
-| 天然氙同位素权重 | \`research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv\` |
-| 天然氙响应样本 | \`research/afh_default_density_natural_xenon_halo/input/afh_response_samples.csv\` |
+| Eq. (6) 三体 kernel | `research/figure2_full_reproduction/eq6_kernel.py` |
+| AFH Xe-131 response | `research/afh_default_density_xe131/run_afh_default_xe131.py` |
+| AFH Xe-131 benchmark 截面替换 | `research/afh_default_density_xe131/compute_four_benchmark_dsigma.py` |
+| AFH 天然氙 halo fold | `research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py` |
+| AFH Xe-131 源矩阵 | `research/afh_default_density_xe131/afh_default_xe131_density_matrix.csv` |
+| 天然氙同位素权重 | `research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv` |
+| 天然氙响应样本 | `research/afh_default_density_natural_xenon_halo/input/afh_response_samples.csv` |
 
 ### F.2 主要复现命令
 
@@ -21,26 +21,26 @@
 
 AFH Xe-131：
 
-\`\`\`bash
+```bash
 python research/afh_default_density_xe131/run_afh_default_xe131.py --outdir research/afh_default_density_xe131/output
 python -m unittest research.afh_default_density_xe131.test_afh_default_xe131
-\`\`\`
+```
 
 四 benchmark 的 AFH/GCN/JJ55 截面对照需要提供归档的 GCN/JJ55 基础表和 AFH 响应表：
 
-\`\`\`bash
+```bash
 python research/afh_default_density_xe131/compute_four_benchmark_dsigma.py \\
   --base-csv <archived-gcn-jj55-base.csv> \\
   --afh-response-csv research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv \\
   --out-csv <output.csv> \\
   --metadata <metadata.json>
-\`\`\`
+```
 
 天然氙 selected-point halo fold：
 
-\`\`\`bash
+```bash
 python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py
-\`\`\`
+```
 
 天然氙程序默认采用 \(m_{\chi_1}=1\) TeV、\(m_V=10\) GeV、耦合乘积平方 \(10^{-8}\)、\(g_2=1\)、\(\rho_\chi=0.3\) GeV/cm³、32 个速度节点和 \(8\times8\times4\) 的三体求积。修改输入时必须同步保存新的 metadata，不应覆盖历史输出。
 
@@ -48,17 +48,17 @@ python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_hal
 
 主要结果文件包括：
 
-- \`output/afh_default_xe131_WM00.csv\`：Xe-131 AFH response 网格；
-- \`output/minima.csv\`：响应极小值；
-- \`output/figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv\`：修正后的四 benchmark 长表；
-- \`output/FOUR_BENCHMARK_CROSS_SECTION_AUDIT.md\`：四 benchmark 截面审计；
-- \`results/natural_xenon_halo_rates.csv\`：天然氙 selected-point halo-folded rates；
-- \`results/isotope_halo_contributions_compact.csv\`：同位素贡献；
-- \`results/kernel_order_crosschecks.csv\`：三体求积阶数对照；
-- \`results/speed_quadrature_crosschecks.csv\`：速度积分阶数对照；
-- \`results/halo_pdf_normalization.csv\`：速度 PDF 归一化；
-- \`results/vmin_by_isotope_at_101keV.csv\`：101 keV 的逐同位素阈值；
-- \`results/metadata.json\`：输入和计算约定。
+- `output/afh_default_xe131_WM00.csv`：Xe-131 AFH response 网格；
+- `output/minima.csv`：响应极小值；
+- `output/figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv`：修正后的四 benchmark 长表；
+- `output/FOUR_BENCHMARK_CROSS_SECTION_AUDIT.md`：四 benchmark 截面审计；
+- `results/natural_xenon_halo_rates.csv`：天然氙 selected-point halo-folded rates；
+- `results/isotope_halo_contributions_compact.csv`：同位素贡献；
+- `results/kernel_order_crosschecks.csv`：三体求积阶数对照；
+- `results/speed_quadrature_crosschecks.csv`：速度积分阶数对照；
+- `results/halo_pdf_normalization.csv`：速度 PDF 归一化；
+- `results/vmin_by_isotope_at_101keV.csv`：101 keV 的逐同位素阈值；
+- `results/metadata.json`：输入和计算约定。
 
 ### F.4 关键验收检查
 
