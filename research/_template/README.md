@@ -40,6 +40,7 @@
 - Operating system / compiler, if relevant:
 - Exact commands:
 - Random seeds / deterministic settings:
+- Run manifest (`run_manifest.json` or equivalent) for substantial runs:
 
 ## 6. Validation
 
@@ -53,6 +54,15 @@
 
 Summarize the principal numerical results and link the exact CSV/JSON files
 and figures. Distinguish diagnostic outputs from final physical conclusions.
+
+| Output file | Format | Size | Rows / records | SHA-256 | Description |
+|---|---|---:|---:|---|---|
+| | | | | | |
+
+Commit essential outputs as directly usable native/uncompressed files. Do not
+create a new ZIP/TAR archive as a substitute for the extracted result files.
+For large files, follow §4 of `research/WORKFLOW.md` and commit an immutable
+storage manifest with the exact file identity and checksum.
 
 ## 8. Assumptions and limitations
 
