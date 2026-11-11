@@ -6,7 +6,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE))
 
-from isotope_mass_schemes import isotope_mass_GeV
+from isotope_mass_schemes import electron_binding_energy_eV, isotope_mass_GeV
 from rate_kinematics import vmin_three_body_km_s
 
 
@@ -54,6 +54,58 @@ class IsotopeMassSchemeTests(unittest.TestCase):
         q_au = math.sqrt(2.0 * isotope_mass_GeV(136, "A_u") * ER)
         q_nist = math.sqrt(2.0 * isotope_mass_GeV(136, "nist_nuclear") * ER)
         self.assertLess(q_nist, q_au)
+
+    def test_ame2020_electron_binding_energy_for_xenon(self):
+        self.assertAlmostEqual(
+            electron_binding_energy_eV(54),
+            202378.2777170466,
+            places=6,
+        )
+
+    def test_ame2020_cod2022_xe131_nuclear_mass(self):
+        self.assertAlmostEqual(
+            isotope_mass_GeV(131, "ame2020_nuclear"),
+            121.9099223838014,
+            places=10,
+        )
+
+    def test_ame2020_scheme_includes_positive_electron_binding_correction(self):
+        from isotope_mass_schemes import (
+            ELECTRON_MASS_U_CODATA2022,
+            NIST_XE_ATOMIC_MASS_U,
+            U_GEV_CODATA2022,
+            Z_XE,
+        )
+        A = 131
+        mass_without_binding = (
+            NIST_XE_ATOMIC_MASS_U[A] - Z_XE * ELECTRON_MASS_U_CODATA2022
+        ) * U_GEV_CODATA2022
+        mass_with_binding = isotope_mass_GeV(A, "ame2020_nuclear")
+        self.assertAlmostEqual(
+            mass_with_binding - mass_without_binding,
+            electron_binding_energy_eV(54) * 1.0e-9,
+            places=14,
+        )
+
+    def test_ame2020_xe136_threshold_is_just_below_shm_endpoint(self):
+        vmin = vmin_three_body_km_s(
+            1000.0,
+            0.0003,
+            isotope_mass_GeV(136, "ame2020_nuclear"),
+            101.0e-6,
+        )
+        self.assertAlmostEqual(vmin, 775.805285248, delta=2e-6)
+        self.assertLess(vmin, 776.0)
+
+    def test_ame2020_xe131_threshold_is_above_shm_endpoint_at_101kev(self):
+        vmin = vmin_three_body_km_s(
+            1000.0,
+            0.0003,
+            isotope_mass_GeV(131, "ame2020_nuclear"),
+            101.0e-6,
+        )
+        self.assertAlmostEqual(vmin, 789.592969144, delta=2e-6)
+        self.assertGreater(vmin, 776.0)
 
 
 if __name__ == "__main__":
