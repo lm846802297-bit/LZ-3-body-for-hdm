@@ -119,8 +119,9 @@ def main() -> None:
             "two-body width helper; the manuscript does not state the "
             "Dirac/Majorana realization or a separate g2 benchmark."
         ),
-        "response_y_convention": "y=b_A^2*m_A*E_R/2 as printed in main.tex",
-        "response_momentum": "q_response=sqrt(2*m_A*E_R)",
+        "response_y_convention": "y=(b_A*q/2)^2 with q the exact spatial momentum transfer",
+        "response_momentum": "q_response=q_kinematics=sqrt(2*m_A*E_R+E_R^2)",
+        "small_recoil_approximation": "q_NR=sqrt(2*m_A*E_R)",
         "three_body_kinematic_momentum": "q_exact=sqrt(2*m_A*E_R+E_R^2)",
         "nuclear_models": ["GCN", "JJ55"],
         "quadrature": {"nw": args.nw, "nz": args.nz, "nphi": args.nphi},
