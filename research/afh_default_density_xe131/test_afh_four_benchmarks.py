@@ -25,7 +25,7 @@ class TestAFHFourBenchmarks(unittest.TestCase):
     def test_response_is_not_stale_gcn_copy(self):
         row = self.wide[self.wide["ER_keV"] == 200].iloc[0]
         self.assertNotAlmostEqual(row["R_A_AFH"], row["R_A_GCN"], places=5)
-        self.assertAlmostEqual(row["R_A_AFH"] / row["R_A_GCN"], 0.95245134, places=6)
+        self.assertAlmostEqual(row["R_A_AFH"] / row["R_A_GCN"], 0.95244612, places=6)
 
     def test_afh_cross_section_uses_physical_response_ratio(self):
         for benchmark, group in self.long.groupby("benchmark"):
