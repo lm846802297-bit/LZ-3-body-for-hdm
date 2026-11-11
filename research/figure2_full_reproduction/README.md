@@ -166,4 +166,4 @@ latter does not specify them.
 The finite-width comparison uses the conditional Dirac / pure-scalar /
 single-open-channel \(\chi_2\to\chi_1s\) width. It is not the full
 vector-plus-scalar self-energy. See
-\`results/USER_L00_BENCHMARK_G1_G2_GVN_1_DELTA_M_450KEV.md\`.
+results/USER_L00_BENCHMARK_G1_G2_GVN_1_DELTA_M_450KEV.md.
