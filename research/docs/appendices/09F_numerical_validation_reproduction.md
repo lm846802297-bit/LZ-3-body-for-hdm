@@ -24,6 +24,8 @@
 | Eq. (6) 三体 kernel | research/figure2_full_reproduction/eq6_kernel.py | 构造末态四动量、Dirac trace、\(I_6\) |
 | AFH Xe-131 响应 | research/afh_default_density_xe131/run_afh_default_xe131.py | 解析密度矩阵并计算 \(W_M^{00}\) |
 | AFH Xe-131 Mathematica runner | research/afh_default_density_xe131/run_afh_default_xe131.wls | 调用官方 AFH 包生成原生响应 |
+| AFH mpmath full-grid validation | research/afh_default_density_xe131/verify_afh_mpmath_full_grid.py | 独立 60 位精度有限和对照全部 2401 个 q 节点 |
+| q convention audit | research/afh_default_density_xe131/audit_response_momentum_conventions.py | 对照论文响应 q、精确运动学 q 和 Xe-131 的响应差异 |
 | Mathematica/Python 对照 | research/afh_default_density_xe131/verify_afh_xe131_native.wls | 原生 AFH 与 Python 网格比较 |
 | 四 benchmark 响应替换 | research/afh_default_density_xe131/recompute_afh_four_benchmarks.py | AFH/GCN/JJ55 同网格截面对照 |
 | 四 benchmark 截面重构 | research/afh_default_density_xe131/compute_four_benchmark_dsigma.py | 从 \(R_A,I_6\) 重构 Eq. (6) 截面 |
@@ -84,6 +86,22 @@ python -m unittest discover \
 
 若只运行 AFH 响应本身的六项测试，将匹配模式改为 test_afh_default_xe131.py。
 
+AFH mpmath 全网格独立验证：
+
+~~~bash
+python research/afh_default_density_xe131/verify_afh_mpmath_full_grid.py \\
+  --response-csv research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv \\
+  --outdir research/afh_default_density_xe131/output/mpmath_full_grid
+~~~
+
+q 约定审计（需要一份新生成的 AFH Xe-131 响应 CSV）：
+
+~~~bash
+python research/afh_default_density_xe131/audit_response_momentum_conventions.py \\
+  --xe131-response-csv research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv \\
+  --outdir research/afh_default_density_xe131/output/q_convention_audit
+~~~
+
 AFH 原生 Mathematica 运行需要官方 dmformfactor-V6.m 和可用的 Wolfram kernel。设置环境变量 DMFormFactorPath 指向该源文件，再运行：
 
 ~~~bash
@@ -99,8 +117,11 @@ wolframscript -file research/afh_default_density_xe131/verify_afh_xe131_native.w
 天然氙 selected-point halo fold：
 
 ~~~bash
-python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py
+python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \\
+  --response-q-convention legacy_exact
 python research/afh_default_density_natural_xenon_halo/validate_archived_results.py
+
+注意：legacy_exact 只用于复现当前已归档的 28 个 exact-q 响应样本。默认 manuscript_nr 会拒绝这些旧样本，直到七同位素 AFH 响应在 q_response=sqrt(2*m_A*E_R) 处重新生成。
 ~~~
 
 Eq. (6) kernel 测试：
@@ -129,12 +150,13 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 | AFH 默认 \(b_A\) | 已完成 | 公式、单位转换、Xe-131 数值回归测试 | 不需要拟合；不得用谷值调参 |
 | AFH 零动量归一化 | 已完成（含有限精度修正） | 原始 \(A^2/4\)、物理响应 \(A^2\)、偏差 \(8.2523\times10^{-5}\) | 统一所有计算文件的质量和 \(q_{\rm resp}\) 约定 |
 | AFH 谷值 | 已完成 | 离散候选点、直接响应局部极小化、minima.csv | 不需要调整 \(b_A\) |
-| mpmath 独立有限和 | 已完成选定点检查 | 六个 \((q,J)\) 组合，容差 \(2\times10^{-11}\) | 不是 2401 点全网格 mpmath |
-| AFH 原生 Mathematica | 待完成 | WLS runner 和比较脚本已归档 | 实际运行 Wolfram kernel 并保存逐点差异 |
+| mpmath 独立有限和 | <badge>已完成全网格</badge> | 60 位精度、2401 个 q 节点；最大振幅绝对差 \(3.98\times10^{-14}\)，最大响应绝对差除以 \(A^2\) 为 \(1.22\times10^{-15}\) | 原生 Mathematica 逐点对照仍待完成 |
+| AFH 原生 Mathematica | 待完成 | WLS runner 和比较脚本已归档；Python/mPMath 全网格交叉验证已通过 | 实际运行 Wolfram kernel 并保存逐点差异 |
 | GCN/JJ55 对照 | 已完成归档 | 三种响应、四 benchmark、1920 行 long table | 对照共享既有 \(I_6\)，不是 640 次独立重算 |
 | 三体运动学/Dirac trace | 已完成代表性检查 | 壳条件、四动量闭合、显式自旋求和、干涉分解 | 扩展到更宽的参数和质量网格 |
 | 三体积分收敛 | 已有 selected-point 验证 | 六个天然氙点 \(8×8×4\) 对 \(16×16×8\)，最大差异 \(2.19×10^{-4}\)；独立 Eq. (6) 测试点 \(16×16×8\) 对 \(32×32×16\)，相对差异小于 \(5×10^{-5}\) | 连续反冲谱全网格收敛 |
 | 天然氙速度积分 | 已有 selected-point 验证 | 五个点 32 对 64 速度节点，最大差异 \(3.31×10^{-6}\) | 连续反冲谱全网格收敛和 halo 参数扫描 |
+| q_response / q_kinematic 分离 | 已完成审计与代码保护 | 28 个天然氙样本识别为 exact-q；Xe-131 四点响应差异约 5.5–212.7 ppm | 重新生成七同位素 manuscript-NR 响应样本并重算 halo fold |
 | Xe-124/Xe-126 | 输入缺失 | 缺失丰度合计 0.001842 | 取得密度矩阵并补算响应、阈值和速率 |
 | LZ detector response | 尚未开展 | 当前仅有理论核反冲率 | 效率、能量分辨、曝光、选择切、背景和统计似然 |
 
@@ -168,6 +190,6 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 3. 保留 AFH raw response 与物理 equal-\(p,n\) response 两列，因子 4 只应用一次。
 4. 早期错误的 AFH response CSV 拼接换行和 benchmark CSV 中 AFH 列误复制 GCN 的版本应标记为 superseded；当前使用 corrected archive。
 5. 任何新的 \(q_{\rm resp}\)、核质量、halo 参数、宽度方案或求积阶数都应产生新的输出和 metadata，不覆盖历史结果。
-6. 主报告包含完整附录 A–F；本目录中的六份独立附录与主报告对应章节保持同步。
+6. 主报告包含完整附录 A–G；本目录中的七份独立附录与主报告对应章节保持同步。
 7. 程序、CSV、JSON 和源文件继续保存在各自计算目录，文档只解释其定义、来源、调用方式和验证边界。
 
