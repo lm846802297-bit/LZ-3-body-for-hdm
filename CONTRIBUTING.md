@@ -1,0 +1,19 @@
+# Contributing and research workflow
+
+This repository is organized around reproducible research. Please read
+research/WORKFLOW.md before starting a new calculation or submitting a change.
+
+## In brief
+
+1. Create a topic branch from the latest main.
+2. Put research-specific material under research/<topic>/.
+3. Include a study README describing the question, assumptions, inputs,
+   environment, reproduction command, tests, results, and limitations.
+4. Run the relevant tests and research workflow before opening a PR.
+5. Submit a pull request to main using the repository PR template.
+6. Merge only after the structure check and all relevant scientific checks
+   have passed and the result's validation status is stated accurately.
+
+The original manuscript source belongs in paper-source/. Do not modify
+paper-source/main_original.tex or replace original source assets as part of
+an ordinary research-code PR.

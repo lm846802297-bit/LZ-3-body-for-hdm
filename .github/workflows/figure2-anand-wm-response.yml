@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - research/figure2-p0-4-mainline
+      - 'research/**'
     paths:
       - .github/workflows/figure2-anand-wm-response.yml
       - research/figure2_full_reproduction/run_anand_wm_response.py
