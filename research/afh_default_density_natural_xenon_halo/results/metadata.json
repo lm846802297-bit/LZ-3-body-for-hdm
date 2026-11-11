@@ -95,9 +95,10 @@
     542
   ],
   "native_Mathematica_validation": "pending; response samples are from the source-translated AFH v6.0 table",
-  "response_q_convention": "legacy_exact_spatial",
+  "response_q_convention": "exact_spatial",
   "response_q_formula": "sqrt(2*m_A*E_R+E_R^2)",
   "kinematic_q_convention": "sqrt(2*m_A*E_R+E_R^2)",
-  "response_q_status": "legacy archived response samples; not yet regenerated using the manuscript y=b_A^2*m_A*E_R/2 convention",
-  "response_q_followup": "regenerate all seven isotope AFH response samples at q_response=sqrt(2*m_A*E_R); retain exact q only for v_min and three-body kinematics"
+  "response_q_status": "exact spatial momentum transfer used by AFH response; consistent with exact nuclear mass-shell kinematics",
+  "response_q_followup": "retain exact spatial q as baseline; q_NR=sqrt(2*m_A*E_R) is an optional small-recoil approximation for response-sensitivity comparison",
+  "response_q_reference_definition": "AFH nuclear response variable y=(q*b_A/2)^2, where q is the spatial momentum transfer"
 }
