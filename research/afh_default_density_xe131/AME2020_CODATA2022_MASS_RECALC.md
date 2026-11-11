@@ -100,10 +100,10 @@ AME2020 atomic-mass inputs.
 
 ### 2.2 Isotope-dependent velocity thresholds
 
-For the benchmark (m_{chi_1}=1) TeV, (m_s=300) keV and
-(E_R=101) keV, the AME2020 masses give:
+For the benchmark $m_{\chi_1}=1$ TeV, $m_s=300$ keV and
+$E_R=101$ keV, the AME2020 masses give:
 
-| Isotope | (v_{min}) [km/s] |
+| Isotope | $v_{\min}$ [km/s] |
 |---|---:|
 | Xe-124 | 810.299895 |
 | Xe-126 | 804.208208 |
@@ -162,11 +162,11 @@ rescaling factor.
 
 For Xe-131 with the AME2020 mass, direct PCHIP interpolation of the full AFH
 curve gives the following selected-point comparison. Since the differential
-cross section is linear in (R_A), the relative response change is also the
-relative change in (d\sigma_{131}/dE_R) and (dR_{131}/dE_R) at fixed
-(E_R), before detector folding.
+cross section is linear in $R_A$, the relative response change is also the
+relative change in $d\sigma_{131}/dE_R$ and $dR_{131}/dE_R$ at fixed
+$E_R$, before detector folding.
 
-| (E_R) [keV] | (q_{\rm resp}^{\rm NR}) [GeV] | (q_{\rm kin}) [GeV] | (R_A^{\rm NR}) | (R_A^{\rm exact}) | Exact vs NR [ppm] |
+| $E_R$ [keV] | $q_{\rm resp}^{\rm NR}$ [GeV] | $q_{\rm kin}$ [GeV] | $R_A^{\rm NR}$ | $R_A^{\rm exact}$ | Exact vs NR [ppm] |
 |---:|---:|---:|---:|---:|---:|
 | 101 | 0.156926111066 | 0.156926143569 | 0.320986807329 | 0.320979635189 | -22.344 |
 | 200 | 0.220825652900 | 0.220825743470 | 9.62849643886 | 9.62844388981 | -5.458 |
@@ -175,8 +175,8 @@ relative change in (d\sigma_{131}/dE_R) and (dR_{131}/dE_R) at fixed
 
 The response-q difference is most consequential at the AFH minimum near
 267 keV. The exact-q prescription lowers the Xe-131 response and differential
-rate there by (2.12708\times10^{-4}), i.e. (0.0212708\%). This is a
-local response-interpolation effect, not a change to (v_{\min}), the
+rate there by $2.12708\times10^{-4}$, i.e. $0.0212708\%$. This is a
+local response-interpolation effect, not a change to $v_{\min}$, the
 three-body phase-space support, or the halo distribution.
 
 The AFH default oscillator-length prescription \(b_A\) and the response
