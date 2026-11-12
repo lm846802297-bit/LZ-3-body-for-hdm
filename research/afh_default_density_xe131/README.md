@@ -172,21 +172,28 @@ The factor four is applied exactly once, in the nuclear response. The
 independent historical code-convention check is documented in
 `AFH_COUPLING_NORMALIZATION_MAPPING.md`.
 
-The natural-xenon exact-spatial selected-point halo fold for the seven
-AFH-available isotopes is now archived under
-research/afh_default_density_natural_xenon_halo/. It uses NIST nuclear masses
-and the 28 selected isotope/recoil response samples, preserves the original
-natural abundances without renormalizing the seven-isotope subset, and has a
-direct reproduction check against the archived rates.
+The seven-isotope AFH v6.0 default-density response grids are now
+regenerated directly from the official source package and archived under
+research/afh_default_density_xenon_all_isotopes/. This produces 16,807
+response points and reproduces the 28 historical NIST-mass response samples
+to a maximum relative difference of (1.1864\times10^{-9}). The source
+package has no default-density matrices for Xe-124 and Xe-126; the available
+seven isotopes cover 99.8158% of the natural atom fraction, without
+renormalization.
 
-The AME2020/CODATA-2022 extension is documented in
-[AME2020_CODATA2022_EXACT_SPATIAL_XE131.md](AME2020_CODATA2022_EXACT_SPATIAL_XE131.md).
-It uses the unrounded AME2020 atomic masses, the electronic-binding correction,
-and exact spatial AFH q. The numerical calculation currently provides the
-Xe-131 isotope contribution only. The existing 28 natural-xenon samples were
-generated with NIST nuclear masses and cannot be relabelled as AME2020-q
-responses; a full AME2020 natural-xenon sum requires regenerating the AFH
-response values for the other isotopes at the AME2020 exact-spatial q values.
+The AME2020/CODATA-2022 full-response halo fold is documented in
+[AME2020_FULL_RESPONSE_NATURAL_XENON_FOLD.md](../afh_default_density_natural_xenon_halo/AME2020_FULL_RESPONSE_NATURAL_XENON_FOLD.md).
+It evaluates each isotope at its own AME2020 exact-spatial q and performs
+the isotope-specific three-body and halo-speed integrals. The NIST-mass
+full-grid calculation reproduces the archived 28-sample natural-xenon
+rates with maximum total-rate relative difference (3.432\times10^{-12}).
+The AME2020 result is a seven-isotope prediction, not a complete nine-isotope
+result and not a detector-level LZ prediction.
+
+The independent Xe-131 mass and response-q component check remains available
+in [AME2020_CODATA2022_EXACT_SPATIAL_XE131.md](AME2020_CODATA2022_EXACT_SPATIAL_XE131.md).
+It compares the AME2020, NIST-nuclear, and historical (A u) masses, and
+exact-spatial q against the NR approximation.
 
 The AFH native Mathematica execution also remains pending; the current AFH
 numerical table is from the source-translated Python implementation.
