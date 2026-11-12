@@ -163,7 +163,7 @@ def extract_uncertainty_envelope(
         upper, lower = curves[0], curves[1]
     else:
         upper, lower = curves[1], curves[0]
-    return lower, upper
+    return lower, upper, len(raw)
 
 
 def interpolate(points: list[tuple[float, float]], energy: float) -> float:
@@ -218,7 +218,7 @@ def main() -> None:
         check=True,
     )
     points = extract_curve(svg_path)
-    lower_points, upper_points = extract_uncertainty_envelope(svg_path)
+    lower_points, upper_points, band_point_count = extract_uncertainty_envelope(svg_path)
 
     energies = sorted(set(float(i) for i in range(301)) | {5.4, 248.0, 269.9})
     csv_path = args.out_dir / "lz_2026_nr_efficiency_digitized.csv"
@@ -270,7 +270,7 @@ def main() -> None:
             "y_efficiency_1": Y_1,
         },
         "raw_vector_point_count": len(points),
-        "raw_uncertainty_band_polygon_point_count": 1170,
+        "raw_uncertainty_band_polygon_point_count": band_point_count,
         "sampled_csv_point_count": len(energies),
         "mean_final_roi_efficiency_14_250": mean_14_250,
         "mean_lower_envelope_efficiency_14_250": mean_lower_14_250,
