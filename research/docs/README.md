@@ -9,16 +9,20 @@
 - `07_source_build_and_figure_audit.md`: source build and figure audit.
 - `08_chi2_decay_width.md`: analytic derivation, benchmark, and validation boundary for chi2 -> chi1 s.
 - `08_final_editorial_pass_2026-11-11.md`: final editorial pass record.
-- `09_afh_xe131_three_body_kernel_natural_xenon_halo_2026-11-11.md`: AFH v6.0 Xe response, Eq. (6) three-body kernel, factor-of-four normalization, natural-xenon isotope sum, and halo-folded rate discussion.
+- `09_afh_xe131_three_body_scattering_natural_xenon.md`: AFH v6.0 Xe-131 nuclear response, Eq. (6) three-body scattering, factor-of-four normalization, natural-xenon isotope sum, and halo-folded recoil-rate study.
 
 ## AFH Xe-131 and natural-xenon three-body study
 
-The main report contains the complete A–G appendices. The seven files below are synchronized standalone copies for focused search and citation.
-- `09_afh_xe131_three_body_kernel_natural_xenon_halo_2026-11-11.md`: complete main report, including the full text of Appendices A–G.
+The main report contains the complete Appendices A–F. The six files below are synchronized standalone copies for focused search and citation.
+- `09_afh_xe131_three_body_scattering_natural_xenon.md`: complete main report, including the full text of Appendices A–F.
 - `appendices/09A_three_body_kinematics_amplitude.md`: three-body kinematics, phase-space limits, and Dirac amplitude.
 - `appendices/09B_afh_v6_density_matrix_response.md`: AFH v6.0 density matrix and response implementation.
 - `appendices/09C_afh_isoscalar_factor4_normalization.md`: AFH isoscalar normalization and factor-of-four mapping.
 - `appendices/09D_natural_xenon_isotope_target.md`: natural xenon isotope abundances and target normalization.
 - `appendices/09E_halo_velocity_vmin_folding.md`: halo velocity distribution, three-body minimum speed, and rate folding.
 - `appendices/09F_numerical_validation_reproduction.md`: code entry points, numerical validation, and reproduction instructions.
-- `appendices/09G_recoil_momentum_convention_audit.md`: AFH spatial momentum definition, exact nuclear mass-shell mapping, and the NR recoil approximation sensitivity.
+
+## Supplementary documents (not part of the main report appendices)
+
+- `supplements/recoil_momentum_convention_audit.md`: AFH spatial momentum definition, exact nuclear mass-shell mapping, and NR recoil-approximation sensitivity.
+- `supplements/research_decision_register.md`: discussion summary, adopted conventions, and scope boundaries.
