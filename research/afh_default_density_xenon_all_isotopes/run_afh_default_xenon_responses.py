@@ -78,8 +78,6 @@ def parse_default_density_matrix(package_path: Path, A: int) -> list[dict]:
         raise RuntimeError(f"{name} density-matrix indices are not contiguous")
     if not any(row["rank"] == 0 and row["isospin"] == 0 for row in rows):
         raise RuntimeError(f"{name} has no isoscalar rank-0 entries")
-    if not any(row["rank"] == 2 and row["isospin"] == 0 for row in rows):
-        raise RuntimeError(f"{name} has no isoscalar rank-2 entries")
     return rows
 
 
@@ -145,6 +143,8 @@ def compute_isotope_response(A: int, rows: list[dict], mass_scheme: str):
         "source_selection": f'SetIsotope[54,{A},"default","default"]',
         "density_matrix_entries": len(rows),
         "density_matrix_isoscalar_entries": sum(row["isospin"] == 0 for row in rows),
+        "rank0_isoscalar_entries": sum(row["rank"] == 0 and row["isospin"] == 0 for row in rows),
+        "rank2_isoscalar_entries": sum(row["rank"] == 2 and row["isospin"] == 0 for row in rows),
         "b_A_fm": b_fm,
         "b_A_GeV_inverse": b_GeV_inv,
         "T_iso": T_iso,
