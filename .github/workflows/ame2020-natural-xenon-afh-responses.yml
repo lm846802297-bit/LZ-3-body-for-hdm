@@ -88,13 +88,14 @@ jobs:
             research/afh_default_density_xe131/test_ame2020_hybrid_natural_xenon.py -v
 
       - name: Upload response grids and regression records
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: afh-v6-seven-isotope-response-grids
           path: |
             ${{ runner.temp }}/afh_default_density_matrices/
             ${{ runner.temp }}/afh_default_xenon_responses/
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 90
 
       - name: Archive native matrices and response grids on the research branch
