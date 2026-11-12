@@ -84,7 +84,7 @@ I_6,
 I_6 =
 \int_{W_{\min}^2}^{W_{\max}^2}
 dW^2\,
-\sqrt{\lambda(W^2,m_{\chi_1}^2,m_s^2)}
+\sqrt{\lambda_{\rm dim}(W^2,m_{\chi_1}^2,m_s^2)}
 \int_{-1}^{1} dz\,
 \left\langle\mathcal L_{00}\right\rangle_{\phi_*}.
 \]
@@ -102,7 +102,7 @@ dW^2\,
 - \(z=\cos\theta_*\)：三体子系统中的角变量；
 - \(\phi_*\)：相应方位角；
 - \(\mathcal L_{00}\)：靶核静止系时间分量对应的粒子侧振幅张量；
-- \(\lambda\)：Källén 函数。
+- \(\lambda_{\rm dim}\)：无量纲 Källén 函数，定义为 \(\lambda_K(W^2,m_{\chi_1}^2,m_s^2)/W^4\)，见附录 A.3。
 
 ### 2.1 为什么核响应可以从三体积分中提出？
 
@@ -845,8 +845,8 @@ AFH 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失的 
 
 ### 13.3 单位总约定
 
-- 微观公式与 kernel：自然单位；质量、能量、三动量均为 GeV，\((W^2)\) 为 GeV\(^2\)，\(I_6\) 为 GeV\(^2\)，\(R_A\) 与耦合无量纲。
-- AFH 核结构：\((b_A)\) 先以 fm 给出，进入 \(y=(Qb_A/2)^2\) 前转换为 GeV\(^{-1}\)；\(Q\) 以 GeV 输入。
+- 微观公式与 kernel：自然单位；质量、能量、三动量均为 GeV，\(W^2\) 为 GeV\(^2\)，\(I_6\) 为 GeV\(^2\)，\(R_A\) 与耦合无量纲。
+- AFH 核结构：\(b_A\) 先以 fm 给出，进入 \(y=(Qb_A/2)^2\) 前转换为 GeV\(^{-1}\)；\(Q\) 以 GeV 输入。
 - halo：速度和 \(v_{\min}\) 以 km/s 报告，\(f_{\rm lab}\) 的单位为 (km/s)\(^{-1}\)；通量因子中 \(v/c\) 无量纲，外部光速换算为 cm/s。
 - 截面：程序内部 \(d\sigma/dE_R\) 为 GeV\(^{-3}\)，报告中的 benchmark 表换算为 cm\(^2\)/keV。
 - 事件率：\(dR/dE_R\) 为 events/(kg day keV)；LZ exposure 为 kg day，最终 \(N_{\rm sig}^{\rm ROI}\) 无量纲。
