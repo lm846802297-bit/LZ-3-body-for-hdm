@@ -9,6 +9,7 @@ from numpy.polynomial.legendre import leggauss
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "figure2_full_reproduction"))
 import eq6_kernel
+from isotope_mass_schemes import isotope_mass_GeV
 
 U_GEV = 0.93149410242
 ME_U = 0.000548579909065
@@ -96,6 +97,9 @@ def main():
     ap.add_argument("--response-q-convention",choices=("exact_spatial","nr_approx","legacy_exact"),
                     default="exact_spatial",
                     help="AFH response momentum: exact_spatial is the physical spatial transfer used by AFH and the exact three-body kinematics; nr_approx is the q^2=2*m_A*E_R approximation; legacy_exact is a backward-compatible alias.")
+    ap.add_argument("--mass-scheme", choices=("A_u","nist_nuclear","ame2020_nuclear"),
+                    default="nist_nuclear",
+                    help="Nuclear mass scheme. AME2020 is rejected for the archived NIST-q response samples unless matching response values are regenerated.")
     args=ap.parse_args()
     args.out_dir.mkdir(parents=True,exist_ok=True)
 
@@ -104,7 +108,7 @@ def main():
     abundance={int(r["A"]):float(r["natural_atom_fraction"]) for r in available}
     atomic_mass={int(r["A"]):float(r["atomic_mass_u"]) for r in isotope_rows}
     mean_atomic_weight=sum(float(r["atomic_mass_u"])*float(r["natural_atom_fraction"]) for r in isotope_rows)
-    nuclear_mass={A:(atomic_mass[A]-Z_XE*ME_U)*U_GEV for A in abundance}
+    nuclear_mass={A:isotope_mass_GeV(A,args.mass_scheme) for A in abundance}
 
     response={}
     response_q={}
@@ -214,7 +218,12 @@ def main():
         "abundance_source":"NIST Atomic Weights and Isotopic Compositions for Xenon",
         "abundance_convention":"natural atomic fractions; no renormalization",
         "mean_atomic_weight_g_mol":mean_atomic_weight,
-        "mass_scheme":"(NIST atomic isotope mass - 54 electron masses)*u; electronic binding neglected",
+        "mass_scheme":args.mass_scheme,
+        "mass_scheme_formula":{
+            "A_u":"m_A=A*u using the historical CODATA-2018 conversion",
+            "nist_nuclear":"(NIST neutral-atom mass - 54 electron masses)*u; electronic binding neglected",
+            "ame2020_nuclear":"(unrounded AME2020 neutral-atom mass - 54 electron masses)*u + B_e(54), using CODATA-2022",
+        }[args.mass_scheme],
         "response_q_convention":canonical_response_q,
         "response_q_formula":("sqrt(2*m_A*E_R+E_R^2) [exact spatial transfer]" if canonical_response_q=="exact_spatial" else "sqrt(2*m_A*E_R) [non-relativistic approximation]"),
         "requested_response_q_mode":args.response_q_convention,
