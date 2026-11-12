@@ -56,5 +56,58 @@ class IsotopeMassSchemeTests(unittest.TestCase):
         self.assertLess(q_nist, q_au)
 
 
+    def test_ame2020_electron_binding_energy_for_xenon(self):
+        from isotope_mass_schemes import electron_binding_energy_eV
+        self.assertAlmostEqual(
+            electron_binding_energy_eV(54),
+            202378.2777170466,
+            places=6,
+        )
+
+    def test_ame2020_atomic_mass_table_contains_all_natural_isotopes(self):
+        from isotope_mass_schemes import AME2020_XE_ATOMIC_MASS_U
+        expected = {
+            124: 123.905885174,
+            126: 125.904297422,
+            128: 127.90353075341,
+            129: 128.90478085742,
+            130: 129.903509346,
+            131: 130.90508412808,
+            132: 131.90415508346,
+            134: 133.905393030,
+            136: 135.907214474,
+        }
+        self.assertEqual(set(AME2020_XE_ATOMIC_MASS_U), set(expected))
+        for A, value in expected.items():
+            self.assertAlmostEqual(AME2020_XE_ATOMIC_MASS_U[A], value, places=13)
+
+    def test_ame2020_xe131_nuclear_mass(self):
+        self.assertAlmostEqual(
+            isotope_mass_GeV(131, "ame2020_nuclear"),
+            121.90992244721734,
+            places=10,
+        )
+
+    def test_ame2020_xe136_threshold_is_below_shm_endpoint(self):
+        vmin = vmin_three_body_km_s(
+            1000.0,
+            0.0003,
+            isotope_mass_GeV(136, "ame2020_nuclear"),
+            101.0e-6,
+        )
+        self.assertAlmostEqual(vmin, 775.805285248, delta=2e-6)
+        self.assertLess(vmin, 776.0)
+
+    def test_ame2020_xe131_threshold_is_above_shm_endpoint(self):
+        vmin = vmin_three_body_km_s(
+            1000.0,
+            0.0003,
+            isotope_mass_GeV(131, "ame2020_nuclear"),
+            101.0e-6,
+        )
+        self.assertAlmostEqual(vmin, 789.592969144, delta=2e-6)
+        self.assertGreater(vmin, 776.0)
+
+
 if __name__ == "__main__":
     unittest.main()
