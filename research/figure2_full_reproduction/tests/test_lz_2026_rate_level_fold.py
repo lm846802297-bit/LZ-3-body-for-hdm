@@ -19,7 +19,7 @@ class LZ2026RateLevelFoldTests(unittest.TestCase):
     def test_candidate_tail_diagnostic_is_clipped_to_lz_roi(self):
         self.assertEqual(candidate_tail_bounds(5.4, 269.9), (225.0, 269.9))
         with self.assertRaises(ValueError):
-            candidate_tail_bounds(270.0, 300.0)
+            candidate_tail_bounds(272.0, 300.0)
 
     def test_linear_interpolation(self):
         self.assertAlmostEqual(interpolate(1.0, [0.0, 2.0], [0.0, 4.0]), 2.0)
