@@ -7,6 +7,7 @@ on:
     paths:
       - .github/workflows/lz-2026-hepdata-download.yml
       - research/figure2_full_reproduction/extract_lz_2026_nr_efficiency.py
+      - research/figure2_full_reproduction/tests/test_lz_2026_efficiency_extraction.py
   workflow_dispatch:
 
 permissions:
@@ -76,6 +77,12 @@ jobs:
             --hepdata-status "$RUNNER_TEMP/lz_hepdata/DOWNLOAD_STATUS.txt" \
             --out-dir "$RUNNER_TEMP/lz_efficiency_extracted"
           cp "$RUNNER_TEMP/lz_efficiency_extracted/"* "$RUNNER_TEMP/lz_hepdata/"
+
+      - name: Validate central efficiency and gray envelope digitization
+        run: |
+          python -m unittest discover \
+            -s research/figure2_full_reproduction/tests \
+            -p 'test_lz_2026_efficiency_extraction.py' -v
 
       - name: Archive efficiency curve and extraction metadata
         shell: bash
