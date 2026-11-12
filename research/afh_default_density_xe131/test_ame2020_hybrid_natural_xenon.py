@@ -39,10 +39,19 @@ class Xe131OnlyAME2020HybridTests(unittest.TestCase):
             self.baseline_isotopes, self.baseline_totals, self.partials
         )
         self.assertEqual(len(rows), 2)
-        self.assertAlmostEqual(rows[0]["hybrid_total_Xe131_only_AME2020"], 9.98)
-        self.assertAlmostEqual(rows[1]["hybrid_total_Xe131_only_AME2020"], 5.01)
-        self.assertAlmostEqual(rows[0]["hybrid_total_relative_shift"], -0.002)
-        self.assertAlmostEqual(rows[1]["hybrid_total_relative_shift"], 0.002)
+        by_benchmark = {row["benchmark"]: row for row in rows}
+        self.assertAlmostEqual(
+            by_benchmark["red_ms200_dm1"]["hybrid_total_Xe131_only_AME2020"], 9.98
+        )
+        self.assertAlmostEqual(
+            by_benchmark["green_ms300_dm1"]["hybrid_total_Xe131_only_AME2020"], 5.01
+        )
+        self.assertAlmostEqual(
+            by_benchmark["red_ms200_dm1"]["hybrid_total_relative_shift"], -0.002
+        )
+        self.assertAlmostEqual(
+            by_benchmark["green_ms300_dm1"]["hybrid_total_relative_shift"], 0.002
+        )
         self.assertEqual(metadata["scope"], "hybrid diagnostic only; not a full AME2020 natural-xenon prediction")
 
     def test_nist_baseline_mismatch_is_rejected(self):
