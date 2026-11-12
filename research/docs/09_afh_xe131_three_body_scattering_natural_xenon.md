@@ -579,6 +579,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 
 ### 仓库内的主要研究记录
 
+- 公式—符号—正文—程序—结果交叉引用索引：`research/docs/formula_symbol_code_cross_reference.md`（F1–F12 公式追溯、单位、近似、代码入口和结果文件）。
 - AFH default Xe-131 README：`research/afh_default_density_xe131/README.md`
 - AFH 因子 4 归一化映射：`research/afh_default_density_xe131/AFH_COUPLING_NORMALIZATION_MAPPING.md`
 - AFH Xe-131 源码与归一化审计：`research/afh_default_density_xe131/AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md`
@@ -619,7 +620,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 
 - [研究决定登记](supplements/research_decision_register.md)：记录讨论中的候选处理、当前采用的约定和适用边界。
 
-七项主要文档内容分别由附录 A–G 承担。研究决定登记用于专项追溯，不改变主报告 A–G 的正式结构。
+七项主要文档内容分别由附录 A–G 承担。公式交叉引用索引是导航文件，不是新增正式附录；研究决定登记用于专项追溯，也不改变主报告 A–G 的正式结构。
 
 附录与主报告使用同一研究分支维护。程序、CSV 和机器可读结果仍保存在各自计算目录中；附录负责解释其定义、调用方式和验证边界，不复制大体积数据。
 
