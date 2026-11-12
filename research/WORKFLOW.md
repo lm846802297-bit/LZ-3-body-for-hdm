@@ -118,7 +118,8 @@ Open a PR from the topic branch to main. The PR must state:
 - the research question and files changed;
 - exact reproduction commands and required dependencies;
 - input provenance and checksums;
-- tests and relevant CI runs;
+- tests and numerical checks actually run locally or on an approved runner;
+- CI runs, if any (optional), with exact status and commit SHA;
 - numerical convergence and independent checks;
 - physical assumptions and what remains unresolved;
 - whether paper-source/ changed and why.
@@ -207,36 +208,42 @@ The main branch is the curated, reproducible research record.
 Recommended GitHub branch protection for main:
 
 - require pull requests before merging;
-- require the lightweight layout-check status check;
-- require relevant topic-specific scientific checks when the PR changes that
-  study's calculation;
 - require conversation resolution;
 - block force pushes and branch deletion;
-- keep merge commits enabled so the PR boundary and topic history are retained.
+- keep merge commits enabled so the PR boundary and topic history are retained;
+- do not require CI status checks as branch-protection gates under this
+  research policy.
 
 For a single-maintainer repository, requiring an approval from another person
 is optional and may make self-merging impossible. If collaborators join, add
 at least one independent approval for substantive physics or numerical
-changes. Administrators should avoid bypassing the rules except for a
-documented emergency.
+changes. Administrators should avoid bypassing repository protections except
+for a documented emergency.
 
-Do not require every long-running scientific workflow on every PR. Require
-the lightweight repository-layout check globally; run and inspect the
-appropriate scientific workflow for the topic being changed. This avoids
-making unrelated research PRs wait for expensive calculations.
+CI is optional. Neither the lightweight layout check nor a topic-specific
+scientific workflow is a prerequisite for starting or completing a
+calculation, validating its numerical result, submitting its files, reviewing
+its PR, or merging it. Run relevant calculations and checks locally or on an
+approved compute runner when practical; record the exact checks actually
+performed. A workflow may still start automatically or be dispatched
+manually, but its status is supplemental evidence, not a merge gate.
 
-The repository's CI currently starts the Figure 2 scientific workflows on
-pushes to main and matching research/** branches. A successful run on the
-topic branch should be linked in the PR before merging a change to that
-calculation.
+A GitHub Actions workflow that performs a calculation is an execution run,
+not a required CI pass. If Actions is queued, unavailable, disabled, billing
+blocked, cancelled, or fails for infrastructure reasons, continue research
+through an available execution route and record the CI status accurately.
+Do not misclassify infrastructure failure as scientific failure or claim an
+unrun check passed.
 
 ## 6. Merge and cleanup
 
 Before merging:
 
 - the study README and PR checklist are complete;
-- the layout check passes;
-- relevant tests and scientific workflows pass;
+- relevant local tests, numerical checks, convergence checks, and independent
+  checks have been run as appropriate and their actual status is recorded;
+- optional CI results, if any, are reported accurately but are not a merge
+  condition;
 - outputs are archived in the study directory or a versioned Release;
 - assumptions, limitations, and validation status are explicit;
 - no unrelated manuscript or research files have entered the PR.
