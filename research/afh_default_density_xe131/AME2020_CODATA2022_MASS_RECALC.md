@@ -324,7 +324,11 @@ The zero Xe-131 rate at 101 keV for the green benchmark is a kinematic
 support effect: \(v_{\min,131}=789.593\) km/s exceeds the truncated-SHM
 endpoint of 776 km/s. The full seven-isotope natural-xenon baseline is
 nevertheless nonzero at this point because Xe-136 is just open
-(\(v_{\min,136}\simeq775.806\) km/s); its total rate is very small.
+(\(v_{\min,136}\simeq775.805\) km/s), only about 0.195 km/s below the
+776-km/s endpoint. The full natural-xenon baseline rate is
+\(2.59953\times10^{-22}\) events/(kg day keV), from the Xe-136 term.
+The open isotope abundance fraction is 0.088573, but the rate is tiny because
+only a very narrow interval of the high-speed tail is available.
 For the black benchmark, \(v_{\min}\) exceeds the SHM endpoint for all
 seven available isotopes, so the selected-point natural-xenon SHM rate is
 zero. This illustrates why the isotope sum and the halo speed integral
