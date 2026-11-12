@@ -844,6 +844,8 @@ AFH 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失的 
 | F10 | 天然氙 \(dR/dE_R\) | [D.3–D.4](appendices/09D_natural_xenon_isotope_target.md)、[E.3–E.7](appendices/09E_halo_velocity_vmin_folding.md) | AFH selected-point / GCN-JJ55 continuous-spectrum runners |
 | F11 | LZ 一维效率加权 \(N_{\rm sig}^{\rm ROI}\) | 主报告 §11.1、§11.4；附录 F.5 | `fold_lz_2026_rate_level.py` |
 | F12 | 条件性 \(\chi_2\to\chi_1s\) pole width | [A.5–A.6](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.chi2_width_dirac_scalar` |
+| F13 | AME2020 中性原子质量到核质量的转换 | [AME2020 Xe-131 扩展，§2](../afh_default_density_xe131/AME2020_CODATA2022_EXACT_SPATIAL_XE131.md) | isotope_mass_schemes.py；test_isotope_mass_schemes.py |
+| F14 | AME2020 exact-spatial AFH Xe-131 halo-folded partial rate | [AME2020 Xe-131 扩展，§3–§4](../afh_default_density_xe131/AME2020_CODATA2022_EXACT_SPATIAL_XE131.md) | run_ame2020_xe131_halo_partial.py；eq6_kernel.py；rate_kinematics.py |
 
 ### 13.2 必须区分的符号和物理层级
 
@@ -851,7 +853,7 @@ AFH 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失的 
 |---|---|
 | \(q^\mu\)、\(Q\)、\(t\) | \(q^\mu\) 是四动量转移；\(Q=|\mathbf q|\) 是空间动量模长；\(t=(q^\mu)^2=-2m_AE_R\)。 |
 | \(W\) 与 \(W^2\) | \(W\) 是 \(\chi_1+s\) 子系统不变质量；\(W^2\) 是数值积分变量。 |
-| \(m_A\) 与 \(M_A\) | 天然氙使用逐同位素 NIST 核质量；固定 Figure-2 Xe-131 benchmark 使用 \(M_A=131u\)。必须读取对应 metadata。 |
+| \(m_A\) 与 \(M_A\) | 天然氙主基准使用逐同位素 NIST 核质量；AME2020 扩展使用 AME2020/CODATA-2022 核质量；固定 Figure-2 Xe-131 benchmark 使用 \(M_A=131u\)。必须读取对应 metadata。 |
 | AFH raw response 与 \(R_A^{\rm phys}\) | AFH 原始 isoscalar 零动量归一化为 \(A^2/4\)；Eq. (6) 中的物理响应归一化为 \(A^2\)，因子 4 只计一次。 |
 | \(I_6\)、\(d\sigma_A/dE_R\)、\(dR/dE_R\)、\(N_{\rm sig}^{\rm ROI}\) | 依次是三体 reduced kernel、单核固定速度微分截面、天然氙 halo-folded 理论速率、再经过一维效率和曝光折叠的预期事件数。 |
 | 固定 \(v=800\) km/s 与截断 SHM | 前者是 Figure-2 固定速度截面诊断；后者的最大实验室速度为 776 km/s，二者不是同一 halo 预测。 |
