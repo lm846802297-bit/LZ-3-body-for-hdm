@@ -177,3 +177,13 @@ The source run (commit `5cbc5d1f779575b348bfab1d74edc71747b8d9ca`, workflow run
 42957904328) completed the six regression tests and generated the JSON at
 \((n_W,n_z,n_\\phi)=(48,40,24)\). The ZIP transfer artifact was extracted;
 only the native JSON and provenance files are committed.
+
+## Draft: fixed-speed Xe-131 differential cross-section curve (450 keV benchmark)
+
+A separate runner is staged at `run_user_dsigma_curve.py`. It scans the open Xe-131 recoil interval on a 5 keV grid at fixed incident speed \(v=776\) km/s, evaluates the Eq. (6) kernel, and compares the AFH GCN and JJ55 nuclear responses. The current draft uses the **zero-width** propagator prescription and the supplied 450 keV mass splitting.
+
+- Runner: `run_user_dsigma_curve.py`
+- Optional manual workflow: `.github/workflows/figure2-user-dsigma-curve.yml`
+- Intended output: `xe131_dsigma_450keV.csv` (not yet generated or archived)
+
+**Status: exploratory / not executed.** The runner and manual workflow are staged for review, but no calculation output or dedicated regression tests are claimed. Keep this work in Draft until the script is executed from the repository root, its output is archived as a native CSV with provenance/checksum, and the recoil-grid/response/units checks are recorded. This is a fixed-speed differential cross-section diagnostic, not a halo-folded spectrum or detector-level LZ prediction. The zero-width choice must remain explicit when comparing with the conditional pole-width L00 benchmark above.
