@@ -51,11 +51,15 @@ def read_efficiency_curves(
     xs = [float(row["ER_keV"]) for row in rows]
     central = [float(row["efficiency_final_WS_ROI"]) for row in rows]
     lower = [
-        float(row.get("efficiency_lower_envelope") or row["efficiency_final_WS_ROI"])
+        float(row["efficiency_lower_envelope"])
+        if row.get("efficiency_lower_envelope") not in (None, "")
+        else float(row["efficiency_final_WS_ROI"])
         for row in rows
     ]
     upper = [
-        float(row.get("efficiency_upper_envelope") or row["efficiency_final_WS_ROI"])
+        float(row["efficiency_upper_envelope"])
+        if row.get("efficiency_upper_envelope") not in (None, "")
+        else float(row["efficiency_final_WS_ROI"])
         for row in rows
     ]
     if any(not math.isfinite(x) for x in xs):
