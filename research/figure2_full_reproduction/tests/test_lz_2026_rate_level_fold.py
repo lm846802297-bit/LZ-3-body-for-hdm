@@ -76,10 +76,10 @@ class LZ2026RateLevelFoldTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "efficiency.csv"
             path.write_text(
-                "ER_keV,efficiency_final_WS_ROI,efficiency_lower_envelope,efficiency_upper_envelope\\n"
-                "0,0.0,0.0,0.0\\n"
-                "100,0.9,0.8,0.95\\n"
-                "300,0.4,0.3,0.5\\n",
+                "ER_keV,efficiency_final_WS_ROI,efficiency_lower_envelope,efficiency_upper_envelope\n"
+                "0,0.0,0.0,0.0\n"
+                "100,0.9,0.8,0.95\n"
+                "300,0.4,0.3,0.5\n",
                 encoding="utf-8",
             )
             xs, central, lower, upper = read_efficiency_curves(path)
@@ -94,9 +94,9 @@ class LZ2026RateLevelFoldTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "efficiency.csv"
             path.write_text(
-                "ER_keV,efficiency_final_WS_ROI\\n"
-                "0,0.0\\n"
-                "100,0.9\\n",
+                "ER_keV,efficiency_final_WS_ROI\n"
+                "0,0.0\n"
+                "100,0.9\n",
                 encoding="utf-8",
             )
             xs, central, lower, upper = read_efficiency_curves(path)
