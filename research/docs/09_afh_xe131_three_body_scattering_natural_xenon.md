@@ -1,10 +1,10 @@
 # AFH v6.0 Xe-131 核响应、三体暗物质散射与天然氙反冲率
 
 > 整理日期：2026-11-11  
-> 最近文档更新：2026-11-12（文档补充与同步；本轮未开展验证计算）  
+> 最近文档更新：2026-11-12（合并后编辑一致性整理；本轮未开展新的物理验证计算）  
 > 对话来源：[ChatGPT 分享对话](https://chatgpt.com/share/6af4660e-e388-83ea-a86a-2482b065dcea)  
 > 对应研究仓库：`lm846802297-bit/LZ-3-body-for-hdm`  
-> 当前归档位置：PR #7 的研究分支  
+> 当前归档位置：`research/figure2-p0-4-mainline`；PR #7 已于 2026-11-12 squash-merged（`f4f2ee91f6a51399dd3b5c06d64878b7f79322d7`）  
 > 研究对象：\(\chi_1+A\rightarrow\chi_1+A+s\) 三体核反冲过程
 
 ## 文档更新记录
@@ -13,7 +13,9 @@
 - **2026-11-12：** 修正附录 D.5 的旧动量约定描述，统一说明固定速度 Xe-131 benchmark 与天然氙 halo fold 均使用精确空间动量；两者区别在核质量输入。
 - **2026-11-12：** 曾将动量约定审计暂列为独立补充文档；随后根据其对 AFH 响应输入和三体运动学的直接影响，将其恢复为正式附录 G。研究决定登记 H 仍独立存放。
 - **2026-11-12：** 将主报告统一命名为 `09_afh_xe131_three_body_scattering_natural_xenon.md`；本轮进一步将动量约定审计纳入正式附录 G，H 保留为独立研究决定登记，并同步更新交叉引用。
-- **2026-11-12：** 修复 detector-level 接口章节的重复编号。以上均为文档整理，不代表新增物理验证或数值计算。
+- **2026-11-12：** 修复 detector-level 接口章节的重复编号。
+- **2026-11-12：** PR #7 已 squash-merge 至 `research/figure2-p0-4-mainline`；更新本报告的归档状态、LZ 效率折叠完成项与尚未完成的 detector-level likelihood 边界。
+- **2026-11-12：** 统一正文、附录 F 与 LZ detector-level 接口的状态描述，区分 GCN/JJ55 连续谱、AFH selected-point 结果及效率加权 rate-level 事件数。以上为文档编辑，不代表新增物理验证或数值计算。
 
 ## 摘要
 
@@ -23,9 +25,19 @@
 2. **核结构输入：** 采用 AFH/DMFormFactor v6.0 内置的 Xe-131 default density matrix，严格使用文献给出的谐振子长度处方，不把 \(b_A\) 当作拟合参数；并处理 AFH 原始 isoscalar response 与物理等质子、等中子耦合之间的因子 4。
 3. **真实天然氙靶的理论速率：** 对可用氙同位素按天然丰度求和，并对实验室系暗物质速度分布积分，得到 \(dR/dE_R\)。这一步与固定速度下的 \(d\sigma_A/dE_R\) 是不同的物理量。
 
-目前已经形成 AFH default Xe-131 响应、GCN/JJ55 对照、四组固定速度 benchmark，以及天然氙 selected-point halo-folded rate 的可复现归档。Xe-131 AFH Python 响应已通过 60 位精度 mpmath 对全部 2401 个 q 节点的独立有限和对照；原生 Mathematica 程序仍未在 Wolfram kernel 中实际运行。进一步核查 AFH 原始定义后，确认其响应变量 y=(q b_A/2)^2 中的 q 是空间动量转移；现有 28 个天然氙响应样本采用的 exact spatial q 与精确三体质量壳关系一致。此前把它们判为 legacy 的结论过于严格，现已修正：exact spatial q 作为默认，NR-q 仅作小反冲近似对照。天然氙结果仍是理论 selected-point rates，尚不是完整的 LZ detector-level likelihood/recast。
+目前已经形成 AFH default Xe-131 响应、GCN/JJ55 核模型对照、四组固定速度 benchmark、AFH 天然氙 selected-point halo-folded rates，以及 GCN/JJ55 天然氙连续反冲谱。LZ 2026 Fig. S2 的一维 final-ROI efficiency 曲线及灰色系统包络也已从官方 PDF 提取，并与独立数字化结果对照；基于 GCN/JJ55 连续谱、2.84 tonne-year exposure 和该效率曲线，已得到初步 efficiency-weighted rate-level event yields。该结果不是完整的 LZ likelihood recast。Xe-131 AFH Python 响应已通过 60 位精度 mpmath 对全部 2401 个 q 节点的独立有限和对照；原生 Mathematica 程序仍未在 Wolfram kernel 中实际运行。进一步核查 AFH 原始定义后，确认其响应变量 \(y=(q b_A/2)^2\) 中的 \(q\) 是空间动量转移；现有 28 个天然氙响应样本采用的 exact spatial q 与精确三体质量壳关系一致。exact spatial q 作为默认，NR-q 仅作小反冲近似对照。当前 AFH 天然氙结果仍限于 selected points；连续谱和 LZ rate-level yields 使用 GCN/JJ55 响应，不能混称为 AFH 连续谱或完整实验重铸。
+
+| 研究层级 | 当前归档结果 | 明确边界 |
+|---|---|---|
+| AFH Xe-131 核响应 | 2401 个 \(q\) 节点；60 位精度 mpmath 独立有限和对照 | 原生 Mathematica/Wolfram kernel 对照仍待完成 |
+| AFH 天然氙速率 | 七种可用同位素的 selected-point halo fold | Xe-124/Xe-126 缺少当前 AFH default density matrix；尚无完整 AFH 连续谱 |
+| GCN/JJ55 天然氙谱 | 四组 benchmark 的连续反冲谱，覆盖当前可用七种同位素 | 是独立核模型对照，不代表 LZ 合作组使用的修改后 WimPyDD 核输入 |
+| LZ rate-level interface | Fig. S2 一维效率曲线与 2.84 tonne-year exposure 折叠，得到 GCN/JJ55 预期事件数 | 未构造二维 \(S1_c\)–\(\log_{10}S2_c\) PDF、完整 nuisance/background likelihood 或实验排除 |
+
 
 ---
+
+## 1. 研究问题与物理对象---
 
 ## 1. 研究问题与物理对象
 
@@ -512,14 +524,14 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 - AFH exact_spatial 默认模式重新计算 98 个逐同位素贡献和 14 个总速率，与归档结果的最大总速率相对差异为 \\(2.67\\times10^{-12}\\)，CI run 43044583357 通过；
 - 核响应 (q) 与精确三体运动学 (q) 的定义、质量壳推导及 NR 近似对照见正式附录 G。
 - AFH q 审计、NR 近似敏感性和固定 (M_A=131u) 的四点对照已由 CI run 43045857679 通过；四组 fixed-speed benchmark 已按 exact spatial q 重算并上传 artifact。
-
-### 8.2 尚未完成或不能过度声称的事项
+- LZ 2026 Fig. S2 的 final-ROI central efficiency 曲线与灰色系统包络已从官方 PDF 的矢量路径提取，并与独立数字化在 248 keV 处对照；灰色包络仅作为系统范围，不赋予置信水平（CI run 43151814368）。
+- GCN/JJ55 天然氙连续谱已与 LZ 2026 一维效率曲线及 2.84 tonne-year exposure 做 rate-level 折叠；分段线性函数乘积采用解析积分，稠密梯形交叉检查的最大相对差异为 \(3.77\times10^{-7}\)（CI run 43151727539）。该事件数只对应 GCN/JJ55 连续谱，不对应 AFH selected-point 结果。
 
 1. **AFH 原生 Mathematica 验证仍待执行。** 原生 runner 和比较程序已归档，但当前执行环境没有 Wolfram kernel。mpmath 全网格验证是独立高精度数值交叉检查，不能替代官方 Mathematica 程序的原生执行。
-2. **AFH 空间 q 的精确与 NR 近似已经区分。** AFH 定义 y=(q b_A/2)^2，其中 q 是空间动量转移；精确质量壳关系给出 q_exact=sqrt(2m_AE_R+E_R^2)。28 个天然氙样本全部匹配 exact spatial q，现作为默认物理基线。q_NR=sqrt(2m_AE_R) 仅作为小反冲近似，其 Xe-131 响应差异已定量记录。
-3. **Xe-124/Xe-126 尚未纳入。** 缺少当前 AFH v6.0 内置 density matrix；七种可用同位素的丰度没有重归一化。
-4. **天然氙结果是 selected-point rates。** 当前不是连续完整反冲谱。
-5. **尚未加入 LZ detector response。** 没有 detector efficiency、能量分辨率、曝光、分析 cuts、背景模型或 likelihood。因此这些理论速率不能直接当作 LZ 预期观测事件数，也不能称为完整的 LZ 数据重铸。
+2. **AFH 空间 q 的精确与 NR 近似已经区分。** AFH 定义 \(y=(q b_A/2)^2\)，其中 \(q\) 是空间动量转移；精确质量壳关系给出 \(q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}\)。28 个天然氙样本全部匹配 exact spatial q，现作为默认物理基线。\(q_{\rm NR}=\sqrt{2m_AE_R}\) 仅作为小反冲近似，其 Xe-131 响应差异已定量记录。
+3. **Xe-124/Xe-126 尚未纳入 AFH default-density 天然氙求和。** 缺少当前 AFH v6.0 内置 density matrix；七种可用同位素覆盖天然丰度 0.998158，未对这七种同位素重新归一化。
+4. **连续谱的核模型覆盖并不相同。** GCN/JJ55 已有四组 benchmark 的天然氙连续反冲谱；AFH 目前仍是 selected-point rates，因为尚未恢复完整的七同位素 AFH 响应网格。不能把 GCN/JJ55 连续谱称为 AFH 连续谱。
+5. **LZ detector mapping 已完成 rate-level 的第一层，但尚非完整 recast。** 已提取 LZ 2026 Fig. S2 的一维 final-ROI efficiency central curve 和灰色系统包络，并使用 2.84 tonne-year exposure 对 GCN/JJ55 连续谱计算 efficiency-weighted event yields。尚缺能量分辨/重建卷积、二维 \({S1_c,\log_{10}S2_c}\) 信号 PDF、NEST 响应及其 nuisance covariance、背景样本与相关约束、profile likelihood。因此这些 event yields 不是 90% CL 排除，也不能单独解释 248 keV 候选事件。
 6. **极点宽度是条件性的。** 只包括给定假设下的 \(\chi_2\to\chi_1s\) 标量通道，不等于完整模型的矢量加标量自能。
 7. **halo 模型依赖尚未做系统扫描。** untruncated MB 只用于高速度尾部敏感性诊断，不作为默认 halo 结果。
 
@@ -532,9 +544,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 
 修正后 AFH 开放点截面相对早期旧值的最大变化为 \(2.7406\times10^{-4}\)。此外，四组 benchmark 已从 NR-q 近似统一到 exact spatial q；在 101、200、267、542 keV 四个 selected recoil 点，Xe-131 的 NR 近似响应偏差最大约 225 ppm。引用结果时应使用当前 exact-spatial corrected archive，不应使用早期 CSV。
 
-## 9. 当前研究决策与下一步
-
-本轮已经固定的决策：
+本阶段已经固定的决定：
 
 1. AFH v6.0 default density 作为本阶段 Xe 核响应的标准输入；
 2. 固定 AFH 文献默认 \(b_A\)，不拟合谷值；
@@ -542,16 +552,20 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 4. 对固定同位素和运动学条件，AFH/GCN/JJ55 共用同一个 \(I_6\)，只替换核响应；
 5. 天然氙采用逐同位素丰度加权，且不对当前缺失的 Xe-124/Xe-126 丰度重新归一化；
 6. 截断 SHM 作为 halo 基准，untruncated MB 仅作为尾部敏感性诊断；
-7. 不把固定速度截面、天然氙理论速率和完整 LZ detector-level 预测混为一谈。
+7. GCN/JJ55 连续谱的 LZ efficiency-weighted event yields 仅为 rate-level 结果，灰色效率包络不是置信区间；
+8. 不把固定速度截面、AFH selected-point 速率、GCN/JJ55 连续谱和完整 LZ detector-level likelihood 混为一谈。
 
-建议后续按以下顺序推进：
+后续研究事项按物理依赖关系排列；文档整理本身不代表这些计算已完成：
 
-1. **完成 AFH 原生 Mathematica 对照。** 在有 Wolfram kernel 的环境中执行官方 v6.0 程序，对照 Xe-131 响应曲线和选定点，形成真正独立于 Python 源码翻译的验证。
-2. **取得完整 AFH v6.0 响应输入并扩展连续反冲谱。** 当前 28 个 selected-point exact-q 响应足以支持已归档的天然氙速率；连续谱需要恢复完整七同位素 AFH 响应网格。NR-q 只作为系统性近似对照，不替代 exact-q 基线。
-3. **补全或明确缺失同位素处理。** 在没有可靠 AFH Xe-124/Xe-126 响应之前，保留当前覆盖率和不重归一化的明确限制，不用平均核响应代替。
-4. **扩展天然氙连续反冲谱。** 当前 selected points 用于验证阈值和 halo 端点；连续谱需要单独做网格和收敛检查。
-5. **最后进行 LZ detector-level 映射。** 在取得并核实效率、分辨率、曝光、cuts 和背景输入后，再计算预期事件数或构建 likelihood；当前 selected-point rate 不应提前解释成 LZ 排除或信号拟合。
+1. **AFH 原生 Mathematica 对照。** 在有 Wolfram kernel 的环境中执行官方 v6.0 程序，对照 Xe-131 响应曲线和选定点；保留与 Python/mpmath 结果逐点比较的归档。
+2. **AFH 连续谱输入。** 恢复完整七同位素 AFH 响应网格后，才能将 AFH selected-point halo fold 扩展为连续谱。Xe-124/Xe-126 的密度矩阵缺失应单独处理，不得用丰度重归一化掩盖。
+3. **完整 LZ detector-level likelihood。** 现有一维效率曲线和 GCN/JJ55 rate-level yields 是接口基线；真正的 recast 还需 NEST 二维响应、能量分辨/重建、校准与 nuisance covariance、背景数据及 profile likelihood。不能直接移植 LZ 的两体非弹性 WIMP 限制。
+4. **模型与 halo 系统误差。** 在固定基准定义后，分别评估核响应模型、halo 参数和条件性 \(\chi_2\) 极点宽度对结果的影响；各项假设应分开报告，不用统一经验缩放代替。
+
+本报告的下一轮编辑优先任务是让摘要、状态表、数值验收矩阵和 detector-level 接口章节对上述完成状态使用完全一致的术语。
 ---
+
+## 10. 代码、数据和文献入口---
 
 ## 10. 代码、数据和文献入口
 
@@ -575,7 +589,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 
 ---
 
-**归档状态说明：** 本文是对本轮 AFH 核响应、三体积分、天然氙同位素和 halo folding 讨论的研究整理，不代表所有后续验证均已完成。当前 PR #7 仍为 Draft/Open；本文随该研究分支归档，不执行 PR 合并。
+**归档状态说明：** 本文是 AFH 核响应、三体积分、天然氙同位素、halo folding 与 LZ rate-level 接口的阶段性研究主报告。PR #7 已于 2026-11-12 squash-merge 至 `research/figure2-p0-4-mainline`，合并提交为 `f4f2ee91f6a51399dd3b5c06d64878b7f79322d7`。本次编辑只统一文档中的完成状态、物理范围和复现边界，没有新增物理验证或数值计算。
 
 ---
 
@@ -617,7 +631,7 @@ S2>645\ {\rm phd},\qquad
 
 The final nuclear-recoil signal efficiency is energy dependent. It exceeds 50% between approximately \(5.4\) and \(269.9\) keV and averages 96% over \(14\)–\(250\) keV. The latter is an average, not a constant efficiency to apply over the entire spectrum. The analysis uses tuned NEST v2.4.5 response modeling and signal/background probability-density functions in \(\{S1_c,\log_{10}S2_c\}\) space.
 
-### 10.1 What can be compared immediately
+### 11.1 What can be compared immediately
 
 The continuous GCN/JJ55 spectra and the AFH selected-point rates are **true nuclear-recoil rates before detector response**. For a first rate-level comparison, the expected accepted signal count is
 
@@ -640,25 +654,17 @@ where
 
 This is an efficiency-weighted event-yield estimate. It is not, by itself, a 90% confidence-level exclusion or a full LZ likelihood recast.
 
-### 10.2 What is required for a genuine LZ recast
+The final LZ selection is applied in the two-dimensional \(S1_c\)–\(\log_{10}S2_c\) plane. The one-dimensional final-ROI efficiency curve and its gray envelope have already been digitized from Fig. S2 and used for a preliminary rate-level fold. A full recast still requires:
 
-The LZ 2026 paper's illustrative inelastic benchmark is a two-body transition \(\chi_1+A\to\chi_2+A\). The process studied here is instead the three-body reaction \(\chi_1+A\to\chi_1+A+s\), with \(\chi_2\) appearing as an internal propagator and \(s\) emitted in the final state. Consequently, the published LZ inelastic-WIMP limit is not directly transferable to this model; only the detector-response and likelihood machinery can be reused after constructing this model's own signal distribution.
-
-The final LZ selection is applied in the two-dimensional \(S1_c\)–\(\log_{10}S2_c\) plane. A full recast therefore requires:
-
-1. the energy-dependent final efficiency and its calibration uncertainty;
-2. the tuned NEST v2.4.5 signal response, including the S1/S2 distributions and their correlations;
-3. the signal PDF generated from this model's own \(dR/dE_R\), rather than borrowing an LZ PDF for a different interaction;
+1. the underlying efficiency calibration information and its nuisance/covariance treatment; the plotted gray envelope is retained as a systematic range, not assigned a confidence level;
+2. the tuned NEST v2.4.5 signal response, including the joint S1/S2 distributions, correlations and energy-reconstruction smearing;
+3. the model-specific two-dimensional signal PDF generated from this model's own \(dR/dE_R\), rather than borrowing an LZ PDF for a different interaction; a continuous AFH prediction additionally requires the full isotope response grids;
 4. the science, prompt-veto and delayed-veto samples and their correlated background constraints;
 5. the published profile-likelihood construction and nuisance-parameter treatment.
 
-The LZ 2026 analysis reports one event compatible with a \(248\pm23\ {\rm(stat)}\pm23\ {\rm(sys)}\) keV nuclear recoil and a 2.6\(\sigma\) global tension with the background-only hypothesis after the look-elsewhere correction. This event is not a discovery and must not be treated as a signal count to fit by itself.
+The current \(5\)–\(800\) keV theoretical recoil grid is intentionally wider than the high-efficiency LZ search window. The continuous GCN/JJ55 numerical scan uses 5 keV spacing through 270 keV, then 20 keV spacing from 280 to 800 keV; the selected comparison points 101, 200, 267 and 542 keV are inserted explicitly. The AFH natural-xenon result remains selected-point only. For the 2026 LZ comparison, only the \(5.4\)–\(269.9\) keV interval enters the quoted WIMP-search ROI at greater than 50% efficiency. The \(270\)–\(800\) keV part remains a theoretical prediction and should not be counted as accepted LZ exposure. The efficiency-weighted event yields reported below apply only to the continuous GCN/JJ55 spectra.
 
-### 10.3 Scope boundary for the present calculation
-
-The current \(5\)–\(800\) keV theoretical recoil grid is intentionally wider than the high-efficiency LZ search window. The continuous numerical scan uses 5 keV spacing through 270 keV, then 20 keV spacing from 280 to 800 keV; the selected comparison points 101, 200, 267 and 542 keV are inserted explicitly. For the 2026 LZ comparison, only the \(5.4\)–\(269.9\) keV interval enters the quoted WIMP-search ROI at greater than 50% efficiency. The \(270\)–\(800\) keV part remains a theoretical prediction and should not be counted as accepted LZ exposure.
-
-The central final-ROI efficiency curve and the gray uncertainty envelope have now been extracted from the vector paths in Fig. S2 and archived at:
+The central final-ROI efficiency curveThe central final-ROI efficiency curve and the gray uncertainty envelope have now been extracted from the vector paths in Fig. S2 and archived at:
 
 - \`research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv\`;
 - \`research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_metadata.json\`;
@@ -670,7 +676,7 @@ A useful independent check comes from Di Mauro, arXiv:2609.02608v2, Appendix D. 
 
 The HEPData YAML/JSON endpoints for DOI \`10.17182/hepdata.182472.v1\` returned HTTP 403 Cloudflare challenge pages. The workflow explicitly rejects HTML challenge pages rather than treating them as downloaded data; see [retrieval and extraction run #43151814368](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43151814368). Thus the current numerical efficiency inputs are a reproducible digitization of the official PDF, not an HEPData machine-readable table. The raw HEPData table and the tuned NEST parameter/covariance files remain unavailable from the current CI route.
 
-### 10.4 Preliminary LZ rate-level event-yield calculation
+### 11.4 Preliminary LZ rate-level event-yield calculation
 
 The central efficiency and gray envelope have been folded with the continuous natural-xenon GCN/JJ55 spectra over \(5.4\le E_R\le269.9\) keV, using the published nominal exposure
 \[
@@ -691,9 +697,9 @@ At the reference coupling, only the red benchmark approaches an appreciable frac
 
 The GCN/JJ55 central-yield differences are about 0.94–3.59%, smaller than the changes between the four particle-physics benchmarks. The gray efficiency envelope changes the integrated yields by approximately \(-6.6\%\) to \(+3.6\%\) for these spectra. The black benchmark is especially suppressed because the ROI overlaps only its extreme high-speed tail; at \(E_R=267\) keV, \(v_{\min}\) for Xe-131 is about 775 km/s, close to the truncated-SHM endpoint of 776 km/s.
 
-The results are archived in \`research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/\`; the successful rate-fold CI run is [#43151727539](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43151727539). The event yields are preliminary rate-level estimates. They do not include energy-resolution smearing, the two-dimensional \(\{S1_c,\log_{10}S2_c\}\) signal PDFs, the NEST nuisance-parameter covariance, background samples or the LZ profile likelihood. They are not a 90% confidence-level exclusion and do not establish an interpretation of the 248 keV event.
+The results are archived in \`research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/\`; the successful rate-fold CI run is [#43151727539](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43151727539). The event yields are preliminary rate-level estimates for the GCN/JJ55 nuclear-response spectra. No AFH continuous-spectrum event yield is quoted. They do not include energy-resolution smearing, the two-dimensional \(\{S1_c,\log_{10}S2_c\}\) signal PDFs, the NEST nuisance-parameter covariance, background samples or the LZ profile likelihood. They are not a 90% confidence-level exclusion and do not establish an interpretation of the 248 keV event.
 
-### 10.5 High-energy-tail diagnostic around the 248 keV candidate
+### 11.5 High-energy-tail diagnostic around the 248 keV candidate
 
 To separate spectral hardness from overall normalization, I also integrated the efficiency-weighted spectrum over \(225\le E_R\le269.9\) keV. The lower boundary is \(248-23\) keV, i.e. the lower statistical-error edge of the reported candidate energy; this is only a high-energy-tail diagnostic. It is not a likelihood window, and no energy-resolution or systematic-energy smearing is applied.
 
@@ -2538,30 +2544,32 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 | 天然氙速度积分 | 已有 selected-point 验证（exact spatial q） | 五个点 32 对 64 速度节点，最大差异 \(3.31×10^{-6}\)；98 个逐同位素贡献和 14 个总速率在 exact_spatial 默认模式下复现，最大总速率差异 \(2.67×10^{-12}\)，CI run 43044583357 | 连续谱和 halo 参数扫描 |
 | AFH 空间 q 与 NR 近似 | 已完成审计与代码保护 | 28 个天然氙样本匹配 exact spatial q；Xe-131 四点 NR 近似响应差异约 5.5–225 ppm；halo fold CI run 43044583357 通过 | 连续反冲谱需要完整七同位素 AFH 响应网格 |
 | Xe-124/Xe-126 | 输入缺失 | 缺失丰度合计 0.001842 | 取得密度矩阵并补算响应、阈值和速率 |
-| LZ detector response | 尚未开展 | 当前仅有理论核反冲率 | 效率、能量分辨、曝光、选择切、背景和统计似然 |
+| 天然氙连续反冲谱 | GCN/JJ55 已完成；AFH 为 selected points | 四组 GCN/JJ55 连续谱，5–800 keV、七种可用同位素、exact spatial q 和截断 SHM | 完整七同位素 AFH 响应网格及连续 AFH 谱；Xe-124/Xe-126 AFH 输入 |
+| LZ efficiency-weighted rate-level fold | GCN/JJ55 已完成初步折叠 | Fig. S2 一维效率曲线及灰色包络；2.84 tonne-year；四组 benchmark 事件数；解析分段积分与稠密梯形对照 | NEST 二维响应、能量分辨/重建、nuisance covariance、背景样本和 profile likelihood；AFH 连续谱尚不能折叠 |
 
 这张表把软件测试、局部数值收敛和物理模型完整性分开。测试通过只说明被测试的代码路径满足相应断言，不等于所有参数点、所有核模型、halo 假设或实验响应都已验证。
 
-### F.5 LZ detector-level 分析还缺少什么
+### F.5 LZ detector-response interface：已完成部分与剩余工作
 
-当前输出是理论核反冲能量 \(E_R\) 上的
+当前已经超出单纯的 pre-detector theoretical rate，但仍未达到完整 detector-level recast。已完成的第一层接口包括：
 
-\[
-\frac{dR}{dE_R}
-\]
+1. 从 LZ 2026 Fig. S2 的官方 PDF 矢量路径提取 final-ROI 一维 central efficiency 曲线及灰色上下包络，并保存 CSV、SVG 和提取 metadata；
+2. 在 248 keV 处与独立数字化结果对照；灰色包络作为 detector-systematic range 使用，不赋予置信水平；
+3. 使用公开的名义曝光 \(2.84\ {\rm tonne\,year}=1.03731\times10^6\ {\rm kg\,day}\)；
+4. 将该效率曲线与 GCN/JJ55 连续天然氙谱在 \(5.4\le E_R\le269.9\) keV 内折叠，得到四组 benchmark 的 preliminary rate-level expected event yields；
+5. 对分段线性谱与分段线性效率的乘积执行区间解析积分，并以稠密梯形积分交叉检查。
 
-，单位 events/(kg day keV)。它尚不能直接与 LZ 的观测事件分布或似然比较。
+这组事件数**只对应 GCN/JJ55 连续核响应谱**。AFH 当前只有 selected-point 天然氙速率，因此不能将 GCN/JJ55 的连续谱折叠结果标记为 AFH 预测。效率曲线的机器可读 HEPData 端点当前受到 HTTP 403 challenge；归档数据来自官方 PDF 的可复现矢量提取，而不是声称下载到了 HEPData 原始 YAML/JSON 表。
 
-至少还需要：
+完整 detector-level recast 仍至少需要：
 
-1. 核反冲到观测量的响应模型，例如 S1/S2 或分析采用的重建能量变量；
-2. 能量相关的信号接受效率和选择切；
-3. 能量分辨函数，将真实 \(E_R\) 卷积到观测变量；
-4. 实际有效曝光和数据质量区间；
-5. 分析区域内的背景模型及其不确定度；
-6. 与指定 LZ 数据集一致的信号/背景 likelihood。
+1. tuned NEST v2.4.5 的联合 \(S1_c\)–\(\log_{10}S2_c\) 响应分布、相关性和能量重建/分辨模型；
+2. 效率与探测器响应的校准 nuisance parameters 及其 covariance；当前 Fig. S2 灰色包络不是完整协方差矩阵，也不是置信区间；
+3. 与该 LZ 数据集对应的 science、prompt-veto、delayed-veto 数据样本及背景约束；
+4. 由本模型自己的 recoil spectrum 构造的二维信号 PDF；AFH 分支还需先恢复完整同位素响应网格；
+5. LZ profile likelihood、系统误差参数化及信号/背景联合统计处理。
 
-因此当前天然氙结果应称为 **pre-detector theoretical rate**，不能称为完整 LZ recast、实验排除或对某个候选事件的统计解释。
+因此，当前结果应称为 **efficiency-weighted rate-level event-yield estimate**，而不是完整 LZ recast、90% CL 排除或对 248 keV 候选事件的统计解释。LZ 论文中的两体 \(\chi_1+A\to\chi_2+A\) 限制也不能直接移植到本研究的三体 \(\chi_1+A\to\chi_1+A+s\) 过程。
 
 ### F.6 历史数据和版本管理原则
 
