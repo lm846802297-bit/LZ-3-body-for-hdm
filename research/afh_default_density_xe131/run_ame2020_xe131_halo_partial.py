@@ -34,6 +34,10 @@ from isotope_mass_schemes import (  # noqa: E402
 from rate_kinematics import vmin_three_body_km_s  # noqa: E402
 
 A = 131
+# AFH v6.0 default-density matrices are available for these seven isotopes.
+# Only the complete 2401-point response q-grid for Xe-131 is archived here.
+AFH_DEFAULT_XE_ISOTOPES = {128, 129, 130, 131, 132, 134, 136}
+AFH_FULL_RESPONSE_GRID_ARCHIVED_ISOTOPES = {131}
 NATURAL_XE_ABUNDANCE_XE131 = 0.212324
 NATURAL_XE_MEAN_ATOMIC_WEIGHT_G_MOL = 131.29276144787175
 NATURAL_XE_ABUNDANCES = {
