@@ -16,6 +16,8 @@ from pathlib import Path
 TONNE_YEAR_TO_KG_DAY = 1000.0 * 365.25
 DEFAULT_ROI_MIN_KEV = 5.4
 DEFAULT_ROI_MAX_KEV = 269.9
+LZ_CANDIDATE_ENERGY_KEV = 248.0
+LZ_CANDIDATE_STAT_UNCERTAINTY_KEV = 23.0
 
 
 def read_xy(path: Path, x_key: str, y_key: str) -> tuple[list[float], list[float]]:
@@ -156,6 +158,15 @@ def integrate_piecewise_linear_product(
     return raw, weighted
 
 
+def candidate_tail_bounds(roi_min_keV: float, roi_max_keV: float) -> tuple[float, float]:
+    """Intersect the candidate's +/- statistical-energy interval with the ROI."""
+    lo = max(roi_min_keV, LZ_CANDIDATE_ENERGY_KEV - LZ_CANDIDATE_STAT_UNCERTAINTY_KEV)
+    hi = min(roi_max_keV, LZ_CANDIDATE_ENERGY_KEV + LZ_CANDIDATE_STAT_UNCERTAINTY_KEV)
+    if not lo < hi:
+        raise ValueError("the LZ candidate statistical-energy interval does not overlap the ROI")
+    return lo, hi
+
+
 def sha256(path: Path) -> str:
     h = hashlib.sha256()
     with path.open("rb") as f:
@@ -196,6 +207,9 @@ def main() -> None:
     if efficiency_x[0] > args.roi_min_keV or efficiency_x[-1] < args.roi_max_keV:
         raise ValueError("digitized LZ efficiency curves do not cover the requested ROI")
     exposure_kg_day = args.exposure_tonne_year * TONNE_YEAR_TO_KG_DAY
+    candidate_tail_min, candidate_tail_max = candidate_tail_bounds(
+        args.roi_min_keV, args.roi_max_keV
+    )
     args.out_dir.mkdir(parents=True, exist_ok=True)
 
     output_rows = []
@@ -245,6 +259,10 @@ def main() -> None:
                 rate_x, rate_y, efficiency_x, efficiency_upper,
                 args.roi_min_keV, args.roi_max_keV,
             )
+            _, weighted_candidate_tail = integrate_piecewise_linear_product(
+                rate_x, rate_y, efficiency_x, efficiency_y,
+                candidate_tail_min, candidate_tail_max,
+            )
             raw_dense, weighted_dense = integrate_weighted_rate(
                 rate_x, rate_y, efficiency_x, efficiency_y,
                 args.roi_min_keV, args.roi_max_keV, args.integration_steps,
@@ -260,6 +278,10 @@ def main() -> None:
             expected = exposure_kg_day * weighted_integral
             expected_lower = exposure_kg_day * weighted_lower
             expected_upper = exposure_kg_day * weighted_upper
+            expected_candidate_tail = exposure_kg_day * weighted_candidate_tail
+            candidate_tail_fraction = (
+                weighted_candidate_tail / weighted_integral if weighted_integral > 0.0 else 0.0
+            )
             ideal = exposure_kg_day * raw_integral
             effective_efficiency = weighted_integral / raw_integral if raw_integral > 0.0 else 0.0
             effective_efficiency_lower = weighted_lower / raw_integral if raw_integral > 0.0 else 0.0
@@ -287,6 +309,10 @@ def main() -> None:
                 "expected_events_in_high_efficiency_window": expected,
                 "expected_events_efficiency_lower_envelope": expected_lower,
                 "expected_events_efficiency_upper_envelope": expected_upper,
+                "candidate_tail_min_keV": candidate_tail_min,
+                "candidate_tail_max_keV": candidate_tail_max,
+                "expected_events_in_candidate_statistical_slice": expected_candidate_tail,
+                "fraction_expected_events_in_candidate_statistical_slice": candidate_tail_fraction,
                 "ideal_100pct_efficiency_events_in_window": ideal,
                 "coupling_product_sq_reference": coupling_sq,
                 "coupling_product_sq_for_one_expected_event_at_fixed_g2": coupling_sq_one_event,
@@ -317,6 +343,15 @@ def main() -> None:
     metadata = {
         "calculation": "LZ 2026 efficiency-weighted rate-level expected event yield",
         "roi_keV": [args.roi_min_keV, args.roi_max_keV],
+        "candidate_tail_diagnostic": {
+            "candidate_energy_keV": LZ_CANDIDATE_ENERGY_KEV,
+            "candidate_statistical_uncertainty_keV": LZ_CANDIDATE_STAT_UNCERTAINTY_KEV,
+            "candidate_systematic_uncertainty_keV": 23.0,
+            "integration_interval_keV": [candidate_tail_min, candidate_tail_max],
+            "upper_edge_clipped_by_search_roi": candidate_tail_max < LZ_CANDIDATE_ENERGY_KEV + LZ_CANDIDATE_STAT_UNCERTAINTY_KEV,
+            "systematic_energy_uncertainty_used": False,
+            "interpretation": "high-energy spectral-shape diagnostic only; no energy-resolution smearing or event likelihood",
+        },
         "exposure_tonne_year": args.exposure_tonne_year,
         "exposure_kg_day": exposure_kg_day,
         "efficiency_curve": str(args.efficiency_csv),
