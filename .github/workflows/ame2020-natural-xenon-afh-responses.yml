@@ -9,6 +9,8 @@ on:
       - .github/workflows/ame2020-natural-xenon-afh-responses.yml
       - research/afh_default_density_natural_xenon_halo/extract_afh_xenon_default_matrices.py
       - research/afh_default_density_natural_xenon_halo/run_afh_default_xenon_responses.py
+      - research/afh_default_density_natural_xenon_halo/verify_afh_selected_q_mpmath.py
+      - research/figure2_full_reproduction/isotope_mass_schemes.py
       - research/afh_default_density_natural_xenon_halo/input/afh_response_samples.csv
       - research/afh_default_density_xe131/afh_default_xe131_density_matrix.csv
       - research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv
