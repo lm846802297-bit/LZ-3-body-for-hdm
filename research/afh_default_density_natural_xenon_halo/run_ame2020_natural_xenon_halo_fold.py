@@ -666,7 +666,8 @@ def main() -> None:
             "AME2020/CODATA-2022 natural-xenon three-body halo fold using all "
             "seven AFH v6.0 default-density xenon responses"
         ),
-        "status": "reproducible seven-isotope AFH central prediction; not a nine-isotope AFH result",
+        "status": "exploratory only; 2401-node PCHIP interpolation is not accepted for precision rates; not a nine-isotope AFH result",
+        "response_interpolation_status": "NOT_ACCEPTED_PENDING_DIRECT_EXACT_Q_OR_VALIDATED_REFINED_GRID",
         "AFH_source": "DMFormFactor v6.0 built-in sdgXeA default densities",
         "AFH_response_file": str(args.response_csv),
         "AFH_response_file_sha256": sha256(args.response_csv),
@@ -683,8 +684,10 @@ def main() -> None:
             "using the same atomic-mass scheme as the nuclear kinematics"
         ),
         "response_momentum": (
-            "exact_spatial only: q=sqrt(2*m_A*E_R+E_R^2); AFH response is "
-            "interpolated with PCHIP on the full 0--0.6 GeV, 2401-node grid"
+            "exact_spatial kinematic q=sqrt(2*m_A*E_R+E_R^2); the current "
+            "response lookup is PCHIP on a 2401-node grid and has a documented "
+            "off-grid interpolation residual up to 8.91e-3 at selected points; "
+            "this response lookup is diagnostic only, not accepted for precision rates"
         ),
         "three_body_kinematics": (
             "exact target mass-shell q; isotope-specific W_max and v_min; "
@@ -768,7 +771,7 @@ def main() -> None:
             }
             for row in summaries
         ],
-        "status": "PASS",
+        "status": "DIAGNOSTIC_ONLY_NOT_ACCEPTED",
     }, indent=2))
 
 
