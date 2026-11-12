@@ -5,17 +5,19 @@ on:
   push:
     branches:
       - main
-      - research/figure2-p0-4-mainline
-      - research/afh-default-density-xe131-mainline
+      - 'research/**'
     paths:
+      - .github/workflows/figure2-joint-xe131.yml
       - research/figure2_full_reproduction/joint_xe131.py
       - research/figure2_full_reproduction/eq6_kernel.py
       - research/figure2_full_reproduction/run_joint_xe131.py
       - research/figure2_full_reproduction/compare_joint_xe131_convergence.py
       - research/figure2_full_reproduction/run_natural_xenon_joint.py
+      - research/figure2_full_reproduction/run_natural_xenon_halo_fold.py
       - research/figure2_full_reproduction/tests/test_joint_xe131.py
       - research/figure2_full_reproduction/tests/test_eq6_kernel.py
       - research/figure2_full_reproduction/tests/test_natural_xenon_joint.py
+      - research/figure2_full_reproduction/tests/test_natural_xenon_halo_fold.py
       - "research/figure2_full_reproduction/results/anand_wm_response/xe*_GCN_WM.csv"
       - "research/figure2_full_reproduction/results/anand_wm_response/xe*_JJ55_WM.csv"
 
