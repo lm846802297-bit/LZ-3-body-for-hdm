@@ -292,5 +292,5 @@ def main() -> None:
         raise SystemExit(1)
 
 
-if __!__ == "__main__":
+if __name__ == "__main__":
     main()
