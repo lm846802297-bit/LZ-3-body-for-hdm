@@ -1,0 +1,37 @@
+{
+  "calculation": "Xe-136 and natural-xenon annual lab-speed sensitivity at ER=101 keV",
+  "mass_scheme": "NIST nuclear mass: (atomic isotope mass - 54 electron masses)*u",
+  "mchi_GeV": 1000.0,
+  "ms_MeV": 0.3,
+  "delta_m_MeV": 1.0,
+  "coupling_product_sq": 1e-08,
+  "rhoDM_GeV_cm3": 0.3,
+  "ER_keV": 101.0,
+  "halo_model": "truncated SHM",
+  "v0_km_s": 220.0,
+  "vesc_km_s": 544.0,
+  "ve_scan_km_s": [
+    217.0,
+    232.0,
+    247.0
+  ],
+  "vE_interpretation": "fixed-speed sensitivity bracket; not a time-averaged annual modulation calculation",
+  "mV_GeV": 0.1,
+  "width_scheme": "zero",
+  "available_isotopes": [
+    128,
+    129,
+    130,
+    131,
+    132,
+    134,
+    136
+  ],
+  "available_abundance_fraction": 0.998158,
+  "rate_units": "events/(kg day keV)",
+  "not_included": [
+    "Xe-124 and Xe-126 nuclear response contributions",
+    "exact date-dependent orbital projection and time averaging",
+    "detector efficiency, energy resolution and exposure"
+  ]
+}

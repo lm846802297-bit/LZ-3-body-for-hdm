@@ -2,10 +2,10 @@
 
 Conventions:
 - All energies and masses are GeV; speeds are km/s.
-- The nuclear response is evaluated with the manuscript's explicit
-  y = b_A^2 m_A E_R / 2, i.e. q_response^2 = 2 m_A E_R.
-- The exact recoil momentum sqrt(2 m_A E_R + E_R^2) remains in the
-  three-body kinematic limits, as printed in the manuscript.
+- AFH nuclear responses are functions of the spatial momentum transfer
+  q, with y=(q*b_A/2)^2. For exact three-body recoil kinematics we use
+  q_response^2 = 2*m_A*E_R + E_R^2.
+- q_NR^2=2*m_A*E_R is retained only as a small-recoil approximation.
 - m_A = A * atomic mass unit is the same mass approximation used by the
   current response archive; replace it only when an isotope-mass source is
   selected and recorded.
@@ -37,10 +37,10 @@ class NuclearResponse:
     R0: float
 
     def at_recoil(self, ER_GeV: float, mA_GeV: float) -> tuple[float, float]:
-        """Return (R_A, q_response) using the manuscript's y(E_R) definition."""
+        """Return (R_A, q_response) using exact spatial recoil momentum."""
         if ER_GeV < 0.0:
             raise ValueError("ER must be non-negative")
-        q_response = math.sqrt(2.0 * mA_GeV * ER_GeV)
+        q_response = math.sqrt(2.0 * mA_GeV * ER_GeV + ER_GeV**2)
         if q_response < self.q_grid_GeV[0] or q_response > self.q_grid_GeV[-1]:
             raise ValueError(
                 f"response q={q_response:g} GeV is outside "
@@ -197,7 +197,7 @@ def differential_cross_section(
         "model": response.model,
         "mA_GeV": mA,
         "ER_GeV": ER_GeV,
-        "q_response_NR_GeV": q_response,
+        "q_response_GeV": q_response,
         "q_kinematics_exact_GeV": q_exact,
         "R_A": R_A,
         "R_A_over_A2": R_A / (A * A),

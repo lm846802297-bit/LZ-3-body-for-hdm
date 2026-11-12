@@ -10,6 +10,7 @@ HERE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE))
 
 import eq6_kernel  # noqa: E402
+from isotope_mass_schemes import isotope_mass_GeV as isotope_mass_with_scheme  # noqa: E402
 from rate_kinematics import vmin_three_body_km_s  # noqa: E402
 from run_natural_xenon_halo_fold import (  # noqa: E402
     C_KM_S,
@@ -18,6 +19,7 @@ from run_natural_xenon_halo_fold import (  # noqa: E402
     mean_target_number_per_kg,
     rate_conversion_factor,
     shm_truncated_pdf,
+    compute_isotope_halo_integrals,
 )
 
 
@@ -74,9 +76,39 @@ class NaturalXenonHaloFoldTests(unittest.TestCase):
         self.assertTrue(all(thresholds[A] > vmax for A in thresholds if A != 136))
         self.assertLess(thresholds[136], vmax)
 
+    def test_conditional_pole_width_mode_uses_exact_response_q(self):
+        rows = compute_isotope_halo_integrals(
+            A=136,
+            ER_keV=101.0,
+            halo_model="shm_cutoff",
+            mass_scheme="nist_nuclear",
+            nv=4,
+            mchi=1000.0,
+            ms=0.0003,
+            delta_m=0.001,
+            speed_v0=220.0,
+            speed_ve=232.0,
+            speed_vesc=544.0,
+            untruncated_vmax=1600.0,
+            coupling_product_sq=1.0e-8,
+            response_dir=HERE / "results" / "anand_wm_response",
+            nw=4,
+            nz=4,
+            nphi=2,
+            width_scheme="pole",
+            g2=1.0,
+            response_cache={},
+        )
+        self.assertEqual({row["width_scheme"] for row in rows}, {"pole"})
+        self.assertEqual({row["g2"] for row in rows}, {1.0})
+        mA = isotope_mass_with_scheme(136, "nist_nuclear")
+        q_exact = math.sqrt(2.0 * mA * 101.0e-6 + (101.0e-6) ** 2)
+        for row in rows:
+            self.assertAlmostEqual(row["q_response_GeV"], q_exact, places=14)
+
     def test_per_kg_target_count_uses_nist_standard_atomic_weight(self):
-        expected = 6.02214076e23 * 1000.0 / 131.293
-        self.assertEqual(NIST_XE_STANDARD_ATOMIC_WEIGHT_G_MOL, 131.293)
+        expected = 6.02214076e23 * 1000.0 / 131.29276144779053
+        self.assertEqual(NIST_XE_STANDARD_ATOMIC_WEIGHT_G_MOL, 131.29276144779053)
         self.assertAlmostEqual(mean_target_number_per_kg(), expected, places=6)
 
     def test_rate_conversion_factor_is_positive_and_scales_with_density(self):

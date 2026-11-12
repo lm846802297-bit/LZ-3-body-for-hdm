@@ -1,0 +1,105 @@
+{
+  "calculation": "continuous pre-detector natural-xenon three-body recoil spectrum",
+  "nuclear_response_models": [
+    "GCN",
+    "JJ55"
+  ],
+  "afh_default_response_used": false,
+  "afh_comparison": "AFH v6.0 is retained separately at 28 selected isotope/recoil samples; this continuous calculation uses the complete GCN/JJ55 isotope response grids.",
+  "available_isotopes": [
+    128,
+    129,
+    130,
+    131,
+    132,
+    134,
+    136
+  ],
+  "omitted_isotopes": [
+    124,
+    126
+  ],
+  "available_natural_amount_fraction": 0.998158,
+  "abundance_renormalization": "none",
+  "abundance_source": "NIST xenon isotopic amount fractions",
+  "mean_target_molar_mass_g_mol": 131.29276144779053,
+  "mean_target_number_per_kg": 4.586803334466193e+24,
+  "mass_scheme": "nist_nuclear",
+  "isotope_nuclear_mass_prescription": "NIST atomic isotope mass minus 54 electron rest masses, multiplied by u; atomic electron binding energy neglected",
+  "response_q_convention": "exact spatial q=sqrt(2*m_A*E_R+E_R^2)",
+  "kinematic_q_convention": "exact spatial q=sqrt(2*m_A*E_R+E_R^2)",
+  "halo_model": "truncated SHM",
+  "halo_parameters_km_s": {
+    "v0": 220.0,
+    "vE": 232.0,
+    "vesc": 544.0,
+    "maximum_lab_speed": 776.0
+  },
+  "particle_parameters": {
+    "mchi_GeV": 1000.0,
+    "mV_GeV": 10.0,
+    "coupling_product_sq_(g1_g2_gVN)^2": 1e-08,
+    "g2_for_width": 1.0,
+    "rhoDM_GeV_cm3": 0.3
+  },
+  "benchmarks": {
+    "red_ms200_dm1": {
+      "ms_MeV": 0.2,
+      "delta_m_MeV": 1.0
+    },
+    "green_ms300_dm1": {
+      "ms_MeV": 0.3,
+      "delta_m_MeV": 1.0
+    },
+    "black_ms360_dm1": {
+      "ms_MeV": 0.36,
+      "delta_m_MeV": 1.0
+    },
+    "blue_ms300_dm10": {
+      "ms_MeV": 0.3,
+      "delta_m_MeV": 10.0
+    }
+  },
+  "recoil_grid_keV": {
+    "min": 5.0,
+    "max": 800.0,
+    "fine_grid_max": 270.0,
+    "fine_step": 5.0,
+    "high_energy_step": 20.0,
+    "additional_exact_comparison_points": [
+      101.0,
+      200.0,
+      267.0,
+      542.0
+    ],
+    "unique_point_count": 84
+  },
+  "width_scheme": "conditional pole width for chi2 -> chi1 s",
+  "width_assumptions": "Dirac fermions, real scalar, pure scalar off-diagonal Yukawa, and no other open chi2 decay channels",
+  "quadrature": {
+    "speed_nodes": 32,
+    "eq6": {
+      "nw": 8,
+      "nz": 8,
+      "nphi": 4
+    },
+    "spot_check_speed_nodes": 16,
+    "spot_check_eq6": {
+      "nw": 16,
+      "nz": 16,
+      "nphi": 8
+    },
+    "maximum_speed_quadrature_relative_difference": 9.333368826691668e-07,
+    "maximum_kernel_order_relative_difference": 0.00021889515201967136,
+    "relative_tolerance": 0.005
+  },
+  "rate_units": "events / kg / day / keV",
+  "detector_response_applied": false,
+  "not_included": [
+    "detector efficiency, S1/S2 response, energy resolution, exposure, cuts and likelihood",
+    "Xe-124 and Xe-126 nuclear response contributions",
+    "full seven-isotope AFH v6.0 response grid",
+    "annual modulation and time-dependent Earth velocity",
+    "uncertainty propagation for halo and nuclear response inputs"
+  ]
+}

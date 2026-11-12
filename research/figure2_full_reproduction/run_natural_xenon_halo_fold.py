@@ -24,7 +24,8 @@ HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
 import eq6_kernel  # noqa: E402
-from joint_xe131 import isotope_mass_GeV, load_nuclear_response  # noqa: E402
+from joint_xe131 import load_nuclear_response  # noqa: E402
+from isotope_mass_schemes import isotope_mass_GeV as isotope_mass_with_scheme  # noqa: E402
 from rate_kinematics import vmin_three_body_km_s  # noqa: E402
 from run_natural_xenon_joint import AVAILABLE, MODELS, NATURAL_ABUNDANCE  # noqa: E402
 
@@ -35,7 +36,8 @@ V0_KM_S_DEFAULT = 220.0
 VE_KM_S_DEFAULT = 232.0
 VESC_KM_S_DEFAULT = 544.0
 UNTRUNCATED_VMAX_KM_S_DEFAULT = 1600.0
-NIST_XE_STANDARD_ATOMIC_WEIGHT_G_MOL = 131.293
+# Abundance-weighted NIST atomic mass from the full natural-xenon isotope table.
+NIST_XE_STANDARD_ATOMIC_WEIGHT_G_MOL = 131.29276144779053
 AVOGADRO = 6.02214076e23
 GEV2_TO_CM2 = 0.3893793721e-27
 
@@ -115,6 +117,7 @@ def compute_isotope_halo_integrals(
     A: int,
     ER_keV: float,
     halo_model: str,
+    mass_scheme: str,
     nv: int,
     mchi: float,
     ms: float,
@@ -128,12 +131,15 @@ def compute_isotope_halo_integrals(
     nw: int,
     nz: int,
     nphi: int,
+    width_scheme: str = "zero",
+    g2: float | None = None,
+    response_cache: dict | None = None,
 ) -> list[dict]:
     """Compute both nuclear models while evaluating the shared I6 only once.
 
     J_A = integral dv f_lab(v) beta C_A(v), with units GeV.
     """
-    mA = isotope_mass_GeV(A)
+    mA = isotope_mass_with_scheme(A, mass_scheme)
     ER = ER_keV * 1.0e-6
     vmin = vmin_three_body_km_s(mchi, ms, mA, ER)
     vmax = (
@@ -142,15 +148,21 @@ def compute_isotope_halo_integrals(
         else untruncated_vmax
     )
     responses = {}
+    if response_cache is None:
+        response_cache = {}
     for model in MODELS:
-        response_path = response_dir / f"xe{A}_{model.upper()}_WM.csv"
-        response = load_nuclear_response(response_path, A, model)
+        cache_key = (str(response_dir.resolve()), int(A), model)
+        if cache_key not in response_cache:
+            response_path = response_dir / f"xe{A}_{model.upper()}_WM.csv"
+            response_cache[cache_key] = load_nuclear_response(response_path, A, model)
+        response = response_cache[cache_key]
         R_A, q_response = response.at_recoil(ER, mA)
         responses[model] = (R_A, q_response)
 
     if vmin >= vmax:
         return [{
             "A": A,
+            "mass_scheme": mass_scheme,
             "model": model.upper(),
             "halo_model": halo_model,
             "ER_keV": ER_keV,
@@ -163,6 +175,8 @@ def compute_isotope_halo_integrals(
             "speed_phase_space_open": False,
             "nv": nv,
             "J_A_GeV": 0.0,
+            "width_scheme": width_scheme,
+            "g2": g2,
         } for model in MODELS]
 
     velocities, weights = speed_nodes(vmin, vmax, nv)
@@ -183,7 +197,8 @@ def compute_isotope_halo_integrals(
             nw=nw,
             nz=nz,
             nphi=nphi,
-            width_scheme="zero",
+            width_scheme=width_scheme,
+            g2=g2,
         )
         common_prefactor = (
             mA * coupling_product_sq
@@ -209,6 +224,8 @@ def compute_isotope_halo_integrals(
             "speed_phase_space_open": True,
             "nv": nv,
             "J_A_GeV": common_integral * R_A,
+            "width_scheme": width_scheme,
+            "g2": g2,
         })
     return rows
 
@@ -227,6 +244,7 @@ def main() -> None:
     parser.add_argument("--response-dir", type=Path,
                         default=HERE / "results" / "anand_wm_response")
     parser.add_argument("--out-dir", type=Path, required=True)
+    parser.add_argument("--mass-scheme", choices=("A_u", "nist_nuclear"), default="A_u")
     parser.add_argument("--mchi-GeV", type=float, default=1000.0)
     parser.add_argument("--ms-MeV", type=float, default=0.3)
     parser.add_argument("--delta-m-MeV", type=float, default=1.0)
@@ -248,10 +266,20 @@ def main() -> None:
     parser.add_argument("--nw", type=int, default=16)
     parser.add_argument("--nz", type=int, default=16)
     parser.add_argument("--nphi", type=int, default=8)
+    parser.add_argument("--width-scheme", choices=("zero", "pole", "running"), default="zero")
+    parser.add_argument("--g2", type=float, default=None,
+                        help="Separate chi2-chi1-s coupling for conditional pole/running width")
     parser.add_argument("--max-relative-convergence", type=float, default=5.0e-3)
+    parser.add_argument("--response-q-convention", choices=("exact_spatial",), default="exact_spatial",
+                        help="The AFH/GCN/JJ55 response uses the exact spatial momentum q=sqrt(2*m_A*E_R+E_R^2).")
     args = parser.parse_args()
 
+    if args.width_scheme in ("pole", "running") and args.g2 is None:
+        parser.error("--g2 is required when --width-scheme is pole or running")
+    if args.g2 is not None and (not math.isfinite(args.g2) or args.g2 < 0.0):
+        parser.error("--g2 must be finite and non-negative")
     args.out_dir.mkdir(parents=True, exist_ok=True)
+    response_cache: dict = {}
     ms = args.ms_MeV * 1.0e-3
     delta_m = args.delta_m_MeV * 1.0e-3
     abundance_coverage = sum(NATURAL_ABUNDANCE[A] for A in AVAILABLE)
@@ -269,6 +297,7 @@ def main() -> None:
                         A=A,
                         ER_keV=ER_keV,
                         halo_model=halo_model,
+                        mass_scheme=args.mass_scheme,
                         nv=nv,
                         mchi=args.mchi_GeV,
                         ms=ms,
@@ -282,6 +311,9 @@ def main() -> None:
                         nw=args.nw,
                         nz=args.nz,
                         nphi=args.nphi,
+                        width_scheme=args.width_scheme,
+                        g2=args.g2,
+                        response_cache=response_cache,
                     )
                     for row in rows:
                         isotope_rows.append(row)
@@ -305,6 +337,7 @@ def main() -> None:
                         rate = rate_factor * weighted_sigma_integral
                         natural_rows.append({
                             "halo_model": halo_model,
+                            "mass_scheme": args.mass_scheme,
                             "model": model.upper(),
                             "ER_keV": ER_keV,
                             "mV_GeV": mV,
@@ -371,7 +404,11 @@ def main() -> None:
         "omitted_natural_amount_fraction": 1.0 - abundance_coverage,
         "abundance_source": "NIST isotopic amount fractions",
         "mean_target_mass_for_per_kg_normalization": "NIST standard atomic weight 131.293 g/mol",
-        "isotope_kinematic_mass": "A * 0.93149410242 GeV, consistent with previous joint calculation",
+        "mass_scheme": args.mass_scheme,
+        "isotope_kinematic_mass": (
+            "A * 0.93149410242 GeV" if args.mass_scheme == "A_u" else
+            "(NIST relative atomic mass - 54 electron masses)*u; electronic binding energy neglected"
+        ),
         "mchi_GeV": args.mchi_GeV,
         "ms_MeV": args.ms_MeV,
         "delta_m_MeV": args.delta_m_MeV,
@@ -392,7 +429,13 @@ def main() -> None:
         },
         "mV_scan_GeV": args.mV_scan_GeV,
         "mV_status": "exploratory scan; not specified by direct-detection figure captions",
-        "width_scheme": "zero-width diagnostic",
+        "width_scheme": args.width_scheme,
+        "g2": args.g2,
+        "width_interpretation": (
+            "conditional Dirac pole/running width for chi2 -> chi1 s; assumes Dirac fermions, real scalar, pure scalar off-diagonal Yukawa, and no other open channels"
+            if args.width_scheme in ("pole", "running") else "zero-width diagnostic"
+        ),
+        "response_q_convention": "exact spatial q=sqrt(2*m_A*E_R+E_R^2); same exact q used by the three-body nuclear recoil kinematics",
         "eq6_quadrature": {"nw": args.nw, "nz": args.nz, "nphi": args.nphi},
         "speed_quadrature_orders": args.nv_orders,
         "speed_convergence_tolerance": args.max_relative_convergence,

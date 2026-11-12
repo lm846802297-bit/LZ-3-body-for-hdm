@@ -1,0 +1,102 @@
+name: Natural xenon halo fold with NIST nuclear masses
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - research/figure2-p0-4-mainline
+    paths:
+      - .github/workflows/figure2-natural-xenon-halo-fold.yml
+      - research/figure2_full_reproduction/run_natural_xenon_halo_fold.py
+      - research/figure2_full_reproduction/isotope_mass_schemes.py
+      - research/figure2_full_reproduction/tests/test_natural_xenon_halo_fold.py
+      - research/figure2_full_reproduction/tests/test_isotope_mass_schemes.py
+      - "research/figure2_full_reproduction/results/anand_wm_response/xe*_GCN_WM.csv"
+      - "research/figure2_full_reproduction/results/anand_wm_response/xe*_JJ55_WM.csv"
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  natural-xenon-halo-fold:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out research branch
+        uses: actions/checkout@v4
+        with:
+          ref: research/figure2-p0-4-mainline
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install numerical dependencies
+        run: python -m pip install --upgrade numpy scipy
+
+      - name: Run halo and isotope-mass regression tests
+        run: |
+          python -m unittest discover \
+            -s research/figure2_full_reproduction/tests \
+            -p 'test_natural_xenon_halo_fold.py' -v
+          python -m unittest discover \
+            -s research/figure2_full_reproduction/tests \
+            -p 'test_isotope_mass_schemes.py' -v
+
+      - name: Download the validated A*u baseline from the completed run
+        uses: actions/download-artifact@v4
+        with:
+          name: natural-xenon-halo-folded-threebody-rates
+          run-id: 42952902206
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: /tmp/natural_xenon_halo_fold_Au
+
+      - name: Compute the NIST nuclear-mass halo fold
+        run: |
+          python research/figure2_full_reproduction/run_natural_xenon_halo_fold.py \
+            --response-dir research/figure2_full_reproduction/results/anand_wm_response \
+            --out-dir /tmp/natural_xenon_halo_fold_nist_nuclear \
+            --mass-scheme nist_nuclear \
+            --mchi-GeV 1000 \
+            --ms-MeV 0.3 \
+            --delta-m-MeV 1 \
+            --coupling-product-sq 1e-8 \
+            --rhoDM-GeV-cm3 0.3 \
+            --ER-keV 101 200 267 542 \
+            --mV-scan-GeV 0.05 0.1 0.2 0.5 1.0 \
+            --halo-models mb_untruncated shm_cutoff \
+            --v0-km-s 220 \
+            --ve-km-s 232 \
+            --vesc-km-s 544 \
+            --untruncated-vmax-km-s 1600 \
+            --nv-orders 16 32 \
+            --nw 16 --nz 16 --nphi 8 \
+            --max-relative-convergence 5e-3
+
+      - name: Upload NIST nuclear-mass halo-fold archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: natural-xenon-halo-folded-threebody-rates-nist-nuclear
+          path: /tmp/natural_xenon_halo_fold_nist_nuclear/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Archive both mass prescriptions and rebase before pushing
+        run: |
+          rm -rf research/figure2_full_reproduction/results/natural_xenon_halo_fold
+          rm -rf research/figure2_full_reproduction/results/natural_xenon_halo_fold_nist_nuclear
+          mkdir -p research/figure2_full_reproduction/results/natural_xenon_halo_fold
+          mkdir -p research/figure2_full_reproduction/results/natural_xenon_halo_fold_nist_nuclear
+          cp -r /tmp/natural_xenon_halo_fold_Au/* research/figure2_full_reproduction/results/natural_xenon_halo_fold/
+          cp -r /tmp/natural_xenon_halo_fold_nist_nuclear/* research/figure2_full_reproduction/results/natural_xenon_halo_fold_nist_nuclear/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/figure2_full_reproduction/results/natural_xenon_halo_fold
+          git add research/figure2_full_reproduction/results/natural_xenon_halo_fold_nist_nuclear
+          git commit -m "Archive natural xenon halo rates for both nuclear mass prescriptions"
+          git fetch origin research/figure2-p0-4-mainline
+          git rebase origin/research/figure2-p0-4-mainline
+          git push origin HEAD:research/figure2-p0-4-mainline

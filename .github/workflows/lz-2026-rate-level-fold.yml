@@ -1,0 +1,78 @@
+name: LZ 2026 efficiency-weighted natural-xenon rate-level yield
+
+concurrency:
+  group: lz-2026-rate-level-fold-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - main
+      - 'research/**'
+    paths:
+      - .github/workflows/lz-2026-rate-level-fold.yml
+      - research/figure2_full_reproduction/fold_lz_2026_rate_level.py
+      - research/figure2_full_reproduction/tests/test_lz_2026_rate_level_fold.py
+      - "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/**"
+      - research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  rate-level-yield:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out research branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run rate-level fold regression tests
+        run: |
+          python -m unittest discover \
+            -s research/figure2_full_reproduction/tests \
+            -p 'test_lz_2026_rate_level_fold.py' -v
+
+      - name: Integrate the digitized LZ final-ROI efficiency
+        run: |
+          python research/figure2_full_reproduction/fold_lz_2026_rate_level.py \
+            --spectrum-dir research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum \
+            --efficiency-csv research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv \
+            --out-dir "$RUNNER_TEMP/lz_rate_level"
+
+      - name: Upload LZ rate-level event-yield results
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-rate-level-event-yields
+          path: ${{ runner.temp }}/lz_rate_level/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Archive LZ rate-level results
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin "$GITHUB_REF_NAME"
+          git reset --hard "origin/$GITHUB_REF_NAME"
+          mkdir -p research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields
+          cp "$RUNNER_TEMP/lz_rate_level/"* \
+            research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields
+          if git diff --cached --quiet; then
+            echo "LZ rate-level yield archive is already current."
+            exit 0
+          fi
+          git commit -m "data: archive LZ 2026 efficiency-weighted event yields [skip ci]"
+          git fetch origin "$GITHUB_REF_NAME"
+          git rebase "origin/$GITHUB_REF_NAME"
+          git push origin "HEAD:$GITHUB_REF_NAME"

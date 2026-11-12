@@ -47,12 +47,13 @@ class JointXe131Tests(unittest.TestCase):
         self.assertAlmostEqual(self.gcn.R0, 131.0**2, delta=0.03)
         self.assertAlmostEqual(self.jj55.R0, 131.0**2, delta=0.03)
 
-    def test_response_uses_manuscript_y_convention(self):
+    def test_response_uses_exact_AFH_spatial_momentum(self):
         ER = 200.0e-6
         R, q_response = self.gcn.at_recoil(ER, self.mA)
-        self.assertAlmostEqual(q_response, math.sqrt(2.0 * self.mA * ER), places=14)
         q_exact = math.sqrt(2.0 * self.mA * ER + ER * ER)
-        self.assertGreater(q_exact, q_response)
+        self.assertAlmostEqual(q_response, q_exact, places=14)
+        q_nr = math.sqrt(2.0 * self.mA * ER)
+        self.assertGreater(q_response, q_nr)
         self.assertGreater(R, 0.0)
 
     def test_joint_cross_section_is_finite_and_factorized(self):
@@ -60,6 +61,12 @@ class JointXe131Tests(unittest.TestCase):
         self.assertTrue(result["phase_space_open"])
         self.assertGreater(result["chi2_pole_gap_GeV"], 0.0)
         self.assertGreater(result["R_A"], 0.0)
+        self.assertAlmostEqual(
+            result["q_response_GeV"],
+            math.sqrt(2.0 * self.mA * 200.0e-6 + (200.0e-6) ** 2),
+            places=14,
+        )
+        self.assertNotIn("q_response_NR_GeV", result)
         self.assertGreater(result["I6_GeV2"], 0.0)
         self.assertGreater(result["C_A_GeV"], 0.0)
         self.assertGreater(result["dsigma_dER_GeVminus3"], 0.0)

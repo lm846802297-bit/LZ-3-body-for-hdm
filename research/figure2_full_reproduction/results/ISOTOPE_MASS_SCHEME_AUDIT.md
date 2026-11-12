@@ -70,7 +70,59 @@ The qualitative cutoff classification is unchanged: among the seven
 available response isotopes, only Xe-136 is open at 101 keV for either mass
 prescription. At 200, 267 and 542 keV, all seven available isotopes are open.
 
-## 3. Interpretation and prescription
+A direct halo-folded 101 keV cross-check was then performed for the only open
+isotope, Xe-136, using the truncated SHM, \(m_V=0.1\) GeV,
+\(\rho_\chi=0.3\) GeV/cm\(^3\), and the zero-width kernel:
+
+| Mass prescription | GCN rate | JJ55 rate |
+|---|---:|---:|
+| \(A u\) | \(6.7922\times10^{-14}\) | \(7.0131\times10^{-14}\) |
+| NIST nuclear | \(2.0727\times10^{-15}\) | \(2.1410\times10^{-15}\) |
+
+Rates are in events/(kg day keV). Thus
+\[
+R_{\rm NIST}/R_{Au}=0.0305,
+\]
+a further suppression by a factor of about 32.8 relative to the \(A u\)
+baseline. The 16- versus 32-node speed-integral difference for the NIST
+prescription is \(6.62\times10^{-7}\). The \(A u\) result independently
+reproduces the archived halo-fold output, providing a cross-check of the
+local re-evaluation.
+
+## 3. Fixed Earth-speed sensitivity at 101 keV
+
+The NIST-mass halo fold was also repeated at three fixed lab speeds, keeping
+\(v_0=220\) km/s and \(v_{\rm esc}=544\) km/s. This is a sensitivity bracket,
+not a time-averaged annual-modulation calculation.
+
+| \(v_E\) [km/s] | \(v_{\max}\) [km/s] | Open available isotopes | GCN rate | JJ55 rate |
+|---:|---:|:---|---:|---:|
+| 217 | 761 | none | 0 | 0 |
+| 232 | 776 | Xe-136 | \(2.0727\times10^{-15}\) | \(2.1410\times10^{-15}\) |
+| 247 | 791 | Xe-131, Xe-132, Xe-134, Xe-136 | \(9.7715\times10^{-9}\) | \(1.0205\times10^{-8}\) |
+
+Rates are in events/(kg day keV), at \(m_V=0.1\) GeV and zero width.
+The 247 km/s result is the full sum over all open isotopes with available
+response data—not the Xe-136-only lower bound used in the initial diagnostic.
+Xe-124 and Xe-126 remain kinematically closed throughout this speed bracket.
+
+The rate changes by approximately
+\[
+\frac{R(v_E=247)}{R(v_E=232)}
+\simeq 4.71\times10^6\quad(\mathrm{GCN}),
+\qquad
+4.77\times10^6\quad(\mathrm{JJ55}).
+\]
+At \(v_E=217\) km/s the channel is closed for every isotope in the available
+set. The 16- versus 32-node speed-quadrature differences are below
+\(6.7\times10^{-7}\) for the nonzero points.
+
+This demonstrates that the 101 keV prediction under a hard escape-speed
+cutoff is exceptionally sensitive to the instantaneous lab speed. A fixed
+\(v_E=232\) value cannot be interpreted as an annual average near this
+kinematic endpoint.
+
+## 4. Interpretation and prescription
 
 - Retain the \(m_A=A u\) result as the historical baseline so existing response
   and fixed-speed outputs remain reproducible.
@@ -84,7 +136,7 @@ prescription. At 200, 267 and 542 keV, all seven available isotopes are open.
   Their thresholds are included in this audit, but their response/event-rate
   contributions are not inferred.
 
-## 4. Reproducibility
+## 5. Reproducibility
 
 - isotope_mass_schemes.py: explicit \(A u\) and NIST nuclear-mass functions.
 - run_isotope_mass_scheme_audit.py: response and \(v_{\min}\) comparison.
@@ -93,4 +145,4 @@ prescription. At 200, 267 and 542 keV, all seven available isotopes are open.
   isotope-by-isotope numerical output.
 
 CI:
-https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/42953967185
+https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/42954180933

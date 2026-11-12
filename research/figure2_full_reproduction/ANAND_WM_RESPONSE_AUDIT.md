@@ -30,7 +30,7 @@ The manuscript's (mathcal R_A(E_R)) is its own shorthand for the normalized nucl
 \]
 not one of Anand's dark-matter response coefficients (R_X^{\tau\tau'}).
 
-The superscript (00) selects the isoscalar-isoscalar channel. This is consistent with the manuscript's equal proton and neutron vector couplings, (g_p=g_n=g_{VN}). At zero momentum transfer, the stated normalization is (\mathcal R_A(0)=A^2).
+The superscript (00) selects the isoscalar-isoscalar channel. This selects the relevant isoscalar channel for equal proton and neutron couplings, but the AFH package normalization must be handled explicitly: its raw (4\pi/(2J_A+1))W_M^{00} is A^2/4 at q=0. The physical equal-nucleon-coupling response is the sum of the four proton/neutron channels, equivalently four times this AFH isoscalar package response. Only that physical combination has the required R_A(0)=A^2.
 
 ## 3. Consequence for the Figure 2 spectral shape
 
@@ -81,7 +81,7 @@ Useful implementation references:
 
 1. Do not perform a Helm-versus-Anand model choice: the manuscript has already selected Anand (W_M^{00}).
 2. Recover or explicitly choose the Xe isotope(s), (J_A), (b_A), and the density-matrix interaction.
-3. Compute (W_M^{00}(y)) alone and verify (\mathcal R_A(0)=A^2).
+3. Compute the AFH package W_M^{00}(y), verify (4\pi/(2J_A+1))W_M^{00}(0)=A^2/4, and then form the equal-p/n physical response with the factor of four; verify R_A(0)=A^2.
 4. Compare the computed response's finite-(q) minima with the common dips in Figure 2.
 5. Repeat for the relevant xenon isotopes and form the abundance-weighted natural-xenon rate if that is the intended LZ target.
 6. Only after this nuclear factor is fixed, combine it with the three-body (W^2,z,\varphi_*) integral and halo-speed integral.
@@ -90,6 +90,116 @@ Useful implementation references:
 
 **Source identification: confirmed from the manuscript equation.**
 
-**Numerical (W_M^{00}) reproduction: not yet completed.**
+**Numerical Xe-131 response reproduction: completed for the AFH v6.0 built-in default matrix and independently compared with the existing GCN/JJ55 dmscatter results.**
 
-No claim is made here that the visible dips have already been reproduced, or that the original plotting input used a particular Xe isotope or shell-model interaction.
+The AFH default result is a literature-defined reference prescription. It does not establish that the original Figure 2 used this exact isotope or matrix; the manuscript still does not identify the original isotope mixture.
+
+
+## 7. AFH DMFormFactor v6.0 default Xe-131 calculation
+
+The supplied official AFH v6.0 archive was inspected directly. Its source
+`dmformfactor-V6.m` contains the built-in `sdgXe131` density matrix
+(67 entries), selected by
+
+```mathematica
+SetIsotope[54,131,"default","default"]
+```
+
+This selects both the AFH default Xe-131 density matrix and the AFH default
+oscillator prescription. The resulting length is
+
+[
+b_{131}=2.2923417985218975 mathrm{fm}.
+]
+
+### 7.1 AFH isoscalar normalization
+
+The package call `ResponseNuclear[y,1,0,0]` returns the AFH isoscalar
+`W_M^{00}`. Its isospin convention includes a factor one half in the
+isoscalar nucleon operator. Consequently,
+
+[
+rac{4pi}{2J_A+1}W_{M,mathrm{AFH}}^{00}(0)
+=rac{A^2}{4},
+]
+
+not (A^2). For the physical equal-proton/equal-neutron coupling in the
+manuscript, the coherent response is four times the AFH package's
+isoscalar-normalized response:
+
+[
+oxed{
+mathcal R_A(q)
+=4,rac{4pi}{2J_A+1}W_{M,mathrm{AFH}}^{00}(q)
+}
+]
+
+up to the tiny overall correction associated with the finite decimal
+precision of the tabulated density-matrix coefficients. We remove only that
+constant offset by normalizing the response shape to its computed q=0 value:
+
+[
+mathcal R_A(q)=A^2
+rac{W_{M,mathrm{AFH}}^{00}(q)}
+     {W_{M,mathrm{AFH}}^{00}(0)}.
+]
+
+The direct source translation gives
+((4pi/(2J_A+1))W_M^{00}(0)=4289.8959557), compared with
+(A^2/4=4290.25), a relative difference (8.25	imes10^{-5}).
+The normalized equal-p/n response satisfies (mathcal R_A(0)=17161).
+
+This is the same physical convention as the existing dmscatter calculation,
+which sums the four pp, pn, np, nn response channels. It is not correct to
+compare the raw AFH package (W_M^{00}) to that four-channel sum without
+the factor of four.
+
+### 7.2 AFH default response minima
+
+| Model | q_min [MeV] | E_R,min [keV] | R_min/R(0) |
+|---|---:|---:|---:|
+| AFH default | 157.93578 | 102.20672 | 1.23638e-5 |
+| AFH default | 256.27187 | 269.10390 | 6.34070e-8 |
+| AFH default | 365.06657 | 546.08690 | 1.56194e-7 |
+
+The first three minima lie close to the Figure 2 dip regions near 101, 267,
+and 542 keV. A fourth minimum occurs at approximately 1.022 MeV recoil,
+outside the three-dip region considered here.
+
+### 7.3 Comparison with GCN and JJ55
+
+The AFH default, GCN and JJ55 minima have similar q locations, while their
+depths are model dependent. In particular, the JJ55 minima are substantially
+deeper than the AFH-default minima. This is a nuclear-structure uncertainty,
+not a reason to tune (b_A).
+
+At the two Figure 2 reference energies where the fixed-speed benchmark is
+open, the same previously validated three-body integral (I_6) gives:
+
+| E_R [keV] | Model | R_A | d sigma/dE_R [cm^2/keV] |
+|---:|---|---:|---:|
+| 267 | AFH default | 0.005598 | 1.38050e-35 |
+| 267 | GCN | 0.004841 | 1.19396e-35 |
+| 267 | JJ55 | 0.009210 | 2.27134e-35 |
+| 542 | AFH default | 0.003151 | 2.34020e-36 |
+| 542 | GCN | 0.003843 | 2.85431e-36 |
+| 542 | JJ55 | 0.005094 | 3.78276e-36 |
+
+The comparison holds the three-body kernel fixed at
+(m_{chi_1}=1) TeV, (m_s=300) keV, (Delta m=450) keV,
+(m_V=10) GeV, and (v=776) km/s; only the nuclear response changes.
+At 101 keV the same benchmark is kinematically closed because its open
+recoil interval begins at 109.1503 keV.
+
+### 7.4 Reproducibility and remaining scope
+
+The full 0--0.6 GeV q-grid, extracted 67-entry density matrix, AFH-source
+Python translation, Mathematica runner, normalization audit, metadata,
+minima, and regression tests are archived under
+`research/afh_default_density_xe131/`. Six regression tests pass, including
+selected 60-digit mpmath checks of the radial/angular kernel.
+
+This closes the AFH-default Xe-131 response calculation. It does not yet
+establish the original Figure 2 isotope mixture, compute the full
+natural-xenon isotope-summed three-body event rate, or perform the final
+halo-speed fold.
