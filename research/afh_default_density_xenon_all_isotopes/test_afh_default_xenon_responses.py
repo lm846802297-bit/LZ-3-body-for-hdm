@@ -55,6 +55,14 @@ class AFHDefaultXenonResponseGridTests(unittest.TestCase):
         self.assertEqual(result["points_compared"], 2401)
         self.assertLessEqual(result["maximum_relative_difference"], 2e-12)
 
+    def test_source_matrix_inventory_covers_all_natural_xenon_isotopes(self):
+        presence = self.metadata["source_matrix_presence_all_natural_isotopes"]
+        self.assertEqual(set(presence), {"124", "126", "128", "129", "130", "131", "132", "134", "136"})
+        generated = {str(A) for A in (128, 129, 130, 131, 132, 134, 136)}
+        self.assertTrue(all(presence[A] for A in generated))
+        missing = sorted(int(A) for A, present in presence.items() if not present)
+        self.assertEqual(missing, self.metadata["unavailable_default_density_isotopes"])
+
     def test_response_metadata_records_ame2020_and_exact_spatial_q(self):
         self.assertEqual(self.metadata["mass_scheme_for_ER_annotation"], "ame2020_nuclear")
         self.assertEqual(self.metadata["response_rows"], 7*2401)
