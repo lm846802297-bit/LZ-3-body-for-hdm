@@ -53,6 +53,44 @@ jobs:
         run: |
           python research/afh_default_density_natural_xenon_halo/validate_archived_results.py
 
+      - name: Recompute NIST-mass natural-xenon exact-spatial baseline
+        run: |
+          python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \
+            --mass-scheme nist_nuclear \
+            --response-q-convention exact_spatial \
+            --out-dir "$RUNNER_TEMP/natural_xenon_exact_spatial"
+
+      - name: Compare natural-xenon reproduction with archived results
+        run: |
+          python research/afh_default_density_natural_xenon_halo/compare_legacy_reproduction.py \
+            --reproduced-dir "$RUNNER_TEMP/natural_xenon_exact_spatial" \
+            --relative-tolerance 5e-8
+
+      - name: Reject AME2020 mass with stale NIST-q response samples
+        shell: bash
+        run: |
+          set +e
+          output=$(python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \
+            --mass-scheme ame2020_nuclear \
+            --response-q-convention exact_spatial \
+            --out-dir "$RUNNER_TEMP/should_not_run_ame2020_stale_response" 2>&1)
+          status=$?
+          set -e
+          if [ "$status" -eq 0 ]; then
+            echo "ERROR: AME2020 masses unexpectedly accepted response samples generated at NIST-mass q"
+            exit 1
+          fi
+          echo "$output"
+          echo "$output" | grep -q "Regenerate R_A at the selected q"
+
+      - name: Upload natural-xenon exact-spatial reproduction
+        uses: actions/upload-artifact@v4
+        with:
+          name: natural-xenon-nist-exact-spatial-regression
+          path: ${{ runner.temp }}/natural_xenon_exact_spatial/
+          if-no-files-found: error
+          retention-days: 90
+
       - name: Compute AME2020 mass and exact-spatial versus NR response comparisons
         run: |
           python research/afh_default_density_xe131/run_ame2020_xe131_halo_partial.py \
