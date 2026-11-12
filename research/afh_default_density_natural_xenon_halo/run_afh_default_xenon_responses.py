@@ -153,7 +153,7 @@ def main() -> None:
         package_zero = float(package_values[0])
         expected_zero = A * A / 4.0
         zero_relative_error = abs(package_zero / expected_zero - 1.0)
-        if zero_relative_error > 2.0e-4:
+        if zero_relative_error > 5.0e-4:
             raise ArithmeticError(
                 f"Xe-{A} AFH q=0 normalization mismatch: "
                 f"got {package_zero:.12g}, expected {expected_zero:.12g}, "
@@ -191,6 +191,7 @@ def main() -> None:
             "package_R0": package_zero,
             "expected_package_R0_A2_over_4": expected_zero,
             "package_R0_relative_error": zero_relative_error,
+            "physical_equal_pn_normalization_factor": (A * A) / package_zero,
             "max_R_over_A2": float(np.max(R_equal / (A * A))),
             "matrix_file": matrix_path.name,
             "matrix_sha256": sha256(matrix_path),
@@ -303,6 +304,12 @@ def main() -> None:
         "response_normalization": (
             "R_equal_pn(q)=A^2*R_AFH_isoscalar(q)/R_AFH_isoscalar(0); "
             "R_equal_pn(0)=A^2"
+        ),
+        "q0_package_normalization_acceptance_tolerance_relative": 5.0e-4,
+        "q0_normalization_note": (
+            "Built-in OBDME coefficients are rounded in the AFH source. "
+            "The raw q=0 offset is retained in metadata and removed only by "
+            "the isotope-specific multiplicative normalization to A^2."
         ),
         "oscillator_length": "sqrt(41.467/(45*A^(-1/3)-25*A^(-2/3))) fm",
         "spatial_momentum": "q=sqrt(2*m_A*E_R+E_R^2); no NR substitution",
