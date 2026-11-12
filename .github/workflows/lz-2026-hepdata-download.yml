@@ -1,4 +1,4 @@
-name: Retrieve official LZ 2026 HEPData release
+name: Extract LZ 2026 NR efficiency from official PDF (HEPData access check)
 
 on:
   push:
@@ -31,21 +31,26 @@ jobs:
           yaml_code=$(curl -L --max-time 120 -A "Mozilla/5.0" -sS \
             -o "$RUNNER_TEMP/lz_hepdata/submission.yaml" -w "%{http_code}" "$yaml_url")
           yaml_status=$?
-          if [ "$yaml_status" -eq 0 ] && [ "$yaml_code" = "200" ] && [ -s "$RUNNER_TEMP/lz_hepdata/submission.yaml" ]; then
+          is_html() {
+            grep -Eqi '<!doctype html|<html' "$1"
+          }
+          if [ "$yaml_status" -eq 0 ] && [ "$yaml_code" = "200" ] && [ -s "$RUNNER_TEMP/lz_hepdata/submission.yaml" ] && ! is_html "$RUNNER_TEMP/lz_hepdata/submission.yaml"; then
             echo "Downloaded HEPData YAML submission (HTTP $yaml_code)." > "$RUNNER_TEMP/lz_hepdata/DOWNLOAD_STATUS.txt"
             sha256sum "$RUNNER_TEMP/lz_hepdata/submission.yaml" >> "$RUNNER_TEMP/lz_hepdata/DOWNLOAD_STATUS.txt"
           else
+            rm -f "$RUNNER_TEMP/lz_hepdata/submission.yaml"
             json_url="https://www.hepdata.net/record/ins3199115?format=json"
             json_code=$(curl -L --max-time 120 -A "Mozilla/5.0" -sS \
               -o "$RUNNER_TEMP/lz_hepdata/record.json" -w "%{http_code}" "$json_url")
             json_status=$?
-            if [ "$json_status" -eq 0 ] && [ "$json_code" = "200" ] && [ -s "$RUNNER_TEMP/lz_hepdata/record.json" ]; then
+            if [ "$json_status" -eq 0 ] && [ "$json_code" = "200" ] && [ -s "$RUNNER_TEMP/lz_hepdata/record.json" ] && ! is_html "$RUNNER_TEMP/lz_hepdata/record.json"; then
               echo "YAML endpoint unavailable (HTTP $yaml_code); downloaded HEPData JSON record (HTTP $json_code)." > "$RUNNER_TEMP/lz_hepdata/DOWNLOAD_STATUS.txt"
               sha256sum "$RUNNER_TEMP/lz_hepdata/record.json" >> "$RUNNER_TEMP/lz_hepdata/DOWNLOAD_STATUS.txt"
             else
+              rm -f "$RUNNER_TEMP/lz_hepdata/record.json"
               {
-                echo "HEPData YAML download failed: HTTP $yaml_code (curl status $yaml_status)."
-                echo "HEPData JSON download failed: HTTP $json_code (curl status $json_status)."
+                echo "HEPData YAML download failed or returned HTML: HTTP $yaml_code (curl status $yaml_status)."
+                echo "HEPData JSON download failed or returned HTML: HTTP $json_code (curl status $json_status)."
                 echo "The official data-release DOI is https://doi.org/10.17182/hepdata.182472.v1."
               } > "$RUNNER_TEMP/lz_hepdata/DOWNLOAD_STATUS.txt"
             fi
@@ -68,6 +73,7 @@ jobs:
           sudo apt-get install -y poppler-utils
           python research/figure2_full_reproduction/extract_lz_2026_nr_efficiency.py \
             --pdf "$RUNNER_TEMP/lz_hepdata/lz_2026_extended_nr_search.pdf" \
+            --hepdata-status "$RUNNER_TEMP/lz_hepdata/DOWNLOAD_STATUS.txt" \
             --out-dir "$RUNNER_TEMP/lz_efficiency_extracted"
           cp "$RUNNER_TEMP/lz_efficiency_extracted/"* "$RUNNER_TEMP/lz_hepdata/"
 
