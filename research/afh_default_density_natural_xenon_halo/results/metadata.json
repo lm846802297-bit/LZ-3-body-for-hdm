@@ -115,5 +115,6 @@
   "source_archive_sha256": "4e0f70e6e780f3f4a40faa14792cae239d1989cf15d1e211b4fd7389b0460727",
   "source_archive_archived": false,
   "source_file": "v6/dmformfactor-V6.m",
-  "source_file_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372"
+  "source_file_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+  "response_sample_sha256": "0a5716bcd5cc2f78569e39420594cdcc9c5b2b0e"
 }
