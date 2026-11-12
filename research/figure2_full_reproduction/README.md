@@ -167,3 +167,13 @@ The finite-width comparison uses the conditional Dirac / pure-scalar /
 single-open-channel \(\chi_2\to\chi_1s\) width. It is not the full
 vector-plus-scalar self-energy. See
 results/USER_L00_BENCHMARK_G1_G2_GVN_1_DELTA_M_450KEV.md.
+
+The high-order result is archived as native data and provenance:
+- `results/user_l00_benchmark_delta_m_450kev.json`
+- `results/user_l00_benchmark_run_manifest.json`
+- `results/USER_L00_BENCHMARK_SHA256SUMS.txt`
+
+The source run (commit `5cbc5d1f779575b348bfab1d74edc71747b8d9ca`, workflow run
+42957904328) completed the six regression tests and generated the JSON at
+\((n_W,n_z,n_\\phi)=(48,40,24)\). The ZIP transfer artifact was extracted;
+only the native JSON and provenance files are committed.
