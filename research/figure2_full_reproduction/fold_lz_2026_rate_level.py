@@ -37,6 +37,37 @@ def read_xy(path: Path, x_key: str, y_key: str) -> tuple[list[float], list[float
     return xs, ys
 
 
+def read_efficiency_curves(
+    path: Path,
+) -> tuple[list[float], list[float], list[float], list[float]]:
+    """Read central and gray-envelope curves; fall back to central-only CSVs."""
+    with path.open(newline="", encoding="utf-8") as f:
+        rows = list(csv.DictReader(f))
+    if len(rows) < 2:
+        raise ValueError(f"Need at least two efficiency samples in {path}")
+    rows.sort(key=lambda row: float(row["ER_keV"]))
+    xs = [float(row["ER_keV"]) for row in rows]
+    central = [float(row["efficiency_final_WS_ROI"]) for row in rows]
+    lower = [
+        float(row.get("efficiency_lower_envelope") or row["efficiency_final_WS_ROI"])
+        for row in rows
+    ]
+    upper = [
+        float(row.get("efficiency_upper_envelope") or row["efficiency_final_WS_ROI"])
+        for row in rows
+    ]
+    if any(not math.isfinite(x) for x in xs):
+        raise ValueError(f"Non-finite recoil energy in {path}")
+    if any(x1 <= x0 for x0, x1 in zip(xs, xs[1:])):
+        raise ValueError(f"Efficiency recoil energies must be strictly increasing in {path}")
+    for lo, mid, hi in zip(lower, central, upper):
+        if not all(math.isfinite(v) and 0.0 <= v <= 1.0 for v in (lo, mid, hi)):
+            raise ValueError(f"Efficiency values must be finite and lie in [0, 1] in {path}")
+        if lo > mid + 2e-3 or mid > hi + 2e-3:
+            raise ValueError(f"Central efficiency is outside its gray envelope in {path}")
+    return xs, central, lower, upper
+
+
 def interpolate(x: float, xs: list[float], ys: list[float]) -> float:
     if x <= xs[0]:
         return ys[0]
@@ -159,13 +190,11 @@ def main() -> None:
             f"continuous-spectrum directory is missing: {args.spectrum_dir}; "
             "the rate-level fold must run after the spectra have been archived"
         )
-    efficiency_x, efficiency_y = read_xy(
-        args.efficiency_csv, "ER_keV", "efficiency_final_WS_ROI"
+    efficiency_x, efficiency_y, efficiency_lower, efficiency_upper = read_efficiency_curves(
+        args.efficiency_csv
     )
     if efficiency_x[0] > args.roi_min_keV or efficiency_x[-1] < args.roi_max_keV:
-        raise ValueError("digitized LZ efficiency curve does not cover the requested ROI")
-    if any(e < 0.0 or e > 1.0 for e in efficiency_y):
-        raise ValueError("efficiency values must lie in [0, 1]")
+        raise ValueError("digitized LZ efficiency curves do not cover the requested ROI")
     exposure_kg_day = args.exposure_tonne_year * TONNE_YEAR_TO_KG_DAY
     args.out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -208,6 +237,14 @@ def main() -> None:
                 rate_x, rate_y, efficiency_x, efficiency_y,
                 args.roi_min_keV, args.roi_max_keV,
             )
+            _, weighted_lower = integrate_piecewise_linear_product(
+                rate_x, rate_y, efficiency_x, efficiency_lower,
+                args.roi_min_keV, args.roi_max_keV,
+            )
+            _, weighted_upper = integrate_piecewise_linear_product(
+                rate_x, rate_y, efficiency_x, efficiency_upper,
+                args.roi_min_keV, args.roi_max_keV,
+            )
             raw_dense, weighted_dense = integrate_weighted_rate(
                 rate_x, rate_y, efficiency_x, efficiency_y,
                 args.roi_min_keV, args.roi_max_keV, args.integration_steps,
@@ -221,9 +258,15 @@ def main() -> None:
             max_dense_vs_exact = max(max_dense_vs_exact, dense_vs_exact)
             max_refinement = max(max_refinement, refinement)
             expected = exposure_kg_day * weighted_integral
+            expected_lower = exposure_kg_day * weighted_lower
+            expected_upper = exposure_kg_day * weighted_upper
             ideal = exposure_kg_day * raw_integral
             effective_efficiency = weighted_integral / raw_integral if raw_integral > 0.0 else 0.0
+            effective_efficiency_lower = weighted_lower / raw_integral if raw_integral > 0.0 else 0.0
+            effective_efficiency_upper = weighted_upper / raw_integral if raw_integral > 0.0 else 0.0
             coupling_sq_one_event = coupling_sq / expected if expected > 0.0 else None
+            coupling_sq_one_event_lower = coupling_sq / expected_lower if expected_lower > 0.0 else None
+            coupling_sq_one_event_upper = coupling_sq / expected_upper if expected_upper > 0.0 else None
             output_rows.append({
                 "benchmark": benchmark_dir.name,
                 "model": model,
@@ -235,13 +278,20 @@ def main() -> None:
                 "raw_roi_integral_events_kg_day": raw_integral,
                 "efficiency_weighted_integral_events_kg_day": weighted_integral,
                 "spectrum_weighted_mean_efficiency": effective_efficiency,
+                "spectrum_weighted_mean_efficiency_lower_envelope": effective_efficiency_lower,
+                "spectrum_weighted_mean_efficiency_upper_envelope": effective_efficiency_upper,
+                "efficiency_envelope_treatment": "gray detector-systematic range; not assigned a confidence level by LZ",
                 "integration_method": "exact analytic integral of piecewise-linear rate times piecewise-linear efficiency",
                 "dense_trapezoid_relative_difference_vs_exact": dense_vs_exact,
                 "dense_trapezoid_refinement_relative_difference": refinement,
                 "expected_events_in_high_efficiency_window": expected,
+                "expected_events_efficiency_lower_envelope": expected_lower,
+                "expected_events_efficiency_upper_envelope": expected_upper,
                 "ideal_100pct_efficiency_events_in_window": ideal,
                 "coupling_product_sq_reference": coupling_sq,
                 "coupling_product_sq_for_one_expected_event_at_fixed_g2": coupling_sq_one_event,
+                "coupling_product_sq_for_one_event_lower_envelope": coupling_sq_one_event_lower,
+                "coupling_product_sq_for_one_event_upper_envelope": coupling_sq_one_event_upper,
                 "g2_for_conditional_pole_width": float(reference["g2"]),
                 "width_scheme": reference["width_scheme"],
                 "mass_scheme": reference["mass_scheme"],
@@ -271,7 +321,9 @@ def main() -> None:
         "exposure_kg_day": exposure_kg_day,
         "efficiency_curve": str(args.efficiency_csv),
         "efficiency_curve_sha256": sha256(args.efficiency_csv),
-        "efficiency_source": "LZ 2026 Fig. S2 black final WIMP-search ROI curve, vector-extracted",
+        "efficiency_source": "LZ 2026 Fig. S2 black central final WIMP-search ROI curve and gray uncertainty envelope, vector-extracted",
+        "efficiency_envelope_treatment": "gray detector-systematic range; no confidence level assigned by LZ",
+        "efficiency_envelope_applied_to_yield_range": True,
         "spectrum_files": spectrum_files,
         "dense_trapezoid_crosscheck_steps": args.integration_steps,
         "integration_method": "exact analytic integration over the union of rate-spectrum and efficiency-curve knots, assuming linear interpolation of each input",
