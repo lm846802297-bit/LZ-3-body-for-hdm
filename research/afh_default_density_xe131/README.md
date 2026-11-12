@@ -172,11 +172,40 @@ The factor four is applied exactly once, in the nuclear response. The
 independent historical code-convention check is documented in
 `AFH_COUPLING_NORMALIZATION_MAPPING.md`.
 
-The natural-xenon isotope sum and halo velocity integration remain separate
-follow-up calculations. The AFH native Mathematica execution also remains
-pending; the current AFH numerical table is from the source-translated Python
-implementation.
+The natural-xenon exact-spatial selected-point halo fold for the seven
+AFH-available isotopes is now archived under
+research/afh_default_density_natural_xenon_halo/. It uses NIST nuclear masses
+and the 28 selected isotope/recoil response samples, preserves the original
+natural abundances without renormalizing the seven-isotope subset, and has a
+direct reproduction check against the archived rates.
+
+The AME2020/CODATA-2022 extension is documented in
+[AME2020_CODATA2022_EXACT_SPATIAL_XE131.md](AME2020_CODATA2022_EXACT_SPATIAL_XE131.md).
+It uses the unrounded AME2020 atomic masses, the electronic-binding correction,
+and exact spatial AFH q. The numerical calculation currently provides the
+Xe-131 isotope contribution only. The existing 28 natural-xenon samples were
+generated with NIST nuclear masses and cannot be relabelled as AME2020-q
+responses; a full AME2020 natural-xenon sum requires regenerating the AFH
+response values for the other isotopes at the AME2020 exact-spatial q values.
+
+The AFH native Mathematica execution also remains pending; the current AFH
+numerical table is from the source-translated Python implementation.
 
 The GCN/JJ55 files from `dmscatter` remain separate nuclear-structure
 calculations and are not relabeled or substituted for AFH default.
 
+
+## AME2020/CODATA-2022 Xe-131 partial halo fold
+
+The mass conversion and exact-spatial response-q comparison are implemented
+in:
+
+- `../figure2_full_reproduction/isotope_mass_schemes.py`;
+- `run_ame2020_xe131_halo_partial.py`;
+- `test_ame2020_xe131_halo_partial.py`;
+- `.github/workflows/ame2020-xe131-exact-spatial.yml`.
+
+The workflow archives outputs under
+`output/ame2020_exact_spatial_xe131_partial/`. The result is a Xe-131
+contribution per kg of natural xenon, not the complete natural-xenon rate and
+not a detector-level prediction.
