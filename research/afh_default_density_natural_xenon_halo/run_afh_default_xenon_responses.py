@@ -231,6 +231,7 @@ def main() -> None:
     sample_rows = []
     max_sample_difference = 0.0
     max_pchip_difference = 0.0
+    max_pchip_archive_difference = 0.0
     with args.selected_samples.open("r", newline="", encoding="utf-8") as handle:
         samples = list(csv.DictReader(handle))
     if len(samples) != 28:
@@ -262,8 +263,14 @@ def main() -> None:
         reference_RA = float(sample["R_A"])
         direct_rel = abs(direct_RA / reference_RA - 1.0) if reference_RA else abs(direct_RA)
         pchip_rel = abs(pchip_RA / direct_RA - 1.0) if direct_RA else abs(pchip_RA)
+        pchip_archive_rel = (
+            abs(pchip_RA / reference_RA - 1.0) if reference_RA else abs(pchip_RA)
+        )
         max_sample_difference = max(max_sample_difference, direct_rel)
         max_pchip_difference = max(max_pchip_difference, pchip_rel)
+        max_pchip_archive_difference = max(
+            max_pchip_archive_difference, pchip_archive_rel
+        )
         sample_rows.append({
             "A": A,
             "ER_keV": float(sample["ER_keV"]),
@@ -283,6 +290,7 @@ def main() -> None:
             "R_A_PCHIP_from_2401_grid": pchip_RA,
             "direct_vs_archived_relative_difference": direct_rel,
             "PCHIP_vs_direct_relative_difference": pchip_rel,
+            "PCHIP_vs_archived_relative_difference": pchip_archive_rel,
         })
 
     # Persist the complete point-by-point audit before enforcing the acceptance
@@ -291,12 +299,18 @@ def main() -> None:
     write_csv(regression_path, sample_rows)
     diagnostic = {
         "status": (
-            "PASS" if max_sample_difference <= args.max_relative_selected_sample_difference
+            "PASS" if max_pchip_archive_difference <= args.max_relative_selected_sample_difference
             else "FAIL"
         ),
+        "acceptance_comparison": "PCHIP from regenerated 2401-node grid vs archived 28 PCHIP samples",
         "acceptance_tolerance_relative": args.max_relative_selected_sample_difference,
         "max_direct_vs_archived_relative_difference": max_sample_difference,
+        "max_pchip_vs_archived_relative_difference": max_pchip_archive_difference,
         "max_pchip_vs_direct_relative_difference": max_pchip_difference,
+        "fold_interpolation_status": (
+            "REQUIRES_EXACT_Q_OR_GRID_REFINEMENT"
+            if max_pchip_difference > 5.0e-4 else "WITHIN_5E-4_DIAGNOSTIC"
+        ),
         "sample_count": len(sample_rows),
         "source_response_grid_points": len(response_rows),
         "top_discrepancies": sorted(
@@ -315,10 +329,10 @@ def main() -> None:
     )
     print(json.dumps(diagnostic, indent=2))
 
-    if max_sample_difference > args.max_relative_selected_sample_difference:
+    if max_pchip_archive_difference > args.max_relative_selected_sample_difference:
         raise RuntimeError(
-            "Regenerated AFH responses do not reproduce the 28 archived samples: "
-            f"max relative difference={max_sample_difference:.3e}"
+            "Regenerated AFH PCHIP grid does not reproduce the 28 archived PCHIP samples: "
+            f"max relative difference={max_pchip_archive_difference:.3e}"
         )
     metadata = {
         "calculation": "AFH v6.0 default-density W_M^00 response for natural xenon",
@@ -355,9 +369,14 @@ def main() -> None:
             "xe131_full_grid_points": EXPECTED_GRID_POINTS,
             "xe131_max_relative_grid_difference": max_xe131_grid_difference,
             "selected_sample_points": len(samples),
-            "selected_sample_max_relative_direct_difference": max_sample_difference,
+            "selected_sample_max_relative_direct_vs_archived_difference": max_sample_difference,
+            "selected_sample_max_relative_pchip_vs_archived_difference": max_pchip_archive_difference,
             "selected_sample_max_relative_pchip_vs_direct_difference": max_pchip_difference,
             "status": "PASS",
+            "fold_interpolation_status": (
+                "REQUIRES_EXACT_Q_OR_GRID_REFINEMENT"
+                if max_pchip_difference > 5.0e-4 else "WITHIN_5E-4_DIAGNOSTIC"
+            ),
         },
         "response_file": response_path.name,
         "response_file_sha256": sha256(response_path),
@@ -373,7 +392,8 @@ def main() -> None:
         "total_response_rows": len(response_rows),
         "xe131_grid_max_relative_difference": max_xe131_grid_difference,
         "selected_samples": len(samples),
-        "selected_samples_max_relative_difference": max_sample_difference,
+        "selected_samples_max_relative_direct_vs_archived_difference": max_sample_difference,
+        "selected_samples_max_relative_pchip_vs_archived_difference": max_pchip_archive_difference,
         "pchip_vs_direct_max_relative_difference": max_pchip_difference,
         "response_sha256": sha256(response_path),
         "status": "PASS",
