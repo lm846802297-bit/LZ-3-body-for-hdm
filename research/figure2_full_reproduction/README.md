@@ -141,3 +141,39 @@ python research/figure2_full_reproduction/chi2_decay_width.py --mchi1 1000 --del
 ~~~
 
 The width is conditional on the Dirac / pure-scalar / single-open-channel assumptions stated in the derivation. It is not yet folded into the integrated three-body recoil spectrum.
+
+
+## Supplied L00 benchmark: Delta m = 450 keV
+
+A separate benchmark has been added for
+\(g_1=g_2=g_{VN}=1\), \(m_{\chi_1}=1\) TeV,
+\(m_{\chi_2}=1\) TeV \(+450\) keV, \(m_V=10\) GeV, and
+\(m_s=300\) keV.
+
+Reproduce it from the repository root:
+
+~~~bash
+python research/figure2_full_reproduction/run_user_l00_benchmark.py
+python -m unittest discover -s research/figure2_full_reproduction/tests -p 'test_user_l00_benchmark.py' -v
+~~~
+
+The pointwise trace inherits the established diagnostic kinematics
+\(m_A=122\) GeV, \(E_R=200\) keV, \(v=776\) km/s,
+midpoint \(W^2\), \(z=0.2\), and \(\phi_*=1.1\). These kinematics are
+explicitly distinguished from the supplied particle benchmark because the
+latter does not specify them.
+
+The finite-width comparison uses the conditional Dirac / pure-scalar /
+single-open-channel \(\chi_2\to\chi_1s\) width. It is not the full
+vector-plus-scalar self-energy. See
+results/USER_L00_BENCHMARK_G1_G2_GVN_1_DELTA_M_450KEV.md.
+
+The high-order result is archived as native data and provenance:
+- `results/user_l00_benchmark_delta_m_450kev.json`
+- `results/user_l00_benchmark_run_manifest.json`
+- `results/USER_L00_BENCHMARK_SHA256SUMS.txt`
+
+The source run (commit `5cbc5d1f779575b348bfab1d74edc71747b8d9ca`, workflow run
+42957904328) completed the six regression tests and generated the JSON at
+\((n_W,n_z,n_\\phi)=(48,40,24)\). The ZIP transfer artifact was extracted;
+only the native JSON and provenance files are committed.
