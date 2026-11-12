@@ -187,7 +187,7 @@ AFH response gives:
 |---:|---:|---:|---:|---:|---:|
 | 101 | 0.156926143569 | 0.156926111066 | 0.320979635189 | 0.320986807329 | +22.344 |
 | 200 | 0.220825743470 | 0.220825652900 | 9.62844388981 | 9.62849643886 | +5.458 |
-| 267 | 0.255146957410 | 0.255146817709 | 0.00676540962832 | 0.00676684899246 | +212.708 |
+| 267 | 0.255146957410 | 0.255146817709 | 0.00676540962832 | 0.00676684899246 | +212.753 |
 | 542 | 0.363525308193 | 0.363524904144 | 0.00328013662691 | 0.00328045596122 | +97.344 |
 
 The response difference is amplified near the AFH diffraction minimum around
@@ -244,6 +244,63 @@ scalar off-diagonal Yukawa, and no other open channels.
 
 The numerical rate is the Xe-131 isotope term per kg of natural xenon.
 It must not be described as the sum over all natural-xenon isotopes.
+
+### 4.1 Completed numerical result and convergence
+
+The exact-spatial AME2020 workflow completed successfully in
+[GitHub Actions run 43186831324](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43186831324).
+All 12 nuclear-mass tests and all 5 Xe-131 response/halo-fold tests passed.
+The same workflow also re-ran the archived NIST-mass natural-xenon calculation:
+98 isotope rows and 14 rate rows were compared, with maximum total-rate
+relative difference \(2.672\times10^{-12}\). Its maximum relative differences
+in \(m_A\), \(q_{\rm response}\), \(R_A\), \(v_{\min}\), and single-isotope
+contributions were all below \(4.4\times10^{-10}\).
+
+For the AME2020 mass and exact-spatial AFH response, selected Xe-131 partial
+rates are:
+
+| Benchmark | \(E_R\) [keV] | \(v_{\min}\) [km/s] | Truncated-SHM rate | Untruncated-MB diagnostic |
+|---|---:|---:|---:|---:|
+| \(m_s=200\) keV, \(\Delta m=1\) MeV | 101 | 598.554 | \(3.86776\times10^{-12}\) | \(6.35039\times10^{-12}\) |
+| \(m_s=300\) keV, \(\Delta m=1\) MeV | 101 | 789.593 | 0 | \(9.91071\times10^{-14}\) |
+| \(m_s=360\) keV, \(\Delta m=1\) MeV | 101 | 904.216 | 0 | \(4.32445\times10^{-15}\) |
+| \(m_s=300\) keV, \(\Delta m=10\) MeV | 101 | 789.593 | 0 | \(7.93852\times10^{-16}\) |
+| \(m_s=300\) keV, \(\Delta m=1\) MeV | 200 | 711.898 | \(3.88331\times10^{-12}\) | \(3.68808\times10^{-11}\) |
+| \(m_s=300\) keV, \(\Delta m=1\) MeV | 267 | 704.458 | \(5.22075\times10^{-15}\) | \(3.91583\times10^{-14}\) |
+| \(m_s=300\) keV, \(\Delta m=1\) MeV | 542 | 748.872 | \(1.13225\times10^{-16}\) | \(1.14541\times10^{-14}\) |
+
+Rates are in events/(kg day keV). The untruncated-MB column is a tail
+diagnostic, not the baseline halo model. In the truncated SHM, the Xe-131
+term vanishes at 101 keV for the green, black, and blue benchmarks because
+their thresholds exceed 776 km/s.
+
+The largest exact-spatial versus NR response/rate difference over all tested
+mass schemes and recoil points is \(2.250\times10^{-4}\). For the AME2020
+mass alone, the largest difference is \(2.12753\times10^{-4}\) at 267 keV.
+The speed and kernel quadrature comparisons give
+\[
+\max\delta_{\rm speed}=1.099\times10^{-4},\qquad
+\max\delta_{\rm kernel}=2.098\times10^{-4}.
+\]
+Both are well below the configured \(5\times10^{-3}\) acceptance tolerance.
+
+### 4.2 Mass-scheme sensitivity at fixed exact-spatial q
+
+For the green benchmark (\(m_s=300\) keV, \(\Delta m=1\) MeV) and truncated
+SHM, the exact-spatial rates are:
+
+| \(E_R\) [keV] | Historical \(A u\) | NIST nuclear | AME2020 nuclear |
+|---:|---:|---:|---:|
+| 200 | \(3.93717\times10^{-12}\) | \(3.88322\times10^{-12}\) | \(3.88331\times10^{-12}\) |
+| 267 | \(4.39798\times10^{-15}\) | \(5.22227\times10^{-15}\) | \(5.22075\times10^{-15}\) |
+| 542 | \(1.13479\times10^{-16}\) | \(1.13225\times10^{-16}\) | \(1.13225\times10^{-16}\) |
+
+At 267 keV, the AME2020 result is \(18.708\%\) above the historical
+\(A u\) approximation and \(0.02913\%\) below the NIST-nuclear result.
+The response minimum amplifies the difference between the historical
+\(A u\) mass and the physical nuclear masses. The NIST-to-AME2020 correction
+is much smaller, but it is still propagated consistently through q,
+\(v_{\min}\), the three-body kernel, and the propagator denominator.
 
 ## 5. Numerical implementation and reproducibility map
 
