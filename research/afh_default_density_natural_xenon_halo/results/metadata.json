@@ -100,5 +100,20 @@
   "kinematic_q_convention": "sqrt(2*m_A*E_R+E_R^2)",
   "response_q_status": "exact spatial momentum transfer used by AFH response; consistent with exact nuclear mass-shell kinematics",
   "response_q_followup": "retain exact spatial q as baseline; q_NR=sqrt(2*m_A*E_R) is an optional small-recoil approximation for response-sensitivity comparison",
-  "response_q_reference_definition": "AFH nuclear response variable y=(q*b_A/2)^2, where q is the spatial momentum transfer"
+  "response_q_reference_definition": "AFH nuclear response variable y=(q*b_A/2)^2, where q is the spatial momentum transfer",
+  "response_input_file": "afh_xe_isotope_responses.csv",
+  "response_input_file_archived": false,
+  "response_input_rows_including_header": 16808,
+  "response_input_sha256_file": "results/afh_response_input_sha256.txt",
+  "response_sample_rows": 28,
+  "response_sample_rows_including_header": 29,
+  "response_sample_scope": "seven AFH-default isotopes x four selected recoil energies; not the full 2401-point q grid",
+  "full_response_q_grid_archived_isotopes": [
+    131
+  ],
+  "full_response_q_grid_points_per_isotope": 2401,
+  "source_archive_sha256": "4e0f70e6e780f3f4a40faa14792cae239d1989cf15d1e211b4fd7389b0460727",
+  "source_archive_archived": false,
+  "source_file": "v6/dmformfactor-V6.m",
+  "source_file_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372"
 }
