@@ -10,6 +10,7 @@ from fold_lz_2026_rate_level import (  # noqa: E402
     integrate_piecewise_linear_product,
     integrate_weighted_rate,
     interpolate,
+    read_efficiency_curves,
 )
 
 
@@ -68,6 +69,39 @@ class LZ2026RateLevelFoldTests(unittest.TestCase):
                 lo=0.5,
                 hi=1.5,
             )
+
+    def test_read_efficiency_curves_preserves_gray_envelope(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "efficiency.csv"
+            path.write_text(
+                "ER_keV,efficiency_final_WS_ROI,efficiency_lower_envelope,efficiency_upper_envelope\\n"
+                "0,0.0,0.0,0.0\\n"
+                "100,0.9,0.8,0.95\\n"
+                "300,0.4,0.3,0.5\\n",
+                encoding="utf-8",
+            )
+            xs, central, lower, upper = read_efficiency_curves(path)
+        self.assertEqual(xs, [0.0, 100.0, 300.0])
+        self.assertEqual(central, [0.0, 0.9, 0.4])
+        self.assertEqual(lower, [0.0, 0.8, 0.3])
+        self.assertEqual(upper, [0.0, 0.95, 0.5])
+
+    def test_read_efficiency_curves_falls_back_to_central_if_no_envelope(self):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "efficiency.csv"
+            path.write_text(
+                "ER_keV,efficiency_final_WS_ROI\\n"
+                "0,0.0\\n"
+                "100,0.9\\n",
+                encoding="utf-8",
+            )
+            xs, central, lower, upper = read_efficiency_curves(path)
+        self.assertEqual(lower, central)
+        self.assertEqual(upper, central)
 
     def test_weighted_integral_never_exceeds_raw_for_efficiency_below_one(self):
         raw, weighted = integrate_weighted_rate(
