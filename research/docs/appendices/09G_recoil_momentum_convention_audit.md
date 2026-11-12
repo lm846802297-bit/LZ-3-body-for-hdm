@@ -2,7 +2,7 @@
 
 # 附录 G：AFH 空间动量转移与非相对论反冲近似
 
-### G.1 AFH 响应函数中的 \(q\) 是什么？
+## G.1 AFH 响应函数中的 \(q\) 是什么？
 
 AFH 原始文献定义谐振子变量
 
@@ -14,7 +14,7 @@ y=\left(\frac{qb_A}{2}\right)^2,
 
 参考：Fitzpatrick et al., *Model-independent WIMP Scattering Responses and Event Rates*, JCAP 02 (2013) 004, arXiv:1203.3542, Secs. 4 and 7.
 
-### G.2 精确质量壳关系与常见 NR 近似
+## G.2 精确质量壳关系与常见 NR 近似
 
 靶核初态静止：
 
@@ -66,7 +66,7 @@ y_{\rm NR}=\frac{b_A^2m_AE_R}{2}.
 
 本项目的三体运动学保留精确质量壳关系，因此采用 \(q_{\rm exact}\) 作为 AFH 响应输入。\(q_{\rm NR}\) 只作为误差对照，不应被称为唯一正确的响应动量。
 
-### G.3 28 个天然氙响应样本的约定核查
+## G.3 28 个天然氙响应样本的约定核查
 
 对七种有 AFH default density matrix 的氙同位素
 
@@ -95,11 +95,11 @@ research/afh_default_density_natural_xenon_halo/input/afh_response_samples.csv
 
 结论：旧 28 点样本采用的是精确空间动量；这与 AFH 的 \(q\) 定义以及精确三体质量壳关系一致，不需要重新生成才能用于当前选定反冲点。
 
-### G.4 响应曲线斜率会放大微小的动量差
+## G.4 响应曲线斜率会放大微小的动量差
 
 虽然 \(q_{\rm exact}-q_{\rm NR}\) 只有亚 keV 量级，但 Xe-131 AFH 响应在衍射谷附近变化很快。使用新生成的 2401 点 AFH default Xe-131 响应网格做 PCHIP 插值，得到：
 
-#### NIST Xe-131 核质量
+### NIST Xe-131 核质量
 
 | \(E_R\) [keV] | \(q_{\rm exact}-q_{\rm NR}\) [keV] | \(R_A(q_{\rm NR})/R_A(q_{\rm exact})-1\) [ppm] |
 |---:|---:|---:|
@@ -108,7 +108,7 @@ research/afh_default_density_natural_xenon_halo/input/afh_response_samples.csv
 | 267 | 0.139702 | +212.729 |
 | 542 | 0.404049 | +97.363 |
 
-#### Figure-2 固定 benchmark 质量 \(M_A=131u\)
+### Figure-2 固定 benchmark 质量 \(M_A=131u\)
 
 | \(E_R\) [keV] | \(q_{\rm exact}-q_{\rm NR}\) [keV] | \(R_A(q_{\rm NR})/R_A(q_{\rm exact})-1\) [ppm] |
 |---:|---:|---:|
@@ -119,7 +119,7 @@ research/afh_default_density_natural_xenon_halo/input/afh_response_samples.csv
 
 这些差异是 NR 近似相对于精确空间动量的响应变化，不是对现有事件率施加的经验修正。固定 \(E_R\) 下，如果 \(I_6\) 和其他因子不变，微分截面的相对变化与 \(R_A\) 的相对变化相同。
 
-### G.5 不要混淆空间 \(q^2\) 与不变量 \(-t\)
+## G.5 不要混淆空间 \(q^2\) 与不变量 \(-t\)
 
 虽然 AFH 响应使用空间动量 \(q=|\mathbf q|\)，媒介子传播子使用的是四动量转移不变量：
 
@@ -142,7 +142,7 @@ m_V^2-t=m_V^2+2m_AE_R
 - 媒介子传播子：使用不变量 \(t=-2m_AE_R\)；
 - \(q_{\rm NR}\)：仅是核反冲能量关系的非相对论近似。
 
-### G.6 代码约定
+## G.6 代码约定
 
 当前统一约定：
 
@@ -155,7 +155,7 @@ m_V^2-t=m_V^2+2m_AE_R
 
 若输入样本的 q 与所选约定不一致，程序会报错，不会静默复用不匹配的 \(R_A\)。
 
-### G.7 机器可读结果
+## G.7 机器可读结果
 
 q 审计程序保存以下文件：
 
@@ -166,7 +166,7 @@ q 审计程序保存以下文件：
 
 当前完整 16807 行的七同位素原始响应表仅保留哈希和 28 个选定点样本。对于本附录所列的 selected-point exact-q 计算，28 个样本已足够；若要扩展到连续反冲谱，则仍需恢复完整 AFH v6.0 响应输入或官方源包。
 
-### G.8 验收标准
+## G.8 验收标准
 
 | 项目 | 状态 | 说明 |
 |---|---|---|
