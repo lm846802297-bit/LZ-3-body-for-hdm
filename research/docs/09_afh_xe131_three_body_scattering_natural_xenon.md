@@ -16,7 +16,8 @@
 - **2026-11-12：** 修复 detector-level 接口章节的重复编号。
 - **2026-11-12：** PR #7 已 squash-merge 至 `research/figure2-p0-4-mainline`；更新本报告的归档状态、LZ 效率折叠完成项与尚未完成的 detector-level likelihood 边界。
 - **2026-11-12：** 统一正文、附录 F 与 LZ detector-level 接口的状态描述，区分 GCN/JJ55 连续谱、AFH selected-point 结果及效率加权 rate-level 事件数。
-- **2026-11-12：** 新增独立的阶段性结论章节，汇总理论核响应、天然氙结果、LZ rate-level event yields 与当前不可声称的实验结论。以上为文档编辑，不代表新增物理验证或数值计算。
+- **2026-11-12：** 新增独立的阶段性结论章节，汇总理论核响应、天然氙结果、LZ rate-level event yields 与当前不可声称的实验结论。
+- **2026-11-12：** 新增公式—符号—正文—程序—结果交叉引用索引；在 Eq. (6)、AFH 响应、halo-folded rate 和 LZ rate-level 公式旁加入推导与程序入口，并新增第 13 节快速导航。该工作为文档追溯性整理，不代表新增物理验证或数值计算。
 
 ## 摘要
 
@@ -87,6 +88,8 @@ dW^2\,
 \int_{-1}^{1} dz\,
 \left\langle\mathcal L_{00}\right\rangle_{\phi_*}.
 \]
+
+> **公式追溯：** Eq. (6) 与 (I_6) 的完整相空间和前因子推导见[附录 A，§A.4–A.4.1](appendices/09A_three_body_kinematics_amplitude.md)；对应程序为 [eq6_kernel.py](../figure2_full_reproduction/eq6_kernel.py)。全部公式—符号—程序—结果映射见[交叉引用索引 F3–F5](formula_symbol_code_cross_reference.md)。
 
 这里：
 
@@ -221,6 +224,8 @@ R_A^{\rm phys}(E_R)
 \frac{16\pi}{2J_A+1}
 W_{M,\mathrm{AFH}}^{00}(y).
 \]
+
+> **公式追溯：** (b_A)、(y) 和 AFH 密度矩阵有限和见[附录 B，§B.2–B.4](appendices/09B_afh_v6_density_matrix_response.md)；raw-to-physical response 映射及因子 4 见[附录 C](appendices/09C_afh_isoscalar_factor4_normalization.md)；空间动量约定见[附录 G](appendices/09G_recoil_momentum_convention_audit.md)。对应程序和 2401 点输出见[索引 F6](formula_symbol_code_cross_reference.md)。
 
 **因子 4 只能计入一次。** 不能既在 \(R_A\) 中乘 4，又在粒子—核子耦合处再乘一次；也不能把 AFH 原始 \(A^2/4\) 归一化响应直接当成物理 \(A^2\) 响应使用。
 
@@ -426,6 +431,8 @@ N_T\frac{\rho_\chi}{m_{\chi_1}}c
 f_{\rm lab}(v)\frac{v}{c}
 \frac{d\sigma_A}{dE_R}(v).
 \]
+
+> **公式追溯：** 天然氙靶数和逐同位素求和见[附录 D](appendices/09D_natural_xenon_isotope_target.md)；三体 (v_{\min,A})、实验室系 PDF 和 halo folding 见[附录 E，§E.1–E.3](appendices/09E_halo_velocity_vmin_folding.md)。AFH selected-point 与 GCN/JJ55 连续谱使用不同 runner 和结果目录，详见[索引 F7–F10](formula_symbol_code_cross_reference.md)。
 
 其中：
 
@@ -653,6 +660,8 @@ where
 =1.03731\times10^6\ {\rm kg\,day}.
 \]
 
+> **公式追溯：** 一维效率折叠的程序、输入曲线、事件数 CSV 和 metadata 见[交叉引用索引 F11](formula_symbol_code_cross_reference.md)；其适用范围和未完成的二维 likelihood 项见附录 F.5。
+
 This is an efficiency-weighted event-yield estimate. It is not, by itself, a 90% confidence-level exclusion or a full LZ likelihood recast.
 
 ### 11.2 What is required for a genuine LZ recast
@@ -778,6 +787,50 @@ AFH 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失的 
 5. 不能把 mpmath 高精度交叉检查描述为官方 Mathematica 原生验证。
 
 后续物理工作仍取决于完整 AFH 响应输入、原生 Mathematica 对照，以及 LZ 的二维 NEST 响应、校准协方差、背景数据和 profile likelihood。本文的阶段性结论不替代这些尚未完成的工作。
+
+## 13. 公式—符号—程序—结果交叉引用
+
+本节提供正文核心公式的快速导航。完整符号表、单位、近似条件、程序函数和机器可读结果路径集中维护在独立文件：[公式—符号—正文—程序—结果交叉引用索引](formula_symbol_code_cross_reference.md)。
+
+### 13.1 核心公式导航
+
+| 索引 | 正文公式 / 物理对象 | 完整推导 | 主要程序 |
+|---|---|---|---|
+| F1 | (q^\mu)、(Q=|\mathbf q|)、(t) 的关系 | [A.1](appendices/09A_three_body_kinematics_amplitude.md)、[G.1–G.5](appendices/09G_recoil_momentum_convention_audit.md) | `rate_kinematics.py`、`eq6_kernel.py` |
+| F2 | (W_{\min}^2,W_{\max}^2) 与相空间开放条件 | [A.2](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.limits` |
+| F3 | 三体相空间分解和 (I_6) | [A.4–A.4.1](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.reduced_kernel` |
+| F4 | 两张辐射图、干涉项和 (\mathcal L_{00}) | [A.5–A.6](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.vertices`、`spin_trace` |
+| F5 | 单同位素固定速度截面 Eq. (6) | [A.4.1](appendices/09A_three_body_kinematics_amplitude.md) | `joint_xe131.py`、`compute_four_benchmark_dsigma.py` |
+| F6 | AFH (b_A,y,W_M^{00},R_A^{\rm phys}) | [B.2–B.4](appendices/09B_afh_v6_density_matrix_response.md)、[C](appendices/09C_afh_isoscalar_factor4_normalization.md)、[G](appendices/09G_recoil_momentum_convention_audit.md) | `run_afh_default_xe131.py`、`joint_xe131.py` |
+| F7 | (m_A,x_A,N_T) 天然氙靶归一化 | [D.1–D.5](appendices/09D_natural_xenon_isotope_target.md) | 两个天然氙 halo/spectrum runner |
+| F8 | 三体阈值速度 (v_{\min,A}) | [A.2](appendices/09A_three_body_kinematics_amplitude.md)、[E.2](appendices/09E_halo_velocity_vmin_folding.md) | `rate_kinematics.vmin_three_body_beta` |
+| F9 | 截断 SHM 与实验室系速度 PDF | [E.1](appendices/09E_halo_velocity_vmin_folding.md) | `run_afh_natural_xenon_halo_fold.py` |
+| F10 | 天然氙 (dR/dE_R) | [D.3–D.4](appendices/09D_natural_xenon_isotope_target.md)、[E.3–E.7](appendices/09E_halo_velocity_vmin_folding.md) | AFH selected-point / GCN-JJ55 continuous-spectrum runners |
+| F11 | LZ 一维效率加权 (N_{\rm sig}^{\rm ROI}) | 主报告 §11.1、§11.4；附录 F.5 | `fold_lz_2026_rate_level.py` |
+| F12 | 条件性 (\chi_2\to\chi_1s) pole width | [A.5–A.6](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.chi2_width_dirac_scalar` |
+
+### 13.2 必须区分的符号和物理层级
+
+| 不应混用的量 | 正确区分 |
+|---|---|
+| (q^\mu)、(Q)、(t) | (q^\mu) 是四动量转移；(Q=|\mathbf q|) 是空间动量模长；(t=(q^\mu)^2=-2m_AE_R)。 |
+| (W) 与 (W^2) | (W) 是 (chi_1+s) 子系统不变质量；(W^2) 是数值积分变量。 |
+| (m_A) 与 (M_A) | 天然氙使用逐同位素 NIST 核质量；固定 Figure-2 Xe-131 benchmark 使用 (M_A=131u)。必须读取对应 metadata。 |
+| AFH raw response 与 (R_A^{\rm phys}) | AFH 原始 isoscalar 零动量归一化为 (A^2/4)；Eq. (6) 中的物理响应归一化为 (A^2)，因子 4 只计一次。 |
+| (I_6)、(d\sigma_A/dE_R)、(dR/dE_R)、(N_{\rm sig}^{\rm ROI}) | 依次是三体 reduced kernel、单核固定速度微分截面、天然氙 halo-folded 理论速率、再经过一维效率和曝光折叠的预期事件数。 |
+| 固定 (v=800) km/s 与截断 SHM | 前者是 Figure-2 固定速度截面诊断；后者的最大实验室速度为 776 km/s，二者不是同一 halo 预测。 |
+
+### 13.3 单位总约定
+
+- 微观公式与 kernel：自然单位；质量、能量、三动量均为 GeV，(W^2) 为 GeV(^2)，(I_6) 为 GeV(^2)，(R_A) 与耦合无量纲。
+- AFH 核结构：(b_A) 先以 fm 给出，进入 (y=(Qb_A/2)^2) 前转换为 GeV(^{-1})；(Q) 以 GeV 输入。
+- halo：速度和 (v_{\min}) 以 km/s 报告，(f_{\rm lab}) 的单位为 (km/s)(^{-1})；通量因子中 (v/c) 无量纲，外部光速换算为 cm/s。
+- 截面：程序内部 (d\sigma/dE_R) 为 GeV(^{-3})，报告中的 benchmark 表换算为 cm(^2)/keV。
+- 事件率：(dR/dE_R) 为 events/(kg day keV)；LZ exposure 为 kg day，最终 (N_{\rm sig}^{\rm ROI}) 无量纲。
+
+### 13.4 复现与维护
+
+详细的逐公式输出文件、metadata、验证状态和复现命令见[独立交叉引用索引第 2–6 节](formula_symbol_code_cross_reference.md)。附录 F.3 是命令行复现入口；附录 F.4 区分软件测试、数值收敛和物理完整性。任何公式、变量或计算方案改变时，必须同步更新本节和独立索引，不得只更新正文显示公式。
 
 # 技术附录（完整内容）
 
