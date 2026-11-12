@@ -26,7 +26,19 @@
     "mA_Xe131_GeV": 121.90992244721734
   },
   "AFH": {
-    "source": "DMFormFactor v6.0 built-in sdgXe131, 67 density-matrix entries",
+    "source": "DMFormFactor v6.0 default-density set; this partial fold uses sdgXe131, 67 density-matrix entries",
+    "default_density_matrix_isotopes": [
+      128,
+      129,
+      130,
+      131,
+      132,
+      134,
+      136
+    ],
+    "full_response_q_grid_archived_isotopes": [
+      131
+    ],
     "response_file": "research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv",
     "response_grid_points": 2401,
     "q_grid_GeV": [
