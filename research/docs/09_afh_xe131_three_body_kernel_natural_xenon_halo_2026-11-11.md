@@ -643,15 +643,40 @@ The LZ 2026 analysis reports one event compatible with a \(248\pm23\ {\rm(stat)}
 
 The current \(5\)–\(800\) keV theoretical recoil grid is intentionally wider than the high-efficiency LZ search window. The continuous numerical scan uses 5 keV spacing through 270 keV, then 20 keV spacing from 280 to 800 keV; the selected comparison points 101, 200, 267 and 542 keV are inserted explicitly. For the 2026 LZ comparison, only the \(5.4\)–\(269.9\) keV interval enters the quoted WIMP-search ROI at greater than 50% efficiency. The \(270\)–\(800\) keV part remains a theoretical prediction and should not be counted as accepted LZ exposure.
 
-The central final-ROI efficiency curve has now been extracted from the black vector path in Fig. S2 and archived at:
+The central final-ROI efficiency curve and the gray uncertainty envelope have now been extracted from the vector paths in Fig. S2 and archived at:
 
 - \`research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv\`;
 - \`research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_metadata.json\`;
 - the extracted vector page \`lz_2026_figS2.svg\`.
 
-The extraction is reproducible from the official arXiv PDF using \`research/figure2_full_reproduction/extract_lz_2026_nr_efficiency.py\`; see [CI run #43122464477](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43122464477). The vector curve gives a mean final-ROI efficiency of 95.471% over 14–250 keV, 0.529 percentage points below the paper's quoted 96%. Its high-energy 50% crossing is 269.868 keV, consistent with 269.9 keV. At low energy, the vector curve crosses 50% near 5.090 keV, whereas the paper text/caption quotes 5.4 keV; the digitized curve is 57.18% at 5.4 keV. This small low-energy discrepancy is retained explicitly, and the published 5.4 keV boundary is used for the preliminary ROI integration without rescaling the curve.
+The extraction is reproducible from the official arXiv PDF using \`research/figure2_full_reproduction/extract_lz_2026_nr_efficiency.py\`; [CI run #43151814368](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43151814368) passes the extraction and independent-digitization regression tests. The central curve gives a mean final-ROI efficiency of 95.471% over 14–250 keV, 0.529 percentage points below the paper's rounded 96%. Its high-energy 50% crossing is 269.868 keV, consistent with 269.9 keV. At low energy, the central vector curve crosses 50% near 5.090 keV, whereas the paper text/caption quotes 5.4 keV; the central curve is 57.18% at 5.4 keV. This discrepancy is retained explicitly, and the published 5.4 keV lower ROI boundary is used without rescaling the curve.
 
-The HEPData YAML/JSON endpoints for DOI \`10.17182/hepdata.182472.v1\` returned HTTP 403 Cloudflare challenge pages ([retrieval run #43120931130](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43120931130)). The PDF-based central efficiency curve is therefore available, but its uncertainty band and the tuned NEST parameter/covariance files have not yet been extracted. The next step is to calculate the efficiency-weighted rate-level yield \(N_{\rm sig}^{\rm ROI}\) using this curve and the 2.84 tonne-year exposure. This remains an event-yield estimate, not a full two-dimensional likelihood recast.
+A useful independent check comes from Di Mauro, arXiv:2609.02608v2, Appendix D. That independent digitization reports \(\epsilon(248\,{\rm keV})=0.9457\), with lower/upper envelope values 0.8835 and 0.9800. Our extracted central/lower/upper values are 0.9456876, 0.8835461 and 0.9800029, respectively; all three agree within the quoted precision. At 269.9 keV the extracted central/lower/upper values are 0.49882, 0.46599 and 0.51687. The gray envelope is treated as a detector-systematic range only: LZ does not assign a confidence level to this plotted envelope.
+
+The HEPData YAML/JSON endpoints for DOI \`10.17182/hepdata.182472.v1\` returned HTTP 403 Cloudflare challenge pages. The workflow explicitly rejects HTML challenge pages rather than treating them as downloaded data; see [retrieval and extraction run #43151814368](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43151814368). Thus the current numerical efficiency inputs are a reproducible digitization of the official PDF, not an HEPData machine-readable table. The raw HEPData table and the tuned NEST parameter/covariance files remain unavailable from the current CI route.
+
+### 10.4 Preliminary LZ rate-level event-yield calculation
+
+The central efficiency and gray envelope have been folded with the continuous natural-xenon GCN/JJ55 spectra over \(5.4\le E_R\le269.9\) keV, using the published nominal exposure
+\[
+\mathcal E=2.84\ {\rm tonne\,year}=1.03731\times10^6\ {\rm kg\,day}.
+\]
+The integration is exact for the adopted piecewise-linear interpolation: the recoil-spectrum and efficiency knot sets are merged, and the product of two linear functions is integrated analytically on each interval. A dense trapezoidal cross-check differs from the exact result by at most \(3.77\times10^{-7}\); doubling the dense grid changes the result by at most \(2.29\times10^{-7}\).
+
+The following values use \((g_1g_2g_{VN})^2=10^{-8}\), \(g_2=1\), \(m_{\chi_1}=1\) TeV, \(m_V=10\) GeV, \(\rho_\chi=0.3\ {\rm GeV/cm^3}\), and the truncated SHM with \((v_0,v_E,v_{\rm esc})=(220,232,544)\) km/s. The \(\chi_2\) propagator uses the conditional pole-width prescription described above. Brackets denote the lower/upper gray detector-efficiency envelope, not a statistical confidence interval.
+
+| Benchmark | GCN expected events | JJ55 expected events |
+|---|---:|---:|
+| Red: \(m_s=0.20\) MeV, \(\Delta m=1\) MeV | \(0.338\ [0.316,0.350]\) | \(0.346\ [0.323,0.359]\) |
+| Green: \(m_s=0.30\) MeV, \(\Delta m=1\) MeV | \(1.525\times10^{-3}\ [1.424,1.580]\times10^{-3}\) | \(1.579\times10^{-3}\ [1.475,1.637]\times10^{-3}\) |
+| Black: \(m_s=0.36\) MeV, \(\Delta m=1\) MeV | \(2.853\times10^{-9}\ [2.666,2.957]\times10^{-9}\) | \(2.879\times10^{-9}\ [2.691,2.984]\times10^{-9}\) |
+| Blue: \(m_s=0.30\) MeV, \(\Delta m=10\) MeV | \(1.248\times10^{-5}\ [1.166,1.293]\times10^{-5}\) | \(1.293\times10^{-5}\ [1.208,1.340]\times10^{-5}\) |
+
+At the reference coupling, only the red benchmark approaches an appreciable fraction of one expected event. Holding \(g_2\) and the conditional pole width fixed, the squared coupling product needed to obtain one expected event is \(2.96\times10^{-8}\) (GCN) or \(2.89\times10^{-8}\) (JJ55) for red; \(6.56\times10^{-6}\) or \(6.33\times10^{-6}\) for green; \(3.51\) or \(3.47\) for black; and \(8.01\times10^{-4}\) or \(7.73\times10^{-4}\) for blue. These are rate-normalization values only, not exclusion limits.
+
+The GCN/JJ55 central-yield differences are about 0.94–3.59%, smaller than the changes between the four particle-physics benchmarks. The gray efficiency envelope changes the integrated yields by approximately \(-6.6\%\) to \(+3.6\%\) for these spectra. The black benchmark is especially suppressed because the ROI overlaps only its extreme high-speed tail; at \(E_R=267\) keV, \(v_{\min}\) for Xe-131 is about 775 km/s, close to the truncated-SHM endpoint of 776 km/s.
+
+The results are archived in \`research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/\`; the successful rate-fold CI run is [#43151727539](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43151727539). The event yields are preliminary rate-level estimates. They do not include energy-resolution smearing, the two-dimensional \(\{S1_c,\log_{10}S2_c\}\) signal PDFs, the NEST nuisance-parameter covariance, background samples or the LZ profile likelihood. They are not a 90% confidence-level exclusion and do not establish an interpretation of the 248 keV event.
 
 A nuclear-response distinction is also necessary. The LZ 2026 paper states that its published theory spectra use WimPyDD with one-body density matrices developed for DMFormFactor-v6, modified as described in Ref. [31]. The continuous spectra being generated in this repository use the available GCN/JJ55 isotope-response grids as an independent nuclear-model comparison; they are not claimed to reproduce the LZ collaboration's modified nuclear-response inputs. The AFH v6.0 calculation remains a separate selected-point result until the full seven-isotope AFH response grid is recovered.
 
