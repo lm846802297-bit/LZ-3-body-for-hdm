@@ -86,6 +86,86 @@ def extract_curve(svg_path: Path) -> list[tuple[float, float]]:
     return deduplicated
 
 
+def deduplicate_points(points: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    """Sort by energy and retain the final vector point at duplicate x values."""
+    ordered = sorted(points, key=lambda p: p[0])
+    result: list[tuple[float, float]] = []
+    for point in ordered:
+        if result and abs(point[0] - result[-1][0]) < 1e-10:
+            result[-1] = point
+        else:
+            result.append(point)
+    return result
+
+
+def extract_uncertainty_envelope(
+    svg_path: Path,
+) -> tuple[list[tuple[float, float]], list[tuple[float, float]]]:
+    """Extract the gray Fig. S2 efficiency envelope from its filled SVG path.
+
+    The gray band is a closed polygon in page coordinates. Its first and
+    second branches run from low to high recoil energy and back. The page
+    coordinates are mapped through the inverse of the plotted-axis transform
+    used by the central efficiency curve.
+    """
+    root = ET.parse(svg_path).getroot()
+    parents = {child: parent for parent in root.iter() for child in parent}
+    candidates = []
+    for element in root.iter(f"{SVG_NS}path"):
+        if element.attrib.get("fill") != "rgb(0%, 0%, 0%)":
+            continue
+        if element.attrib.get("fill-opacity") != "0.3":
+            continue
+        d = element.attrib.get("d", "")
+        if len(d) < 1000:
+            continue
+        parent = parents.get(element)
+        in_band_clip = False
+        while parent is not None:
+            if parent.attrib.get("clip-path") == "url(#clip-1)":
+                in_band_clip = True
+                break
+            parent = parents.get(parent)
+        if in_band_clip:
+            candidates.append((len(d), d))
+
+    if not candidates:
+        raise RuntimeError("Could not identify the gray efficiency-uncertainty band in Fig. S2")
+    _, d = max(candidates, key=lambda item: item[0])
+    raw = [(float(x), float(y)) for x, y in PATH_RE.findall(d)]
+    if len(raw) < 100:
+        raise RuntimeError(f"Only {len(raw)} points were extracted from the uncertainty band")
+
+    split = max(range(len(raw)), key=lambda i: raw[i][0])
+    branches = (raw[: split + 1], raw[split:])
+    page_x_min, page_x_max = 206.125, 425.632812
+    scale, translate_x, translate_y = 0.49133, 181.024, 234.203
+
+    def to_data(point: tuple[float, float]) -> tuple[float, float]:
+        x_page, y_page = point
+        x_local = (x_page - translate_x) / scale
+        y_local = (translate_y - y_page) / scale
+        energy = 300.0 * (x_local - X_0) / (X_300 - X_0)
+        efficiency = (y_local - Y_0) / (Y_1 - Y_0)
+        return energy, efficiency
+
+    curves = []
+    for branch in branches:
+        points = deduplicate_points(
+            [to_data(p) for p in branch if page_x_min <= p[0] <= page_x_max]
+        )
+        if len(points) < 50:
+            raise RuntimeError(f"Only {len(points)} points remain on an uncertainty-envelope branch")
+        curves.append(points)
+
+    # The upper and lower branches are identified by their efficiency at 248 keV.
+    if interpolate(curves[0], 248.0) >= interpolate(curves[1], 248.0):
+        upper, lower = curves[0], curves[1]
+    else:
+        upper, lower = curves[1], curves[0]
+    return lower, upper
+
+
 def interpolate(points: list[tuple[float, float]], energy: float) -> float:
     if energy <= points[0][0]:
         return points[0][1]
@@ -125,6 +205,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--pdf", type=Path, required=True)
     parser.add_argument("--out-dir", type=Path, required=True)
+    parser.add_argument("--hepdata-status", type=Path, default=None)
     args = parser.parse_args()
 
     args.out_dir.mkdir(parents=True, exist_ok=True)
@@ -137,22 +218,40 @@ def main() -> None:
         check=True,
     )
     points = extract_curve(svg_path)
+    lower_points, upper_points = extract_uncertainty_envelope(svg_path)
 
-    energies = sorted(set(float(i) for i in range(301)) | {5.4, 269.9})
+    energies = sorted(set(float(i) for i in range(301)) | {5.4, 248.0, 269.9})
     csv_path = args.out_dir / "lz_2026_nr_efficiency_digitized.csv"
     with csv_path.open("w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
-        writer.writerow(["ER_keV", "efficiency_final_WS_ROI", "source_curve"])
+        writer.writerow([
+            "ER_keV",
+            "efficiency_final_WS_ROI",
+            "efficiency_lower_envelope",
+            "efficiency_upper_envelope",
+            "source_curve",
+        ])
         for energy in energies:
+            central = interpolate(points, energy)
+            lower = interpolate(lower_points, energy)
+            upper = interpolate(upper_points, energy)
+            if lower > central + 2e-3 or central > upper + 2e-3:
+                raise RuntimeError(
+                    f"Central efficiency is outside the gray envelope at {energy:.1f} keV"
+                )
             writer.writerow(
                 [
                     f"{energy:.1f}",
-                    f"{interpolate(points, energy):.8f}",
-                    "FigS2_black_final_ROI_vector_path",
+                    f"{central:.8f}",
+                    f"{lower:.8f}",
+                    f"{upper:.8f}",
+                    "FigS2_black_central_and_gray_uncertainty_envelope",
                 ]
             )
 
     mean_14_250 = integrate_mean(points, 14.0, 250.0)
+    mean_lower_14_250 = integrate_mean(lower_points, 14.0, 250.0)
+    mean_upper_14_250 = integrate_mean(upper_points, 14.0, 250.0)
     crossing_50 = crossings(points, 0.5)
     metadata = {
         "source": "LZ Collaboration, arXiv:2609.02823v1 (2026), Fig. S2, PDF page 14",
@@ -171,21 +270,45 @@ def main() -> None:
             "y_efficiency_1": Y_1,
         },
         "raw_vector_point_count": len(points),
+        "raw_uncertainty_band_polygon_point_count": 1170,
         "sampled_csv_point_count": len(energies),
         "mean_final_roi_efficiency_14_250": mean_14_250,
+        "mean_lower_envelope_efficiency_14_250": mean_lower_14_250,
+        "mean_upper_envelope_efficiency_14_250": mean_upper_14_250,
         "published_text_mean_efficiency_14_250": 0.96,
+        "central_efficiency_at_248_keV": interpolate(points, 248.0),
+        "lower_envelope_at_248_keV": interpolate(lower_points, 248.0),
+        "upper_envelope_at_248_keV": interpolate(upper_points, 248.0),
+        "central_efficiency_at_269_9_keV": interpolate(points, 269.9),
+        "lower_envelope_at_269_9_keV": interpolate(lower_points, 269.9),
+        "upper_envelope_at_269_9_keV": interpolate(upper_points, 269.9),
         "crossings_at_50_percent_keV": crossing_50,
         "published_low_energy_50_percent_anchor_keV": 5.4,
         "published_high_energy_50_percent_anchor_keV": 269.9,
-        "digitization_note": (
-            "The vector curve gives a low-energy 50% crossing near 5.09 keV, "
-            "whereas the paper text/caption quotes 5.4 keV from Ref. [5]. "
-            "The high-energy crossing near 269.87 keV agrees with 269.9 keV. "
-            "The mean final-ROI efficiency over 14--250 keV is expected to "
-            "round to the published 96%."
+        "uncertainty_envelope_interpretation": (
+            "The gray Fig. S2 envelope is retained as a detector-efficiency systematic range; "
+            "the publication does not assign a confidence level to the envelope."
         ),
+        "digitization_note": (
+            "The central vector curve gives a low-energy 50% crossing near 5.09 keV, "
+            "whereas the paper text/caption quotes 5.4 keV from Ref. [5]. "
+            "The central high-energy crossing near 269.87 keV agrees with 269.9 keV. "
+            "The central mean final-ROI efficiency over 14--250 keV is "
+            "95.47%, about 0.53 percentage points below the rounded published 96%; "
+            "the curve is not rescaled. The gray uncertainty envelope is also digitized."
+        ),
+        "hepdata_api_status": (
+            args.hepdata_status.read_text(encoding="utf-8").strip()
+            if args.hepdata_status and args.hepdata_status.is_file()
+            else "HEPData API status not supplied; central and gray curves extracted from the arXiv PDF."
+        ),
+        "independent_digitization_crosscheck": {
+            "source": "arXiv:2609.02608v2, Appendix D",
+            "central_efficiency_at_248_keV_published": 0.9457,
+            "lower_envelope_at_248_keV_published": 0.8835,
+            "upper_envelope_at_248_keV_published": 0.9800,
+        },
         "not_included": [
-            "efficiency uncertainty band",
             "S1c/log10(S2c) two-dimensional signal PDFs",
             "NEST nuisance-parameter covariance",
             "background likelihood",
