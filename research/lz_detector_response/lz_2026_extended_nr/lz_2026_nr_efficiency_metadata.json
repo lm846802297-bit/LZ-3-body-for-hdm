@@ -35,7 +35,7 @@
   "published_high_energy_50_percent_anchor_keV": 269.9,
   "uncertainty_envelope_interpretation": "The gray Fig. S2 envelope is retained as a detector-efficiency systematic range; the publication does not assign a confidence level to the envelope.",
   "digitization_note": "The central vector curve gives a low-energy 50% crossing near 5.09 keV, whereas the paper text/caption quotes 5.4 keV from Ref. [5]. The central high-energy crossing near 269.87 keV agrees with 269.9 keV. The central mean final-ROI efficiency over 14--250 keV is 95.47%, about 0.53 percentage points below the rounded published 96%; the curve is not rescaled. The gray uncertainty envelope is also digitized.",
-  "hepdata_api_status": "HEPData API status not supplied; central and gray curves extracted from the arXiv PDF.",
+  "hepdata_api_status": "HEPData YAML download failed or returned HTML: HTTP 403 (curl status 0).\nHEPData JSON download failed or returned HTML: HTTP 403 (curl status 0).\nThe official data-release DOI is https://doi.org/10.17182/hepdata.182472.v1.\n54ae96529a3765ea5e285e9fc225b5517d594aebc4d6e272125a2d6254609dbd  /home/runner/work/_temp/lz_hepdata/lz_2026_extended_nr_search.pdf",
   "independent_digitization_crosscheck": {
     "source": "arXiv:2609.02608v2, Appendix D",
     "central_efficiency_at_248_keV_published": 0.9457,
