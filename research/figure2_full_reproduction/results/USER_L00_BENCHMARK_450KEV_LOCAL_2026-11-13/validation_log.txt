@@ -1,0 +1,33 @@
+Local validation — 2026-11-13
+
+Source snapshots:
+  PR kernel blob: b4eac1242f9301ab8b32c4e83466d8fc218ed581
+  main kernel blob: 7c796b48c3f3c2cb9079ddbf1e632cc0b9ce207c
+  current main HEAD: e8fa6ecd619dceafcffdb25b5084acee40dbf432
+  runner blob: 71ef22645cc5d15c9419a96083b792b5e7f66e80
+  tests blob: 09313ffa3721507224ca466831040687f19ccce2
+
+Local execution:
+  Python 3.13.5; NumPy 2.3.5; Linux x86_64
+  GitHub Actions / CI not used.
+
+Regression tests:
+  Ran 6 tests
+  Passed: 6
+  Failed: 0
+  Process exit code: 0
+
+Independent spinor sum:
+  explicit spin sum = 3.393332392078337e14
+  Dirac trace       = 3.3933323920783375e14
+  relative difference = 2.220446049250313e-16
+
+Kinematics:
+  max four-momentum closure residual = 2.1316282072803006e-13 GeV
+  external mass-shell and K^2-W^2 residuals are at floating-point roundoff.
+
+Quadrature convergence (40x32x20 -> 48x40x24):
+  zero-width I6 relative difference = 6.53699222863402e-7
+  pole-width I6 relative difference = 6.661978180222405e-7
+
+PR and main kernel I6 values match at 24x24x16, 40x32x20, and 48x40x24.

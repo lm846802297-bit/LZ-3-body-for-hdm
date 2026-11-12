@@ -1,0 +1,78 @@
+{
+  "Eq6_integral": {
+    "I6_conditional_scalar_pole_width_GeV2": 15439364.806283338,
+    "I6_zero_width_GeV2": 16218103.153840005,
+    "quadrature": {
+      "nphi": 24,
+      "nw": 48,
+      "nz": 40
+    },
+    "relative_pole_vs_zero": -0.04801661083110598
+  },
+  "L00_at_W2_midpoint": {
+    "conditional_scalar_pole_width": {
+      "after": 240055885058952.47,
+      "before": 6682172613346.438,
+      "imaginary_residual": 0.0020966269075870514,
+      "interference": 78371007233730.6,
+      "total": 325109064906029.5
+    },
+    "relative_pole_vs_zero": -0.0419180105521354,
+    "zero_width": {
+      "after": 250779215386574.0,
+      "before": 6682172613346.438,
+      "imaginary_residual": 0.0,
+      "interference": 81871851207913.31,
+      "total": 339333239207833.75
+    }
+  },
+  "benchmark": {
+    "coupling_product_squared": 1.0,
+    "delta_m_keV": 450.0,
+    "g1": 1.0,
+    "g2": 1.0,
+    "gVN": 1.0,
+    "mV_GeV": 10.0,
+    "mchi1_GeV": 1000.0,
+    "mchi2_GeV": 1000.00045,
+    "ms_keV": 300.0
+  },
+  "conditional_scalar_width": {
+    "Gamma_chi2_GeV": 5.338560839097935e-05,
+    "Gamma_chi2_keV": 53.38560839097935,
+    "assumptions": [
+      "Dirac chi1 and chi2",
+      "pure scalar g2 vertex",
+      "chi2 -> chi1 s is the only open decay channel",
+      "vector-sector self-energy contribution not included"
+    ]
+  },
+  "differential_cross_section": {
+    "note": "Multiply by the separately supplied dimensionless nuclear response R_A(ER).",
+    "prefactor_times_I6_over_RA_GeVminus3_pole_width": 3.5382699311972723,
+    "prefactor_times_I6_over_RA_GeVminus3_zero_width": 3.7167349466951025
+  },
+  "inherited_diagnostic_kinematics": {
+    "ER_keV": 200.0,
+    "W2_GeV2": 1000000.6474104495,
+    "frame": "target rest frame",
+    "mA_GeV": 122.0,
+    "phi_rad": 1.1,
+    "speed_km_s": 776.0,
+    "z": 0.2
+  },
+  "interpretation": [
+    "L00 is the initial-spin-averaged and final-spin-summed Dirac trace.",
+    "g1, gVN and mV do not enter L00 itself; they enter the full cross-section prefactor.",
+    "g2 enters L00 only through the finite-width prescription used here.",
+    "The numerical L00 point depends on the explicitly listed inherited kinematics."
+  ],
+  "phase_space": {
+    "Wmax2_GeV2": 1000000.6948208088,
+    "Wmin2_GeV2": 1000000.6000000901,
+    "mchi2_minus_sqrt_Wmax_keV": 102.58965596676717,
+    "mchi2_squared_minus_Wmax2_GeV2": 0.20517939364071935,
+    "on_shell_chi2_accessible": false,
+    "sqrt_Wmax_GeV": 1000.000347410344
+  }
+}

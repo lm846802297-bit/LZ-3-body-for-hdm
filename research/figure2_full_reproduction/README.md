@@ -178,6 +178,20 @@ The source run (commit `5cbc5d1f779575b348bfab1d74edc71747b8d9ca`, workflow run
 \((n_W,n_z,n_\\phi)=(48,40,24)\). The ZIP transfer artifact was extracted;
 only the native JSON and provenance files are committed.
 
+
+
+## Independent local validation archive — 2026-11-13
+
+The supplied 450 keV benchmark now has a self-contained local acceptance record under results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/:
+
+- USER_L00_BENCHMARK_450KEV_48x40x24.json: high-order pointwise L00 and reduced Eq. (6) result;
+- QUADRATURE_CONVERGENCE_450KEV.csv: three quadrature orders, ending at (48,40,24);
+- LOCAL_VALIDATION_2026-11-13.md: assumptions, independent spin-sum check, four-momentum closure, convergence and scope;
+- run_manifest.json, validation_log.txt, and SHA256SUMS: execution provenance and native-file integrity record.
+
+The high-order JSON is byte-identical to the existing results/user_l00_benchmark_delta_m_450kev.json archive. The additional directory preserves the local validation and convergence evidence as a complete, self-contained record. The local acceptance used the same eq6_kernel.py and run_user_l00_benchmark.py blob IDs currently present on main. It validates only the stated pointwise L00 and reduced Eq. (6) integral under the conditional Dirac/pure-scalar/single-channel width assumptions; it is not a halo-folded or detector-level prediction.
+
+
 ## Draft: fixed-speed Xe-131 differential cross-section curve (450 keV benchmark)
 
 A separate runner is staged at run_user_dsigma_curve.py. It scans the fixed-speed Xe-131 recoil interval at v=776 km/s on a 5 keV grid, evaluates Eq. (6), and compares the AFH GCN/JJ55 nuclear responses. The propagator prescription is zero width. The isotope mass is A*u, consistent with the current response archive, not the AME2020 exact isotope mass.
