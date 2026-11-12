@@ -30,6 +30,7 @@ from isotope_mass_schemes import isotope_mass_GeV
 
 Z_XE = 54
 ISOTOPES = (128, 129, 130, 131, 132, 134, 136)
+NATURAL_XENON_ISOTOPES = (124, 126, 128, 129, 130, 131, 132, 134, 136)
 Q_MAX_GEV = 0.60
 Q_STEP_GEV = 0.00025
 FM_TO_GEV_INV = 5.0677
@@ -262,6 +263,10 @@ def main() -> None:
     source_text = package.read_text(encoding="utf-8", errors="strict")
     if "Welcome to DMFormFactor version 1.1." not in source_text:
         raise RuntimeError("Unexpected AFH package footer/version marker")
+    source_matrix_presence = {
+        str(A): (f"sdgXe{A}[1]" in source_text and f"sdgXe{A}length" in source_text)
+        for A in NATURAL_XENON_ISOTOPES
+    }
 
     matrix_dir = args.outdir/"density_matrices"
     matrix_dir.mkdir(parents=True, exist_ok=True)
@@ -314,6 +319,10 @@ def main() -> None:
         "source_url": "https://www.ocf.berkeley.edu/~nanand/software/dmformfactor/v6.zip",
         "mass_scheme_for_ER_annotation": args.mass_scheme,
         "isotopes": list(args.isotopes),
+        "source_matrix_presence_all_natural_isotopes": source_matrix_presence,
+        "unavailable_default_density_isotopes": [
+            int(A) for A, present in source_matrix_presence.items() if not present
+        ],
         "isotope_metadata": isotope_metadata,
         "response_file": response_path.name,
         "response_rows": len(all_rows),
