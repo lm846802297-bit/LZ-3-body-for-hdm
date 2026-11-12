@@ -61,3 +61,18 @@ AFH v6.0 still has no built-in default-density matrices for Xe-124 and Xe-126.
 The seven-isotope AFH result therefore covers 0.998158 of the natural atom
 fraction without renormalization; the missing-isotope \(A^2\) values remain
 a coherent-charge ceiling only, not an AFH central prediction.
+
+
+## AME2020 direct exact-q recalculation (2026-11-12)
+
+The selected-point seven-isotope natural-xenon halo fold has now been recomputed locally using the 56 archived direct AFH finite-sum responses at exact spatial q, for both NIST and AME2020 nuclear masses. **No GitHub Actions / CI was used.**
+
+- Report: [AME2020_DIRECT_EXACT_Q_RECALCULATION_2026-11-12.md](AME2020_DIRECT_EXACT_Q_RECALCULATION_2026-11-12.md)
+- Primary response: direct exact-q; PCHIP retained only as a diagnostic.
+- NIST/PCHIP historical total-rate reproduction: maximum relative difference 3.432e-12.
+- Speed quadrature 32 vs 64 nodes: maximum total-rate difference 3.303e-6.
+- Kernel quadrature 8x8x4 vs 16x16x8: maximum difference 2.108e-4 over 21 anchor checks.
+- Replacing PCHIP by direct exact-q changes the selected natural-xenon total rates by at most 15.995 ppm (NIST) / 15.999 ppm (AME2020).
+- Xe-131-only hybrid correction, with other isotope terms held at the historical NIST/PCHIP baseline: maximum absolute total-rate shift 15.277 ppm. This is a hybrid diagnostic, not a full AME2020 prediction.
+
+The full local numerical bundle includes 392 kernel/halo integrals, 784 isotope contributions, 112 rate summaries, convergence tables, metadata and SHA-256 manifest. It is not part of the continuous recoil spectrum or detector-level LZ likelihood. Xe-124 and Xe-126 remain unsupported by the AFH v6.0 default density matrices; the seven-isotope abundance coverage is 0.998158 without renormalization.
