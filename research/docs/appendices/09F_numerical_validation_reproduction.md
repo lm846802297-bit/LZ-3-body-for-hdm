@@ -195,6 +195,6 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 3. 保留 AFH raw response 与物理 equal-\(p,n\) response 两列，因子 4 只应用一次。
 4. 早期错误的 AFH response CSV 拼接换行和 benchmark CSV 中 AFH 列误复制 GCN 的版本应标记为 superseded；当前使用 corrected archive。
 5. 任何新的 \(q_{\rm resp}\)、核质量、halo 参数、宽度方案或求积阶数都应产生新的输出和 metadata，不覆盖历史结果。
-6. 主报告包含完整附录 A–F；本目录中的六份独立附录与主报告对应章节保持同步。
+6. 主报告包含完整附录 A–G；本目录中的七份独立附录与主报告对应章节保持同步。
 7. 程序、CSV、JSON 和源文件继续保存在各自计算目录，文档只解释其定义、来源、调用方式和验证边界。
 
