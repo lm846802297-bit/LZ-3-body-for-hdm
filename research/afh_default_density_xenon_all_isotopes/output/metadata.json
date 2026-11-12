@@ -15,6 +15,21 @@
     134,
     136
   ],
+  "source_matrix_presence_all_natural_isotopes": {
+    "124": false,
+    "126": false,
+    "128": true,
+    "129": true,
+    "130": true,
+    "131": true,
+    "132": true,
+    "134": true,
+    "136": true
+  },
+  "unavailable_default_density_isotopes": [
+    124,
+    126
+  ],
   "isotope_metadata": [
     {
       "A": 128,
