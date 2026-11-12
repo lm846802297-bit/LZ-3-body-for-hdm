@@ -1,0 +1,22 @@
+{
+  "status": "pass",
+  "workflow_run_id": 43040078335,
+  "artifact_name": "afh-natural-xenon-legacy-exact-reproduction",
+  "artifact_id": 13865411221,
+  "artifact_sha256": "sha256:12005b87eab5000ab9ed9a945f31fce111db4df19271ce4fd2f7ee7a576732fe",
+  "response_q_convention": "legacy_exact",
+  "isotope_rows_compared": 98,
+  "rate_rows_compared": 14,
+  "relative_tolerance": 5e-8,
+  "maximum_relative_differences_by_field": {
+    "abundance": 0,
+    "mA_GeV": 3.1991563695795384e-10,
+    "q_response_GeV": 2.9865753663925046e-10,
+    "R_A": 4.319098782518628e-10,
+    "vmin_km_s": 8.152916406435323e-11,
+    "J_A_GeV": 4.1144535066733135e-10,
+    "rate_contribution_events_kg_day_keV": 3.236297389311803e-10
+  },
+  "maximum_relative_total_rate_difference": 2.6716770186037274e-12,
+  "interpretation": "The updated halo-fold code reproduces the archived legacy exact-q selected-point results. This validates backward reproduction only; it does not validate manuscript-NR response samples or corrected NR-q halo rates."
+}

@@ -53,3 +53,28 @@ in each control file. The original target manuscript does not state b_A;
 we adopt the AFH literature default rather than fit b_A to Figure 2.
 
 See metadata.json and the raw_runs directory for provenance.
+
+
+## AFH v6.0 default Xe-131 reference
+
+The official AFH v6.0 package includes the built-in 67-entry `sdgXe131`
+default density matrix. Using `SetIsotope[54,131,"default","default"]`
+gives (b_A=2.2923417985218975) fm.
+
+The AFH package's `ResponseNuclear[y,1,0,0]` is the isoscalar
+(W_M^{00}) with ((4\pi/(2J_A+1))W_M^{00}(0)=A^2/4).
+For equal physical proton and neutron couplings, the coherent response is
+four times the raw AFH isoscalar response. The archived AFH-default curve
+is normalized by its q=0 value to (A^2), correcting only the
+(8.25\times10^{-5}) finite-precision offset in the source density matrix.
+
+AFH-default minima: 102.207, 269.104, and 546.087 keV. These lie close to
+the existing GCN/JJ55 minima; depths remain model dependent. The same-kernel
+cross-section comparison at 267 and 542 keV is archived in
+`research/afh_default_density_xe131/output/AFH_DEFAULT_VS_GCN_JJ55_COMPARISON.md`.
+
+**Normalization convention warning:** the manuscript currently writes
+(4\pi W_M^{00}/(2J_A+1)) and (R_A(0)=A^2) together. If (W_M^{00})
+is the unmodified AFH package output, this is a factor-of-four mismatch.
+The physical equal-p/n response must use the four-channel sum (or an
+equivalent factor of four) before the absolute three-body cross section.

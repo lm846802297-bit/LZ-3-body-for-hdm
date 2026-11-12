@@ -194,7 +194,7 @@ g_{VN} = 3 g_{Vq}
 \subsection{\texorpdfstring{$2 \to 3$}{2 to 3} cross section}
 We consider
 $\chi_1(p)+A(P)\to\chi_1(p')+A(P')+s(k)$,
-with $q=P'-P$, $t=q^2=-2m_AE_R$, and $W^2=(p'+k)^2$.
+with the four-momentum transfer $q^\mu=P'^{\mu}-P^\mu$, $t=q^2=-2m_AE_R$, spatial transfer $\mathbf q=\mathbf P'-\mathbf P$, and $W^2=(p'+k)^2$.
 Emission before and after vector exchange gives the fermion current
 $\bar u(p')\Gamma^\mu u(p)$, where
 \begin{equation}
@@ -207,9 +207,16 @@ Both diagrams and their interference are retained.
 
 At leading order in the non-relativistic nuclear current, vector
 exchange probes the coherent charge response.
-For equal proton and neutron couplings, $g_p=g_n=g_{VN}$, we use the response function
-$\mathcal R_A(E_R)=4\pi W_M^{00}(y)/(2J_A+1)$,
-where $y=b_A^2m_AE_R/2$ and $\mathcal R_A(0)=A^2$
+For equal physical proton and neutron couplings, $g_p=g_n=g_{VN}$, the coherent response is
+\begin{equation}
+\mathcal R_A(E_R)=\frac{16\pi}{2J_A+1}W_{M,\mathrm{AFH\,v6}}^{00}(y),
+\qquad
+y=\left(\frac{b_A|\mathbf q|}{2}\right)^2
+=\frac{b_A^2}{4}(2m_AE_R+E_R^2),
+\qquad
+\mathcal R_A(0)=A^2.
+\end{equation}
+The relation for $y$ uses the exact nuclear mass shell, $(m_A+E_R)^2-|\mathbf q|^2=m_A^2$; in the small-recoil limit it reduces to $y\simeq b_A^2m_AE_R/2$. The invariant transfer remains $t=-2m_AE_R$, so the propagator denominator below is exact. Here $W_{M,\mathrm{AFH\,v6}}^{00}$ denotes the raw isoscalar response returned by the AFH DMFormFactor v6.0 implementation. Its isoscalar coefficient convention is $c_1^0=c_1^p+c_1^n$, so equal physical couplings correspond to $c_1^0=2g_{VN}$. Squaring this coefficient supplies the factor of four relative to $4\pi W_{M,\mathrm{AFH\,v6}}^{00}/(2J_A+1)$, whose zero-momentum value is $A^2/4$. The response above therefore multiplies the per-nucleon coupling $g_{VN}^2$ without an additional normalization factor
 \cite{Anand:2013yka}.
 The differential cross section is
 \begin{equation}

@@ -1,0 +1,44 @@
+{
+  "target": "Xe-131",
+  "A": 131,
+  "mA_GeV": 122.02572741702,
+  "AFH_response": "DMFormFactor v6.0 built-in sdgXe131",
+  "physical_normalization": "R_A=16*pi*W_M00_AFH_v6/(2J_A+1), R_A(0)=A^2",
+  "interpolation": "PCHIP in exact spatial q_response=sqrt(2*mA*ER+ER^2); no extrapolation",
+  "I6_recomputed": false,
+  "benchmarks": {
+    "red_ms200_dm1": {
+      "m_s_keV": 200,
+      "Delta_m_MeV": 1
+    },
+    "green_ms300_dm1": {
+      "m_s_keV": 300,
+      "Delta_m_MeV": 1
+    },
+    "black_ms360_dm1": {
+      "m_s_keV": 360,
+      "Delta_m_MeV": 1
+    },
+    "blue_ms300_dm10": {
+      "m_s_keV": 300,
+      "Delta_m_MeV": 10
+    }
+  },
+  "first_open_grid_point_keV": {
+    "black_ms360_dm1": 190.0,
+    "blue_ms300_dm10": 100.0,
+    "green_ms300_dm1": 100.0,
+    "red_ms200_dm1": 35.0
+  },
+  "rows": {
+    "long": 1920,
+    "wide": 640
+  },
+  "limitations": [
+    "Fixed mono-speed v=800 km/s; no halo velocity integration.",
+    "Reuses the archived I6 grid; not a fresh three-body integral calculation.",
+    "Conditional pole width, not a full self-energy calculation.",
+    "No detector efficiency, resolution, cuts, or likelihood.",
+    "Native Mathematica execution of AFH v6.0 remains pending."
+  ]
+}

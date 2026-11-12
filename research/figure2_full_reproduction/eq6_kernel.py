@@ -5,11 +5,21 @@ nuclear response, mediator prefactor, or overall coupling prefactor.
 """
 from __future__ import annotations
 from dataclasses import dataclass
+from functools import lru_cache
 import math
 import numpy as np
 from numpy.polynomial.legendre import leggauss
 
 C_KM_S = 299_792.458
+
+
+@lru_cache(maxsize=None)
+def _cached_leggauss(order: int):
+    """Cache immutable Gauss-Legendre nodes reused by every Eq. (6) call."""
+    nodes, weights = leggauss(int(order))
+    nodes.setflags(write=False)
+    weights.setflags(write=False)
+    return nodes, weights
 
 @dataclass(frozen=True)
 class Point:
@@ -145,7 +155,7 @@ def reduced_kernel(mchi,ms,delta_m,mA,ER,speed_kms,width=0.,nw=16,nz=16,nphi=8,
         raise ValueError("g2 is required for pole/running width schemes")
     wmin,wmax=limits(mchi,ms,mA,ER,speed_kms)
     if wmax<=wmin: return 0.
-    xw,ww=leggauss(nw); xz,wz=leggauss(nz); xp,wp=leggauss(nphi)
+    xw,ww=_cached_leggauss(nw); xz,wz=_cached_leggauss(nz); xp,wp=_cached_leggauss(nphi)
     wvals=.5*(wmax+wmin)+.5*(wmax-wmin)*xw
     wweights=.5*(wmax-wmin)*ww
     phis=math.pi*(xp+1.); phiweights=.5*wp

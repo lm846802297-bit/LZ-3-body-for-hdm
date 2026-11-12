@@ -1,0 +1,21 @@
+{
+  "mass_scheme": "NIST atomic isotope mass minus 54 electron masses, converted to GeV; nuclear mass used in recoil kinematics",
+  "available_isotopes": [128, 129, 130, 131, 132, 134, 136],
+  "available_abundance_fraction": 0.998158,
+  "omitted_isotopes": [124, 126],
+  "omitted_abundance_fraction": 0.001842,
+  "mchi_GeV": 1000.0,
+  "mV_GeV": 10.0,
+  "g_product_squared": 1e-8,
+  "g2": 1.0,
+  "rhoDM_GeV_cm3": 0.3,
+  "mean_xenon_atomic_weight_g_mol": 131.293,
+  "halo_models": {
+    "truncated_SHM": {"v0_km_s": 220, "vE_km_s": 232, "vesc_km_s": 544, "vmax_lab_km_s": 776},
+    "untruncated_boosted_MB": {"v0_km_s": 220, "vE_km_s": 232, "numerical_vmax_km_s": 1600}
+  },
+  "quadrature": {"speed_orders": [16, 32], "three_body_kernel": "8x8x4"},
+  "width": "pole width chi2 -> chi1 s, conditional on Dirac fermion, real scalar, pure scalar off-diagonal Yukawa, one open channel",
+  "rate_units": "events/(kg day keV)",
+  "caveats": ["No detector effects, exposure or cuts", "Xe-124 and Xe-126 omitted without abundance renormalization", "Halo choice not specified by Fig.2 caption", "Native Mathematica AFH v6 execution remains pending"]
+}

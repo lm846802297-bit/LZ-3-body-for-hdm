@@ -1,0 +1,71 @@
+name: AFH natural-xenon halo-fold archive validation
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/afh-natural-xenon-halo-archive.yml
+      - research/afh_default_density_natural_xenon_halo/**
+  push:
+    branches:
+      - research/afh-default-density-xe131-mainline
+    paths:
+      - .github/workflows/afh-natural-xenon-halo-archive.yml
+      - research/afh_default_density_natural_xenon_halo/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate-afh-natural-xenon-halo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Check out research branch
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install numerical dependency
+        run: python -m pip install --upgrade numpy
+
+      - name: Validate archived isotope contributions, rate sums and quadrature records
+        run: python research/afh_default_density_natural_xenon_halo/validate_archived_results.py
+
+      - name: Confirm the NR approximation is distinguished from exact AFH spatial q
+        shell: bash
+        run: |
+          set +e
+          output=$(python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \
+            --response-q-convention nr_approx \
+            --out-dir "$RUNNER_TEMP/should_not_run_nr_approx" 2>&1)
+          status=$?
+          set -e
+          if [ "$status" -eq 0 ]; then
+            echo "ERROR: NR approximation unexpectedly accepted exact-q response samples"
+            exit 1
+          fi
+          echo "$output"
+          echo "$output" | grep -q "Regenerate R_A at the selected q"
+
+      - name: Recompute exact-spatial-q selected-point natural-xenon halo fold
+        run: |
+          python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \
+            --out-dir "$RUNNER_TEMP/natural_xenon_exact_spatial"
+
+      - name: Compare fresh exact-spatial-q output against the archived tables
+        run: |
+          python research/afh_default_density_natural_xenon_halo/compare_legacy_reproduction.py \
+            --reproduced-dir "$RUNNER_TEMP/natural_xenon_exact_spatial" \
+            --relative-tolerance 5e-8
+
+      - name: Upload exact-spatial-q reproduction and comparison
+        uses: actions/upload-artifact@v4
+        with:
+          name: afh-natural-xenon-exact-spatial-reproduction
+          path: ${{ runner.temp }}/natural_xenon_exact_spatial/
+          if-no-files-found: error
+          retention-days: 90

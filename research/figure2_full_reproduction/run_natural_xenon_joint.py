@@ -96,8 +96,9 @@ def main() -> None:
 
         for ER_keV in args.ER_keV:
             ER = ER_keV * 1.0e-6
-            q_response = math.sqrt(2.0 * mA * ER)
-            q_exact = math.sqrt(2.0 * mA * ER + ER * ER)
+            q_NR_approx = math.sqrt(2.0 * mA * ER)
+            q_response = math.sqrt(2.0 * mA * ER + ER * ER)
+            q_exact = q_response
             wmin2, wmax2 = eq6_kernel.limits(
                 args.mchi_GeV, ms, mA, ER, args.speed_km_s
             )
@@ -114,7 +115,9 @@ def main() -> None:
 
             for model in MODELS:
                 response = response_cache[(A, model)]
-                R_A, _ = response.at_recoil(ER, mA)
+                R_A, q_response_from_table = response.at_recoil(ER, mA)
+                if not math.isclose(q_response_from_table, q_response, rel_tol=0.0, abs_tol=2e-14):
+                    raise ArithmeticError("response interpolation q does not match exact spatial recoil q")
                 C_A = (
                     mA * args.coupling_product_sq
                     / (256.0 * math.pi**3 * pchi**2)
@@ -127,7 +130,8 @@ def main() -> None:
                     "natural_amount_fraction": abundance,
                     "mA_GeV": mA,
                     "ER_keV": ER_keV,
-                    "q_response_NR_GeV": q_response,
+                    "q_response_GeV": q_response,
+                    "q_NR_approx_GeV": q_NR_approx,
                     "q_kinematics_exact_GeV": q_exact,
                     "R_A": R_A,
                     "R_A_over_A2": R_A / (A * A),
@@ -199,7 +203,9 @@ def main() -> None:
         "mV_scan_GeV": args.mV_scan_GeV,
         "mV_status": "exploratory parameter scan; no mV benchmark is specified in the Figure 2 caption",
         "quadrature": {"nw": args.nw, "nz": args.nz, "nphi": args.nphi},
-        "response_y_convention": "y=b_A^2*m_A*E_R/2; q_response=sqrt(2*m_A*E_R)",
+        "response_y_convention": "y=(b_A*q/2)^2 with q the exact spatial momentum transfer",
+        "response_q_convention": "q_response=q_kinematics=sqrt(2*m_A*E_R+E_R^2)",
+        "small_recoil_approximation": "q_NR=sqrt(2*m_A*E_R)",
         "three_body_kinematics": "q_exact=sqrt(2*m_A*E_R+E_R^2)",
         "models": ["GCN", "JJ55"],
         "natural_sum": "sum_A x_A * d sigma_A/dE_R; common 1/mean xenon mass omitted",

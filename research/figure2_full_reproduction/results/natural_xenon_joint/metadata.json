@@ -19,19 +19,19 @@
   "abundance_convention": "atomic amount fractions; not mass fractions",
   "abundance_renormalization": "none; missing 124/126 fraction is left missing",
   "mA_prescription": "A * 0.93149410242 GeV",
-  "mchi_GeV": 1000.0,
+  "mchi_GeV": 1000,
   "ms_MeV": 0.3,
-  "delta_m_MeV": 1.0,
-  "speed_km_s": 776.0,
+  "delta_m_MeV": 1,
+  "speed_km_s": 776,
   "speed_treatment": "single fixed incident speed; no halo integral",
-  "coupling_product_sq": 1e-08,
+  "coupling_product_sq": 1e-8,
   "width_scheme": "zero",
   "mV_scan_GeV": [
     0.05,
     0.1,
     0.2,
     0.5,
-    1.0
+    1
   ],
   "mV_status": "exploratory parameter scan; no mV benchmark is specified in the Figure 2 caption",
   "quadrature": {
@@ -39,7 +39,7 @@
     "nz": 32,
     "nphi": 20
   },
-  "response_y_convention": "y=b_A^2*m_A*E_R/2; q_response=sqrt(2*m_A*E_R)",
+  "response_y_convention": "y=(b_A*q/2)^2 with q the exact spatial momentum transfer",
   "three_body_kinematics": "q_exact=sqrt(2*m_A*E_R+E_R^2)",
   "models": [
     "GCN",
@@ -51,5 +51,7 @@
     "halo velocity integral",
     "detector efficiency and exposure",
     "finite-width uncertainty from the unspecified separate g2"
-  ]
+  ],
+  "response_q_convention": "q_response=q_kinematics=sqrt(2*m_A*E_R+E_R^2)",
+  "small_recoil_approximation": "q_NR=sqrt(2*m_A*E_R)"
 }

@@ -1,0 +1,40 @@
+{
+  "calculation": "LZ 2026 efficiency-weighted rate-level expected event yield",
+  "roi_keV": [
+    5.4,
+    269.9
+  ],
+  "exposure_tonne_year": 2.84,
+  "exposure_kg_day": 1037310,
+  "efficiency_curve": "research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv",
+  "efficiency_curve_sha256": "a0917cd29eef20fbbdc9383b81012f4bd9a669859779e39a8b6ccf47dd8a47ed",
+  "efficiency_source": "LZ 2026 Fig. S2 black central final WIMP-search ROI curve and gray uncertainty envelope, vector-extracted",
+  "efficiency_envelope_treatment": "gray detector-systematic range; no confidence level assigned by LZ",
+  "efficiency_envelope_applied_to_yield_range": true,
+  "spectrum_files": [
+    "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/black_ms360_dm1/natural_xenon_continuous_spectrum.csv",
+    "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/blue_ms300_dm10/natural_xenon_continuous_spectrum.csv",
+    "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/green_ms300_dm1/natural_xenon_continuous_spectrum.csv",
+    "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/red_ms200_dm1/natural_xenon_continuous_spectrum.csv"
+  ],
+  "dense_trapezoid_crosscheck_steps": 10000,
+  "integration_method": "exact analytic integration over the union of rate-spectrum and efficiency-curve knots, assuming linear interpolation of each input",
+  "maximum_dense_trapezoid_relative_difference_vs_exact": 3.7701192900918556e-7,
+  "maximum_dense_trapezoid_refinement_relative_difference": 2.2888560113898393e-7,
+  "nuclear_response_models": [
+    "GCN",
+    "JJ55"
+  ],
+  "interpretation": "Central expected signal counts and lower/upper detector-systematic yield variations in the published high-efficiency true-NR window. Rates are pre-detector and are folded with the digitized central final-ROI efficiency and its gray Fig. S2 envelope.",
+  "coupling_scaling": "The one-event coupling normalization assumes the reference g2 and conditional pole width are held fixed; it is a rate normalization, not a confidence limit.",
+  "limitations": [
+    "gray efficiency envelope is propagated as a systematic range but has no assigned confidence level",
+    "no S1c/log10(S2c) two-dimensional signal PDFs",
+    "no NEST nuisance-parameter covariance",
+    "no energy-resolution smearing beyond the published efficiency curve",
+    "no background model or profile likelihood",
+    "not a 90% confidence-level exclusion",
+    "continuous nuclear responses are GCN/JJ55, not the LZ-modified DMFormFactor-v6 inputs",
+    "AFH v6.0 is available only at selected recoil points in the current archive"
+  ]
+}
