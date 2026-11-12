@@ -15,23 +15,36 @@
     "y_efficiency_1": 349.147721
   },
   "raw_vector_point_count": 160,
+  "raw_uncertainty_band_polygon_point_count": 1170,
   "sampled_csv_point_count": 303,
   "mean_final_roi_efficiency_14_250": 0.9547104518957983,
+  "mean_lower_envelope_efficiency_14_250": 0.8929982679346409,
+  "mean_upper_envelope_efficiency_14_250": 0.9898149583107922,
   "published_text_mean_efficiency_14_250": 0.96,
+  "central_efficiency_at_248_keV": 0.9456875755002285,
+  "lower_envelope_at_248_keV": 0.8835461149899179,
+  "upper_envelope_at_248_keV": 0.9800028962119275,
+  "central_efficiency_at_269_9_keV": 0.4988195353969035,
+  "lower_envelope_at_269_9_keV": 0.4659891611322288,
+  "upper_envelope_at_269_9_keV": 0.5168651730538417,
   "crossings_at_50_percent_keV": [
     5.089721891590893,
     269.86778867044467
   ],
   "published_low_energy_50_percent_anchor_keV": 5.4,
   "published_high_energy_50_percent_anchor_keV": 269.9,
-  "digitization_note": "The vector curve gives a low-energy 50% crossing near 5.09 keV, whereas the paper text/caption quotes 5.4 keV from Ref. [5]; the extracted curve is 57.18% at 5.4 keV. The high-energy crossing near 269.87 keV agrees with 269.9 keV. The mean final-ROI efficiency over 14--250 keV is 95.47%, about 0.53 percentage points below the paper's quoted 96%; this small difference is retained explicitly rather than rescaling the curve.",
+  "uncertainty_envelope_interpretation": "The gray Fig. S2 envelope is retained as a detector-efficiency systematic range; the publication does not assign a confidence level to the envelope.",
+  "digitization_note": "The central vector curve gives a low-energy 50% crossing near 5.09 keV, whereas the paper text/caption quotes 5.4 keV from Ref. [5]. The central high-energy crossing near 269.87 keV agrees with 269.9 keV. The central mean final-ROI efficiency over 14--250 keV is 95.47%, about 0.53 percentage points below the rounded published 96%; the curve is not rescaled. The gray uncertainty envelope is also digitized.",
+  "hepdata_api_status": "HEPData API status not supplied; central and gray curves extracted from the arXiv PDF.",
+  "independent_digitization_crosscheck": {
+    "source": "arXiv:2609.02608v2, Appendix D",
+    "central_efficiency_at_248_keV_published": 0.9457,
+    "lower_envelope_at_248_keV_published": 0.8835,
+    "upper_envelope_at_248_keV_published": 0.98
+  },
   "not_included": [
-    "efficiency uncertainty band",
     "S1c/log10(S2c) two-dimensional signal PDFs",
     "NEST nuisance-parameter covariance",
     "background likelihood"
-  ],
-  "mean_efficiency_difference_from_published": -0.00528954810420168,
-  "mean_efficiency_difference_percentage_points": -0.528954810420168,
-  "rate_level_use": "Use the digitized black final-ROI curve for preliminary efficiency-weighted event yields; the 5.4 keV published ROI boundary and low-energy crossing discrepancy must be reported. This curve does not replace the two-dimensional S1c/log10(S2c) PDFs or likelihood."
+  ]
 }
