@@ -4,8 +4,20 @@
     5.4,
     269.9
   ],
+  "candidate_tail_diagnostic": {
+    "candidate_energy_keV": 248.0,
+    "candidate_statistical_uncertainty_keV": 23.0,
+    "candidate_systematic_uncertainty_keV": 23.0,
+    "integration_interval_keV": [
+      225.0,
+      269.9
+    ],
+    "upper_edge_clipped_by_search_roi": true,
+    "systematic_energy_uncertainty_used": false,
+    "interpretation": "high-energy spectral-shape diagnostic only; no energy-resolution smearing or event likelihood"
+  },
   "exposure_tonne_year": 2.84,
-  "exposure_kg_day": 1037310,
+  "exposure_kg_day": 1037310.0,
   "efficiency_curve": "research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv",
   "efficiency_curve_sha256": "a0917cd29eef20fbbdc9383b81012f4bd9a669859779e39a8b6ccf47dd8a47ed",
   "efficiency_source": "LZ 2026 Fig. S2 black central final WIMP-search ROI curve and gray uncertainty envelope, vector-extracted",
@@ -19,8 +31,8 @@
   ],
   "dense_trapezoid_crosscheck_steps": 10000,
   "integration_method": "exact analytic integration over the union of rate-spectrum and efficiency-curve knots, assuming linear interpolation of each input",
-  "maximum_dense_trapezoid_relative_difference_vs_exact": 3.7701192900918556e-7,
-  "maximum_dense_trapezoid_refinement_relative_difference": 2.2888560113898393e-7,
+  "maximum_dense_trapezoid_relative_difference_vs_exact": 3.7701192900918556e-07,
+  "maximum_dense_trapezoid_refinement_relative_difference": 2.2888560113898393e-07,
   "nuclear_response_models": [
     "GCN",
     "JJ55"
