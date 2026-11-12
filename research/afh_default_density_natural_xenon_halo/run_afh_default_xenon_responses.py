@@ -120,8 +120,11 @@ def main() -> None:
                         default=HERE / "input" / "afh_response_samples.csv")
     parser.add_argument("--max-relative-xe131-grid-difference", type=float,
                         default=5.0e-12)
-    parser.add_argument("--max-relative-selected-sample-difference", type=float,
-                        default=5.0e-7)
+    parser.add_argument(
+        "--max-relative-selected-sample-difference", type=float,
+        default=5.0e-7,
+        help="PCHIP-from-grid versus archived historical PCHIP sample tolerance",
+    )
     args = parser.parse_args()
     args.out_dir.mkdir(parents=True, exist_ok=True)
 
@@ -226,8 +229,9 @@ def main() -> None:
             f"Xe-131 curve: max relative difference={max_xe131_grid_difference:.3e}"
         )
 
-    # Independent regression 2: directly evaluate all 28 old selected samples
-    # at their recorded NIST-mass exact-spatial q, rather than interpolating.
+    # Independent regression 2: the archived 28 values are historical PCHIP
+    # samples from the 2401-node grid. Compare PCHIP-to-archive for reproduction;
+    # retain direct-q-to-PCHIP as a separate interpolation-accuracy diagnostic.
     sample_rows = []
     max_sample_difference = 0.0
     max_pchip_difference = 0.0
