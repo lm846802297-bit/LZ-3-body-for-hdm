@@ -283,9 +283,11 @@ mass-scheme and response-q rate-comparison CSV files.
 
 ### 4.1 Numerical result and convergence
 
-The exact-spatial-q AME2020 calculation completed in GitHub Actions run
-[43186054835](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43186054835).
-The 10 nuclear-mass tests and six Xe-131 response/halo-fold tests passed.
+The exact-spatial-q AME2020 calculation and Xe-131-only hybrid diagnostic
+completed in GitHub Actions run
+[43187421374](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43187421374).
+The 10 nuclear-mass tests, six Xe-131 response/halo-fold tests, and three
+hybrid natural-xenon tests all passed.
 The speed-grid and kernel-grid comparisons give
 
 \[
@@ -369,11 +371,14 @@ R_{131}^{\rm NIST}
 R_{131}^{\rm AME2020}.
 \]
 
-The other six isotope terms remain at their NIST baseline. The NIST Xe-131
-partial rate independently reproduces the compact natural-xenon baseline
-to better than \(3\times10^{-10}\) relative accuracy. The largest absolute
+The other six isotope terms remain at their NIST baseline. The NIST Xe-131 partial rate independently reproduces the compact
+natural-xenon baseline with maximum relative difference
+(2.88978\times10^{-10}). The 14-row hybrid output and its input SHA-256
+records are archived in
+`output/ame2020_exact_spatial_xe131_partial/`. The largest absolute
 change in the hybrid total over the 14 selected recoil/halo points is
-approximately 7.87 ppm.
+(7.86892\times10^{-6}), or 7.87 ppm. The hybrid calculation passed in
+[Actions run 43187421374](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43187421374).
 
 | Benchmark and point | Xe-131 fraction of NIST total | Hybrid total shift |
 |---|---:|---:|
