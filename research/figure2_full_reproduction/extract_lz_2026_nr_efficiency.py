@@ -100,7 +100,7 @@ def deduplicate_points(points: list[tuple[float, float]]) -> list[tuple[float, f
 
 def extract_uncertainty_envelope(
     svg_path: Path,
-) -> tuple[list[tuple[float, float]], list[tuple[float, float]]]:
+) -> tuple[list[tuple[float, float]], list[tuple[float, float]], int]:
     """Extract the gray Fig. S2 efficiency envelope from its filled SVG path.
 
     The gray band is a closed polygon in page coordinates. Its first and
@@ -257,7 +257,7 @@ def main() -> None:
         "source": "LZ Collaboration, arXiv:2609.02823v1 (2026), Fig. S2, PDF page 14",
         "data_release_doi": "10.17182/hepdata.182472.v1",
         "pdf_sha256": sha256(args.pdf),
-        "extraction_method": "vector-path extraction from the black final WIMP-search ROI curve",
+        "extraction_method": "vector-path extraction of the black central final WIMP-search ROI curve and gray uncertainty-envelope polygon",
         "svg_path_selector": {
             "stroke": "rgb(0%, 0%, 0%)",
             "parent_clip_path": "url(#clip-16)",
