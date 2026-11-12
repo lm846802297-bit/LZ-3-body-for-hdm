@@ -2,7 +2,7 @@
   "source": "LZ Collaboration, arXiv:2609.02823v1 (2026), Fig. S2, PDF page 14",
   "data_release_doi": "10.17182/hepdata.182472.v1",
   "pdf_sha256": "54ae96529a3765ea5e285e9fc225b5517d594aebc4d6e272125a2d6254609dbd",
-  "extraction_method": "vector-path extraction from the black final WIMP-search ROI curve",
+  "extraction_method": "vector-path extraction of the black central final WIMP-search ROI curve and gray uncertainty-envelope polygon",
   "svg_path_selector": {
     "stroke": "rgb(0%, 0%, 0%)",
     "parent_clip_path": "url(#clip-16)",
