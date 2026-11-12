@@ -331,15 +331,16 @@ def main() -> None:
         "maximum_dense_trapezoid_refinement_relative_difference": max_refinement,
         "nuclear_response_models": ["GCN", "JJ55"],
         "interpretation": (
-            "Expected signal counts in the published high-efficiency true-NR window. "
-            "Rates are pre-detector and are folded with the digitized final ROI efficiency."
+            "Central expected signal counts and lower/upper detector-systematic yield variations "
+            "in the published high-efficiency true-NR window. Rates are pre-detector and are folded "
+            "with the digitized central final-ROI efficiency and its gray Fig. S2 envelope."
         ),
         "coupling_scaling": (
             "The one-event coupling normalization assumes the reference g2 and conditional "
             "pole width are held fixed; it is a rate normalization, not a confidence limit."
         ),
         "limitations": [
-            "LZ efficiency uncertainty band not propagated",
+            "gray efficiency envelope is propagated as a systematic range but has no assigned confidence level",
             "no S1c/log10(S2c) two-dimensional signal PDFs",
             "no NEST nuisance-parameter covariance",
             "no energy-resolution smearing beyond the published efficiency curve",
