@@ -198,12 +198,12 @@ the relative response shift is also the relative shift in
 |---:|---:|---:|---:|---:|---:|
 | 101 | 0.156926111066 | 0.156926143569 | 0.320979635189 | 0.320986807329 | +22.344 |
 | 200 | 0.220825652900 | 0.220825743470 | 9.62844388981 | 9.62849643886 | +5.458 |
-| 267 | 0.255146817709 | 0.255146957410 | 0.00676540962832 | 0.00676684899246 | +212.708 |
-| 542 | 0.363524904144 | 0.363525308193 | 0.00328013662691 | 0.00328045596122 | +97.344 |
+| 267 | 0.255146817709 | 0.255146957410 | 0.00676540962832 | 0.00676684899246 | +212.753 |
+| 542 | 0.363524904144 | 0.363525308193 | 0.00328013662691 | 0.00328045596122 | +97.363 |
 
 The largest selected-point response difference is at the AFH minimum near
 267 keV: the NR approximation raises the response and differential rate
-by \(2.12708\times10^{-4}\), or \(0.0212708\%\), relative to the exact
+by \(2.12753\times10^{-4}\), or \(0.0212753\%\), relative to the exact
 spatial-q baseline. This is a local interpolation effect, not a change to
 \(v_{\min}\), three-body phase-space support, or the halo distribution.
 
@@ -283,59 +283,110 @@ mass-scheme and response-q rate-comparison CSV files.
 
 ### 4.1 Numerical result and convergence
 
-The integrated workflow completed successfully in GitHub Actions run
-[43045746227](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43045746227).
-All 12 nuclear-mass tests and all 5 Xe-131 response/halo-fold tests passed.
+The exact-spatial-q AME2020 calculation completed in GitHub Actions run
+[43186054835](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43186054835).
+The 10 nuclear-mass tests and six Xe-131 response/halo-fold tests passed.
 The speed-grid and kernel-grid comparisons give
 
 \[
-\max\delta_{\rm speed}=1.099\times10^{-4},\qquad
-\max\delta_{\rm kernel}=2.098\times10^{-4}.
+\max\delta_{\rm speed}=1.09924\times10^{-4},\qquad
+\max\delta_{\rm kernel}=2.09774\times10^{-4}.
 \]
 
-The largest exact-q versus manuscript-NR rate shift across the tested
-mass schemes and recoil points is \(2.250\times10^{-4}\). For the AME2020
-reference mass, the largest shift is \(2.12708\times10^{-4}\), at
-\(E_R=267\) keV.
+Across the three mass schemes and selected recoil points, the largest
+NR-approximation versus exact-spatial-q rate difference is
+\(2.25018\times10^{-4}\). For the AME2020 mass alone, the largest difference
+is \(2.12753\times10^{-4}\), at \(E_R=267\) keV.
 
-For the AME2020 mass and manuscript-NR response convention, the selected
-Xe-131 partial rates are:
+For the AME2020 mass and exact-spatial-q response, the selected Xe-131
+partial rates are:
 
 | Benchmark | \(E_R\) [keV] | \(v_{\min}\) [km/s] | Truncated-SHM rate | Untruncated-MB diagnostic |
 |---|---:|---:|---:|---:|
-| \(m_s=200\) keV, \(\Delta m=1\) MeV | 101 | 598.554 | \(3.86785\times10^{-12}\) | \(6.35054\times10^{-12}\) |
-| \(m_s=300\) keV, \(\Delta m=1\) MeV | 101 | 789.593 | 0 | \(9.91093\times10^{-14}\) |
-| \(m_s=360\) keV, \(\Delta m=1\) MeV | 101 | 904.216 | 0 | \(4.32454\times10^{-15}\) |
-| \(m_s=300\) keV, \(\Delta m=10\) MeV | 101 | 789.593 | 0 | \(7.93870\times10^{-16}\) |
-| \(m_s=300\) keV, \(\Delta m=1\) MeV | 200 | 711.898 | \(3.88333\times10^{-12}\) | \(3.68810\times10^{-11}\) |
-| \(m_s=300\) keV, \(\Delta m=1\) MeV | 267 | 704.458 | \(5.22186\times10^{-15}\) | \(3.91667\times10^{-14}\) |
-| \(m_s=300\) keV, \(\Delta m=1\) MeV | 542 | 748.872 | \(1.13236\times10^{-16}\) | \(1.14552\times10^{-14}\) |
+| \(m_s=200\) keV, \(\Delta m=1\) MeV | 101 | 598.554 | \(3.86776\times10^{-12}\) | \(6.35039\times10^{-12}\) |
+| \(m_s=300\) keV, \(\Delta m=1\) MeV | 101 | 789.593 | 0 | \(9.91071\times10^{-14}\) |
+| \(m_s=360\) keV, \(\Delta m=1\) MeV | 101 | 904.216 | 0 | \(4.32445\times10^{-15}\) |
+| \(m_s=300\) keV, \(\Delta m=10\) MeV | 101 | 789.593 | 0 | \(7.93852\times10^{-16}\) |
+| \(m_s=300\) keV, \(\Delta m=1\) MeV | 200 | 711.898 | \(3.88331\times10^{-12}\) | \(3.68808\times10^{-11}\) |
+| \(m_s=300\) keV, \(\Delta m=1\) MeV | 267 | 704.458 | \(5.22075\times10^{-15}\) | \(3.91583\times10^{-14}\) |
+| \(m_s=300\) keV, \(\Delta m=1\) MeV | 542 | 748.872 | \(1.13225\times10^{-16}\) | \(1.14541\times10^{-14}\) |
 
 Rates are in events/(kg day keV). They use
 \((g_1g_2g_{VN})^2=10^{-8}\), \(g_2=1\), \(m_{\chi_1}=1\) TeV,
 \(m_V=10\) GeV, and \(\rho_\chi=0.3\ {\rm GeV\,cm^{-3}}\). They are
 reference-normalized Xe-131 contributions per kg of natural xenon, not
-detector event predictions. The untruncated-MB column is a tail diagnostic,
-not the baseline halo result.
+detector event predictions. The untruncated-MB column is a high-speed-tail
+diagnostic, not the baseline halo result.
 
-### 4.2 Mass-scheme effect at fixed response convention
+The zero Xe-131 rate at 101 keV for the green benchmark is a kinematic
+support effect: \(v_{\min,131}=789.593\) km/s exceeds the truncated-SHM
+endpoint of 776 km/s. The full seven-isotope natural-xenon baseline is
+nevertheless nonzero at this point because Xe-136 is just open
+(\(v_{\min,136}\simeq775.806\) km/s); its total rate is very small.
+For the black benchmark, \(v_{\min}\) exceeds the SHM endpoint for all
+seven available isotopes, so the selected-point natural-xenon SHM rate is
+zero. This illustrates why the isotope sum and the halo speed integral
+cannot be replaced by one average target mass and one fixed incident speed.
+
+### 4.2 Mass-scheme effect at fixed exact-spatial-q convention
 
 For the green benchmark (\(m_s=300\) keV, \(\Delta m=1\) MeV) with
-manuscript-NR response interpolation and truncated SHM:
+exact-spatial-q response interpolation and truncated SHM:
 
 | \(E_R\) [keV] | \(A u\) | NIST nuclear | AME2020 nuclear |
 |---:|---:|---:|---:|
-| 200 | \(3.93719\times10^{-12}\) | \(3.88324\times10^{-12}\) | \(3.88333\times10^{-12}\) |
-| 267 | \(4.39897\times10^{-15}\) | \(5.22338\times10^{-15}\) | \(5.22186\times10^{-15}\) |
-| 542 | \(1.13489\times10^{-16}\) | \(1.13236\times10^{-16}\) | \(1.13236\times10^{-16}\) |
+| 200 | \(3.93717\times10^{-12}\) | \(3.88322\times10^{-12}\) | \(3.88331\times10^{-12}\) |
+| 267 | \(4.39798\times10^{-15}\) | \(5.22227\times10^{-15}\) | \(5.22075\times10^{-15}\) |
+| 542 | \(1.13479\times10^{-16}\) | \(1.13225\times10^{-16}\) | \(1.13225\times10^{-16}\) |
 
-At 267 keV, the AME2020 rate is \(18.7065\%\) above the \(A u\)
-approximation and \(0.02913\%\) below the NIST-nuclear result. The strong
-\(A u\)-versus-physical-mass difference is amplified by the steep AFH response
-minimum. By contrast, the NIST-to-AME2020 mass update is a much smaller
-correction. The rate response is not determined by \(R_A\) alone: \(m_A\)
-also changes \(q\), \(v_{\min}\), the three-body kernel and the propagator
-denominator.
+At 267 keV, the AME2020 rate is \(18.7079\%\) above the \(A u\)
+approximation and \(0.02913\%\) below the NIST-nuclear result. At 200 keV,
+the AME2020 result is \(0.002421\%\) above NIST; at 542 keV it is
+\(0.0001773\%\) above NIST. The \(A u\) approximation is substantially
+less accurate because it overestimates the Xe-131 nuclear mass by about
+115.8 MeV. The NIST-to-AME2020 mass difference is only about 202.6 keV,
+but the AFH response slope near the 267-keV minimum amplifies its effect.
+
+The rate response is not determined by \(R_A(q)\) alone: changing \(m_A\)
+also changes the exact response momentum, \(v_{\min}\), the three-body
+kernel, and the mediator denominator. The AME2020 correction is therefore
+propagated through the complete partial-rate calculation rather than
+applied as a multiplicative correction to the old rate.
+
+### 4.3 Xe-131-only update of the natural-xenon total
+
+The existing mainline natural-xenon calculation uses NIST nuclear masses
+for all seven AFH-default isotopes. As a controlled sensitivity diagnostic,
+the hybrid calculation replaces only its Xe-131 term:
+
+\[
+R_{\rm hybrid}
+=
+R_{\rm nat}^{\rm NIST}
+-
+R_{131}^{\rm NIST}
++
+R_{131}^{\rm AME2020}.
+\]
+
+The other six isotope terms remain at their NIST baseline. The NIST Xe-131
+partial rate independently reproduces the compact natural-xenon baseline
+to better than \(3\times10^{-10}\) relative accuracy. The largest absolute
+change in the hybrid total over the 14 selected recoil/halo points is
+approximately 7.87 ppm.
+
+| Benchmark and point | Xe-131 fraction of NIST total | Hybrid total shift |
+|---|---:|---:|
+| Red, 101 keV, SHM | 7.324% | \(-5.48\) ppm |
+| Green, 200 keV, SHM | 21.412% | \(+5.18\) ppm |
+| Green, 267 keV, SHM | 1.915% | \(-5.58\) ppm |
+| Green, 542 keV, SHM | 7.776% | \(+0.14\) ppm |
+| Green, 542 keV, untruncated MB | 14.019% | \(-7.87\) ppm |
+
+This hybrid result quantifies only the Xe-131 mass update. It is not a
+full AME2020 natural-xenon prediction because the other six isotope terms
+still use NIST masses and their response curves have not been re-evaluated
+at AME2020 momenta.
 
 ## 5. Natural-xenon limitation
 
