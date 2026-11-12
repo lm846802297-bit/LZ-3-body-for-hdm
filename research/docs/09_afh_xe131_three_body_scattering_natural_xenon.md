@@ -2575,7 +2575,7 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 
 ---
 
-# 附录 G：AFH 空间动量转移与非相对论反冲近似
+## 附录 G：AFH 空间动量转移与非相对论反冲近似
 
 ### G.1 AFH 响应函数中的 \(q\) 是什么？
 
