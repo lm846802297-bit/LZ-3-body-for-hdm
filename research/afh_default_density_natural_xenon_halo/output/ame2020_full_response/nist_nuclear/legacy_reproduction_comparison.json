@@ -1,0 +1,18 @@
+{
+  "status": "pass",
+  "response_q_convention": "exact_spatial",
+  "isotope_rows_compared": 98,
+  "rate_rows_compared": 14,
+  "relative_tolerance": 5e-08,
+  "maximum_relative_differences_by_field": {
+    "abundance": 0.0,
+    "mA_GeV": 3.1991563695795384e-10,
+    "q_response_GeV": 2.9865753663925046e-10,
+    "R_A": 4.33591681994557e-10,
+    "vmin_km_s": 8.152916406435323e-11,
+    "J_A_GeV": 4.1113386160162023e-10,
+    "rate_contribution_events_kg_day_keV": 3.2341556806848387e-10
+  },
+  "maximum_relative_total_rate_difference": 3.4316196337356316e-12,
+  "interpretation": "The updated halo-fold code reproduces the archived selected-point results using the exact spatial AFH momentum transfer. The q_NR=sqrt(2*m_A*E_R) option is a separate non-relativistic approximation."
+}

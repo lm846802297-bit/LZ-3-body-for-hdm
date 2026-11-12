@@ -1,0 +1,332 @@
+{
+  "calculation": "full AFH-default natural-xenon isotope-specific halo-folded three-body rate",
+  "mass_scheme": "nist_nuclear",
+  "mass_scheme_formula": "NIST neutral-atom mass - 54 electron masses; historical CODATA-2018; no electron binding correction",
+  "response_q_convention": "exact_spatial",
+  "response_q_formula": "sqrt(2*m_A*E_R+E_R^2), exact spatial momentum transfer",
+  "kinematic_q_formula": "sqrt(2*m_A*E_R+E_R^2)",
+  "response_grid": "research/afh_default_density_xenon_all_isotopes/output/afh_default_xenon_WM00.csv",
+  "response_grid_sha256": "9a155f71056b62aa50a8016bc15c3c65430ab61c3c3bcd03dc83283f08e774ff",
+  "response_grid_source_metadata": {
+    "source_archive": "DMFormFactor v6.0",
+    "source_zip": "dmformfactor-v6.zip",
+    "source_zip_sha256": "4e0f70e6e780f3f4a40faa14792cae239d1989cf15d1e211b4fd7389b0460727",
+    "source_file": "dmformfactor-V6.m",
+    "source_file_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+    "source_url": "https://www.ocf.berkeley.edu/~nanand/software/dmformfactor/v6.zip",
+    "mass_scheme_for_ER_annotation": "ame2020_nuclear",
+    "isotopes": [
+      128,
+      129,
+      130,
+      131,
+      132,
+      134,
+      136
+    ],
+    "isotope_metadata": [
+      {
+        "A": 128,
+        "Z": 54,
+        "source_density_matrix": "built-in sdgXe128",
+        "source_selection": "SetIsotope[54,128,\"default\",\"default\"]",
+        "density_matrix_entries": 21,
+        "density_matrix_isoscalar_entries": 16,
+        "rank0_isoscalar_entries": 16,
+        "rank2_isoscalar_entries": 0,
+        "b_A_fm": 2.2845956364531257,
+        "b_A_GeV_inverse": 11.577645306853507,
+        "T_iso": 10.0,
+        "mass_scheme_for_ER_annotation": "ame2020_nuclear",
+        "mA_GeV_for_ER_annotation": 119.11399317671135,
+        "q_grid_GeV": [
+          0.0,
+          0.6,
+          0.00025
+        ],
+        "W_M00_q0": 325.91917744944715,
+        "R_A_q0": 16384.0,
+        "expected_R_A_q0": 16384.0,
+        "normalization": "R_A(q)=A^2*W_M00(q)/W_M00(0); AFH shape preserved and equal-pn R_A(0)=A^2 imposed",
+        "response_q_definition": "q=|spatial momentum transfer|; q grid is independent of the target-mass convention",
+        "native_Mathematica_reexecution": false,
+        "density_matrix_csv": "density_matrices/afh_default_xe128_density_matrix.csv",
+        "density_matrix_csv_sha256": "fa2017a7ea1951cad6407078aeebede34b9182d0554f38968d5033c6c16bbeb4"
+      },
+      {
+        "A": 129,
+        "Z": 54,
+        "source_density_matrix": "built-in sdgXe129",
+        "source_selection": "SetIsotope[54,129,\"default\",\"default\"]",
+        "density_matrix_entries": 39,
+        "density_matrix_isoscalar_entries": 25,
+        "rank0_isoscalar_entries": 16,
+        "rank2_isoscalar_entries": 0,
+        "b_A_fm": 2.2871937024334894,
+        "b_A_GeV_inverse": 11.590811525822195,
+        "T_iso": 10.5,
+        "mass_scheme_for_ER_annotation": "ame2020_nuclear",
+        "mA_GeV_for_ER_annotation": 120.04665174494572,
+        "q_grid_GeV": [
+          0.0,
+          0.6,
+          0.00025
+        ],
+        "W_M00_q0": 662.0513124596584,
+        "R_A_q0": 16641.0,
+        "expected_R_A_q0": 16641.0,
+        "normalization": "R_A(q)=A^2*W_M00(q)/W_M00(0); AFH shape preserved and equal-pn R_A(0)=A^2 imposed",
+        "response_q_definition": "q=|spatial momentum transfer|; q grid is independent of the target-mass convention",
+        "native_Mathematica_reexecution": false,
+        "density_matrix_csv": "density_matrices/afh_default_xe129_density_matrix.csv",
+        "density_matrix_csv_sha256": "a0bd848d443a073b80ad731cc87fcfb29d7c899da932d5a230e2e245295f158e"
+      },
+      {
+        "A": 130,
+        "Z": 54,
+        "source_density_matrix": "built-in sdgXe130",
+        "source_selection": "SetIsotope[54,130,\"default\",\"default\"]",
+        "density_matrix_entries": 21,
+        "density_matrix_isoscalar_entries": 16,
+        "rank0_isoscalar_entries": 16,
+        "rank2_isoscalar_entries": 0,
+        "b_A_fm": 2.2897756832598466,
+        "b_A_GeV_inverse": 11.603896230055925,
+        "T_iso": 11.0,
+        "mass_scheme_for_ER_annotation": "ame2020_nuclear",
+        "mA_GeV_for_ER_annotation": 120.97696144327516,
+        "q_grid_GeV": [
+          0.0,
+          0.6,
+          0.00025
+        ],
+        "W_M00_q0": 336.17243902485734,
+        "R_A_q0": 16900.0,
+        "expected_R_A_q0": 16900.0,
+        "normalization": "R_A(q)=A^2*W_M00(q)/W_M00(0); AFH shape preserved and equal-pn R_A(0)=A^2 imposed",
+        "response_q_definition": "q=|spatial momentum transfer|; q grid is independent of the target-mass convention",
+        "native_Mathematica_reexecution": false,
+        "density_matrix_csv": "density_matrices/afh_default_xe130_density_matrix.csv",
+        "density_matrix_csv_sha256": "38eedadeecc45acc637264b386f8e0d2b63c8dc9e811395e348fbb3e4da8beea"
+      },
+      {
+        "A": 131,
+        "Z": 54,
+        "source_density_matrix": "built-in sdgXe131",
+        "source_selection": "SetIsotope[54,131,\"default\",\"default\"]",
+        "density_matrix_entries": 67,
+        "density_matrix_isoscalar_entries": 39,
+        "rank0_isoscalar_entries": 16,
+        "rank2_isoscalar_entries": 8,
+        "b_A_fm": 2.2923417985218975,
+        "b_A_GeV_inverse": 11.61690053236942,
+        "T_iso": 11.5,
+        "mass_scheme_for_ER_annotation": "ame2020_nuclear",
+        "mA_GeV_for_ER_annotation": 121.90992244721734,
+        "q_grid_GeV": [
+          0.0,
+          0.6,
+          0.00025
+        ],
+        "W_M00_q0": 1365.5162934039433,
+        "R_A_q0": 17161.0,
+        "expected_R_A_q0": 17161.0,
+        "normalization": "R_A(q)=A^2*W_M00(q)/W_M00(0); AFH shape preserved and equal-pn R_A(0)=A^2 imposed",
+        "response_q_definition": "q=|spatial momentum transfer|; q grid is independent of the target-mass convention",
+        "native_Mathematica_reexecution": false,
+        "density_matrix_csv": "density_matrices/afh_default_xe131_density_matrix.csv",
+        "density_matrix_csv_sha256": "4ca110f6828ef6cebe4373fb0c9704220d8227c4a131bc2b5801dc2884e00a00"
+      },
+      {
+        "A": 132,
+        "Z": 54,
+        "source_density_matrix": "built-in sdgXe132",
+        "source_selection": "SetIsotope[54,132,\"default\",\"default\"]",
+        "density_matrix_entries": 21,
+        "density_matrix_isoscalar_entries": 16,
+        "rank0_isoscalar_entries": 16,
+        "rank2_isoscalar_entries": 0,
+        "b_A_fm": 2.2948922631920268,
+        "b_A_GeV_inverse": 11.629825522178235,
+        "T_iso": 12.0,
+        "mass_scheme_for_ER_annotation": "ame2020_nuclear",
+        "mA_GeV_for_ER_annotation": 122.84055115135172,
+        "q_grid_GeV": [
+          0.0,
+          0.6,
+          0.00025
+        ],
+        "W_M00_q0": 346.6240402968277,
+        "R_A_q0": 17424.0,
+        "expected_R_A_q0": 17424.0,
+        "normalization": "R_A(q)=A^2*W_M00(q)/W_M00(0); AFH shape preserved and equal-pn R_A(0)=A^2 imposed",
+        "response_q_definition": "q=|spatial momentum transfer|; q grid is independent of the target-mass convention",
+        "native_Mathematica_reexecution": false,
+        "density_matrix_csv": "density_matrices/afh_default_xe132_density_matrix.csv",
+        "density_matrix_csv_sha256": "5a367bb5a4d278bf9c3c9f7e2aae8cd7252efe8c3371f1da2d06516c766f07f3"
+      },
+      {
+        "A": 134,
+        "Z": 54,
+        "source_density_matrix": "built-in sdgXe134",
+        "source_selection": "SetIsotope[54,134,\"default\",\"default\"]",
+        "density_matrix_entries": 21,
+        "density_matrix_isoscalar_entries": 16,
+        "rank0_isoscalar_entries": 16,
+        "rank2_isoscalar_entries": 0,
+        "b_A_fm": 2.2999470783389384,
+        "b_A_GeV_inverse": 11.655441808898239,
+        "T_iso": 13.0,
+        "mass_scheme_for_ER_annotation": "ame2020_nuclear",
+        "mA_GeV_for_ER_annotation": 124.70469249869444,
+        "q_grid_GeV": [
+          0.0,
+          0.6,
+          0.00025
+        ],
+        "W_M00_q0": 357.1494020520764,
+        "R_A_q0": 17956.0,
+        "expected_R_A_q0": 17956.0,
+        "normalization": "R_A(q)=A^2*W_M00(q)/W_M00(0); AFH shape preserved and equal-pn R_A(0)=A^2 imposed",
+        "response_q_definition": "q=|spatial momentum transfer|; q grid is independent of the target-mass convention",
+        "native_Mathematica_reexecution": false,
+        "density_matrix_csv": "density_matrices/afh_default_xe134_density_matrix.csv",
+        "density_matrix_csv_sha256": "843bd0d85d77f904c41b6a8ecb349369cadfec9d3b79f477406208e8dc410a7c"
+      },
+      {
+        "A": 136,
+        "Z": 54,
+        "source_density_matrix": "built-in sdgXe136",
+        "source_selection": "SetIsotope[54,136,\"default\",\"default\"]",
+        "density_matrix_entries": 21,
+        "density_matrix_isoscalar_entries": 16,
+        "rank0_isoscalar_entries": 16,
+        "rank2_isoscalar_entries": 0,
+        "b_A_fm": 2.304941760984924,
+        "b_A_GeV_inverse": 11.6807533621433,
+        "T_iso": 14.0,
+        "mass_scheme_for_ER_annotation": "ame2020_nuclear",
+        "mA_GeV_for_ER_annotation": 126.5693773704807,
+        "q_grid_GeV": [
+          0.0,
+          0.6,
+          0.00025
+        ],
+        "W_M00_q0": 367.965674139773,
+        "R_A_q0": 18496.0,
+        "expected_R_A_q0": 18496.0,
+        "normalization": "R_A(q)=A^2*W_M00(q)/W_M00(0); AFH shape preserved and equal-pn R_A(0)=A^2 imposed",
+        "response_q_definition": "q=|spatial momentum transfer|; q grid is independent of the target-mass convention",
+        "native_Mathematica_reexecution": false,
+        "density_matrix_csv": "density_matrices/afh_default_xe136_density_matrix.csv",
+        "density_matrix_csv_sha256": "9069106f11e2efd537380c62d7e4e63114ed84ec6bbfde687bd5da493d988df0"
+      }
+    ],
+    "response_file": "afh_default_xenon_WM00.csv",
+    "response_rows": 16807,
+    "q_grid_GeV": [
+      0.0,
+      0.6,
+      0.00025
+    ],
+    "response_definition": "AFH v6.0 built-in default-density W_M^{00}; physical equal-pn shape normalized to R_A(0)=A^2",
+    "response_q_definition": "q=|spatial momentum transfer|; exact-spatial q is applied later in the three-body halo fold",
+    "archived_28_sample_comparison": {
+      "status": "pass",
+      "samples_compared": 28,
+      "isotopes_compared": [
+        128,
+        129,
+        130,
+        131,
+        132,
+        134,
+        136
+      ],
+      "relative_tolerance": 5e-08,
+      "maximum_relative_difference": 1.1864053073296077e-09
+    },
+    "xe131_full_grid_reference_comparison": {
+      "status": "pass",
+      "points_compared": 2401,
+      "maximum_absolute_difference": 3.637978807091713e-12,
+      "maximum_relative_difference": 3.3306690738754696e-16,
+      "relative_tolerance": 2e-12
+    },
+    "limitations": [
+      "This is a source-translated Python evaluation of the AFH v6.0 built-in default matrices, not a native Mathematica re-execution.",
+      "The 28 archived NIST-mass response samples are used only as validation points; the full curves are evaluated independently from the v6.0 source matrices.",
+      "The response grid is a function of spatial q. AME2020 masses enter when mapping each recoil energy to q_exact and in the three-body kinematics.",
+      "Xe-124 and Xe-126 are not included because the AFH v6.0 default density matrices used by the natural-xenon baseline are unavailable for these isotopes."
+    ]
+  },
+  "available_isotopes": [
+    128,
+    129,
+    130,
+    131,
+    132,
+    134,
+    136
+  ],
+  "available_natural_atom_fraction": 0.998158,
+  "omitted_isotopes": [
+    124,
+    126
+  ],
+  "omitted_natural_atom_fraction": 0.0018420000000000103,
+  "abundance_convention": "NIST natural atom fractions; no renormalization",
+  "mean_atomic_weight_g_mol": 131.29276144779053,
+  "mchi1_GeV": 1000.0,
+  "mV_GeV": 10.0,
+  "coupling_product_squared": 1e-08,
+  "g2": 1.0,
+  "rho_chi_GeV_cm3": 0.3,
+  "benchmarks": {
+    "red_ms200_dm1": {
+      "ms_keV": 200.0,
+      "Delta_m_MeV": 1.0
+    },
+    "green_ms300_dm1": {
+      "ms_keV": 300.0,
+      "Delta_m_MeV": 1.0
+    },
+    "black_ms360_dm1": {
+      "ms_keV": 360.0,
+      "Delta_m_MeV": 1.0
+    },
+    "blue_ms300_dm10": {
+      "ms_keV": 300.0,
+      "Delta_m_MeV": 10.0
+    }
+  },
+  "halo": {
+    "baseline": {
+      "model": "truncated SHM",
+      "v0_km_s": 220.0,
+      "vE_km_s": 232.0,
+      "vesc_km_s": 544.0,
+      "vmax_lab_km_s": 776.0
+    },
+    "diagnostic": {
+      "model": "untruncated boosted Maxwell-Boltzmann",
+      "vmax_km_s": 1600.0
+    }
+  },
+  "quadrature": {
+    "speed_nodes": 32,
+    "kernel": [
+      8,
+      8,
+      4
+    ]
+  },
+  "width_scheme": "pole chi2 -> chi1 s; conditional Dirac/real-scalar/pure-scalar/single-channel",
+  "rate_units": "events/(kg day keV)",
+  "detector_response": "not applied",
+  "not_included": [
+    "Xe-124 and Xe-126: no AFH v6.0 default-density response matrices in the available target set",
+    "detector efficiency, resolution, exposure, cuts, backgrounds, and likelihood",
+    "native Mathematica re-execution"
+  ]
+}

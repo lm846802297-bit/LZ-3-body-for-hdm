@@ -1,0 +1,15 @@
+benchmark,ER_keV,halo_model,mass_scheme,response_q_convention,rate_events_kg_day_keV,open_isotopes,open_abundance_fraction,available_abundance_fraction
+red_ms200_dm1,101.0,shm_cutoff,nist_nuclear,exact_spatial,5.281044624587731e-11,128;129;130;131;132;134;136,0.998158,0.998158
+red_ms200_dm1,101.0,mb_untruncated,nist_nuclear,exact_spatial,8.600868116878055e-11,128;129;130;131;132;134;136,0.998158,0.998158
+green_ms300_dm1,101.0,shm_cutoff,nist_nuclear,exact_spatial,2.5995280601189206e-22,136,0.088573,0.998158
+green_ms300_dm1,101.0,mb_untruncated,nist_nuclear,exact_spatial,1.3836579399510565e-12,128;129;130;131;132;134;136,0.998158,0.998158
+black_ms360_dm1,101.0,shm_cutoff,nist_nuclear,exact_spatial,0.0,,0,0.998158
+black_ms360_dm1,101.0,mb_untruncated,nist_nuclear,exact_spatial,6.223591842749843e-14,128;129;130;131;132;134;136,0.998158,0.998158
+blue_ms300_dm10,101.0,shm_cutoff,nist_nuclear,exact_spatial,2.1675476147065608e-24,136,0.088573,0.998158
+blue_ms300_dm10,101.0,mb_untruncated,nist_nuclear,exact_spatial,1.1078921238482879e-14,128;129;130;131;132;134;136,0.998158,0.998158
+green_ms300_dm1,200.0,shm_cutoff,nist_nuclear,exact_spatial,1.8136044211407812e-11,128;129;130;131;132;134;136,0.998158,0.998158
+green_ms300_dm1,200.0,mb_untruncated,nist_nuclear,exact_spatial,1.6461481020787244e-10,128;129;130;131;132;134;136,0.998158,0.998158
+green_ms300_dm1,267.0,shm_cutoff,nist_nuclear,exact_spatial,2.7271143850713726e-13,128;129;130;131;132;134;136,0.998158,0.998158
+green_ms300_dm1,267.0,mb_untruncated,nist_nuclear,exact_spatial,1.7872097654237027e-12,128;129;130;131;132;134;136,0.998158,0.998158
+green_ms300_dm1,542.0,shm_cutoff,nist_nuclear,exact_spatial,1.4561374754767707e-15,128;129;130;131;132;134;136,0.998158,0.998158
+green_ms300_dm1,542.0,mb_untruncated,nist_nuclear,exact_spatial,8.170928788072071e-14,128;129;130;131;132;134;136,0.998158,0.998158

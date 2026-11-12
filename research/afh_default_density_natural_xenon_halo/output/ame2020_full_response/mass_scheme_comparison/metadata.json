@@ -1,0 +1,10 @@
+{
+  "status": "pass",
+  "total_rate_rows_compared": 14,
+  "isotope_partial_rows_compared": 98,
+  "maximum_absolute_total_rate_shift_AME2020_vs_NIST": 0.01059386342231905,
+  "maximum_absolute_isotope_partial_shift_AME2020_vs_NIST": 0.01059386342231905,
+  "open_isotope_sets_identical": true,
+  "available_isotope_abundance_sum": 0.998158,
+  "abundance_renormalization": false
+}
