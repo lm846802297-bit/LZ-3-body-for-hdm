@@ -23,7 +23,7 @@ jobs:
         with:
           persist-credentials: true
 
-      - name: Retrieve HEPData YAML submission
+      - name: Check HEPData YAML/JSON endpoints and reject HTML challenges
         shell: bash
         run: |
           set +e
@@ -112,7 +112,7 @@ jobs:
       - name: Upload HEPData retrieval attempt
         uses: actions/upload-artifact@v4
         with:
-          name: lz-2026-hepdata-data-release
+          name: lz-2026-efficiency-pdf-extraction-and-hepdata-status
           path: ${{ runner.temp }}/lz_hepdata/
           if-no-files-found: error
           retention-days: 90
