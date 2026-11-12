@@ -44,18 +44,24 @@ at a selected point (Xe-128, 542 keV). An independent 60-digit mpmath
 finite-sum evaluation confirms the direct response at the selected NIST-q
 points.
 
-**Consequently, the existing seven-isotope AME2020 fold script is still
-exploratory.** It currently uses PCHIP interpolation on the 2401-node grid.
-The precision rate fold must be updated to consume the direct exact-q response
-table produced by the mpmath validator, or use a separately validated refined
-or adaptive response grid. The response-grid generation and historical
-archive-reproduction checks passing does not validate the halo-fold rates.
+**The legacy seven-isotope AME2020 fold script**
+`run_ame2020_natural_xenon_halo_fold.py` and its
+`output/ame2020_full_response/` tables remain PCHIP-based diagnostics.
+They are not the primary rate result.
 
-The same interpolation issue affects the previously reported Xe-131 AME2020
-partial rates and the Xe-131-only hybrid ppm diagnostic. The nuclear-mass
-table and mass-conversion tests remain valid, but those rate-level numbers are
-provisional until the direct exact-q response is used and the rates are
-recomputed.
+The selected-point precision calculation has since been completed by
+`run_ame2020_direct_exactq_natural_xenon_halo_fold.py`. It consumes the
+56-point direct exact-q response table and writes the native outputs under
+`output/ame2020_direct_exactq_fold/`; the calculation, convergence checks,
+and output manifests are documented in the following section. The older
+PCHIP-based Xe-131 partial-rate and hybrid tables remain historical
+diagnostics and must not be cited as direct exact-q predictions.
+
+The direct exact-q result is primary only for the 14 selected recoil/halo
+benchmark points and the seven AFH-supported isotopes. It is not a continuous
+recoil spectrum or a detector-level LZ likelihood. Passing response-grid
+generation or historical PCHIP reproduction alone does not establish either
+of those broader predictions.
 
 AFH v6.0 still has no built-in default-density matrices for Xe-124 and Xe-126.
 The seven-isotope AFH result therefore covers 0.998158 of the natural atom
