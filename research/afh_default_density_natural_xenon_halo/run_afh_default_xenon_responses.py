@@ -267,7 +267,17 @@ def main() -> None:
         sample_rows.append({
             "A": A,
             "ER_keV": float(sample["ER_keV"]),
+            "J_A": J_A,
+            "T_iso": T_iso,
+            "b_A_fm_archived": float(sample["b_A_fm"]),
+            "b_A_fm_recomputed": oscillator_length_fm(A),
             "q_NIST_exact_spatial_GeV": q_sample,
+            "q_recomputed_GeV": q_expected,
+            "q_abs_difference_GeV": abs(q_sample - q_expected),
+            "y_AFH": (q_sample * b_inv / 2.0) ** 2,
+            "package_R0": package_zero,
+            "package_R_at_q": package_R,
+            "normalization_factor_to_A2": (A * A) / package_zero,
             "R_A_archived_28_sample": reference_RA,
             "R_A_direct_AFH": direct_RA,
             "R_A_PCHIP_from_2401_grid": pchip_RA,
@@ -275,14 +285,41 @@ def main() -> None:
             "PCHIP_vs_direct_relative_difference": pchip_rel,
         })
 
+    # Persist the complete point-by-point audit before enforcing the acceptance
+    # threshold. A failed regression must still leave a downloadable diagnostic.
+    regression_path = args.out_dir / "afh_response_selected_sample_regression.csv"
+    write_csv(regression_path, sample_rows)
+    diagnostic = {
+        "status": (
+            "PASS" if max_sample_difference <= args.max_relative_selected_sample_difference
+            else "FAIL"
+        ),
+        "acceptance_tolerance_relative": args.max_relative_selected_sample_difference,
+        "max_direct_vs_archived_relative_difference": max_sample_difference,
+        "max_pchip_vs_direct_relative_difference": max_pchip_difference,
+        "sample_count": len(sample_rows),
+        "source_response_grid_points": len(response_rows),
+        "top_discrepancies": sorted(
+            sample_rows,
+            key=lambda row: row["direct_vs_archived_relative_difference"],
+            reverse=True,
+        )[:10],
+        "interpretation": (
+            "Diagnostic only. No tolerance is relaxed and no response is rescaled "
+            "to force agreement."
+        ),
+    }
+    diagnostic_path = args.out_dir / "afh_response_selected_sample_regression_diagnostic.json"
+    diagnostic_path.write_text(
+        json.dumps(diagnostic, indent=2) + "\\n", encoding="utf-8"
+    )
+    print(json.dumps(diagnostic, indent=2))
+
     if max_sample_difference > args.max_relative_selected_sample_difference:
         raise RuntimeError(
             "Regenerated AFH responses do not reproduce the 28 archived samples: "
             f"max relative difference={max_sample_difference:.3e}"
         )
-
-    regression_path = args.out_dir / "afh_response_selected_sample_regression.csv"
-    write_csv(regression_path, sample_rows)
     metadata = {
         "calculation": "AFH v6.0 default-density W_M^00 response for natural xenon",
         "source": "Official AFH DMFormFactor v6.0 built-in default density matrices",
