@@ -47,8 +47,10 @@ subsequent kinematics.
 
 ## Validation hierarchy
 
-1. All seven source matrices must parse with contiguous indices and both
-   isoscalar rank-0 and rank-2 components.
+1. All seven source matrices must parse with contiguous indices and an
+   isoscalar rank-0 component. Isoscalar rank-2 entries are retained when
+   present; their absence for spin-zero isotopes is allowed and corresponds
+   to a vanishing rank-2 amplitude.
 2. Every isotope must have 2401 finite, nonnegative response points and
    \(R_A(0)=A^2\).
 3. The generated Xe-131 curve must match the already validated 2401-point
