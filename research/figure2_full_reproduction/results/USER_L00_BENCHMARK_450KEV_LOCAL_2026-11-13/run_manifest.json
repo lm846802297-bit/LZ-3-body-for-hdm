@@ -1,0 +1,62 @@
+{
+  "execution": {
+    "commands": [
+      "python research/figure2_full_reproduction/run_user_l00_benchmark.py --nw 48 --nz 40 --nphi 24 --output /tmp/USER_L00_BENCHMARK_450KEV_48x40x24.json",
+      "python -m unittest discover -s research/figure2_full_reproduction/tests -p test_user_l00_benchmark.py -v"
+    ],
+    "github_actions_used": false
+  },
+  "inputs": {
+    "delta_m_keV": 450,
+    "diagnostic_kinematics": {
+      "ER_keV": 200,
+      "W2": "midpoint",
+      "frame": "target rest",
+      "mA_GeV_approx": 122,
+      "phi_rad": 1.1,
+      "speed_km_s": 776,
+      "z": 0.2
+    },
+    "g1": 1,
+    "g2": 1,
+    "gVN": 1,
+    "mV_GeV": 10,
+    "mchi1_GeV": 1000,
+    "ms_keV": 300
+  },
+  "outputs": [
+    "USER_L00_BENCHMARK_450KEV_48x40x24.json",
+    "QUADRATURE_CONVERGENCE_450KEV.csv",
+    "LOCAL_VALIDATION_2026-11-13.md",
+    "run_manifest.json",
+    "validation_log.txt",
+    "SHA256SUMS"
+  ],
+  "pull_request": 5,
+  "repository": "lm846802297-bit/LZ-3-body-for-hdm",
+  "run_id": "LZ-PR5-L00-450keV-local-2026-11-13",
+  "runtime": {
+    "numpy": "2.3.5",
+    "platform": "Linux x86_64",
+    "python": "3.13.5"
+  },
+  "scope": "Pointwise L00 and reduced Eq. (6) only; no full vector-plus-scalar self-energy, exact isotope mass, continuous AFH response, halo fold, natural-xenon sum, detector response, or LZ likelihood.",
+  "source_blob_shas": {
+    "main_kernel": "7c796b48c3f3c2cb9079ddbf1e632cc0b9ce207c",
+    "pr_kernel": "b4eac1242f9301ab8b32c4e83466d8fc218ed581",
+    "runner": "71ef22645cc5d15c9419a96083b792b5e7f66e80",
+    "tests": "09313ffa3721507224ca466831040687f19ccce2"
+  },
+  "source_branch": "research/figure2-l00-benchmark-450kev",
+  "source_commit": "33ed2e0fa094783b0dba3dd7f7b8a695767fbd1a",
+  "target_main_commit": "e8fa6ecd619dceafcffdb25b5084acee40dbf432",
+  "validation": {
+    "I6_convergence_pole": 6.661978180222405e-7,
+    "I6_convergence_zero": 6.53699222863402e-7,
+    "max_four_momentum_closure_residual_GeV": 2.1316282072803006e-13,
+    "pr_and_main_kernel_match_at_tested_orders": true,
+    "spinor_trace_relative_difference": 2.220446049250313e-16,
+    "tests_failed": 0,
+    "tests_passed": 6
+  }
+}
