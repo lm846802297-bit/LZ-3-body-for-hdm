@@ -311,7 +311,7 @@ def main() -> None:
     }
     diagnostic_path = args.out_dir / "afh_response_selected_sample_regression_diagnostic.json"
     diagnostic_path.write_text(
-        json.dumps(diagnostic, indent=2) + "\\n", encoding="utf-8"
+        json.dumps(diagnostic, indent=2) + "\n", encoding="utf-8"
     )
     print(json.dumps(diagnostic, indent=2))
 
