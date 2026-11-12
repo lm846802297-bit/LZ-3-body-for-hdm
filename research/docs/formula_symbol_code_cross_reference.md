@@ -1,12 +1,12 @@
 # 公式—符号—正文—程序—结果交叉引用索引
 
 > 所属主报告：[09_afh_xe131_three_body_scattering_natural_xenon.md](09_afh_xe131_three_body_scattering_natural_xenon.md)  
-> 研究分支：`research/figure2-p0-4-mainline`  
+> 当前 AME2020 扩展分支：`research/ame2020-xe131-exact-spatial-mainline`  
 > 文档性质：可追溯性索引；本文件不引入新的物理假设，也不声称完成新的数值验证。
 
 ## 1. 使用方法与统一约定
 
-本索引为每个核心公式分配稳定编号 F1–F12。推荐沿以下路径阅读：
+本索引为每个核心公式分配稳定编号 F1–F14。推荐沿以下路径阅读：
 
 1. 从主报告相应小节读取物理定义和最终使用的公式；
 2. 进入对应附录查看完整推导、约定和适用条件；
@@ -33,6 +33,8 @@
 | F10 | 天然氙 halo-folded 微分事件率 \(dR/dE_R\) | §2.2、§6.3、§7 | [附录 D，§D.3–D.4](appendices/09D_natural_xenon_isotope_target.md)；[附录 E，§E.3–E.7](appendices/09E_halo_velocity_vmin_folding.md) | [run_afh_natural_xenon_halo_fold.py](../afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py)：AFH selected points；[run_natural_xenon_continuous_spectrum.py](../figure2_full_reproduction/run_natural_xenon_continuous_spectrum.py)：GCN/JJ55 continuous spectra | [natural_xenon_halo_rates.csv](../afh_default_density_natural_xenon_halo/results/natural_xenon_halo_rates.csv)；[natural_xenon_continuous_spectrum.csv](../figure2_full_reproduction/results/natural_xenon_continuous_spectrum/red_ms200_dm1/natural_xenon_continuous_spectrum.csv)；其他 benchmark 子目录采用相同文件名 | 单位 events/(kg day keV)。对每个同位素分别使用 \(m_A,R_A,v_{\min,A},I_{6,A}\)，再按原始 \(x_A\) 求和。AFH 当前为 selected points；连续谱是 GCN/JJ55，不能混称为 AFH 连续谱。 |
 | F11 | LZ 一维效率加权预期事件数 \(N_{\rm sig}^{\rm ROI}\) | §11.1、§11.4 | 主报告 §11.1、§11.4；接口限制见附录 F.5 | [fold_lz_2026_rate_level.py](../figure2_full_reproduction/fold_lz_2026_rate_level.py) | [lz_2026_nr_efficiency_digitized.csv](../lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv)；[lz_2026_rate_level_event_yields.csv](../lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/lz_2026_rate_level_event_yields.csv)；对应 metadata | 使用 5.4–269.9 keV、2.84 tonne-year 和一维 final-ROI efficiency。当前只折叠 GCN/JJ55 连续谱；没有能量分辨卷积、二维 \(S1_c\)–\(\log_{10}S2_c\) PDF、NEST nuisance covariance、背景 likelihood 或 90% CL 排除。 |
 | F12 | 条件性 \(\chi_2\to\chi_1s\) pole width | §5、§7 的 width prescription | [附录 A，§A.5–A.6](appendices/09A_three_body_kinematics_amplitude.md)；[附录 E，§E.3](appendices/09E_halo_velocity_vmin_folding.md) | [eq6_kernel.py](../figure2_full_reproduction/eq6_kernel.py)：`chi2_width_dirac_scalar`、`chi2_width_dirac_scalar_at_mass`、`reduced_kernel` | benchmark metadata、halo metadata 与 continuous-spectrum metadata 中的 `width_scheme`、`g2` 字段 | 当前 pole-width 方案假设 Dirac 费米子、实标量、纯 scalar off-diagonal Yukawa、仅一个开放衰变道。它不是完整自能计算；耦合乘积 \((g_1g_2g_{VN})^2\) 本身不足以确定宽度，故另记录 \(g_2\)。running-width 仅为诊断 ansatz。 |
+| F13 | AME2020 原子质量到氙核质量的转换 \(m_Ac^2=M_{\rm atom}c^2-54m_ec^2+B_e(54)\) | AME2020 Xe-131 扩展文档 §2.1–§2.2 | [AME2020/CODATA-2022 质量与 exact-spatial 计算记录，§2](../afh_default_density_xe131/AME2020_CODATA2022_EXACT_SPATIAL_XE131.md)；AME2020 质量评估 Eq. (1)–(2) | [isotope_mass_schemes.py](../figure2_full_reproduction/isotope_mass_schemes.py)：electron_binding_energy_eV、isotope_mass_GeV；[质量方案测试](../figure2_full_reproduction/tests/test_isotope_mass_schemes.py) | [xenon_isotope_ame2020_masses.csv](../afh_default_density_xe131/output/ame2020_exact_spatial_xe131_partial/xenon_isotope_ame2020_masses.csv)；计算 metadata | 使用 unrounded AME2020 mass_1.mas20 中性原子质量、CODATA-2022 常数和近似总电子结合能。与 NIST-nuclear、\(A u\) 方案分开；电子结合能公式不附加未经来源支持的精度声明。 |
+| F14 | AME2020 核质量下 Xe-131 的 exact-spatial AFH halo-folded partial rate \(dR_{131}/dE_R\) | AME2020 Xe-131 扩展文档 §3–§4 | [附录 D，§D.3–D.4](appendices/09D_natural_xenon_isotope_target.md)；[附录 E，§E.2–E.7](appendices/09E_halo_velocity_vmin_folding.md)；[附录 G，§G.1–G.5](appendices/09G_recoil_momentum_convention_audit.md)；[AME2020 Xe-131 记录，§3–§4](../afh_default_density_xe131/AME2020_CODATA2022_EXACT_SPATIAL_XE131.md) | [run_ame2020_xe131_halo_partial.py](../afh_default_density_xe131/run_ame2020_xe131_halo_partial.py)：compute_partial_rate；[rate_kinematics.py](../figure2_full_reproduction/rate_kinematics.py)：vmin_three_body_km_s；[eq6_kernel.py](../figure2_full_reproduction/eq6_kernel.py)：reduced_kernel | [xe131_partial_halo_rates.csv](../afh_default_density_xe131/output/ame2020_exact_spatial_xe131_partial/xe131_partial_halo_rates.csv)；[mass_scheme_rate_comparison.csv](../afh_default_density_xe131/output/ame2020_exact_spatial_xe131_partial/mass_scheme_rate_comparison.csv)；[response_q_convention_rate_comparison.csv](../afh_default_density_xe131/output/ame2020_exact_spatial_xe131_partial/response_q_convention_rate_comparison.csv)；workflow metadata | AFH response 用 \(q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}\)，NR q 只作诊断；质量、阈值、三体核和传播子分母使用同一质量方案。只计算 Xe-131 在天然氙中的部分贡献，不是全同位素 AME2020 预测，也不含探测器响应或 likelihood。 |
 
 ## 3. 符号、定义与单位表
 
@@ -80,6 +82,10 @@
 | \(A,Z,J_A\) | 同位素质量数、质子数、核自旋 | 整数 / 自旋量子数 | Xe-131 为 \(A=131,Z=54,J_A=3/2\) |
 | \(m_A\) | 目标核质量 | GeV | 天然氙使用逐同位素 NIST 核质量方案 |
 | \(M_{\rm atom}(A)\) | 同位素原子质量 | u | \(m_A=[M_{\rm atom}(A)-54m_e]u\)，忽略电子结合能 |
+| \(B_e(Z)\) | AME2020 近似总电子结合能 | eV | \(14.4381Z^{2.39}+1.55468\times10^{-6}Z^{5.35}\)；Xe 取 \(Z=54\) |
+| \(M_{\rm atom}^{\rm AME2020}(A)\) | AME2020 中性原子质量 | u | 使用官方 mass_1.mas20 未舍入数值，不等同于 NIST 汇总值 |
+| \(m_A^{\rm AME2020}\) | AME2020/CODATA-2022 核质量 | GeV | \([M_{\rm atom}^{\rm AME2020}-54m_e]uc^2+B_e(54)\) |
+| \(u_{\rm CODATA2022},m_{e,\rm CODATA2022}\) | 原子质量单位和电子质量 | \(uc^2=931.49410372\) MeV；\(m_ec^2=0.51099895069\) MeV | 与历史 \(A u\) 和 NIST-nuclear 方案的常数版本分开记录 |
 | \(u,m_e\) | 原子质量单位、电子质量 | \(u=0.93149410242\) GeV；\(m_e=0.000548579909065\,u\) | 电子质量在此式中以 u 表示 |
 | \(N_{\rm Av}\) | 阿伏伽德罗常数 | mol\(^{-1}\) | 用于将平均摩尔质量转换为每 kg 靶核数 |
 | \(x_A\) | 天然氙同位素原子丰度 | 无量纲 | 使用原始丰度；当前 AFH 可用七种覆盖 0.998158，不重归一化 |
@@ -114,7 +120,7 @@
 | 传播子动量 | \(t=-2m_AE_R\) | 不用 \(Q^2\) 替代 \(t\) | \(Q^2=2m_AE_R+E_R^2\)，而 \(t=-2m_AE_R\) |
 | AFH \(b_A\) | AFH 文献 default 处方 | 不拟合谷值 | 调节 \(b_A\) 会改变核响应形状，不能用于强行对齐 Figure 2 |
 | AFH 归一化 | 物理响应 \(R_A(0)=A^2\) | 原始 AFH isoscalar \(A^2/4\) | 因子 4 只计入一次 |
-| 同位素质量 | 天然氙 halo fold 使用 NIST 原子质量减去 54 个电子质量 | 固定 Figure-2 Xe-131 截面对照使用 \(M_A=131u\) | 两种质量方案各自有 metadata；不要把一套结果的质量输入与另一套 \(q\) 或阈值混用 |
+| 同位素质量 | 天然氙历史基准使用 NIST nuclear；AME2020 扩展使用 unrounded AME2020 + CODATA-2022 | 固定 Figure-2 Xe-131 截面对照使用 \(M_A=131u\) | NIST、AME2020 和 \(A u\) 分开运行；不能混用质量输入、响应 q 和阈值。AME2020 天然氙全同位素折叠仍待生成各同位素响应。 |
 | 同位素丰度 | 原始 \(x_A\)，可用 AFH 七同位素覆盖 0.998158 | 不把七种丰度重归一化到 1 | Xe-124/Xe-126 的缺失贡献保持显式边界 |
 | 速度分布 | 截断 SHM，\(v_{\max}=776\) km/s | 不截断 boosted MB 仅作尾部诊断 | 固定 \(v=800\) km/s 的 Figure-2 截面对照不是截断 SHM halo rate |
 | 方位角 | \(I_6\) 中对 \(\phi_*\) 作归一化平均 | 不使用未归一化方位角积分 | 否则 Eq. (6) 的整体相空间前因子需要重新定义 |
@@ -132,6 +138,7 @@
 | GCN/JJ55 天然氙连续谱 | `research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/<benchmark>/natural_xenon_continuous_spectrum.csv` | 每个 benchmark 子目录的 `metadata.json` 与 `quadrature_crosschecks.csv` |
 | LZ 效率输入 | `research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv` | 同目录的 `lz_2026_nr_efficiency_metadata.json` 和 `lz_2026_figS2.svg` |
 | LZ rate-level yields | `research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/lz_2026_rate_level_event_yields.csv` | 同目录的 `lz_2026_rate_level_metadata.json` |
+| AME2020 Xe-131 exact-spatial partial fold | research/afh_default_density_xe131/output/ame2020_exact_spatial_xe131_partial/xe131_partial_halo_rates.csv | 同目录的 mass/q comparison CSV、convergence CSV、metadata；workflow .github/workflows/ame2020-xe131-exact-spatial.yml |
 
 复现命令以[附录 F，§F.3](appendices/09F_numerical_validation_reproduction.md)为准。建议先运行 Eq. (6) kernel tests，再运行 AFH response、halo fold、continuous-spectrum 和 LZ rate-level workflows。不要仅凭某个 workflow 成功，就把未被该 workflow 覆盖的物理层级标记为已验证。
 
