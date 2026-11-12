@@ -172,11 +172,44 @@ The factor four is applied exactly once, in the nuclear response. The
 independent historical code-convention check is documented in
 `AFH_COUPLING_NORMALIZATION_MAPPING.md`.
 
-The natural-xenon isotope sum and halo velocity integration remain separate
-follow-up calculations. The AFH native Mathematica execution also remains
+The selected-point natural-xenon isotope sum and halo velocity fold are
+implemented separately in
+`../afh_default_density_natural_xenon_halo/`. That calculation uses 28
+selected AFH samples (seven isotopes x four recoil energies), not seven
+complete 2401-point response grids. The provenance metadata now explicitly
+distinguishes the original 16,807-row source input from the committed
+28-row selected-sample file; the original all-isotope input itself is not
+currently committed. The AFH native Mathematica execution also remains
 pending; the current AFH numerical table is from the source-translated Python
 implementation.
 
 The GCN/JJ55 files from `dmscatter` remain separate nuclear-structure
 calculations and are not relabeled or substituted for AFH default.
 
+
+
+## AME2020/CODATA2022 nuclear-mass update
+
+The current mainline-based AME2020 study is documented in
+[AME2020_CODATA2022_MASS_RECALC.md](AME2020_CODATA2022_MASS_RECALC.md).
+It adds a third nuclear-mass prescription alongside the historical \(A u\)
+and NIST nuclear-mass schemes:
+
+\[
+M_N=M_{\rm atom}^{\rm AME2020}-54m_e+B_e(54),
+\]
+
+using unrounded AME2020 atomic masses and CODATA-2022 constants.
+
+The Xe-131 partial halo fold uses the exact AFH spatial momentum
+\(q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}\) as its baseline. The
+\(q_{\rm NR}=\sqrt{2m_AE_R}\) result is retained only as an approximation
+diagnostic. The calculation and its numerical outputs are archived under
+\`output/ame2020_exact_spatial_xe131_partial/\`.
+
+A separate Xe-131-only hybrid diagnostic replaces the Xe-131 term in the
+existing NIST natural-xenon selected-point sum with the AME2020 result while
+leaving the other six isotope terms at their NIST baseline. It is explicitly
+not a full AME2020 natural-xenon prediction. Updating the full seven-isotope
+sum requires the original all-isotope AFH response input or regeneration of
+the six other full response grids from the AFH v6.0 source archive.
