@@ -23,6 +23,10 @@ The main report contains the complete Appendices A–G. The seven files below ar
 - `appendices/09F_numerical_validation_reproduction.md`: code entry points, numerical validation, and reproduction instructions.
 - `appendices/09G_recoil_momentum_convention_audit.md`: exact spatial momentum, nuclear mass-shell mapping, and NR recoil approximation audit.
 
+## Formula and symbol index
+
+- [Formula–symbol–text–code–result cross-reference](formula_symbol_code_cross_reference.md): equation-by-equation links to derivations, definitions, units, approximations, program entry points and archived outputs.
+
 ## Supplementary documents (not part of the main report appendices)
 
 - `supplements/research_decision_register.md`: discussion summary, adopted conventions, and scope boundaries.
