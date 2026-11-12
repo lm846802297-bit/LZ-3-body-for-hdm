@@ -678,6 +678,19 @@ The GCN/JJ55 central-yield differences are about 0.94–3.59%, smaller than the 
 
 The results are archived in \`research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/\`; the successful rate-fold CI run is [#43151727539](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43151727539). The event yields are preliminary rate-level estimates. They do not include energy-resolution smearing, the two-dimensional \(\{S1_c,\log_{10}S2_c\}\) signal PDFs, the NEST nuisance-parameter covariance, background samples or the LZ profile likelihood. They are not a 90% confidence-level exclusion and do not establish an interpretation of the 248 keV event.
 
+### 10.5 High-energy-tail diagnostic around the 248 keV candidate
+
+To separate spectral hardness from overall normalization, I also integrated the efficiency-weighted spectrum over \(225\le E_R\le269.9\) keV. The lower boundary is \(248-23\) keV, i.e. the lower statistical-error edge of the reported candidate energy; this is only a high-energy-tail diagnostic. It is not a likelihood window, and no energy-resolution or systematic-energy smearing is applied.
+
+| Benchmark | Fraction of accepted events above 225 keV (GCN/JJ55) | Accepted events in 225--269.9 keV (GCN/JJ55) |
+|---|---:|---:|
+| Red | 2.25% / 2.32% | \(7.61\times10^{-3}\) / \(8.02\times10^{-3}\) |
+| Green | 8.62% / 8.78% | \(1.31\times10^{-4}\) / \(1.39\times10^{-4}\) |
+| Black | 92.84% / 92.76% | \(2.65\times10^{-9}\) / \(2.67\times10^{-9}\) |
+| Blue | 8.57% / 8.74% | \(1.07\times10^{-6}\) / \(1.13\times10^{-6}\) |
+
+This separates two distinct properties. Red has the largest total accepted rate but places only about 2.3% of its accepted events above 225 keV. Black has an extremely hard spectrum, with more than 92% of its already tiny accepted rate above 225 keV, but its total rate is only about \(3\times10^{-9}\) events. Green and Blue are intermediate in spectral hardness but remain strongly rate-suppressed at the reference coupling. Thus a hard spectrum alone does not establish an explanation of the 248 keV event: the normalization must also be viable.
+
 A nuclear-response distinction is also necessary. The LZ 2026 paper states that its published theory spectra use WimPyDD with one-body density matrices developed for DMFormFactor-v6, modified as described in Ref. [31]. The continuous spectra being generated in this repository use the available GCN/JJ55 isotope-response grids as an independent nuclear-model comparison; they are not claimed to reproduce the LZ collaboration's modified nuclear-response inputs. The AFH v6.0 calculation remains a separate selected-point result until the full seven-isotope AFH response grid is recovered.
 
 **Experimental reference:** LZ Collaboration, D. S. Akerib et al., *Search for dark matter particle interactions in an extended nuclear recoil energy window with the LUX-ZEPLIN (LZ) experiment*, arXiv:2609.02823v1 (2026), data release DOI: [10.17182/hepdata.182472.v1](https://doi.org/10.17182/hepdata.182472.v1).
