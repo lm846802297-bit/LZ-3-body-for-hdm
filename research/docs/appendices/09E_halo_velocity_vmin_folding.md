@@ -1,4 +1,4 @@
-> 所属主报告：[AFH v6.0 氙核响应与三体暗物质散射](../09_afh_xe131_three_body_kernel_natural_xenon_halo_2026-11-11.md)
+> 所属主报告：[AFH v6.0 氙核响应与三体暗物质散射](../09_afh_xe131_three_body_scattering_natural_xenon.md)
 
 # 附录 E：实验室系速度分布、三体 \(v_{\min}\) 与 halo folding
 
@@ -212,7 +212,7 @@ q_{\rm NR}=\sqrt{2m_AE_R}
 
 只是 \(E_R\ll m_A\) 的非相对论反冲近似，保留为独立的响应敏感性对照。
 
-当前归档的 28 个 AFH 天然氙响应样本全部是在 \(q_{\rm exact}\) 处取值，与精确三体运动学一致，不属于需要修正的 legacy 错误样本。附录 G 给出精确质量壳推导、28 个样本核查及 Xe-131 NR 近似的响应影响。
+当前归档的 28 个 AFH 天然氙响应样本全部是在 \(q_{\rm exact}\) 处取值，与精确三体运动学一致，不属于需要修正的 legacy 错误样本。独立补充技术说明给出精确质量壳推导、28 个样本核查及 Xe-131 NR 近似的响应影响。
 
 ## E.4 101 keV 时逐同位素阈值
 
@@ -309,4 +309,4 @@ python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_hal
 
 若显式选择 nr_approx，程序会因输入样本仍采用 exact spatial q 而报错，除非同时提供在 NR q 处重新计算的匹配响应值。该检查用于防止把一个 q 点的 \(R_A\) 错误地标记成另一个 q 点的响应。
 
-本节的 selected-point 速率保留 exact spatial q，不进行经验重标度。NR 近似的响应变化见附录 G；连续反冲谱仍需恢复完整七同位素 AFH 响应网格后再开展。
+本节的 selected-point 速率保留 exact spatial q，不进行经验重标度。NR 近似的响应变化见独立补充技术说明；连续反冲谱仍需恢复完整七同位素 AFH 响应网格后再开展。
