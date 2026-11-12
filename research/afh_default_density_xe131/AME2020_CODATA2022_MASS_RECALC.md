@@ -462,3 +462,43 @@ cuts, backgrounds, and likelihood.
 5. A. Anand, A. L. Fitzpatrick, and W. C. Haxton, *Weakly interacting
    massive particle-nucleus elastic scattering response*, Phys. Rev. C **89**
    (2014) 065501, arXiv:1308.6288.
+
+## 9. Post-calculation AFH interpolation audit — rate tables provisional
+
+A subsequent seven-isotope AFH audit found that the 28 historical selected
+response values in the natural-xenon input are PCHIP interpolants from a
+2401-node response grid, not direct finite-sum evaluations at the off-grid
+exact spatial momenta. The regenerated PCHIP values reproduce the historical
+28 samples to a maximum relative difference of \(1.19\times10^{-9}\).
+However, direct exact-q finite-sum evaluations can differ from PCHIP by
+\(3.185\times10^{-4}\) for Xe-131 at 267 keV.
+
+The direct finite-sum evaluation was independently checked with a 60-digit
+mpmath implementation; at the selected Xe-131 NIST-q points the maximum
+relative difference is below \(6\times10^{-14}\). The discrepancy is
+therefore attributable to the coarse-grid interpolation, not to the
+AME2020 mass conversion or the exact spatial momentum formula.
+
+This has an important consequence for the numerical results in Sections 4.1
+through 4.3:
+
+- the AME2020 atomic masses, nuclear-mass conversion, and mass-scheme unit
+  tests remain valid;
+- the PCHIP-based Xe-131 partial rates in Section 4.1 are retained as
+  reproducible historical values, but are provisional for precision use;
+- the quoted NIST-to-AME2020 rate shifts in Section 4.2, especially the
+  \(267\) keV comparison, must be recomputed using direct exact-q responses;
+- the Xe-131-only natural-xenon hybrid shift of at most 7.87 ppm in Section
+  4.3 is provisional and must not be used as the final mass correction.
+
+The corrected workflow now separates reproduction of the historical PCHIP
+samples from off-grid interpolation accuracy. The independent
+`verify_afh_selected_q_mpmath.py` validator produces direct exact-q response
+values for both NIST-nuclear and AME2020-nuclear masses. The selected-point
+rate fold must consume those values, or use a separately validated
+refined/adaptive response grid, before its rates can be promoted to final
+results.
+
+See
+`research/afh_default_density_natural_xenon_halo/audit/AFH_RESPONSE_INTERPOLATION_AUDIT.md`
+for the seven-isotope numerical diagnosis and rate-level sensitivity check.
