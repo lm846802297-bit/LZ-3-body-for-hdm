@@ -8,10 +8,18 @@ research/WORKFLOW.md before starting a new calculation or submitting a change.
 1. Create a topic branch from the latest main.
 2. Put research-specific material under research/<topic>/.
 3. Include a study README describing the question, assumptions, inputs,
-   environment, reproduction command, tests, results, and limitations. Commit
-   the essential native/uncompressed result files, run manifest, provenance,
-   and checksums; do not create a new ZIP/TAR archive as a substitute for the
-   extracted result files.
+   environment, reproduction command, tests, results, and limitations.
+   **When a submission or calculation result is supplied as ZIP/TAR, extract it
+   before committing. Upload the extracted native files individually** (source
+   code, tests, inputs, CSV/JSON/ROOT/HDF5/TXT outputs, reports, metadata, and
+   manifests) into the appropriate research directory. A delivery ZIP/TAR is
+   a transfer container, not the repository archive, and must not be committed
+   as a substitute for its extracted contents. Preserve an original upstream
+   archive only when its exact container is needed for provenance or
+   reproducibility; record its source/version, size, SHA-256, extraction
+   command, and per-file checksums, and still commit the required extracted
+   files when redistribution is permitted. Commit the run manifest,
+   provenance, and checksums alongside the native files.
 4. Run the relevant tests and research workflow before opening a PR.
 5. Submit a pull request to main using the repository PR template.
 6. Merge only after the structure check and all relevant scientific checks

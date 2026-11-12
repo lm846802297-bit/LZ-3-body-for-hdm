@@ -78,7 +78,7 @@ Do not combine cosmological and direct-detection constraints using mismatched be
 - Preserve `paper-source/main_original.tex`, original figures, bibliography, and other original source assets byte-for-byte. Do not overwrite them or silently replace the source archive.
 - The working manuscript `paper-source/main.tex` is distinct from the preserved original. A research-code PR must not modify the manuscript unless the task explicitly includes manuscript editing and the diff is separately identified and reviewed.
 - Treat figure digitization, data conversion, isotope-abundance updates, and reconstructed-efficiency curves as research inputs: retain the source, extraction method, units, and checksums.
-- Follow [research/WORKFLOW.md](research/WORKFLOW.md) and the mandatory calculation-result archival policy. Commit essential native outputs directly; do not create a new ZIP/TAR as a substitute for extracted result files.
+- Follow [research/WORKFLOW.md](research/WORKFLOW.md) and the mandatory calculation-result archival policy. **If files arrive in a ZIP/TAR delivery bundle, extract the bundle first and commit the required extracted native files individually.** Do not commit the delivery bundle as the sole or substitute record of its contents. Retain an original upstream archive only when needed for provenance/reproducibility, with source/version, size, SHA-256, extraction command, and per-file checksums recorded; still commit the extracted files when redistribution is allowed.
 - Use Git LFS or durable versioned storage with a manifest for large outputs. Verify remote paths, sizes, counts, and SHA-256 after pushing.
 
 ## 8. Validation and completion
