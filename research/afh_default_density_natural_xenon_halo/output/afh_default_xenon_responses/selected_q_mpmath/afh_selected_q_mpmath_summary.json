@@ -1,0 +1,108 @@
+{
+  "method": "independent grouped finite-sum evaluation with 60-digit mpmath.hyp1f1",
+  "reference_precision_decimal_digits": 60,
+  "source": "AFH DMFormFactor v6.0 default density matrices extracted from official package",
+  "source_archive_sha256": "4e0f70e6e780f3f4a40faa14792cae239d1989cf15d1e211b4fd7389b0460727",
+  "source_package_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+  "isotopes": [
+    128,
+    129,
+    130,
+    131,
+    132,
+    134,
+    136
+  ],
+  "mass_schemes": [
+    "nist_nuclear",
+    "ame2020_nuclear"
+  ],
+  "recoil_points_keV": [
+    101.0,
+    200.0,
+    267.0,
+    542.0
+  ],
+  "exact_q_response_rows": 56,
+  "q0_normalization": {
+    "128": {
+      "matrix_entries": 21,
+      "J_A": 0.0,
+      "T_iso": 10.0,
+      "b_A_fm": "2.28459563645312593",
+      "package_R0": "4095.621174156846570011",
+      "expected_A2_over_4": 4096.0,
+      "relative_q0_error": 9.248677811363037e-05
+    },
+    "129": {
+      "matrix_entries": 39,
+      "J_A": 0.5,
+      "T_iso": 10.5,
+      "b_A_fm": "2.28719370243348988",
+      "package_R0": "4159.791079045487760944",
+      "expected_A2_over_4": 4160.25,
+      "relative_q0_error": 0.00011031090788107423
+    },
+    "130": {
+      "matrix_entries": 21,
+      "J_A": 0.0,
+      "T_iso": 11.0,
+      "b_A_fm": "2.28977568325984681",
+      "package_R0": "4224.467459119417571916",
+      "expected_A2_over_4": 4225.0,
+      "relative_q0_error": 0.00012604517883607765
+    },
+    "131": {
+      "matrix_entries": 67,
+      "J_A": 1.5,
+      "T_iso": 11.5,
+      "b_A_fm": "2.29234179852189751",
+      "package_R0": "4289.895955714992084396",
+      "expected_A2_over_4": 4290.25,
+      "relative_q0_error": 8.252299633073029e-05
+    },
+    "132": {
+      "matrix_entries": 21,
+      "J_A": 0.0,
+      "T_iso": 12.0,
+      "b_A_fm": "2.29489226319202701",
+      "package_R0": "4355.806154216504958532",
+      "expected_A2_over_4": 4356.0,
+      "relative_q0_error": 4.450086857094616e-05
+    },
+    "134": {
+      "matrix_entries": 21,
+      "J_A": 0.0,
+      "T_iso": 13.0,
+      "b_A_fm": "2.29994707833893859",
+      "package_R0": "4488.071750883163864671",
+      "expected_A2_over_4": 4489.0,
+      "relative_q0_error": 0.00020678305119985194
+    },
+    "136": {
+      "matrix_entries": 21,
+      "J_A": 0.0,
+      "T_iso": 14.0,
+      "b_A_fm": "2.3049417609849238",
+      "package_R0": "4623.993034602908731184",
+      "expected_A2_over_4": 4624.0,
+      "relative_q0_error": 1.5063575024370276e-06
+    }
+  },
+  "max_q0_relative_error": 0.00020678305119985194,
+  "max_PCHIP_vs_archived_28_sample_relative_error_NIST": 8.115841332312357e-12,
+  "max_PCHIP_vs_exact_q_relative_error_by_mass_scheme": {
+    "nist_nuclear": 0.008830600264375337,
+    "ame2020_nuclear": 0.00879940579303358
+  },
+  "max_PCHIP_vs_exact_q_relative_error": 0.008830600264375337,
+  "historical_sample_interpretation": "The 28 archived R_A values are PCHIP interpolants from the historical 2401-node grid, not direct AFH evaluations at the off-grid q values.",
+  "fold_interpolation_status": "NOT_ACCEPTED_FOR_PRECISION_RATE_FOLD",
+  "response_table": "afh_selected_exact_q_responses.csv",
+  "status": "PASS",
+  "limitations": [
+    "This validates selected exact-q points, not the full continuous response curve.",
+    "It is an independent high-precision Python finite-sum evaluation, not a native Mathematica execution.",
+    "The 2401-node PCHIP interpolation remains unsuitable for a precision fold at points where its residual exceeds the stated threshold."
+  ]
+}

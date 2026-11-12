@@ -169,12 +169,22 @@ deletion after merge.
   inputs, environment, commands, numerical settings, outputs, and validation.
 - Keep raw inputs immutable when their provenance matters. Do not overwrite
   a historical result; write a new versioned result and explain the difference.
-- Commit small, redistributable inputs and essential machine-readable outputs
-  directly in their native, uncompressed formats (CSV, JSON/JSONL, ROOT, HDF5,
-  TXT, etc.) where practical. Do not create a new ZIP/TAR archive as a
-  substitute for the extracted result files. If an upstream source is supplied
-  as an archive, extract the required files and record the original archive's
-  source/version, size, SHA-256, extraction command, and per-file checksums.
+- **Extract-before-upload is mandatory for research delivery bundles.** If a
+  local runner, ChatGPT export, GitHub Actions artifact, collaborator, or other
+  source supplies a ZIP/TAR containing calculation results, unpack it before
+  committing and upload the required extracted files individually to the
+  appropriate study directory. Commit native, uncompressed inputs and outputs
+  (CSV, JSON/JSONL, ROOT, HDF5, TXT, source code, tests, reports, metadata,
+  manifests, etc.) rather than the delivery ZIP/TAR. A delivery bundle must
+  never be the only archived copy of its contents.
+- An original upstream ZIP/TAR may be retained only when the exact source
+  container is relevant to provenance or reproducibility, or when the
+  extracted source cannot legally be redistributed. Record its source/version,
+  size, SHA-256, extraction command, and per-file checksums; separately commit
+  all extracted files that can be redistributed. If an upstream archive is
+  too large for ordinary Git storage, use Git LFS or a versioned Release and
+  commit a manifest; do not replace native calculation outputs with a newly
+  generated opaque ZIP/TAR bundle.
 - Do not commit secrets, credentials, private data, or files whose license
   does not permit redistribution.
 - For files too large for ordinary GitHub Git storage, use Git LFS or a

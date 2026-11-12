@@ -1,0 +1,21 @@
+{
+  "calculation": "Xe-131-only AME2020 replacement in the NIST natural-xenon baseline",
+  "scope": "hybrid diagnostic only; not a full AME2020 natural-xenon prediction",
+  "baseline": "mainline exact-spatial-q natural-xenon selected-point fold",
+  "baseline_mass_scheme": "NIST nuclear masses for all seven AFH-default isotopes",
+  "replacement": "Xe-131 term recomputed with unrounded AME2020 atomic mass and CODATA-2022 constants",
+  "response_q_convention": "exact_spatial for both baseline and replacement",
+  "other_isotope_terms": "Xe-128, Xe-129, Xe-130, Xe-132, Xe-134, Xe-136 remain at NIST baseline",
+  "Xe124_Xe126": "omitted in the AFH default-density baseline",
+  "number_of_selected_point_rows": 14,
+  "max_NIST_partial_reproduction_relative_difference": 2.8897806370054013e-10,
+  "NIST_baseline_consistency_tolerance": 5e-09,
+  "rate_units": "events/(kg day keV)",
+  "detector_response": "not applied",
+  "baseline_isotope_contributions_file": "/home/runner/work/LZ-3-body-for-hdm/LZ-3-body-for-hdm/research/afh_default_density_natural_xenon_halo/results/isotope_halo_contributions_compact.csv",
+  "baseline_isotope_contributions_sha256": "15b97626c5f118e7ff403726b7c01f9be654374902c7b63e5502538fcc292b5b",
+  "baseline_total_rates_file": "/home/runner/work/LZ-3-body-for-hdm/LZ-3-body-for-hdm/research/afh_default_density_natural_xenon_halo/results/natural_xenon_halo_rates.csv",
+  "baseline_total_rates_sha256": "93ae142ab66bde2fd8b60c017c1d02c9a5a708fcce35c51ef06706b11521fb16",
+  "xe131_partial_rates_file": "/home/runner/work/_temp/ame2020_xe131_exact_spatial/xe131_partial_halo_rates.csv",
+  "xe131_partial_rates_sha256": "0110b8dc8e66d49c859576fbadbf50e3b51155a3a714937470727b495c4a7c5b"
+}

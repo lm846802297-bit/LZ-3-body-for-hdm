@@ -2,3 +2,6 @@ AFH all-isotope response input: afh_xe_isotope_responses.csv
 SHA256: 44c88f3aaf2fb212facbe68432d38389374255432eec04ce8a76437c82c1be3a
 Rows including header: 16808
 Rows of data: 16807
+Archive status: checksum and row count only; the original 16,807-row CSV is not currently committed.
+Selected sample file: input/afh_response_samples.csv (28 data rows; seven isotopes x four selected recoil energies).
+Full response-grid status: only the Xe-131 2,401-point q grid is archived in the repository.

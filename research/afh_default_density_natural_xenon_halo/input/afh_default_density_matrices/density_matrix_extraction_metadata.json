@@ -1,0 +1,80 @@
+{
+  "source": "AFH DMFormFactor v6.0",
+  "source_url": "https://www.ocf.berkeley.edu/~nanand/software/dmformfactor/v6.zip",
+  "source_archive_sha256": "4e0f70e6e780f3f4a40faa14792cae239d1989cf15d1e211b4fd7389b0460727",
+  "source_file": "dmformfactor-V6.m",
+  "source_file_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+  "source_selection": "SetIsotope[54,A,\"default\",\"default\"]",
+  "isotopes": [
+    128,
+    129,
+    130,
+    131,
+    132,
+    134,
+    136
+  ],
+  "matrices": {
+    "128": {
+      "entries": 21,
+      "file": "afh_default_xe128_density_matrix.csv",
+      "sha256": "fa2017a7ea1951cad6407078aeebede34b9182d0554f38968d5033c6c16bbeb4",
+      "rank_counts_tau0": {
+        "0": 16
+      }
+    },
+    "129": {
+      "entries": 39,
+      "file": "afh_default_xe129_density_matrix.csv",
+      "sha256": "a0bd848d443a073b80ad731cc87fcfb29d7c899da932d5a230e2e245295f158e",
+      "rank_counts_tau0": {
+        "0": 16,
+        "1": 9
+      }
+    },
+    "130": {
+      "entries": 21,
+      "file": "afh_default_xe130_density_matrix.csv",
+      "sha256": "38eedadeecc45acc637264b386f8e0d2b63c8dc9e811395e348fbb3e4da8beea",
+      "rank_counts_tau0": {
+        "0": 16
+      }
+    },
+    "131": {
+      "entries": 67,
+      "file": "afh_default_xe131_density_matrix.csv",
+      "sha256": "4ca110f6828ef6cebe4373fb0c9704220d8227c4a131bc2b5801dc2884e00a00",
+      "rank_counts_tau0": {
+        "0": 16,
+        "1": 9,
+        "2": 8,
+        "3": 6
+      }
+    },
+    "132": {
+      "entries": 21,
+      "file": "afh_default_xe132_density_matrix.csv",
+      "sha256": "5a367bb5a4d278bf9c3c9f7e2aae8cd7252efe8c3371f1da2d06516c766f07f3",
+      "rank_counts_tau0": {
+        "0": 16
+      }
+    },
+    "134": {
+      "entries": 21,
+      "file": "afh_default_xe134_density_matrix.csv",
+      "sha256": "843bd0d85d77f904c41b6a8ecb349369cadfec9d3b79f477406208e8dc410a7c",
+      "rank_counts_tau0": {
+        "0": 16
+      }
+    },
+    "136": {
+      "entries": 21,
+      "file": "afh_default_xe136_density_matrix.csv",
+      "sha256": "9069106f11e2efd537380c62d7e4e63114ed84ec6bbfde687bd5da493d988df0",
+      "rank_counts_tau0": {
+        "0": 16
+      }
+    }
+  },
+  "note": "AFH v6.0 default xenon matrices exist for 128,129,130,131,132,134,136Xe. 124Xe and 126Xe are not part of this built-in default set."
+}
