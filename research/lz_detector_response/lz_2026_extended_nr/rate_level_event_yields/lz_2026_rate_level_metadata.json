@@ -7,8 +7,10 @@
   "exposure_tonne_year": 2.84,
   "exposure_kg_day": 1037310.0,
   "efficiency_curve": "research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv",
-  "efficiency_curve_sha256": "610216cad02f6519e49f3480b2c9c7211474dfd600c65b70c19da85e22e02f9e",
-  "efficiency_source": "LZ 2026 Fig. S2 black final WIMP-search ROI curve, vector-extracted",
+  "efficiency_curve_sha256": "a0917cd29eef20fbbdc9383b81012f4bd9a669859779e39a8b6ccf47dd8a47ed",
+  "efficiency_source": "LZ 2026 Fig. S2 black central final WIMP-search ROI curve and gray uncertainty envelope, vector-extracted",
+  "efficiency_envelope_treatment": "gray detector-systematic range; no confidence level assigned by LZ",
+  "efficiency_envelope_applied_to_yield_range": true,
   "spectrum_files": [
     "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/black_ms360_dm1/natural_xenon_continuous_spectrum.csv",
     "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/blue_ms300_dm10/natural_xenon_continuous_spectrum.csv",
