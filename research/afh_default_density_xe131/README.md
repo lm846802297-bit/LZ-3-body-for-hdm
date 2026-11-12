@@ -216,7 +216,7 @@ the six other full response grids from the AFH v6.0 source archive.
 
 The exact-spatial-q calculation, mass-scheme comparison, and Xe-131-only
 hybrid diagnostic passed in
-[GitHub Actions run 43187421374](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43187421374).
+[GitHub Actions run 43188435890](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43188435890).
 The archived numerical tables and input SHA-256 records are under
 `output/ame2020_exact_spatial_xe131_partial/`. The hybrid changes the
 natural-xenon selected-point total by at most 7.87 ppm when only the Xe-131
