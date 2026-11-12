@@ -15,7 +15,7 @@ on:
       - research/afh_default_density_xe131/run_afh_default_xe131.py
 
 concurrency:
-  group: ame2020-natural-xenon-afh-responses-\${{ github.ref }}
+  group: ame2020-natural-xenon-afh-responses-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -92,8 +92,8 @@ jobs:
         with:
           name: afh-v6-seven-isotope-response-grids
           path: |
-            \${{ runner.temp }}/afh_default_density_matrices/
-            \${{ runner.temp }}/afh_default_xenon_responses/
+            ${{ runner.temp }}/afh_default_density_matrices/
+            ${{ runner.temp }}/afh_default_xenon_responses/
           if-no-files-found: error
           retention-days: 90
 
