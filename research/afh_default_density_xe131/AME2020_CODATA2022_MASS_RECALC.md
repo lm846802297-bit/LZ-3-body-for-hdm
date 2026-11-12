@@ -166,7 +166,7 @@ The current implementation therefore uses:
 
 - exact_spatial: \(q_{\rm resp}=q_{\rm exact}\), the baseline AFH response input;
 - nr_approx: \(q_{\rm resp}=q_{\rm NR}\), retained only as an approximation diagnostic;
-- exact_spatial: backward-compatible alias for exact_spatial.
+- legacy_exact: backward-compatible alias for exact_spatial.
 
 For both response-q choices, the three-body kinematics, \(v_{\min}\),
 phase-space limits, and mediator invariant use the exact mass-shell
@@ -339,35 +339,40 @@ denominator.
 
 ## 5. Natural-xenon limitation
 
-The repository contains the complete AFH v6.0 default-density response curve
+The repository contains the complete 2401-point AFH v6.0 response grid
 for Xe-131 and 28 selected-point samples for the seven AFH-default xenon
-isotopes (Xe-128, 129, 130, 131, 132, 134, and 136). It does not currently
-contain the original 16,807-row all-isotope response input
-afh_xe_isotope_responses.csv. The 28 archived samples were generated using
-the exact-spatial-q convention and NIST nuclear masses.
+isotopes (Xe-128, 129, 130, 131, 132, 134, and 136). The full all-isotope
+source input is identified in the provenance record as
+afh_xe_isotope_responses.csv, with SHA-256
+44c88f3aaf2fb212facbe68432d38389374255432eec04ce8a76437c82c1be3a and
+16,807 data rows. However, the original 16,807-row file itself is not
+currently present in the repository; only its checksum and row count are
+archived. The 28 selected samples were generated using exact-spatial q and
+NIST nuclear masses.
 
-The exact-spatial-q / NIST-nuclear reproduction was rerun on the current
-mainline and passed in
-[Actions run 43044031554](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43044031554).
-The archived 28-sample inputs and their derived natural-xenon selected-point
-differential rates reproduce at a maximum relative difference of
-\(2.67\times10^{-12}\). This validates the exact-spatial-q NIST baseline.
+The exact-spatial-q / NIST-nuclear reproduction passed on the current
+mainline in
+[Actions run 43177232910](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43177232910).
+It compared 98 isotope contributions and 14 total-rate rows against the
+archived selected-point results. The maximum relative difference in the
+total natural-xenon rate was \(2.67168\times10^{-12}\). This validates the
+exact-spatial-q NIST baseline at the selected recoil points.
 
 The 28 archived samples are tied to the NIST nuclear masses. They cannot be
 silently reused at AME2020 masses because the exact response momentum changes
-with (m_A), and each isotope's (R_A(q)) must be evaluated at the new
-(q_{m exact}). The current Xe-131 calculation can do this because its
+with \(m_A\), and each isotope's \(R_A(q)\) must be evaluated at the new
+\(q_{\rm exact}\). The current Xe-131 calculation can do this because its
 complete 2401-point AFH response curve is archived. The corresponding full
-response curves for the other six AFH-default xenon isotopes are not yet
-archived. No missing response is inferred from Xe-131, interpolated across
-isotopes, or replaced by GCN/JJ55 data.
+response q-grids for the other six AFH-default xenon isotopes are not
+currently archived. No missing response is inferred from Xe-131, interpolated
+across isotopes, or replaced by GCN/JJ55 data.
 
 Thus the present AME2020 result is a controlled Xe-131 isotope contribution,
 not a complete AME2020 natural-xenon sum. Completing the latter requires
-regenerating the seven AFH-default isotope responses at their AME2020
-exact-spatial q values from the AFH v6.0 source package. Xe-124 and Xe-126
-remain omitted because the current AFH default-density set does not provide
-their response matrices.
+regenerating the six other AFH-default isotope responses at their AME2020
+exact-spatial q values from the original source input or AFH v6.0 package.
+Xe-124 and Xe-126 remain omitted because the current AFH default-density set
+does not provide their response matrices.
 
 The rate is also before detector efficiency, energy resolution, exposure,
 cuts, backgrounds, and likelihood.
