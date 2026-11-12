@@ -1,4 +1,4 @@
-> 所属主报告：[AFH v6.0 氙核响应与三体暗物质散射](../09_afh_xe131_three_body_kernel_natural_xenon_halo_2026-11-11.md)
+> 所属主报告：[AFH v6.0 氙核响应与三体暗物质散射](../09_afh_xe131_three_body_scattering_natural_xenon.md)
 
 # 附录 B：AFH v6.0 密度矩阵、谐振子基底与响应实现
 
@@ -285,7 +285,7 @@ y_{\rm exact}=\frac{b_A^2}{4}(2m_AE_R+E_R^2).
 - 媒介子传播子：\(t=-2m_AE_R\)，故分母 \(m_V^2-t=m_V^2+2m_AE_R\)；
 - \(q_{\rm NR}\)：只作为独立的非相对论响应近似对照。
 
-28 个天然氙 AFH 响应样本全部与 exact spatial q 相符，因此不需要为当前 selected-point halo fold 重新生成响应。NR 近似的响应影响已在附录 G 中用 Xe-131 的 2401 点 AFH 响应网格定量比较。
+28 个天然氙 AFH 响应样本全部与 exact spatial q 相符，因此不需要为当前 selected-point halo fold 重新生成响应。NR 近似的响应影响已在独立补充技术说明中用 Xe-131 的 2401 点 AFH 响应网格定量比较。
 
 代码默认值现统一为 exact_spatial；nr_approx 只用于敏感性对照，legacy_exact 保留为向后兼容别名。若响应样本与所选 q 不匹配，程序会显式报错。
 
