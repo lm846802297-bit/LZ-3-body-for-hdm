@@ -26,7 +26,15 @@ def read_xy(path: Path, x_key: str, y_key: str) -> tuple[list[float], list[float
             xs.append(float(row[x_key]))
             ys.append(float(row[y_key]))
     order = sorted(range(len(xs)), key=xs.__getitem__)
-    return [xs[i] for i in order], [ys[i] for i in order]
+    xs = [xs[i] for i in order]
+    ys = [ys[i] for i in order]
+    if len(xs) < 2:
+        raise ValueError(f"Need at least two data points in {path}")
+    if any(not math.isfinite(x) for x in xs) or any(not math.isfinite(y) for y in ys):
+        raise ValueError(f"Non-finite x/y value in {path}")
+    if any(x1 <= x0 for x0, x1 in zip(xs, xs[1:])):
+        raise ValueError(f"x values must be strictly increasing in {path}")
+    return xs, ys
 
 
 def interpolate(x: float, xs: list[float], ys: list[float]) -> float:
@@ -75,6 +83,48 @@ def integrate_weighted_rate(
     return trapezoid(raw_values), trapezoid(weighted_values)
 
 
+def integrate_piecewise_linear_product(
+    rate_x: list[float],
+    rate_y: list[float],
+    efficiency_x: list[float],
+    efficiency_y: list[float],
+    lo: float,
+    hi: float,
+) -> tuple[float, float]:
+    """Integrate rate and rate*efficiency exactly for linear interpolation.
+
+    The union of both input knot sets partitions the interval into segments on
+    which the rate and efficiency are each linear. Their product is quadratic,
+    so its integral is analytic on every segment.
+    """
+    if not lo < hi:
+        raise ValueError("require lo < hi")
+    if rate_x[0] > lo or rate_x[-1] < hi:
+        raise ValueError("rate spectrum does not cover the full ROI")
+    if efficiency_x[0] > lo or efficiency_x[-1] < hi:
+        raise ValueError("efficiency curve does not cover the full ROI")
+    knots = sorted(
+        {lo, hi}
+        | {x for x in rate_x if lo < x < hi}
+        | {x for x in efficiency_x if lo < x < hi}
+    )
+    raw = 0.0
+    weighted = 0.0
+    for a, b in zip(knots, knots[1:]):
+        width = b - a
+        r0 = interpolate(a, rate_x, rate_y)
+        r1 = interpolate(b, rate_x, rate_y)
+        e0 = interpolate(a, efficiency_x, efficiency_y)
+        e1 = interpolate(b, efficiency_x, efficiency_y)
+        dr = r1 - r0
+        de = e1 - e0
+        raw += 0.5 * width * (r0 + r1)
+        weighted += width * (
+            r0 * e0 + 0.5 * (r0 * de + e0 * dr) + (dr * de) / 3.0
+        )
+    return raw, weighted
+
+
 def sha256(path: Path) -> str:
     h = hashlib.sha256()
     with path.open("rb") as f:
@@ -104,15 +154,27 @@ def main() -> None:
 
     if not args.efficiency_csv.is_file():
         raise FileNotFoundError(args.efficiency_csv)
+    if not args.spectrum_dir.is_dir():
+        raise FileNotFoundError(
+            f"continuous-spectrum directory is missing: {args.spectrum_dir}; "
+            "the rate-level fold must run after the spectra have been archived"
+        )
     efficiency_x, efficiency_y = read_xy(
         args.efficiency_csv, "ER_keV", "efficiency_final_WS_ROI"
     )
+    if efficiency_x[0] > args.roi_min_keV or efficiency_x[-1] < args.roi_max_keV:
+        raise ValueError("digitized LZ efficiency curve does not cover the requested ROI")
+    if any(e < 0.0 or e > 1.0 for e in efficiency_y):
+        raise ValueError("efficiency values must lie in [0, 1]")
     exposure_kg_day = args.exposure_tonne_year * TONNE_YEAR_TO_KG_DAY
     args.out_dir.mkdir(parents=True, exist_ok=True)
 
     output_rows = []
     spectrum_files = []
-    for benchmark_dir in sorted(p for p in args.spectrum_dir.iterdir() if p.is_dir()):
+    max_dense_vs_exact = 0.0
+    max_refinement = 0.0
+    benchmark_dirs = sorted(p for p in args.spectrum_dir.iterdir() if p.is_dir())
+    for benchmark_dir in benchmark_dirs:
         spectrum_path = benchmark_dir / "natural_xenon_continuous_spectrum.csv"
         if not spectrum_path.is_file():
             continue
@@ -130,6 +192,10 @@ def main() -> None:
             rate_y = [float(r["rate_events_kg_day_keV"]) for r in rows]
             if len(rate_x) < 2:
                 raise RuntimeError(f"Insufficient spectrum points: {spectrum_path} ({model})")
+            if rate_x[0] > args.roi_min_keV or rate_x[-1] < args.roi_max_keV:
+                raise RuntimeError(f"Spectrum does not cover the full ROI: {spectrum_path} ({model})")
+            if any(not math.isfinite(x) for x in rate_x) or any(not math.isfinite(y) or y < 0.0 for y in rate_y):
+                raise RuntimeError(f"Non-finite or negative rate in {spectrum_path} ({model})")
             reference = rows[0]
             coupling_sq = float(reference["coupling_product_sq"])
             if any(
@@ -138,10 +204,22 @@ def main() -> None:
             ):
                 raise RuntimeError(f"Coupling normalization varies with recoil energy: {spectrum_path}")
 
-            raw_integral, weighted_integral = integrate_weighted_rate(
+            raw_integral, weighted_integral = integrate_piecewise_linear_product(
+                rate_x, rate_y, efficiency_x, efficiency_y,
+                args.roi_min_keV, args.roi_max_keV,
+            )
+            raw_dense, weighted_dense = integrate_weighted_rate(
                 rate_x, rate_y, efficiency_x, efficiency_y,
                 args.roi_min_keV, args.roi_max_keV, args.integration_steps,
             )
+            raw_dense_fine, weighted_dense_fine = integrate_weighted_rate(
+                rate_x, rate_y, efficiency_x, efficiency_y,
+                args.roi_min_keV, args.roi_max_keV, 2 * args.integration_steps,
+            )
+            dense_vs_exact = abs(weighted_dense / weighted_integral - 1.0) if weighted_integral > 0.0 else 0.0
+            refinement = abs(weighted_dense_fine / weighted_dense - 1.0) if weighted_dense > 0.0 else 0.0
+            max_dense_vs_exact = max(max_dense_vs_exact, dense_vs_exact)
+            max_refinement = max(max_refinement, refinement)
             expected = exposure_kg_day * weighted_integral
             ideal = exposure_kg_day * raw_integral
             effective_efficiency = weighted_integral / raw_integral if raw_integral > 0.0 else 0.0
@@ -157,6 +235,9 @@ def main() -> None:
                 "raw_roi_integral_events_kg_day": raw_integral,
                 "efficiency_weighted_integral_events_kg_day": weighted_integral,
                 "spectrum_weighted_mean_efficiency": effective_efficiency,
+                "integration_method": "exact analytic integral of piecewise-linear rate times piecewise-linear efficiency",
+                "dense_trapezoid_relative_difference_vs_exact": dense_vs_exact,
+                "dense_trapezoid_refinement_relative_difference": refinement,
                 "expected_events_in_high_efficiency_window": expected,
                 "ideal_100pct_efficiency_events_in_window": ideal,
                 "coupling_product_sq_reference": coupling_sq,
@@ -172,8 +253,10 @@ def main() -> None:
                 "is_exclusion_limit": False,
             })
 
+    if not spectrum_files:
+        raise RuntimeError(f"No continuous spectrum CSV files found under {args.spectrum_dir}")
     if not output_rows:
-        raise RuntimeError(f"No continuous spectra found under {args.spectrum_dir}")
+        raise RuntimeError(f"No usable SHM-cutoff model spectra found under {args.spectrum_dir}")
 
     output_csv = args.out_dir / "lz_2026_rate_level_event_yields.csv"
     with output_csv.open("w", newline="", encoding="utf-8") as f:
@@ -190,7 +273,10 @@ def main() -> None:
         "efficiency_curve_sha256": sha256(args.efficiency_csv),
         "efficiency_source": "LZ 2026 Fig. S2 black final WIMP-search ROI curve, vector-extracted",
         "spectrum_files": spectrum_files,
-        "integration_steps": args.integration_steps,
+        "dense_trapezoid_crosscheck_steps": args.integration_steps,
+        "integration_method": "exact analytic integration over the union of rate-spectrum and efficiency-curve knots, assuming linear interpolation of each input",
+        "maximum_dense_trapezoid_relative_difference_vs_exact": max_dense_vs_exact,
+        "maximum_dense_trapezoid_refinement_relative_difference": max_refinement,
         "nuclear_response_models": ["GCN", "JJ55"],
         "interpretation": (
             "Expected signal counts in the published high-efficiency true-NR window. "
