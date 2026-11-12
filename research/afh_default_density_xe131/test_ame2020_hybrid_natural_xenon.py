@@ -1,6 +1,6 @@
 import unittest
 
-from audit_xe131_only_ame2020_hybrid import build_hybrid_rows
+from research.afh_default_density_xe131.audit_xe131_only_ame2020_hybrid import build_hybrid_rows
 
 
 class Xe131OnlyAME2020HybridTests(unittest.TestCase):
