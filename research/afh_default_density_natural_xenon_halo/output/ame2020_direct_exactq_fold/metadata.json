@@ -1,0 +1,113 @@
+{
+  "calculation": "Selected-point seven-isotope natural-xenon three-body halo fold using direct AFH exact-spatial-q responses",
+  "status": "locally recomputed; selected-point result only; not a continuous recoil spectrum or detector-level prediction",
+  "ci_used": false,
+  "source_branch_head_before_local_recalculation": "fd325c13e0aa82f7c829fa85a3ee3a744e5d8e03",
+  "response_input": "/mnt/data/ame2020_direct_exactq/repo/research/afh_default_density_natural_xenon_halo/output/afh_default_xenon_responses/selected_q_mpmath/afh_selected_exact_q_responses.csv",
+  "response_input_sha256": "4d7267390be6aa8fa5f4e051719f7aa4f4adb19ca05a4f30e6427f7b4a7a41cd",
+  "response_rows": 56,
+  "response_validation": "direct AFH finite-sum values independently checked against 60-digit mpmath at selected q points",
+  "max_abs_PCHIP_over_direct_response_minus_one_by_mass_scheme": {
+    "nist_nuclear": 0.008830600264375321,
+    "ame2020_nuclear": 0.008799405793033621
+  },
+  "AFH_source_archive_sha256": "4e0f70e6e780f3f4a40faa14792cae239d1989cf15d1e211b4fd7389b0460727",
+  "AFH_source_file_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+  "AFH_isotopes": [
+    128,
+    129,
+    130,
+    131,
+    132,
+    134,
+    136
+  ],
+  "AFH_abundance_coverage": 0.998158,
+  "missing_AFH_isotopes": [
+    124,
+    126
+  ],
+  "missing_isotope_abundance": 0.0018419999999999999,
+  "abundance_convention": "natural atom fractions; no renormalization of the seven AFH-supported isotopes",
+  "mass_schemes": {
+    "nist_nuclear": "NIST atomic isotope mass minus 54 electron masses, CODATA-2018 constants; electron binding neglected",
+    "ame2020_nuclear": "unrounded AME2020 atomic masses minus 54 CODATA-2022 electron masses plus B_e(54)"
+  },
+  "dark_sector": {
+    "mchi1_GeV": 1000.0,
+    "mV_GeV": 10.0,
+    "coupling_product_squared": 1e-08,
+    "g2": 1.0,
+    "rho_chi_GeV_cm3": 0.3,
+    "benchmarks": {
+      "red_ms200_dm1": {
+        "ms_keV": 200.0,
+        "Delta_m_MeV": 1.0
+      },
+      "green_ms300_dm1": {
+        "ms_keV": 300.0,
+        "Delta_m_MeV": 1.0
+      },
+      "black_ms360_dm1": {
+        "ms_keV": 360.0,
+        "Delta_m_MeV": 1.0
+      },
+      "blue_ms300_dm10": {
+        "ms_keV": 300.0,
+        "Delta_m_MeV": 10.0
+      }
+    },
+    "chi2_width": "pole width for chi2 -> chi1 s, conditional on Dirac chi2, real scalar, pure scalar off-diagonal Yukawa and no other open channels"
+  },
+  "halo": {
+    "shm_cutoff": {
+      "v0_km_s": 220.0,
+      "vE_km_s": 232.0,
+      "vesc_km_s": 544.0,
+      "vmax_km_s": 776.0
+    },
+    "mb_untruncated": {
+      "v0_km_s": 220.0,
+      "vE_km_s": 232.0,
+      "integration_vmax_km_s": 1600.0,
+      "role": "tail diagnostic"
+    }
+  },
+  "quadrature": {
+    "speed_orders": [
+      32,
+      64
+    ],
+    "baseline_kernel": [
+      8,
+      8,
+      4
+    ],
+    "kernel_crosscheck": "16x16x8 at three anchors for all seven isotopes; AME2020 masses",
+    "max_total_speed_32_to_64_relative_difference": 3.3028009314151063e-06,
+    "max_isotope_speed_32_to_64_relative_difference": 3.3301832615961757e-06,
+    "max_kernel_8x8x4_to_16x16x8_relative_difference": 0.00021075226878330966
+  },
+  "NIST_historical_PCHIP_baseline": {
+    "max_reproduction_relative_difference": 3.431699369116359e-12,
+    "tolerance": 5e-08,
+    "result": "reproduced with 32-node speed quadrature"
+  },
+  "response_comparison": {
+    "max_rate_shift_NIST_direct_vs_PCHIP_ppm": 15.995371017485382,
+    "max_rate_shift_AME2020_direct_vs_PCHIP_ppm": 15.999256684828822
+  },
+  "Xe131_only_hybrid": {
+    "max_abs_total_shift_ppm": 15.277448955686168,
+    "scope": "Xe-131 is replaced by AME2020 direct exact-q partial; other six isotope terms remain the archived NIST/PCHIP baseline; hybrid only, not full AME2020"
+  },
+  "rate_units": "events/(kg day keV)",
+  "detector_response": "not applied; no efficiency, resolution, exposure, cuts or likelihood",
+  "limitations": [
+    "Only four selected recoil energies are calculated: 101, 200, 267 and 542 keV.",
+    "Direct AFH exact-q response values are validated at these selected points only; no continuous response curve is inferred.",
+    "Xe-124 and Xe-126 have no AFH v6.0 default density matrices and are not included in the seven-isotope AFH central result.",
+    "The seven-isotope AFH abundance coverage is 0.998158 and is not renormalized.",
+    "The 2401-node PCHIP response is retained only as a diagnostic comparison, not used for primary direct-exact-q rates."
+  ]
+}

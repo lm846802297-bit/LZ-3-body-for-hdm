@@ -76,3 +76,18 @@ The selected-point seven-isotope natural-xenon halo fold has now been recomputed
 - Xe-131-only hybrid correction, with other isotope terms held at the historical NIST/PCHIP baseline: maximum absolute total-rate shift 15.277 ppm. This is a hybrid diagnostic, not a full AME2020 prediction.
 
 The full local numerical bundle includes 392 kernel/halo integrals, 784 isotope contributions, 112 rate summaries, convergence tables, metadata and SHA-256 manifest. It is not part of the continuous recoil spectrum or detector-level LZ likelihood. Xe-124 and Xe-126 remain unsupported by the AFH v6.0 default density matrices; the seven-isotope abundance coverage is 0.998158 without renormalization.
+
+
+### Local runner and native numerical archive
+
+The selected-point AME2020 direct exact-q calculation is archived as native source and data files (not as a ZIP in the repository):
+
+- Runner: `run_ame2020_direct_exactq_natural_xenon_halo_fold.py`
+- Local validator: `validate_ame2020_direct_exactq_outputs.py`
+- 56-point exact-q input: `input/afh_selected_exact_q_responses.csv`
+- 392 kernel/halo integrals and 784 isotope contributions: `output/ame2020_direct_exactq_fold/`
+- Output manifest: `output/ame2020_direct_exactq_fold/SHA256SUMS.txt`
+- Bundle manifest: `AME2020_DIRECT_EXACT_Q_SHA256SUMS.txt`
+- Full calculation report: `AME2020_DIRECT_EXACT_Q_RECALCULATION_2026-11-12.md`
+
+The calculation and numerical acceptance were performed locally; this runner is not a self-hosted GitHub Actions runner. The selected-point results are not a continuous recoil spectrum or a detector-level LZ prediction.
