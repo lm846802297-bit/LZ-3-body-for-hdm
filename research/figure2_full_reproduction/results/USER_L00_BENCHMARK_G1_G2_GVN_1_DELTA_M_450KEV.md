@@ -209,3 +209,18 @@ Main implementation:
 The benchmark is deliberately separate from the natural-xenon halo-fold
 calculation. It validates the supplied particle/coupling point at the
 amplitude and Eq. (6) levels before any new detector-rate interpretation.
+
+## 9. Native numerical archive and provenance
+
+The high-order JSON output from the completed benchmark run is committed as a native result file:
+
+- Numerical output: `results/user_l00_benchmark_delta_m_450kev.json`
+- Run manifest: `results/user_l00_benchmark_run_manifest.json`
+- SHA-256 manifest: `results/USER_L00_BENCHMARK_SHA256SUMS.txt`
+- Source commit used for the calculation: `5cbc5d1f779575b348bfab1d74edc71747b8d9ca`
+- GitHub Actions run: [42957904328](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/42957904328), completed successfully; its regression-test step and high-order archive-generation step both succeeded.
+- Extracted JSON: 2,475 bytes; SHA-256 `b1861ccc7c802af9ea5953a60f4d27f9910c70bae0d05d5094c8248395d1cfe0`.
+- Original transfer artifact ZIP SHA-256: `146890fd6a8e39940800535f6dd751ec9a0ae6b8a6f2568688883fb572a7dbd6`. The ZIP is not committed; the extracted JSON and provenance are.
+
+The workflow ran six regression tests successfully and generated the JSON with
+\((n_W,n_z,n_\\phi)=(48,40,24)\). The JSON is a pointwise L00/Eq. (6) benchmark archive, not a halo-folded or detector-level result. Its conditional scalar width and inherited diagnostic kinematics retain the assumptions and limitations listed above.
