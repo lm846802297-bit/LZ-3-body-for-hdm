@@ -13,6 +13,7 @@ from isotope_mass_schemes import isotope_mass_GeV
 from run_ame2020_xe131_halo_partial import (
     A,
     AFH_DEFAULT_XE_ISOTOPES,
+    AFH_FULL_RESPONSE_GRID_ARCHIVED_ISOTOPES,
     load_afh_response,
     mb_untruncated_pdf,
     shm_truncated_pdf,
@@ -34,6 +35,7 @@ class Ame2020Xe131PartialRateTests(unittest.TestCase):
         self.assertNotIn(124, AFH_DEFAULT_XE_ISOTOPES)
         self.assertNotIn(126, AFH_DEFAULT_XE_ISOTOPES)
         # The present partial fold only loads the full Xe-131 q-grid.
+        self.assertEqual(AFH_FULL_RESPONSE_GRID_ARCHIVED_ISOTOPES, {131})
         self.assertEqual(A, 131)
 
     def test_mass_is_the_ame2020_cod2022_value(self):
