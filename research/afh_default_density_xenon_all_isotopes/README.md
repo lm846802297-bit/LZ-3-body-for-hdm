@@ -43,7 +43,19 @@ subsequent kinematics.
   selected NIST-mass response samples already archived in the natural-xenon
   baseline.
 - output/metadata.json: source archive and file hashes, isotope-specific
-  matrix counts, b_A, T_iso, q grid, and validation results.
+  matrix counts, b_A, T_iso, q grid, source-matrix availability for all nine
+  natural isotopes, and validation results.
+
+The official v6.0 source scan confirms that the default-density matrices
+sdgXe124 and sdgXe126 are absent. The other seven matrices are present.
+Their natural atom fractions sum to 0.998158; the calculation retains these
+fractions without renormalizing the seven-isotope subset.
+
+The archived run generated 16,807 response points. Interpolation of the
+full curves reproduces the existing 28 selected NIST-mass samples with
+maximum relative difference (1.1864\times10^{-9}). The Xe-131 curve agrees
+with its independently validated 2401-point reference to
+(3.33\times10^{-16}) relative.
 
 ## Validation hierarchy
 
