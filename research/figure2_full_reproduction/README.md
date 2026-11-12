@@ -187,3 +187,15 @@ A separate runner is staged at `run_user_dsigma_curve.py`. It scans the open Xe-
 - Intended output: `xe131_dsigma_450keV.csv` (not yet generated or archived)
 
 **Status: exploratory / not executed.** The runner and manual workflow are staged for review, but no calculation output or dedicated regression tests are claimed. Keep this work in Draft until the script is executed from the repository root, its output is archived as a native CSV with provenance/checksum, and the recoil-grid/response/units checks are recorded. This is a fixed-speed differential cross-section diagnostic, not a halo-folded spectrum or detector-level LZ prediction. The zero-width choice must remain explicit when comparing with the conditional pole-width L00 benchmark above.
+
+## Draft: fixed-speed Xe-131 differential cross-section curve (450 keV benchmark)
+
+The runner now uses the five-argument Eq. (6) phase-space limit function correctly; the mass splitting enters the reduced kernel, not the W-limit function. Three local regression tests cover open/closed recoil kinematics and the GeV^-3 to cm^2/keV conversion.
+
+The calculation remains **Draft / not yet accepted**:
+- No physical output CSV or run manifest has been generated.
+- The isotope mass is A*u (approximate), not the AME2020 exact Xe-131 mass used in the direct-exact-q fold.
+- GCN/JJ55 response values are interpolated from the tabulated q grid using PCHIP. The interpolation error for this specific pair of response tables has not been independently established by a direct-response comparison.
+- The intended scan is fixed at v=776 km/s and zero-width propagation. It is not halo-folded and not detector-level.
+
+Do not promote this PR until the full scan is executed against the archived response tables, the 130–650 keV open interval and q coverage are checked, the native CSV and run manifest are archived with verified SHA-256, and the response-interpolation uncertainty is quantified.
