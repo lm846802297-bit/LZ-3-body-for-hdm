@@ -37,7 +37,7 @@
 
 ---
 
-## 1. 研究问题与物理对象---
+---
 
 ## 1. 研究问题与物理对象
 
@@ -527,6 +527,8 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 - LZ 2026 Fig. S2 的 final-ROI central efficiency 曲线与灰色系统包络已从官方 PDF 的矢量路径提取，并与独立数字化在 248 keV 处对照；灰色包络仅作为系统范围，不赋予置信水平（CI run 43151814368）。
 - GCN/JJ55 天然氙连续谱已与 LZ 2026 一维效率曲线及 2.84 tonne-year exposure 做 rate-level 折叠；分段线性函数乘积采用解析积分，稠密梯形交叉检查的最大相对差异为 \(3.77\times10^{-7}\)（CI run 43151727539）。该事件数只对应 GCN/JJ55 连续谱，不对应 AFH selected-point 结果。
 
+### 8.2 尚未完成或不能过度声称的事项
+
 1. **AFH 原生 Mathematica 验证仍待执行。** 原生 runner 和比较程序已归档，但当前执行环境没有 Wolfram kernel。mpmath 全网格验证是独立高精度数值交叉检查，不能替代官方 Mathematica 程序的原生执行。
 2. **AFH 空间 q 的精确与 NR 近似已经区分。** AFH 定义 \(y=(q b_A/2)^2\)，其中 \(q\) 是空间动量转移；精确质量壳关系给出 \(q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}\)。28 个天然氙样本全部匹配 exact spatial q，现作为默认物理基线。\(q_{\rm NR}=\sqrt{2m_AE_R}\) 仅作为小反冲近似，其 Xe-131 响应差异已定量记录。
 3. **Xe-124/Xe-126 尚未纳入 AFH default-density 天然氙求和。** 缺少当前 AFH v6.0 内置 density matrix；七种可用同位素覆盖天然丰度 0.998158，未对这七种同位素重新归一化。
@@ -543,6 +545,8 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 - 早期 benchmark CSV 的 AFH \(R_A\) 列曾误复制 GCN 值，而截面列已经按 AFH/GCN 响应比缩放。现已改为保存真实插值 AFH 响应，并由显示的 \(R_A\) 和 \(I_6\) 直接重构截面。
 
 修正后 AFH 开放点截面相对早期旧值的最大变化为 \(2.7406\times10^{-4}\)。此外，四组 benchmark 已从 NR-q 近似统一到 exact spatial q；在 101、200、267、542 keV 四个 selected recoil 点，Xe-131 的 NR 近似响应偏差最大约 225 ppm。引用结果时应使用当前 exact-spatial corrected archive，不应使用早期 CSV。
+
+## 9. 当前研究决策与下一步
 
 本阶段已经固定的决定：
 
@@ -565,7 +569,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 本报告的下一轮编辑优先任务是让摘要、状态表、数值验收矩阵和 detector-level 接口章节对上述完成状态使用完全一致的术语。
 ---
 
-## 10. 代码、数据和文献入口---
+---
 
 ## 10. 代码、数据和文献入口
 
@@ -654,6 +658,8 @@ where
 
 This is an efficiency-weighted event-yield estimate. It is not, by itself, a 90% confidence-level exclusion or a full LZ likelihood recast.
 
+### 11.2 What is required for a genuine LZ recast
+
 The final LZ selection is applied in the two-dimensional \(S1_c\)–\(\log_{10}S2_c\) plane. The one-dimensional final-ROI efficiency curve and its gray envelope have already been digitized from Fig. S2 and used for a preliminary rate-level fold. A full recast still requires:
 
 1. the underlying efficiency calibration information and its nuisance/covariance treatment; the plotted gray envelope is retained as a systematic range, not assigned a confidence level;
@@ -662,9 +668,11 @@ The final LZ selection is applied in the two-dimensional \(S1_c\)–\(\log_{10}S
 4. the science, prompt-veto and delayed-veto samples and their correlated background constraints;
 5. the published profile-likelihood construction and nuisance-parameter treatment.
 
+### 11.3 Scope boundary for the present calculation
+
 The current \(5\)–\(800\) keV theoretical recoil grid is intentionally wider than the high-efficiency LZ search window. The continuous GCN/JJ55 numerical scan uses 5 keV spacing through 270 keV, then 20 keV spacing from 280 to 800 keV; the selected comparison points 101, 200, 267 and 542 keV are inserted explicitly. The AFH natural-xenon result remains selected-point only. For the 2026 LZ comparison, only the \(5.4\)–\(269.9\) keV interval enters the quoted WIMP-search ROI at greater than 50% efficiency. The \(270\)–\(800\) keV part remains a theoretical prediction and should not be counted as accepted LZ exposure. The efficiency-weighted event yields reported below apply only to the continuous GCN/JJ55 spectra.
 
-The central final-ROI efficiency curveThe central final-ROI efficiency curve and the gray uncertainty envelope have now been extracted from the vector paths in Fig. S2 and archived at:
+The central final-ROI efficiency curve and the gray uncertainty envelope have now been extracted from the vector paths in Fig. S2 and archived at:
 
 - \`research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv\`;
 - \`research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_metadata.json\`;
