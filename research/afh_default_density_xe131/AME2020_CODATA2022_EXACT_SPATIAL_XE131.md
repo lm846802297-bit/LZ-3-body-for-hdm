@@ -1,6 +1,6 @@
 # AME2020/CODATA-2022 nuclear masses and exact-spatial AFH Xe-131 rate
 
-**Status:** reproducible Xe-131 isotope partial calculation; full AME2020 natural-xenon sum not yet available.
+**Status:** reproducible Xe-131 isotope partial calculation and component cross-check. The full seven-isotope AME2020 natural-xenon fold is documented separately.
 
 ## 1. Scope and relation to the natural-xenon baseline
 
@@ -27,13 +27,17 @@ selected-point calculation on main:
   natural abundance fraction 0.998158 without renormalizing the available
   isotopes, and reproduces its archived tables with maximum total-rate
   relative difference \(2.67\times10^{-12}\).
-- The AME2020 calculation below uses the full Xe-131 AFH response curve and
-  recomputes the response at the AME2020 nuclear mass. It is therefore a
-  Xe-131 partial contribution per kg of natural xenon, not the all-isotope
-  AME2020 prediction.
-- The 28 selected response samples were generated at the NIST-mass q values.
-  They cannot be reused at the AME2020 q values by simply changing the mass
-  metadata. The natural-xenon runner deliberately rejects that mismatch.
+- The AME2020 Xe-131 component calculation below uses the full Xe-131 AFH
+  response curve and recomputes the response at the AME2020 nuclear mass.
+  It is a Xe-131 partial contribution per kg of natural xenon.
+- The seven-isotope extension now regenerates the full AFH v6.0 default-density
+  response curves for Xe-128, Xe-129, Xe-130, Xe-131, Xe-132, Xe-134, and
+  Xe-136. The 28 old NIST-mass response samples are used only as validation
+  points; they are not relabelled as AME2020 responses.
+- The resulting seven-isotope AME2020 halo fold is documented in
+  [AME2020_FULL_RESPONSE_NATURAL_XENON_FOLD.md](../afh_default_density_natural_xenon_halo/AME2020_FULL_RESPONSE_NATURAL_XENON_FOLD.md).
+  It covers 99.8158% of natural xenon without renormalization; Xe-124 and
+  Xe-126 remain absent from the AFH v6.0 default-density matrix set.
 
 The rate is before detector efficiency, energy resolution, exposure, cuts,
 backgrounds, and likelihood. It is not an LZ event-yield or exclusion result.
@@ -322,27 +326,30 @@ It contains the isotope mass table, partial-rate table, mass-scheme comparison,
 response-q comparison, speed-grid convergence, kernel-grid convergence,
 and metadata.
 
-## 6. Natural-xenon AME2020 limitation
+## 6. Seven-isotope natural-xenon AME2020 result and remaining limitation
 
-The current main archive contains 28 exact-spatial AFH response samples
-(7 isotopes × 4 recoil energies) for the NIST nuclear-mass convention. Those
-samples reproduce the archived NIST-mass natural-xenon selected-point rates.
-They do not provide the full isotope response curves needed to evaluate
-\(R_A(q_{\rm exact}^{\rm AME2020})\) at the shifted AME2020 q values.
+The full AFH v6.0 default-density response curves for the seven available
+isotopes have now been regenerated from the official source package. The
+combined 16,807-row response grid is archived in
+research/afh_default_density_xenon_all_isotopes/output/. It reproduces the
+28 historical NIST-mass response samples with maximum relative difference
+(1.1864\times10^{-9}), and the Xe-131 full curve agrees with the prior
+validated curve to (3.33\times10^{-16}) relative.
 
-The natural-xenon runner now exposes an explicit mass-scheme option and
-checks each stored response q against the requested mass/q convention. With
-ame2020_nuclear, the old NIST-q samples are rejected rather than silently
-relabelled. The AME2020 Xe-131 calculation avoids this problem because it
-uses the complete Xe-131 AFH response curve and interpolates at the AME2020
-exact-spatial q.
+The AME2020 exact-spatial halo fold for those seven isotopes is archived in
+research/afh_default_density_natural_xenon_halo/output/ame2020_full_response/.
+The NIST-mass full-grid regression reproduces the historical natural-xenon
+selected-point rates with maximum total-rate relative difference
+(3.432\times10^{-12}). The AME2020 fold uses the full response curves at
+each isotope's own exact-spatial q; it does not relabel or reuse the old
+NIST-q samples.
 
-A full AME2020 natural-xenon result requires regenerating the AFH response
-values for each isotope with the AME2020 nuclear mass and exact-spatial q,
-or archiving complete isotope response curves that can be interpolated at
-those q values. No response is borrowed from another isotope, and no
-missing-isotope contribution is inferred from the seven-isotope abundance
-coverage.
+The remaining limitation is specific: the official AFH v6.0 package has no
+default-density matrices for Xe-124 and Xe-126. Their combined natural
+abundance is 0.1842%. The seven-isotope result preserves the available
+fractions without renormalization and is not called a complete nine-isotope
+natural-xenon prediction. The detector response, exposure, cuts, backgrounds,
+and likelihood are also not included.
 
 ## 7. Primary references
 
