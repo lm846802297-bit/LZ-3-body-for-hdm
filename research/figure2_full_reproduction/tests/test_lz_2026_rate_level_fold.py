@@ -7,6 +7,7 @@ HERE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE))
 
 from fold_lz_2026_rate_level import (  # noqa: E402
+    candidate_tail_bounds,
     integrate_piecewise_linear_product,
     integrate_weighted_rate,
     interpolate,
@@ -15,6 +16,11 @@ from fold_lz_2026_rate_level import (  # noqa: E402
 
 
 class LZ2026RateLevelFoldTests(unittest.TestCase):
+    def test_candidate_tail_diagnostic_is_clipped_to_lz_roi(self):
+        self.assertEqual(candidate_tail_bounds(5.4, 269.9), (225.0, 269.9))
+        with self.assertRaises(ValueError):
+            candidate_tail_bounds(270.0, 300.0)
+
     def test_linear_interpolation(self):
         self.assertAlmostEqual(interpolate(1.0, [0.0, 2.0], [0.0, 4.0]), 2.0)
         self.assertAlmostEqual(interpolate(0.0, [0.0, 2.0], [1.0, 3.0]), 1.0)
