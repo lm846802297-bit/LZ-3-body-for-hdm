@@ -164,11 +164,12 @@ def compute_isotope_response(A: int, rows: list[dict], mass_scheme: str):
 def compare_archived_samples(full_rows: list[dict], sample_path: Path,
                              relative_tolerance: float) -> dict:
     grouped = {}
+    interpolators = {}
     for row in full_rows:
         grouped.setdefault(int(row["A"]), []).append(row)
     for A in grouped:
         grouped[A].sort(key=lambda row: float(row["q_GeV"]))
-        grouped[A]["_interp"] = PchipInterpolator(
+        interpolators[A] = PchipInterpolator(
             [float(row["q_GeV"]) for row in grouped[A]],
             [float(row["R_A_equal_pn"]) for row in grouped[A]],
             extrapolate=False,
@@ -181,7 +182,7 @@ def compare_archived_samples(full_rows: list[dict], sample_path: Path,
         A = int(sample["A"])
         q = float(sample["q_response_GeV"])
         expected = float(sample["R_A"])
-        got = float(grouped[A]["_interp"](q))
+        got = float(interpolators[A](q))
         relative = abs(got/expected - 1.0) if expected else abs(got)
         max_relative = max(max_relative, relative)
         comparisons.append({
