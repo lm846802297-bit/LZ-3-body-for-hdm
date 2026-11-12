@@ -406,6 +406,14 @@ currently present in the repository; only its checksum and row count are
 archived. The 28 selected samples were generated using exact-spatial q and
 NIST nuclear masses.
 
+The AFH v6.0 source provenance is also recorded in the Xe-131 README:
+source-archive SHA-256
+\`4e0f70e6e780f3f4a40faa14792cae239d1989cf15d1e211b4fd7389b0460727\`,
+and raw \`dmformfactor-V6.m\` SHA-256
+\`dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372\`.
+These hashes are provenance identifiers; neither the original source archive
+nor the 16,807-row all-isotope response CSV is currently committed.
+
 The exact-spatial-q / NIST-nuclear reproduction passed on the current
 mainline in
 [Actions run 43177232910](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43177232910).
