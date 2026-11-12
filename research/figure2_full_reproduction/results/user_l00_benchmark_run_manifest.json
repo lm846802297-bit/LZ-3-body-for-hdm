@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "run_label": "user-l00-benchmark-delta-m-450-kev-2026-11-11",
+  "purpose": "Archive the native high-order numerical output for the supplied Eq. (6) L00 benchmark at Delta m = 450 keV.",
+  "source": {
+    "repository": "lm846802297-bit/LZ-3-body-for-hdm",
+    "branch": "research/figure2-l00-benchmark-450kev",
+    "commit": "5cbc5d1f779575b348bfab1d74edc71747b8d9ca",
+    "workflow_file": ".github/workflows/figure2-user-l00-benchmark.yml",
+    "workflow_run_id": 42957904328,
+    "workflow_job": "l00-benchmark",
+    "workflow_conclusion": "success"
+  },
+  "execution": {
+    "command": "python research/figure2_full_reproduction/run_user_l00_benchmark.py --nw 48 --nz 40 --nphi 24 --output user_l00_benchmark.json",
+    "python": "3.12 (GitHub Actions ubuntu-latest)",
+    "quadrature": {
+      "nW": 48,
+      "nz": 40,
+      "nphi": 24
+    },
+    "regression_tests": {
+      "suite": "research/figure2_full_reproduction/tests/test_user_l00_benchmark.py",
+      "passed": 6,
+      "failed": 0,
+      "workflow_step": "Run supplied L00 benchmark regression tests"
+    }
+  },
+  "artifact_transfer": {
+    "artifact_id": 13827831888,
+    "artifact_name": "user-l00-benchmark-delta-m-450-kev",
+    "artifact_zip_bytes": 1288,
+    "artifact_zip_sha256": "146890fd6a8e39940800535f6dd751ec9a0ae6b8a6f2568688883fb572a7dbd6",
+    "note": "The transfer ZIP is not committed; its extracted native JSON output is committed instead."
+  },
+  "output": {
+    "path": "research/figure2_full_reproduction/results/user_l00_benchmark_delta_m_450kev.json",
+    "bytes": 2475,
+    "sha256": "b1861ccc7c802af9ea5953a60f4d27f9910c70bae0d05d5094c8248395d1cfe0"
+  },
+  "benchmark": {
+    "delta_m_keV": 450.0,
+    "mchi1_GeV": 1000.0,
+    "mchi2_GeV": 1000.00045,
+    "ms_keV": 300.0,
+    "mV_GeV": 10.0,
+    "g1": 1.0,
+    "g2": 1.0,
+    "gVN": 1.0,
+    "coupling_product_squared": 1.0
+  },
+  "interpretation_and_limitations": [
+    "The L00 value is an initial-spin-averaged and final-spin-summed Dirac trace.",
+    "The conditional chi2 width assumes Dirac chi1 and chi2, a pure scalar off-diagonal Yukawa vertex, chi2 -> chi1 s as the only open decay channel, and excludes the vector-sector self-energy contribution.",
+    "The pointwise L00 diagnostic uses the inherited target-rest-frame kinematics listed in the JSON output.",
+    "The reduced Eq. (6) integral and differential cross section divided by the nuclear response are not halo-folded event rates.",
+    "No nuclear response, halo integral, detector efficiency, energy resolution, exposure, or likelihood is included."
+  ]
+}
