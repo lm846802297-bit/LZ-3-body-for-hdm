@@ -6,7 +6,11 @@ import sys
 HERE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE))
 
-from fold_lz_2026_rate_level import integrate_weighted_rate, interpolate  # noqa: E402
+from fold_lz_2026_rate_level import (  # noqa: E402
+    integrate_piecewise_linear_product,
+    integrate_weighted_rate,
+    interpolate,
+)
 
 
 class LZ2026RateLevelFoldTests(unittest.TestCase):
@@ -27,6 +31,43 @@ class LZ2026RateLevelFoldTests(unittest.TestCase):
         )
         self.assertAlmostEqual(raw, 2.0, places=10)
         self.assertAlmostEqual(weighted, 1.0, places=10)
+
+    def test_piecewise_linear_rate_times_efficiency_is_integrated_exactly(self):
+        raw, weighted = integrate_piecewise_linear_product(
+            rate_x=[0.0, 2.0],
+            rate_y=[1.0, 3.0],
+            efficiency_x=[0.0, 2.0],
+            efficiency_y=[0.2, 0.4],
+            lo=0.0,
+            hi=2.0,
+        )
+        # rate=1+x, efficiency=0.2+0.1*x; integral(rate)=4,
+        # integral(rate*efficiency)=integral(0.2+0.3*x+0.1*x^2).
+        self.assertAlmostEqual(raw, 4.0, places=14)
+        self.assertAlmostEqual(weighted, 1.2666666666666666, places=14)
+
+    def test_piecewise_exact_integral_uses_union_of_knots(self):
+        raw, weighted = integrate_piecewise_linear_product(
+            rate_x=[0.0, 1.0, 2.0],
+            rate_y=[1.0, 2.0, 1.0],
+            efficiency_x=[0.0, 2.0],
+            efficiency_y=[0.5, 0.5],
+            lo=0.0,
+            hi=2.0,
+        )
+        self.assertAlmostEqual(raw, 3.0, places=14)
+        self.assertAlmostEqual(weighted, 1.5, places=14)
+
+    def test_piecewise_exact_integral_rejects_roi_extrapolation(self):
+        with self.assertRaises(ValueError):
+            integrate_piecewise_linear_product(
+                rate_x=[1.0, 2.0],
+                rate_y=[1.0, 1.0],
+                efficiency_x=[0.0, 2.0],
+                efficiency_y=[0.5, 0.5],
+                lo=0.5,
+                hi=1.5,
+            )
 
     def test_weighted_integral_never_exceeds_raw_for_efficiency_below_one(self):
         raw, weighted = integrate_weighted_rate(
