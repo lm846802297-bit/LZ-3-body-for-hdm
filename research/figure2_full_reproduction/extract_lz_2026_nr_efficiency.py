@@ -220,6 +220,19 @@ def main() -> None:
     points = extract_curve(svg_path)
     lower_points, upper_points, band_point_count = extract_uncertainty_envelope(svg_path)
 
+    # Independent public digitization of the same LZ Fig. S2 curve, arXiv:2609.02608v2.
+    independent_anchors = (
+        (interpolate(points, 248.0), 0.9457, "central efficiency at 248 keV"),
+        (interpolate(lower_points, 248.0), 0.8835, "lower envelope at 248 keV"),
+        (interpolate(upper_points, 248.0), 0.9800, "upper envelope at 248 keV"),
+    )
+    for value, reference, label in independent_anchors:
+        if abs(value - reference) > 1.0e-3:
+            raise RuntimeError(
+                f"Independent LZ efficiency digitization check failed for {label}: "
+                f"{value:.7f} vs {reference:.7f}"
+            )
+
     energies = sorted(set(float(i) for i in range(301)) | {5.4, 248.0, 269.9})
     csv_path = args.out_dir / "lz_2026_nr_efficiency_digitized.csv"
     with csv_path.open("w", newline="", encoding="utf-8") as f:
