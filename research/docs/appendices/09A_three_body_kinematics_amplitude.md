@@ -221,6 +221,128 @@ p+P=p'+P'+k,\qquad K^2=W^2.
 \]
 
 这就是程序中末态四动量构造函数的逻辑。
+### A.3.1 显式 Lorentz boost 与正交基构造
+
+为避免“boost 到 \(K\) 静止系”只停留在操作描述，下面把实际使用的变换写成分量形式。记靶核静止系中的
+
+\[
+K^\mu=(K^0,\mathbf K),\qquad K^2=W^2,
+\]
+
+并定义
+
+\[
+\boldsymbol\beta_K=\frac{\mathbf K}{K^0},
+\qquad
+\beta_K=|\boldsymbol\beta_K|,
+\qquad
+\gamma_K=\frac{K^0}{W}=\frac{1}{\sqrt{1-\beta_K^2}}.
+\]
+
+对任意靶核静止系四矢量 \(a^\mu=(a^0,\mathbf a)\)，变换到 \(K\) 静止系的分量为
+
+\[
+\boxed{
+a_*^0=\gamma_K(a^0-\boldsymbol\beta_K\cdot\mathbf a)
+}
+\]
+
+以及
+
+\[
+\boxed{
+\mathbf a_*=
+\mathbf a+
+\left[
+\frac{\gamma_K-1}{\beta_K^2}
+(\boldsymbol\beta_K\cdot\mathbf a)
+-\gamma_K a^0
+\right]\boldsymbol\beta_K
+}.
+\]
+
+这里的符号对应于进入以速度 \(+\boldsymbol\beta_K\) 运动的 \(K\) 系；因此能量变换中出现负号。逆变换为
+
+\[
+\boxed{
+a^0=\gamma_K(a_*^0+\boldsymbol\beta_K\cdot\mathbf a_*)
+}
+\]
+
+和
+
+\[
+\boxed{
+\mathbf a=
+\mathbf a_*+
+\left[
+\frac{\gamma_K-1}{\beta_K^2}
+(\boldsymbol\beta_K\cdot\mathbf a_*)
++\gamma_K a_*^0
+\right]\boldsymbol\beta_K
+}.
+\]
+
+这两组公式分别用于将入射动量 \(p^\mu\) 变换到 \(K\) 静止系，以及将构造出的 \(p_*'{}^\mu,k_*^\mu\) 变换回靶核静止系。变换后应有
+
+\[
+K_*^\mu=(W,\mathbf 0),\qquad
+p_*'{}^\mu+k_*^\mu=K_*^\mu.
+\]
+
+当 \(\beta_K=0\) 时，上述含 \(\beta_K^{-2}\) 的表达按连续极限理解为恒等变换。
+
+**正交基的一个明确构造方式**如下。先定义
+
+\[
+\hat{\mathbf e}_3=\frac{\mathbf p_*}{|\mathbf p_*|}.
+\]
+
+选取一个不与 \(\hat{\mathbf e}_3\) 平行的参考单位向量 \(\hat{\mathbf r}\)，例如优先取靶核静止系的固定 \(z\) 轴方向；若两者近乎平行，则改用固定 \(x\) 轴方向。随后作 Gram–Schmidt 正交化：
+
+\[
+\hat{\mathbf e}_1=
+\frac{
+\hat{\mathbf r}
+-(\hat{\mathbf r}\cdot\hat{\mathbf e}_3)\hat{\mathbf e}_3
+}{
+\sqrt{1-(\hat{\mathbf r}\cdot\hat{\mathbf e}_3)^2}
+},
+\]
+
+\[
+\hat{\mathbf e}_2=\hat{\mathbf e}_3\times\hat{\mathbf e}_1.
+\]
+
+于是
+
+\[
+\hat{\mathbf e}_i\cdot\hat{\mathbf e}_j=\delta_{ij},
+\qquad
+\hat{\mathbf e}_1\times\hat{\mathbf e}_2=\hat{\mathbf e}_3.
+\]
+
+在这个基底下，标量方向为
+
+\[
+\hat{\mathbf k}_*
+=z\hat{\mathbf e}_3+
+\sqrt{1-z^2}
+(\cos\phi_*\hat{\mathbf e}_1+\sin\phi_*\hat{\mathbf e}_2).
+\]
+
+参考向量的选择只决定横向坐标轴的零方位角。由于对完整的 \(0\le\phi_*<2\pi\) 区间积分，物理积分不依赖这一任意坐标选择；改变横向基底只会重新定义 \(\phi_*\) 的原点。
+
+因此，完整的四动量构造可以按以下顺序理解：
+
+1. 在靶核静止系给定 \(p,P,q\)，并由 \(K=p-q\) 得到子系统总动量；
+2. 使用上述正向 boost 得到 \(p_*\)，并由其方向定义 \(\hat{\mathbf e}_3\)；
+3. 根据 \(W,m_{\chi_1},m_s\) 得到两体衰变的 \(E_{s,*}\)、\(E_{\chi_1,*}\) 和 \(|\mathbf k_*|\)；
+4. 使用 \(z,\phi_*\) 构造 \(\hat{\mathbf k}_*\)，从而得到 \(k_*^\mu\) 和 \(p_*'{}^\mu\)；
+5. 使用逆 boost 得到靶核静止系中的 \(k^\mu,p'^\mu\)，并取 \(P'=P+q\)。
+
+这样构造后，子系统关系 \(p'+k=K\) 与总四动量守恒 \(p+P=p'+P'+k\) 在解析上相互一致。数值程序中的质量壳和四动量闭合检查属于对这一构造的实现检查，不改变上述运动学定义。
+
 
 ## A.4 为什么选取 \((W^2,z,\phi_*)\) 作为积分变量
 
