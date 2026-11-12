@@ -331,8 +331,8 @@ def main() -> None:
 
     response_interp, q_grid, response_grid = load_afh_response(args.response_csv)
 
-    # Archive the full NIST -> nuclear-mass conversion table, including isotopes
-    # for which an AFH response curve is not currently available.
+    # Archive masses for all nine natural isotopes. Distinguish availability
+    # of a v6.0 default density matrix from an archived full response q-grid.
     binding_eV = electron_binding_energy_eV(54)
     mass_rows = []
     for isotope_A, abundance in NATURAL_XE_ABUNDANCES.items():
@@ -358,7 +358,8 @@ def main() -> None:
             "delta_nuclear_mass_AME2020_vs_NIST_keV": (m_A_ame - m_A_nist) * 1.0e6,
             "delta_AME2020_vs_Au_keV": (m_A_ame - m_A_au) * 1.0e6,
             "vmin_at_ER101keV_ms300_km_s": vmin_101,
-            "AFH_default_response_available": isotope_A == A,
+            "AFH_default_density_matrix_available_in_v6": isotope_A in AFH_DEFAULT_XE_ISOTOPES,
+            "AFH_full_response_q_grid_archived_in_repo": isotope_A == A,
         })
     write_csv(args.out_dir / "xenon_isotope_ame2020_masses.csv", mass_rows)
 
@@ -567,7 +568,9 @@ def main() -> None:
             "mA_Xe131_GeV": mass,
         },
         "AFH": {
-            "source": "DMFormFactor v6.0 built-in sdgXe131, 67 density-matrix entries",
+            "source": "DMFormFactor v6.0 default-density set; this partial fold uses sdgXe131, 67 density-matrix entries",
+            "default_density_matrix_isotopes": sorted(AFH_DEFAULT_XE_ISOTOPES),
+            "full_response_q_grid_archived_isotopes": [131],
             "response_file": str(args.response_csv),
             "response_grid_points": int(len(q_grid)),
             "q_grid_GeV": [float(q_grid[0]), float(q_grid[-1]), float(q_grid[1]-q_grid[0])],
