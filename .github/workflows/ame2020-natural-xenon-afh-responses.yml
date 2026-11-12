@@ -40,7 +40,7 @@ jobs:
       - name: Install numerical dependencies
         run: |
           python -m pip install --upgrade pip
-          python -m pip install numpy scipy sympy
+          python -m pip install numpy scipy sympy mpmath
 
       - name: Download and verify the official AFH v6.0 source
         shell: bash
@@ -78,6 +78,14 @@ jobs:
             --matrix-dir "$RUNNER_TEMP/afh_default_density_matrices" \
             --out-dir "$RUNNER_TEMP/afh_default_xenon_responses"
 
+      - name: Independently validate selected exact-q AFH responses with mpmath
+        run: |
+          python research/afh_default_density_natural_xenon_halo/verify_afh_selected_q_mpmath.py \
+            --matrix-dir "$RUNNER_TEMP/afh_default_density_matrices" \
+            --response-csv "$RUNNER_TEMP/afh_default_xenon_responses/afh_xe_isotope_responses.csv" \
+            --selected-samples research/afh_default_density_natural_xenon_halo/input/afh_response_samples.csv \
+            --out-dir "$RUNNER_TEMP/afh_selected_q_mpmath"
+
       - name: Run the existing Xe-131 AME2020 regression tests
         run: |
           python -m unittest \
@@ -95,6 +103,7 @@ jobs:
           path: |
             ${{ runner.temp }}/afh_default_density_matrices/
             ${{ runner.temp }}/afh_default_xenon_responses/
+            ${{ runner.temp }}/afh_selected_q_mpmath/
           if-no-files-found: warn
           retention-days: 90
 
@@ -104,9 +113,11 @@ jobs:
           set -euo pipefail
           MATRIX_DEST="research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices"
           RESPONSE_DEST="research/afh_default_density_natural_xenon_halo/output/afh_default_xenon_responses"
-          mkdir -p "$MATRIX_DEST" "$RESPONSE_DEST"
+          MPMATH_DEST="$RESPONSE_DEST/selected_q_mpmath"
+          mkdir -p "$MATRIX_DEST" "$RESPONSE_DEST" "$MPMATH_DEST"
           cp -a "$RUNNER_TEMP/afh_default_density_matrices/." "$MATRIX_DEST/"
           cp -a "$RUNNER_TEMP/afh_default_xenon_responses/." "$RESPONSE_DEST/"
+          cp -a "$RUNNER_TEMP/afh_selected_q_mpmath/." "$MPMATH_DEST/"
           (
             cd research/afh_default_density_natural_xenon_halo
             find input/afh_default_density_matrices output/afh_default_xenon_responses \
