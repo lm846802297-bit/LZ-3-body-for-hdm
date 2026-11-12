@@ -167,3 +167,21 @@ The finite-width comparison uses the conditional Dirac / pure-scalar /
 single-open-channel \(\chi_2\to\chi_1s\) width. It is not the full
 vector-plus-scalar self-energy. See
 results/USER_L00_BENCHMARK_G1_G2_GVN_1_DELTA_M_450KEV.md.
+
+
+## Local native acceptance archive — supplied L00 benchmark, 450 keV
+
+The supplied (g_1=g_2=g_{VN}=1), (Delta m=450) keV benchmark was rerun locally using the current main-branch Eq. (6) kernel. The PR-branch and main kernel snapshots agree at the tested quadrature orders.
+
+The native output and provenance files are archived under:
+
+`results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/`
+
+- High-order JSON benchmark output.
+- Three-level quadrature convergence CSV.
+- Local validation report, run manifest, and test log.
+- SHA-256 checksums for all five native files.
+
+Local acceptance: six regression tests passed; the independent explicit spin sum agrees with the Dirac trace at relative difference (2.22\times10^{-16}); the ((40,32,20)) to ((48,40,24)) changes in (I_6) are below (6.7\times10^{-7}).
+
+This archive validates only the pointwise (mathcal L_{00}) benchmark and reduced Eq. (6) integral under the stated Dirac and conditional scalar-width assumptions. It is not an AME2020 exact-isotope result, a halo-folded natural-xenon spectrum, or an LZ likelihood. The separate fixed-speed Xe-131 curve helper is excluded pending direct-response interpolation validation.
