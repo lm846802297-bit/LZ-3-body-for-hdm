@@ -15,7 +15,8 @@
 - **2026-11-12：** 将主报告统一命名为 `09_afh_xe131_three_body_scattering_natural_xenon.md`；本轮进一步将动量约定审计纳入正式附录 G，H 保留为独立研究决定登记，并同步更新交叉引用。
 - **2026-11-12：** 修复 detector-level 接口章节的重复编号。
 - **2026-11-12：** PR #7 已 squash-merge 至 `research/figure2-p0-4-mainline`；更新本报告的归档状态、LZ 效率折叠完成项与尚未完成的 detector-level likelihood 边界。
-- **2026-11-12：** 统一正文、附录 F 与 LZ detector-level 接口的状态描述，区分 GCN/JJ55 连续谱、AFH selected-point 结果及效率加权 rate-level 事件数。以上为文档编辑，不代表新增物理验证或数值计算。
+- **2026-11-12：** 统一正文、附录 F 与 LZ detector-level 接口的状态描述，区分 GCN/JJ55 连续谱、AFH selected-point 结果及效率加权 rate-level 事件数。
+- **2026-11-12：** 新增独立的阶段性结论章节，汇总理论核响应、天然氙结果、LZ rate-level event yields 与当前不可声称的实验结论。以上为文档编辑，不代表新增物理验证或数值计算。
 
 ## 摘要
 
@@ -719,6 +720,64 @@ This separates two distinct properties. Red has the largest total accepted rate 
 A nuclear-response distinction is also necessary. The LZ 2026 paper states that its published theory spectra use WimPyDD with one-body density matrices developed for DMFormFactor-v6, modified as described in Ref. [31]. The continuous spectra archived in this repository use the available GCN/JJ55 isotope-response grids as an independent nuclear-model comparison; they are not claimed to reproduce the LZ collaboration's modified nuclear-response inputs. The AFH v6.0 calculation remains a separate selected-point result until the full seven-isotope AFH response grid is recovered.
 
 **Experimental reference:** LZ Collaboration, D. S. Akerib et al., *Search for dark matter particle interactions in an extended nuclear recoil energy window with the LUX-ZEPLIN (LZ) experiment*, arXiv:2609.02823v1 (2026), data release DOI: [10.17182/hepdata.182472.v1](https://doi.org/10.17182/hepdata.182472.v1).
+
+## 12. 阶段性结论与结果解释
+
+本报告已经把三体核散射的理论截面、核结构输入、天然氙靶求和、halo 速度积分以及 LZ 一维效率加权接口连接起来。但这些层级的完成程度不同，不能将某一层的结果自动视为下一层已经完成。
+
+### 12.1 理论与核响应层面的结论
+
+1. **三体截面具有清晰的因式分解结构。** 对固定同位素和入射运动学，Eq. (6) 可写为粒子物理与三体相空间部分乘以核响应 \(R_A(E_R)\)。在 AFH、GCN、JJ55 之间进行受控核模型比较时，可以在相同运动学点复用同一个 \(I_6\)，只替换核响应；这不是对每个核模型重新计算一套独立三体积分。
+2. **AFH 归一化约定已经固定。** AFH 原始 isoscalar response 的零动量归一化为 \(A^2/4\)，而论文前因子显式提出物理单核子耦合 \(g_{VN}^2\) 时，使用的物理相干响应应满足 \(R_A^{\rm phys}(0)=A^2\)。因子 4 只计入一次。
+3. **AFH 响应使用空间动量。** 默认输入为 \(q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}\)，而传播子使用不变量 \(t=-2m_AE_R\)。\(q_{\rm NR}=\sqrt{2m_AE_R}\) 只作为小反冲近似对照，不与 \(t\) 混淆。
+4. **AFH Xe-131 的数值翻译已有高精度独立检查，但原生 Mathematica 运行仍待完成。** 2401 个 \(q\) 节点的 60 位精度 mpmath 有限和对照已归档；它不能替代官方 Wolfram kernel 的原生执行。
+
+### 12.2 当前结果覆盖范围
+
+| 研究层级 | 当前结果 | 不能据此声称 |
+|---|---|---|
+| AFH Xe-131 | default density matrix、固定 \(b_A\)、2401 点响应网格 | 原生 Mathematica 已通过 |
+| 固定速度截面 | 四组 Figure 2 benchmark；AFH/GCN/JJ55 受控响应替换 | \(v=800\) km/s 是截断 SHM 支持区间内的 halo 速度 |
+| AFH 天然氙 | 七种可用同位素的 selected-point halo fold | 已得到连续 AFH 天然氙反冲谱，或已包含 Xe-124/Xe-126 |
+| GCN/JJ55 天然氙 | 四组 benchmark 的连续反冲谱 | 这些核响应等同于 LZ 合作组的修改后 WimPyDD 输入 |
+| LZ rate-level interface | 一维效率曲线、灰色系统包络和 2.84 tonne-year exposure 折叠 | 已构造二维信号 PDF、背景 likelihood 或实验排除 |
+
+AFH 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失的 Xe-124 与 Xe-126 丰度没有重新分配给其他同位素。AFH 当前的天然氙结果仍是 selected-point rates。连续谱和下表的 LZ efficiency-weighted yields 使用 GCN/JJ55 核响应。
+
+### 12.3 LZ rate-level event yields 与高能尾部
+
+在参考耦合 \((g_1g_2g_{VN})^2=10^{-8}\)、\(g_2=1\) 和名义曝光 2.84 tonne-year 下，GCN/JJ55 连续谱给出的效率加权预期事件数为：
+
+| Benchmark | GCN expected events | JJ55 expected events | \(225\)–\(269.9\) keV 接受事件比例（GCN/JJ55） |
+|---|---:|---:|---:|
+| Red | 0.338 | 0.346 | 2.25% / 2.32% |
+| Green | \(1.525\times10^{-3}\) | \(1.579\times10^{-3}\) | 8.62% / 8.78% |
+| Black | \(2.853\times10^{-9}\) | \(2.879\times10^{-9}\) | 92.84% / 92.76% |
+| Blue | \(1.248\times10^{-5}\) | \(1.293\times10^{-5}\) | 8.57% / 8.74% |
+
+表中事件数的灰色效率包络上下变化见第 11.4 节；它是系统范围，不是置信区间。高能尾部比例是 \(225\)–\(269.9\) keV 区间积分占整个 WIMP-search ROI 接受事件数的比例，不是经过能量分辨卷积的候选事件窗口概率。
+
+这组结果体现了**谱形硬度与总归一化必须分开判断**：
+
+- Red 的总接受事件数最大，但只有约 2.3% 位于 225 keV 以上；
+- Black 的高能尾部比例超过 92%，但总接受事件数只有约 \(3\times10^{-9}\)；
+- Green 与 Blue 的高能尾部比例约为 8.6%–8.8%，但在参考耦合下总事件数仍很小。
+
+因此，单独拥有较硬的高能谱尾并不足以解释 248 keV 候选事件；总归一化、探测器响应和完整统计模型同样重要。上述事件数只对应 GCN/JJ55 连续谱，不是 AFH 连续谱预测。
+
+### 12.4 本阶段结论的适用边界
+
+当前结果可以支持以下表述：已经建立并归档了从三体微分截面到天然氙理论反冲谱、再到一维效率加权 rate-level event-yield estimate 的计算链，并对 AFH、GCN、JJ55 核响应作了分层比较。
+
+当前结果**不能**支持以下更强结论：
+
+1. 不能称为完整 LZ detector-level recast 或 90% CL exclusion；
+2. 不能把 LZ 论文中的两体 \(\chi_1+A\to\chi_2+A\) 限制直接移植到本研究的三体过程；
+3. 不能把 GCN/JJ55 连续谱或其 LZ 效率加权事件数标记为 AFH 预测；
+4. 不能把 248 keV 单个候选事件当作信号计数进行拟合；
+5. 不能把 mpmath 高精度交叉检查描述为官方 Mathematica 原生验证。
+
+后续物理工作仍取决于完整 AFH 响应输入、原生 Mathematica 对照，以及 LZ 的二维 NEST 响应、校准协方差、背景数据和 profile likelihood。本文的阶段性结论不替代这些尚未完成的工作。
 
 # 技术附录（完整内容）
 
