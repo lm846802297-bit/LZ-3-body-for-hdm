@@ -205,7 +205,7 @@ The Xe-131 partial halo fold uses the exact AFH spatial momentum
 \(q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}\) as its baseline. The
 \(q_{\rm NR}=\sqrt{2m_AE_R}\) result is retained only as an approximation
 diagnostic. The calculation and its numerical outputs are archived under
-\`output/ame2020_exact_spatial_xe131_partial/\`.
+`output/ame2020_exact_spatial_xe131_partial/`.
 
 A separate Xe-131-only hybrid diagnostic replaces the Xe-131 term in the
 existing NIST natural-xenon selected-point sum with the AME2020 result while
@@ -213,3 +213,12 @@ leaving the other six isotope terms at their NIST baseline. It is explicitly
 not a full AME2020 natural-xenon prediction. Updating the full seven-isotope
 sum requires the original all-isotope AFH response input or regeneration of
 the six other full response grids from the AFH v6.0 source archive.
+
+The exact-spatial-q calculation, mass-scheme comparison, and Xe-131-only
+hybrid diagnostic passed in
+[GitHub Actions run 43187421374](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43187421374).
+The archived numerical tables and input SHA-256 records are under
+`output/ame2020_exact_spatial_xe131_partial/`. The hybrid changes the
+natural-xenon selected-point total by at most 7.87 ppm when only the Xe-131
+term is replaced; this must not be interpreted as the complete
+seven-isotope AME2020 correction.
