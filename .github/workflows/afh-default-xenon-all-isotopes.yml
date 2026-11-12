@@ -1,0 +1,96 @@
+name: AFH v6.0 default xenon responses for AME2020 masses
+
+on:
+  push:
+    branches:
+      - research/ame2020-xe131-exact-spatial-mainline
+    paths:
+      - .github/workflows/afh-default-xenon-all-isotopes.yml
+      - research/afh_default_density_xenon_all_isotopes/**
+      - research/afh_default_density_xe131/run_afh_default_xe131.py
+      - research/afh_default_density_xe131/afh_default_xe131_density_matrix.csv
+      - research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv
+      - research/afh_default_density_natural_xenon_halo/input/afh_response_samples.csv
+      - research/figure2_full_reproduction/isotope_mass_schemes.py
+
+concurrency:
+  group: afh-default-xenon-all-isotopes-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  regenerate-default-density-responses:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Check out the mainline-based research branch
+        uses: actions/checkout@v4
+        with:
+          ref: research/ame2020-xe131-exact-spatial-mainline
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install numerical dependencies
+        run: python -m pip install --upgrade numpy scipy sympy
+
+      - name: Download official DMFormFactor v6.0 source archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl --fail --location --retry 3 \
+            https://www.ocf.berkeley.edu/~nanand/software/dmformfactor/v6.zip \
+            --output "$RUNNER_TEMP/dmformfactor-v6.zip"
+          printf '%s  %s\n' \
+            4e0f70e6e780f3f4a40faa14792cae239d1989cf15d1e211b4fd7389b0460727 \
+            "$RUNNER_TEMP/dmformfactor-v6.zip" | sha256sum --check
+
+      - name: Extract official AFH package
+        id: afh-package
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/afh-v6"
+          unzip -q "$RUNNER_TEMP/dmformfactor-v6.zip" -d "$RUNNER_TEMP/afh-v6"
+          PACKAGE=$(find "$RUNNER_TEMP/afh-v6" -type f -iname 'dmformfactor-V6.m' -print -quit)
+          test -n "$PACKAGE"
+          echo "path=$PACKAGE" >> "$GITHUB_OUTPUT"
+
+      - name: Generate full default-density AFH response curves
+        run: |
+          python research/afh_default_density_xenon_all_isotopes/run_afh_default_xenon_responses.py \
+            --afh-package "${{ steps.afh-package.outputs.path }}" \
+            --source-zip "$RUNNER_TEMP/dmformfactor-v6.zip" \
+            --mass-scheme ame2020_nuclear \
+            --outdir research/afh_default_density_xenon_all_isotopes/output
+
+      - name: Test isotope response grids and independent reference comparisons
+        run: |
+          python -m unittest \
+            research/afh_default_density_xenon_all_isotopes/test_afh_default_xenon_responses.py -v
+
+      - name: Upload full response grid and extracted density matrices
+        uses: actions/upload-artifact@v4
+        with:
+          name: afh-default-xenon-all-isotopes-ame2020
+          path: research/afh_default_density_xenon_all_isotopes/output/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Archive validated full response grid on the research branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/afh_default_density_xenon_all_isotopes/output/
+          git diff --cached --quiet && exit 0
+          git commit -m "Archive full AFH default-density xenon response grids"
+          git fetch origin research/ame2020-xe131-exact-spatial-mainline
+          git rebase origin/research/ame2020-xe131-exact-spatial-mainline
+          git push origin HEAD:research/ame2020-xe131-exact-spatial-mainline
