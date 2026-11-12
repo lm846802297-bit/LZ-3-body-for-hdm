@@ -7,7 +7,8 @@ concurrency:
 on:
   push:
     branches:
-      - research/afh-default-density-xe131-mainline
+      - main
+      - 'research/**'
     paths:
       - .github/workflows/lz-2026-rate-level-fold.yml
       - research/figure2_full_reproduction/fold_lz_2026_rate_level.py
