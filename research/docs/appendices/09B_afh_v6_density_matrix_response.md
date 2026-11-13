@@ -308,7 +308,7 @@ y_{\rm exact}=\frac{b_A^2}{4}(2m_AE_R+E_R^2).
 A\in\{128,129,130,131,132,134,136\}.
 \]
 
-对应源代码位于默认矩阵选择分支，见 [源文件第 1555–1597 行](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/blob/main/v6/dmformfactor-V6.m#L1555-L1597)。当 `Ziso=54` 且质量数不属于上述集合时，程序进入通用回退分支并输出 `Cannot find default matrix which matches input M and Z!`。
+对应源代码位于默认矩阵选择分支，见 [源文件第 1555–1597 行](../../../v6/dmformfactor-V6.m#L1555-L1597)。当 `Ziso=54` 且质量数不属于上述集合时，程序进入通用回退分支并输出 `Cannot find default matrix which matches input M and Z!`。
 
 因此，Xe-124 和 Xe-126 的缺失不是本项目提取 CSV 时漏读，也不是 Python 转换器遗漏；它们确实没有出现在当前 AFH v6.0 官方包的默认 Xe dispatch 中。源文件其他位置出现的 `sdgI[124]` 和 `sdgI[126]` 是内部表索引，不能解释为 Xe-124/Xe-126 的默认核密度矩阵。
 
