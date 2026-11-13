@@ -39,6 +39,23 @@ class AFHDefaultXe131Tests(unittest.TestCase):
         physical_normalized = 131**2 * physical_raw/physical_raw
         self.assertAlmostEqual(physical_normalized, 131**2, places=10)
 
+    def test_paper_python_and_mma_share_physical_factor4_convention(self):
+        repo_root = HERE.parents[1]
+        paper = (repo_root / "paper-source" / "main.tex").read_text(encoding="utf-8")
+        mma_runner = (HERE / "run_afh_default_xe131.wls").read_text(encoding="utf-8")
+        mma_verifier = (HERE / "verify_afh_xe131_native.wls").read_text(encoding="utf-8")
+        comparator = (HERE / "compare_afh_mathematica_python.py").read_text(encoding="utf-8")
+
+        self.assertIn(r"\\frac{16\\pi}{2J_A+1}", paper)
+        self.assertIn(r"W_{M,\\mathrm{AFH,v6}}^{00}", paper)
+        self.assertIn(r"q=\\sqrt{2m_AE_R+E_R^2}", paper)
+        self.assertNotIn(r"\\mathcal R_A(E_R)=4\\pi W_M^{00}", paper)
+
+        self.assertIn("rEqualRaw = 4.0*rAFH;", mma_runner)
+        self.assertIn("rRaw[q_?NumericQ] := 16 Pi/(2 jA + 1) wm[q];", mma_verifier)
+        self.assertIn('"R_equal_pn_raw"', comparator)
+        self.assertIn('"raw_AFH_W_M00"', comparator)
+
     def test_independent_high_precision_kernel_check_points(self):
         # Reference values independently checked with 60-digit mpmath evaluation
         # of the finite sums in AFH BesselElement.
