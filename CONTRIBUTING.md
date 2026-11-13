@@ -28,6 +28,18 @@ research/WORKFLOW.md before starting a new calculation or submitting a change.
    file counts, sizes, and SHA-256 checksums. Report archival and physics
    validation as separate statuses.
 
+## Merge strategy
+
+Use **Merge Commit by default** for substantive research PRs so that individual
+derivation, implementation, numerical-validation, and result-archival commits
+remain in the `main` history. Use Squash Merge only for documentation-only,
+minor maintenance, or small cohesive changes whose intermediate commits have
+no independent audit value. Use Rebase and Merge only when clean atomic commits
+and a deliberately linear history are required; remember that it rewrites
+commit SHAs. Do not squash multi-stage scientific work merely to shorten the
+history. See [research/WORKFLOW.md](research/WORKFLOW.md#merge-strategy-and-research-traceability)
+for the full policy and the provenance requirements when an exception is used.
+
 The original manuscript source belongs in paper-source/. Do not modify
 paper-source/main_original.tex or replace original source assets as part of
 an ordinary research-code PR.
