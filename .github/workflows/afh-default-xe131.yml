@@ -1,4 +1,4 @@
-name: AFH default Xe-131 nuclear response
+name: AFH response and natural-xenon target-mass validation
 
 concurrency:
   group: afh-default-xe131-${{ github.ref }}
