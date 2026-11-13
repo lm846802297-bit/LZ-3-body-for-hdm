@@ -1,7 +1,7 @@
 # AFH v6.0 Xe-131 核响应、三体暗物质散射与天然氙反冲率
 
 > 整理日期：2026-11-11  
-> 最近文档更新：2026-11-12（合并后编辑一致性整理；本轮未开展新的物理验证计算）  
+> 最近文档更新：2026-11-13（完成 P0 精确空间动量复算归档比较、P1 F1–F12 交叉审查及 P2 科学状态表；原生 Mathematica 与完整 likelihood 仍未完成）  
 > 对话来源：[ChatGPT 分享对话](https://chatgpt.com/share/6af4660e-e388-83ea-a86a-2482b065dcea)  
 > 对应研究仓库：`lm846802297-bit/LZ-3-body-for-hdm`  
 > 当前归档位置：`research/figure2-p0-4-mainline`；PR #7 已于 2026-11-12 squash-merged（`f4f2ee91f6a51399dd3b5c06d64878b7f79322d7`）  
@@ -19,6 +19,8 @@
 - **2026-11-12：** 新增独立的阶段性结论章节，汇总理论核响应、天然氙结果、LZ rate-level event yields 与当前不可声称的实验结论。
 - **2026-11-12：** 新增公式—符号—正文—程序—结果交叉引用索引；在 Eq. (6)、AFH 响应、halo-folded rate 和 LZ rate-level 公式旁加入推导与程序入口，并新增第 13 节快速导航。该工作为文档追溯性整理，不代表新增物理验证或数值计算。
 - **2026-11-12：** 交叉核对主报告与附录 A 的 \(I_6\) 维度约定，将主公式明确写为无量纲 \(\lambda_{\rm dim}\)；在正文补出三体 \(v_{\min,A}\) 显式表达式，并补齐 \(a_A,\theta_q,N_{\rm Av}\) 的符号定义。该工作为公式记号和追溯性修订，不代表新增数值计算。
+- **2026-11-13：** 完成 P0–P2 阶段审查：PR #25 最新 CI（run 43381653706）重新生成 Xe-131 AFH 2401 点响应、60 位 mpmath 全网格对照、28 个天然氙精确空间 q 样本审计及四 benchmark；完成 F1–F12 正文—附录—代码—结果追溯，补充科学状态表。P0 的 Python/归档闭环已完成；原生 Wolfram/Mathematica 仍明确标记为待执行。
+- **2026-11-13：** 修正旧天然氙 metadata 中平均摩尔质量的三位小数舍入，改为由全部九种天然同位素输入加权得到的 131.29276144779053 g/mol，并记录每 kg 靶核数；该平均质量使用全天然丰度，与 AFH 响应仅覆盖七种同位素（0.998158）是两个不同范围。
 
 ## 摘要
 
@@ -552,19 +554,24 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 - 天然氙归档完整性验证 workflow 通过；
 - AFH exact_spatial 默认模式重新计算 98 个逐同位素贡献和 14 个总速率，与归档结果的最大总速率相对差异为 \\(2.67\\times10^{-12}\\)，CI run 43044583357 通过；
 - 核响应 (q) 与精确三体运动学 (q) 的定义、质量壳推导及 NR 近似对照见正式附录 G。
+- **P0 最新复算（PR #25，CI run 43381653706）：** 2401 个 Xe-131 精确空间 q 节点重新生成；60 位 mpmath 对照最大振幅绝对差 \(3.98\times10^{-14}\)，最大响应绝对差除以 \(A^2\) 为 \(1.22\times10^{-15}\)。28 个天然氙 AFH 样本全部匹配 exact spatial q，最大 \(\Delta q\) 为 0.408764 keV、最大相对 q 偏移为 1.137567 ppm。四 benchmark、q-convention 与 mpmath artifacts 均成功上传。
+- **P0 归档比较：** 已生成的 AFH Xe-131 响应、四 benchmark corrected/wide 表、selected ratios、天然氙 q 审计与固定 Xe-131 q 对照等 7 个归档输出与对应复算结果逐字节一致；这证明 Python 复算与当前归档闭合，不替代原生 Mathematica 对照。
+- **P1 重点核查：** AFH 物理响应采用 \(R_A^{\rm phys}=16\pi W_M^{00}/(2J_A+1)\)，即相对原始 package response 乘以因子 4 一次；三体 \(v_{\min,A}\) 的解析式对 28 个逐同位素归档值复算，最大速度差为 \(4.35\times10^{-10}\) km/s，代回阈值方程的最大绝对残差为 \(1.17\times10^{-10}\) GeV\(^2\)。
+- **P1 同位素靶数：** 全部九种天然氙同位素的丰度加权平均原子质量为 \(131.29276144779053\) g/mol，对应 \(N_T=4.586803334466193\times10^{24}\) kg\(^{-1}\)。AFH 响应仍只覆盖七种同位素，丰度 0.998158，不重归一化。
 - AFH q 审计、NR 近似敏感性和固定 (M_A=131u) 的四点对照已由 CI run 43045857679 通过；四组 fixed-speed benchmark 已按 exact spatial q 重算并上传 artifact。
 - LZ 2026 Fig. S2 的 final-ROI central efficiency 曲线与灰色系统包络已从官方 PDF 的矢量路径提取，并与独立数字化在 248 keV 处对照；灰色包络仅作为系统范围，不赋予置信水平（CI run 43151814368）。
 - GCN/JJ55 天然氙连续谱已与 LZ 2026 一维效率曲线及 2.84 tonne-year exposure 做 rate-level 折叠；分段线性函数乘积采用解析积分，稠密梯形交叉检查的最大相对差异为 \(3.77\times10^{-7}\)（CI run 43151727539）。该事件数只对应 GCN/JJ55 连续谱，不对应 AFH selected-point 结果。
 
 ### 8.2 尚未完成或不能过度声称的事项
 
-1. **AFH 原生 Mathematica 验证仍待执行。** 原生 runner 和比较程序已归档，但当前执行环境没有 Wolfram kernel。mpmath 全网格验证是独立高精度数值交叉检查，不能替代官方 Mathematica 程序的原生执行。
-2. **AFH 空间 q 的精确与 NR 近似已经区分。** AFH 定义 \(y=(q b_A/2)^2\)，其中 \(q\) 是空间动量转移；精确质量壳关系给出 \(q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}\)。28 个天然氙样本全部匹配 exact spatial q，现作为默认物理基线。\(q_{\rm NR}=\sqrt{2m_AE_R}\) 仅作为小反冲近似，其 Xe-131 响应差异已定量记录。
-3. **Xe-124/Xe-126 尚未纳入 AFH default-density 天然氙求和。** 缺少当前 AFH v6.0 内置 density matrix；七种可用同位素覆盖天然丰度 0.998158，未对这七种同位素重新归一化。
-4. **连续谱的核模型覆盖并不相同。** GCN/JJ55 已有四组 benchmark 的天然氙连续反冲谱；AFH 目前仍是 selected-point rates，因为尚未恢复完整的七同位素 AFH 响应网格。不能把 GCN/JJ55 连续谱称为 AFH 连续谱。
-5. **LZ detector mapping 已完成 rate-level 的第一层，但尚非完整 recast。** 已提取 LZ 2026 Fig. S2 的一维 final-ROI efficiency central curve 和灰色系统包络，并使用 2.84 tonne-year exposure 对 GCN/JJ55 连续谱计算 efficiency-weighted event yields。尚缺能量分辨/重建卷积、二维 \({S1_c,\log_{10}S2_c}\) 信号 PDF、NEST 响应及其 nuisance covariance、背景样本与相关约束、profile likelihood。因此这些 event yields 不是 90% CL 排除，也不能单独解释 248 keV 候选事件。
-6. **极点宽度是条件性的。** 只包括给定假设下的 \(\chi_2\to\chi_1s\) 标量通道，不等于完整模型的矢量加标量自能。
-7. **halo 模型依赖尚未做系统扫描。** untruncated MB 只用于高速度尾部敏感性诊断，不作为默认 halo 结果。
+1. **AFH 原生 Mathematica 验证仍待执行。** 原生 runner 和比较程序已归档，PR #25 CI 仅完成 PowerShell 语法解析，并未执行 Wolfram kernel。mpmath 全网格验证是独立高精度数值交叉检查，不能替代官方 Mathematica 程序的原生执行。
+2. **三体相空间 Jacobian 的独立核验仍未完成。** 当前 Eq. (6) 和程序均使用整体 \(256\pi^3\) 归一化，现有积分回归与收敛检查不能单独证明该常数；仍需从 Lorentz-invariant \(d\Phi_3\) 独立推导变量变换 \((W^2,z,\phi_*)\) 的 Jacobian，并逐项核对 \(2\pi\) 因子。
+3. **AFH 空间 q 的精确与 NR 近似已经区分。** AFH 定义 \(y=(q b_A/2)^2\)，其中 \(q\) 是空间动量转移；精确质量壳关系给出 \(q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}\)。28 个天然氙样本全部匹配 exact spatial q，现作为默认物理基线。\(q_{\rm NR}=\sqrt{2m_AE_R}\) 仅作为小反冲近似，其 Xe-131 响应差异已定量记录。
+4. **Xe-124/Xe-126 尚未纳入 AFH default-density 天然氙求和。** 缺少当前 AFH v6.0 内置 density matrix；七种可用同位素覆盖天然丰度 0.998158，未对这七种同位素重新归一化。
+5. **连续谱的核模型覆盖并不相同。** GCN/JJ55 已有四组 benchmark 的天然氙连续反冲谱；AFH 目前仍是 selected-point rates，因为尚未恢复完整的七同位素 AFH 响应网格。不能把 GCN/JJ55 连续谱称为 AFH 连续谱。
+6. **LZ detector mapping 已完成 rate-level 的第一层，但尚非完整 recast。** 已提取 LZ 2026 Fig. S2 的一维 final-ROI efficiency central curve 和灰色系统包络，并使用 2.84 tonne-year exposure 对 GCN/JJ55 连续谱计算 efficiency-weighted event yields。尚缺能量分辨/重建卷积、二维 \({S1_c,\log_{10}S2_c}\) 信号 PDF、NEST 响应及其 nuisance covariance、背景样本与相关约束、profile likelihood。因此这些 event yields 不是 90% CL 排除，也不能单独解释 248 keV 候选事件。
+7. **极点宽度是条件性的。** 只包括给定假设下的 \(\chi_2\to\chi_1s\) 标量通道，不等于完整模型的矢量加标量自能。
+8. **halo 模型依赖尚未做系统扫描。** untruncated MB 只用于高速度尾部敏感性诊断，不作为默认 halo 结果。
 
 ### 8.3 数据修正记录
 
@@ -574,6 +581,8 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 - 早期 benchmark CSV 的 AFH \(R_A\) 列曾误复制 GCN 值，而截面列已经按 AFH/GCN 响应比缩放。现已改为保存真实插值 AFH 响应，并由显示的 \(R_A\) 和 \(I_6\) 直接重构截面。
 
 修正后 AFH 开放点截面相对早期旧值的最大变化为 \(2.7406\times10^{-4}\)。此外，四组 benchmark 已从 NR-q 近似统一到 exact spatial q；在 101、200、267、542 keV 四个 selected recoil 点，Xe-131 的 NR 近似响应偏差最大约 225 ppm。引用结果时应使用当前 exact-spatial corrected archive，不应使用早期 CSV。
+
+天然氙 target-number metadata 另有一项精度修正：旧 natural_xenon_halo_metadata_nist_mass.json 将丰度加权平均原子质量写为 131.293 g/mol。现按归档 natural_xenon_isotope_weights.csv 的全部九种天然同位素重新求和，更新为 131.29276144779053 g/mol，并显式记录 \(N_T=N_{\rm Av}1000/\bar M_{\rm Xe}=4.586803334466193\times10^{24}\) kg\(^{-1}\)。该平均质量用于每 kg 靶核数；它不改变七种 AFH 可用同位素的丰度覆盖 0.998158，也不意味着把缺失同位素的响应补齐。
 
 ## 9. 当前研究决策与下一步
 
@@ -811,6 +820,31 @@ AFH 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失的 
 5. 不能把 mpmath 高精度交叉检查描述为官方 Mathematica 原生验证。
 
 后续物理工作仍取决于完整 AFH 响应输入、原生 Mathematica 对照，以及 LZ 的二维 NEST 响应、校准协方差、背景数据和 profile likelihood。本文的阶段性结论不替代这些尚未完成的工作。
+
+### 12.5 科学状态表（P0–P2，2026-11-13）
+
+状态定义：**已验证**表示公式、程序与归档数值在明确适用范围内闭合；**条件性验证**表示核心实现和代表性测试通过，但仍受参数覆盖、独立推导或物理假设限制；**未完成**表示所需计算或物理输入尚不存在。
+
+| 公式 / 工作项 | 状态 | 已有证据 | 尚存边界 |
+|---|---|---|---|
+| F1 精确空间动量、四动量转移与 \(t\) | 已验证 | 核质量壳关系、28 个 AFH 样本 q 审计、exact/NR 对照 | NR 仅为小反冲敏感性对照 |
+| F2 \(W_{\min}^2,W_{\max}^2\) 与相空间开闭 | 条件性验证 | limits、wmax_squared、开闭区间和阈值回归 | 尚未对更宽质量—速度区域做独立扫描 |
+| F3 三体相空间变量与 \(I_6\) | 条件性验证 | \(W^2,z,\phi_*\) 数值实现、代表点积分收敛 | **独立 Jacobian 与 \(256\pi^3\) 常数推导未完成** |
+| F4 两张辐射图与 Dirac trace | 条件性验证 | before/after/干涉分解、显式自旋求和、壳条件与四动量闭合 | 目前是代表性测试点，不是全参数扫描 |
+| F5 单同位素固定速度 Eq. (6) | 条件性验证 | 四 benchmark 的 AFH/GCN/JJ55 响应替换与截面重构 | 共用既有 \(I_6\)，并非 640 个独立三体积分重算 |
+| F6 AFH 响应与因子 4 归一化 | 条件性验证 | 原始 \(A^2/4\)、物理 \(A^2\)；2401 点 mpmath；Python 归档闭合 | 原生 Wolfram/Mathematica 2401 点比较待执行 |
+| F7 同位素质量、丰度与 \(N_T\) | 已验证 | 九同位素质量—丰度表、精确加权平均质量和每 kg 靶核数 | 电子结合能忽略；AFH 响应可用同位素仅七种 |
+| F8 三体 \(v_{\min,A}\) | 已验证 | 28/28 逐同位素阈值复算；最大速度差 \(4.35\times10^{-10}\) km/s | 适用范围为当前 benchmark 与输入质量约定 |
+| F9 实验室系速度 PDF | 已验证 | untruncated MB 与 truncated SHM 数值积分归一化 | 物理预测仍依赖所选 halo 参数 |
+| F10 天然氙 \(dR/dE_R\) | 条件性验证 | AFH selected-point；GCN/JJ55 连续谱及速度积分收敛 | 完整 AFH 连续谱和 Xe-124/Xe-126 响应未完成 |
+| F11 LZ 效率加权事件数 | 条件性验证 | 一维 Fig. S2 efficiency、2.84 tonne-year、rate-level 折叠 | 二维 NEST、能量分辨、背景与 profile likelihood 未完成 |
+| F12 \(\chi_2\to\chi_1s\) pole width | 条件性验证 | 条件性 Dirac 纯标量单通道宽度公式和数值测试 | 非完整自能；未纳入所有可能开放衰变道 |
+| 三体相空间 Jacobian / \(256\pi^3\) 独立推导 | 未完成 | 现有公式和数值核已使用该前因子 | 需要从 Lorentz-invariant phase space 独立推导 |
+| AFH 原生 Mathematica 全网格运行 | 未完成 | 已归档原生 runner、固定源哈希、PowerShell parser CI PASS | 需要在有 Wolfram Engine/Mathematica 的 Windows 环境运行并归档比较包 |
+| AFH 完整天然氙连续谱 | 未完成 | 七种可用同位素 selected-point rate 已完成 | 需要七同位素完整响应网格；Xe-124/Xe-126 还缺 AFH density matrix |
+| 完整 LZ detector-level recast | 未完成 | GCN/JJ55 一维效率加权 rate-level yields | 需要二维信号 PDF、NEST nuisance、背景和 profile likelihood |
+
+**P0 判定：** 精确空间动量 Python 复算、60 位 mpmath 全网格检查、归档输出比较已完成。**P1 判定：** F1–F12 的追溯索引和三处重点一致性检查已完成；其中 F3 的 \(256\pi^3\) 独立推导仍是未完成项。**P2 判定：** 本表已将已验证、条件性验证和未完成分开登记。原生 Mathematica、完整 AFH 连续谱和完整 LZ likelihood 不因 CI 通过而升级状态。
 
 ## 13. 公式—符号—程序—结果交叉引用
 
@@ -2680,6 +2714,7 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 | AFH 原生 Mathematica | 待完成 | WLS runner 和比较脚本已归档；Python/mPMath 全网格交叉验证已通过 | 实际运行 Wolfram kernel 并保存逐点差异 |
 | GCN/JJ55 对照 | 已完成归档 | 三种响应、四 benchmark、1920 行 long table | 对照共享既有 \(I_6\)，不是 640 次独立重算 |
 | 三体运动学/Dirac trace | 已完成代表性检查 | 壳条件、四动量闭合、显式自旋求和、干涉分解 | 扩展到更宽的参数和质量网格 |
+| 三体相空间 Jacobian 与整体 \(256\pi^3\) | 未完成 | 当前 Eq. (6) 和程序采用该前因子，代表性积分回归通过 | 尚需从 Lorentz-invariant \(d\Phi_3\) 独立推导 \((W^2,z,\phi_*)\) 变量变换并逐项核对 \(2\pi\) 因子 |
 | 三体积分收敛 | 已有 selected-point 验证 | 六个天然氙点 \(8×8×4\) 对 \(16×16×8\)，最大差异 \(2.19×10^{-4}\)；独立 Eq. (6) 测试点 \(16×16×8\) 对 \(32×32×16\)，相对差异小于 \(5×10^{-5}\) | 连续反冲谱全网格收敛 |
 | 天然氙速度积分 | 已有 selected-point 验证（exact spatial q） | 五个点 32 对 64 速度节点，最大差异 \(3.31×10^{-6}\)；98 个逐同位素贡献和 14 个总速率在 exact_spatial 默认模式下复现，最大总速率差异 \(2.67×10^{-12}\)，CI run 43044583357 | 连续谱和 halo 参数扫描 |
 | AFH 空间 q 与 NR 近似 | 已完成审计与代码保护 | 28 个天然氙样本匹配 exact spatial q；Xe-131 四点 NR 近似响应差异约 5.5–225 ppm；halo fold CI run 43044583357 通过 | 连续反冲谱需要完整七同位素 AFH 响应网格 |
