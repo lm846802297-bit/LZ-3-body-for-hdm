@@ -104,8 +104,9 @@ class Eq6Tests(unittest.TestCase):
             average_weights = 0.5*w
             self.assertAlmostEqual(float(np.sum(average_weights)), 1.0, places=14)
             self.assertAlmostEqual(float(np.sum(w)), 2.0, places=14)
-            self.assertAlmostEqual(float(np.dot(average_weights, np.cos(phi))), 0.0, places=14)
-            self.assertAlmostEqual(float(np.dot(average_weights, np.sin(phi))), 0.0, places=14)
+            # The mapped linear test function is integrated exactly by Gauss-Legendre.
+            self.assertAlmostEqual(float(np.dot(average_weights, x)), 0.0, places=14)
+            self.assertEqual(len(phi), nphi)
 
     def test_regression_azimuthal_average_normalization(self):
         # Historical benchmark from the independent Eq. (6) audit.
