@@ -13,6 +13,7 @@ on:
     paths:
       - .github/workflows/afh-default-xe131.yml
       - research/afh_default_density_xe131/**
+      - research/afh_default_density_natural_xenon_halo/**
   pull_request:
     branches:
       - main
@@ -49,6 +50,16 @@ jobs:
       - name: Compile Python/MMA comparison utility
         run: |
           python -m py_compile research/afh_default_density_xe131/compare_afh_mathematica_python.py
+
+      - name: Compile natural-xenon halo-fold runner
+        run: |
+          python -m py_compile research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py
+
+      - name: Verify natural-xenon target-number metadata
+        run: |
+          python -m unittest discover \
+            -s research/afh_default_density_natural_xenon_halo \
+            -p "test_target_number.py" -v
 
       - name: Parse native Windows PowerShell runner
         shell: pwsh
