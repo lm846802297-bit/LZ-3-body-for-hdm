@@ -4,21 +4,33 @@ Date: 2026-11-11
 
 ## 1. Exact response used by the manuscript
 
-The working manuscript defines the nuclear factor explicitly as
-
+The original working-manuscript line used
+\[
+\mathcal R_A=\frac{4\pi}{2J_A+1}W_M^{00},
+\qquad \mathcal R_A(0)=A^2,
+\]
+but that expression was inconsistent with the raw AFH v6.0 package normalization. The cross-audit established that
+\[
+\frac{4\pi}{2J_A+1}W_{M,\mathrm{AFH,v6}}^{00}(0)=\frac{A^2}{4}.
+\]
+The source manuscript has therefore been corrected on the active research branch to use the physical equal-proton/equal-neutron response
 \[
 \boxed{
-\mathcal R_A(E_R)=\frac{4\pi}{2J_A+1}W_M^{00}(y),
+\mathcal R_A^{\mathrm{phys}}(E_R)
+=\frac{16\pi}{2J_A+1}W_{M,\mathrm{AFH,v6}}^{00}(y),
 \qquad
-y=\frac{b_A^2m_AE_R}{2},
+y=\left(\frac{b_AQ}{2}\right)^2,
 \qquad
-\mathcal R_A(0)=A^2 .
+Q=\sqrt{2m_AE_R+E_R^2},
+\qquad
+\mathcal R_A^{\mathrm{phys}}(0)=A^2 .
 }
 \]
+The factor four is included exactly once, while the cross-section prefactor retains the physical per-nucleon coupling \(g_{VN}\). The commonly used \(y\simeq b_A^2m_AE_R/2\) is only the \(E_R\ll m_A\) approximation.
 
-Source: `paper-source/main.tex`, Section “2 -> 3 cross section”, immediately before Eq. (radiative-recoil), citing Anand, Fitzpatrick and Haxton, arXiv:1308.6288.
+Source: \`paper-source/main.tex\`, Section “2 -> 3 cross section”, immediately before Eq. (radiative-recoil), citing Anand, Fitzpatrick and Haxton, arXiv:1308.6288.
 
-This fixes the interpretation: the Figure 2 calculation uses the **isoscalar coherent-charge nuclear response** (W_M^{00}) in the Anand et al. formalism. A Helm form factor is not the source prescription and must not be substituted for it.
+This fixes the interpretation: the Figure 2 calculation uses the **isoscalar coherent-charge nuclear response** in the Anand et al. formalism, mapped to the physical equal-\(p,n\) nucleon coupling. A Helm form factor is not the source prescription and must not be substituted for it.
 
 ## 2. Notation: distinguish nuclear and dark-matter responses
 
