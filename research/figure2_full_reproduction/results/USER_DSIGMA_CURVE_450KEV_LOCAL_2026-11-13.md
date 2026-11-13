@@ -7,7 +7,7 @@
 - (g1 g2 gVN)^2 = 1; zero-width prescription
 - Xe-131 with mA = 131 u = 122.02572741702 GeV (A*u approximation, not AME2020)
 - 105 fixed-speed recoil points: 130–650 keV in 5 keV steps
-- AFH GCN and JJ55 response tables; exact spatial q = sqrt(2 mA ER + ER^2)
+- GCN and JJ55 nuclear-response tables; exact spatial q = sqrt(2 mA ER + ER^2)
 
 This is a single-isotope, fixed-speed cross-section diagnostic. It is not a natural-xenon halo fold, detector-level LZ prediction, event-rate calculation, or exclusion.
 
