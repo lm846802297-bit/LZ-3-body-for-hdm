@@ -107,6 +107,47 @@ For a native AFH Mathematica calculation, use
 `run_afh_default_xe131.wls` with the official package file in this directory
 or set `DMFormFactorPath`.
 
+For an independent native Mathematica/Python comparison, use the one-command
+Windows PowerShell runner below. It accepts either the original AFH v6.0 ZIP
+archive or the extracted `dmformfactor-V6.m` file:
+
+```powershell
+.\run_native_afh_audit.ps1 -AfhSource "D:\path\to\v6.zip"
+```
+
+The runner verifies the supplied ZIP SHA-256
+(`4e0f70e6e780f3f4a40faa14792cae239d1989cf15d1e211b4fd7389b0460727`) or
+source-file SHA-256
+(`dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372`),
+checks the 67-entry Xe-131 density-matrix CSV, regenerates the Python
+reference from that exact source, runs both native Wolfram scripts, compares
+all 2401 q nodes without interpolation, and writes a SHA-256 manifest.
+
+Required on the Windows machine: Python with the repository requirements,
+Wolfram Engine or Mathematica with `wolframscript` on `PATH`, and the
+either the original AFH v6.0 ZIP or its extracted dmformfactor-V6.m source file. The outputs are written to
+`output/native_audit/`, including the raw-response comparison, minima,
+Wolfram version, source hashes, CSV hashes, and
+`afh_native_audit_manifest.json`. The runner also bundles the complete review
+set (native CSV, metadata, comparison tables, minima, and manifest) as a local convenience file output/afh-native-audit-results.zip. The canonical repository record is the individually committed extracted files under output/native_audit/, not the ZIP bundle.
+
+A successful Python GitHub Actions run is **not** a substitute for this native
+Wolfram execution. The native audit is considered complete only when the
+manifest reports `status = PASS` and the comparison JSON reports
+`"passed": true`.
+
+## Completed native Mathematica audit (2026-11-13)
+
+The local Windows/Wolfram run is now archived and reports **PASS**:
+
+- Wolfram 14.0.0, Windows 64-bit; official AFH v6.0 source SHA-256 dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372.
+- 2401 q nodes from 0 to 0.6 GeV in 0.25 MeV steps; Mathematica and Python grids are identical, with no interpolation.
+- Raw \(W_M^{00}\), package response, physical equal-p/n response, and q=0-normalized response all pass at rtol=2e-8, atol=2e-10; maximum relative difference is \(3.59087\times10^{-9}\) at \(q=0.2565\) GeV.
+- The factor-four response mapping is checked at every q node. The separate q=0 shape-normalization factor is \(1.0000825298069378\), correcting the \(8.2523\times10^{-5}\) finite-density-matrix offset; it is not another factor of four.
+- Full details and the native SHA-256 manifest are in output/native_audit/NATIVE_MATHEMATICA_AUDIT.md and output/native_audit/afh_native_audit_manifest.json.
+
+This validates the Xe-131 AFH response only. The natural-xenon AFH halo result remains selected-point; a full seven-isotope AFH continuous spectrum and the LZ detector-level likelihood remain open.
+
 ## Independent full-grid mpmath validation
 
 The CI workflow now evaluates the AFH finite sums independently with 60-digit
@@ -179,9 +220,10 @@ selected AFH samples (seven isotopes x four recoil energies), not seven
 complete 2401-point response grids. The provenance metadata now explicitly
 distinguishes the original 16,807-row source input from the committed
 28-row selected-sample file; the original all-isotope input itself is not
-currently committed. The AFH native Mathematica execution also remains
-pending; the current AFH numerical table is from the source-translated Python
-implementation.
+currently committed. The Xe-131 response table now also has an archived native
+Mathematica/Wolfram 14.0.0 output and a 2401-point Python comparison (PASS);
+this does not change the selected-point-only scope of the natural-xenon AFH
+halo fold.
 
 The GCN/JJ55 files from `dmscatter` remain separate nuclear-structure
 calculations and are not relabeled or substituted for AFH default.

@@ -1,10 +1,10 @@
 # AFH v6.0 Xe-131 核响应、三体暗物质散射与天然氙反冲率
 
-> 整理日期：2026-11-11  
-> 最近文档更新：2026-11-12（合并后编辑一致性整理；本轮未开展新的物理验证计算）  
+> 整理日期：2026-11-11（原始主报告整理日期）
+> 最近文档更新：2026-11-14（新增 P1-PhaseSpace 三体积分变量映射、阈值稳定性、代表点角积分与 raw-\(d\Phi_3\) 归一化数值审计；保留近极点和完整连续反冲网格未完成边界）
 > 对话来源：[ChatGPT 分享对话](https://chatgpt.com/share/6af4660e-e388-83ea-a86a-2482b065dcea)  
 > 对应研究仓库：`lm846802297-bit/LZ-3-body-for-hdm`  
-> 当前归档位置：`research/figure2-p0-4-mainline`；PR #7 已于 2026-11-12 squash-merged（`f4f2ee91f6a51399dd3b5c06d64878b7f79322d7`）  
+> 当前正式归档：main；PR #10 于 2026-11-13 合并，merge commit 724d9e7877fb76f4cc477fbb9e24e1e706bf37a6。PR #7 是此前研究分支内的历史合并记录。
 > 研究对象：\(\chi_1+A\rightarrow\chi_1+A+s\) 三体核反冲过程
 
 ## 文档更新记录
@@ -19,6 +19,16 @@
 - **2026-11-12：** 新增独立的阶段性结论章节，汇总理论核响应、天然氙结果、LZ rate-level event yields 与当前不可声称的实验结论。
 - **2026-11-12：** 新增公式—符号—正文—程序—结果交叉引用索引；在 Eq. (6)、AFH 响应、halo-folded rate 和 LZ rate-level 公式旁加入推导与程序入口，并新增第 13 节快速导航。该工作为文档追溯性整理，不代表新增物理验证或数值计算。
 - **2026-11-12：** 交叉核对主报告与附录 A 的 \(I_6\) 维度约定，将主公式明确写为无量纲 \(\lambda_{\rm dim}\)；在正文补出三体 \(v_{\min,A}\) 显式表达式，并补齐 \(a_A,\theta_q,N_{\rm Av}\) 的符号定义。该工作为公式记号和追溯性修订，不代表新增数值计算。
+- **2026-11-13：** 将 450 keV supplied benchmark 的 pointwise \(\mathcal L_{00}\)/\(I_6\) 本地验收记录纳入主报告导航；明确其条件性 Dirac / pure-scalar / single-open-channel 宽度假设及单一诊断运动学点，不将其解释为天然氙速率。
+- **2026-11-13：** 将独立的 Xe-131 fixed-speed 450 keV 曲线纳入结果覆盖表：GCN/JJ55 response、\(v=776\) km/s、\(M_A=131u\)、zero-width，105 个内部网格点；明确两端未覆盖的开放相空间区间仍需高阶积分。
+- **2026-11-13：** PR #10 将研究成果正式提升至 main；同步修订主报告、附录 F、公式索引和 README 导航。该轮只做文档追溯和状态整理，不新增物理验证或数值计算。
+- **2026-11-13：** 扩充主报告正文的物理推导和解释：补入非对角相互作用与虚 \(\chi_2\) 图像、核反冲空间动量与四动量不变量的区别、两张辐射图的 Dirac trace 和干涉、三体相空间及 Eq. (6) 前因子的来源、AFH 响应极小值的核结构含义、\(m_s/\Delta m\) 的不同作用、三体 \(v_{\min}\) 与 SHM 端点抑制，以及 LZ 一维效率折叠的概率解释。本轮不修改模型输入、数值程序或已归档数值结果。
+- **2026-11-13：** 建立 P0 Figure 2 benchmark / 输入 / 参数 / 输出 / SHA-256 总索引（9 组、60 个文件条目，已纳入原生 Mathematica 输出和 AFH v6.0 `.m` 源文件），P1 物理公式交叉审查和 P2 科学结果状态表，并在第 13.5 节加入导航。交叉审查发现原始工作稿的 AFH raw-to-physical factor-of-four 与 exact spatial-q 定义不一致，已修正 `paper-source/main.tex` 并刷新 `paper-source/SHA256SUMS`；同时将天然氙 metadata 中误写为 SHA-256 的 40 位 Git blob SHA-1 改为真实 64 位文件 SHA-256，并在 runner / validator 中加入检查。本轮修复的是公式定义和 provenance，不重算已归档物理数值。
+
+- **2026-11-13：** 将独立 Lorentz-invariant 三体相空间推导并入正文 §2.5.1–2.5.8 和附录 A.4.2；进一步补齐固定速度下 (m_{s,max}) 与 (E_R^*) 的解析极值、条件性 (chi_2	ochi_1s) 宽度、截断 SHM 实验室速度 PDF、天然氙靶核数及 halo 通量折叠的逐步推导，并同步主报告嵌入附录、独立附录文件和公式索引。本轮为解析推导与文档一致性更新，不修改数值程序、输入或归档结果。
+
+- **2026-11-13：** 将 `research/p1-mma-local` 中已完成的 Wolfram 14.0.0 原生 AFH Xe-131 2401 点结果、Python 对照、minima、源文件和 SHA-256 manifest 逐文件纳入本 PR；更新 README、附录 B/G、F6 索引和 P0–P2 状态。该归档不改变 Eq. (6) kernel 或天然氙连续谱的完成边界。
+- **2026-11-14：** 新增 P1-PhaseSpace 数值收敛审计：比较线性 \(W^2\)、线性 \(W\) 与 threshold-\(u^2\) 参数化，检查五个 \(v_{\min}\) 邻域速度点和代表点角积分，并以未归一化 Lorentz-invariant \(d\Phi_3\) 路径复核 Eq. (6) 前因子；新增六项回归测试和结果 SHA-256 归档。近极点积分、完整连续反冲网格和 halo fold 仍未完成。
 
 ## 摘要
 
@@ -28,13 +38,18 @@
 2. **核结构输入：** 采用 AFH/DMFormFactor v6.0 内置的 Xe-131 default density matrix，严格使用文献给出的谐振子长度处方，不把 \(b_A\) 当作拟合参数；并处理 AFH 原始 isoscalar response 与物理等质子、等中子耦合之间的因子 4。
 3. **真实天然氙靶的理论速率：** 对可用氙同位素按天然丰度求和，并对实验室系暗物质速度分布积分，得到 \(dR/dE_R\)。这一步与固定速度下的 \(d\sigma_A/dE_R\) 是不同的物理量。
 
-目前已经形成 AFH default Xe-131 响应、GCN/JJ55 核模型对照、四组固定速度 benchmark、AFH 天然氙 selected-point halo-folded rates，以及 GCN/JJ55 天然氙连续反冲谱。LZ 2026 Fig. S2 的一维 final-ROI efficiency 曲线及灰色系统包络也已从官方 PDF 提取，并与独立数字化结果对照；基于 GCN/JJ55 连续谱、2.84 tonne-year exposure 和该效率曲线，已得到初步 efficiency-weighted rate-level event yields。该结果不是完整的 LZ likelihood recast。Xe-131 AFH Python 响应已通过 60 位精度 mpmath 对全部 2401 个 q 节点的独立有限和对照；原生 Mathematica 程序仍未在 Wolfram kernel 中实际运行。进一步核查 AFH 原始定义后，确认其响应变量 \(y=(q b_A/2)^2\) 中的 \(q\) 是空间动量转移；现有 28 个天然氙响应样本采用的 exact spatial q 与精确三体质量壳关系一致。exact spatial q 作为默认，NR-q 仅作小反冲近似对照。当前 AFH 天然氙结果仍限于 selected points；连续谱和 LZ rate-level yields 使用 GCN/JJ55 响应，不能混称为 AFH 连续谱或完整实验重铸。
+目前已经形成 AFH default Xe-131 响应、GCN/JJ55 核模型对照、四组固定速度 benchmark、AFH 天然氙 selected-point halo-folded rates，以及 GCN/JJ55 天然氙连续反冲谱。LZ 2026 Fig. S2 的一维 final-ROI efficiency 曲线及灰色系统包络也已从官方 PDF 提取，并与独立数字化结果对照；基于 GCN/JJ55 连续谱、2.84 tonne-year exposure 和该效率曲线，已得到初步 efficiency-weighted rate-level event yields。该结果不是完整的 LZ likelihood recast。Xe-131 AFH 响应现已同时通过 60 位精度 mpmath 独立有限和检查，以及 Wolfram 14.0.0 原生 Mathematica 对 2401 个 q 节点的逐点比较；Python 与 Mathematica 的 q 网格完全一致，四种响应量的最大相对差异为 \\(3.59\\times10^{-9}\\)，全部 2401 点通过。原始 AFH 响应、物理等质子等中子响应、因子 4 一次转换和有限密度矩阵精度导致的 q=0 小归一化修正均分别归档。该原生验证仅针对 Xe-131 响应层，不等于完整 AFH 天然氙连续谱或 LZ likelihood。进一步核查 AFH 原始定义后，确认其响应变量 \(y=(q b_A/2)^2\) 中的 \(q\) 是空间动量转移；现有 28 个天然氙响应样本采用的 exact spatial q 与精确三体质量壳关系一致。exact spatial q 作为默认，NR-q 仅作小反冲近似对照。当前 AFH 天然氙结果仍限于 selected points；连续谱和 LZ rate-level yields 使用 GCN/JJ55 响应，不能混称为 AFH 连续谱或完整实验重铸。
+
+本轮正文还补入了从相互作用拉格朗日量到两张树图、Dirac trace、三体相空间和 Eq. (6) 整体前因子的连贯推导；附录进一步逐步推导最优反冲能量与最大标量质量、条件性二体 pole width、截断 SHM 实验室速度 PDF、天然氙靶核数和通量事件率，并解释核响应极小值、三体阈值、halo 端点和 LZ 效率折叠各自代表的物理机制。完整的 Lorentz boost、相空间归一化、AFH 密度矩阵有限和、因子 4、同位素输入和 halo 数值约定仍分别保留在附录 A–G，避免正文与附录互相替代。
+
+另外，仓库还归档了一个独立的 450 keV benchmark：其一是单一运动学点的 \(\mathcal L_{00}\) 与 reduced \(I_6\) 对照，使用条件性标量 pole width；其二是 Xe-131 固定速度微分截面曲线，使用 GCN/JJ55 响应、\(v=776\) km/s、\(M_A=131u\) 和 zero-width prescription。两者的输入与物理层级不同，均不替代天然氙 halo fold 或 LZ detector-level likelihood。
 
 | 研究层级 | 当前归档结果 | 明确边界 |
 |---|---|---|
-| AFH Xe-131 核响应 | 2401 个 \(q\) 节点；60 位精度 mpmath 独立有限和对照 | 原生 Mathematica/Wolfram kernel 对照仍待完成 |
+| AFH Xe-131 核响应 | 2401 个 \(q\) 节点；60 位精度 mpmath 与 Wolfram 14.0.0 原生逐点对照均通过，最大相对差异 \(3.59\times10^{-9}\) | 仅验证 Xe-131 AFH response-level；不代表完整天然氙连续谱或 LZ likelihood |
 | AFH 天然氙速率 | 七种可用同位素的 selected-point halo fold | Xe-124/Xe-126 缺少当前 AFH default density matrix；尚无完整 AFH 连续谱 |
 | GCN/JJ55 天然氙谱 | 四组 benchmark 的连续反冲谱，覆盖当前可用七种同位素 | 是独立核模型对照，不代表 LZ 合作组使用的修改后 WimPyDD 核输入 |
+| 450 keV supplied benchmark | 单点 \(\mathcal L_{00}\)/\(I_6\) 本地验收；另有 105 点 Xe-131 fixed-speed curve | 不是天然氙 halo rate；curve 使用 \(M_A=131u\)、zero width，且未积分两端开放区间 |
 | LZ rate-level interface | Fig. S2 一维效率曲线与 2.84 tonne-year exposure 折叠，得到 GCN/JJ55 预期事件数 | 未构造二维 \(S1_c\)–\(\log_{10}S2_c\) PDF、完整 nuisance/background likelihood 或实验排除 |
 
 
@@ -63,6 +78,132 @@ m_{\chi_2}=m_{\chi_1}+\Delta m.
 
 这两个步骤分别处理靶核组成和入射粒子通量，不能提前混入单一同位素、固定速度的截面公式。
 
+### 1.1 相互作用结构：为什么末态会多出一个标量？
+
+当前 Eq. (6) 数值主线对应论文中的 vector–vector 交换与 scalar emission 结构。相关相互作用可写为
+\[
+\mathcal L_{\rm int}\supset
+\left(
+g_1 V_\mu\bar\chi_2\gamma^\mu\chi_1
++g_2s\bar\chi_2\chi_1
++\mathrm{h.c.}
+\right)
++g_{Vq}V_\mu\sum_q\bar q\gamma^\mu q
+\]
+这里 \(V_\mu\) 是连接暗物质与核子的矢量媒介子，\(s\) 是末态标量，\(\chi_1,\chi_2\) 是两个不同质量的暗扇区费米子。对于普适的夸克矢量耦合，在低能核子匹配中，核子矢量电荷给出
+\[
+g_{VN}=3g_{Vq},
+\]
+其中因子 3 来自核子中三个价夸克的矢量数荷；这条夸克—核子匹配关系与 AFH isoscalar response 的归一化因子 4 是两件不同的事。
+
+需要注意，这组相互作用在暗费米子空间中是非对角的：顶点连接 \(\chi_1\) 与 \(\chi_2\)，而不是直接给出 \(\chi_1\chi_1V\) 或 \(\chi_1\chi_1s\) 顶点。因此，入射的 \(\chi_1\) 通过矢量交换与核靶发生作用，同时在暗费米子线上辐射出 \(s\)，最后又回到 \(\chi_1\)。这解释了为什么末态是
+\[
+\chi_1+A\longrightarrow\chi_1+A+s,
+\]
+而不是简单的 \(\chi_1+A\to\chi_2+A\)。
+
+论文源文件还列出了 scalar–pseudoscalar 的另一种相互作用结构。本文 Eq. (6)、当前 Dirac kernel 和以下核响应讨论针对上面的 vector–vector 基准；不能把另一种模型的顶点或耦合约定混入这条数值计算链。
+
+相互作用的原始写法见论文工作稿 [paper-source/main.tex](../../paper-source/main.tex) 的 Model 一节；本段只解释当前采用的 vector–vector 计算分支。
+
+### 1.2 为什么 \(\chi_2\) 是虚中间态，而不是末态粒子？
+
+定义
+\[
+m_{\chi_2}=m_{\chi_1}+\Delta m.
+\]
+\(\chi_2\) 出现在内部费米子传播子中。它不是本过程的外部末态粒子；最终暗物质仍然是 \(\chi_1\)。因此，\(\Delta m\) 首先决定的是内部传播子的极点位置，而不是末态两体阈值。
+
+尤其是标量发射发生在矢量交换之后的图，其内部动量为
+\[
+K=p'+k=p-q,\qquad K^2=W^2,
+\]
+相应传播子分母包含
+\[
+W^2-m_{\chi_2}^2+i m_{\chi_2}\Gamma_{\chi_2}.
+\]
+若某个允许的运动学点达到 \(W^2=m_{\chi_2}^2\)，内部 \(\chi_2\) 就可能到达质量壳，振幅会出现极点增强，并需要认真处理真实中间态产生、窄宽度极限以及相应的双重计数问题。
+
+本文采用的参数筛选要求在整个可达 halo 速度和反冲能量范围内
+\[
+\boxed{W_{\max}(v,E_R)<m_{\chi_2}.}
+\]
+因为任何允许的 \(W\) 都不超过 \(W_{\max}\)，这个条件保证第二张图中的 \(\chi_2\) 仍然是虚态。它是参数空间筛选条件，不是程序对任意输入自动成立的恒等式。
+
+第一张图的内部动量为 \(p-k\)。对于未来指向的壳上四动量，有 \(p\cdot k\ge m_{\chi_1}m_s\)，从而
+\[
+(p-k)^2=m_{\chi_1}^2+m_s^2-2p\cdot k
+\le(m_{\chi_1}-m_s)^2<m_{\chi_2}^2.
+\]
+所以在本文的质量排序下，第一张图不会到达 \(\chi_2\) 极点；需要考虑极点宽度的是第二张图。
+
+这也解释了两个质量参数的不同作用：
+
+- \(m_s\) 是真实末态粒子的质量，直接决定末态相空间是否开放；
+- \(\Delta m\) 决定虚态 \(\chi_2\) 的质量，控制传播子离极点有多远，并通过所采用的宽度处方影响振幅。
+
+若采用 \(\Gamma_{\chi_2}\)，必须明确它来自什么衰变道。本文当前使用的 \(\chi_2\to\chi_1s\) 宽度仅在 Dirac 费米子、实标量、纯 scalar off-diagonal Yukawa 耦合且该道是唯一开放道的假设下成立；它不是完整模型的通用自能。
+
+### 1.3 核反冲的两个动量变量：空间动量与四动量不变量
+
+在靶核静止系，令
+\[
+P^\mu=(m_A,\mathbf 0),\qquad
+P'^\mu=(m_A+E_R,\mathbf q),
+\]
+并定义核反冲四动量
+\[
+q^\mu=P'^\mu-P^\mu=(E_R,\mathbf q).
+\]
+初末核都在质量壳上，故
+\[
+(P+q)^2=P^2
+\quad\Longrightarrow\quad
+q_\mu q^\mu=-2m_AE_R.
+\]
+因此传播子所使用的 Mandelstam 不变量是
+\[
+t=q_\mu q^\mu=-2m_AE_R.
+\]
+而核响应所使用的是空间动量模长
+\[
+\boxed{Q\equiv|\mathbf q|
+=\sqrt{2m_AE_R+E_R^2}.}
+\]
+两者满足 \(Q^2=E_R^2-t\)，并不相等。于是矢量传播子平方给出
+\[
+\frac{1}{(m_V^2-t)^2}
+=\frac{1}{(m_V^2+2m_AE_R)^2},
+\]
+AFH 核响应则通过
+\[
+y=\left(\frac{Qb_A}{2}\right)^2
+\]
+依赖空间动量 \(Q\)。
+
+在 \(E_R\ll m_A\) 时，才可以近似 \(Q\simeq\sqrt{2m_AE_R}\)。本文默认使用精确的空间动量关系；不能把传播子中的 \(-t\) 直接代入 AFH 的 \(q\)，也不能把空间 \(Q^2\) 误写成四动量不变量 \(t\)。完整质量壳推导和 NR 近似比较见附录 G。
+
+### 1.4 暗物质的速度能量尺度
+
+虽然 \(m_{\chi_1}=1\) TeV 很大，但银河系暗物质速度远小于光速，其入射动能只有 MeV 或亚 MeV 量级：
+\[
+T_{\chi_1}\simeq\frac12m_{\chi_1}\left(\frac vc\right)^2.
+\]
+例如
+\[
+T_{\chi_1}\simeq
+0.269\ {\rm MeV}
+\left(\frac{m_{\chi_1}}{1\ {\rm TeV}}\right)
+\left(\frac{v}{220\ {\rm km/s}}\right)^2,
+\]
+而在截断 SHM 的最大实验室速度 \(776\ {\rm km/s}\) 处，
+\[
+T_{\chi_1}\simeq
+3.35\ {\rm MeV}
+\left(\frac{m_{\chi_1}}{1\ {\rm TeV}}\right).
+\]
+这给出了为什么 sub-MeV 标量质量值得研究的直观能量尺度：在高速尾部，入射暗物质的动能有可能支持标量辐射和核反冲同时发生。不过，这部分动能还要在末态暗物质、标量和核反冲之间分配，不能把 \(T_{\chi_1}\) 直接等同于标量可获得的能量。
+
 ## 2. Eq. (6)：三体积分与核响应的因式分解
 
 采用的微分截面结构为
@@ -90,7 +231,7 @@ dW^2\,
 \left\langle\mathcal L_{00}\right\rangle_{\phi_*}.
 \]
 
-> **公式追溯：** Eq. (6) 与 \(I_6\) 的完整相空间和前因子推导见[附录 A，§A.3–A.4.1](appendices/09A_three_body_kinematics_amplitude.md)；对应程序为 [eq6_kernel.py](../figure2_full_reproduction/eq6_kernel.py)。全部公式—符号—程序—结果映射见[交叉引用索引 F3–F5](formula_symbol_code_cross_reference.md)。
+> **公式追溯：** Eq. (6) 与 \(I_6\) 的完整相空间和前因子推导见[附录 A，§A.3–A.4.2](appendices/09A_three_body_kinematics_amplitude.md)；正文逐项推导见§2.5.1–2.5.8；对应程序为 [eq6_kernel.py](../figure2_full_reproduction/eq6_kernel.py)。全部公式—符号—程序—结果映射见[交叉引用索引 F3–F5](formula_symbol_code_cross_reference.md)。
 
 这里：
 
@@ -135,6 +276,552 @@ R_A^{\rm JJ55}.
 - \(dR/dE_R\) 才是可以继续与探测器曝光、效率和能量响应结合的理论事件率。
 
 两者不能混称为同一条“探测器谱”。
+
+### 2.3 从相互作用顶点到两张辐射图的振幅
+
+在靶核静止系，矢量核电荷流的 leading non-relativistic 分量是时间分量。把核结构因子从核子耦合中提出后，振幅的结构可以写成
+\[
+\mathcal M_A\ \propto\
+\frac{g_1g_2g_{VN}}{m_V^2+2m_AE_R}
+\,\mathcal J_{A,\mu}(q)\,
+\bar u(p')\Gamma^\mu u(p),
+\]
+其中 \(\mathcal J_A^\mu\) 表示已剥离单核子耦合的核电流矩阵元，\(\Gamma^\mu\) 是暗费米子线上的辐射顶点结构。两张树图分别为
+\[
+\Gamma^\mu=\Gamma^\mu_{\rm before}+\Gamma^\mu_{\rm after},
+\]
+\[
+\Gamma^\mu_{\rm before}
+=\frac{\gamma^\mu(\slashed p-\slashed k+m_{\chi_2})}
+{(p-k)^2-m_{\chi_2}^2},
+\qquad
+\Gamma^\mu_{\rm after}
+=\frac{(\slashed p'+\slashed k+m_{\chi_2})\gamma^\mu}
+{W^2-m_{\chi_2}^2+i m_{\chi_2}\Gamma_{\chi_2}}.
+\]
+before/after 指标量 \(s\) 相对于矢量交换发生在暗费米子线上的先后次序，不是两个不同的末态过程。
+
+在核靶非相对论极限，核的空间电流相对时间分量受到核速度或 \(|\mathbf q|/m_A\) 抑制，因此当前相干电荷近似保留 \(\Gamma^0\) 对应的粒子侧张量：
+\[
+\mathcal L_{00}
+=\frac12\sum_{s,s'}
+\left|\bar u_{s'}(p')\Gamma^0u_s(p)\right|^2.
+\]
+对 Dirac 外部态使用自旋完备关系，可得到
+\[
+\boxed{
+\mathcal L_{00}
+=\frac12\operatorname{Tr}
+\left[
+(\slashed p'+m_{\chi_1})\Gamma^0
+(\slashed p+m_{\chi_1})\overline\Gamma^{\,0}
+\right],
+\qquad
+\overline\Gamma^{\,0}=\gamma^0(\Gamma^0)^\dagger\gamma^0.
+}
+\]
+
+令 \(\mathcal M_b\) 和 \(\mathcal M_a\) 分别表示 before 与 after 两张图，则
+\[
+|\mathcal M_b+\mathcal M_a|^2
+=|\mathcal M_b|^2+|\mathcal M_a|^2
++2\,\mathrm{Re}(\mathcal M_b\mathcal M_a^*).
+\]
+最后一项就是干涉项。它可以为正，也可以为负；但完整自旋求和后的 \(\mathcal L_{00}\) 必须非负。若把两张图的平方直接相加而不保留交叉项，就不再是原拉格朗日量所定义的完整树级振幅。本文程序将两张图先相加，再计算 Dirac trace；附录 A.5 给出迹表达式和实现检查。
+
+### 2.4 为什么积分变量是 \((W^2,z,\phi_*)\)？
+
+三体末态的相空间可以按子系统不变质量分解：
+\[
+d\Phi_3(p+P;P',p',k)
+=\frac{dW^2}{2\pi}
+\,d\Phi_2(p+P;P',K)\,
+d\Phi_2(K;p',k).
+\]
+第一段描述入射暗物质与核靶产生反冲核 \(P'\) 和子系统 \(K\)；第二段描述 \(K\) 再分解为 \(\chi_1+s\)。这样，三体问题被拆成一个不变质量积分和一个子系统两体角积分。
+
+在 \(K\) 静止系中，
+\[
+|\mathbf k_*|
+=\frac{\sqrt{\lambda_K(W^2,m_{\chi_1}^2,m_s^2)}}{2W}
+=\frac W2\sqrt{\lambda_{\rm dim}},
+\]
+其中
+\[
+\lambda_{\rm dim}
+=\left[1-\frac{(m_{\chi_1}+m_s)^2}{W^2}\right]
+\left[1-\frac{(m_{\chi_1}-m_s)^2}{W^2}\right].
+\]
+因此 \(\sqrt{\lambda_{\rm dim}}\) 正比于子系统静止系中的末态三动量；当 \(W=m_{\chi_1}+m_s\) 时，末态两粒子相对动量降为零，二体相空间关闭。
+
+固定 \(E_R\) 和入射速度后，核反冲方向与 \(W^2\) 一一对应：
+\[
+W^2=m_{\chi_1}^2+2p_{\chi_1}Q\cos\theta_q
+-2(E_{\chi_1}+m_A)E_R,
+\]
+\[
+\frac{dW^2}{d\cos\theta_q}=2p_{\chi_1}Q.
+\]
+而 \(z=\cos\theta_*\) 和 \(\phi_*\) 描述标量在 \(K\) 静止系中的发射方向。它们不是靶核静止系中 \(\mathbf p\) 与 \(\mathbf q\) 的夹角；后者记为 \(\theta_q\)。
+
+由此得到
+\[
+W_{\min}^2=(m_{\chi_1}+m_s)^2,
+\]
+\[
+W_{\max}^2=
+m_{\chi_1}^2+2p_{\chi_1}Q
+-2(E_{\chi_1}+m_A)E_R.
+\]
+\(W_{\max}\) 对应 \(\cos\theta_q=1\)，即固定反冲能量时允许的最大子系统不变质量。积分开放条件为
+\[
+\boxed{W_{\max}^2\ge W_{\min}^2.}
+\]
+等价地，在给定 \(v,E_R\) 时允许的标量质量满足
+\[
+m_s\le W_{\max}(v,E_R)-m_{\chi_1}.
+\]
+若进一步对 \(E_R\) 最大化，得到的是该入射速度下的标量质量运动学上限；使这个上限达到最大值的 \(E_R\)，只是最有利于保留 \(\chi_1+s\) 子系统不变质量的反冲点，并不意味着该点的散射概率或探测器事件数最大。
+
+对给定入射速度，最大允许标量质量可通过对 \(W_{\max}(E_R)\) 关于反冲能量最大化得到。定义
+\[
+s_{\rm tot}=(p+P)^2=m_{\chi_1}^2+m_A^2+2m_AE_\chi,
+\qquad B=E_\chi+m_A.
+\]
+由
+\[
+\frac{dW_{\max}^2}{dE_R}
+=2p_{\chi_1}\frac{m_A+E_R}{Q}-2B=0
+\]
+得到最有利的反冲点
+\[
+\boxed{
+E_R^*
+=m_A\left(\frac{E_\chi+m_A}{\sqrt{s_{\rm tot}}}-1\right).
+}
+\]
+在该点
+\[
+W_{\max}(E_R^*)=\sqrt{s_{\rm tot}}-m_A,
+\qquad
+\boxed{
+m_{s,\max}=\sqrt{s_{\rm tot}}-m_A-m_{\chi_1}.
+}
+\]
+这里的 \(E_R^*\) 是使运动学允许的 \(m_s\) 上限最大的反冲能量，不是使 \(d\sigma/dE_R\) 或探测器事件率最大的能量。完整求导和代数化简见附录 A.2。
+
+
+所以 \(I_6\) 不只是一个可随意提高精度的数值积分：它的积分区间本身编码了三体过程能否发生。靠近阈值时，区间缩短，同时 \(\sqrt{\lambda_{\rm dim}}\) 也趋于零，二者共同压低积分。
+
+\[
+I_6=
+\int_{W_{\min}^2}^{W_{\max}^2}dW^2
+\sqrt{\lambda_{\rm dim}}
+\int_{-1}^{1}dz\,
+\langle\mathcal L_{00}\rangle_{\phi_*}.
+\]
+由于 \(\lambda_{\rm dim}\) 与 \(\mathcal L_{00}\) 无量纲，而 \(dW^2\) 带有 GeV\(^2\)，故
+\[
+[I_6]={\rm GeV}^2.
+\]
+方位角平均定义为
+\[
+\langle\mathcal L_{00}\rangle_{\phi_*}
+=\frac{1}{2\pi}\int_0^{2\pi}d\phi_*\,\mathcal L_{00};
+\]
+若程序已经执行这一平均，就不能再额外乘入一次 \(2\pi\)。
+
+### 2.5 Eq. (6) 整体前因子的 Lorentz-invariant 独立推导
+
+本节在正文中独立重建 Eq. (6) 的整体归一化。目的不是从现有数值程序反推常数，而是从单粒子 Lorentz-invariant 测度出发，逐项核对两个两体子过程、变量 Jacobian、方位角约定、不变通量和核电荷流。详细的扩展审计另见[附录 A.4.2](appendices/09A_three_body_kinematics_amplitude.md)。
+
+#### 2.5.1 不变相空间约定与三体分解
+
+采用自然单位制和单粒子不变测度
+\[
+d\Pi_i=\frac{d^3\mathbf p_i}{(2\pi)^3\,2E_i},
+\]
+两体相空间定义为
+\[
+d\Phi_2(Q;a,b)
+=(2\pi)^4\delta^{(4)}(Q-p_a-p_b)d\Pi_a d\Pi_b.
+\]
+在母系统静止系，令 \(M=\sqrt{Q^2}\)。先积分三维动量 delta 函数，再利用能量 delta 函数，可得
+\[
+d\Phi_2
+=\frac{p_*^2dp_*\,d\Omega_*}{16\pi^2E_aE_b}
+\delta(M-E_a-E_b).
+\]
+因为
+\[
+\frac{d(E_a+E_b)}{dp_*}
+=\frac{p_*M}{E_aE_b},
+\]
+径向动量积分给出标准结果
+\[
+\boxed{
+d\Phi_2(Q;a,b)
+=\frac{p_*}{16\pi^2M}d\Omega_*
+=\frac{\sqrt{\lambda_K(M^2,m_a^2,m_b^2)}}{32\pi^2M^2}d\Omega_*.
+}
+\]
+这里
+\[
+\lambda_K(x,y,z)=x^2+y^2+z^2-2xy-2xz-2yz
+\]
+为有量纲 Källén 函数。末态 \(\chi_1\) 与 \(s\) 是不同粒子，因此三体相空间没有额外的 \(1/2!\) 对称因子。
+
+定义
+\[
+q=P'-P,\qquad K=p-q=p'+k,\qquad W^2=K^2,
+\]
+其中 \(p,P\) 是入射暗物质和靶核四动量，\(P'\) 是末态核四动量，\(p',k\) 分别是末态暗物质和标量四动量。插入中间子系统的不变质量后，
+\[
+\boxed{
+d\Phi_3(p+P;P',p',k)
+=\frac{dW^2}{2\pi}
+d\Phi_2(p+P;P',K)d\Phi_2(K;p',k).
+}
+\]
+这里的积分变量是 \(W^2\)，故分解中不产生额外的 \(2W\)；只有改用 \(W\) 作为积分变量时才需使用 \(dW^2=2W\,dW\)。
+
+#### 2.5.2 第一段两体相空间与 \(t\leftrightarrow E_R\) Jacobian
+
+令
+\[
+s_{\rm tot}=(p+P)^2,\qquad
+\Lambda_{\rm in}
+=\sqrt{\lambda_K(s_{\rm tot},m_{\chi_1}^2,m_A^2)}.
+\]
+在初态质心系中，初态和末态相对动量大小分别为
+\[
+p_i^*=\frac{\Lambda_{\rm in}}{2\sqrt{s_{\rm tot}}},
+\qquad
+p_f^*=\frac{\sqrt{\lambda_K(s_{\rm tot},m_A^2,W^2)}}{2\sqrt{s_{\rm tot}}}.
+\]
+对第一段过程 \(p+P\to P'+K\)，
+\[
+d\Phi_2
+=\frac{p_f^*}{16\pi^2\sqrt{s_{\rm tot}}}
+d\cos\theta\,d\phi_q.
+\]
+由
+\[
+t=q^2=(P'-P)^2,\qquad
+\left|\frac{dt}{d\cos\theta}\right|=2p_i^*p_f^*
+\]
+可得
+\[
+\frac{d\Phi_2}{dt\,d\phi_q}
+=\frac{1}{32\pi^2\sqrt{s_{\rm tot}}p_i^*}
+=\frac{1}{16\pi^2\Lambda_{\rm in}}.
+\]
+在未极化靶核、相干且只保留核电荷时间分量 \(J_A^0\) 的近似下，体系绕入射轴具有旋转对称性，可以积分掉核反冲方位角 \(\phi_q\)：
+\[
+\boxed{
+\frac{d\Phi_2}{dt}
+=\int_0^{2\pi}d\phi_q\,
+\frac{d\Phi_2}{dt\,d\phi_q}
+=\frac{1}{8\pi\Lambda_{\rm in}}.
+}
+\]
+靶核静止系中
+\[
+t=q^2=-2m_AE_R,\qquad
+\left|\frac{dt}{dE_R}\right|=2m_A,
+\qquad
+\Lambda_{\rm in}=2m_Ap_{\chi_1}.
+\]
+因此
+\[
+\boxed{
+\frac{d\Phi_2(p+P;P',K)}{dE_R}
+=\frac{2m_A}{8\pi\Lambda_{\rm in}}
+=\frac{1}{8\pi p_{\chi_1}}.
+}
+\]
+这里的 \(\phi_q\) 是第一段核反冲方位角；它与下文第二段子系统中的 \(\phi_*\) 不是同一个角变量。
+
+#### 2.5.3 第二段两体相空间与 \((z,\phi_*)\) 变量
+
+在 \(K\) 静止系，令 \(W=\sqrt{W^2}\)。末态相对动量为
+\[
+|\mathbf k_*|
+=\frac{\sqrt{\lambda_K(W^2,m_{\chi_1}^2,m_s^2)}}{2W}.
+\]
+取
+\[
+z=\cos\theta_*,\qquad d\Omega_*=dz\,d\phi_*,
+\]
+并定义无量纲 Källén 函数
+\[
+\lambda_{\rm dim}(W^2,m_{\chi_1}^2,m_s^2)
+=\frac{\lambda_K(W^2,m_{\chi_1}^2,m_s^2)}{W^4}.
+\]
+于是
+\[
+\boxed{
+d\Phi_2(K;p',k)
+=\frac{\sqrt{\lambda_{\rm dim}}}{32\pi^2}
+dz\,d\phi_*.
+}
+\]
+由于使用 \(z=\cos\theta_*\)，角测度已经是 \(dz\,d\phi_*\)，不应再额外乘入 \(\sin\theta_*\)。
+
+#### 2.5.4 合并三体相空间：\(512\pi^4\) 的来源
+
+将前两段相空间代入三体分解，得到尚未对 \(\phi_*\) 积分的测度：
+\[
+\boxed{
+\frac{d\Phi_3}
+{dE_R\,dW^2\,dz\,d\phi_*}
+=
+\frac{1}{2\pi}
+\frac{1}{8\pi p_{\chi_1}}
+\frac{\sqrt{\lambda_{\rm dim}}}{32\pi^2}
+=
+\frac{\sqrt{\lambda_{\rm dim}}}
+{512\pi^4p_{\chi_1}}.
+}
+\]
+因此，未积分方位角时的系数是 \(1/(512\pi^4p_{\chi_1})\)，而不是 \(1/(256\pi^3p_{\chi_1})\)。后者对应的是对 \(\phi_*\) 完成平均之后的约定。
+
+#### 2.5.5 方位角积分改写为平均：\(512\pi^4\to256\pi^3\)
+
+本文定义
+\[
+\left\langle\mathcal L_{00}\right\rangle_{\phi_*}
+=\frac{1}{2\pi}\int_0^{2\pi}d\phi_*\,
+\mathcal L_{00}.
+\]
+所以
+\[
+\int_0^{2\pi}d\phi_*\,\mathcal L_{00}
+=2\pi\left\langle\mathcal L_{00}\right\rangle_{\phi_*}.
+\]
+将它代入上一节的未积分相空间，得到
+\[
+\boxed{
+\frac{\sqrt{\lambda_{\rm dim}}}{512\pi^4p_{\chi_1}}
+\int_0^{2\pi}d\phi_*\,\mathcal L_{00}
+=
+\frac{\sqrt{\lambda_{\rm dim}}}{256\pi^3p_{\chi_1}}
+\left\langle\mathcal L_{00}\right\rangle_{\phi_*}.
+}
+\]
+因此，从 \(512\pi^4\) 到 \(256\pi^3\) 的变化只来自将未归一化的方位角积分写成 \(1/(2\pi)\) 平均；不能在采用平均定义后再次额外乘 \(2\pi\)。
+
+#### 2.5.6 不变通量、核电荷流与 Eq. (6)
+
+不变通量因子为
+\[
+F=4\sqrt{(p\cdot P)^2-m_{\chi_1}^2m_A^2}
+=4m_Ap_{\chi_1}
+\]
+（最后一个等号使用靶核静止系）。在本研究的 leading non-relativistic 核电荷近似下，
+\[
+J_A^0\simeq2m_A.
+\]
+因此，在当前核响应定义下，振幅平方写成
+\[
+|\mathcal M|^2
+=
+\frac{
+4m_A^2(g_1g_2g_{VN})^2R_A(E_R)
+}{
+(m_V^2-t)^2
+}\mathcal L_{00}
+=
+\frac{
+4m_A^2(g_1g_2g_{VN})^2R_A(E_R)
+}{
+(m_V^2+2m_AE_R)^2
+}\mathcal L_{00}.
+\]
+这里 \(\mathcal L_{00}\) 已包含暗物质初态自旋平均和末态自旋求和；核态的自旋处理则包含在 \(R_A\) 的定义中。故不应再对同一自由度重复添加平均因子。
+
+将振幅平方、通量 \(1/F\) 和方位角平均后的相空间系数合并：
+\[
+\frac{4m_A^2}{4m_Ap_{\chi_1}}
+\frac{1}{256\pi^3p_{\chi_1}}
+=
+\boxed{
+\frac{m_A}{256\pi^3p_{\chi_1}^2}.
+}
+\]
+最终得到正文 Eq. (6)：
+\[
+\boxed{
+\frac{d\sigma_A}{dE_R}
+=
+\frac{
+m_A(g_1g_2g_{VN})^2R_A(E_R)
+}{
+256\pi^3p_{\chi_1}^2(m_V^2+2m_AE_R)^2
+}
+I_6,
+}
+\]
+其中
+\[
+I_6=
+\int_{W_{\min}^2}^{W_{\max}^2}dW^2
+\sqrt{\lambda_{\rm dim}}
+\int_{-1}^{1}dz\,
+\left\langle\mathcal L_{00}\right\rangle_{\phi_*}.
+\]
+
+#### 2.5.7 与数值实现的约定对照
+
+| 理论量 | 本文约定 | Python 实现/后续 Mathematica 约定 |
+|---|---|---|
+| 无量纲 Källén 函数 | \(\lambda_K/W^4\) | \(\texttt{lambda\_dimensionless}\)，不得再乘或除 \(W^2\) |
+| \(W^2\) 积分 | \(dW^2\) | \(\texttt{wvals}\)、\(\texttt{wweights}\) |
+| 极角积分 | \(\int_{-1}^{1}dz\) | \(\texttt{xz}\)、\(\texttt{wz}\)，权重和为 2 |
+| 方位角处理 | \((2\pi)^{-1}\int_0^{2\pi}d\phi_*\) | \(\texttt{phis}\)、\(\texttt{phiweights=0.5*wp}\)，权重和为 1 |
+| 自旋约定 | \(\frac12\sum_{s_i,s_f}\) | \(\texttt{spin\_trace}\) 中初态平均 \(\texttt{/2}\) |
+| 三体积分 | \(I_6\) | \(\texttt{reduced\_kernel}\)，不包含 Eq. (6) 外部的 \(256\pi^3\) |
+| 截面前因子 | \(m_A/(256\pi^3p_{\chi_1}^2)\) | \(\texttt{joint\_xe131.py}\) 的 \(\texttt{C\_A}\) |
+
+对 Gauss–Legendre 方位角节点 \(x_i\in[-1,1]\)，变量映射
+\[
+\phi_i=\pi(x_i+1),\qquad d\phi_*=\pi\,dx
+\]
+给出
+\[
+\frac{1}{2\pi}\int_0^{2\pi}f(\phi_*)d\phi_*
+=\frac12\int_{-1}^{1}f(\pi(x+1))dx
+\simeq\sum_i\frac{w_i}{2}f(\phi_i).
+\]
+所以程序中的 \(0.5\,w_i\) 是平均权重，权重和为 1；若在 Mathematica 中改用未归一化的 \(\phi_*\) 积分，则相应地必须把截面前因子改写为 \(m_A/(512\pi^4p_{\chi_1}^2)\)，二者不能混搭。
+
+作为交叉检查，若定义未归一化积分
+\[
+I_6^{\rm raw}
+=\int dW^2\sqrt{\lambda_{\rm dim}}
+\int_{-1}^{1}dz\int_0^{2\pi}d\phi_*\,
+\mathcal L_{00},
+\]
+则 \(I_6^{\rm raw}=2\pi I_6\)，并且
+\[
+\frac{m_A}{512\pi^4p_{\chi_1}^2}I_6^{\rm raw}
+=
+\frac{m_A}{256\pi^3p_{\chi_1}^2}I_6.
+\]
+这是同一物理截面的两种等价积分约定。
+
+#### 2.5.8 维度、适用范围与 AFH 因子 4 的区分
+
+\[
+[I_6]={\rm GeV}^2,\qquad
+\left[\frac{d\sigma_A}{dE_R}\right]={\rm GeV}^{-3},
+\]
+与自然单位下的微分截面维度一致。上述 \(256\pi^3\) 结论适用于未极化靶核、相干散射、只保留 \(J_A^0\simeq2m_A\) 的近似，并采用本文对暗物质自旋迹和核响应的定义。若保留靶极化、横向核流或非平凡的核反冲方位角依赖，必须重新保留相应角变量，不能直接沿用已经积分掉 \(\phi_q\) 的表达式。
+
+最后，必须区分两个彼此独立的归一化问题：
+\[
+\underbrace{256\pi^3}_{\text{三体相空间、角平均与不变通量}}
+\qquad\text{和}\qquad
+\underbrace{4}_{\text{AFH 响应从包定义到物理等核子耦合的转换}}.
+\]
+AFH 的因子 4 不参与上述相空间推导，也不能用来补偿或修改 \(256\pi^3\)。本节解析推导确认了 Eq. (6) 与当前 Python 积分约定的一致性；完整连续反冲网格上的 \(I_6\) 数值收敛仍按第 8 节单独验收。
+
+### 2.5.9 数值求积与阈值稳定性审计（P1-PhaseSpace，2026-11-14）
+
+上一节验证的是解析相空间测度与 Eq. (6) 的归一化关系。本节进一步检查实际 \(I_6\) 数值积分的变量映射、Jacobian、阈值端点和角积分收敛。完整表格、逐点 CSV、测试代码及 SHA-256 记录见[独立数值审计报告](supplements/phase_space_convergence_audit_2026-11-14.md)。
+
+令
+\[
+W_{\min}^2=(m_{\chi_1}+m_s)^2,\qquad
+\Delta=W_{\max}^2-W_{\min}^2,\qquad
+\delta=W^2-W_{\min}^2.
+\]
+有量纲 Källén 函数可因式分解为
+\[
+\lambda_K
+=\delta(4m_{\chi_1}m_s+\delta),
+\qquad
+\lambda_{\rm dim}
+=\frac{\delta(4m_{\chi_1}m_s+\delta)}
+       {(W_{\min}^2+\delta)^2}.
+\]
+在线性 \(W^2\) 变量下，\(\sqrt{\lambda_{\rm dim}}\sim\sqrt{\delta}\)，因此下端点存在平方根型 cusp。采用
+\[
+\boxed{W^2=W_{\min}^2+\Delta u^2,\quad 0\le u\le1},
+\qquad
+\boxed{dW^2=2\Delta u\,du}
+\]
+后，阈值附近的相空间权重满足
+\[
+\sqrt{\lambda_{\rm dim}}\,dW^2\propto u^2du,
+\]
+端点行为因而更加平滑。程序直接传递 \(\delta=\Delta u^2\)，并用因式分解形式计算 Källén 函数和末态三动量，避免从两个约 \(10^6\,{\rm GeV}^2\) 的数值相减恢复很小的阈值差。
+
+本轮独立比较了三种积分参数化：
+- 线性 \(W^2\)：\(W^2=W_{\min}^2+\Delta x\)，\(dW^2=\Delta dx\)；
+- 线性 \(W\)：\(W=W_{\min}+(W_{\max}-W_{\min})x\)，显式使用 \(dW^2=2W\,dW\)；
+- threshold-\(u^2\)：\(W^2=W_{\min}^2+\Delta u^2\)，显式使用 \(dW^2=2\Delta u\,du\)。
+
+统一采用 \(m_{\chi_1}=1\) TeV、\(m_A=122\) GeV、\(v=776\) km/s、\(\Delta m=1\) MeV 和条件性 pole-width、\(g_2=1\)。四组固定速度 benchmark 的结果为：
+
+| \(m_s\) | \(E_R\) | 线性 \(W^2\) 8×8×4 相对差异 | 线性 \(W^2\) 16×16×8 相对差异 | threshold-\(u^2\) 6×6×4 相对差异 |
+|---:|---:|---:|---:|---:|
+| 300 keV | 200 keV | \(2.37742\times10^{-4}\) | \(3.23494\times10^{-5}\) | \(4.02\times10^{-11}\) |
+| 300 keV | 267 keV | \(2.33199\times10^{-4}\) | \(3.17397\times10^{-5}\) | \(1.45\times10^{-11}\) |
+| 300 keV | 542 keV | \(2.42444\times10^{-4}\) | \(3.29824\times10^{-5}\) | \(9.03\times10^{-12}\) |
+| 200 keV | 101 keV | \(2.24319\times10^{-4}\) | \(3.05467\times10^{-5}\) | \(1.62\times10^{-10}\) |
+
+相对差异均以 threshold-\(u^2\) 的 \(48\times24\times16\) 结果为参考。线性 \(W\) 与线性 \(W^2\) 的同阶结果在四组 benchmark 上相差约 \(10^{-9}\)，验证了 \(2W\) Jacobian；但线性 \(W\) 仍保留阈值 cusp。threshold-\(u^2\) 的 \(6\times6\times4\) 最大相对差异为 \(1.62\times10^{-10}\)。
+
+另对 \(m_s=300\) keV、\(E_R=542\) keV 的运动学阈值邻域取
+\[
+v=v_{\min}+\{0.1,0.5,1,2,5\}\ {\rm km/s}.
+\]
+在最近的 \(v-v_{\min}=0.1\) km/s 点，\(\Delta W^2=2.42608832\times10^{-4}\ {\rm GeV}^2\)。以相同角阶数的 \(24\times4\times4\) threshold-\(u^2\) 结果为参考，线性 \(W^2\) 的 \(8\times8\times4\) 最大相对差异为 \(2.53\times10^{-4}\)，threshold-\(u^2\) 的 \(4\times4\times4\) 最大相对差异为 \(1.64\times10^{-10}\)。
+
+在 \(E_R=200\) keV 的代表点固定 \(n_u=8\)，将 \(z\) 阶数从 2 增至 24、将 \(\phi_*\) 阶数从 2 增至 20，最大相对差异分别为 \(2.81\times10^{-12}\) 和 \(3.58\times10^{-12}\)。这只证明该代表点角积分平滑，不能外推至近传播子极点区域。
+
+最后，保留未归一化 \(d\phi_*\) 的 Lorentz-invariant 相空间路径，独立计算
+\[
+I_6^{\rm raw}
+=\int dW^2\,dz\,d\phi_*\,
+\sqrt{\lambda_{\rm dim}}\,\mathcal L_{00},
+\qquad I_6^{\rm raw}=2\pi I_6.
+\]
+在 \(m_{\chi_1}=1\) TeV、\(m_s=300\) keV、\(\Delta m=1\) MeV、\(m_A=122\) GeV、\(E_R=200\) keV、\(v=776\) km/s 的 \(8\times8\times4\) 检查点：
+\[
+I_6=868218.71218827\ {\rm GeV}^2,\qquad
+I_6^{\rm raw}=5455179.0558397\ {\rm GeV}^2,
+\]
+\[
+\frac{I_6^{\rm raw}}{2\pi I_6}=1.
+\]
+取 \(m_V=10\) GeV、耦合乘积平方 \(C^2=1\)、\(R_A=1\)，Eq. (6) 平均方位角路径与直接 raw-\(d\Phi_3\) 路径均给出
+\[
+\frac{d\sigma}{dE_R}=0.19897140857689\ {\rm GeV}^{-3},
+\]
+两条路径之比为 1。该数值检查没有使用 AFH factor 4；AFH 核响应归一化仍是独立问题。
+
+**验证边界：** 本轮完成四组 fixed-speed benchmark、五个阈值邻域速度点、三种 \(W\) 参数化、代表点角积分以及 raw-\(d\Phi_3\) 前因子数值对照；新增六项回归测试本地全部通过。当前尚未完成近传播子极点窄峰积分、不同宽度处方的系统收敛比较、完整连续反冲网格误差控制或天然氙 halo fold。故本轮结论限定为所测非近极点 benchmark 和阈值邻域，不升级为全参数空间收敛证明。
+
+复算入口为 research/figure2_full_reproduction/phase_space_convergence.py；回归测试为 research/figure2_full_reproduction/tests/test_phase_space_convergence.py。结果 CSV 和归档包位于 research/figure2_full_reproduction/results/。
+
+### 2.6 参数分别控制归一化、阈值还是谱形？
+
+| 参数或输入 | 主要进入的位置 | 物理作用 |
+|---|---|---|
+| \(m_s\) | \(W_{\min}=m_{\chi_1}+m_s\)、\(v_{\min}\)、\(I_6\) | 增大末态质量门槛，压缩三体相空间并提高最小入射速度 |
+| \(\Delta m\) | \(m_{\chi_2}=m_{\chi_1}+\Delta m\)、传播子分母和宽度 | 改变虚中间态离极点的距离；在 \(\chi_2\) 不外显的前提下，不直接改变末态 \(\chi_1+s\) 的阈值 |
+| \(m_V\) | \((m_V^2+2m_AE_R)^{-2}\) | 控制矢量交换强度及其反冲能量依赖 |
+| \(g_1,g_2,g_{VN}\) | 振幅整体因子和 \(\Gamma_{\chi_2}\) | 耦合乘积控制主要归一化，但 \(g_2\) 还单独进入条件性 pole width |
+| \(m_{\chi_1}\) | \(p_{\chi_1}\)、\(W_{\max}\)、\(v_{\min}\)、传播子 | 决定入射动能尺度和整个三体运动学 |
+| 核模型与 \(b_A\) | \(R_A(E_R)\) | 决定核相干响应的有限动量形状和极小值 |
+| halo 参数 | \(f_{\rm lab}(v)\)、\(v_{\max}\) | 决定哪些速度能贡献以及高速度尾部的权重 |
+
+
+在当前 \(m_V=10\) GeV benchmark 中，\(m_V^2=100\ {\rm GeV}^2\)，而 Xe 核在 \(E_R=0.2\)–\(0.8\) MeV 时的 \(2m_AE_R\) 只有约 \(0.05\)–\(0.20\ {\rm GeV}^2\)。因此该 benchmark 处于重媒介子近似 \(m_V^2\gg |t|\) 的区域，传播子因子在所考察反冲窗口内变化很小，主要给出近似整体归一化 \(\propto m_V^{-4}\)。这时谱形的显著结构主要来自核响应 \(R_A\) 与三体积分 \(I_6\)，而不是矢量传播子的快速反冲依赖。若研究更轻的 \(m_V\)，这一判断必须重新评估。
+
+特别要避免把耦合乘积 \((g_1g_2g_{VN})^2\) 当成足以确定所有传播子效应的参数：若改变 \(g_2\) 而同时调整其他耦合以保持该乘积不变，条件性 \(\Gamma_{\chi_2}\propto |g_2|^2\) 仍会改变。因此，比较不同耦合点时必须同时报告 \(g_2\) 和宽度处方。
 
 ## 3. AFH v6.0 default Xe-131 核响应
 
@@ -183,13 +870,15 @@ Xe-128 至 Xe-136 这组可用同位素的处方值约为 \(2.284596\)–\(2.304
 
 这是本轮最重要的归一化问题之一。
 
-AFH v6.0 的原始 isoscalar response 并不直接等于以物理单核子耦合 \(g_{VN}\) 定义的等质子、等中子相干响应。AFH 程序中的系数约定使用
+AFH v6.0 的原始 isoscalar response 并不直接等于以物理单核子耦合 \(g_{VN}\) 定义的等质子、等中子相干响应。标准 isospin 基底中的系数定义为
 
 \[
-c^0=\frac{c^p+c^n}{2},
+c_{\rm std}^{0}=\frac{c^p+c^n}{2},
 \qquad
-c^1=\frac{c^p-c^n}{2}.
+c_{\rm std}^{1}=\frac{c^p-c^n}{2}.
 \]
+
+AFH 分发版 Mathematica setter 的接口输入是另一个量 \(c_{\rm set}\)，其内部映射见附录 C.1；不能把 setter 输入与标准 isospin 系数混为同一个符号。
 
 其内置 isoscalar response 在零动量处满足
 
@@ -217,7 +906,7 @@ Zg_p+(A-Z)g_n=A g_{VN},
 R_A^{\rm phys}(0)=A^2.
 \]
 
-在 AFH 接口的系数约定下，物理单核子耦合对应的 isoscalar 输入系数为 \(c_0=2g_{VN}\)，所以振幅平方带来因子 4。若截面前因子仍写成物理的 \(g_{VN}\)，就必须把这一个因子 4 放入核响应定义中。
+在 AFH 接口的系数约定下，物理单核子耦合对应的 isoscalar 输入系数为 \(c_{\rm set}=2g_{VN}\)，所以振幅平方带来因子 4。这里的 \(c_{\rm set}\) 是 AFH setter 输入，不是标准基底中的 \(c_{\rm std}^{0}=g_{VN}\)；两者定义不同。若截面前因子仍写成物理的 \(g_{VN}\)，就必须把这一个因子 4 放入核响应定义中。
 
 对于原始 AFH v6.0 输出，物理响应的解析映射写作
 
@@ -283,6 +972,45 @@ AFH default Xe-131 响应在 Figure 2 相关范围内得到三个主要极小值
 
 此外，在约 \(1021.8\) keV 还有一个更高反冲能量的极小值，不属于 Figure 2 的三个主要谷值范围。
 
+### 3.5 AFH 响应极小值的物理意义：核相干与衍射结构
+
+矢量媒介子在当前近似下耦合到核的相干矢量电荷。直观地说，有限空间动量 \(Q\) 下，核内不同位置的核子带有不同的 Fourier 相位 \(e^{i\mathbf q\cdot\mathbf r_i}\)，总核振幅是这些贡献的相干和：
+\[
+\mathcal A_A(\mathbf q)\sim
+\sum_{i=1}^{A}g_{Vi}e^{i\mathbf q\cdot\mathbf r_i}.
+\]
+在 \(Q\to0\) 时，各核子的相位趋于一致。若 \(g_p=g_n=g_{VN}\)，核振幅正比于
+\[
+Zg_p+(A-Z)g_n=Ag_{VN},
+\]
+所以物理相干响应满足 \(R_A^{\rm phys}(0)=A^2\)。这就是零动量处的 \(A^2\) 相干增强。
+
+当 \(Q\) 增大到能够分辨核的有限空间分布时，不同轨道和不同径向区域的贡献不再同相。它们在振幅求和中可以相互抵消，导致响应出现很深的局部极小值。这种结构可以类比有限尺寸电荷分布的 form-factor diffraction minima，但 AFH 的实际计算还包含壳模型轨道、角动量耦合和密度矩阵，不能简单替换成一个均匀球体的解析 form factor。
+
+对 Xe-131，AFH v6.0 的弹性 \(M\) 响应可写成
+\[
+W_{M,\rm AFH}^{00}(y)
+=\frac14\left[\mathcal A_0(y)^2+\mathcal A_2(y)^2\right].
+\]
+与正文采用的物理等质子、等中子耦合归一化相对应，
+\[
+R_A^{\rm phys}(Q)
+=\frac{16\pi}{2J_A+1}W_{M,\rm AFH}^{00}(y),
+\qquad y=\left(\frac{Qb_A}{2}\right)^2.
+\]
+其中 \(\mathcal A_J\) 是给定多极 \(J\) 下对密度矩阵条目、角矩阵元和径向矩阵元的相干求和。当前 Xe-131 计算保留 \(J=0,2\)。因此：
+- 每个 \(\mathcal A_J\) 内部的轨道与密度矩阵贡献可以发生相消；
+- \(J=0\) 与 \(J=2\) 的响应强度在这里以平方和相加，不能把不同 \(J\) 通道之间描述成同一个振幅的相干抵消；
+- 总响应非负，极小值表示核相干振幅受到强抑制，不表示核靶不存在或散射严格禁止；它也不是暗费米子传播子的 \(\chi_2\) 共振，更不是三体相空间关闭的运动学阈值。
+
+空间动量极小值与反冲能量的精确换算为
+\[
+E_R(Q)=\sqrt{m_A^2+Q^2}-m_A.
+\]
+因此表中的 \(q_{\min}\) 和 \(E_{R,\min}\) 是同一个核响应结构的两种标记。改变 \(b_A\) 会改变 \(y=(Qb_A/2)^2\) 的映射，并系统移动响应结构；这就是不能为了匹配 Figure 2 的谷值而拟合 \(b_A\) 的物理原因。
+
+最后，**核响应的极小值不必然等于完整截面或 halo-folded 事件率的极小值**。固定速度截面还乘有 \(I_6(v,E_R)\) 和矢量传播子；天然氙速率还对同位素与速度求和/积分。不同同位素的极小值位置不完全相同，速度积分也会对不同反冲点施加不同阈值权重。因此，必须分别讨论 \(R_A\)、\(d\sigma_A/dE_R\) 和 \(dR/dE_R\) 的谱形。
+
 ## 4. AFH、GCN 与 JJ55 的对照
 
 三种核结构处方的极小值位置接近，但极小值深度存在模型依赖性：
@@ -318,6 +1046,12 @@ AFH default Xe-131 响应在 Figure 2 相关范围内得到三个主要极小值
 | 542 | JJ55 | 0.005093560 | \(3.78276\times10^{-36}\) |
 
 该表是**同一 \(I_6\) 下的核响应替换对照**，不是天然氙 halo-folded rate。
+
+### 4.1 核模型对照应如何作物理解读？
+
+在相同同位素、相同 \(E_R\)、相同入射速度和相同粒子物理输入下，AFH、GCN、JJ55 的差异只通过各自的 \(R_A(E_R)\) 进入 Eq. (6)。因此同一运动学点上的截面比可以直接用响应比解释。表中三个主要极小值的位置在不同核模型间相对接近，这提示这些结构与 Xe 核有限尺寸及主要壳结构的动量尺度有关；但极小值深度差异明显，说明核波函数和密度矩阵对相消程度十分敏感。
+
+这类差异不应被压缩成一个常数“核模型误差条”：响应模型可能同时改变极小值的深度、位置和极小值之间的谱形。反过来，也不能仅凭某个模型在一个 \(E_R\) 点给出更大的 \(R_A\)，就断言它在整个 LZ 能区给出更大的事件数。天然氙的逐同位素求和和速度阈值会重新加权这些差异。
 
 ## 5. 四组 Figure 2 固定速度 benchmark
 
@@ -369,6 +1103,26 @@ I_6=878078.840766\ {\rm GeV}^2.
 
 固定 \(v=800\) km/s 是用于复现固定速度截面曲线的诊断选择，不是标准 halo 中的典型速度，也不是截断 SHM 中允许的速度。后文采用的截断 SHM 实验室系速度上限是 776 km/s。因此，不能把 \(v=800\) km/s 的固定速度截面直接解释为截断 SHM 下的天然氙事件率。
 
+### 5.3 \(m_s\) 与 \(\Delta m\) 在 benchmark 中扮演不同角色
+
+四组 benchmark 的参数选择可以直接展示“末态阈值”和“虚态传播子”是两种不同的物理效应。
+
+首先，固定 \(v,E_R,m_{\chi_1},m_A\) 时，三体末态开放条件是
+\[
+W_{\max}^2(v,E_R)\ge(m_{\chi_1}+m_s)^2.
+\]
+因此增大 \(m_s\) 会提高 \(W_{\min}\)，压缩允许的 \(W^2\) 区间，并使 \(v_{\min}\) 增大。表中第一个开放的 5 keV 网格点由 \(m_s=200\) keV 时的 35 keV，移动到 300 keV 时的 100 keV，再移动到 360 keV 时的 190 keV。这不是核响应谷值移动，而是三体相空间开始开放的运动学门槛在改变。
+
+其次，\(\Delta m\) 不出现在 \(W_{\min}=m_{\chi_1}+m_s\) 中，因为末态并没有真实的 \(\chi_2\)。它改变的是
+\[
+W^2-m_{\chi_2}^2
+=W^2-(m_{\chi_1}+\Delta m)^2
+\]
+这一内部传播子虚度。因而 Green 与 Blue 具有相同的 \(m_s=300\) keV，运动学开放阈值相同；但 \(\Delta m\) 从 1 MeV 增至 10 MeV 后，传播子离极点更远，截面归一化和谱形会改变。若同时改变 \(g_2\)，还必须重新计算条件性宽度，不能只按耦合乘积缩放。
+
+在当前 \(m_{\chi_1}=1\) TeV 的例子中，\(v=800\) km/s 的固定速度曲线是论文图形的运动学诊断；它高于截断 SHM 的 \(776\) km/s 实验室速度上限。它不能直接解释为 halo 中有粒子以 800 km/s 入射的真实事件率。这个区分尤其重要：固定速度下三体相空间开放，并不保证所选 halo 模型下有足够的粒子通量。
+
+
 ## 6. 为什么要考虑氙同位素和暗物质速度分布？
 
 ### 6.1 LZ 是什么探测器？
@@ -395,7 +1149,7 @@ LZ 指 LUX-ZEPLIN 暗物质实验。其核心靶体是双相液氙时间投影�
 0.998158.
 \]
 
-Xe-124 与 Xe-126 合计约 \(0.001842\)，因为当前提供的 AFH v6.0 响应集合没有相应内置密度矩阵，故本轮没有纳入。**七种可用同位素的丰度没有重新归一化**，不能把缺失的丰度简单重新分配给其余同位素。
+Xe-124 与 Xe-126 合计约 \(0.001842\)，因为当前提供的 AFH v6.0 响应集合没有相应内置密度矩阵，故本轮没有纳入。**七种可用同位素的丰度没有重新归一化**，不能把缺失的丰度简单重新分配给其余同位素。 对官方源文件 `v6/dmformfactor-V6.m` 的 dispatch 进一步审计确认，默认 Xe 矩阵分支只列出 A=128,129,130,131,132,134,136；Xe-124/Xe-126 会进入通用 `Cannot find default matrix which matches input M and Z!` 回退分支。因此这不是提取脚本漏读，详见 [源代码第 1555–1597 行](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/blob/main/v6/dmformfactor-V6.m#L1555-L1597)。
 
 每种同位素分别使用：
 
@@ -465,6 +1219,35 @@ Q_A=\sqrt{2m_AE_R+E_R^2},
 
 > **公式追溯：** 完整阈值推导见[附录 E，§E.2](appendices/09E_halo_velocity_vmin_folding.md)；数值实现和逐同位素阈值输出见[索引 F8](formula_symbol_code_cross_reference.md)。
 
+这一阈值公式可以从三体相空间边界直接推导，而不是套用弹性散射的标准表达式。令
+\[
+Q_A=\sqrt{2m_AE_R+E_R^2},\qquad
+a_A=m_s+\frac{m_AE_R+m_s^2/2}{m_{\chi_1}},
+\]
+并用 \(p_{\chi_1}=m_{\chi_1}\gamma\beta\)、\(E_{\chi_1}=m_{\chi_1}\gamma\)。在阈值处令
+\[
+W_{\max,A}^2=(m_{\chi_1}+m_s)^2.
+\]
+代入 \(W_{\max,A}\) 后得到
+\[
+\gamma(\beta Q_A-E_R)=a_A.
+\]
+再使用 \(\gamma^{-2}=1-\beta^2\)，可化为
+\[
+(Q_A^2+a_A^2)\beta^2
+-2Q_AE_R\beta+(E_R^2-a_A^2)=0.
+\]
+取物理的正根便得到正文的 \(\beta_{\min,A}\)。这一步说明 \(v_{\min,A}\) 由真实末态标量质量、核反冲和入射暗物质质量共同决定；\(\Delta m\) 不进入这个阈值方程，是因为 \(\chi_2\) 只是内部传播子，而不是外部末态。
+
+速度积分本身也有明确的通量含义。每千克靶中同位素 \(A\) 的核数是 \(N_Tx_A\)，暗物质数密度是 \(n_\chi=\rho_\chi/m_{\chi_1}\)，速度为 \(v\) 的暗物质通量正比于 \(n_\chi v\)。因此从单核微分截面得到单位靶质量的事件率，结构上必然是
+\[
+\frac{dR}{dE_R}
+=N_T n_\chi\sum_Ax_A
+\int dv\,f_{\rm lab}(v)\,v\,
+\frac{d\sigma_A}{dE_R}(v).
+\]
+本文以 \(v\) 的 km/s 数值输入，并将物理速度写成 \(c(v/c)\)，于是得到正文公式中的 \(c\) 与 \(v/c\)。这里 \(f_{\rm lab}(v)\) 是速度模长的概率密度，满足 \(\int dv\,f_{\rm lab}(v)=1\)，不是三维速度矢量分布；额外的 \(v\) 是通量因子，不能用一个平均速度简单替代整个积分。
+
 ### 6.4 采用的 halo benchmark
 
 基准采用截断 Standard Halo Model：
@@ -496,6 +1279,32 @@ g_2=1,\quad
 \]
 
 其中 \(\chi_2\) 极点宽度采用条件性的 \(\chi_2\to\chi_1s\) 宽度，假设 Dirac 费米子、实标量、纯 scalar off-diagonal Yukawa 且没有其他开放衰变道；它不是完整的 \(\chi_2\) 自能。
+
+### 6.5 为什么“刚好开放”仍然可能几乎没有事件？
+
+运动学开放只意味着积分区间非空，并不意味着事件率可观。截断 SHM 的实验室速度支持区间是
+\[
+0\le v\le v_{\max}=v_{\rm esc}+v_E=776\ {\rm km/s}.
+\]
+在高速度分支，PDF 含有
+\[
+e^{-(v-v_E)^2/v_0^2}-e^{-v_{\rm esc}^2/v_0^2}.
+\]
+当 \(v\) 从下方接近 \(v_{\max}\) 时，两项相互抵消，故
+\[
+f_{\rm SHM}(v)\propto v_{\max}-v.
+\]
+于是若 \(v_{\min}\) 只比 \(v_{\max}\) 低一个很小的量，单纯速度 PDF 所提供的积分权重就按速度窗口宽度的平方趋于零；同时，三体积分 \(I_6\) 也会在相空间阈值处缩小。因此“低于 776 km/s”只是开放条件，不是事件率足够大的保证。
+
+Green/Blue 在 \(E_R=101\) keV 时是一个极端例子：七种可用同位素中只有 Xe-136 的阈值低于截断端点，且
+\[
+v_{\min,136}=775.806\ {\rm km/s},\qquad
+v_{\max}-v_{\min,136}\simeq0.194\ {\rm km/s}.
+\]
+所以它虽然在数学上开放，实际只剩一个极窄且 PDF 接近零的速度区间。相比之下，在 \(E_R=200\) keV，Green 的阈值条件明显放宽，速率上升到 \(1.8136\times10^{-11}\) events/(kg day keV)。这说明反冲能量变化不仅改变核响应，还会改变哪些 halo 速度可以贡献。
+
+同样，Black 在 \(E_R=101\) keV 的截断 SHM 速率为零，准确含义是当前可用同位素的 \(v_{\min,A}\) 全部高于 \(776\) km/s，故该 halo 模型的积分支持区间为空；这不是说该粒子物理模型在任意更高速度下的微分截面恒等于零。untruncated boosted Maxwell–Boltzmann 诊断允许更高速度，因此给出非零结果，但那是另一个 halo 假设，不应拿它替代截断 SHM 的基准结论。
+
 
 ## 7. 天然氙 halo-folded selected-point 结果
 
@@ -539,6 +1348,17 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 
 **解释：** Green/Blue 在 101 keV 的截断 SHM 速率极小，是因为只有 Xe-136 的阈值勉强落在 halo 速度端点以内；Black 则完全关闭。把固定 \(v=800\) km/s 的截面曲线与这个 halo-folded 结果比较时，必须记住 800 km/s 已经超过截断 SHM 的 776 km/s 上限。
 
+### 7.1 如何区分运动学关闭、halo 抑制和核响应抑制？
+
+这三种情况在数值上都可能表现为很小的 \(dR/dE_R\)，但物理含义不同：
+
+1. **三体运动学关闭：** \(W_{\max,A}<m_{\chi_1}+m_s\)，或等价地 \(v<v_{\min,A}\)。对应同位素在该速度和反冲点没有允许的三体末态，kernel 返回零。
+2. **Halo 端点抑制：** \(v_{\min,A}<v_{\max}\)，但两者非常接近。积分并非严格为零，只是速度 PDF 在截断端点趋于零，且可用速度区间很窄。
+3. **核响应抑制：** \(R_A(E_R)\) 位于核 form-factor 极小值附近。此时粒子侧三体过程可能仍然开放，但核内相干电荷振幅发生强烈相消。
+
+判断一个小事件率时，应分别检查 \(W_{\max}-W_{\min}\)、\(v_{\max}-v_{\min}\) 和 \(R_A(E_R)/A^2\)，而不是仅看最终速率一个数字。Green 在 101 keV 的主要问题是 halo 端点抑制；Black 在同一点是运动学关闭；核响应极小值则是另一条独立的核结构效应。三者不能混为同一种“截面谷值”。
+
+
 ## 8. 数值验证、归档状态与限制
 
 ### 8.1 已完成的检查
@@ -550,7 +1370,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 - 四组 benchmark 的 AFH/GCN/JJ55 响应替换表完成逐点重构检查，并已统一改用 exact spatial q；
 - 天然氙 Eq. (6) kernel 与速度积分完成 selected-point 网格收敛检查；
 - 天然氙归档完整性验证 workflow 通过；
-- AFH exact_spatial 默认模式重新计算 98 个逐同位素贡献和 14 个总速率，与归档结果的最大总速率相对差异为 \\(2.67\\times10^{-12}\\)，CI run 43044583357 通过；
+- AFH exact_spatial 默认模式重新计算 98 个逐同位素贡献和 14 个总速率，与归档结果的最大总速率相对差异为 \(2.67\times10^{-12}\)，CI run 43044583357 通过；
 - 核响应 (q) 与精确三体运动学 (q) 的定义、质量壳推导及 NR 近似对照见正式附录 G。
 - AFH q 审计、NR 近似敏感性和固定 (M_A=131u) 的四点对照已由 CI run 43045857679 通过；四组 fixed-speed benchmark 已按 exact spatial q 重算并上传 artifact。
 - LZ 2026 Fig. S2 的 final-ROI central efficiency 曲线与灰色系统包络已从官方 PDF 的矢量路径提取，并与独立数字化在 248 keV 处对照；灰色包络仅作为系统范围，不赋予置信水平（CI run 43151814368）。
@@ -558,13 +1378,12 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 
 ### 8.2 尚未完成或不能过度声称的事项
 
-1. **AFH 原生 Mathematica 验证仍待执行。** 原生 runner 和比较程序已归档，但当前执行环境没有 Wolfram kernel。mpmath 全网格验证是独立高精度数值交叉检查，不能替代官方 Mathematica 程序的原生执行。
-2. **AFH 空间 q 的精确与 NR 近似已经区分。** AFH 定义 \(y=(q b_A/2)^2\)，其中 \(q\) 是空间动量转移；精确质量壳关系给出 \(q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}\)。28 个天然氙样本全部匹配 exact spatial q，现作为默认物理基线。\(q_{\rm NR}=\sqrt{2m_AE_R}\) 仅作为小反冲近似，其 Xe-131 响应差异已定量记录。
-3. **Xe-124/Xe-126 尚未纳入 AFH default-density 天然氙求和。** 缺少当前 AFH v6.0 内置 density matrix；七种可用同位素覆盖天然丰度 0.998158，未对这七种同位素重新归一化。
-4. **连续谱的核模型覆盖并不相同。** GCN/JJ55 已有四组 benchmark 的天然氙连续反冲谱；AFH 目前仍是 selected-point rates，因为尚未恢复完整的七同位素 AFH 响应网格。不能把 GCN/JJ55 连续谱称为 AFH 连续谱。
-5. **LZ detector mapping 已完成 rate-level 的第一层，但尚非完整 recast。** 已提取 LZ 2026 Fig. S2 的一维 final-ROI efficiency central curve 和灰色系统包络，并使用 2.84 tonne-year exposure 对 GCN/JJ55 连续谱计算 efficiency-weighted event yields。尚缺能量分辨/重建卷积、二维 \({S1_c,\log_{10}S2_c}\) 信号 PDF、NEST 响应及其 nuisance covariance、背景样本与相关约束、profile likelihood。因此这些 event yields 不是 90% CL 排除，也不能单独解释 248 keV 候选事件。
-6. **极点宽度是条件性的。** 只包括给定假设下的 \(\chi_2\to\chi_1s\) 标量通道，不等于完整模型的矢量加标量自能。
-7. **halo 模型依赖尚未做系统扫描。** untruncated MB 只用于高速度尾部敏感性诊断，不作为默认 halo 结果。
+1. **AFH 空间 q 与 NR 近似必须继续分开表述。** AFH 定义 \(y=(q b_A/2)^2\)，其中 \(q\) 是空间动量转移；精确质量壳关系给出 \(q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}\)。28 个天然氙样本全部匹配 exact spatial q，现作为默认物理基线。\(q_{\rm NR}=\sqrt{2m_AE_R}\) 仅作为小反冲近似，其 Xe-131 响应差异已定量记录。
+2. **Xe-124/Xe-126 尚未纳入 AFH default-density 天然氙求和。** 缺少当前 AFH v6.0 内置 density matrix；七种可用同位素覆盖天然丰度 0.998158，未对这七种同位素重新归一化。
+3. **连续谱的核模型覆盖并不相同。** GCN/JJ55 已有四组 benchmark 的天然氙连续反冲谱；AFH 目前仍是 selected-point rates，因为尚未恢复完整的七同位素 AFH 响应网格。不能把 GCN/JJ55 连续谱称为 AFH 连续谱。
+4. **LZ detector mapping 已完成 rate-level 的第一层，但尚非完整 recast。** 已提取 LZ 2026 Fig. S2 的一维 final-ROI efficiency central curve 和灰色系统包络，并使用 2.84 tonne-year exposure 对 GCN/JJ55 连续谱计算 efficiency-weighted event yields。尚缺能量分辨/重建卷积、二维 \({S1_c,\log_{10}S2_c}\) 信号 PDF、NEST 响应及其 nuisance covariance、背景样本与相关约束、profile likelihood。因此这些 event yields 不是 90% CL 排除，也不能单独解释 248 keV 候选事件。
+5. **极点宽度是条件性的。** 只包括给定假设下的 \(\chi_2\to\chi_1s\) 标量通道，不等于完整模型的矢量加标量自能。
+6. **halo 模型依赖尚未做系统扫描。** untruncated MB 只用于高速度尾部敏感性诊断，不作为默认 halo 结果。
 
 ### 8.3 数据修正记录
 
@@ -588,14 +1407,13 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 7. GCN/JJ55 连续谱的 LZ efficiency-weighted event yields 仅为 rate-level 结果，灰色效率包络不是置信区间；
 8. 不把固定速度截面、AFH selected-point 速率、GCN/JJ55 连续谱和完整 LZ detector-level likelihood 混为一谈。
 
-后续研究事项按物理依赖关系排列；文档整理本身不代表这些计算已完成：
+后续研究事项按物理依赖关系排列；Xe-131 原生 Mathematica 2401 点响应对照已经完成并归档，不再列为待执行任务：
 
-1. **AFH 原生 Mathematica 对照。** 在有 Wolfram kernel 的环境中执行官方 v6.0 程序，对照 Xe-131 响应曲线和选定点；保留与 Python/mpmath 结果逐点比较的归档。
-2. **AFH 连续谱输入。** 恢复完整七同位素 AFH 响应网格后，才能将 AFH selected-point halo fold 扩展为连续谱。Xe-124/Xe-126 的密度矩阵缺失应单独处理，不得用丰度重归一化掩盖。
-3. **完整 LZ detector-level likelihood。** 现有一维效率曲线和 GCN/JJ55 rate-level yields 是接口基线；真正的 recast 还需 NEST 二维响应、能量分辨/重建、校准与 nuisance covariance、背景数据及 profile likelihood。不能直接移植 LZ 的两体非弹性 WIMP 限制。
-4. **模型与 halo 系统误差。** 在固定基准定义后，分别评估核响应模型、halo 参数和条件性 \(\chi_2\) 极点宽度对结果的影响；各项假设应分开报告，不用统一经验缩放代替。
+1. **AFH 连续谱输入。** 恢复完整七同位素 AFH 响应网格后，才能将 AFH selected-point halo fold 扩展为连续谱。Xe-124/Xe-126 的密度矩阵缺失应单独处理，不得用丰度重归一化掩盖。
+2. **完整 LZ detector-level likelihood。** 现有一维效率曲线和 GCN/JJ55 rate-level yields 是接口基线；真正的 recast 还需 NEST 二维响应、能量分辨/重建、校准与 nuisance covariance、背景数据及 profile likelihood。不能直接移植 LZ 的两体非弹性 WIMP 限制。
+3. **模型与 halo 系统误差。** 在固定基准定义后，分别评估核响应模型、halo 参数和条件性 \(\chi_2\) 极点宽度对结果的影响；各项假设应分开报告，不用统一经验缩放代替。
 
-本报告的下一轮编辑优先任务是让摘要、状态表、数值验收矩阵和 detector-level 接口章节对上述完成状态使用完全一致的术语。
+本报告的下一轮编辑优先任务是让摘要、状态表、数值验收矩阵和 detector-level 接口章节对上述完成状态使用完全一致的术语。本报告的下一轮编辑优先任务是让摘要、状态表、数值验收矩阵和 detector-level 接口章节对上述完成状态使用完全一致的术语。
 ---
 
 ## 10. 代码、数据和文献入口
@@ -603,6 +1421,8 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 ### 仓库内的主要研究记录
 
 - 公式—符号—正文—程序—结果交叉引用索引：`research/docs/formula_symbol_code_cross_reference.md`（F1–F12 公式追溯、单位、近似、代码入口和结果文件）。
+- 450 keV pointwise L00 benchmark：[输入与计算记录](../figure2_full_reproduction/results/USER_L00_BENCHMARK_G1_G2_GVN_1_DELTA_M_450KEV.md)；[本地验收记录](../figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md)。
+- 450 keV fixed-speed Xe-131 curve：[结果记录](../figure2_full_reproduction/results/USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md)；该结果仅是内部反冲能量网格上的固定速度诊断。
 - AFH default Xe-131 README：`research/afh_default_density_xe131/README.md`
 - AFH 因子 4 归一化映射：`research/afh_default_density_xe131/AFH_COUPLING_NORMALIZATION_MAPPING.md`
 - AFH Xe-131 源码与归一化审计：`research/afh_default_density_xe131/AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md`
@@ -621,7 +1441,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 
 ---
 
-**归档状态说明：** 本文是 AFH 核响应、三体积分、天然氙同位素、halo folding 与 LZ rate-level 接口的阶段性研究主报告。PR #7 已于 2026-11-12 squash-merge 至 `research/figure2-p0-4-mainline`，合并提交为 `f4f2ee91f6a51399dd3b5c06d64878b7f79322d7`。本次编辑只统一文档中的完成状态、物理范围和复现边界，没有新增物理验证或数值计算。
+**归档状态说明：** 本文是 AFH 核响应、三体积分、天然氙同位素、halo folding 与 LZ rate-level 接口的阶段性研究主报告。PR #7（merge commit f4f2ee91f6a51399dd3b5c06d64878b7f79322d7）是此前将报告纳入研究分支的历史记录；随后 PR #10 已于 2026-11-13 将研究主线正式合并到默认分支 main，merge commit 为 724d9e7877fb76f4cc477fbb9e24e1e706bf37a6。本轮在原有 450 keV 结果导航和归档状态基础上，增加了主报告正文的物理推导与物理意义说明；没有修改模型输入、数值程序或已归档数值结果，也没有声称完成新的物理验证或数值计算。
 
 ---
 
@@ -754,6 +1574,47 @@ A nuclear-response distinction is also necessary. The LZ 2026 paper states that 
 
 **Experimental reference:** LZ Collaboration, D. S. Akerib et al., *Search for dark matter particle interactions in an extended nuclear recoil energy window with the LUX-ZEPLIN (LZ) experiment*, arXiv:2609.02823v1 (2026), data release DOI: [10.17182/hepdata.182472.v1](https://doi.org/10.17182/hepdata.182472.v1).
 
+### 11.6 从真实核反冲到 LZ 重建信号：一维效率折叠的含义
+
+理论计算得到的 \(dR/dE_R\) 是真实核反冲能量 \(E_R\) 的分布；LZ 事件选择则作用在重建观测量 \(S1_c\) 和 \(\log_{10}S2_c\) 上。两者之间需要探测器响应概率
+\[
+\mathcal P(S1_c,\log_{10}S2_c\mid E_R),
+\]
+它描述一个真实能量为 \(E_R\) 的核反冲在探测器中产生何种光信号、电离信号和重建值。
+
+若有完整二维响应，则对应的信号分布结构为
+\[
+\frac{d^2R}{dS1_c\,d\log_{10}S2_c}
+=\int dE_R\,
+\frac{dR}{dE_R}
+\mathcal P(S1_c,\log_{10}S2_c\mid E_R).
+\]
+一维 final-ROI efficiency 实际上是将该二维条件概率在选定区域积分：
+\[
+\epsilon_{\rm ROI}(E_R)
+=\int_{\rm ROI}dS1_c\,d\log_{10}S2_c\,
+\mathcal P(S1_c,\log_{10}S2_c\mid E_R).
+\]
+
+若将 \(\mathcal P\) 视为在完整重建观测空间上归一化的条件概率密度，则
+\[
+\int_{\rm all}dS1_c\,d\log_{10}S2_c\,
+\mathcal P(S1_c,\log_{10}S2_c\mid E_R)=1,
+\]
+而对 ROI 的积分就是该真实反冲能量下通过相应选择的概率，因此
+\(0\le\epsilon_{\rm ROI}(E_R)\le1\)。当前使用的 Fig. S2 一维效率曲线已经是该二维响应在 ROI 上的投影；不能再把相同的 S1/S2 选择效率重复乘一次。若未来使用完整二维 PDF，则应直接在观测空间构造信号分布并进入 likelihood，而不是再把一维效率曲线重复应用。
+
+因此
+\[
+N_{\rm sig}^{\rm ROI}
+=\mathcal E\int dE_R\,
+\epsilon_{\rm ROI}(E_R)\frac{dR}{dE_R}
+\]
+给出的是预计通过该选择的事件数。
+
+这解释了当前 rate-level fold 的边界：它使用一维 \(\epsilon_{\rm ROI}(E_R)\) 计算总接受数，但没有保留 \(S1_c\) 与 \(S2_c\) 的联合形状，也没有对能量重建分辨率、相关 nuisance parameters 和背景 PDF 作 profile likelihood。灰色效率包络是图中给出的系统范围，不是统计置信区间。故一维效率折叠是完整 detector-level likelihood 的一个投影量，而不是它的替代品。
+
+
 ## 12. 阶段性结论与结果解释
 
 本报告已经把三体核散射的理论截面、核结构输入、天然氙靶求和、halo 速度积分以及 LZ 一维效率加权接口连接起来。但这些层级的完成程度不同，不能将某一层的结果自动视为下一层已经完成。
@@ -763,13 +1624,13 @@ A nuclear-response distinction is also necessary. The LZ 2026 paper states that 
 1. **三体截面具有清晰的因式分解结构。** 对固定同位素和入射运动学，Eq. (6) 可写为粒子物理与三体相空间部分乘以核响应 \(R_A(E_R)\)。在 AFH、GCN、JJ55 之间进行受控核模型比较时，可以在相同运动学点复用同一个 \(I_6\)，只替换核响应；这不是对每个核模型重新计算一套独立三体积分。
 2. **AFH 归一化约定已经固定。** AFH 原始 isoscalar response 的零动量归一化为 \(A^2/4\)，而论文前因子显式提出物理单核子耦合 \(g_{VN}^2\) 时，使用的物理相干响应应满足 \(R_A^{\rm phys}(0)=A^2\)。因子 4 只计入一次。
 3. **AFH 响应使用空间动量。** 默认输入为 \(q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}\)，而传播子使用不变量 \(t=-2m_AE_R\)。\(q_{\rm NR}=\sqrt{2m_AE_R}\) 只作为小反冲近似对照，不与 \(t\) 混淆。
-4. **AFH Xe-131 的数值翻译已有高精度独立检查，但原生 Mathematica 运行仍待完成。** 2401 个 \(q\) 节点的 60 位精度 mpmath 有限和对照已归档；它不能替代官方 Wolfram kernel 的原生执行。
+4. **AFH Xe-131 response-level 数值验证已完成。** 2401 个 \(q\) 节点的 60 位精度 mpmath 有限和检查与 Wolfram 14.0.0 原生 Mathematica/Python 逐点比较均通过；原生比较的最大相对差异为 \(3.59\times10^{-9}\)，q 网格完全一致。该结果只验证 Xe-131 AFH 核响应及其归一化，不代表完整 AFH 天然氙连续谱。
 
 ### 12.2 当前结果覆盖范围
 
 | 研究层级 | 当前结果 | 不能据此声称 |
 |---|---|---|
-| AFH Xe-131 | default density matrix、固定 \(b_A\)、2401 点响应网格 | 原生 Mathematica 已通过 |
+| AFH Xe-131 | default density matrix、固定 \(b_A\)、2401 点响应网格 | mpmath 与原生 Mathematica/Python 逐点对照均已通过；最大相对差异 \(3.59\times10^{-9}\) |
 | 固定速度截面 | 四组 Figure 2 benchmark；AFH/GCN/JJ55 受控响应替换 | \(v=800\) km/s 是截断 SHM 支持区间内的 halo 速度 |
 | AFH 天然氙 | 七种可用同位素的 selected-point halo fold | 已得到连续 AFH 天然氙反冲谱，或已包含 Xe-124/Xe-126 |
 | GCN/JJ55 天然氙 | 四组 benchmark 的连续反冲谱 | 这些核响应等同于 LZ 合作组的修改后 WimPyDD 输入 |
@@ -810,7 +1671,57 @@ AFH 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失的 
 4. 不能把 248 keV 单个候选事件当作信号计数进行拟合；
 5. 不能把 mpmath 高精度交叉检查描述为官方 Mathematica 原生验证。
 
-后续物理工作仍取决于完整 AFH 响应输入、原生 Mathematica 对照，以及 LZ 的二维 NEST 响应、校准协方差、背景数据和 profile likelihood。本文的阶段性结论不替代这些尚未完成的工作。
+后续物理工作仍取决于完整 AFH 同位素响应输入，以及 LZ 的二维 NEST 响应、校准协方差、背景数据和 profile likelihood；Xe-131 原生 Mathematica 对照已完成。
+
+### 12.5 450 keV supplied benchmark 与固定速度曲线
+
+450 keV 结果包含两个彼此独立的计算层级，必须分开引用。
+
+**A. 单一运动学点的 \(\mathcal L_{00}\) 与 \(I_6\) benchmark。** 输入为 \(g_1=g_2=g_{VN}=1\)、\(m_{\chi_1}=1\) TeV、\(\Delta m=450\) keV、\(m_s=300\) keV 和 \(m_V=10\) GeV。由于 supplied particle benchmark 本身没有指定唯一的点态运动学，数值验收沿用明确标记的诊断点：\(m_A=122\) GeV、\(E_R=200\) keV、\(v=776\) km/s、\(W^2\) midpoint、\(z=0.2\)、\(\phi_*=1.1\)。在该点，zero-width 与条件性 Dirac / pure-scalar / single-open-channel pole-width 结果分别为
+\[
+\mathcal L_{00}^{(0)}=3.3933323921\times10^{14},\qquad
+\mathcal L_{00}^{(\Gamma)}=3.2510906491\times10^{14},
+\]
+\[
+I_6^{(0)}=1.6218103154\times10^7\ {\rm GeV}^2,\qquad
+I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
+\]
+对应变化分别为 \(-4.1918\%\) 和 \(-4.8017\%\)。显式自旋求和与 Dirac trace 的相对差异为 \(2.22\times10^{-16}\)，最大四动量闭合残差为 \(2.13\times10^{-13}\) GeV；\((40,32,20)\) 与 \((48,40,24)\) 的 \(I_6\) 相对差异约为 \(6.54\times10^{-7}\)（zero width）和 \(6.66\times10^{-7}\)（pole width）。这些数值只验收该点态 trace 和 reduced integral，不代表完整矢量加标量自能或任何 halo-folded spectrum。
+
+**B. Xe-131 fixed-speed differential curve。** 另一份独立曲线使用 \(m_{\chi_1}=1\) TeV、\(\Delta m=450\) keV、\(m_s=300\) keV、\(m_V=10\) GeV、\((g_1g_2g_{VN})^2=1\)，固定 \(v=776\) km/s，采用 \(m_A=131u\) 的质量近似、GCN/JJ55 response tables 和 zero-width prescription。已归档 105 个内部点（130–650 keV，5 keV 间隔）；该网格上的最大值位于 175 keV，GCN/JJ55 分别为 \(1.874622684\times10^{-32}\) 和 \(1.985254401\times10^{-32}\) cm\(^2\)/keV。1 keV 局部细化得到的 dip 位置是离散采样极小值，不是连续极小值。
+
+该固定速度开放反冲区间约为
+\[
+109.150286\ {\rm keV}<E_R<654.955583\ {\rm keV}.
+\]
+当前曲线只覆盖 130–650 keV；两端尚未完成高阶 \(I_6\) 积分。边界 bracket 测试只证明运动学开放/关闭位置，不等于端点附近的积分收敛验证。该曲线也不是截断 SHM 的 halo average：即使速度数值取到 776 km/s，也不能将单一速度点当作对速度分布的积分。
+
+完整复现命令、输入质量方案、响应插值和限制分别记录在附录 F.7、固定速度曲线结果记录及 pointwise benchmark local-validation record 中。
+
+### 12.6 科学状态表（P0–P2，2026-11-13）
+
+状态定义：**已验证**表示公式、程序与归档数值在明确适用范围内闭合；**条件性验证**表示核心实现和代表性测试通过，但仍受参数覆盖、独立推导或物理假设限制；**未完成**表示所需计算或物理输入尚不存在。
+
+| 公式 / 工作项 | 状态 | 已有证据 | 尚存边界 |
+|---|---|---|---|
+| F1 精确空间动量、四动量转移与 \(t\) | 已验证 | 核质量壳关系、28 个 AFH 样本 q 审计、exact/NR 对照 | NR 仅为小反冲敏感性对照 |
+| F2 \(W_{\min}^2,W_{\max}^2\) 与相空间开闭 | 条件性验证 | limits、wmax_squared、开闭区间和阈值回归 | 尚未对更宽质量—速度区域做独立扫描 |
+| F3 三体相空间变量与 \(I_6\) | 条件性验证（代表点和阈值邻域收敛通过） | 独立 \(d\Phi_3\) 推导、三种变量映射、四组 fixed-speed benchmark、五个阈值邻域速度点、角积分阶数与 raw-\(d\Phi_3\) 前因子对照；六项回归测试通过 | 近传播子极点、不同宽度处方系统比较、完整连续反冲网格与 halo fold 仍需验证 |
+| F4 两张辐射图与 Dirac trace | 条件性验证 | before/after/干涉分解、显式自旋求和、壳条件与四动量闭合 | 目前是代表性测试点，不是全参数扫描 |
+| F5 单同位素固定速度 Eq. (6) | 条件性验证 | 四 benchmark 的 AFH/GCN/JJ55 响应替换与截面重构 | 共用既有 \(I_6\)，并非 640 个独立三体积分重算 |
+| F6 AFH 响应与因子 4 归一化 | 已验证（限定 Xe-131 response-level） | 原始 \(A^2/4\)、物理 \(A^2\)；2401 点 mpmath 与原生 Mathematica/Python 比较通过；最大相对差异 \(3.59\times10^{-9}\) | 完整 AFH 天然氙连续谱仍缺 Xe-124/Xe-126 输入和完整同位素响应网格 |
+| F7 同位素质量、丰度与 \(N_T\) | 已验证 | 九同位素质量—丰度表、精确加权平均质量和每 kg 靶核数 | 电子结合能忽略；AFH 响应可用同位素仅七种 |
+| F8 三体 \(v_{\min,A}\) | 已验证 | 28/28 逐同位素阈值复算；最大速度差 \(4.35\times10^{-10}\) km/s | 适用范围为当前 benchmark 与输入质量约定 |
+| F9 实验室系速度 PDF | 已验证 | untruncated MB 与 truncated SHM 数值积分归一化 | 物理预测仍依赖所选 halo 参数 |
+| F10 天然氙 \(dR/dE_R\) | 条件性验证 | AFH selected-point；GCN/JJ55 连续谱及速度积分收敛 | 完整 AFH 连续谱和 Xe-124/Xe-126 响应未完成 |
+| F11 LZ 效率加权事件数 | 条件性验证 | 一维 Fig. S2 efficiency、2.84 tonne-year、rate-level 折叠 | 二维 NEST、能量分辨、背景与 profile likelihood 未完成 |
+| F12 \(\chi_2\to\chi_1s\) pole width | 条件性验证 | 条件性 Dirac 纯标量单通道宽度公式和数值测试 | 非完整自能；未纳入所有可能开放衰变道 |
+| 三体相空间 Jacobian / \(256\pi^3\) 独立推导 | 已验证 | 从单粒子不变测度独立重建 \(d\Phi_3\)，并逐项核对 \(t\leftrightarrow E_R\)、\(z,\phi_*\)、通量与核电荷流 | 适用于未极化靶、相干且仅保留 \(J_A^0\) 的近似；完整数值积分收敛另行检查 |
+| AFH 原生 Mathematica 全网格运行 | 已完成 PASS | Wolfram 14.0.0 Windows；2401 点；q 网格完全一致；四种响应量比较全部通过；最大相对差异 \(3.59\times10^{-9}\)；SHA-256 manifest 已归档 | 适用范围仅为 Xe-131 AFH response-level；不替代三体积分、天然氙连续谱或 LZ likelihood 验证 |
+| AFH 完整天然氙连续谱 | 未完成 | 七种可用同位素 selected-point rate 已完成 | 需要七同位素完整响应网格；Xe-124/Xe-126 还缺 AFH density matrix |
+| 完整 LZ detector-level recast | 未完成 | GCN/JJ55 一维效率加权 rate-level yields | 需要二维信号 PDF、NEST nuisance、背景和 profile likelihood |
+
+**P0 判定：** 精确空间动量 Python 复算、60 位 mpmath 全网格检查、Wolfram 14.0.0 原生 Mathematica/Python 2401 点比较和归档输出核验均已完成。**P1 判定：** F1–F12 的追溯索引和重点一致性检查已完成；F3 除解析相空间 Jacobian 与 \(256\pi^3\) 已独立验证外，还完成四组 fixed-speed benchmark、五个阈值邻域速度点、三种变量映射、代表点角积分和 raw-\(d\Phi_3\) 数值复核；近极点及完整连续反冲网格收敛仍未完成。**P2 判定：** 完整 AFH 天然氙连续谱和完整 LZ likelihood 仍未完成，不能因 Xe-131 response-level 对照通过而升级状态。
 
 ## 13. 公式—符号—程序—结果交叉引用
 
@@ -821,17 +1732,17 @@ AFH 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失的 
 | 索引 | 正文公式 / 物理对象 | 完整推导 | 主要程序 |
 |---|---|---|---|
 | F1 | \(q^\mu\)、\(Q=|\mathbf q|\)、\(t\) 的关系 | [A.1](appendices/09A_three_body_kinematics_amplitude.md)、[G.1–G.5](appendices/09G_recoil_momentum_convention_audit.md) | `rate_kinematics.py`、`eq6_kernel.py` |
-| F2 | \(W_{\min}^2,W_{\max}^2\) 与相空间开放条件 | [A.2](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.limits` |
-| F3 | 三体相空间分解和 \(I_6\) | [A.3–A.4.1](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.reduced_kernel` |
+| F2 | \(W_{\min}^2,W_{\max}^2\)、相空间开闭、\(m_{s,\max}\) 与最优 \(E_R^*\) | §2.4、§6.3 | [A.2–A.2.1](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.limits`、`rate_kinematics.wmax_squared` | 四 benchmark corrected CSV；逐速度阈值结果 | 固定同位素和入射速度；最优反冲能量最大化运动学质量上限，不是事件率峰值。 |
+| F3 | 三体 Lorentz-invariant 相空间、\((W^2,z,\phi_*)\) Jacobian 与 \(I_6\) | §2.5.1–2.5.9 | [A.3–A.4.2](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.py`：`build_point`、`reduced_kernel`；`phase_space_convergence.py`：独立变量映射和 raw-\(d\Phi_3\) 路径 | `phase_space_*_convergence.csv`；`phase_space_li_prefactor_crosscheck.csv`；六项回归测试；P1-PhaseSpace audit archive | \(I_6\) 为 GeV\(^2\)；代表点与阈值邻域的数值收敛已验证；近极点和完整连续反冲网格仍单独验收。 |
 | F4 | 两张辐射图、干涉项和 \(\mathcal L_{00}\) | [A.5–A.6](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.vertices`、`spin_trace` |
-| F5 | 单同位素固定速度截面 Eq. (6) | [A.4.1](appendices/09A_three_body_kinematics_amplitude.md) | `joint_xe131.py`、`compute_four_benchmark_dsigma.py` |
+| F5 | 单同位素固定速度截面 Eq. (6) | [A.4.1](appendices/09A_three_body_kinematics_amplitude.md) | joint_xe131.py、compute_four_benchmark_dsigma.py、run_user_dsigma_curve.py |
 | F6 | AFH \(b_A,y,W_M^{00},R_A^{\rm phys}\) | [B.2–B.4](appendices/09B_afh_v6_density_matrix_response.md)、[C](appendices/09C_afh_isoscalar_factor4_normalization.md)、[G](appendices/09G_recoil_momentum_convention_audit.md) | `run_afh_default_xe131.py`、`joint_xe131.py` |
-| F7 | \(m_A,x_A,N_T\) 天然氙靶归一化 | [D.1–D.5](appendices/09D_natural_xenon_isotope_target.md) | 两个天然氙 halo/spectrum runner |
+| F7 | \(m_A,x_A,N_T\) 天然氙靶归一化 | §6.2 | [D.1–D.5，特别是 D.3.1](appendices/09D_natural_xenon_isotope_target.md) | 两个天然氙 halo/spectrum runner | NIST 丰度质量表；natural-xenon metadata | \(N_T\) 使用完整九同位素平均原子质量；AFH 速率只求和七种可用响应且不重归一化。 |
 | F8 | 三体阈值速度 \(v_{\min,A}\) | [A.2](appendices/09A_three_body_kinematics_amplitude.md)、[E.2](appendices/09E_halo_velocity_vmin_folding.md) | `rate_kinematics.vmin_three_body_beta` |
-| F9 | 截断 SHM 与实验室系速度 PDF | [E.1](appendices/09E_halo_velocity_vmin_folding.md) | `run_afh_natural_xenon_halo_fold.py` |
-| F10 | 天然氙 \(dR/dE_R\) | [D.3–D.4](appendices/09D_natural_xenon_isotope_target.md)、[E.3–E.7](appendices/09E_halo_velocity_vmin_folding.md) | AFH selected-point / GCN-JJ55 continuous-spectrum runners |
-| F11 | LZ 一维效率加权 \(N_{\rm sig}^{\rm ROI}\) | 主报告 §11.1、§11.4；附录 F.5 | `fold_lz_2026_rate_level.py` |
-| F12 | 条件性 \(\chi_2\to\chi_1s\) pole width | [A.5–A.6](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.chi2_width_dirac_scalar` |
+| F9 | 截断 SHM 与实验室系速度 PDF \(f_{\rm lab}(v)\) | §6.4 | [E.1–E.1.1](appendices/09E_halo_velocity_vmin_folding.md) | `shm_truncated_pdf`、`mb_untruncated_pdf` | halo PDF normalization CSV | 从银河系静止系三维截断 Maxwell 分布作 Galilean boost，再对速度方向积分；\(f_{\rm lab}\) 按速度模长归一化。 |
+| F10 | 天然氙 halo-folded 微分事件率 \(dR/dE_R\) | §2.2、§6.3、§7 | [D.3–D.4](appendices/09D_natural_xenon_isotope_target.md)；[E.2–E.3.2](appendices/09E_halo_velocity_vmin_folding.md) | AFH selected-point / GCN-JJ55 continuous-spectrum runners | natural-xenon rate CSV；isotope contribution CSV | 由数密度、速度通量、单核截面和每 kg 靶核数推导；逐同位素使用自己的阈值和 kernel。 |
+| F11 | LZ 一维效率加权预期事件数 \(N_{\rm sig}^{\rm ROI}\) | §11.1、§11.4、§11.6 | §11.6 的二维响应概率投影；附录 F.5 | `fold_lz_2026_rate_level.py` | efficiency CSV；rate-level yield CSV | 一维效率是二维重建响应在 ROI 上的概率投影；当前结果不是二维 likelihood 或 90% CL 排除。 |
+| F12 | 条件性 \(\chi_2\to\chi_1s\) pole width | §1.2、§5 | [A.5–A.6.1](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.chi2_width_dirac_scalar` | benchmark metadata：`width_scheme`、`g2` | 从 Dirac 纯标量 Yukawa 振幅和二体相空间推导；仅适用于 Dirac、实标量、纯标量耦合及单一开放衰变道。 |
 
 ### 13.2 必须区分的符号和物理层级
 
@@ -855,6 +1766,16 @@ AFH 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失的 
 ### 13.4 复现与维护
 
 详细的逐公式输出文件、metadata、验证状态和复现命令见[独立交叉引用索引第 2–6 节](formula_symbol_code_cross_reference.md)。附录 F.3 是命令行复现入口；附录 F.4 区分软件测试、数值收敛和物理完整性。任何公式、变量或计算方案改变时，必须同步更新本节和独立索引，不得只更新正文显示公式。
+
+### 13.5 数值结果索引、物理公式审查与科学状态
+
+为避免主报告、附录和结果目录分别维护不同的 benchmark 口径，当前归档另设三份互相对应的维护记录：
+
+- [Figure 2 数值结果总索引](supplements/figure2_results_master_index_2026-11-13.md)：benchmark、输入、参数、输出文件与 SHA-256；机器可读清单见 [JSON manifest](supplements/figure2_results_master_index_2026-11-13.json)。
+- [物理公式交叉审查](supplements/figure2_physics_formula_audit_2026-11-13.md)：从原始拉格朗日量、两张辐射图、Dirac trace、三体相空间、\(256\pi^3\)、AFH factor 4、三体 \(v_{\min}\) 到天然氙速率逐项对照主报告、附录和代码。
+- [科学结果状态表](supplements/figure2_scientific_status_2026-11-13.md)：将每项结果明确标记为已验证、部分验证、待补输入或尚未完成，并注明适用范围和剩余限制。
+
+这三份记录是本报告的复现与审查入口，不替代附录 A–G 中的正式推导，也不把 selected-point、fixed-speed 或 rate-level 结果升级表述为完整模型或完整 LZ likelihood 的验证。
 
 # 技术附录（完整内容）
 
@@ -988,6 +1909,87 @@ W_{\max}^2\ge W_{\min}^2.
 
 唯一确定。数值构造还检查 \(|\cos\theta_q|\le1\)，以排除不物理点。
 
+
+### A.2.1 固定入射速度下的最大标量质量与最优反冲能量
+
+前面的相空间开放条件给出
+\[
+m_s\le W_{\max}(E_R)-m_{\chi_1}.
+\]
+若固定入射速度，寻找该速度下允许的最大 \(m_s\)，等价于对 \(W_{\max}^2(E_R)\) 关于 \(E_R\) 最大化。这里
+\[
+Q(E_R)=\sqrt{2m_AE_R+E_R^2},
+\qquad
+W_{\max}^2=m_{\chi_1}^2+2p_{\chi_1}Q-2(E_\chi+m_A)E_R.
+\]
+因为 \(W_{\max}>0\)，最大化 \(W_{\max}\) 与最大化 \(W_{\max}^2\) 等价。求导得
+\[
+\frac{dW_{\max}^2}{dE_R}
+=2p_{\chi_1}\frac{m_A+E_R}{Q}
+-2(E_\chi+m_A).
+\]
+令导数为零，并定义
+\[
+B=E_\chi+m_A,\qquad x=m_A+E_R,
+\]
+则
+\[
+p_{\chi_1}x=BQ,\qquad Q^2=x^2-m_A^2.
+\]
+平方后
+\[
+p_{\chi_1}^2x^2=B^2(x^2-m_A^2),
+\]
+所以
+\[
+(B^2-p_{\chi_1}^2)x^2=B^2m_A^2.
+\]
+靶核静止系中
+\[
+B^2-p_{\chi_1}^2
+=(E_\chi+m_A)^2-p_{\chi_1}^2
+=m_{\chi_1}^2+m_A^2+2m_AE_\chi
+=s_{\rm tot}.
+\]
+取物理正根，
+\[
+x=\frac{Bm_A}{\sqrt{s_{\rm tot}}},
+\]
+从而
+\[
+\boxed{
+E_R^*=m_A\left(\frac{E_\chi+m_A}{\sqrt{s_{\rm tot}}}-1\right),
+\qquad
+Q^*=\frac{m_Ap_{\chi_1}}{\sqrt{s_{\rm tot}}}.
+}
+\]
+将其代回 \(W_{\max}^2\)，得到
+\[
+W_{\max}^2(E_R^*)=(\sqrt{s_{\rm tot}}-m_A)^2.
+\]
+因此
+\[
+\boxed{
+m_{s,\max}(v)
+=\sqrt{s_{\rm tot}}-m_A-m_{\chi_1},
+\quad
+s_{\rm tot}=m_{\chi_1}^2+m_A^2+2m_AE_\chi.
+}
+\]
+在 \(\beta\ll1\) 时，令
+\[
+\mu_A=\frac{m_{\chi_1}m_A}{m_{\chi_1}+m_A},
+\]
+可展开为
+\[
+m_{s,\max}\simeq\frac12\mu_A\beta^2,
+\qquad
+E_R^*\simeq
+\frac{m_A}{2}
+\left(\frac{m_{\chi_1}}{m_{\chi_1}+m_A}\right)^2\beta^2.
+\]
+这两个近似式展示了暗物质入射动能如何在核反冲与末态标量质量门槛之间分配。\(E_R^*\) 只最大化运动学质量上限；真实谱还乘有核响应、传播子和三体矩阵元，故该点一般不是事件率峰值。
+
 ### A.3 在 \(K\) 静止系构造三体末态
 
 给定 \(W^2\) 后，子过程
@@ -1081,6 +2083,7 @@ p+P=p'+P'+k,\qquad K^2=W^2.
 \]
 
 这就是程序中末态四动量构造函数的逻辑。
+
 ### A.3.1 显式 Lorentz boost 与正交基构造
 
 为避免“boost 到 \(K\) 静止系”只停留在操作描述，下面把实际使用的变换写成分量形式。记靶核静止系中的
@@ -1390,6 +2393,285 @@ I_6
 
 这个推导采用的条件是：靶核矢量电荷流保留 leading non-relativistic 时间分量 \(2m_A\)，核结构和核自旋平均已经包含在物理响应 \(R_A\) 中，且 \(\phi_*\) 使用平均而非未归一化积分。若改变这些定义，不能继续原样沿用 \(256\pi^3\) 前因子。
 
+### A.4.2 独立审计：从单粒子不变测度逐项重建 \(256\pi^3\)
+
+本节不把 A.4.1 的中间结果作为输入，而从单粒子 Lorentz-invariant 测度重新计算两体相空间、两个角变量的处理方式、通量因子及核电荷流归一化。所有 \(2\pi\) 因子均显式保留。
+
+#### (i) 从单粒子测度得到两体相空间
+
+采用
+\[
+d\Pi_i=\frac{d^3\mathbf p_i}{(2\pi)^3\,2E_i},
+\qquad
+d\Phi_2(Q;a,b)
+=(2\pi)^4\delta^{(4)}(Q-p_a-p_b)d\Pi_a d\Pi_b .
+\]
+在 \(Q\) 静止系，令 \(M=\sqrt{Q^2}\)。积分掉三维动量 delta 函数后，
+\[
+d\Phi_2
+=\frac{p^2dp\,d\Omega}{16\pi^2 E_aE_b}
+\delta(M-E_a-E_b).
+\]
+又有
+\[
+\frac{d(E_a+E_b)}{dp}
+=p\left(\frac1{E_a}+\frac1{E_b}\right)
+=\frac{pM}{E_aE_b}.
+\]
+完成径向动量积分得到
+\[
+\boxed{
+d\Phi_2(Q;a,b)
+=\frac{p_*}{16\pi^2M}d\Omega
+=\frac{\sqrt{\lambda_K(M^2,m_a^2,m_b^2)}}{32\pi^2M^2}d\Omega .
+}
+\]
+因此全立体角积分为
+\[
+\int d\Phi_2
+=\frac{\sqrt{\lambda_K(M^2,m_a^2,m_b^2)}}{8\pi M^2},
+\]
+与标准两体不变相空间归一化一致。
+
+#### (ii) 第一段两体过程：显式计算 \(t\) 的 Jacobian
+
+令
+\[
+s_{\rm tot}=(p+P)^2,\qquad
+\Lambda_{\rm in}
+=\sqrt{\lambda_K(s_{\rm tot},m_{\chi_1}^2,m_A^2)}.
+\]
+在初态质心系中，
+\[
+p_i^*=\frac{\Lambda_{\rm in}}{2\sqrt{s_{\rm tot}}},
+\qquad
+p_f^*=\frac{\sqrt{\lambda_K(s_{\rm tot},m_A^2,W^2)}}{2\sqrt{s_{\rm tot}}}.
+\]
+对 \(p+P\to P'+K\)，两体相空间为
+\[
+d\Phi_2
+=\frac{p_f^*}{16\pi^2\sqrt{s_{\rm tot}}}
+\,d\cos\theta\,d\phi_q.
+\]
+这里 \(\theta\) 是初态轴与末态核动量之间的质心系散射角。由
+\[
+t=(P'-P)^2,\qquad
+\left|\frac{dt}{d\cos\theta}\right|=2p_i^*p_f^*
+\]
+可得
+\[
+\frac{d\Phi_2}{dt\,d\phi_q}
+=\frac{1}{32\pi^2\sqrt{s_{\rm tot}}p_i^*}
+=\frac{1}{16\pi^2\Lambda_{\rm in}}.
+\]
+对 \(\phi_q\) 积分给出
+\[
+\boxed{
+\frac{d\Phi_2}{dt}
+=\frac{1}{8\pi\Lambda_{\rm in}}.
+}
+\]
+这一步已经消耗了第一段两体过程的 \(2\pi\) 方位角因子。它只在未极化靶核、相干且仅保留 \(J_A^0\) 的旋转对称近似下成立；若保留靶极化或横向核流，必须保留 \(\phi_q\)，不能直接使用这一已积分表达式。
+
+核质量壳条件 \(P'^2=P^2=m_A^2\) 给出
+\[
+t=q^2=-2m_AE_R,\qquad
+\left|\frac{dt}{dE_R}\right|=2m_A.
+\]
+靶核静止系还满足
+\[
+\Lambda_{\rm in}=2m_Ap_{\chi_1}.
+\]
+所以
+\[
+\boxed{
+\frac{d\Phi_2(p+P;P',K)}{dE_R}
+=\frac{2m_A}{8\pi\Lambda_{\rm in}}
+=\frac{1}{8\pi p_{\chi_1}}.
+}
+\]
+
+#### (iii) 第二段两体过程：\((z,\phi_*)\) 的 Jacobian
+
+在 \(K\) 静止系，令 \(W=\sqrt{W^2}\)，则
+\[
+|\mathbf k_*|
+=\frac{\sqrt{\lambda_K(W^2,m_{\chi_1}^2,m_s^2)}}{2W}.
+\]
+取
+\[
+z=\cos\theta_*,\qquad d\Omega_*=dz\,d\phi_*,
+\]
+并定义
+\[
+\lambda_{\rm dim}(W^2,m_{\chi_1}^2,m_s^2)
+=\frac{\lambda_K(W^2,m_{\chi_1}^2,m_s^2)}{W^4}.
+\]
+正文 main.tex 与 Python 的 lambda_dimensionless 使用的函数正是
+\[
+\lambda_{\rm paper}(W^2,m_{\chi_1}^2,m_s^2)
+=
+\left[1-\frac{(m_{\chi_1}+m_s)^2}{W^2}\right]
+\left[1-\frac{(m_{\chi_1}-m_s)^2}{W^2}\right]
+=\lambda_{\rm dim}.
+\]
+因此正文的 \(\sqrt{\lambda}\)、附录中的 \(\sqrt{\lambda_{\rm dim}}\) 与程序的 \texttt{lambda_dimensionless} 是同一个无量纲量；这里没有遗漏 \(W^{-2}\) 或额外的 \(W^2\) 因子。
+由 (i) 得
+\[
+\boxed{
+d\Phi_2(K;p',k)
+=\frac{\sqrt{\lambda_{\rm dim}}}{32\pi^2}
+\,dz\,d\phi_*.
+}
+\]
+这里没有额外的 \(\sin\theta_*\)：它已通过 \(z=\cos\theta_*\) 的变量变换吸收，因为 \(d\cos\theta_*=-\sin\theta_*d\theta_*\)。
+
+#### (iv) 合并三体相空间：保留未积分的 \(\phi_*\)
+
+插入中间态不变质量的标准分解
+\[
+d\Phi_3
+=\frac{dW^2}{2\pi}
+d\Phi_2(p+P;P',K)d\Phi_2(K;p',k).
+\]
+这里的积分变量就是 \(W^2\)，所以分解式不产生额外的 \(2W\)；只有将积分变量另行改成 \(W\) 时，才需要使用 \(dW^2=2W\,dW\)。末态 \(p'\) 与 \(k\) 是不同粒子，因此没有相同末态的 \(1/2!\) 对称因子。
+结合 (ii)、(iii)，得到
+\[
+\boxed{
+\frac{d\Phi_3}
+{dE_R\,dW^2\,dz\,d\phi_*}
+=
+\frac{1}{2\pi}
+\frac{1}{8\pi p_{\chi_1}}
+\frac{\sqrt{\lambda_{\rm dim}}}{32\pi^2}
+=
+\frac{\sqrt{\lambda_{\rm dim}}}
+{512\pi^4p_{\chi_1}}.
+}
+\]
+至此，所有未积分的相空间因子已经确定；尚未对 \(\phi_*\) 作任何平均。
+
+#### (v) 将 \(\phi_*\) 积分改写为平均
+
+论文定义
+\[
+\left\langle\mathcal L_{00}\right\rangle_{\phi_*}
+=\frac{1}{2\pi}\int_0^{2\pi}d\phi_*\,
+\mathcal L_{00}.
+\]
+故
+\[
+\int_0^{2\pi}d\phi_*\,\mathcal L_{00}
+=2\pi\left\langle\mathcal L_{00}\right\rangle_{\phi_*}.
+\]
+将其乘到 (iv) 的相空间测度上：
+\[
+\boxed{
+\frac{\sqrt{\lambda_{\rm dim}}}{512\pi^4p_{\chi_1}}
+\int_0^{2\pi}d\phi_*\,\mathcal L_{00}
+=
+\frac{\sqrt{\lambda_{\rm dim}}}{256\pi^3p_{\chi_1}}
+\left\langle\mathcal L_{00}\right\rangle_{\phi_*}.
+}
+\]
+因此，从 \(512\pi^4\) 到 \(256\pi^3\) 的唯一变化，是把未归一化的方位角积分替换成 \(1/(2\pi)\) 平均；不能再额外乘 \(2\pi\)。
+
+#### (vi) 通量因子与核电荷流
+
+不变通量为
+\[
+F=4\sqrt{(p\cdot P)^2-m_{\chi_1}^2m_A^2}
+=4m_Ap_{\chi_1}.
+\]
+所以
+\[
+d\sigma=\frac{|\mathcal M|^2}{4m_Ap_{\chi_1}}d\Phi_3.
+\]
+在本文的 leading non-relativistic 核电荷近似下，
+\[
+J_A^0\simeq 2m_A,
+\]
+而 \(\mathcal L_{00}\) 已按
+\[
+\mathcal L_{00}
+=\frac12\sum_{s_i,s_f}
+|\bar u(p')\Gamma^0u(p)|^2
+\]
+对初态暗物质自旋平均、对末态自旋求和。核初态自旋平均及求和包含在 \(R_A\) 中。因此振幅平方写为
+\[
+|\mathcal M|^2
+=
+\frac{4m_A^2(g_1g_2g_{VN})^2R_A(E_R)}
+{(m_V^2-t)^2}\mathcal L_{00},
+\qquad
+m_V^2-t=m_V^2+2m_AE_R.
+\]
+结合 (v) 与通量因子，整体质量和动量因子为
+\[
+\frac{4m_A^2}{4m_Ap_{\chi_1}}
+\frac{1}{256\pi^3p_{\chi_1}}
+=
+\boxed{\frac{m_A}{256\pi^3p_{\chi_1}^2}}.
+\]
+故
+\[
+\boxed{
+\frac{d\sigma_A}{dE_R}
+=
+\frac{m_A(g_1g_2g_{VN})^2R_A(E_R)}
+{256\pi^3p_{\chi_1}^2(m_V^2+2m_AE_R)^2}
+I_6,
+}
+\]
+其中
+\[
+I_6=
+\int_{W_{\min}^2}^{W_{\max}^2}dW^2
+\sqrt{\lambda_{\rm dim}}
+\int_{-1}^{1}dz\,
+\left\langle\mathcal L_{00}\right\rangle_{\phi_*}.
+\]
+
+#### (vii) 与正文及 Python 实现逐项对应
+
+| 理论量 | 解析表达式 | 程序对应 |
+|---|---|---|
+| 中间态质量测度 | \(dW^2/(2\pi)\) | \texttt{wvals}, \texttt{wweights} |
+| 第一段反冲相空间 | \(1/(8\pi p_{\chi_1})\) | 已进入 Eq. (6) 外部系数 |
+| 第二段极角测度 | \(dz\) | \texttt{xz}, \texttt{wz} |
+| 第二段方位角平均 | \((2\pi)^{-1}\int d\phi_*\) | \texttt{phis}, \texttt{phiweights=0.5*wp} |
+| 两体末态动量 | \(\sqrt{\lambda_{\rm dim}}\) | \texttt{lambda_dimensionless} |
+| 自旋平均 | \(\frac12\sum_{\rm spins}\) | \texttt{spin_trace} 中的 \texttt{/2.} |
+| 相空间积分 | \(I_6\) | \texttt{reduced_kernel} |
+
+特别地，Gauss–Legendre 变量变换
+\[
+\phi_i=\pi(x_i+1),\qquad d\phi=\pi dx
+\]
+给出
+\[
+\frac{1}{2\pi}\int_0^{2\pi}f(\phi)d\phi
+=\frac12\int_{-1}^{1}f(\pi(x+1))dx
+\simeq\sum_i\frac{w_i}{2}f(\phi_i).
+\]
+因此程序中的 \texttt{phiweights=0.5*wp} 正是方位角平均权重，且其权重和为 1；\texttt{z} 方向仍使用未平均的积分权重，其权重和为 2。
+
+#### (viii) 维度与适用条件
+
+\[
+[d\Phi_3]=\mathrm{GeV}^2,\qquad
+\left[
+\frac{d\Phi_3}{dE_R\,dW^2\,dz\,d\phi_*}
+\right]=\mathrm{GeV}^{-1},
+\]
+与 (iv) 的 \(1/p_{\chi_1}\) 一致。又有
+\[
+[I_6]=\mathrm{GeV}^2,\qquad
+\left[\frac{d\sigma}{dE_R}\right]=\mathrm{GeV}^{-3}.
+\]
+
+**独立推导结论：** 在未极化靶核、相干且仅保留 \(J_A^0\) 的近似、初态暗物质自旋平均已经包含于 \(\mathcal L_{00}\)、核自旋处理已经包含于 \(R_A\)，以及 \(\phi_*\) 采用平均定义的条件下，整体系数确为 \(256\pi^3\)。这一系数来自 Lorentz-invariant 三体相空间、反冲能量 Jacobian、通量和核电荷流；它与 AFH 响应的因子 4 是完全不同的归一化来源。
+
 ### A.5 两张辐射图、振幅与干涉项
 
 正文矢量流的两个图分别对应标量在矢量交换前、后从暗物质费米子线上辐射：
@@ -1521,6 +2803,72 @@ I_6
 
 当前实现明确采用 Dirac 外部自旋子。原始模型文本尚未把 \(\chi_{1,2}\) 的 Dirac/Majorana 性质和完整 CP/手征约定全部固定，因此 Majorana 版本不在当前结果的自动适用范围内。
 
+
+#### A.6.1 从 Dirac 标量 Yukawa 振幅推导条件性二体宽度
+
+明确采用
+\[
+\mathcal L_{\chi\chi s}
+=-g_2s\,\bar\chi_1\chi_2
+-g_2^*s\,\bar\chi_2\chi_1
+\]
+的纯标量、非对角 Yukawa 相互作用，并考虑
+\[
+\chi_2(P)\longrightarrow\chi_1(p)+s(k),
+\qquad
+P^2=m_{\chi_2}^2,\quad
+p^2=m_{\chi_1}^2,\quad
+k^2=m_s^2.
+\]
+树级振幅为
+\[
+\mathcal M=g_2\,\bar u_1(p)u_2(P).
+\]
+对初态 \(\chi_2\) 自旋平均、末态 \(\chi_1\) 自旋求和，使用
+\[
+\sum_su_s(p)\bar u_s(p)=\slashed p+m
+\]
+得到
+\[
+\begin{aligned}
+\overline{|\mathcal M|^2}
+&=\frac{|g_2|^2}{2}
+\operatorname{Tr}\!\left[
+(\slashed p+m_{\chi_1})(\slashed P+m_{\chi_2})
+\right]\\
+&=2|g_2|^2(p\cdot P+m_{\chi_1}m_{\chi_2})\\
+&=|g_2|^2
+\left[(m_{\chi_2}+m_{\chi_1})^2-m_s^2\right],
+\end{aligned}
+\]
+其中最后一步使用
+\[
+2p\cdot P=m_{\chi_2}^2+m_{\chi_1}^2-m_s^2.
+\]
+在 \(\chi_2\) 静止系，二体末态动量大小为
+\[
+|\mathbf p_*|
+=\frac{\sqrt{\lambda_K(m_{\chi_2}^2,m_{\chi_1}^2,m_s^2)}}
+{2m_{\chi_2}},
+\]
+且角积分后的二体衰变宽度为
+\[
+\Gamma=\frac{|\mathbf p_*|}{8\pi m_{\chi_2}^2}
+\overline{|\mathcal M|^2}.
+\]
+代入即得
+\[
+\boxed{
+\Gamma_{\chi_2\to\chi_1s}
+=\frac{|g_2|^2}{16\pi m_{\chi_2}^3}
+\sqrt{\lambda_K(m_{\chi_2}^2,m_{\chi_1}^2,m_s^2)}
+\left[(m_{\chi_2}+m_{\chi_1})^2-m_s^2\right].
+}
+\]
+该式仅在 \(m_{\chi_2}\ge m_{\chi_1}+m_s\) 时对应开放衰变道。末态 \(\chi_1\) 与 \(s\) 是不同粒子，不存在额外的 \(1/2!\) 因子；若有其他开放衰变道，总宽度应将它们的部分宽度相加。
+
+这不是任意 Dirac/Majorana、标量/赝标量或完整 UV 模型的通用宽度。本文当前 pole prescription 采用 Dirac 外部态、实标量、纯标量耦合和单一开放衰变道。该宽度只进入可能接近极点的 after 传播子；它不改变 \(W_{\min}\) 或三体相空间边界，也不能替代完整的 Dyson 自能计算。对应代码入口为 \(\texttt{chi2\_width\_dirac\_scalar}\)，详见索引 F12。
+
 ### A.7 求积、数值检查与复现入口
 
 程序使用 Gauss–Legendre 求积：
@@ -1631,6 +2979,15 @@ y=\left(\frac{qb_A}{2}\right)^2,
 其中 \(q=|\mathbf q|\)。因此 \(b_A\) 是核结构处方的一部分，不是用来拟合 Figure 2 谷值的自由参数。
 
 **为什么不能调节 \(b_A\) 拟合谷值？** 因为 \(b_A\) 决定 \(q\mapsto y\) 的映射，并进入所有径向振子矩阵元。改变它会系统性移动有限动量响应的节点和极小值，相当于改变核模型输入。若为了匹配图中某个谷值而任意调节 \(b_A\)，得到的就不再是 AFH default 处方，也无法再把结果称为对该文献核响应的复现。
+
+
+#### B.2.1 该谐振子长度公式的性质
+
+\[
+b_A=
+\sqrt{\frac{41.467}{45A^{-1/3}-25A^{-2/3}}}\ {\rm fm}
+\]
+是 AFH/DMFormFactor v6.0 所采用的 default 核结构处方。这里的常数属于壳模型谐振子基底的经验/模型输入，不是从本文暗扇区拉格朗日量、Eq. (6) 或三体运动学推导出来的动力学关系。本研究的任务是忠实采用并评估该处方，而不是重新拟合它。若改变 \(b_A\)，就等于改变核结构模型输入，必须作为独立核模型变体报告。
 
 ### B.3 单粒子轨道、多极角动量与径向矩阵元
 
@@ -1807,7 +3164,13 @@ AFH 原生 Mathematica runner 和 Python/Mathematica 比较程序已经归档：
 - verify_afh_xe131_native.wls
 - compare_afh_mathematica_python.py
 
-但 Wolfram kernel 尚未在当前计算环境中执行。因此原生 Mathematica 逐点对照仍为待完成项目。全网格 mpmath 是独立高精度数值实现，不应被称为官方 Mathematica 原生复算。
+#### B.7.1 原生 Mathematica 2401 点对照（2026-11-13）
+
+用户本地 Windows 环境使用 Wolfram 14.0.0 执行了 AFH v6.0 原生程序，并将原始 \(W_M^{00}\)、AFH package response、物理等质子等中子 raw response 和 q=0-normalized response 与 Python 参考表逐点比较。\(q\) 网格为 \(0\)–\(0.6\) GeV、步长 \(0.00025\) GeV，共 2401 点；两套网格完全一致，不做插值。采用 \(2\times10^{-8}\) 相对容差与 \(2\times10^{-10}\) 绝对容差，四种响应量全部 PASS，最大相对差异 \(3.59087\times10^{-9}\)，最坏点位于 \(q=0.2565\) GeV，失败点数为零。
+
+原始 package response 在 \(q=0\) 为 \(4289.895955714992\)，相对 \(A^2/4=4290.25\) 偏差 \(8.2523\times10^{-5}\)，来自有限精度密度矩阵。物理 raw response 由 AFH response 乘因子 4 得到；随后独立使用 \(C_0=1.0000825298069378\) 做 q=0 形状归一化，使 \(R_A(0)=A^2\)。\(C_0\) 不是因子 4。完整环境、源文件哈希、逐点差异和 manifest 见 [native audit record](../afh_default_density_xe131/output/native_audit/NATIVE_MATHEMATICA_AUDIT.md)。
+
+这项验证只覆盖 Xe-131 AFH response-level，不代表 Eq. (6) 三体积分、天然氙连续谱或 detector-level likelihood。60 位 mpmath 检查仍作为另一条独立高精度数值交叉验证保留。
 
 ### B.8 AFH 空间动量与精确三体反冲
 
@@ -2101,6 +3464,27 @@ x_{124}+x_{126}=0.001842.
 
 当前没有把这两种同位素的核响应设为零以外的任意估计，也没有把其余七种同位素重新归一化到 100%。天然丰度仍按原始 \(x_A\) 使用。
 
+
+#### D.1.1 从中性原子质量得到核质量
+
+NIST 表给出的是中性原子的原子质量，而散射运动学使用原子核质量。忽略电子结合能时，中性原子质量可写为
+\[
+M_{\rm atom}(A)u\simeq m_A+Z m_e.
+\]
+因此
+\[
+\boxed{
+m_A\simeq [M_{\rm atom}(A)-Z m_e]u.
+}
+\]
+这里 \(M_{\rm atom}(A)\) 和 \(m_e\) 均以原子质量单位 \(u\) 表示，转换因子为
+\[
+1u=0.93149410242\ {\rm GeV},
+\qquad
+m_e=0.000548579909065u.
+\]
+对氙 \(Z=54\)。忽略的是电子结合能带来的极小修正，而不是核结合能；核结合能已经包含在实测原子质量所对应的核质量中。天然氙每千克靶质量的摩尔数仍使用中性原子的平均摩尔质量 \(\bar M_{\rm Xe}\)，只有单核散射运动学使用扣除电子质量后的 \(m_A\)。
+
 ### D.2 缺失同位素造成的误差边界
 
 必须区分“丰度覆盖率”与“事件率覆盖率”。当前输入只能确定缺失同位素占天然氙原子数的 0.1842%，不能仅凭这一数字断言事件率也恰好少了 0.1842%。
@@ -2148,6 +3532,39 @@ N_T=\frac{N_{\rm Av}\,1000}{\bar M_{\rm Xe}}
 - 微分速率中的 \(\sum_A x_A\) 当前只包括七种有 AFH default response 的同位素，并保留其原始天然丰度、不重新归一化。
 
 不能把这两个操作混为一谈。
+
+
+#### D.3.1 从天然同位素丰度推导每千克靶核数
+
+这里的 \(x_A\) 是原子丰度，因此也等于天然混合物中的摩尔分数，而不是质量分数。完整天然氙的丰度加权平均摩尔质量为
+\[
+\bar M_{\rm Xe}=\sum_{A\in{\rm natural}}x_A M_{\rm atom}(A).
+\]
+一千克靶物质包含
+\[
+n_{\rm mol}=\frac{1000\ {\rm g}}{\bar M_{\rm Xe}}
+\]
+摩尔氙原子。乘以阿伏伽德罗常数，得到每千克靶物质中的核总数
+\[
+\boxed{
+N_T=N_{\rm Av}n_{\rm mol}
+=\frac{N_{\rm Av}\,1000}{\bar M_{\rm Xe}}
+=4.586803334466193\times10^{24}\ {\rm kg}^{-1}.
+}
+\]
+其中本轮使用
+\[
+\bar M_{\rm Xe}=131.29276144779053\ {\rm g/mol},
+\qquad
+N_{\rm Av}=6.02214076\times10^{23}\ {\rm mol}^{-1}.
+\]
+第 \(A\) 种同位素在一千克天然氙中的靶核数为
+\[
+N_{T,A}=x_A N_T.
+\]
+因此按每千克靶质量写事件率时，必须先乘总靶核数 \(N_T\)，再以原始原子丰度 \(x_A\) 分配到各同位素；不能再额外乘一次质量分数或 \(A\) 因子。
+
+这里有两个不同的同位素集合：\(\bar M_{\rm Xe}\) 使用完整九种天然同位素，决定真实的一千克天然氙有多少个原子；当前 AFH 响应求和只覆盖七种有 default density matrix 的同位素，且不把七种丰度重新归一化到 1。缺失的 \(0.001842\) 是原子丰度缺口，并不自动等于事件率缺失比例。
 
 ### D.4 为什么不能用平均核质量代替逐同位素求和
 
@@ -2278,6 +3695,74 @@ e^{-(v-v_E)^2/v_0^2}
 
 数值积分上限取 1600 km/s。该分布只用于检查截断 SHM 高速度尾部对结果的影响，不作为与截断 SHM 同等地位的默认 halo 假设。两种 PDF 均进行数值归一化检查。
 
+
+#### E.1.1 从银河系静止系截断 Maxwell 分布推导实验室速度 PDF
+
+标准晕模型先在银河系静止系定义三维速度矢量分布
+\[
+f_{\rm gal}(\mathbf u)
+=\frac{1}{N_{\rm esc}\pi^{3/2}v_0^3}
+e^{-u^2/v_0^2}\,
+\Theta(v_{\rm esc}-u).
+\]
+归一化常数由
+\[
+1=\int d^3u\,f_{\rm gal}(\mathbf u)
+=\frac{4\pi}{N_{\rm esc}\pi^{3/2}v_0^3}
+\int_0^{v_{\rm esc}}du\,u^2e^{-u^2/v_0^2}
+\]
+确定。令 \(z_{\rm esc}=v_{\rm esc}/v_0\)，径向积分给出
+\[
+N_{\rm esc}
+=\operatorname{erf}(z_{\rm esc})
+-\frac{2z_{\rm esc}}{\sqrt\pi}e^{-z_{\rm esc}^2}.
+\]
+实验室相对银河系以速度 \(\mathbf v_E\) 运动。伽利略变换只平移速度矢量，
+\[
+\mathbf u=\mathbf v+\mathbf v_E,
+\]
+不改变速度空间体积元。实验室系速度模长 PDF 因而是对方向积分：
+\[
+f_{\rm lab}(v)
+=v^2\int d\Omega_v\,
+f_{\rm gal}(\mathbf v+\mathbf v_E).
+\]
+取 \(\mu=\cos\theta=\hat{\mathbf v}\cdot\hat{\mathbf v}_E\)，则
+\[
+u^2=v^2+v_E^2+2vv_E\mu.
+\]
+在没有逃逸速度截断时，角积分为
+\[
+\int_{-1}^{1}d\mu\,
+e^{-(v^2+v_E^2+2vv_E\mu)/v_0^2}
+=\frac{v_0^2}{2vv_E}
+\left[
+e^{-(v-v_E)^2/v_0^2}
+-e^{-(v+v_E)^2/v_0^2}
+\right].
+\]
+乘上 \(2\pi v^2/(N_{\rm esc}\pi^{3/2}v_0^3)\)，得到第一段速度分布的解析形式。
+
+加入 \(u\le v_{\rm esc}\) 后，角积分还必须满足
+\[
+\mu\le
+\mu_{\max}(v)
+=\frac{v_{\rm esc}^2-v^2-v_E^2}{2vv_E}.
+\]
+当 \(0\le v<v_{\rm esc}-v_E\) 时，所有方向都允许，恢复上面的两指数之差；当
+\(v_{\rm esc}-v_E\le v\le v_{\rm esc}+v_E\) 时，只允许
+\(-1\le\mu\le\mu_{\max}\)，上端指数固定为
+\(e^{-v_{\rm esc}^2/v_0^2}\)，从而得到正文 E.1 的第二个分支；当
+\(v>v_{\rm esc}+v_E\) 时，不存在满足银河系逃逸速度条件的方向，PDF 为零。因此
+\[
+v_{\max,\rm lab}=v_{\rm esc}+v_E.
+\]
+速度平移不改变三维积分的归一化，所以方向积分后的模长 PDF 满足
+\[
+\int_0^\infty dv\,f_{\rm lab}(v)=1.
+\]
+这也解释了为什么它的单位为 \(({\rm km/s})^{-1}\)，而不是三维速度分布的 \(({\rm km/s})^{-3}\)。当前计算未加入年度调制；\(v_E\) 被视为固定 benchmark。
+
 ### E.2 三体过程的最小入射速度 \(v_{\min,A}\)
 
 固定同位素 \(A\) 和反冲能量 \(E_R\) 时，三体过程开放的条件为
@@ -2335,6 +3820,18 @@ v_{\min,A}=c\beta_{\min}.
 \]
 
 这个阈值来自当前 \(\chi_1+A\to\chi_1+A+s\) 三体运动学，不是弹性散射或普通两体非弹性散射的标准 \(v_{\min}\) 公式。由于 \(m_A\) 不同，每种氙同位素都必须单独计算 \(v_{\min,A}\)。
+
+
+平方前的阈值方程还要求
+\[
+\gamma(\beta Q-E_R)=a>0,
+\]
+所以物理解必须满足 \(\beta Q>E_R\)。二次方程的两个代数根中，回代原始未平方方程后，只有
+\[
+\beta_{\min}
+=\frac{QE_R+a\sqrt{Q^2-E_R^2+a^2}}{Q^2+a^2}
+\]
+满足这一符号条件；这就是上式选取正号分支的原因。数值上还应检查 \(0\le\beta_{\min}<1\)。若 \(v_{\min,A}>v_{\max,\rm lab}\)，该同位素在当前截断 halo 下没有速度支持，事件率积分严格为零。
 
 ### E.3 从单同位素截面到天然氙事件率
 
@@ -2404,7 +3901,67 @@ m_{\chi_1}=1\ {\rm TeV},\qquad m_V=10\ {\rm GeV},
 
 最终 halo-folded rate 的单位为 events/(kg day keV)。速率计算包括秒到天的 \(86400\) 转换，但尚未乘探测器效率或能量分辨函数。
 
-### E.3.1 AFH 响应动量与三体运动学
+
+### E.3.1 从暗物质数密度和粒子通量推导天然氙事件率
+
+暗物质质量密度除以单粒子质量给出数密度
+\[
+n_\chi=\frac{\rho_\chi}{m_{\chi_1}}.
+\]
+实验室系速度落在 \([v,v+dv]\) 的粒子数密度为
+\(n_\chi f_{\rm lab}(v)\,dv\)，它们穿过单位面积的通量为
+\[
+d\mathcal F_\chi
+=n_\chi f_{\rm lab}(v)\,v_{\rm phys}\,dv.
+\]
+对一个固定同位素核，单位时间、单位反冲能量的散射率等于入射通量乘以微分截面：
+\[
+\frac{d\Gamma_A}{dE_R}
+=n_\chi\int_{v_{\min,A}}^{v_{\max}}
+dv\,f_{\rm lab}(v)\,v_{\rm phys}
+\frac{d\sigma_A}{dE_R}(v).
+\]
+每千克天然氙含有 \(N_Tx_A\) 个该同位素核，因此对所有可用同位素求和：
+\[
+\frac{dR}{dE_R}
+=N_T\sum_Ax_A\frac{d\Gamma_A}{dE_R}.
+\]
+将 \(v_{\rm phys}=c(v/c)\) 写成程序使用的混合单位形式，就得到
+\[
+\boxed{
+\frac{dR}{dE_R}
+=N_T\frac{\rho_\chi}{m_{\chi_1}}c
+\sum_Ax_A
+\int_{v_{\min,A}}^{v_{\max}}
+dv\,f_{\rm lab}(v)\frac vc
+\frac{d\sigma_A}{dE_R}(v).
+}
+\]
+这里 \(v\) 与 \(f_{\rm lab}\) 的单位分别为 km/s 和 \(({\rm km/s})^{-1}\)，所以
+\(f_{\rm lab}(v)\,dv\) 与 \(v/c\) 都无量纲；前面的 \(c\) 在通量换算时使用 cm/s。程序在每个速度节点重新计算
+\[
+p_{\chi_1}(v)=\frac{m_{\chi_1}\beta}{\sqrt{1-\beta^2}}
+\]
+和 \(I_{6,A}(v,E_R)\)，因此不能用一个固定速度截面乘以平均速度代替速度积分。
+
+若截面先以自然单位计算，则
+\[
+\left[\frac{d\sigma}{dE_R}\right]={\rm GeV}^{-3}.
+\]
+使用
+\[
+1\ {\rm GeV}^{-2}=0.389379\times10^{-27}\ {\rm cm}^2
+\]
+以及 \(1\ {\rm GeV}=10^6\ {\rm keV}\)，得到
+\[
+1\ {\rm GeV}^{-3}
+\longrightarrow
+0.389379\times10^{-33}\ {\rm cm}^2/{\rm keV}.
+\]
+最后将秒换算为天，乘以 \(86400\ {\rm s/day}\)，输出单位为
+events/(kg day keV)。这里得到的仍是真实核反冲理论率；探测器效率和重建响应要在下一层单独折叠。
+
+### E.3.2 AFH 响应动量与三体运动学
 
 AFH 响应函数使用空间动量转移 \(q\)，满足 \(y=(qb_A/2)^2\)。本节的精确三体质量壳关系给出
 
@@ -2672,14 +4229,16 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 
 | 验证项目 | 当前状态 | 已有证据 | 尚未完成的部分 |
 |---|---|---|---|
-| AFH 67 项密度矩阵解析 | 已完成 | 官方源解析、CSV 逐项核对、67 项计数 | 原生 Mathematica 全网格输出比较 |
+| AFH 67 项密度矩阵解析 | 已完成 | 官方源解析、CSV 逐项核对、67 项计数；原生 Mathematica 已加载 built-in matrix 并完成全网格比较 | 无 Xe-131 矩阵解析遗留项 |
 | AFH 默认 \(b_A\) | 已完成 | 公式、单位转换、Xe-131 数值回归测试 | 不需要拟合；不得用谷值调参 |
 | AFH 零动量归一化 | 已完成（含有限精度修正） | 原始 \(A^2/4\)、物理响应 \(A^2\)、偏差 \(8.2523\times10^{-5}\) | 记录 AFH 空间 q 的精确质量壳关系，并区分 NR 近似 |
 | AFH 谷值 | 已完成 | 离散候选点、直接响应局部极小化、minima.csv | 不需要调整 \(b_A\) |
-| mpmath 独立有限和 | 已完成全网格 | 60 位精度、2401 个 q 节点；最大振幅绝对差 \(3.98\times10^{-14}\)，最大响应绝对差除以 \(A^2\) 为 \(1.22\times10^{-15}\) | 原生 Mathematica 逐点对照仍待完成 |
-| AFH 原生 Mathematica | 待完成 | WLS runner 和比较脚本已归档；Python/mPMath 全网格交叉验证已通过 | 实际运行 Wolfram kernel 并保存逐点差异 |
+| mpmath 独立有限和 | 已完成全网格 | 60 位精度、2401 个 q 节点；最大振幅绝对差 \(3.98\times10^{-14}\)，最大响应绝对差除以 \(A^2\) 为 \(1.22\times10^{-15}\) | 与原生 Mathematica 对照为独立验证；两者均已通过 |
+| AFH 原生 Mathematica | 已完成 PASS | Wolfram 14.0.0 Windows；2401 点；raw \(W_M^{00}\)、AFH response、物理 raw 与 normalized response 全部逐点通过；最大相对差异 \(3.59\times10^{-9}\) | 仅 Xe-131 response-level；不是完整 Eq. (6) 或天然氙 rate 验证 |
 | GCN/JJ55 对照 | 已完成归档 | 三种响应、四 benchmark、1920 行 long table | 对照共享既有 \(I_6\)，不是 640 次独立重算 |
 | 三体运动学/Dirac trace | 已完成代表性检查 | 壳条件、四动量闭合、显式自旋求和、干涉分解 | 扩展到更宽的参数和质量网格 |
+| 450 keV pointwise \(\mathcal L_{00}\)/\(I_6\) benchmark | 已完成本地验收 | 六项 regression tests、显式自旋求和、四动量闭合、三阶求积对照；见 local validation record | 仅覆盖指定诊断运动学点；pole width 依赖 Dirac / pure-scalar / single-channel 假设 |
+| 450 keV Xe-131 fixed-speed curve | 已归档的内部网格诊断 | 105 点 130–650 keV、独立 PCHIP 重构、Eq. (6) anchor convergence、运动学端点 bracket | 109.150–654.956 keV 两端尚未完成高阶积分；固定速度、A×u 质量近似、zero width，不是 halo rate |
 | 三体积分收敛 | 已有 selected-point 验证 | 六个天然氙点 \(8×8×4\) 对 \(16×16×8\)，最大差异 \(2.19×10^{-4}\)；独立 Eq. (6) 测试点 \(16×16×8\) 对 \(32×32×16\)，相对差异小于 \(5×10^{-5}\) | 连续反冲谱全网格收敛 |
 | 天然氙速度积分 | 已有 selected-point 验证（exact spatial q） | 五个点 32 对 64 速度节点，最大差异 \(3.31×10^{-6}\)；98 个逐同位素贡献和 14 个总速率在 exact_spatial 默认模式下复现，最大总速率差异 \(2.67×10^{-12}\)，CI run 43044583357 | 连续谱和 halo 参数扫描 |
 | AFH 空间 q 与 NR 近似 | 已完成审计与代码保护 | 28 个天然氙样本匹配 exact spatial q；Xe-131 四点 NR 近似响应差异约 5.5–225 ppm；halo fold CI run 43044583357 通过 | 连续反冲谱需要完整七同位素 AFH 响应网格 |
@@ -2720,6 +4279,76 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 5. 任何新的 \(q_{\rm resp}\)、核质量、halo 参数、宽度方案或求积阶数都应产生新的输出和 metadata，不覆盖历史结果。
 6. 主报告包含完整附录 A–G；本目录中的七份独立附录与主报告对应章节保持同步。
 7. 程序、CSV、JSON 和源文件继续保存在各自计算目录，文档只解释其定义、来源、调用方式和验证边界。
+
+## F.7 450 keV supplied benchmark：复现与适用边界
+
+本节记录两个独立的 450 keV benchmark。它们共享粒子质量点，但并不共享全部运动学、核响应或传播子处方。
+
+本节所列 native outputs 与 validation records 均已归档在 main。这里的 main-branch 状态只说明文件归档位置，不扩大各 benchmark 的物理适用范围。
+
+### F.7.1 Pointwise \(\mathcal L_{00}\) 与 reduced \(I_6\)
+
+输入为 \(g_1=g_2=g_{VN}=1\)、\(m_{\chi_1}=1\) TeV、\(\Delta m=450\) keV、\(m_s=300\) keV、\(m_V=10\) GeV。点态运动学为显式指定的诊断点：\(m_A=122\) GeV、\(E_R=200\) keV、\(v=776\) km/s、\(W^2\) midpoint、\(z=0.2\)、\(\phi_*=1.1\)。这不是由 supplied particle benchmark 唯一确定的运动学点。
+
+从仓库根目录复现：
+
+~~~bash
+python research/figure2_full_reproduction/run_user_l00_benchmark.py \
+  --nw 48 --nz 40 --nphi 24 \
+  --output /tmp/USER_L00_BENCHMARK_450KEV_48x40x24.json
+python -m unittest discover \
+  -s research/figure2_full_reproduction/tests \
+  -p test_user_l00_benchmark.py -v
+~~~
+
+本地验收记录位于：
+
+- research/figure2_full_reproduction/research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md；
+- 同目录的 JSON、quadrature convergence CSV、run manifest、validation log 和 SHA256SUMS。
+
+该结果比较 zero-width 与条件性 pole-width；后者只在 Dirac 费米子、实标量、纯 scalar off-diagonal Yukawa 且仅 \(\chi_2\to\chi_1s\) 通道开放的假设下成立。它不是完整 vector-plus-scalar self-energy，也不是 halo-folded 或 detector-level prediction。该本地验收没有使用 GitHub Actions；不能将未运行的 CI 描述为通过。
+
+### F.7.2 Fixed-speed Xe-131 \(d\sigma/dE_R\) 曲线
+
+该曲线采用 \(v=776\) km/s、\(m_A=131u\)、GCN/JJ55 response tables 和 zero-width prescription，扫描 130–650 keV 共 105 个内部点。它与 F.7.1 的 \(m_A=122\) GeV 点态 trace benchmark 不是同一核质量或传播子宽度方案。
+
+从仓库根目录复现：
+
+~~~bash
+python research/figure2_full_reproduction/run_user_dsigma_curve.py \
+  --step-keV 5 --nw 20 --nz 16 --nphi 12 \
+  --output /tmp/xe131_dsigma_450kev.csv
+python research/figure2_full_reproduction/plot_user_dsigma_curve.py
+python -m unittest discover \
+  -s research/figure2_full_reproduction/tests \
+  -p test_user_dsigma_curve.py -v
+~~~
+
+结果与 provenance：
+
+- research/figure2_full_reproduction/results/fixed_speed_xe131_dsigma_450kev.csv；
+- research/figure2_full_reproduction/results/local_minima_refinement_1keV.csv；
+- research/figure2_full_reproduction/results/kernel_quadrature_convergence_450kev.csv；
+- research/figure2_full_reproduction/results/metadata_user_dsigma_450kev.json；
+- research/figure2_full_reproduction/results/USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md；
+- research/figure2_full_reproduction/results/SHA256SUMS_user_dsigma_450kev.txt；
+- research/figure2_full_reproduction/results/plots/fixed_speed_xe131_dsigma_450kev.svg；
+- research/figure2_full_reproduction/results/plots/xe131_gcn_jj55_response_ratio_450kev.svg。
+
+开放反冲区间约为 109.150286–654.955583 keV；当前曲线只覆盖 130–650 keV。两端的 kinematic bracket tests 不等于端点附近的高阶积分收敛，故当前归档只能称为内部网格 fixed-speed diagnostic。它不是天然氙 halo-folded spectrum、事件率、LZ detector-level prediction 或 exclusion。
+
+### F.7.3 两项 benchmark 的不可互换性
+
+| 项目 | Pointwise L00 benchmark | Fixed-speed Xe-131 curve |
+|---|---|---|
+| 核质量 | 122 GeV 诊断近似 | 131 u 质量近似 |
+| 运动学 | 单一点：200 keV、776 km/s、指定角变量 | 105 个反冲能量点、固定 776 km/s |
+| 核响应 | 点态 \(\mathcal L_{00}\)/\(I_6\)，不构成完整核响应谱 | GCN/JJ55 响应表 |
+| 宽度 | zero-width 与条件性 scalar pole-width 对照 | zero width |
+| 输出层级 | pointwise trace 与 reduced integral | 单同位素固定速度 \(d\sigma/dE_R\) |
+| 不能声称 | 完整自能、halo rate、LZ 预测 | 完整开放区间、halo rate、detector likelihood |
+
+
 
 ---
 
@@ -2889,6 +4518,10 @@ q 审计程序保存以下文件：
 
 当前完整 16807 行的七同位素原始响应表仅保留哈希和 28 个选定点样本。对于本附录所列的 selected-point exact-q 计算，28 个样本已足够；若要扩展到连续反冲谱，则仍需恢复完整 AFH v6.0 响应输入或官方源包。
 
+### G.7.1 原生 AFH 响应验证的状态边界
+
+Xe-131 AFH default response 的原生 Mathematica/Python 2401 点比较已通过，详见 research/afh_default_density_xe131/output/native_audit/。这不改变本附录对精确空间 q 与 NR 近似的结论，也不补齐 Xe-124/Xe-126 的 AFH density matrix 或完整天然氙连续谱。
+
 ### G.8 验收标准
 
 | 项目 | 状态 | 说明 |
@@ -2899,5 +4532,175 @@ q 审计程序保存以下文件：
 | Xe-131 NR 近似影响 | 已计算 | NIST 与 \(M_A=131u\) 两种质量约定均有对照 |
 | 天然氙 halo fold | exact-q 基线 | 98 个同位素贡献、14 个总速率复现；最大总速率差异 \(2.67\\times10^{-12}\)，CI run 43044583357 通过 |
 | 连续反冲谱 | 待完成 | 需要完整七同位素 AFH 响应输入 |
-| 原生 Mathematica 复算 | 待完成 | mpmath 全网格验证不能替代官方 Wolfram kernel 执行 |
+| 原生 Mathematica 复算 | 已完成 PASS | Wolfram 14.0.0；2401 点；最大相对差异 \(3.59\times10^{-9}\)；manifest 与 SHA-256 均已归档 |
 
+
+
+## 附录 H：完整 Eq. (6) 微分截面的 Mathematica–Python 对照
+
+本附录把已完成的 AFH 核响应验证，与尚待完成的完整三体截面验证分开。**2401 个 \(q\) 节点的 Mathematica/Python 对照只验证 \(R_A(q)\)，不验证 \(I_6\)，也不验证完整 \(d\sigma_A/dE_R\)。** 因此，以下原生计算器和比较器是本轮新增的独立验收链；在 Wolfram Engine 实际运行并完成逐点比较之前，不将完整截面标记为 PASS。
+
+### H.1 从公式 (6) 拆分出独立三体积分
+
+在本文的 Dirac 基准实现中，
+\[
+\mathcal L_{00}(W^2,z,\phi_*)
+=\frac12\operatorname{Tr}\!\left[
+(\not p'+m_{\chi_1})\Gamma^0
+(\not p+m_{\chi_1})\overline{\Gamma}^{\,0}
+\right],
+\qquad
+\overline{\Gamma}^{\,0}
+=\gamma^0(\Gamma^0)^\dagger\gamma^0.
+\]
+这里的 \(\Gamma^0\) 是靶核静止系中的时间分量，包含 scalar emission before/after 两张图；两张图先相加，再计算平方，因此保留它们的干涉项。初态自旋平均 \(1/2\) 只出现一次。
+
+定义无量纲 Källén 函数
+\[
+\lambda_{\rm dim}(W^2)
+=\frac{
+[W^2-(m_{\chi_1}+m_s)^2]
+[W^2-(m_{\chi_1}-m_s)^2]
+}{W^4}.
+\]
+那么三体积分写为
+\[
+\boxed{
+I_6(v,E_R)=
+\int_{W_{\min}^2}^{W_{\max}^2}dW^2
+\sqrt{\lambda_{\rm dim}(W^2)}
+\int_{-1}^{1}dz\,
+\frac{1}{2\pi}\int_0^{2\pi}d\phi_*
+\,\mathcal L_{00}(W^2,z,\phi_*)
+}.
+\]
+其中
+\[
+W_{\min}^2=(m_{\chi_1}+m_s)^2,
+\qquad
+W_{\max}^2=m_{\chi_1}^2
++2p_{\chi_1}\sqrt{2m_AE_R+E_R^2}
+-2(E_{\chi_1}+m_A)E_R.
+\]
+因为 \(\mathcal L_{00}\) 无量纲，\(dW^2\) 带有 \({\rm GeV}^2\)，所以
+\[
+[I_6]={\rm GeV}^2.
+\]
+这一积分不含核响应、矢量传播子和整体耦合 prefactor；这些量在下一步独立装配。
+
+### H.2 AFH 物理响应与因子 4 的唯一放置位置
+
+对 AFH v6.0 原生输出，先定义 package convention 下的响应
+\[
+R_A^{\rm package}(q)
+=\frac{4\pi}{2J_A+1}W_{M,\rm AFH}^{00}(q).
+\]
+该量的零动量极限是 \(A^2/4\)，不是本文等物理质子/中子耦合所需的 \(A^2\)。有限小数密度矩阵还产生一个独立的整体归一化偏差，因此定义
+\[
+C_0=\frac{A^2}{4R_A^{\rm package}(0)},
+\qquad
+\boxed{R_A^{\rm phys}(q)=4C_0R_A^{\rm package}(q)}.
+\]
+于是 \(R_A^{\rm phys}(0)=A^2\)。因子 4 来自 AFH v6.0 isoscalar 接口的系数约定；\(C_0\) 只修正有限精度密度矩阵的整体偏移，两者不是同一件事。
+
+本文 Eq. (6) 的整体耦合仍写为每核子物理耦合 \(g_{VN}\)，因此完整截面使用 \(R_A^{\rm phys}\)，**不再在振幅或截面 prefactor 中额外乘 4**。作为程序防错控制，另计算
+\[
+\left(\frac{d\sigma_A}{dE_R}\right)_{\rm no4}
+=
+\left(\frac{d\sigma_A}{dE_R}\right)_{\rm phys}/4.
+\]
+每一个开相空间点都必须满足
+\[
+\frac{(d\sigma_A/dE_R)_{\rm phys}}
+{(d\sigma_A/dE_R)_{\rm no4}}=4.
+\]
+这个控制只用于检验因子 4 没有丢失或重复计数，不是另一种物理预测。
+
+### H.3 完整微分截面的数值装配
+
+在上述约定下，
+\[
+\boxed{
+\frac{d\sigma_A}{dE_R}
+=
+\frac{m_A(g_1g_2g_{VN})^2}
+{256\pi^3p_{\chi_1}^2}
+\frac{R_A^{\rm phys}(E_R)}
+{(m_V^2+2m_AE_R)^2}
+I_6(v,E_R)
+}.
+\]
+\(R_A^{\rm phys}\) 无量纲，\(I_6\) 为 \({\rm GeV}^2\)，自然单位下 \(d\sigma_A/dE_R\) 为 \({\rm GeV}^{-3}\)。转为 \({\rm cm}^2/{\rm keV}\) 时使用
+\[
+1\ {\rm GeV}^{-3}
+=0.3893793721\times10^{-33}\ {\rm cm}^2/{\rm keV}.
+\]
+AFH 的响应变量使用精确空间动量
+\[
+q=|\mathbf q|=\sqrt{2m_AE_R+E_R^2},
+\]
+而传播子中的不变量仍为
+\[
+t=-2m_AE_R.
+\]
+不能把空间 \(q^2\) 与四动量不变量 \(t\) 混用。
+
+### H.4 本轮原生 Mathematica 与 Python 的分工
+
+新增程序：
+
+- **research/afh_default_density_xe131/run_afh_eq6_full_dsigma.wls**：在 Wolfram Language 中独立构造三体末态四动量、计算完整 Dirac trace、执行 \(W^2,z,\phi_*\) 求积，并装配完整截面。它只读取已经归档的 AFH 2401 点响应表，不重新运行 AFH package。
+- **research/afh_default_density_xe131/compare_full_dsigma_mathematica.py**：独立调用 research/figure2_full_reproduction/eq6_kernel.py 重新计算同一组 \(I_6\)，使用 SciPy PCHIP 独立插值 AFH 响应，再与 Mathematica CSV 逐点比较。
+- **research/afh_default_density_xe131/output/NATIVE_MATHEMATICA_FULL_DSIGMA_AUDIT.md**：记录固定输入、代码路径、验收标准和未完成边界。
+
+首轮完整网格采用四组固定速度 benchmark，\(v=800\ {\rm km/s}\)，\(m_{\chi_1}=1\ {\rm TeV}\)，\(m_V=10\ {\rm GeV}\)，\(m_A=131u\)，\((g_1g_2g_{VN})^2=10^{-8}\)，\(g_2=1\)。四组 \((m_s,\Delta m)\) 分别为 \((200\,{\rm keV},1\,{\rm MeV})\)、\((300\,{\rm keV},1\,{\rm MeV})\)、\((360\,{\rm keV},1\,{\rm MeV})\) 和 \((300\,{\rm keV},10\,{\rm MeV})\)。这里 \(g_2=1\) 是对图注耦合乘积的一种 benchmark 分解，并不能由耦合乘积本身唯一推出。
+
+主宽度方案使用在 pole mass 处计算的常数 \(\Gamma_{\chi_2}\)，并将其放入 after-emission 传播子分母
+\[
+W^2-m_{\chi_2}^2+i\,m_{\chi_2}\Gamma_{\chi_2}.
+\]
+本轮采用的 \(\Gamma_{\chi_2}\) 仍是条件性结果：Dirac \(\chi_{1,2}\)、实标量、纯 scalar \(g_2\) 顶点，并假设 \(\chi_2\to\chi_1s\) 是唯一开放衰变道。零宽度方案可单独运行作为诊断，但不与 pole-width 结果混为一个 benchmark。
+
+### H.5 初步 Python 预检与旧归档差异
+
+在 green benchmark 的 \(E_R=200\ {\rm keV}\) 点，按当前 eq6_kernel.py 的 Dirac 实现、\(m_A=131u\)、\(v=800\ {\rm km/s}\)、\(g_2=1\) 和常数 pole-width，分析环境中的独立 Python 预检得到：
+
+| 求积阶数 \((n_W,n_z,n_\phi)\) | \(I_6\ [{\rm GeV}^2]\) |
+|---|---:|
+| \((16,16,8)\) | \(1.4336191378\times10^6\) |
+| \((24,24,12)\) | \(1.4335877039\times10^6\) |
+| \((32,32,16)\) | \(1.4335798097\times10^6\) |
+| \((48,40,24)\) | \(1.4335756754\times10^6\) |
+
+最高两组相对差异约为 \(2.9\times10^{-6}\)。这是单点 Python 预检，不是 Mathematica/Python 对照结果。
+
+同时，旧归档 output/figure2_four_benchmarks_dsigma_AFH_GCN_JJ55.csv 在同一 benchmark、同一 \(E_R=200\ {\rm keV}\) 的 GCN 行记录
+\[
+I_6^{\rm archived}=1.43367807229\times10^6\ {\rm GeV}^2.
+\]
+它相对上述新 \((16,16,8)\) 预检值高约 \(4.11\times10^{-5}\)。因此旧四 benchmark 表格不能直接充当本轮新代码的验收真值；需要先追踪旧积分网格的生成版本、宽度实现和求积映射，再以同一新 kernel 在 Mathematica/Python 两端重新计算。这个差异目前是待解释的归档一致性问题，不应擅自归因于 AFH 因子 4。
+
+在同一预检点，使用归档的 \(R_A^{\rm phys}=9.56772226605\) 和新 Python \(I_6\) 得到
+\[
+\left.\frac{d\sigma_A}{dE_R}\right|_{\rm phys}
+\simeq2.95827575\times10^{-8}\ {\rm GeV}^{-3},
+\]
+而故意不乘因子 4 的控制值为
+\[
+\left.\frac{d\sigma_A}{dE_R}\right|_{\rm no4}
+\simeq7.39568938\times10^{-9}\ {\rm GeV}^{-3}.
+\]
+两者比值为 4。这只证明该点的代数装配按预期传递因子 4；尚不能替代原生 Mathematica 的完整截面对照。
+
+### H.6 验收状态
+
+| 层次 | 当前状态 | 说明 |
+|---|---|---|
+| AFH Xe-131 \(R_A(q)\) | **已验证** | 原生 Mathematica/Python 2401 点比较已通过 |
+| AFH package \(\to R_A^{\rm phys}\) 因子 4 | **已验证（response-level）** | \(R_A^{\rm phys}=4C_0R_A^{\rm package}\)，\(C_0\) 单独记录 |
+| Python 单点 \(I_6\) 求积预检 | **条件性验证** | green benchmark 单点求积阶数对照已完成 |
+| 完整网格 Mathematica \(I_6\) | **待执行** | 新 WLS runner 已提交，尚无 Wolfram 运行产物 |
+| 完整 \(d\sigma_A/dE_R\) Mathematica/Python 逐点对照 | **未完成** | 必须等待 WLS 输出 CSV 和 Python comparator 的机器可读 PASS |
+| 完整宽度与 UV 自能 | **未完成** | 当前 pole width 仍是 Dirac/纯 scalar/单道条件性宽度 |
+
+完整网格的第一层使用 \(16\times16\times8\)；随后对阈值附近、AFH 响应极小值附近和积分收敛最慢的点进行 \(48\times40\times24\) 高阶复算。代码间对照和求积收敛是两个独立验收：前者检查 Mathematica 与 Python 是否实现同一积分，后者检查该积分本身是否达到所需精度。

@@ -90,7 +90,7 @@ This is a single overall normalization correction of (8.2523	imes10^{-5}); it do
 - The official uploaded AFH v6 source archive was parsed and its 67 Xe-131 density-matrix entries were checked against the archived CSV.
 - The source-to-Python implementation was rerun against the supplied package and reproduced the archived response values.
 - All six Python regression tests pass.
-- The Mathematica/Wolfram native runner is committed, but has not yet been executed because no Wolfram kernel is installed in the current execution environment. This is still an independent validation task; Python source translation tests are not represented as a native Mathematica run.
+- The native AFH v6.0 Mathematica runner was executed locally with Wolfram 14.0.0 on Windows. The raw (W_M^{00}), package response, physical raw response and q=0-normalized response agree with the source-translated Python reference over all 2401 q nodes; the maximum relative difference is (3.59\times10^{-9}), with zero failed points. The native output and SHA-256 manifest are archived under output/native_audit/. This validates the Xe-131 response implementation; it does not replace the source-level derivation of the setter-to-physical-nucleon coupling mapping or validate the full three-body cross section.
 
 
 ## 6. Independent literature cross-check and manuscript convention

@@ -159,6 +159,8 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 | AFH 原生 Mathematica | 待完成 | WLS runner 和比较脚本已归档；Python/mPMath 全网格交叉验证已通过 | 实际运行 Wolfram kernel 并保存逐点差异 |
 | GCN/JJ55 对照 | 已完成归档 | 三种响应、四 benchmark、1920 行 long table | 对照共享既有 \(I_6\)，不是 640 次独立重算 |
 | 三体运动学/Dirac trace | 已完成代表性检查 | 壳条件、四动量闭合、显式自旋求和、干涉分解 | 扩展到更宽的参数和质量网格 |
+| 450 keV pointwise \(\mathcal L_{00}\)/\(I_6\) benchmark | 已完成本地验收 | 六项 regression tests、显式自旋求和、四动量闭合、三阶求积对照；见 local validation record | 仅覆盖指定诊断运动学点；pole width 依赖 Dirac / pure-scalar / single-channel 假设 |
+| 450 keV Xe-131 fixed-speed curve | 已归档的内部网格诊断 | 105 点 130–650 keV、独立 PCHIP 重构、Eq. (6) anchor convergence、运动学端点 bracket | 109.150–654.956 keV 两端尚未完成高阶积分；固定速度、A×u 质量近似、zero width，不是 halo rate |
 | 三体积分收敛 | 已有 selected-point 验证 | 六个天然氙点 \(8×8×4\) 对 \(16×16×8\)，最大差异 \(2.19×10^{-4}\)；独立 Eq. (6) 测试点 \(16×16×8\) 对 \(32×32×16\)，相对差异小于 \(5×10^{-5}\) | 连续反冲谱全网格收敛 |
 | 天然氙速度积分 | 已有 selected-point 验证（exact spatial q） | 五个点 32 对 64 速度节点，最大差异 \(3.31×10^{-6}\)；98 个逐同位素贡献和 14 个总速率在 exact_spatial 默认模式下复现，最大总速率差异 \(2.67×10^{-12}\)，CI run 43044583357 | 连续谱和 halo 参数扫描 |
 | AFH 空间 q 与 NR 近似 | 已完成审计与代码保护 | 28 个天然氙样本匹配 exact spatial q；Xe-131 四点 NR 近似响应差异约 5.5–225 ppm；halo fold CI run 43044583357 通过 | 连续反冲谱需要完整七同位素 AFH 响应网格 |
@@ -199,4 +201,73 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 5. 任何新的 \(q_{\rm resp}\)、核质量、halo 参数、宽度方案或求积阶数都应产生新的输出和 metadata，不覆盖历史结果。
 6. 主报告包含完整附录 A–G；本目录中的七份独立附录与主报告对应章节保持同步。
 7. 程序、CSV、JSON 和源文件继续保存在各自计算目录，文档只解释其定义、来源、调用方式和验证边界。
+## F.7 450 keV supplied benchmark：复现与适用边界
+
+本节记录两个独立的 450 keV benchmark。它们共享粒子质量点，但并不共享全部运动学、核响应或传播子处方。
+
+本节所列 native outputs 与 validation records 均已归档在 main。这里的 main-branch 状态只说明文件归档位置，不扩大各 benchmark 的物理适用范围。
+
+### F.7.1 Pointwise \(\mathcal L_{00}\) 与 reduced \(I_6\)
+
+输入为 \(g_1=g_2=g_{VN}=1\)、\(m_{\chi_1}=1\) TeV、\(\Delta m=450\) keV、\(m_s=300\) keV、\(m_V=10\) GeV。点态运动学为显式指定的诊断点：\(m_A=122\) GeV、\(E_R=200\) keV、\(v=776\) km/s、\(W^2\) midpoint、\(z=0.2\)、\(\phi_*=1.1\)。这不是由 supplied particle benchmark 唯一确定的运动学点。
+
+从仓库根目录复现：
+
+~~~bash
+python research/figure2_full_reproduction/run_user_l00_benchmark.py \
+  --nw 48 --nz 40 --nphi 24 \
+  --output /tmp/USER_L00_BENCHMARK_450KEV_48x40x24.json
+python -m unittest discover \
+  -s research/figure2_full_reproduction/tests \
+  -p test_user_l00_benchmark.py -v
+~~~
+
+本地验收记录位于：
+
+- research/figure2_full_reproduction/research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md；
+- 同目录的 JSON、quadrature convergence CSV、run manifest、validation log 和 SHA256SUMS。
+
+该结果比较 zero-width 与条件性 pole-width；后者只在 Dirac 费米子、实标量、纯 scalar off-diagonal Yukawa 且仅 \(\chi_2\to\chi_1s\) 通道开放的假设下成立。它不是完整 vector-plus-scalar self-energy，也不是 halo-folded 或 detector-level prediction。该本地验收没有使用 GitHub Actions；不能将未运行的 CI 描述为通过。
+
+### F.7.2 Fixed-speed Xe-131 \(d\sigma/dE_R\) 曲线
+
+该曲线采用 \(v=776\) km/s、\(m_A=131u\)、GCN/JJ55 response tables 和 zero-width prescription，扫描 130–650 keV 共 105 个内部点。它与 F.7.1 的 \(m_A=122\) GeV 点态 trace benchmark 不是同一核质量或传播子宽度方案。
+
+从仓库根目录复现：
+
+~~~bash
+python research/figure2_full_reproduction/run_user_dsigma_curve.py \
+  --step-keV 5 --nw 20 --nz 16 --nphi 12 \
+  --output /tmp/xe131_dsigma_450kev.csv
+python research/figure2_full_reproduction/plot_user_dsigma_curve.py
+python -m unittest discover \
+  -s research/figure2_full_reproduction/tests \
+  -p test_user_dsigma_curve.py -v
+~~~
+
+结果与 provenance：
+
+- research/figure2_full_reproduction/results/fixed_speed_xe131_dsigma_450kev.csv；
+- research/figure2_full_reproduction/results/local_minima_refinement_1keV.csv；
+- research/figure2_full_reproduction/results/kernel_quadrature_convergence_450kev.csv；
+- research/figure2_full_reproduction/results/metadata_user_dsigma_450kev.json；
+- research/figure2_full_reproduction/results/USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md；
+- research/figure2_full_reproduction/results/SHA256SUMS_user_dsigma_450kev.txt；
+- research/figure2_full_reproduction/results/plots/fixed_speed_xe131_dsigma_450kev.svg；
+- research/figure2_full_reproduction/results/plots/xe131_gcn_jj55_response_ratio_450kev.svg。
+
+开放反冲区间约为 109.150286–654.955583 keV；当前曲线只覆盖 130–650 keV。两端的 kinematic bracket tests 不等于端点附近的高阶积分收敛，故当前归档只能称为内部网格 fixed-speed diagnostic。它不是天然氙 halo-folded spectrum、事件率、LZ detector-level prediction 或 exclusion。
+
+### F.7.3 两项 benchmark 的不可互换性
+
+| 项目 | Pointwise L00 benchmark | Fixed-speed Xe-131 curve |
+|---|---|---|
+| 核质量 | 122 GeV 诊断近似 | 131 u 质量近似 |
+| 运动学 | 单一点：200 keV、776 km/s、指定角变量 | 105 个反冲能量点、固定 776 km/s |
+| 核响应 | 点态 \(\mathcal L_{00}\)/\(I_6\)，不构成完整核响应谱 | GCN/JJ55 响应表 |
+| 宽度 | zero-width 与条件性 scalar pole-width 对照 | zero width |
+| 输出层级 | pointwise trace 与 reduced integral | 单同位素固定速度 \(d\sigma/dE_R\) |
+| 不能声称 | 完整自能、halo rate、LZ 预测 | 完整开放区间、halo rate、detector likelihood |
+
+
 

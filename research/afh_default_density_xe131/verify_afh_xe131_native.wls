@@ -62,12 +62,36 @@ minima = Table[
     er = 10^6 qq^2/(Sqrt[mA^2 + qq^2] + mA);
     {qq, 1000 qq, er, sol[[1]]}
   ], {interval, intervals}];
-Export[FileNameJoin[{outDir, "afh_native_audit_grid.csv"}],
+nativeGridPath = FileNameJoin[{outDir, "afh_native_audit_grid.csv"}];
+nativeComparisonPath = FileNameJoin[{outDir, "afh_native_audit_comparison.csv"}];
+nativeMinimaPath = FileNameJoin[{outDir, "afh_native_audit_minima.csv"}];
+nativeMetadataPath = FileNameJoin[{outDir, "afh_native_audit_metadata.txt"}];
+Export[nativeGridPath,
   Prepend[native, {"q_GeV", "W_M00_AFH_package", "R_equal_pn_raw", "R_equal_pn_normalized"}], "CSV"];
-Export[FileNameJoin[{outDir, "afh_native_audit_comparison.csv"}],
+Export[nativeComparisonPath,
   Prepend[stats, {"quantity", "max_absolute_difference", "max_tolerance_ratio", "worst_q_GeV", "failed_points"}], "CSV"];
-Export[FileNameJoin[{outDir, "afh_native_audit_minima.csv"}],
+Export[nativeMinimaPath,
   Prepend[minima, {"q_GeV", "q_MeV", "ER_keV", "R_over_A2"}], "CSV"];
+auditMetadata = {
+  "WolframVersion = " <> $Version,
+  "AFHSourcePath = " <> packagePath,
+  "AFHSourceSHA256 = " <> FileHash[packagePath, "SHA256", "HexString"],
+  "PythonCSVPath = " <> pythonPath,
+  "PythonCSV_SHA256 = " <> FileHash[pythonPath, "SHA256", "HexString"],
+  "NativeGridCSV_SHA256 = " <> FileHash[nativeGridPath, "SHA256", "HexString"],
+  "NativeComparisonCSV_SHA256 = " <> FileHash[nativeComparisonPath, "SHA256", "HexString"],
+  "NativeMinimaCSV_SHA256 = " <> FileHash[nativeMinimaPath, "SHA256", "HexString"],
+  "q_nodes = " <> ToString[Length[qGrid]],
+  "q_min_GeV = " <> ToString[InputForm[First[qGrid]]],
+  "q_max_GeV = " <> ToString[InputForm[Last[qGrid]]],
+  "q_step_GeV = 0.00025",
+  "response_rtol = " <> ToString[InputForm[rtol]],
+  "response_atol = " <> ToString[InputForm[atol]],
+  "raw_R_A_zero = " <> ToString[InputForm[r0]],
+  "raw_R_A_zero_relative_offset = " <> ToString[InputForm[relativeZeroOffset]],
+  "zero_normalization_factor = " <> ToString[InputForm[A^2/r0]]
+};
+Export[nativeMetadataPath, StringRiffle[auditMetadata, "\n"] <> "\n", "Text"];
 Print["b_A [fm] = ", InputForm[bFM]];
 Print["raw physical R(0) = ", InputForm[r0], "; A^2 = ", A^2];
 Print["raw relative offset R(0)/A^2 - 1 = ", InputForm[relativeZeroOffset]];
@@ -78,4 +102,5 @@ Print["Minima {q [GeV], q [MeV], ER [keV], normalized response/A^2}:"];
 Scan[Print, minima];
 If[Total[stats[[All, 5]]] > 0, fail["Mathematica/Python comparison failed; output files retained", 7]];
 Print["PASS: raw and normalized responses agree with Python at all grid points."];
+Print["Native audit metadata: ", nativeMetadataPath];
 Exit[0];

@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 """Compare AFH-native Mathematica output with the source-translated Python result.
 
-Run after executing run_afh_default_xe131.wls with the official DMFormFactor
-v6.0 package. This deliberately refuses to interpolate mismatched q grids.
+The comparison is deliberately performed before and after the finite-precision
+q=0 normalization.  It checks the raw AFH W_M response, the package-normalized
+isoscalar response, the physical equal-p/n response (factor four included once),
+and the final q=0-normalized physical response.  Mismatched q grids are rejected;
+no interpolation is allowed.
 """
 from __future__ import annotations
 import argparse
 import csv
+import hashlib
 import json
 from pathlib import Path
 import numpy as np
@@ -15,6 +19,38 @@ import numpy as np
 def read_rows(path: Path):
     with path.open(newline="", encoding="utf-8") as f:
         return list(csv.DictReader(f))
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as f:
+        for block in iter(lambda: f.read(1 << 20), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def column(rows, name):
+    try:
+        return np.array([float(row[name]) for row in rows], dtype=float)
+    except KeyError as exc:
+        raise SystemExit(f"Missing required CSV column: {name}") from exc
+    except ValueError as exc:
+        raise SystemExit(f"Non-numeric value in CSV column {name}") from exc
+
+
+def compare(a, b, *, rtol, atol):
+    delta = np.abs(a - b)
+    scale = np.maximum(np.abs(b), atol)
+    rel = delta / scale
+    passed = bool(np.allclose(a, b, rtol=rtol, atol=atol))
+    i = int(np.argmax(rel))
+    return {
+        "passed": passed,
+        "max_absolute_difference": float(delta.max()),
+        "max_relative_difference": float(rel[i]),
+        "worst_index": i,
+        "worst_q_GeV": None,
+    }
 
 
 def main():
@@ -31,36 +67,75 @@ def main():
     if len(py) != len(wl):
         raise SystemExit(f"Grid length mismatch: Python={len(py)}, Mathematica={len(wl)}")
 
-    q_py = np.array([float(r["q_GeV"]) for r in py])
-    q_wl = np.array([float(r["q_GeV"]) for r in wl])
-    if not np.array_equal(q_py, q_wl):
-        raise SystemExit("q grids are not exactly equal; no interpolation is allowed")
+    q_py = column(py, "q_GeV")
+    q_wl = column(wl, "q_GeV")
+    q_grid_max_abs_difference = float(np.max(np.abs(q_py - q_wl)))
+    q_grid_atol = 1e-14  # allow only CSV floating-point serialization roundoff
+    if not np.allclose(q_py, q_wl, rtol=0.0, atol=q_grid_atol):
+        raise SystemExit(
+            f"q grids differ by {q_grid_max_abs_difference:.3e} GeV; "
+            "no interpolation is allowed"
+        )
 
-    # Compare the physical equal-pn response after each implementation applies
-    # the same q=0 normalization. This avoids confusing rounded density-matrix
-    # coefficients with a shape disagreement.
-    r_py = np.array([float(r["R_equal_pn_normalized"]) for r in py])
-    r_wl = np.array([float(r["R_equal_pn_normalized"]) for r in wl])
-    absdiff = np.abs(r_py-r_wl)
-    scale = np.maximum(np.maximum(np.abs(r_py), np.abs(r_wl)), args.atol)
-    reldiff = absdiff/scale
-    passed = bool(np.allclose(r_py, r_wl, rtol=args.rtol, atol=args.atol))
+    # The same physical response is represented by 4 times the AFH package
+    # isoscalar response when the cross-section prefactor contains g_VN^2.
+    py_w = column(py, "W_M00_AFH_package")
+    wl_w = column(wl, "W_M00_AFH_package")
+    py_afh = column(py, "R_AFH_package_4pi_over_2Jplus1")
+    wl_afh = column(wl, "R_AFH_4Pi_over_2Jplus1")
+    py_phys_raw = column(py, "R_equal_pn_raw")
+    wl_phys_raw = column(wl, "R_equal_pn_raw")
+    py_phys_norm = column(py, "R_equal_pn_normalized")
+    wl_phys_norm = column(wl, "R_equal_pn_normalized")
+
+    factor4_py = bool(np.allclose(py_phys_raw, 4.0 * py_afh, rtol=2e-12, atol=2e-10))
+    factor4_wl = bool(np.allclose(wl_phys_raw, 4.0 * wl_afh, rtol=2e-12, atol=2e-10))
+    expected_zero = 131**2
+    q0_normalization_py = bool(np.isclose(py_phys_norm[0], expected_zero, rtol=0, atol=2e-8))
+    q0_normalization_wl = bool(np.isclose(wl_phys_norm[0], expected_zero, rtol=0, atol=2e-8))
+
+    quantities = {
+        "raw_AFH_W_M00": compare(py_w, wl_w, rtol=args.rtol, atol=args.atol),
+        "AFH_package_R_4piW_over_2Jplus1": compare(py_afh, wl_afh, rtol=args.rtol, atol=args.atol),
+        "physical_equal_pn_R_raw_factor4_once": compare(py_phys_raw, wl_phys_raw, rtol=args.rtol, atol=args.atol),
+        "physical_equal_pn_R_q0_normalized": compare(py_phys_norm, wl_phys_norm, rtol=args.rtol, atol=args.atol),
+    }
+    for result in quantities.values():
+        result["worst_q_GeV"] = float(q_py[result["worst_index"]])
+
+    passed = (
+        all(x["passed"] for x in quantities.values())
+        and factor4_py and factor4_wl
+        and q0_normalization_py and q0_normalization_wl
+    )
     result = {
         "passed": passed,
         "points": len(py),
+        "python_csv_sha256": sha256_file(args.python_csv),
+        "mathematica_csv_sha256": sha256_file(args.mathematica_csv),
         "rtol": args.rtol,
         "atol": args.atol,
-        "max_abs_difference": float(absdiff.max()),
-        "max_relative_difference": float(reldiff.max()),
-        "max_relative_difference_index": int(np.argmax(reldiff)),
-        "max_relative_difference_q_GeV": float(q_py[int(np.argmax(reldiff))]),
-        "python_R0": float(r_py[0]),
-        "mathematica_R0": float(r_wl[0]),
-        "expected_R0": 131**2,
-        "q_grid_identical": True,
+        "q_grid_identical_within_export_precision": True,
+        "q_grid_max_abs_difference_GeV": q_grid_max_abs_difference,
+        "q_grid_export_atol_GeV": q_grid_atol,
+        "q_grid_start_GeV": float(q_py[0]),
+        "q_grid_end_GeV": float(q_py[-1]),
+        "q_grid_step_GeV": float(q_py[1] - q_py[0]),
+        "expected_R_A_zero": expected_zero,
+        "factor4_contract": {
+            "python_R_equal_raw_equals_4_R_AFH": factor4_py,
+            "mathematica_R_equal_raw_equals_4_R_AFH": factor4_wl,
+        },
+        "q0_normalization_contract": {
+            "python_R_A_0": float(py_phys_norm[0]),
+            "mathematica_R_A_0": float(wl_phys_norm[0]),
+            "python_passed": q0_normalization_py,
+            "mathematica_passed": q0_normalization_wl,
+        },
+        "comparisons": quantities,
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(result, indent=2)+"\n", encoding="utf-8")
+    args.output.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(result, indent=2))
     if not passed:
         raise SystemExit(1)
