@@ -112,7 +112,7 @@ Windows PowerShell runner below. It accepts either the original AFH v6.0 ZIP
 archive or the extracted `dmformfactor-V6.m` file:
 
 ```powershell
-.\\run_native_afh_audit.ps1 -AfhSource "D:\\path\\to\\v6.zip"
+.\run_native_afh_audit.ps1 -AfhSource "D:\path\to\v6.zip"
 ```
 
 The runner verifies the supplied ZIP SHA-256
