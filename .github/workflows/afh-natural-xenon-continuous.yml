@@ -1,7 +1,7 @@
 name: AFH natural-xenon seven-isotope continuous response
 
 concurrency:
-  group: afh-natural-xenon-continuous-\${{ github.ref }}
+  group: afh-natural-xenon-continuous-${{ github.ref }}
   cancel-in-progress: true
 
 on:
@@ -94,5 +94,5 @@ jobs:
             echo "Generated response grid is already up to date."
           else
             git commit -m "Archive full seven-isotope AFH response grid"
-            git push origin "HEAD:\${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
