@@ -10,6 +10,7 @@ no interpolation is allowed.
 from __future__ import annotations
 import argparse
 import csv
+import hashlib
 import json
 from pathlib import Path
 import numpy as np
@@ -18,6 +19,14 @@ import numpy as np
 def read_rows(path: Path):
     with path.open(newline="", encoding="utf-8") as f:
         return list(csv.DictReader(f))
+
+
+def sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as f:
+        for block in iter(lambda: f.read(1 << 20), b""):
+            digest.update(block)
+    return digest.hexdigest()
 
 
 def column(rows, name):
@@ -102,6 +111,8 @@ def main():
     result = {
         "passed": passed,
         "points": len(py),
+        "python_csv_sha256": sha256_file(args.python_csv),
+        "mathematica_csv_sha256": sha256_file(args.mathematica_csv),
         "rtol": args.rtol,
         "atol": args.atol,
         "q_grid_identical_within_export_precision": True,
