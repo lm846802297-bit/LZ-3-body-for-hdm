@@ -48,3 +48,27 @@ Choose one and explain briefly:
 Known limitations / unresolved assumptions:
 
 <!-- State what this PR does NOT establish. -->
+
+## Baseline and merge provenance
+
+- Base `main` commit SHA:
+- Source branch HEAD SHA:
+- Related PR / research record:
+- Proposed merge strategy: **Create a merge commit** (default for substantive research). Explain any Squash/Rebase exception:
+
+## Validation evidence and exact revision
+
+- Exact commit SHA on which each test/run was performed:
+- Commands and test counts:
+- Passed:
+- Failed:
+- Not run:
+- Independent cross-check / convergence evidence:
+- Input/output SHA-256 manifests:
+- Claims not established / remaining limitations:
+
+## Post-merge verification
+
+- [ ] Verify the integrated main SHA and all archived artifact paths.
+- [ ] Verify checksums after merge.
+- [ ] Report archival status separately from scientific validation.
