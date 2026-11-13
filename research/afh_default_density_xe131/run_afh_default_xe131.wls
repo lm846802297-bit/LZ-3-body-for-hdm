@@ -22,6 +22,11 @@ rows = Table[
     wm = N[wmExpr /. y -> yy, 30];
     rAFH = 4.0 Pi/(2.0 JA + 1.0)*wm;
     rEqualRaw = 4.0*rAFH;
+    rEqualFormula = 16.0 Pi/(2.0 JA + 1.0)*wm;
+    factor4Residual = Abs[rEqualRaw - rEqualFormula]/Max[1.0, Abs[rEqualFormula]];
+    If[factor4Residual > 10^-12,
+      Print["ERROR: factor-four mapping disagrees with 16 Pi W_M/(2J+1)."]; Exit[4]
+    ];
     er = (Sqrt[mA^2 + q^2] - mA)*10^6;
     {q, yy, wm, rAFH, rEqualRaw, er}
   ], {i, Length[qGrid]}
@@ -48,7 +53,8 @@ metadata = {
   "SetIsotope = SetIsotope[54,131,default,default]",
   "response = ResponseNuclear[y,1,0,0] = W_M^{00}",
   "AFH isoscalar convention: (4 Pi/(2 J_A+1))*W_M00(0) = A^2/4",
-  "equal physical proton/neutron charge response = 4 * AFH isoscalar response",
+  "equal physical proton/neutron charge response = 4 * AFH isoscalar response = 16 Pi W_M00/(2 J_A+1)",
+  "factor-four algebraic identity checked at every q grid point to relative tolerance 1e-12",
   "exact q=0 normalization applied only to remove rounded density-matrix offset",
   "A = 131", "Z = 54", "J_A = 3/2",
   "b_A_fm = " <> ToString[InputForm[N[bFM, 16]]],
