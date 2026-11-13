@@ -218,15 +218,25 @@ The fixed-speed Xe-131 differential curve has now been calculated locally and in
 - Maximum dσ/dER: GCN 1.874622684e-32 cm²/keV and JJ55 1.985254401e-32 cm²/keV, both at 175 keV.
 - A 1-keV local refinement resolves sampled dips at GCN 269/551 keV and JJ55 270/555 keV. These are sampled grid minima, not continuous minimizers.
 - Ten-anchor independent SciPy PCHIP check: maximum absolute difference 3.553e-15; maximum relative difference 4.929e-14.
+- Full-grid independent PCHIP reconstruction at all 105 exact recoil q values: maximum relative difference 4.64e-10 (GCN) and 3.80e-10 (JJ55), consistent with the rounded R_A values in the pointwise CSV.
 - Eq. (6) quadrature comparison (20,16,12) vs (24,20,16), ten anchors: maximum relative change 7.346e-6.
 - The χ2 s-channel pole is closed throughout this recoil interval; the minimum clearance is 85.663520 keV.
 
 The corrected local validation report is recorded at
 `results/USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md`.
-The complete local native archive contains the pointwise CSV, 1-keV minima CSV, quadrature CSV, metadata, validation report, and SHA256SUMS. The checksums were revalidated locally after correcting the minima summary.
+The native outputs are now committed to this branch:
 
-### Remaining merge gate — keep Draft
+- `results/fixed_speed_xe131_dsigma_450kev.csv`
+- `results/local_minima_refinement_1keV.csv`
+- `results/kernel_quadrature_convergence_450kev.csv`
+- `results/metadata_user_dsigma_450kev.json`
+- `results/USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md`
+- `results/SHA256SUMS_user_dsigma_450kev.txt`
 
-The physical calculation and local numerical checks are complete for this fixed-speed diagnostic, but the native output archive has not yet been committed to the research branch. Add the native data files (or a reproducible archive containing them) before marking this PR ready.
+The SHA256 manifest is calculated against the committed LF-normalized file contents. The local archive also retains the original run metadata and a separate checksum manifest.
+
+### Remaining review — keep Draft for now
+
+The numerical output and native provenance are now present. Before promotion, the remaining review is scientific scope: keep the A*u mass approximation and zero-width prescription explicitly confined to this benchmark, and do not interpret this fixed-speed, single-isotope curve as a halo-folded or detector-level LZ prediction.
 
 This remains a fixed-speed, zero-width diagnostic using the A*u Xe-131 mass. It is not the AME2020 direct-exact-q result, a natural-xenon halo-folded recoil spectrum, a detector-level LZ prediction, or an exclusion/likelihood calculation.
