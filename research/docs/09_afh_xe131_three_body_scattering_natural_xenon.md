@@ -1375,6 +1375,16 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 
 详细的逐公式输出文件、metadata、验证状态和复现命令见[独立交叉引用索引第 2–6 节](formula_symbol_code_cross_reference.md)。附录 F.3 是命令行复现入口；附录 F.4 区分软件测试、数值收敛和物理完整性。任何公式、变量或计算方案改变时，必须同步更新本节和独立索引，不得只更新正文显示公式。
 
+### 13.5 数值结果索引、物理公式审查与科学状态
+
+为避免主报告、附录和结果目录分别维护不同的 benchmark 口径，当前归档另设三份互相对应的维护记录：
+
+- [Figure 2 数值结果总索引](supplements/figure2_results_master_index_2026-11-13.md)：benchmark、输入、参数、输出文件与 SHA-256；机器可读清单见 [JSON manifest](supplements/figure2_results_master_index_2026-11-13.json)。
+- [物理公式交叉审查](supplements/figure2_physics_formula_audit_2026-11-13.md)：从原始拉格朗日量、两张辐射图、Dirac trace、三体相空间、\(256\pi^3\)、AFH factor 4、三体 \(v_{\min}\) 到天然氙速率逐项对照主报告、附录和代码。
+- [科学结果状态表](supplements/figure2_scientific_status_2026-11-13.md)：将每项结果明确标记为已验证、部分验证、待补输入或尚未完成，并注明适用范围和剩余限制。
+
+这三份记录是本报告的复现与审查入口，不替代附录 A–G 中的正式推导，也不把 selected-point、fixed-speed 或 rate-level 结果升级表述为完整模型或完整 LZ likelihood 的验证。
+
 # 技术附录（完整内容）
 
 以下 A–G 附录正文与目录 research/docs/appendices/ 中的七份独立文件保持同步。主报告保留完整附录，独立文件用于单独检索和引用。
