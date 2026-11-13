@@ -205,6 +205,8 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 
 本节记录两个独立的 450 keV benchmark。它们共享粒子质量点，但并不共享全部运动学、核响应或传播子处方。
 
+本节所列 native outputs 与 validation records 均已归档在 main。这里的 main-branch 状态只说明文件归档位置，不扩大各 benchmark 的物理适用范围。
+
 ### F.7.1 Pointwise \(\mathcal L_{00}\) 与 reduced \(I_6\)
 
 输入为 \(g_1=g_2=g_{VN}=1\)、\(m_{\chi_1}=1\) TeV、\(\Delta m=450\) keV、\(m_s=300\) keV、\(m_V=10\) GeV。点态运动学为显式指定的诊断点：\(m_A=122\) GeV、\(E_R=200\) keV、\(v=776\) km/s、\(W^2\) midpoint、\(z=0.2\)、\(\phi_*=1.1\)。这不是由 supplied particle benchmark 唯一确定的运动学点。
