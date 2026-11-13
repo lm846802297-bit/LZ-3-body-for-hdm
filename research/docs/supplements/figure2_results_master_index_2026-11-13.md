@@ -25,7 +25,7 @@
 
 - AFH v6.0 source archive：SHA-256 `4e0f70e6e780f3f4a40faa14792cae239d1989cf15d1e211b4fd7389b0460727`。
 - AFH Mathematica source `v6/dmformfactor-V6.m`：SHA-256 `dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372`；该 `.m` 文件已提交，原始 ZIP 仍为 checksum-only provenance。
-- 原始 ZIP 仍只保留来源 SHA-256 provenance，未提交到仓库；`.m` 源文件已提交至 `v6/dmformfactor-V6.m`，并按上面的 SHA-256 核验。仓库同时提交了 67 项 Xe-131 密度矩阵及其 Python source translation。
+- 原始 ZIP 仍只保留来源 SHA-256 provenance，未提交到仓库；仓库中的 67 项 Xe-131 密度矩阵及其 Python source translation 均保留独立文件与校验值。
 - AFH raw isoscalar response 的零动量归一化为 \(A^2/4\)；物理等质子、等中子耦合的 response 为 \(A^2\)，因子 4 只计一次。
 - AFH 物理响应使用 \(Q=\sqrt{2m_AE_R+E_R^2}\) 和 \(y=(b_AQ/2)^2\)。\(y\simeq b_A^2m_AE_R/2\) 仅是小反冲近似。
 
@@ -84,7 +84,7 @@
 
 ## 9. AFH Xe-131 native Mathematica/Python audit
 
-The native Wolfram 14.0.0 response calculation is archived separately from the Python source translation. Both use the same 2401-point grid, (q=0) to (0.6\,\mathrm{GeV}), with a (0.00025\,\mathrm{GeV}) step. Four response quantities pass the pointwise comparison; the maximum relative difference is (3.59087\times10^{-9}).
+The native Wolfram 14.0.0 response calculation is archived separately from the Python source translation. Both use the same 2401-point grid, \(q=0\) to \(0.6\,\mathrm{GeV}\), with a \(0.00025\,\mathrm{GeV}\) step. Four response quantities pass the pointwise comparison; the maximum relative difference is \(3.59087\times10^{-9}\).
 
 Native result files:
 
