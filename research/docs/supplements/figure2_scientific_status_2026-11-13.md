@@ -54,7 +54,7 @@
 
 | 子任务 | 当前状态 | 已有证据 | 尚存边界 |
 |---|---|---|---|
-| Figure 2 结果总索引 | **已验证（当前归档范围）** | [机器可读总清单](figure2_results_master_index_2026-11-13.json)：9 组、59 个文件条目，含 SHA-256、参数和用途，并纳入原生 Mathematica 输出 | 对外部未提交输入只保留 checksum provenance，不能将其标记为已下载/可复现 |
+| Figure 2 结果总索引 | **已验证（当前归档范围）** | [机器可读总清单](figure2_results_master_index_2026-11-13.json)：9 组、60 个文件条目，含 SHA-256、参数和用途，并纳入原生 Mathematica 输出 | 对外部未提交输入只保留 checksum provenance，不能将其标记为已下载/可复现 |
 | AFH response sample SHA-256 | **已修正，待 workflow 再验** | 40 位 Git blob SHA-1 已替换为真实 64 位 SHA-256；runner 和 validator 增加校验 | 本轮尚未宣称新的 GitHub Actions run 已通过 |
 | 原始论文 AFH response 公式 | **已修正** | `paper-source/main.tex` 改为 factor 4 physical mapping 和 exact spatial \(q\)；`paper-source/SHA256SUMS` 同步 | 合并后仍需在正式 Overleaf / PDF 构建中检查排版 |
 | 主报告—附录 A–G—代码公式索引 | **部分验证** | F1–F12 公式索引、附录 A–G、代码入口和主报告已交叉检查 | 仍需按最终固定的 Dirac/Majorana 模型约定做一轮完整 UV 层复核 |
