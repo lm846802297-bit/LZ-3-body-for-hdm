@@ -60,7 +60,8 @@ jobs:
             -s research/afh_default_density_natural_xenon_halo \
             -p "test_afh_default_xenon_response_grid.py" -v
 
-      - name: Generate the full 7-isotope AFH v6.0 response grid
+      - name: Generate the full 7-isotope AFH v6.0 response grid (manual cloud run only)
+        if: false
         run: |
           python research/afh_default_density_natural_xenon_halo/generate_afh_default_xenon_response_grid.py \
             --afh-package v6/dmformfactor-V6.m \
@@ -87,6 +88,7 @@ jobs:
           PY
 
       - name: Upload full AFH seven-isotope response artifact
+        if: false
         uses: actions/upload-artifact@v4
         with:
           name: afh-v6-natural-xenon-seven-isotope-response
@@ -95,7 +97,7 @@ jobs:
           retention-days: 90
 
       - name: Commit generated response grid to the research branch
-        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+        if: false
         shell: bash
         run: |
           set -euo pipefail
