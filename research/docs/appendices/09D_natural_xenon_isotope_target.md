@@ -206,3 +206,12 @@ q_{{\rm resp},A}=\sqrt{2m_AE_R+E_R^2}.
 - research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv
 - research/afh_default_density_natural_xenon_halo/input/afh_response_samples.csv
 
+
+
+## D.6 Xe-124/Xe-126 缺失的源代码级确认与补齐条件
+
+天然氙丰度表仍然保留 Xe-124 和 Xe-126 的真实丰度。对 AFH v6.0 官方源文件的默认矩阵 dispatch 检查表明，`Ziso=54` 只对 Xe-128、129、130、131、132、134、136 设置了默认密度矩阵；Xe-124 和 Xe-126 会进入 `Cannot find default matrix which matches input M and Z!` 回退分支。详见 [`dmformfactor-V6.m` 第 1555–1597 行](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/blob/main/v6/dmformfactor-V6.m#L1555-L1597)。
+
+这说明当前 0.998158 的 AFH 原子丰度覆盖率是 AFH v6.0 输入能力的真实边界，而不是提取程序的偶然遗漏。补齐两种同位素需要取得独立、可追溯的核结构输入（例如对应的单粒子轨道空间、相互作用、截断方案和 one-body density matrix），并明确其与 AFH 多极展开及归一化约定的映射。不能仅由 Xe-128/Xe-130 的响应插值，也不能把剩余丰度重新分配给七种已有同位素。
+
+在获得并验证这两种密度矩阵之前，AFH 天然氙结果应继续称为七种可用同位素的 selected-point halo fold；缺失的 0.1842% 原子丰度也不能直接当作 0.1842% 的事件率误差。
