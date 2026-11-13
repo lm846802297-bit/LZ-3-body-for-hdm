@@ -113,25 +113,25 @@ Mathematica and making `wolframscript` available on `PATH`:
 
 ```powershell
 # 1. Generate the Python reference grid.
-python .\\run_afh_default_xe131.py --outdir .\\output
+python .\run_afh_default_xe131.py --outdir .\output
 
 # 2. Point both Wolfram scripts to the official AFH v6.0 source.
-$env:DMFormFactorPath = "C:\\path\\to\\dmformfactor-V6.m"
+$env:DMFormFactorPath = "C:\path\to\dmformfactor-V6.m"
 
 # 3. Run the native AFH calculation (writes the Mathematica CSV beside the WLS files).
-wolframscript -file .\\run_afh_default_xe131.wls
+wolframscript -file .\run_afh_default_xe131.wls
 
 # 4. Compare native and Python results on the identical 2401-point q grid.
-$env:AFHPythonCSV = (Resolve-Path .\\output\\afh_default_xe131_WM00.csv).Path
-$env:AFHAuditDir = Join-Path (Get-Location) "output\\native_audit"
+$env:AFHPythonCSV = (Resolve-Path .\output\afh_default_xe131_WM00.csv).Path
+$env:AFHAuditDir = Join-Path (Get-Location) "output\native_audit"
 New-Item -ItemType Directory -Force $env:AFHAuditDir | Out-Null
-wolframscript -file .\\verify_afh_xe131_native.wls
+wolframscript -file .\verify_afh_xe131_native.wls
 
 # 5. Produce the standalone machine-readable comparison summary.
-python .\\compare_afh_mathematica_python.py `
-  --python-csv .\\output\\afh_default_xe131_WM00.csv `
-  --mathematica-csv .\\afh_default_xe131_WM00_mathematica.csv `
-  --output .\\output\\afh_mathematica_python_comparison.json
+python .\compare_afh_mathematica_python.py `
+  --python-csv .\output\afh_default_xe131_WM00.csv `
+  --mathematica-csv .\afh_default_xe131_WM00_mathematica.csv `
+  --output .\output\afh_mathematica_python_comparison.json
 ```
 
 The native verifier compares the raw AFH `W_M^{00}`, the physical
