@@ -12,6 +12,8 @@
 - [研究文档索引](research/docs/README.md)：主报告、独立附录、公式索引和补充记录。
 - [公式—符号—正文—程序—结果交叉引用](research/docs/formula_symbol_code_cross_reference.md)：F1–F12 公式、单位、程序入口、输出和适用边界。
 - [研究目录索引](research/README.md)：各专题的内容和科学状态。
+- [Figure 2 数值结果总索引](research/docs/supplements/figure2_results_master_index_2026-11-13.md)：benchmark、输入、参数、输出和 SHA-256 provenance。
+- [Figure 2 科学状态表](research/docs/supplements/figure2_scientific_status_2026-11-13.md)：明确各项验证的适用范围和未完成边界。
 - [Eq. (6) kernel 与 Figure 2 数值复现入口](research/figure2_full_reproduction/README.md)。
 - [LZ detector-response 输入与 rate-level 归档说明](research/lz_detector_response/README.md)。
 
@@ -54,7 +56,7 @@
 ## 当前科学状态（2026-11-13）
 
 - **Eq. (6) kernel：** 已有 Dirac-spinor 实现、运动学/自旋迹检查和数值积分测试；模型的 Dirac/Majorana、完整矢量扇区等输入仍须按具体 benchmark 明确。
-- **核响应与天然氙：** AFH Xe-131 响应有 2401 点 mpmath 高精度交叉检查；AFH 天然氙结果仍为 selected-point。GCN/JJ55 已有天然氙连续谱，不能将其标记为 AFH 连续谱。
+- **核响应与天然氙：** AFH Xe-131 的 2401 点响应已通过 60 位 mpmath 检查和 Wolfram 14.0.0 原生 Mathematica/Python 逐点比较（最大相对差异 $3.59\times10^{-9}$）；AFH 天然氙仍为 selected-point，GCN/JJ55 连续谱不能标记为 AFH 连续谱。
 - **LZ 接口：** 已完成一维 final-ROI efficiency 加权的 GCN/JJ55 rate-level event-yield estimates；尚不是二维 NEST + background + profile-likelihood 的完整 LZ recast，也不是 90% CL exclusion。
 - **450 keV benchmark：** 已归档一个条件性 pointwise \(\mathcal L_{00}\)/\(I_6\) 验证，以及一个独立的 Xe-131 固定速度、零宽度、\(A u\) 质量近似曲线。后者只覆盖 130–650 keV 的内部网格，不能当作天然氙 halo rate。
 - **总体解释：** 代码、文档和归档完成不等于所有物理假设均已验证，更不代表模型已经解释 LZ 候选事件。
