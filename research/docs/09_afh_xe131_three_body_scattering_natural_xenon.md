@@ -1539,6 +1539,15 @@ z=\cos\theta_*,\qquad d\Omega_*=dz\,d\phi_*,
 \lambda_{\rm dim}(W^2,m_{\chi_1}^2,m_s^2)
 =\frac{\lambda_K(W^2,m_{\chi_1}^2,m_s^2)}{W^4}.
 \]
+正文 main.tex 与 Python 的 lambda_dimensionless 使用的函数正是
+\[
+\lambda_{\rm paper}(W^2,m_{\chi_1}^2,m_s^2)
+=
+\left[1-\frac{(m_{\chi_1}+m_s)^2}{W^2}\right]
+\left[1-\frac{(m_{\chi_1}-m_s)^2}{W^2}\right]
+=\lambda_{\rm dim}.
+\]
+因此正文的 \(\sqrt{\lambda}\)、附录中的 \(\sqrt{\lambda_{\rm dim}}\) 与程序的 \texttt{lambda_dimensionless} 是同一个无量纲量；这里没有遗漏 \(W^{-2}\) 或额外的 \(W^2\) 因子。
 由 (i) 得
 \[
 \boxed{
@@ -1557,6 +1566,7 @@ d\Phi_3
 =\frac{dW^2}{2\pi}
 d\Phi_2(p+P;P',K)d\Phi_2(K;p',k).
 \]
+这里的积分变量就是 \(W^2\)，所以分解式不产生额外的 \(2W\)；只有将积分变量另行改成 \(W\) 时，才需要使用 \(dW^2=2W\,dW\)。末态 \(p'\) 与 \(k\) 是不同粒子，因此没有相同末态的 \(1/2!\) 对称因子。
 结合 (ii)、(iii)，得到
 \[
 \boxed{
