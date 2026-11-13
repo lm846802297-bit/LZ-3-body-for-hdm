@@ -3,6 +3,7 @@ import csv
 import importlib.util
 import json
 import math
+import re
 import subprocess
 import sys
 import tempfile
@@ -29,6 +30,28 @@ class AFHDefaultXe131Tests(unittest.TestCase):
 
     def test_default_oscillator_length(self):
         self.assertAlmostEqual(self.b_fm, 2.2923417985218975, places=12)
+
+    def test_official_v6_default_xenon_dispatch_coverage(self):
+        source_path = HERE.parents[1] / "v6" / "dmformfactor-V6.m"
+        source = source_path.read_text(encoding="utf-8")
+        masses = [
+            int(value) for value in re.findall(
+                r"If\\[Ziso\\s*==\\s*54\\s*&&\\s*Mxx\\s*==\\s*(\\d+)\\s*,",
+                source,
+            )
+        ]
+        self.assertEqual(masses, [128, 129, 130, 131, 132, 134, 136])
+        self.assertIn(
+            "Cannot find default matrix which matches input M and Z!",
+            source,
+        )
+        # Xe-124 and Xe-126 are natural isotopes, but have no default
+        # AFH v6.0 xenon density-matrix dispatch entries.
+        for missing_mass in (124, 126):
+            self.assertNotIn(
+                f"If[Ziso==54&&Mxx=={missing_mass},",
+                source,
+            )
 
     def test_afh_isoscalar_zero_momentum_convention(self):
         W00, _ = afh.package_w00(0.0, self.rows, self.b, self.Tiso)
