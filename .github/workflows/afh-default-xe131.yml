@@ -21,6 +21,7 @@ on:
     paths:
       - .github/workflows/afh-default-xe131.yml
       - research/afh_default_density_xe131/**
+      - research/afh_default_density_natural_xenon_halo/**
 
 permissions:
   contents: write
