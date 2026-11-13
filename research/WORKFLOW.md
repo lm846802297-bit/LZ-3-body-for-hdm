@@ -235,7 +235,40 @@ through an available execution route and record the CI status accurately.
 Do not misclassify infrastructure failure as scientific failure or claim an
 unrun check passed.
 
-## 6. Merge and cleanup
+## 6. Merge strategy and commit-history policy
+
+### Default: merge commit
+
+Use **Create a merge commit** as the default GitHub PR merge method for research and substantive repository changes.
+
+Rationale:
+
+- Preserve the topic branch's individual commits and their parent/child relationships in the repository history.
+- Keep the PR boundary explicit through the merge commit.
+- Make it possible to trace a scientific change through its intermediate derivation, implementation, test, correction, and result commits.
+- Retain useful bisect and provenance information when a later numerical or physical discrepancy must be traced to a particular change.
+
+For research code, a commit may represent a distinct equation change, convention correction, numerical method, regression test, input update, or validation result. Do not discard that history merely to make the main log shorter.
+
+### Allowed exceptions
+
+Use **Squash and merge** only when the PR is genuinely one indivisible maintenance or documentation unit and its individual commits do not carry useful scientific or review provenance. Examples include formatting-only cleanup, typo fixes, or a small batch of trivial edits. If a research PR contains meaningful intermediate scientific decisions or independently useful validation steps, do not squash it by default.
+
+Use **Rebase and merge** only when a linear history is explicitly desired and the topic commits have already been organized into meaningful, reviewable units. Note that rebase-and-merge rewrites commit identities; it does not preserve the original branch's exact commit graph.
+
+### Before merging
+
+1. Inspect the PR commit list and diff; do not choose a method solely by commit count.
+2. Confirm that commit messages identify meaningful changes and that temporary, duplicate, or misleading commits have been cleaned up on the topic branch when appropriate.
+3. Confirm the PR is focused and its scientific scope, tests, provenance, and limitations are documented.
+4. Select **Create a merge commit** unless a documented exception above applies.
+5. After merging, verify the merge commit and resulting files on main. Preserve the PR URL as the review record.
+
+Do not rewrite or force-push a branch after review merely to obtain a prettier history. If history cleanup is necessary, coordinate it before final review and re-check the resulting diff.
+
+The choice of merge strategy does not change the scientific acceptance criteria: a merge commit is not evidence that a calculation is correct, and a squash commit is not evidence that its intermediate work was invalid. Report archival status and physics validation separately.
+
+## 7. Merge and cleanup
 
 Before merging:
 
@@ -252,7 +285,7 @@ Use a merge commit by default. After merging, verify that the result is on
 main, then delete the topic branch if no further work depends on it.
 Continue future work from a fresh branch created from the updated main.
 
-## 7. Current repository convention
+## 8. Current repository convention
 
 The current top-level research areas are:
 
