@@ -7,10 +7,10 @@ param(
 $ErrorActionPreference = "Stop"
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $tempExtract = $null
+$sourceInput = (Resolve-Path -LiteralPath $AfhSource).Path
 Push-Location $scriptDir
 
 try {
-    $sourceInput = (Resolve-Path -LiteralPath $AfhSource).Path
     if (-not (Test-Path -LiteralPath $sourceInput -PathType Leaf)) {
         throw "AfhSource must be a .m file or the original AFH v6.0 ZIP archive."
     }
@@ -30,7 +30,7 @@ try {
         Expand-Archive -LiteralPath $sourceInput -DestinationPath $tempExtract -Force
         $packageMatches = @(Get-ChildItem -LiteralPath $tempExtract -Filter "dmformfactor-V6.m" -File -Recurse)
         if ($packageMatches.Count -ne 1) {
-            throw "Expected exactly one dmformfactor-V6.m in the AFH ZIP; found $($matches.Count)."
+            throw "Expected exactly one dmformfactor-V6.m in the AFH ZIP; found $($packageMatches.Count)."
         }
         $packagePath = $packageMatches[0].FullName
     }
@@ -104,12 +104,15 @@ try {
         }
     }
 
+    $wolframVersion = "not recorded"
+    if ($wolframVersionLine) { $wolframVersion = $wolframVersionLine -replace "^WolframVersion = ", "" }
+
     $manifest = [ordered]@{
         status = "PASS"
         afhArchiveSha256 = $archiveSha
         afhSourceFileSha256 = $sourceSha
         densityMatrixCsvSha256 = $matrixSha
-        wolframVersion = if ($wolframVersionLine) { $wolframVersionLine -replace "^WolframVersion = ", "" } else { "not recorded" }
+        wolframVersion = $wolframVersion
         pythonReferenceCsvSha256 = (Get-FileHash -LiteralPath $pythonCsv -Algorithm SHA256).Hash.ToLowerInvariant()
         mathematicaNativeCsvSha256 = (Get-FileHash -LiteralPath $mathematicaCsv -Algorithm SHA256).Hash.ToLowerInvariant()
         comparisonJsonSha256 = (Get-FileHash -LiteralPath $comparisonJson -Algorithm SHA256).Hash.ToLowerInvariant()
