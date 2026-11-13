@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """AFH-default natural-xenon halo fold for selected Figure-2 recoil points."""
 from __future__ import annotations
-import argparse, csv, json, math, sys
+import argparse, csv, hashlib, json, math, sys
 from pathlib import Path
 import numpy as np
 from numpy.polynomial.legendre import leggauss
@@ -207,6 +207,8 @@ def main():
         "AFH_reference":"Anand, Fitzpatrick and Haxton, Phys. Rev. C 89 (2014) 065501, arXiv:1308.6288; DMFormFactor v6.0 built-in sdgXeA default densities",
         "response_source_sha256":response_sha,
         "response_sample_file":str(args.response_samples),
+        "response_sample_sha256":hashlib.sha256(args.response_samples.read_bytes()).hexdigest(),
+        "response_sample_rows":len(response),
         "available_isotopes":list(abundance),
         "available_natural_atom_fraction":sum(abundance.values()),
         "omitted_isotopes":[124,126],
