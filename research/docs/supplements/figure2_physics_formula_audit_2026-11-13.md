@@ -342,9 +342,9 @@ N_{\rm sig}^{\rm ROI}
 
 | 编号 | 问题 | 处理 | 状态 |
 |---|---|---|---|
-| P1-01 | 原始工作稿 AFH response 使用 \(4\pi W_M/(2J+1)\) 却声明 \(R_A(0)=A^2\) | 改为 \(16\pi W_{M,\rm AFH,v6}/(2J+1)\)，明确 raw \(A^2/4\) 到 physical \(A^2\) 的映射 | <span>已修正</span> |
-| P1-02 | 原始工作稿将 \(y=b_A^2m_AE_R/2\) 写成无条件定义 | 改为 \(y=(b_AQ/2)^2\)，并标明前式为小反冲近似 | <span>已修正</span> |
-| P1-03 | 天然氙 metadata 的 \`response_sample_sha256\` 实际为 40 位 Git blob SHA-1 | 替换为文件真实 64 位 SHA-256；runner 和 validator 增加校验 | <span>已修正</span> |
+| P1-01 | 原始工作稿 AFH response 使用 \(4\pi W_M/(2J+1)\) 却声明 \(R_A(0)=A^2\) | 改为 \(16\pi W_{M,\rm AFH,v6}/(2J+1)\)，明确 raw \(A^2/4\) 到 physical \(A^2\) 的映射 | **已修正** |
+| P1-02 | 原始工作稿将 \(y=b_A^2m_AE_R/2\) 写成无条件定义 | 改为 \(y=(b_AQ/2)^2\)，并标明前式为小反冲近似 | **已修正** |
+| P1-03 | 天然氙 metadata 的 \`response_sample_sha256\` 实际为 40 位 Git blob SHA-1 | 替换为文件真实 64 位 SHA-256；runner 和 validator 增加校验 | **已修正** |
 | P1-04 | Dirac/Majorana、复耦合相位、完整 \(\chi_2\) 自能未由原始模型文本固定 | 明确保留为模型输入/理论扩展，不将条件性宽度推广 | <span>待补模型定义</span> |
 | P1-05 | Xe-124、Xe-126 的 AFH default response 缺失；完整 16807 行七同位素响应表未提交 | 在主索引中登记 checksum-only provenance 与缺失输入 | <span>待补输入</span> |
 | P1-06 | 原始 Figure 2 的单同位素/天然氙靶定义不明确 | 不把当前 LZ 天然氙扩展误称为原图已确认靶定义 | <span>待补原始输入</span> |
