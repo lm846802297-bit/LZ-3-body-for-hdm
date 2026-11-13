@@ -200,8 +200,8 @@ Do[
     wMax2 = mchi^2 + 2.*pChi*Sqrt[2.*mA*ER + ER^2] - 2.*(eChi + mA)*ER;
     open = wMax2 > wMin2;
     If[open && wMax2 >= mchi2^2, Print["On-shell chi2 region: ", benchmark, " ER=", erKev]; Exit[8]];
-    clearance = If[wMax2 > 0., mchi2 - Sqrt[wMax2], Infinity];
-    If[open, minPoleClearance = Min[minPoleClearance, clearance]];
+    clearanceGeV = If[wMax2 > 0., mchi2 - Sqrt[wMax2], Infinity];
+    If[open, minPoleClearance = Min[minPoleClearance, clearanceGeV]];
     {rPackage, rPhysical, qValue} = responseAt[ER];
     If[!NumericQ[rPackage] || !NumericQ[rPhysical] || !NumericQ[qValue], Exit[9]];
     i6Value = If[open, reducedKernel[mchi, ms, deltaM, mA, ER, speedKms, width, nw, nz, nphi], 0.];
@@ -251,7 +251,7 @@ meta = <|
     "physical_response" -> "R_A = 4 C0 R_A_AFH_package",
     "factor_four_applied_in_response_once" -> True,
     "max_native_table_mapping_relative_residual" -> responseNodeResidual,
-    "max_full_grid_factor_four_relative_residual" -> maxFactor4GridResidual|>,
+    "max_full_grid_factor_four_relative_residual" -> maxFactor4GridResidual,\n    "minimum_chi2_pole_clearance_keV" -> minPoleClearance*10^6|>,
   "output" -> <|"rows" -> Length[rows], "csv" -> outPath|>,
   "scope" -> {"Xe-131 only; fixed v=800 km/s; no halo fold or detector response",
     "g2=1 is a chosen factorization of the caption coupling product",
