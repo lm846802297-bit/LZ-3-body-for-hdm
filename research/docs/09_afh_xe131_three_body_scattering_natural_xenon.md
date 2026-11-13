@@ -22,6 +22,7 @@
 - **2026-11-13：** 完成 P0–P2 阶段审查：PR #25 最新 CI（run 43381653706）重新生成 Xe-131 AFH 2401 点响应、60 位 mpmath 全网格对照、28 个天然氙精确空间 q 样本审计及四 benchmark；完成 F1–F12 正文—附录—代码—结果追溯，补充科学状态表。P0 的 Python/归档闭环已完成；原生 Wolfram/Mathematica 仍明确标记为待执行。
 - **2026-11-13：** 修正旧天然氙 metadata 中平均摩尔质量的三位小数舍入，改为由全部九种天然同位素输入加权得到的 131.29276144779053 g/mol，并记录每 kg 靶核数；该平均质量使用全天然丰度，与 AFH 响应仅覆盖七种同位素（0.998158）是两个不同范围。
 - **2026-11-13：** 完成 P1-PhaseSpace 独立推导：从单粒子 Lorentz-invariant 测度重新推导两体相空间、第一段 (t\leftrightarrow E_R) Jacobian、第二段 (z,\phi_*) 变量、(dW^2/(2\pi)) 分解及不变通量；确认在当前 (J_A^0) 相干近似和方位角平均定义下 Eq. (6) 的系数为 (256\pi^3)。同步增加方位角平均权重与相空间系数回归测试。
+- **2026-11-13：** 新增 CI workflow run #318（ID `43392874996`）通过：AFH response 30 tests、q-convention 6 tests、independent numerical validation 3 tests，以及 Eq. (6) 三体相空间/振幅 12 tests 全部 PASS。新增的 `test_phase_space_prefactor_256_pi3` 与 `test_phi_quadrature_weights_are_normalized_average` 均通过；该结果验证程序对解析归一化的实现，不替代完整连续反冲网格的积分收敛审计。
 
 ## 摘要
 
