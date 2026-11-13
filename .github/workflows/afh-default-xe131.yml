@@ -50,6 +50,21 @@ jobs:
         run: |
           python -m py_compile research/afh_default_density_xe131/compare_afh_mathematica_python.py
 
+      - name: Parse native Windows PowerShell runner
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            "research/afh_default_density_xe131/run_native_afh_audit.ps1",
+            [ref]$tokens,
+            [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -gt 0) {
+            $errors | Format-List | Out-String | Write-Error
+            exit 1
+          }
+
       - name: Run AFH response and four-benchmark regression tests
         run: |
           python -m unittest discover \
