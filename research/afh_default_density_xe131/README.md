@@ -107,45 +107,33 @@ For a native AFH Mathematica calculation, use
 `run_afh_default_xe131.wls` with the official package file in this directory
 or set `DMFormFactorPath`.
 
-For an independent native Mathematica/Python comparison, run the following
-from this directory in Windows PowerShell after installing Wolfram Engine or
-Mathematica and making `wolframscript` available on `PATH`:
+For an independent native Mathematica/Python comparison, use the one-command
+Windows PowerShell runner below. It accepts either the original AFH v6.0 ZIP
+archive or the extracted `dmformfactor-V6.m` file:
 
 ```powershell
-# 1. Generate the Python reference grid.
-python .\run_afh_default_xe131.py --outdir .\output
-
-# 2. Point both Wolfram scripts to the official AFH v6.0 source.
-$env:DMFormFactorPath = "C:\path\to\dmformfactor-V6.m"
-
-# 3. Run the native AFH calculation (writes the Mathematica CSV beside the WLS files).
-wolframscript -file .\run_afh_default_xe131.wls
-
-# 4. Compare native and Python results on the identical 2401-point q grid.
-$env:AFHPythonCSV = (Resolve-Path .\output\afh_default_xe131_WM00.csv).Path
-$env:AFHAuditDir = Join-Path (Get-Location) "output\native_audit"
-New-Item -ItemType Directory -Force $env:AFHAuditDir | Out-Null
-wolframscript -file .\verify_afh_xe131_native.wls
-
-# 5. Produce the standalone machine-readable comparison summary.
-python .\compare_afh_mathematica_python.py `
-  --python-csv .\output\afh_default_xe131_WM00.csv `
-  --mathematica-csv .\afh_default_xe131_WM00_mathematica.csv `
-  --output .\output\afh_mathematica_python_comparison.json
+.\\run_native_afh_audit.ps1 -AfhSource "D:\\path\\to\\v6.zip"
 ```
 
-The native verifier compares the raw AFH `W_M^{00}`, the physical
-equal-proton/equal-neutron response with the factor four included exactly
-once, and the final q=0-normalized response. It requires q-grid agreement
-within `1e-14 GeV` (CSV serialization roundoff only) and does not interpolate.
-The response acceptance tolerances are `rtol=2e-8` and
-`atol=2e-10`; the raw q=0 response is separately checked against the
-finite-density-matrix rounding tolerance of `2e-4`.
+The runner verifies the supplied ZIP SHA-256
+(`4e0f70e6e780f3f4a40faa14792cae239d1989cf15d1e211b4fd7389b0460727`) or
+source-file SHA-256
+(`dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372`),
+checks the 67-entry Xe-131 density-matrix CSV, regenerates the Python
+reference from that exact source, runs both native Wolfram scripts, compares
+all 2401 q nodes without interpolation, and writes a SHA-256 manifest.
 
-A successful Python CI run is **not** a substitute for this native Wolfram
-execution. Archive the Wolfram version, AFH source SHA-256, Python CSV SHA-256,
-native CSV, comparison CSV, and minima CSV together when the native run is
-completed.
+Required on the Windows machine: Python with the repository requirements,
+Wolfram Engine or Mathematica with `wolframscript` on `PATH`, and the
+original AFH v6.0 source archive. The outputs are written to
+`output/native_audit/`, including the raw-response comparison, minima,
+Wolfram version, source hashes, CSV hashes, and
+`afh_native_audit_manifest.json`.
+
+A successful Python GitHub Actions run is **not** a substitute for this native
+Wolfram execution. The native audit is considered complete only when the
+manifest reports `status = PASS` and the comparison JSON reports
+`"passed": true`.
 
 ## Independent full-grid mpmath validation
 
