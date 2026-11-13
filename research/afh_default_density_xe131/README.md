@@ -107,6 +107,45 @@ For a native AFH Mathematica calculation, use
 `run_afh_default_xe131.wls` with the official package file in this directory
 or set `DMFormFactorPath`.
 
+For an independent native Mathematica/Python comparison, run the following
+from this directory in Windows PowerShell after installing Wolfram Engine or
+Mathematica and making `wolframscript` available on `PATH`:
+
+```powershell
+# 1. Generate the Python reference grid.
+python .\\run_afh_default_xe131.py --outdir .\\output
+
+# 2. Point both Wolfram scripts to the official AFH v6.0 source.
+$env:DMFormFactorPath = "C:\\path\\to\\dmformfactor-V6.m"
+
+# 3. Run the native AFH calculation (writes the Mathematica CSV beside the WLS files).
+wolframscript -file .\\run_afh_default_xe131.wls
+
+# 4. Compare native and Python results on the identical 2401-point q grid.
+$env:AFHPythonCSV = (Resolve-Path .\\output\\afh_default_xe131_WM00.csv).Path
+$env:AFHAuditDir = Join-Path (Get-Location) "output\\native_audit"
+New-Item -ItemType Directory -Force $env:AFHAuditDir | Out-Null
+wolframscript -file .\\verify_afh_xe131_native.wls
+
+# 5. Produce the standalone machine-readable comparison summary.
+python .\\compare_afh_mathematica_python.py `
+  --python-csv .\\output\\afh_default_xe131_WM00.csv `
+  --mathematica-csv .\\afh_default_xe131_WM00_mathematica.csv `
+  --output .\\output\\afh_mathematica_python_comparison.json
+```
+
+The native verifier compares the raw AFH `W_M^{00}`, the physical
+equal-proton/equal-neutron response with the factor four included exactly
+once, and the final q=0-normalized response. It rejects a changed q grid and
+does not interpolate. The acceptance tolerances are `rtol=2e-8` and
+`atol=2e-10`; the raw q=0 response is separately checked against the
+finite-density-matrix rounding tolerance of `2e-4`.
+
+A successful Python CI run is **not** a substitute for this native Wolfram
+execution. Archive the Wolfram version, AFH source SHA-256, Python CSV SHA-256,
+native CSV, comparison CSV, and minima CSV together when the native run is
+completed.
+
 ## Independent full-grid mpmath validation
 
 The CI workflow now evaluates the AFH finite sums independently with 60-digit
