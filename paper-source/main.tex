@@ -207,9 +207,20 @@ Both diagrams and their interference are retained.
 
 At leading order in the non-relativistic nuclear current, vector
 exchange probes the coherent charge response.
-For equal proton and neutron couplings, $g_p=g_n=g_{VN}$, we use the response function
-$\mathcal R_A(E_R)=4\pi W_M^{00}(y)/(2J_A+1)$,
-where $y=b_A^2m_AE_R/2$ and $\mathcal R_A(0)=A^2$
+For equal physical proton and neutron couplings, $g_p=g_n=g_{VN}$, we use the physical response associated with the raw AFH v6.0 isoscalar output,
+\begin{equation}
+\mathcal R_A(E_R)
+=\frac{16\pi}{2J_A+1}W_{M,\mathrm{AFH,v6}}^{00}(y),
+\qquad
+y=\left(\frac{b_A Q}{2}\right)^2,
+\qquad
+Q=\sqrt{2m_AE_R+E_R^2},
+\end{equation}
+so that $\mathcal R_A(0)=A^2$.
+The raw AFH package convention gives
+$4\pi W_{M,\mathrm{AFH,v6}}^{00}(0)/(2J_A+1)=A^2/4$;
+the factor of four maps its isoscalar normalization to the physical equal-$p,n$ nucleon coupling and is included here exactly once. The frequently used
+$y\simeq b_A^2m_AE_R/2$ is the small-recoil limit $E_R\ll m_A$.
 \cite{Anand:2013yka}.
 The differential cross section is
 \begin{equation}
