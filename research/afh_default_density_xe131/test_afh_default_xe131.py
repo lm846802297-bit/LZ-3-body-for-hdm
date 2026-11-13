@@ -52,6 +52,8 @@ class AFHDefaultXe131Tests(unittest.TestCase):
         self.assertNotIn(r"\mathcal R_A(E_R)=4\pi W_M^{00}", paper)
 
         self.assertIn("rEqualRaw = 4.0*rAFH;", mma_runner)
+        self.assertIn("rEqualFormula = 16.0 Pi/(2.0 JA + 1.0)*wm;", mma_runner)
+        self.assertIn("factor4Residual > 10^-12", mma_runner)
         self.assertIn("rRaw[q_?NumericQ] := 16 Pi/(2 jA + 1) wm[q];", mma_verifier)
         self.assertIn('"R_equal_pn_raw"', comparator)
         self.assertIn('"raw_AFH_W_M00"', comparator)
