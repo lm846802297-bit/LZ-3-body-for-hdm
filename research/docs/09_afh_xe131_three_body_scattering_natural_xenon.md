@@ -21,6 +21,7 @@
 - **2026-11-12：** 交叉核对主报告与附录 A 的 \(I_6\) 维度约定，将主公式明确写为无量纲 \(\lambda_{\rm dim}\)；在正文补出三体 \(v_{\min,A}\) 显式表达式，并补齐 \(a_A,\theta_q,N_{\rm Av}\) 的符号定义。该工作为公式记号和追溯性修订，不代表新增数值计算。
 - **2026-11-13：** 完成 P0–P2 阶段审查：PR #25 最新 CI（run 43381653706）重新生成 Xe-131 AFH 2401 点响应、60 位 mpmath 全网格对照、28 个天然氙精确空间 q 样本审计及四 benchmark；完成 F1–F12 正文—附录—代码—结果追溯，补充科学状态表。P0 的 Python/归档闭环已完成；原生 Wolfram/Mathematica 仍明确标记为待执行。
 - **2026-11-13：** 修正旧天然氙 metadata 中平均摩尔质量的三位小数舍入，改为由全部九种天然同位素输入加权得到的 131.29276144779053 g/mol，并记录每 kg 靶核数；该平均质量使用全天然丰度，与 AFH 响应仅覆盖七种同位素（0.998158）是两个不同范围。
+- **2026-11-13：** 完成 P1-PhaseSpace 独立推导：从单粒子 Lorentz-invariant 测度重新推导两体相空间、第一段 (t\leftrightarrow E_R) Jacobian、第二段 (z,\phi_*) 变量、(dW^2/(2\pi)) 分解及不变通量；确认在当前 (J_A^0) 相干近似和方位角平均定义下 Eq. (6) 的系数为 (256\pi^3)。同步增加方位角平均权重与相空间系数回归测试。
 
 ## 摘要
 
@@ -92,7 +93,7 @@ dW^2\,
 \left\langle\mathcal L_{00}\right\rangle_{\phi_*}.
 \]
 
-> **公式追溯：** Eq. (6) 与 \(I_6\) 的完整相空间和前因子推导见[附录 A，§A.3–A.4.1](appendices/09A_three_body_kinematics_amplitude.md)；对应程序为 [eq6_kernel.py](../figure2_full_reproduction/eq6_kernel.py)。全部公式—符号—程序—结果映射见[交叉引用索引 F3–F5](formula_symbol_code_cross_reference.md)。
+> **公式追溯：** Eq. (6) 与 \(I_6\) 的完整相空间和前因子推导见[附录 A，§A.3–A.4.2](appendices/09A_three_body_kinematics_amplitude.md)；对应程序为 [eq6_kernel.py](../figure2_full_reproduction/eq6_kernel.py)。全部公式—符号—程序—结果映射见[交叉引用索引 F3–F5](formula_symbol_code_cross_reference.md)。
 
 这里：
 
@@ -565,7 +566,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 ### 8.2 尚未完成或不能过度声称的事项
 
 1. **AFH 原生 Mathematica 验证仍待执行。** 原生 runner 和比较程序已归档，PR #25 CI 仅完成 PowerShell 语法解析，并未执行 Wolfram kernel。mpmath 全网格验证是独立高精度数值交叉检查，不能替代官方 Mathematica 程序的原生执行。
-2. **三体相空间 Jacobian 的独立核验仍未完成。** 当前 Eq. (6) 和程序均使用整体 \(256\pi^3\) 归一化，现有积分回归与收敛检查不能单独证明该常数；仍需从 Lorentz-invariant \(d\Phi_3\) 独立推导变量变换 \((W^2,z,\phi_*)\) 的 Jacobian，并逐项核对 \(2\pi\) 因子。
+2. **三体相空间 Jacobian 与 \(256\pi^3\) 已完成独立推导。** 新增附录 A.4.2，从单粒子不变测度重建两体相空间，显式推导 \(t\leftrightarrow E_R\) Jacobian、\(z=\cos\theta_*\) 及 \(\phi_*\) 的测度、初态通量和 \(J_A^0\simeq2m_A\)，得到 \(d\Phi_3/(dE_RdW^2dzd\phi_*)=\sqrt{\lambda_{\rm dim}}/(512\pi^4p_{\chi_1})\)，对 \(\phi_*\) 使用平均后为 \(1/(256\pi^3p_{\chi_1})\)。适用条件是未极化靶、相干且仅保留 \(J_A^0\) 的旋转对称近似；完整参数网格的数值积分收敛仍单独列为条件性工作。
 3. **AFH 空间 q 的精确与 NR 近似已经区分。** AFH 定义 \(y=(q b_A/2)^2\)，其中 \(q\) 是空间动量转移；精确质量壳关系给出 \(q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}\)。28 个天然氙样本全部匹配 exact spatial q，现作为默认物理基线。\(q_{\rm NR}=\sqrt{2m_AE_R}\) 仅作为小反冲近似，其 Xe-131 响应差异已定量记录。
 4. **Xe-124/Xe-126 尚未纳入 AFH default-density 天然氙求和。** 缺少当前 AFH v6.0 内置 density matrix；七种可用同位素覆盖天然丰度 0.998158，未对这七种同位素重新归一化。
 5. **连续谱的核模型覆盖并不相同。** GCN/JJ55 已有四组 benchmark 的天然氙连续反冲谱；AFH 目前仍是 selected-point rates，因为尚未恢复完整的七同位素 AFH 响应网格。不能把 GCN/JJ55 连续谱称为 AFH 连续谱。
@@ -829,7 +830,7 @@ AFH 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失的 
 |---|---|---|---|
 | F1 精确空间动量、四动量转移与 \(t\) | 已验证 | 核质量壳关系、28 个 AFH 样本 q 审计、exact/NR 对照 | NR 仅为小反冲敏感性对照 |
 | F2 \(W_{\min}^2,W_{\max}^2\) 与相空间开闭 | 条件性验证 | limits、wmax_squared、开闭区间和阈值回归 | 尚未对更宽质量—速度区域做独立扫描 |
-| F3 三体相空间变量与 \(I_6\) | 条件性验证 | \(W^2,z,\phi_*\) 数值实现、代表点积分收敛 | **独立 Jacobian 与 \(256\pi^3\) 常数推导未完成** |
+| F3 三体相空间变量与 \(I_6\) | 条件性验证 | 独立 \(d\Phi_3\) 推导、\(256\pi^3\) 因子核查、方位角平均权重测试、代表点积分收敛 | 完整连续反冲网格的 \(I_6\) 收敛仍需验证 |
 | F4 两张辐射图与 Dirac trace | 条件性验证 | before/after/干涉分解、显式自旋求和、壳条件与四动量闭合 | 目前是代表性测试点，不是全参数扫描 |
 | F5 单同位素固定速度 Eq. (6) | 条件性验证 | 四 benchmark 的 AFH/GCN/JJ55 响应替换与截面重构 | 共用既有 \(I_6\)，并非 640 个独立三体积分重算 |
 | F6 AFH 响应与因子 4 归一化 | 条件性验证 | 原始 \(A^2/4\)、物理 \(A^2\)；2401 点 mpmath；Python 归档闭合 | 原生 Wolfram/Mathematica 2401 点比较待执行 |
@@ -839,12 +840,12 @@ AFH 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失的 
 | F10 天然氙 \(dR/dE_R\) | 条件性验证 | AFH selected-point；GCN/JJ55 连续谱及速度积分收敛 | 完整 AFH 连续谱和 Xe-124/Xe-126 响应未完成 |
 | F11 LZ 效率加权事件数 | 条件性验证 | 一维 Fig. S2 efficiency、2.84 tonne-year、rate-level 折叠 | 二维 NEST、能量分辨、背景与 profile likelihood 未完成 |
 | F12 \(\chi_2\to\chi_1s\) pole width | 条件性验证 | 条件性 Dirac 纯标量单通道宽度公式和数值测试 | 非完整自能；未纳入所有可能开放衰变道 |
-| 三体相空间 Jacobian / \(256\pi^3\) 独立推导 | 未完成 | 现有公式和数值核已使用该前因子 | 需要从 Lorentz-invariant phase space 独立推导 |
+| 三体相空间 Jacobian / \(256\pi^3\) 独立推导 | 已验证 | 从单粒子不变测度独立重建 \(d\Phi_3\)，并逐项核对 \(t\leftrightarrow E_R\)、\(z,\phi_*\)、通量与核电荷流 | 适用于未极化靶、相干且仅保留 \(J_A^0\) 的近似；完整数值积分收敛另行检查 |
 | AFH 原生 Mathematica 全网格运行 | 未完成 | 已归档原生 runner、固定源哈希、PowerShell parser CI PASS | 需要在有 Wolfram Engine/Mathematica 的 Windows 环境运行并归档比较包 |
 | AFH 完整天然氙连续谱 | 未完成 | 七种可用同位素 selected-point rate 已完成 | 需要七同位素完整响应网格；Xe-124/Xe-126 还缺 AFH density matrix |
 | 完整 LZ detector-level recast | 未完成 | GCN/JJ55 一维效率加权 rate-level yields | 需要二维信号 PDF、NEST nuisance、背景和 profile likelihood |
 
-**P0 判定：** 精确空间动量 Python 复算、60 位 mpmath 全网格检查、归档输出比较已完成。**P1 判定：** F1–F12 的追溯索引和三处重点一致性检查已完成；其中 F3 的 \(256\pi^3\) 独立推导仍是未完成项。**P2 判定：** 本表已将已验证、条件性验证和未完成分开登记。原生 Mathematica、完整 AFH 连续谱和完整 LZ likelihood 不因 CI 通过而升级状态。
+**P0 判定：** 精确空间动量 Python 复算、60 位 mpmath 全网格检查、归档输出比较已完成。**P1 判定：** F1–F12 的追溯索引和三处重点一致性检查已完成；其中 F3 的解析相空间 Jacobian 与 \(256\pi^3\) 已独立验证，但完整连续反冲网格收敛仍未完成。**P2 判定：** 本表已将已验证、条件性验证和未完成分开登记。原生 Mathematica、完整 AFH 连续谱和完整 LZ likelihood 不因 CI 通过而升级状态。
 
 ## 13. 公式—符号—程序—结果交叉引用
 
@@ -856,9 +857,9 @@ AFH 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失的 
 |---|---|---|---|
 | F1 | \(q^\mu\)、\(Q=|\mathbf q|\)、\(t\) 的关系 | [A.1](appendices/09A_three_body_kinematics_amplitude.md)、[G.1–G.5](appendices/09G_recoil_momentum_convention_audit.md) | `rate_kinematics.py`、`eq6_kernel.py` |
 | F2 | \(W_{\min}^2,W_{\max}^2\) 与相空间开放条件 | [A.2](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.limits` |
-| F3 | 三体相空间分解和 \(I_6\) | [A.3–A.4.1](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.reduced_kernel` |
+| F3 | 三体相空间分解和 \(I_6\) | [A.3–A.4.2](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.reduced_kernel` |
 | F4 | 两张辐射图、干涉项和 \(\mathcal L_{00}\) | [A.5–A.6](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.vertices`、`spin_trace` |
-| F5 | 单同位素固定速度截面 Eq. (6) | [A.4.1](appendices/09A_three_body_kinematics_amplitude.md) | `joint_xe131.py`、`compute_four_benchmark_dsigma.py` |
+| F5 | 单同位素固定速度截面 Eq. (6) | [A.4.2](appendices/09A_three_body_kinematics_amplitude.md) | `joint_xe131.py`、`compute_four_benchmark_dsigma.py` |
 | F6 | AFH \(b_A,y,W_M^{00},R_A^{\rm phys}\) | [B.2–B.4](appendices/09B_afh_v6_density_matrix_response.md)、[C](appendices/09C_afh_isoscalar_factor4_normalization.md)、[G](appendices/09G_recoil_momentum_convention_audit.md) | `run_afh_default_xe131.py`、`joint_xe131.py` |
 | F7 | \(m_A,x_A,N_T\) 天然氙靶归一化 | [D.1–D.5](appendices/09D_natural_xenon_isotope_target.md) | 两个天然氙 halo/spectrum runner |
 | F8 | 三体阈值速度 \(v_{\min,A}\) | [A.2](appendices/09A_three_body_kinematics_amplitude.md)、[E.2](appendices/09E_halo_velocity_vmin_folding.md) | `rate_kinematics.vmin_three_body_beta` |
@@ -1423,6 +1424,275 @@ I_6
 \]
 
 这个推导采用的条件是：靶核矢量电荷流保留 leading non-relativistic 时间分量 \(2m_A\)，核结构和核自旋平均已经包含在物理响应 \(R_A\) 中，且 \(\phi_*\) 使用平均而非未归一化积分。若改变这些定义，不能继续原样沿用 \(256\pi^3\) 前因子。
+
+### A.4.2 独立审计：从单粒子不变测度逐项重建 \(256\pi^3\)
+
+本节不把 A.4.1 的中间结果作为输入，而从单粒子 Lorentz-invariant 测度重新计算两体相空间、两个角变量的处理方式、通量因子及核电荷流归一化。所有 \(2\pi\) 因子均显式保留。
+
+#### (i) 从单粒子测度得到两体相空间
+
+采用
+\[
+d\Pi_i=\frac{d^3\mathbf p_i}{(2\pi)^3\,2E_i},
+\qquad
+d\Phi_2(Q;a,b)
+=(2\pi)^4\delta^{(4)}(Q-p_a-p_b)d\Pi_a d\Pi_b .
+\]
+在 \(Q\) 静止系，令 \(M=\sqrt{Q^2}\)。积分掉三维动量 delta 函数后，
+\[
+d\Phi_2
+=\frac{p^2dp\,d\Omega}{16\pi^2 E_aE_b}
+\delta(M-E_a-E_b).
+\]
+又有
+\[
+\frac{d(E_a+E_b)}{dp}
+=p\left(\frac1{E_a}+\frac1{E_b}\right)
+=\frac{pM}{E_aE_b}.
+\]
+完成径向动量积分得到
+\[
+\boxed{
+d\Phi_2(Q;a,b)
+=\frac{p_*}{16\pi^2M}d\Omega
+=\frac{\sqrt{\lambda_K(M^2,m_a^2,m_b^2)}}{32\pi^2M^2}d\Omega .
+}
+\]
+因此全立体角积分为
+\[
+\int d\Phi_2
+=\frac{\sqrt{\lambda_K(M^2,m_a^2,m_b^2)}}{8\pi M^2},
+\]
+与标准两体不变相空间归一化一致。
+
+#### (ii) 第一段两体过程：显式计算 \(t\) 的 Jacobian
+
+令
+\[
+s_{\rm tot}=(p+P)^2,\qquad
+\Lambda_{\rm in}
+=\sqrt{\lambda_K(s_{\rm tot},m_{\chi_1}^2,m_A^2)}.
+\]
+在初态质心系中，
+\[
+p_i^*=\frac{\Lambda_{\rm in}}{2\sqrt{s_{\rm tot}}},
+\qquad
+p_f^*=\frac{\sqrt{\lambda_K(s_{\rm tot},m_A^2,W^2)}}{2\sqrt{s_{\rm tot}}}.
+\]
+对 \(p+P\to P'+K\)，两体相空间为
+\[
+d\Phi_2
+=\frac{p_f^*}{16\pi^2\sqrt{s_{\rm tot}}}
+\,d\cos\theta\,d\phi_q.
+\]
+这里 \(\theta\) 是初态轴与末态核动量之间的质心系散射角。由
+\[
+t=(P'-P)^2,\qquad
+\left|\frac{dt}{d\cos\theta}\right|=2p_i^*p_f^*
+\]
+可得
+\[
+\frac{d\Phi_2}{dt\,d\phi_q}
+=\frac{1}{32\pi^2\sqrt{s_{\rm tot}}p_i^*}
+=\frac{1}{16\pi^2\Lambda_{\rm in}}.
+\]
+对 \(\phi_q\) 积分给出
+\[
+\boxed{
+\frac{d\Phi_2}{dt}
+=\frac{1}{8\pi\Lambda_{\rm in}}.
+}
+\]
+这一步已经消耗了第一段两体过程的 \(2\pi\) 方位角因子。它只在未极化靶核、相干且仅保留 \(J_A^0\) 的旋转对称近似下成立；若保留靶极化或横向核流，必须保留 \(\phi_q\)，不能直接使用这一已积分表达式。
+
+核质量壳条件 \(P'^2=P^2=m_A^2\) 给出
+\[
+t=q^2=-2m_AE_R,\qquad
+\left|\frac{dt}{dE_R}\right|=2m_A.
+\]
+靶核静止系还满足
+\[
+\Lambda_{\rm in}=2m_Ap_{\chi_1}.
+\]
+所以
+\[
+\boxed{
+\frac{d\Phi_2(p+P;P',K)}{dE_R}
+=\frac{2m_A}{8\pi\Lambda_{\rm in}}
+=\frac{1}{8\pi p_{\chi_1}}.
+}
+\]
+
+#### (iii) 第二段两体过程：\((z,\phi_*)\) 的 Jacobian
+
+在 \(K\) 静止系，令 \(W=\sqrt{W^2}\)，则
+\[
+|\mathbf k_*|
+=\frac{\sqrt{\lambda_K(W^2,m_{\chi_1}^2,m_s^2)}}{2W}.
+\]
+取
+\[
+z=\cos\theta_*,\qquad d\Omega_*=dz\,d\phi_*,
+\]
+并定义
+\[
+\lambda_{\rm dim}(W^2,m_{\chi_1}^2,m_s^2)
+=\frac{\lambda_K(W^2,m_{\chi_1}^2,m_s^2)}{W^4}.
+\]
+由 (i) 得
+\[
+\boxed{
+d\Phi_2(K;p',k)
+=\frac{\sqrt{\lambda_{\rm dim}}}{32\pi^2}
+\,dz\,d\phi_*.
+}
+\]
+这里没有额外的 \(\sin\theta_*\)：它已通过 \(z=\cos\theta_*\) 的变量变换吸收，因为 \(d\cos\theta_*=-\sin\theta_*d\theta_*\)。
+
+#### (iv) 合并三体相空间：保留未积分的 \(\phi_*\)
+
+插入中间态不变质量的标准分解
+\[
+d\Phi_3
+=\frac{dW^2}{2\pi}
+d\Phi_2(p+P;P',K)d\Phi_2(K;p',k).
+\]
+结合 (ii)、(iii)，得到
+\[
+\boxed{
+\frac{d\Phi_3}
+{dE_R\,dW^2\,dz\,d\phi_*}
+=
+\frac{1}{2\pi}
+\frac{1}{8\pi p_{\chi_1}}
+\frac{\sqrt{\lambda_{\rm dim}}}{32\pi^2}
+=
+\frac{\sqrt{\lambda_{\rm dim}}}
+{512\pi^4p_{\chi_1}}.
+}
+\]
+至此，所有未积分的相空间因子已经确定；尚未对 \(\phi_*\) 作任何平均。
+
+#### (v) 将 \(\phi_*\) 积分改写为平均
+
+论文定义
+\[
+\left\langle\mathcal L_{00}\right\rangle_{\phi_*}
+=\frac{1}{2\pi}\int_0^{2\pi}d\phi_*\,
+\mathcal L_{00}.
+\]
+故
+\[
+\int_0^{2\pi}d\phi_*\,\mathcal L_{00}
+=2\pi\left\langle\mathcal L_{00}\right\rangle_{\phi_*}.
+\]
+将其乘到 (iv) 的相空间测度上：
+\[
+\boxed{
+\frac{\sqrt{\lambda_{\rm dim}}}{512\pi^4p_{\chi_1}}
+\int_0^{2\pi}d\phi_*\,\mathcal L_{00}
+=
+\frac{\sqrt{\lambda_{\rm dim}}}{256\pi^3p_{\chi_1}}
+\left\langle\mathcal L_{00}\right\rangle_{\phi_*}.
+}
+\]
+因此，从 \(512\pi^4\) 到 \(256\pi^3\) 的唯一变化，是把未归一化的方位角积分替换成 \(1/(2\pi)\) 平均；不能再额外乘 \(2\pi\)。
+
+#### (vi) 通量因子与核电荷流
+
+不变通量为
+\[
+F=4\sqrt{(p\cdot P)^2-m_{\chi_1}^2m_A^2}
+=4m_Ap_{\chi_1}.
+\]
+所以
+\[
+d\sigma=\frac{|\mathcal M|^2}{4m_Ap_{\chi_1}}d\Phi_3.
+\]
+在本文的 leading non-relativistic 核电荷近似下，
+\[
+J_A^0\simeq 2m_A,
+\]
+而 \(\mathcal L_{00}\) 已按
+\[
+\mathcal L_{00}
+=\frac12\sum_{s_i,s_f}
+|\bar u(p')\Gamma^0u(p)|^2
+\]
+对初态暗物质自旋平均、对末态自旋求和。核初态自旋平均及求和包含在 \(R_A\) 中。因此振幅平方写为
+\[
+|\mathcal M|^2
+=
+\frac{4m_A^2(g_1g_2g_{VN})^2R_A(E_R)}
+{(m_V^2-t)^2}\mathcal L_{00},
+\qquad
+m_V^2-t=m_V^2+2m_AE_R.
+\]
+结合 (v) 与通量因子，整体质量和动量因子为
+\[
+\frac{4m_A^2}{4m_Ap_{\chi_1}}
+\frac{1}{256\pi^3p_{\chi_1}}
+=
+\boxed{\frac{m_A}{256\pi^3p_{\chi_1}^2}}.
+\]
+故
+\[
+\boxed{
+\frac{d\sigma_A}{dE_R}
+=
+\frac{m_A(g_1g_2g_{VN})^2R_A(E_R)}
+{256\pi^3p_{\chi_1}^2(m_V^2+2m_AE_R)^2}
+I_6,
+}
+\]
+其中
+\[
+I_6=
+\int_{W_{\min}^2}^{W_{\max}^2}dW^2
+\sqrt{\lambda_{\rm dim}}
+\int_{-1}^{1}dz\,
+\left\langle\mathcal L_{00}\right\rangle_{\phi_*}.
+\]
+
+#### (vii) 与正文及 Python 实现逐项对应
+
+| 理论量 | 解析表达式 | 程序对应 |
+|---|---|---|
+| 中间态质量测度 | \(dW^2/(2\pi)\) | \texttt{wvals}, \texttt{wweights} |
+| 第一段反冲相空间 | \(1/(8\pi p_{\chi_1})\) | 已进入 Eq. (6) 外部系数 |
+| 第二段极角测度 | \(dz\) | \texttt{xz}, \texttt{wz} |
+| 第二段方位角平均 | \((2\pi)^{-1}\int d\phi_*\) | \texttt{phis}, \texttt{phiweights=0.5*wp} |
+| 两体末态动量 | \(\sqrt{\lambda_{\rm dim}}\) | \texttt{lambda_dimensionless} |
+| 自旋平均 | \(\frac12\sum_{\rm spins}\) | \texttt{spin_trace} 中的 \texttt{/2.} |
+| 相空间积分 | \(I_6\) | \texttt{reduced_kernel} |
+
+特别地，Gauss–Legendre 变量变换
+\[
+\phi_i=\pi(x_i+1),\qquad d\phi=\pi dx
+\]
+给出
+\[
+\frac{1}{2\pi}\int_0^{2\pi}f(\phi)d\phi
+=\frac12\int_{-1}^{1}f(\pi(x+1))dx
+\simeq\sum_i\frac{w_i}{2}f(\phi_i).
+\]
+因此程序中的 \texttt{phiweights=0.5*wp} 正是方位角平均权重，且其权重和为 1；\texttt{z} 方向仍使用未平均的积分权重，其权重和为 2。
+
+#### (viii) 维度与适用条件
+
+\[
+[d\Phi_3]=\mathrm{GeV}^2,\qquad
+\left[
+\frac{d\Phi_3}{dE_R\,dW^2\,dz\,d\phi_*}
+\right]=\mathrm{GeV}^{-1},
+\]
+与 (iv) 的 \(1/p_{\chi_1}\) 一致。又有
+\[
+[I_6]=\mathrm{GeV}^2,\qquad
+\left[\frac{d\sigma}{dE_R}\right]=\mathrm{GeV}^{-3}.
+\]
+
+**独立推导结论：** 在未极化靶核、相干且仅保留 \(J_A^0\) 的近似、初态暗物质自旋平均已经包含于 \(\mathcal L_{00}\)、核自旋处理已经包含于 \(R_A\)，以及 \(\phi_*\) 采用平均定义的条件下，整体系数确为 \(256\pi^3\)。这一系数来自 Lorentz-invariant 三体相空间、反冲能量 Jacobian、通量和核电荷流；它与 AFH 响应的因子 4 是完全不同的归一化来源。
 
 ### A.5 两张辐射图、振幅与干涉项
 
@@ -2714,7 +2984,7 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 | AFH 原生 Mathematica | 待完成 | WLS runner 和比较脚本已归档；Python/mPMath 全网格交叉验证已通过 | 实际运行 Wolfram kernel 并保存逐点差异 |
 | GCN/JJ55 对照 | 已完成归档 | 三种响应、四 benchmark、1920 行 long table | 对照共享既有 \(I_6\)，不是 640 次独立重算 |
 | 三体运动学/Dirac trace | 已完成代表性检查 | 壳条件、四动量闭合、显式自旋求和、干涉分解 | 扩展到更宽的参数和质量网格 |
-| 三体相空间 Jacobian 与整体 \(256\pi^3\) | 未完成 | 当前 Eq. (6) 和程序采用该前因子，代表性积分回归通过 | 尚需从 Lorentz-invariant \(d\Phi_3\) 独立推导 \((W^2,z,\phi_*)\) 变量变换并逐项核对 \(2\pi\) 因子 |
+| 三体相空间 Jacobian 与整体 \(256\pi^3\) | 已验证 | 附录 A.4.2 从单粒子不变测度独立推导，含 \(t\leftrightarrow E_R\)、\(z,\phi_*\)、通量和 \(J_A^0\) | 适用范围限定于未极化靶、相干且仅保留 \(J_A^0\)；连续网格积分收敛另行验证 |
 | 三体积分收敛 | 已有 selected-point 验证 | 六个天然氙点 \(8×8×4\) 对 \(16×16×8\)，最大差异 \(2.19×10^{-4}\)；独立 Eq. (6) 测试点 \(16×16×8\) 对 \(32×32×16\)，相对差异小于 \(5×10^{-5}\) | 连续反冲谱全网格收敛 |
 | 天然氙速度积分 | 已有 selected-point 验证（exact spatial q） | 五个点 32 对 64 速度节点，最大差异 \(3.31×10^{-6}\)；98 个逐同位素贡献和 14 个总速率在 exact_spatial 默认模式下复现，最大总速率差异 \(2.67×10^{-12}\)，CI run 43044583357 | 连续谱和 halo 参数扫描 |
 | AFH 空间 q 与 NR 近似 | 已完成审计与代码保护 | 28 个天然氙样本匹配 exact spatial q；Xe-131 四点 NR 近似响应差异约 5.5–225 ppm；halo fold CI run 43044583357 通过 | 连续反冲谱需要完整七同位素 AFH 响应网格 |
