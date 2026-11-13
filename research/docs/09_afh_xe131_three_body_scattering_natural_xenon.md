@@ -1158,9 +1158,9 @@ AFH 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失的 
 |---|---|---|---|
 | F1 | \(q^\mu\)、\(Q=|\mathbf q|\)、\(t\) 的关系 | [A.1](appendices/09A_three_body_kinematics_amplitude.md)、[G.1–G.5](appendices/09G_recoil_momentum_convention_audit.md) | `rate_kinematics.py`、`eq6_kernel.py` |
 | F2 | \(W_{\min}^2,W_{\max}^2\) 与相空间开放条件 | [A.2](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.limits` |
-| F3 | 三体相空间分解和 \(I_6\) | [A.3–A.4.2](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.reduced_kernel` |
+| F3 | 三体相空间分解和 \(I_6\) | §2.3 正文推导；[A.3–A.4.2](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.reduced_kernel` |
 | F4 | 两张辐射图、干涉项和 \(\mathcal L_{00}\) | [A.5–A.6](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.vertices`、`spin_trace` |
-| F5 | 单同位素固定速度截面 Eq. (6) | [A.4.2](appendices/09A_three_body_kinematics_amplitude.md) | `joint_xe131.py`、`compute_four_benchmark_dsigma.py` |
+| F5 | 单同位素固定速度截面 Eq. (6) | §2.3 正文推导；[A.4.2](appendices/09A_three_body_kinematics_amplitude.md) | `joint_xe131.py`、`compute_four_benchmark_dsigma.py` |
 | F6 | AFH \(b_A,y,W_M^{00},R_A^{\rm phys}\) | [B.2–B.4](appendices/09B_afh_v6_density_matrix_response.md)、[C](appendices/09C_afh_isoscalar_factor4_normalization.md)、[G](appendices/09G_recoil_momentum_convention_audit.md) | `run_afh_default_xe131.py`、`joint_xe131.py` |
 | F7 | \(m_A,x_A,N_T\) 天然氙靶归一化 | [D.1–D.5](appendices/09D_natural_xenon_isotope_target.md) | 两个天然氙 halo/spectrum runner |
 | F8 | 三体阈值速度 \(v_{\min,A}\) | [A.2](appendices/09A_three_body_kinematics_amplitude.md)、[E.2](appendices/09E_halo_velocity_vmin_folding.md) | `rate_kinematics.vmin_three_body_beta` |
