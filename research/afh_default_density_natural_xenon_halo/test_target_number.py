@@ -11,7 +11,7 @@ REPO = HERE.parents[1]
 INPUT = HERE / "input" / "natural_xenon_isotope_weights.csv"
 ACTIVE_METADATA = HERE / "results" / "metadata.json"
 LEGACY_METADATA = (
-    REPO / "afh_default_density_xe131" / "output"
+    REPO / "research" / "afh_default_density_xe131" / "output"
     / "natural_xenon_halo_metadata_nist_mass.json"
 )
 
