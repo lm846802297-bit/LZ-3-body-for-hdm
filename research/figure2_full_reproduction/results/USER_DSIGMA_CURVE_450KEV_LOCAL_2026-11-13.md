@@ -49,4 +49,4 @@ The two response models share the same Eq. (6) kernel; the differences in the de
 
 ## Native local archive
 
-The local archive contains the 105-point CSV, 1-keV minima refinement CSV, quadrature-convergence CSV, metadata JSON, validation report, and SHA256SUMS. All five listed file checksums were revalidated after correcting the minima table in the report. The native data archive still needs to be added to this branch before this PR is promoted from Draft.
+The local archive contains the 105-point CSV, 1-keV minima refinement CSV, quadrature-convergence CSV, metadata JSON, validation report, and SHA256SUMS. All five listed file checksums were revalidated after correcting the minima table in the report. The pointwise curve CSV, 1-keV minima refinement CSV, quadrature-convergence CSV, and benchmark metadata JSON are now committed in this branch. SHA256SUMS records their content hashes. The PR remains Draft pending final consistency review.
