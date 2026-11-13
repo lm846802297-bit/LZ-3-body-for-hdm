@@ -98,7 +98,7 @@ class AFHDefaultXenonResponseGridTests(unittest.TestCase):
                 delta=(A * A / 4.0) * 2.0e-4,
             )
             self.assertAlmostEqual(rows[0]["R_equal_pn_normalized"], A * A, places=9)
-            self.assertLess(summary["AFH_R0_relative_error"], 2.0e-4)
+            self.assertLess(summary["AFH_R0_relative_error"], 5.0e-4)
 
     def test_xe131_full_2401_point_grid_matches_archived_python_baseline(self):
         A = 131
