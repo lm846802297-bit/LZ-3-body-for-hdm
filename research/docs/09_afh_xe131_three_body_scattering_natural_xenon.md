@@ -1,7 +1,7 @@
 # AFH v6.0 Xe-131 核响应、三体暗物质散射与天然氙反冲率
 
 > 整理日期：2026-11-11  
-> 最近文档更新：2026-11-13（完成 P0 精确空间动量复算归档比较、P1 F1–F12 交叉审查及 P2 科学状态表；原生 Mathematica 与完整 likelihood 仍未完成）  
+> 最近文档更新：2026-11-13（完成 P1-PhaseSpace 独立推导并纳入正文 §2.3；Eq. (6) 归一化 CI 通过；原生 Mathematica 与完整 likelihood 仍未完成）  
 > 对话来源：[ChatGPT 分享对话](https://chatgpt.com/share/6af4660e-e388-83ea-a86a-2482b065dcea)  
 > 对应研究仓库：`lm846802297-bit/LZ-3-body-for-hdm`  
 > 当前归档位置：`research/figure2-p0-4-mainline`；PR #7 已于 2026-11-12 squash-merged（`f4f2ee91f6a51399dd3b5c06d64878b7f79322d7`）  
@@ -24,7 +24,7 @@
 - **2026-11-13：** 完成 P1-PhaseSpace 独立推导：从单粒子 Lorentz-invariant 测度重新推导两体相空间、第一段 (t\leftrightarrow E_R) Jacobian、第二段 (z,\phi_*) 变量、(dW^2/(2\pi)) 分解及不变通量；确认在当前 (J_A^0) 相干近似和方位角平均定义下 Eq. (6) 的系数为 (256\pi^3)。同步增加方位角平均权重与相空间系数回归测试。
 - **2026-11-13：** 天然氙 exact-spatial halo-fold workflow #242（run ID `43392874875`）通过：98 个逐同位素贡献、14 个总速率，最大 kernel-grid 差异 (2.189\times10^{-4})，最大速度网格差异 (3.303\times10^{-6})，相对归档总速率最大差异 (2.671677\times10^{-12})。
 - **2026-11-13：** 新增 CI workflow run #318（ID `43392874996`）通过：AFH response 30 tests、q-convention 6 tests、independent numerical validation 3 tests，以及 Eq. (6) 三体相空间/振幅 12 tests 全部 PASS。新增的 `test_phase_space_prefactor_256_pi3` 与 `test_phi_quadrature_weights_are_normalized_average` 均通过；该结果验证程序对解析归一化的实现，不替代完整连续反冲网格的积分收敛审计。
-- **2026-11-13：** 将 Eq. (6) 的 Lorentz-invariant 三体相空间完整推导从仅附录引用扩展到研究主文档正文 §2.3；正文逐项列出两体相空间、(t\leftrightarrow E_R) Jacobian、(z,\phi_*) 变量、(512\pi^4\to256\pi^3) 平均约定、通量与 (J_A^0)，并对照 Python 与后续 Mathematica 的积分约定。
+- **2026-11-13：** 将 Eq. (6) 的 Lorentz-invariant 三体相空间完整推导从仅附录引用扩展到研究主文档正文 §2.3；正文逐项列出两体相空间、\(t\leftrightarrow E_R\) Jacobian、\((z,\phi_*)\) 变量、\(512\pi^4\to256\pi^3\) 平均约定、通量与 \(J_A^0\)，并对照 Python 与后续 Mathematica 的积分约定。
 
 ## 摘要
 
