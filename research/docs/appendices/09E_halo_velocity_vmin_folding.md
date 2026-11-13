@@ -70,6 +70,74 @@ e^{-(v-v_E)^2/v_0^2}
 
 数值积分上限取 1600 km/s。该分布只用于检查截断 SHM 高速度尾部对结果的影响，不作为与截断 SHM 同等地位的默认 halo 假设。两种 PDF 均进行数值归一化检查。
 
+
+### E.1.1 从银河系静止系截断 Maxwell 分布推导实验室速度 PDF
+
+标准晕模型先在银河系静止系定义三维速度矢量分布
+\[
+f_{\rm gal}(\mathbf u)
+=\frac{1}{N_{\rm esc}\pi^{3/2}v_0^3}
+e^{-u^2/v_0^2}\,
+\Theta(v_{\rm esc}-u).
+\]
+归一化常数由
+\[
+1=\int d^3u\,f_{\rm gal}(\mathbf u)
+=\frac{4\pi}{N_{\rm esc}\pi^{3/2}v_0^3}
+\int_0^{v_{\rm esc}}du\,u^2e^{-u^2/v_0^2}
+\]
+确定。令 \(z_{\rm esc}=v_{\rm esc}/v_0\)，径向积分给出
+\[
+N_{\rm esc}
+=\operatorname{erf}(z_{\rm esc})
+-\frac{2z_{\rm esc}}{\sqrt\pi}e^{-z_{\rm esc}^2}.
+\]
+实验室相对银河系以速度 \(\mathbf v_E\) 运动。伽利略变换只平移速度矢量，
+\[
+\mathbf u=\mathbf v+\mathbf v_E,
+\]
+不改变速度空间体积元。实验室系速度模长 PDF 因而是对方向积分：
+\[
+f_{\rm lab}(v)
+=v^2\int d\Omega_v\,
+f_{\rm gal}(\mathbf v+\mathbf v_E).
+\]
+取 \(\mu=\cos\theta=\hat{\mathbf v}\cdot\hat{\mathbf v}_E\)，则
+\[
+u^2=v^2+v_E^2+2vv_E\mu.
+\]
+在没有逃逸速度截断时，角积分为
+\[
+\int_{-1}^{1}d\mu\,
+e^{-(v^2+v_E^2+2vv_E\mu)/v_0^2}
+=\frac{v_0^2}{2vv_E}
+\left[
+e^{-(v-v_E)^2/v_0^2}
+-e^{-(v+v_E)^2/v_0^2}
+\right].
+\]
+乘上 \(2\pi v^2/(N_{\rm esc}\pi^{3/2}v_0^3)\)，得到第一段速度分布的解析形式。
+
+加入 \(u\le v_{\rm esc}\) 后，角积分还必须满足
+\[
+\mu\le
+\mu_{\max}(v)
+=\frac{v_{\rm esc}^2-v^2-v_E^2}{2vv_E}.
+\]
+当 \(0\le v<v_{\rm esc}-v_E\) 时，所有方向都允许，恢复上面的两指数之差；当
+\(v_{\rm esc}-v_E\le v\le v_{\rm esc}+v_E\) 时，只允许
+\(-1\le\mu\le\mu_{\max}\)，上端指数固定为
+\(e^{-v_{\rm esc}^2/v_0^2}\)，从而得到正文 E.1 的第二个分支；当
+\(v>v_{\rm esc}+v_E\) 时，不存在满足银河系逃逸速度条件的方向，PDF 为零。因此
+\[
+v_{\max,\rm lab}=v_{\rm esc}+v_E.
+\]
+速度平移不改变三维积分的归一化，所以方向积分后的模长 PDF 满足
+\[
+\int_0^\infty dv\,f_{\rm lab}(v)=1.
+\]
+这也解释了为什么它的单位为 \(({\rm km/s})^{-1}\)，而不是三维速度分布的 \(({\rm km/s})^{-3}\)。当前计算未加入年度调制；\(v_E\) 被视为固定 benchmark。
+
 ## E.2 三体过程的最小入射速度 \(v_{\min,A}\)
 
 固定同位素 \(A\) 和反冲能量 \(E_R\) 时，三体过程开放的条件为
@@ -127,6 +195,18 @@ v_{\min,A}=c\beta_{\min}.
 \]
 
 这个阈值来自当前 \(\chi_1+A\to\chi_1+A+s\) 三体运动学，不是弹性散射或普通两体非弹性散射的标准 \(v_{\min}\) 公式。由于 \(m_A\) 不同，每种氙同位素都必须单独计算 \(v_{\min,A}\)。
+
+
+平方前的阈值方程还要求
+\[
+\gamma(\beta Q-E_R)=a_A>0,
+\]
+所以物理解必须满足 \(\beta Q>E_R\)。二次方程的两个代数根中，回代原始未平方方程后，只有
+\[
+\beta_{\min}
+=\frac{QE_R+a_A\sqrt{Q^2-E_R^2+a_A^2}}{Q^2+a_A^2}
+\]
+满足这一符号条件；这就是上式选取正号分支的原因。数值上还应检查 \(0\le\beta_{\min}<1\)。若 \(v_{\min,A}>v_{\max,\rm lab}\)，该同位素在当前截断 halo 下没有速度支持，事件率积分严格为零。
 
 ## E.3 从单同位素截面到天然氙事件率
 
@@ -196,7 +276,67 @@ m_{\chi_1}=1\ {\rm TeV},\qquad m_V=10\ {\rm GeV},
 
 最终 halo-folded rate 的单位为 events/(kg day keV)。速率计算包括秒到天的 \(86400\) 转换，但尚未乘探测器效率或能量分辨函数。
 
-### E.3.1 AFH 响应动量与三体运动学
+
+### E.3.1 从暗物质数密度和粒子通量推导天然氙事件率
+
+暗物质质量密度除以单粒子质量给出数密度
+\[
+n_\chi=\frac{\rho_\chi}{m_{\chi_1}}.
+\]
+实验室系速度落在 \([v,v+dv]\) 的粒子数密度为
+\(n_\chi f_{\rm lab}(v)\,dv\)，它们穿过单位面积的通量为
+\[
+d\mathcal F_\chi
+=n_\chi f_{\rm lab}(v)\,v_{\rm phys}\,dv.
+\]
+对一个固定同位素核，单位时间、单位反冲能量的散射率等于入射通量乘以微分截面：
+\[
+\frac{d\Gamma_A}{dE_R}
+=n_\chi\int_{v_{\min,A}}^{v_{\max}}
+dv\,f_{\rm lab}(v)\,v_{\rm phys}
+\frac{d\sigma_A}{dE_R}(v).
+\]
+每千克天然氙含有 \(N_Tx_A\) 个该同位素核，因此对所有可用同位素求和：
+\[
+\frac{dR}{dE_R}
+=N_T\sum_Ax_A\frac{d\Gamma_A}{dE_R}.
+\]
+将 \(v_{\rm phys}=c(v/c)\) 写成程序使用的混合单位形式，就得到
+\[
+\boxed{
+\frac{dR}{dE_R}
+=N_T\frac{\rho_\chi}{m_{\chi_1}}c
+\sum_Ax_A
+\int_{v_{\min,A}}^{v_{\max}}
+dv\,f_{\rm lab}(v)\frac vc
+\frac{d\sigma_A}{dE_R}(v).
+}
+\]
+这里 \(v\) 与 \(f_{\rm lab}\) 的单位分别为 km/s 和 \(({\rm km/s})^{-1}\)，所以
+\(f_{\rm lab}(v)\,dv\) 与 \(v/c\) 都无量纲；前面的 \(c\) 在通量换算时使用 cm/s。程序在每个速度节点重新计算
+\[
+p_{\chi_1}(v)=\frac{m_{\chi_1}\beta}{\sqrt{1-\beta^2}}
+\]
+和 \(I_{6,A}(v,E_R)\)，因此不能用一个固定速度截面乘以平均速度代替速度积分。
+
+若截面先以自然单位计算，则
+\[
+\left[\frac{d\sigma}{dE_R}\right]={\rm GeV}^{-3}.
+\]
+使用
+\[
+1\ {\rm GeV}^{-2}=0.389379\times10^{-27}\ {\rm cm}^2
+\]
+以及 \(1\ {\rm GeV}=10^6\ {\rm keV}\)，得到
+\[
+1\ {\rm GeV}^{-3}
+\longrightarrow
+0.389379\times10^{-33}\ {\rm cm}^2/{\rm keV}.
+\]
+最后将秒换算为天，乘以 \(86400\ {\rm s/day}\)，输出单位为
+events/(kg day keV)。这里得到的仍是真实核反冲理论率；探测器效率和重建响应要在下一层单独折叠。
+
+### E.3.2 AFH 响应动量与三体运动学
 
 AFH 响应函数使用空间动量转移 \(q\)，满足 \(y=(qb_A/2)^2\)。本节的精确三体质量壳关系给出
 
