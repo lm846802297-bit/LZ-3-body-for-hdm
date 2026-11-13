@@ -22,6 +22,17 @@ class FixedSpeedXe131CurveTests(unittest.TestCase):
         wmin2, wmax2 = recoil_interval(1000.0, 300e-6, mA, 655e-6, 776.0)
         self.assertLessEqual(wmax2, wmin2)
 
+    def test_kinematic_endpoint_bracket(self):
+        # The exact endpoint is about 654.955583 keV for this benchmark.
+        mA = 131 * 0.93149410242
+        wmin2, wmax2 = recoil_interval(
+            1000.0, 300e-6, mA, 654.955e-6, 776.0
+        )
+        self.assertGreater(wmax2, wmin2)
+        wmin2, wmax2 = recoil_interval(
+            1000.0, 300e-6, mA, 654.956e-6, 776.0
+        )
+        self.assertLessEqual(wmax2, wmin2)
     def test_differential_cross_section_unit_conversion(self):
         expected = 0.3893793721e-33
         self.assertTrue(math.isclose(
