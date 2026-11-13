@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[2]
+ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE.parent / "afh_default_density_xe131"))
 
 from generate_afh_default_xenon_response_grid import (  # noqa: E402
