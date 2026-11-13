@@ -20,6 +20,8 @@ from run_afh7_hybrid9_continuous_spectrum import (
     recoil_grid,
     scenario_response,
     stable_build_point,
+    shm_truncated_pdf,
+    speed_nodes,
 )
 from generate_afh_default_xenon_response_grid import read_natural_xenon_masses
 
@@ -61,6 +63,19 @@ class AFHHybrid9ContinuousSpectrumTests(unittest.TestCase):
             )
             self.assertEqual(scenario_response("Helm-9", A, None, 0.5 * A * A), 0.5 * A * A)
         self.assertEqual(len(SCENARIOS), 4)
+
+    def test_speed_quadrature_splits_shm_pdf_kink_and_normalizes(self):
+        v0, ve, vesc = 220.0, 232.0, 544.0
+        kink, vmax = vesc - ve, vesc + ve
+        nodes, weights = speed_nodes(0.0, vmax, 24, breakpoints=(kink,))
+        self.assertEqual(len(nodes), 48)
+        self.assertLess(float(np.max(nodes[:24])), kink)
+        self.assertGreater(float(np.min(nodes[24:])), kink)
+        normalization = sum(
+            float(w) * shm_truncated_pdf(float(v), v0, ve, vesc)
+            for v, w in zip(nodes, weights)
+        )
+        self.assertAlmostEqual(normalization, 1.0, places=12)
 
     def test_recoil_grid_is_sorted_unique_and_contains_anchor_points(self):
         energies = recoil_grid()

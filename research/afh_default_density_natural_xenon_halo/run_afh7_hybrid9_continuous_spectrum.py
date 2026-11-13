@@ -168,13 +168,32 @@ def shm_truncated_pdf(v: float, v0: float, ve: float, vesc: float) -> float:
     return v * bracket / (math.sqrt(math.pi) * v0 * ve * normalization)
 
 
-def speed_nodes(vmin: float, vmax: float, n: int) -> tuple[np.ndarray, np.ndarray]:
+def speed_nodes(
+    vmin: float, vmax: float, n: int, breakpoints: tuple[float, ...] = (),
+) -> tuple[np.ndarray, np.ndarray]:
+    """Gauss-Legendre nodes on smooth subintervals of the speed PDF.
+
+    The truncated SHM PDF changes analytic branch at v_esc-v_E. Splitting
+    there avoids asking one global polynomial rule to resolve that kink.
+    The order n is applied independently on each non-empty segment.
+    """
     if n < 2:
         raise ValueError("speed quadrature order must be >=2")
     if vmax <= vmin:
         return np.empty(0), np.empty(0)
+    internal = sorted({float(x) for x in breakpoints if vmin < x < vmax})
+    bounds = [float(vmin), *internal, float(vmax)]
     x, w = leggauss(int(n))
-    return 0.5 * (vmax + vmin) + 0.5 * (vmax - vmin) * x, 0.5 * (vmax - vmin) * w
+    node_blocks = []
+    weight_blocks = []
+    for left, right in zip(bounds[:-1], bounds[1:]):
+        if right <= left:
+            continue
+        node_blocks.append(0.5 * (right + left) + 0.5 * (right - left) * x)
+        weight_blocks.append(0.5 * (right - left) * w)
+    if not node_blocks:
+        return np.empty(0), np.empty(0)
+    return np.concatenate(node_blocks), np.concatenate(weight_blocks)
 
 
 def global_wmax2(mchi: float, mA: float, speed_kms: float) -> tuple[float, float]:
@@ -310,7 +329,7 @@ def compute_kernel_halo_integral(
             "speed_phase_space_open": False,
             "kernel_halo_integral_GeV": 0.0,
         }
-    velocities, weights = speed_nodes(vmin, vmax, nv)
+    velocities, weights = speed_nodes(vmin, vmax, nv, breakpoints=(vesc - ve,))
     total = 0.0
     for v, weight in zip(velocities, weights):
         v = float(v)
