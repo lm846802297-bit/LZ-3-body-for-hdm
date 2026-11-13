@@ -1,0 +1,921 @@
+{
+  "schema_version": "1.0",
+  "created_on": "2026-11-13",
+  "repository": "lm846802297-bit/LZ-3-body-for-hdm",
+  "branch": "docs/update-figure2-documentation-20261113",
+  "purpose": "Unified provenance index for Figure 2 three-body HDM benchmarks, numerical inputs, parameters, outputs and SHA-256 digests.",
+  "sha256_method": "For committed text files listed here, SHA-256 was recomputed from exact repository file bytes returned in base64 form. For artifacts covered by existing committed SHA256SUMS, the recorded per-file digest was cross-checked against that manifest. External/uncommitted inputs are explicitly listed as checksum-only provenance, not as locally available files.",
+  "external_or_checksum_only_inputs": [
+    {
+      "name": "AFH DMFormFactor v6.0 source archive (user-provided v6.zip)",
+      "repository_path": null,
+      "sha256": "4e0f70e6e780f3f4a40faa14792cae239d1989cf15d1e211b4fd7389b0460727",
+      "availability": "not committed; source provenance only"
+    },
+    {
+      "name": "AFH v6.0 Mathematica source v6/dmformfactor-V6.m",
+      "repository_path": null,
+      "sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+      "availability": "not committed as raw source; source provenance only"
+    },
+    {
+      "name": "Full AFH seven-isotope response table (16807 data rows)",
+      "repository_path": null,
+      "sha256": "44c88f3aaf2fb212facbe68432d38389374255432eec04ce8a76437c82c1be3a",
+      "availability": "checksum and row count only; full file not committed. Current AFH halo fold uses 28 selected samples."
+    },
+    {
+      "name": "AME2020 direct exact-q selected response input",
+      "repository_path": "research/afh_default_density_natural_xenon_halo/input/afh_selected_exact_q_responses.csv",
+      "sha256": "4d7267390be6aa8fa5f4e051719f7aa4f4adb19ca05a4f30e6427f7b4a7a41cd",
+      "availability": "committed; digest also recorded in AME2020 output manifest"
+    }
+  ],
+  "groups": [
+    {
+      "id": "afh-xe131-response",
+      "description": "AFH v6.0 default Xe-131 response, 67 density-matrix entries, 2401 q nodes, fixed b_A, physical equal-p/n normalization R_A(0)=A^2.",
+      "parameters": {
+        "isotope": "Xe-131",
+        "A": 131,
+        "Z": 54,
+        "J_A": 1.5,
+        "density_matrix_entries": 67,
+        "b_A_fm": 2.2923417985218975,
+        "q_grid_GeV": [
+          0,
+          0.6
+        ],
+        "q_step_GeV": 0.00025,
+        "q_nodes": 2401,
+        "response_q": "sqrt(2 m_A E_R + E_R^2)",
+        "raw_AFH_zero_limit": "A^2/4",
+        "physical_zero_limit": "A^2",
+        "physical_mapping": "R_A=16 pi W_M,AFH,v6^(00)/(2 J_A+1)"
+      },
+      "files": [
+        {
+          "path": "research/afh_default_density_xe131/afh_default_xe131_density_matrix.csv",
+          "sha256": "f656145ba2fb9da741b77faed4c01d0dc457c955fa340928b5dbf9cee9bc5d45",
+          "bytes": 1777,
+          "role": "67-entry AFH default Xe-131 density matrix"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv",
+          "sha256": "1b936abf07f54a669ae0680fe230ca7d858297f579ba3113bbbc55c3e76ed83c",
+          "bytes": 598294,
+          "role": "2401-point AFH Xe-131 raw/physical response grid"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/metadata.json",
+          "sha256": "da6c0ac49d9fd44b41263676f356a8a7b10c898e8ad9b58224602c602a1c8d90",
+          "bytes": 3683,
+          "role": "AFH Xe-131 source, normalization, b_A, q grid and minima metadata"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/afh_default_vs_gcn_jj55_cross_section.csv",
+          "sha256": "d1efcdd994b3b1b3dafabb5e39942bb2677c84cd1b69d7660d07435e3722e389",
+          "bytes": 525,
+          "role": "AFH/GCN/JJ55 response comparison input"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv",
+          "sha256": "43acdbb49053fe9967c6389922658d8176200505f26096228a7f787e389271f7",
+          "bytes": 203356,
+          "role": "four benchmark Xe-131 fixed-speed cross-section response substitution"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/figure2_four_benchmarks_dsigma_metadata.json",
+          "sha256": "98a049ccfc8210d9f0d3f0c10f45155acea97a9dab4dc73b5bec8a0a01d709e5",
+          "bytes": 1669,
+          "role": "four benchmark dsigma metadata"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/four_benchmark_metadata.json",
+          "sha256": "9ba064ce439c97e0d7a23185a33b391b9ea7eca98fc8ccbd888b21fd5d5d5ebc",
+          "bytes": 1217,
+          "role": "four benchmark parameter metadata"
+        }
+      ]
+    },
+    {
+      "id": "figure2-four-fixed-speed-benchmarks",
+      "description": "Xe-131 fixed-speed response substitution for Red/Green/Black/Blue. This is a mono-speed diagnostic, not a halo-folded rate.",
+      "parameters": {
+        "m_chi1_GeV": 1000,
+        "m_V_GeV": 10,
+        "coupling_product_squared": 1e-8,
+        "g2": 1,
+        "speed_km_s": 800,
+        "target_mass_scheme": "M_A=131 u",
+        "benchmarks": {
+          "red": {
+            "m_s_keV": 200,
+            "Delta_m_MeV": 1
+          },
+          "green": {
+            "m_s_keV": 300,
+            "Delta_m_MeV": 1
+          },
+          "black": {
+            "m_s_keV": 360,
+            "Delta_m_MeV": 1
+          },
+          "blue": {
+            "m_s_keV": 300,
+            "Delta_m_MeV": 10
+          }
+        },
+        "width_scheme": "conditional Dirac pole width",
+        "models": [
+          "AFH_default",
+          "GCN",
+          "JJ55"
+        ],
+        "I6_recomputed": false
+      },
+      "files": [
+        {
+          "path": "research/afh_default_density_xe131/output/afh_default_vs_gcn_jj55_cross_section.csv",
+          "sha256": "d1efcdd994b3b1b3dafabb5e39942bb2677c84cd1b69d7660d07435e3722e389",
+          "bytes": 525,
+          "role": "AFH/GCN/JJ55 response comparison input"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv",
+          "sha256": "43acdbb49053fe9967c6389922658d8176200505f26096228a7f787e389271f7",
+          "bytes": 203356,
+          "role": "four benchmark Xe-131 fixed-speed cross-section response substitution"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/figure2_four_benchmarks_dsigma_metadata.json",
+          "sha256": "98a049ccfc8210d9f0d3f0c10f45155acea97a9dab4dc73b5bec8a0a01d709e5",
+          "bytes": 1669,
+          "role": "four benchmark dsigma metadata"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/four_benchmark_metadata.json",
+          "sha256": "9ba064ce439c97e0d7a23185a33b391b9ea7eca98fc8ccbd888b21fd5d5d5ebc",
+          "bytes": 1217,
+          "role": "four benchmark parameter metadata"
+        }
+      ]
+    },
+    {
+      "id": "afh-natural-xenon-selected-points",
+      "description": "AFH natural-xenon selected-point halo fold. Not a continuous AFH spectrum.",
+      "parameters": {
+        "m_chi1_GeV": 1000,
+        "m_V_GeV": 10,
+        "coupling_product_squared": 1e-8,
+        "g2": 1,
+        "rho_chi_GeV_cm3": 0.3,
+        "benchmarks": {
+          "red": {
+            "m_s_keV": 200,
+            "Delta_m_MeV": 1
+          },
+          "green": {
+            "m_s_keV": 300,
+            "Delta_m_MeV": 1
+          },
+          "black": {
+            "m_s_keV": 360,
+            "Delta_m_MeV": 1
+          },
+          "blue": {
+            "m_s_keV": 300,
+            "Delta_m_MeV": 10
+          }
+        },
+        "recoil_energies_keV": [
+          101,
+          200,
+          267,
+          542
+        ],
+        "available_isotopes": [
+          128,
+          129,
+          130,
+          131,
+          132,
+          134,
+          136
+        ],
+        "abundance_coverage": 0.998158,
+        "omitted_isotopes": [
+          124,
+          126
+        ],
+        "omitted_abundance": 0.001842,
+        "abundance_renormalized": false,
+        "mass_scheme": "(NIST atomic isotope mass - 54 m_e) u",
+        "response_q": "exact spatial q",
+        "halo_SHM": {
+          "v0_km_s": 220,
+          "vE_km_s": 232,
+          "vesc_km_s": 544,
+          "vmax_lab_km_s": 776
+        },
+        "halo_tail_diagnostic": {
+          "model": "untruncated boosted Maxwell-Boltzmann",
+          "integration_max_km_s": 1600
+        },
+        "quadrature": {
+          "speed_nodes": 32,
+          "kernel": [
+            8,
+            8,
+            4
+          ],
+          "speed_check": [
+            32,
+            64
+          ],
+          "kernel_check": [
+            8,
+            8,
+            4,
+            16,
+            16,
+            8
+          ]
+        },
+        "width_scheme": "conditional Dirac / real scalar / pure scalar / single open channel pole width"
+      },
+      "files": [
+        {
+          "path": "research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv",
+          "sha256": "fd1bb996e5f582c74c3c86d129f1d2dded510c65237d0a7b2ba08861f1d8c991",
+          "bytes": 863,
+          "role": "NIST natural xenon isotope abundance and mass input"
+        },
+        {
+          "path": "research/afh_default_density_natural_xenon_halo/input/afh_response_samples.csv",
+          "sha256": "919bae8f7d3dbe89d090c3ab182e743049e4088b8add57671b635c1d5426aa47",
+          "bytes": 1497,
+          "role": "28 AFH selected response samples: seven isotopes x four recoil energies"
+        },
+        {
+          "path": "research/afh_default_density_natural_xenon_halo/results/metadata.json",
+          "sha256": "7a34c3c5f2e4a55b00611d8ae4ef6681a38e9d57baa639f45619d4fc9efbd90",
+          "bytes": 4310,
+          "role": "AFH natural-xenon selected-point fold parameters and provenance; sample SHA-256 corrected"
+        },
+        {
+          "path": "research/afh_default_density_natural_xenon_halo/results/natural_xenon_halo_rates.csv",
+          "sha256": "93ae142ab66bde2fd8b60c017c1d02c9a5a708fcce35c51ef06706b11521fb16",
+          "bytes": 1218,
+          "role": "14 natural-xenon selected-point total rates"
+        },
+        {
+          "path": "research/afh_default_density_natural_xenon_halo/results/isotope_halo_contributions_compact.csv",
+          "sha256": "15b97626c5f118e7ff403726b7c01f9be654374902c7b63e5502538fcc292b5b",
+          "bytes": 12561,
+          "role": "98 isotope-level rate contributions"
+        },
+        {
+          "path": "research/afh_default_density_natural_xenon_halo/results/vmin_by_isotope_at_101keV.csv",
+          "sha256": "3c0f9c7515ca0d3132ffee52f40fcf42909946dbd7582e30634127cfe58099b6",
+          "bytes": 1617,
+          "role": "101 keV three-body v_min by isotope and benchmark"
+        },
+        {
+          "path": "research/afh_default_density_natural_xenon_halo/results/natural_xenon_q_convention_audit.csv",
+          "sha256": "715635018cfc4596a4ca3e60867f9741e789c88ea9a3719aa58a372e8256696e",
+          "bytes": 3975,
+          "role": "exact spatial-q versus NR response-momentum audit"
+        },
+        {
+          "path": "research/afh_default_density_natural_xenon_halo/results/kernel_order_crosschecks.csv",
+          "sha256": "a546e2aeb486c116859f3a55130346086dd3b0e146485f30fdb3e82595793e5c",
+          "bytes": 933,
+          "role": "Eq. (6) kernel quadrature convergence checks"
+        },
+        {
+          "path": "research/afh_default_density_natural_xenon_halo/results/speed_quadrature_crosschecks.csv",
+          "sha256": "335a0b51a38b77fa53cae38a4529d9317c945c2a8cd2dcb94f7f406e42ff6d35",
+          "bytes": 520,
+          "role": "halo speed quadrature convergence checks"
+        },
+        {
+          "path": "research/afh_default_density_natural_xenon_halo/results/afh_response_input_sha256.txt",
+          "sha256": "389edcc04d0cb1b62ef3c0f8ab6ac2ad5b38b3f6d5da2c682c02b3e51d0b121f",
+          "bytes": 494,
+          "role": "checksum-only provenance for full 16807-row AFH response source"
+        },
+        {
+          "path": "research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py",
+          "sha256": "7da4cbb0e1f62f40649f532bef47158e0ec96a673afa85b87d2a64e58faccd5c",
+          "bytes": 12123,
+          "role": "AFH natural-xenon selected-point fold runner; now records response sample SHA-256"
+        },
+        {
+          "path": "research/afh_default_density_natural_xenon_halo/validate_archived_results.py",
+          "sha256": "b49cc80e9659fe0e3deac624491f7279c943b91ddb622273f6b9c32701df0c85",
+          "bytes": 3362,
+          "role": "archive validator; now verifies selected response sample SHA-256"
+        },
+        {
+          "path": "research/afh_default_density_natural_xenon_halo/output/ame2020_direct_exactq_fold/metadata.json",
+          "sha256": "38d02362a888131362eef801e7f079e68c7aa2328c4f1c94ece7e5354ad4959d",
+          "bytes": 4490,
+          "role": "AME2020 direct exact-q selected-point fold metadata"
+        },
+        {
+          "path": "research/afh_default_density_natural_xenon_halo/output/ame2020_direct_exactq_fold/seven_isotope_halo_rates.csv",
+          "sha256": "755217e6f0d44b22023b920e56d74c6d709102d1e3fbf009a00fcdbdd51dfb80",
+          "bytes": 15058,
+          "role": "AME2020 direct exact-q selected-point seven-isotope rates"
+        },
+        {
+          "path": "research/afh_default_density_natural_xenon_halo/output/ame2020_direct_exactq_fold/SHA256SUMS.txt",
+          "sha256": "a3de78278145049b5ee4dfde2cee76b39e34aaa7ed83692d52f8790fc094f39d",
+          "bytes": 1177,
+          "role": "AME2020 direct exact-q output checksum manifest"
+        }
+      ]
+    },
+    {
+      "id": "ame2020-direct-exact-q-crosscheck",
+      "description": "AME2020 direct AFH exact-q selected-point alternative. The Xe-131-only hybrid must not be described as a full seven-isotope AME2020 result.",
+      "parameters": {
+        "response_points": 56,
+        "available_isotopes": [
+          128,
+          129,
+          130,
+          131,
+          132,
+          134,
+          136
+        ],
+        "recoil_energies_keV": [
+          101,
+          200,
+          267,
+          542
+        ],
+        "mass_schemes": [
+          "NIST nuclear",
+          "AME2020 nuclear"
+        ],
+        "status": "selected-point only; Xe-131 hybrid is not a full AME2020 seven-isotope recalculation"
+      },
+      "files": [
+        {
+          "path": "research/afh_default_density_natural_xenon_halo/output/ame2020_direct_exactq_fold/metadata.json",
+          "sha256": "38d02362a888131362eef801e7f079e68c7aa2328c4f1c94ece7e5354ad4959d",
+          "bytes": 4490,
+          "role": "AME2020 direct exact-q selected-point fold metadata"
+        },
+        {
+          "path": "research/afh_default_density_natural_xenon_halo/output/ame2020_direct_exactq_fold/seven_isotope_halo_rates.csv",
+          "sha256": "755217e6f0d44b22023b920e56d74c6d709102d1e3fbf009a00fcdbdd51dfb80",
+          "bytes": 15058,
+          "role": "AME2020 direct exact-q selected-point seven-isotope rates"
+        },
+        {
+          "path": "research/afh_default_density_natural_xenon_halo/output/ame2020_direct_exactq_fold/SHA256SUMS.txt",
+          "sha256": "a3de78278145049b5ee4dfde2cee76b39e34aaa7ed83692d52f8790fc094f39d",
+          "bytes": 1177,
+          "role": "AME2020 direct exact-q output checksum manifest"
+        }
+      ]
+    },
+    {
+      "id": "gcn-jj55-natural-xenon-continuous-spectra",
+      "description": "Continuous pre-detector natural-xenon spectra for GCN/JJ55. These are not AFH continuous spectra.",
+      "parameters": {
+        "benchmarks": [
+          "red_ms200_dm1",
+          "green_ms300_dm1",
+          "blue_ms300_dm10",
+          "black_ms360_dm1"
+        ],
+        "mass_scheme": "NIST nuclear",
+        "isotopes": [
+          128,
+          129,
+          130,
+          131,
+          132,
+          134,
+          136
+        ],
+        "response_q": "exact spatial q",
+        "halo": "truncated SHM",
+        "detector_response_applied": false
+      },
+      "files": [
+        {
+          "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/red_ms200_dm1/natural_xenon_continuous_spectrum.csv",
+          "sha256": "accca3714a2026b8fefdee4dcdf5b800e3d73b4165c15db6ff21596ffbceebd6",
+          "bytes": 24704,
+          "role": "Red GCN/JJ55 continuous natural-xenon pre-detector spectrum"
+        },
+        {
+          "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/red_ms200_dm1/metadata.json",
+          "sha256": "5061414350f7479728884cd815f01d1a9151ef05323a8f2597fdd578771f8f59",
+          "bytes": 3035,
+          "role": "Red continuous-spectrum metadata"
+        },
+        {
+          "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/red_ms200_dm1/quadrature_crosschecks.csv",
+          "sha256": "e844078b03c77a8a32af710801e22b205e55cb00816ae633efe83f43fe5fa1ac",
+          "bytes": 5460,
+          "role": "Red continuous-spectrum quadrature crosschecks"
+        },
+        {
+          "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/green_ms300_dm1/natural_xenon_continuous_spectrum.csv",
+          "sha256": "6be7a54d8f0f642344e78b8b1610e045c112efbb290f7dd3e3580375780f542f",
+          "bytes": 23634,
+          "role": "Green GCN/JJ55 continuous natural-xenon pre-detector spectrum"
+        },
+        {
+          "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/green_ms300_dm1/metadata.json",
+          "sha256": "4b91c67c39c35e064ddb6be996545ae71c4719902c5aab7e88ca45672897ccdc",
+          "bytes": 3033,
+          "role": "Green continuous-spectrum metadata"
+        },
+        {
+          "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/green_ms300_dm1/quadrature_crosschecks.csv",
+          "sha256": "60b9e7537069c71551a29102d92019021a37a1d6e3b65f2b0fab30aa81d6e96c",
+          "bytes": 5091,
+          "role": "Green continuous-spectrum quadrature crosschecks"
+        },
+        {
+          "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/blue_ms300_dm10/natural_xenon_continuous_spectrum.csv",
+          "sha256": "c0daaa19cc0a4ef9008bee9317cd3f2be0e6e84d1a3a71cca0d2dd60e7c40674",
+          "bytes": 23792,
+          "role": "Blue GCN/JJ55 continuous natural-xenon pre-detector spectrum"
+        },
+        {
+          "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/blue_ms300_dm10/metadata.json",
+          "sha256": "514ed11b617668f42de89a2e86a767fa13fad3b7eb1e2a3f44ab60d3c5a82b94",
+          "bytes": 3034,
+          "role": "Blue continuous-spectrum metadata"
+        },
+        {
+          "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/blue_ms300_dm10/quadrature_crosschecks.csv",
+          "sha256": "26cacc276820807bb9d330e303288c0d4f5213490256642852b2d9e6d8156653",
+          "bytes": 5096,
+          "role": "Blue continuous-spectrum quadrature crosschecks"
+        },
+        {
+          "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/black_ms360_dm1/natural_xenon_continuous_spectrum.csv",
+          "sha256": "03d6250f85cfb218c0649791fc654b79c9927dc44e63440560ca105e6508df28",
+          "bytes": 21279,
+          "role": "Black GCN/JJ55 continuous natural-xenon pre-detector spectrum"
+        },
+        {
+          "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/black_ms360_dm1/metadata.json",
+          "sha256": "01781095f1e46b48acbfe320342dda19ef32c22811826d565fe509d006c59c5d",
+          "bytes": 3034,
+          "role": "Black continuous-spectrum metadata"
+        },
+        {
+          "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/black_ms360_dm1/quadrature_crosschecks.csv",
+          "sha256": "354b500bad368943f72c2faf54bfaf0c28b6db9f42f5609bb6f01ad41e1d16e1",
+          "bytes": 3774,
+          "role": "Black continuous-spectrum quadrature crosschecks"
+        }
+      ]
+    },
+    {
+      "id": "lz-2026-rate-level-fold",
+      "description": "One-dimensional LZ 2026 final-ROI efficiency fold of GCN/JJ55 continuous spectra. Not a two-dimensional detector likelihood or exclusion.",
+      "parameters": {
+        "exposure_tonne_year": 2.84,
+        "exposure_kg_day": 1037310,
+        "ROI_keV": [
+          5.4,
+          269.9
+        ],
+        "efficiency": "central curve plus gray systematic envelope",
+        "integration": "analytic piecewise-linear rate x efficiency",
+        "energy_resolution_smearing": false,
+        "two_dimensional_signal_pdf": false,
+        "background_likelihood": false,
+        "is_exclusion_limit": false
+      },
+      "files": [
+        {
+          "path": "research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv",
+          "sha256": "a0917cd29eef20fbbdc9383b81012f4bd9a669859779e39a8b6ccf47dd8a47ed",
+          "bytes": 27259,
+          "role": "LZ 2026 final-ROI efficiency curve and gray systematic envelope"
+        },
+        {
+          "path": "research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_metadata.json",
+          "sha256": "79cc439938dab45435cfa19f779f5856c2c7d28154f6a92a87d60c4cc7d94a24",
+          "bytes": 2935,
+          "role": "LZ efficiency source and digitization metadata"
+        },
+        {
+          "path": "research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/lz_2026_rate_level_event_yields.csv",
+          "sha256": "82bea75d6a0ae470b2e6ddc26c75f4ae3822739e41638dfa4ebfe9e285a37645",
+          "bytes": 6217,
+          "role": "LZ 2026 one-dimensional efficiency-weighted rate-level event yields"
+        },
+        {
+          "path": "research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/lz_2026_rate_level_metadata.json",
+          "sha256": "335a7d3b7e983be6073a8eb4b31c43076272be1eea4e58c3c02c48ec8443a495",
+          "bytes": 3165,
+          "role": "LZ rate-level fold metadata; no resolution smearing or likelihood"
+        }
+      ]
+    },
+    {
+      "id": "450kev-pointwise-l00",
+      "description": "Separate local pointwise L00 / reduced-kernel diagnostic. Does not include the full natural-xenon rate or detector response.",
+      "parameters": {
+        "m_chi1_GeV": 1000,
+        "m_s_keV": 300,
+        "Delta_m_keV": 450,
+        "m_V_GeV": 10,
+        "g1": 1,
+        "g2": 1,
+        "gVN": 1,
+        "speed_km_s": 776,
+        "ER_keV": 200,
+        "m_A_GeV_approx": 122,
+        "quadrature": [
+          48,
+          40,
+          24
+        ],
+        "scope": "pointwise L00 and I6 only",
+        "github_actions_used": false
+      },
+      "files": [
+        {
+          "path": "research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/USER_L00_BENCHMARK_450KEV_48x40x24.json",
+          "sha256": "b1861ccc7c802af9ea5953a60f4d27f9910c70bae0d05d5094c8248395d1cfe0",
+          "bytes": 2475,
+          "role": "pointwise 450 keV L00 and reduced Eq. (6) kernel result"
+        },
+        {
+          "path": "research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/run_manifest.json",
+          "sha256": "ba155f0a401ac6fa3704f59b5044aa7291e85e0da572c36603c1f859c5a6d939",
+          "bytes": 2150,
+          "role": "pointwise 450 keV L00 run parameters, source commits and validation summary"
+        },
+        {
+          "path": "research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/QUADRATURE_CONVERGENCE_450KEV.csv",
+          "sha256": "5a776ddfbd8022b9f104585984c44de1abd18d87bb9cebbcb9e21941e04872b9",
+          "role": "pointwise L00 quadrature convergence"
+        },
+        {
+          "path": "research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md",
+          "sha256": "4f1791c1e2b212469f7b639ef8a37d0bbb04ea793e82f9fb073ae62ed1caabf3",
+          "role": "pointwise L00 local validation record"
+        }
+      ]
+    },
+    {
+      "id": "450kev-fixed-speed-dsigma",
+      "description": "Separate fixed-speed Xe-131 differential curve; not the pointwise L00 benchmark and not a halo-folded prediction.",
+      "parameters": {
+        "m_chi1_GeV": 1000,
+        "m_s_keV": 300,
+        "Delta_m_keV": 450,
+        "m_V_GeV": 10,
+        "speed_km_s": 776,
+        "target_mass": "M_A=131 u",
+        "width_scheme": "zero width",
+        "response_models": [
+          "GCN",
+          "JJ55"
+        ],
+        "grid_keV": "105 interior points over 130-650 keV",
+        "scope": "fixed-speed d sigma/d E_R"
+      },
+      "files": [
+        {
+          "path": "research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/USER_L00_BENCHMARK_450KEV_48x40x24.json",
+          "sha256": "b1861ccc7c802af9ea5953a60f4d27f9910c70bae0d05d5094c8248395d1cfe0",
+          "bytes": 2475,
+          "role": "pointwise 450 keV L00 and reduced Eq. (6) kernel result"
+        },
+        {
+          "path": "research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/run_manifest.json",
+          "sha256": "ba155f0a401ac6fa3704f59b5044aa7291e85e0da572c36603c1f859c5a6d939",
+          "bytes": 2150,
+          "role": "pointwise 450 keV L00 run parameters, source commits and validation summary"
+        },
+        {
+          "path": "research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/QUADRATURE_CONVERGENCE_450KEV.csv",
+          "sha256": "5a776ddfbd8022b9f104585984c44de1abd18d87bb9cebbcb9e21941e04872b9",
+          "role": "pointwise L00 quadrature convergence"
+        },
+        {
+          "path": "research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md",
+          "sha256": "4f1791c1e2b212469f7b639ef8a37d0bbb04ea793e82f9fb073ae62ed1caabf3",
+          "role": "pointwise L00 local validation record"
+        },
+        {
+          "path": "research/figure2_full_reproduction/results/fixed_speed_xe131_dsigma_450kev.csv",
+          "sha256": "0d1376a64bff21bc7a00555271e5692bddc4a4836bc6e91e0bb102bcdc39c42c",
+          "bytes": 9348,
+          "role": "fixed-speed Xe-131 differential cross-section curve; separate from L00 pointwise test"
+        },
+        {
+          "path": "research/figure2_full_reproduction/results/metadata_user_dsigma_450kev.json",
+          "sha256": "d724d2b2b2d3e54544b68d7d7cd809e0fca4780a7adef5033e3d14c1da1ecae48",
+          "bytes": 7350,
+          "role": "fixed-speed Xe-131 differential-curve metadata"
+        },
+        {
+          "path": "research/figure2_full_reproduction/results/SHA256SUMS_user_dsigma_450kev.txt",
+          "sha256": "fa8d084539bd5c4023c705bc0ff5e94084769a4a96c449197f54124900feb88e",
+          "bytes": 1029,
+          "role": "fixed-speed Xe-131 curve checksum manifest"
+        }
+      ]
+    }
+  ],
+  "files": [
+    {
+      "path": "paper-source/main.tex",
+      "sha256": "422b80423f785f8dceed7b92a38874dfd349a7635b1ec35e8ee548732a7cca0f",
+      "bytes": 19341,
+      "role": "corrected manuscript source; AFH factor-four and exact spatial-q definition"
+    },
+    {
+      "path": "paper-source/SHA256SUMS",
+      "sha256": "39756355689b99d334b1f945966883353796f4f99adec032025c6bc9fe7dfdd4",
+      "bytes": 942,
+      "role": "manuscript source checksum manifest"
+    },
+    {
+      "path": "research/afh_default_density_xe131/afh_default_xe131_density_matrix.csv",
+      "sha256": "f656145ba2fb9da741b77faed4c01d0dc457c955fa340928b5dbf9cee9bc5d45",
+      "bytes": 1777,
+      "role": "67-entry AFH default Xe-131 density matrix"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv",
+      "sha256": "1b936abf07f54a669ae0680fe230ca7d858297f579ba3113bbbc55c3e76ed83c",
+      "bytes": 598294,
+      "role": "2401-point AFH Xe-131 raw/physical response grid"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/metadata.json",
+      "sha256": "da6c0ac49d9fd44b41263676f356a8a7b10c898e8ad9b58224602c602a1c8d90",
+      "bytes": 3683,
+      "role": "AFH Xe-131 source, normalization, b_A, q grid and minima metadata"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/afh_default_vs_gcn_jj55_cross_section.csv",
+      "sha256": "d1efcdd994b3b1b3dafabb5e39942bb2677c84cd1b69d7660d07435e3722e389",
+      "bytes": 525,
+      "role": "AFH/GCN/JJ55 response comparison input"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv",
+      "sha256": "43acdbb49053fe9967c6389922658d8176200505f26096228a7f787e389271f7",
+      "bytes": 203356,
+      "role": "four benchmark Xe-131 fixed-speed cross-section response substitution"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/figure2_four_benchmarks_dsigma_metadata.json",
+      "sha256": "98a049ccfc8210d9f0d3f0c10f45155acea97a9dab4dc73b5bec8a0a01d709e5",
+      "bytes": 1669,
+      "role": "four benchmark dsigma metadata"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/four_benchmark_metadata.json",
+      "sha256": "9ba064ce439c97e0d7a23185a33b391b9ea7eca98fc8ccbd888b21fd5d5d5ebc",
+      "bytes": 1217,
+      "role": "four benchmark parameter metadata"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv",
+      "sha256": "fd1bb996e5f582c74c3c86d129f1d2dded510c65237d0a7b2ba08861f1d8c991",
+      "bytes": 863,
+      "role": "NIST natural xenon isotope abundance and mass input"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/input/afh_response_samples.csv",
+      "sha256": "919bae8f7d3dbe89d090c3ab182e743049e4088b8add57671b635c1d5426aa47",
+      "bytes": 1497,
+      "role": "28 AFH selected response samples: seven isotopes x four recoil energies"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/results/metadata.json",
+      "sha256": "7a34c3c5f2e4a55b00611d8ae4ef6681a38e9d57baa639f45619d4fc9efbd90",
+      "bytes": 4310,
+      "role": "AFH natural-xenon selected-point fold parameters and provenance; sample SHA-256 corrected"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/results/natural_xenon_halo_rates.csv",
+      "sha256": "93ae142ab66bde2fd8b60c017c1d02c9a5a708fcce35c51ef06706b11521fb16",
+      "bytes": 1218,
+      "role": "14 natural-xenon selected-point total rates"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/results/isotope_halo_contributions_compact.csv",
+      "sha256": "15b97626c5f118e7ff403726b7c01f9be654374902c7b63e5502538fcc292b5b",
+      "bytes": 12561,
+      "role": "98 isotope-level rate contributions"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/results/vmin_by_isotope_at_101keV.csv",
+      "sha256": "3c0f9c7515ca0d3132ffee52f40fcf42909946dbd7582e30634127cfe58099b6",
+      "bytes": 1617,
+      "role": "101 keV three-body v_min by isotope and benchmark"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/results/natural_xenon_q_convention_audit.csv",
+      "sha256": "715635018cfc4596a4ca3e60867f9741e789c88ea9a3719aa58a372e8256696e",
+      "bytes": 3975,
+      "role": "exact spatial-q versus NR response-momentum audit"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/results/kernel_order_crosschecks.csv",
+      "sha256": "a546e2aeb486c116859f3a55130346086dd3b0e146485f30fdb3e82595793e5c",
+      "bytes": 933,
+      "role": "Eq. (6) kernel quadrature convergence checks"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/results/speed_quadrature_crosschecks.csv",
+      "sha256": "335a0b51a38b77fa53cae38a4529d9317c945c2a8cd2dcb94f7f406e42ff6d35",
+      "bytes": 520,
+      "role": "halo speed quadrature convergence checks"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/results/afh_response_input_sha256.txt",
+      "sha256": "389edcc04d0cb1b62ef3c0f8ab6ac2ad5b38b3f6d5da2c682c02b3e51d0b121f",
+      "bytes": 494,
+      "role": "checksum-only provenance for full 16807-row AFH response source"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py",
+      "sha256": "7da4cbb0e1f62f40649f532bef47158e0ec96a673afa85b87d2a64e58faccd5c",
+      "bytes": 12123,
+      "role": "AFH natural-xenon selected-point fold runner; now records response sample SHA-256"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/validate_archived_results.py",
+      "sha256": "b49cc80e9659fe0e3deac624491f7279c943b91ddb622273f6b9c32701df0c85",
+      "bytes": 3362,
+      "role": "archive validator; now verifies selected response sample SHA-256"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/output/ame2020_direct_exactq_fold/metadata.json",
+      "sha256": "38d02362a888131362eef801e7f079e68c7aa2328c4f1c94ece7e5354ad4959d",
+      "bytes": 4490,
+      "role": "AME2020 direct exact-q selected-point fold metadata"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/output/ame2020_direct_exactq_fold/seven_isotope_halo_rates.csv",
+      "sha256": "755217e6f0d44b22023b920e56d74c6d709102d1e3fbf009a00fcdbdd51dfb80",
+      "bytes": 15058,
+      "role": "AME2020 direct exact-q selected-point seven-isotope rates"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/output/ame2020_direct_exactq_fold/SHA256SUMS.txt",
+      "sha256": "a3de78278145049b5ee4dfde2cee76b39e34aaa7ed83692d52f8790fc094f39d",
+      "bytes": 1177,
+      "role": "AME2020 direct exact-q output checksum manifest"
+    },
+    {
+      "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/red_ms200_dm1/natural_xenon_continuous_spectrum.csv",
+      "sha256": "accca3714a2026b8fefdee4dcdf5b800e3d73b4165c15db6ff21596ffbceebd6",
+      "bytes": 24704,
+      "role": "Red GCN/JJ55 continuous natural-xenon pre-detector spectrum"
+    },
+    {
+      "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/red_ms200_dm1/metadata.json",
+      "sha256": "5061414350f7479728884cd815f01d1a9151ef05323a8f2597fdd578771f8f59",
+      "bytes": 3035,
+      "role": "Red continuous-spectrum metadata"
+    },
+    {
+      "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/red_ms200_dm1/quadrature_crosschecks.csv",
+      "sha256": "e844078b03c77a8a32af710801e22b205e55cb00816ae633efe83f43fe5fa1ac",
+      "bytes": 5460,
+      "role": "Red continuous-spectrum quadrature crosschecks"
+    },
+    {
+      "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/green_ms300_dm1/natural_xenon_continuous_spectrum.csv",
+      "sha256": "6be7a54d8f0f642344e78b8b1610e045c112efbb290f7dd3e3580375780f542f",
+      "bytes": 23634,
+      "role": "Green GCN/JJ55 continuous natural-xenon pre-detector spectrum"
+    },
+    {
+      "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/green_ms300_dm1/metadata.json",
+      "sha256": "4b91c67c39c35e064ddb6be996545ae71c4719902c5aab7e88ca45672897ccdc",
+      "bytes": 3033,
+      "role": "Green continuous-spectrum metadata"
+    },
+    {
+      "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/green_ms300_dm1/quadrature_crosschecks.csv",
+      "sha256": "60b9e7537069c71551a29102d92019021a37a1d6e3b65f2b0fab30aa81d6e96c",
+      "bytes": 5091,
+      "role": "Green continuous-spectrum quadrature crosschecks"
+    },
+    {
+      "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/blue_ms300_dm10/natural_xenon_continuous_spectrum.csv",
+      "sha256": "c0daaa19cc0a4ef9008bee9317cd3f2be0e6e84d1a3a71cca0d2dd60e7c40674",
+      "bytes": 23792,
+      "role": "Blue GCN/JJ55 continuous natural-xenon pre-detector spectrum"
+    },
+    {
+      "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/blue_ms300_dm10/metadata.json",
+      "sha256": "514ed11b617668f42de89a2e86a767fa13fad3b7eb1e2a3f44ab60d3c5a82b94",
+      "bytes": 3034,
+      "role": "Blue continuous-spectrum metadata"
+    },
+    {
+      "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/blue_ms300_dm10/quadrature_crosschecks.csv",
+      "sha256": "26cacc276820807bb9d330e303288c0d4f5213490256642852b2d9e6d8156653",
+      "bytes": 5096,
+      "role": "Blue continuous-spectrum quadrature crosschecks"
+    },
+    {
+      "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/black_ms360_dm1/natural_xenon_continuous_spectrum.csv",
+      "sha256": "03d6250f85cfb218c0649791fc654b79c9927dc44e63440560ca105e6508df28",
+      "bytes": 21279,
+      "role": "Black GCN/JJ55 continuous natural-xenon pre-detector spectrum"
+    },
+    {
+      "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/black_ms360_dm1/metadata.json",
+      "sha256": "01781095f1e46b48acbfe320342dda19ef32c22811826d565fe509d006c59c5d",
+      "bytes": 3034,
+      "role": "Black continuous-spectrum metadata"
+    },
+    {
+      "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/black_ms360_dm1/quadrature_crosschecks.csv",
+      "sha256": "354b500bad368943f72c2faf54bfaf0c28b6db9f42f5609bb6f01ad41e1d16e1",
+      "bytes": 3774,
+      "role": "Black continuous-spectrum quadrature crosschecks"
+    },
+    {
+      "path": "research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv",
+      "sha256": "a0917cd29eef20fbbdc9383b81012f4bd9a669859779e39a8b6ccf47dd8a47ed",
+      "bytes": 27259,
+      "role": "LZ 2026 final-ROI efficiency curve and gray systematic envelope"
+    },
+    {
+      "path": "research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_metadata.json",
+      "sha256": "79cc439938dab45435cfa19f779f5856c2c7d28154f6a92a87d60c4cc7d94a24",
+      "bytes": 2935,
+      "role": "LZ efficiency source and digitization metadata"
+    },
+    {
+      "path": "research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/lz_2026_rate_level_event_yields.csv",
+      "sha256": "82bea75d6a0ae470b2e6ddc26c75f4ae3822739e41638dfa4ebfe9e285a37645",
+      "bytes": 6217,
+      "role": "LZ 2026 one-dimensional efficiency-weighted rate-level event yields"
+    },
+    {
+      "path": "research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/lz_2026_rate_level_metadata.json",
+      "sha256": "335a7d3b7e983be6073a8eb4b31c43076272be1eea4e58c3c02c48ec8443a495",
+      "bytes": 3165,
+      "role": "LZ rate-level fold metadata; no resolution smearing or likelihood"
+    },
+    {
+      "path": "research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/USER_L00_BENCHMARK_450KEV_48x40x24.json",
+      "sha256": "b1861ccc7c802af9ea5953a60f4d27f9910c70bae0d05d5094c8248395d1cfe0",
+      "bytes": 2475,
+      "role": "pointwise 450 keV L00 and reduced Eq. (6) kernel result"
+    },
+    {
+      "path": "research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/run_manifest.json",
+      "sha256": "ba155f0a401ac6fa3704f59b5044aa7291e85e0da572c36603c1f859c5a6d939",
+      "bytes": 2150,
+      "role": "pointwise 450 keV L00 run parameters, source commits and validation summary"
+    },
+    {
+      "path": "research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/QUADRATURE_CONVERGENCE_450KEV.csv",
+      "sha256": "5a776ddfbd8022b9f104585984c44de1abd18d87bb9cebbcb9e21941e04872b9",
+      "role": "pointwise L00 quadrature convergence"
+    },
+    {
+      "path": "research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md",
+      "sha256": "4f1791c1e2b212469f7b639ef8a37d0bbb04ea793e82f9fb073ae62ed1caabf3",
+      "role": "pointwise L00 local validation record"
+    },
+    {
+      "path": "research/figure2_full_reproduction/results/fixed_speed_xe131_dsigma_450kev.csv",
+      "sha256": "0d1376a64bff21bc7a00555271e5692bddc4a4836bc6e91e0bb102bcdc39c42c",
+      "bytes": 9348,
+      "role": "fixed-speed Xe-131 differential cross-section curve; separate from L00 pointwise test"
+    },
+    {
+      "path": "research/figure2_full_reproduction/results/metadata_user_dsigma_450kev.json",
+      "sha256": "d724d2b2b2d3e54544b68d7d7cd809e0fca4780a7adef5033e3d14c1da1ecae48",
+      "bytes": 7350,
+      "role": "fixed-speed Xe-131 differential-curve metadata"
+    },
+    {
+      "path": "research/figure2_full_reproduction/results/SHA256SUMS_user_dsigma_450kev.txt",
+      "sha256": "fa8d084539bd5c4023c705bc0ff5e94084769a4a96c449197f54124900feb88e",
+      "bytes": 1029,
+      "role": "fixed-speed Xe-131 curve checksum manifest"
+    }
+  ]
+}
