@@ -1114,3 +1114,67 @@ python -m unittest discover -s research/figure2_full_reproduction/tests -v
 
 上述检查验证的是当前 Dirac 基准实现和被测试点，不自动证明所有参数点、所有传播子方案或未定义的 Majorana 模型都已验证。
 
+
+
+## A.8 从 reduced kernel 到完整微分截面：核响应归一化和因子 4
+
+本节明确 \(I_6\) 与核响应在 Eq. (6) 中的分工。前面定义的
+\[
+I_6(v,E_R)=
+\int dW^2\,\sqrt{\lambda_{\rm dim}}
+\int_{-1}^{1}dz\,\frac{1}{2\pi}\int_0^{2\pi}d\phi_*
+\,\mathcal L_{00}
+\]
+只包含三体末态相空间和暗费米子振幅。它不包含 AFH 核响应、矢量传播子或整体耦合。由于 \(\mathcal L_{00}\) 无量纲，
+\[
+[I_6]={\rm GeV}^2.
+\]
+
+对 AFH v6.0 的原生 package 输出，定义
+\[
+R_A^{\rm package}(q)=\frac{4\pi}{2J_A+1}W_{M,\rm AFH}^{00}(q).
+\]
+AFH package 的 isoscalar 系数 convention 对应 \(R_A^{\rm package}(0)\simeq A^2/4\)。有限精度密度矩阵造成的零动量小偏差通过
+\[
+C_0=\frac{A^2}{4R_A^{\rm package}(0)}
+\]
+单独修正。物理等质子、等中子耦合响应因此是
+\[
+\boxed{R_A^{\rm phys}(q)=4C_0R_A^{\rm package}(q)},
+\qquad R_A^{\rm phys}(0)=A^2.
+\]
+这里的因子 4 来自 package 的 isoscalar 接口约定；\(C_0\) 是有限小数精度修正，不能把两者合并成一个经验因子。
+
+当截面 prefactor 使用每核子物理耦合 \(g_{VN}\) 时，
+\[
+\boxed{
+\frac{d\sigma_A}{dE_R}
+=
+\frac{m_A(g_1g_2g_{VN})^2}
+{256\pi^3p_{\chi_1}^2}
+\frac{R_A^{\rm phys}(E_R)}
+{(m_V^2+2m_AE_R)^2}
+I_6(v,E_R)
+}.
+\]
+因子 4 已包含在 \(R_A^{\rm phys}\) 中，不能再在耦合平方或截面结果上乘一次。代码额外计算 \(R_A^{\rm phys}/4\) 的 no-factor-four 控制，要求每个开相空间点满足
+\[
+(d\sigma/dE_R)_{\rm phys}/(d\sigma/dE_R)_{\rm no4}=4.
+\]
+这是防止漏乘或重复乘因子 4 的代数回归检查。
+
+量纲闭合为
+\[
+[m_A/p_{\chi_1}^2]={\rm GeV}^{-1},\quad
+[(m_V^2+2m_AE_R)^{-2}]={\rm GeV}^{-4},\quad
+[I_6]={\rm GeV}^{2},
+\]
+故 \([d\sigma_A/dE_R]={\rm GeV}^{-3}\)。转成 \({\rm cm}^2/{\rm keV}\) 使用 \(0.3893793721\times10^{-33}\)。
+
+数值比较中，AFH 响应的插值自变量必须是精确空间动量
+\[
+q=\sqrt{2m_AE_R+E_R^2},
+\]
+传播子则使用 \(t=-2m_AE_R\)。Mathematica 端读取已归档的 native AFH 2401 点表，不重跑核响应；它独立计算 \(I_6\) 和完整截面。Python 端重新调用 eq6_kernel.py，并用 SciPy PCHIP 独立插值同一 AFH 响应表。两端在同一 benchmark、反冲能量、宽度处方和求积阶数下逐点比较 \(I_6\)、\(R_A\) 和 \(d\sigma_A/dE_R\)。
+
+本节对应的原生程序为 research/afh_default_density_xe131/run_afh_eq6_full_dsigma.wls，Python 比较器为 research/afh_default_density_xe131/compare_full_dsigma_mathematica.py。**程序已加入整合分支，但 Wolfram 原生完整积分尚未运行；因此完整截面逐点对照目前仍为未完成。** AFH 核响应层已经通过的 Mathematica/Python 对照不能替代这一项验收。
