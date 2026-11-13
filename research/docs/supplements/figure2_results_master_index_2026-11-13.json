@@ -956,6 +956,66 @@
       "sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
       "bytes": 94031,
       "role": "official AFH v6.0 Mathematica source; committed and verified against source-file SHA-256"
+    },
+    {
+      "path": "research/afh_default_density_xe131/afh_default_xe131_WM00_mathematica.csv",
+      "sha256": "f3a5ed1c94d5d58eb82b8ef113fe56b4d678c6edaac0b280a7e3cd08c57821f8",
+      "bytes": 355835,
+      "role": "2401-point native Mathematica AFH response table"
+    },
+    {
+      "path": "research/afh_default_density_xe131/afh_default_xe131_mathematica_metadata.txt",
+      "sha256": "c1ae8347a043bf8e522be60c239df594cc997b64dc3648d1726d0ac0e1e502fb",
+      "bytes": 939,
+      "role": "native Mathematica execution metadata and source provenance"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/native_audit/afh_mathematica_python_comparison.json",
+      "sha256": "26d27d4b67944a7bd0fd4fe42e7152a71bd4e169545197c0eb6f417ea537395f",
+      "bytes": 1805,
+      "role": "pointwise Mathematica/Python comparison summary"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/native_audit/afh_native_audit_comparison.csv",
+      "sha256": "76d9bab7196fedd9c172b31b1b6163bd91892c48a21f9ad5b48a98e68ab2bc0c",
+      "bytes": 310,
+      "role": "response-quantity comparison and maximum differences"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/native_audit/afh_native_audit_grid.csv",
+      "sha256": "b957ee3a2df1d1028dc3283397c20e90556827eb6ddd7ea45d73363c423044ae",
+      "bytes": 167393,
+      "role": "2401-point native AFH response grid"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/native_audit/afh_native_audit_manifest.json",
+      "sha256": "166fea30ae95440690a8bfaf2dacae7ad4abca30fe4d6a16174b08aa6c21ee50",
+      "bytes": 1108,
+      "role": "native audit source/output SHA-256 manifest"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/native_audit/afh_native_audit_metadata.txt",
+      "sha256": "2b2a1af9d790bfb7f6fa00ba2745fce862d55e2520683b403f269b4a68f69ead",
+      "bytes": 971,
+      "role": "native audit environment and numerical settings"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/native_audit/afh_native_audit_minima.csv",
+      "sha256": "74d0e837c51a5ea44fd6db1ee7994bf028637852e905322cb7b5f147ced1a68e",
+      "bytes": 277,
+      "role": "native AFH response minimum locations"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/native_audit/python_reference.csv",
+      "sha256": "c383af67a9e149c3ee215b2a1c1944aaecfb9e57813214ea011fdd2dd992f365",
+      "bytes": 598299,
+      "role": "Python reference grid used in the native pointwise comparison"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/afh-native-audit-results.zip",
+      "sha256": "bc9a7179da4a7a73cb105b6f54e95d3fc121acadac64c2bffd76f2162d2bdd67",
+      "bytes": 237475,
+      "role": "complete native AFH Mathematica audit result archive"
     }
   ]
 }
