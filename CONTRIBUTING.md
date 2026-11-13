@@ -31,3 +31,7 @@ research/WORKFLOW.md before starting a new calculation or submitting a change.
 The original manuscript source belongs in paper-source/. Do not modify
 paper-source/main_original.tex or replace original source assets as part of
 an ordinary research-code PR.
+
+## Merge strategy
+
+The default merge method for research and substantive changes is **Create a merge commit**. This preserves the topic branch's individual commits and makes the PR boundary explicit, which is valuable for tracing equations, numerical implementations, tests, corrections, and result provenance. Use Squash and merge only for genuinely trivial, indivisible maintenance or documentation batches whose individual commits carry no useful research history. Use Rebase and merge only when a linear history is intentionally required and the topic commits are already meaningful and reviewable. See [research/WORKFLOW.md](research/WORKFLOW.md#6-merge-strategy-and-commit-history-policy) for the full policy.
