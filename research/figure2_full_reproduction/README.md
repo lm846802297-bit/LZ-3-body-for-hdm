@@ -192,7 +192,7 @@ The supplied 450 keV benchmark now has a self-contained local acceptance record 
 The high-order JSON is byte-identical to the existing results/user_l00_benchmark_delta_m_450kev.json archive. The additional directory preserves the local validation and convergence evidence as a complete, self-contained record. The local acceptance used the same eq6_kernel.py and run_user_l00_benchmark.py blob IDs currently present on main. It validates only the stated pointwise L00 and reduced Eq. (6) integral under the conditional Dirac/pure-scalar/single-channel width assumptions; it is not a halo-folded or detector-level prediction.
 
 
-## Draft: fixed-speed Xe-131 differential cross-section curve (450 keV benchmark)
+## Fixed-speed Xe-131 differential cross-section curve (450 keV benchmark)
 
 A separate runner is staged at run_user_dsigma_curve.py. It scans the fixed-speed Xe-131 recoil interval at v=776 km/s on a 5 keV grid, evaluates Eq. (6), and compares the AFH GCN/JJ55 nuclear responses. The propagator prescription is zero width. The isotope mass is A*u, consistent with the current response archive, not the AME2020 exact isotope mass.
 
@@ -235,8 +235,28 @@ The native outputs are now committed to this branch:
 
 The SHA256 manifest is calculated against the committed LF-normalized file contents. The local archive also retains the original run metadata and a separate checksum manifest.
 
-### Remaining review — keep Draft for now
+### Scope boundary and follow-up
 
 The numerical output and native provenance are now present. Before promotion, the remaining review is scientific scope: keep the A*u mass approximation and zero-width prescription explicitly confined to this benchmark, and do not interpret this fixed-speed, single-isotope curve as a halo-folded or detector-level LZ prediction.
 
 This remains a fixed-speed, zero-width diagnostic using the A*u Xe-131 mass. It is not the AME2020 direct-exact-q result, a natural-xenon halo-folded recoil spectrum, a detector-level LZ prediction, or an exclusion/likelihood calculation.
+
+### Reproduce the fixed-speed Xe-131 curve and figures
+
+From the repository root:
+
+```bash
+python research/figure2_full_reproduction/run_user_dsigma_curve.py \
+  --step-keV 5 --nw 20 --nz 16 --nphi 12 \
+  --output /tmp/xe131_dsigma_450kev.csv
+python research/figure2_full_reproduction/plot_user_dsigma_curve.py
+python -m unittest discover -s research/figure2_full_reproduction/tests -p 'test_user_dsigma_curve.py' -v
+```
+
+The committed 105-point curve covers 130–650 keV. The exact kinematic endpoint is 654.9555833089706 keV; the final 4.9556 keV is reserved for a dedicated endpoint-focused quadrature refinement. The endpoint bracket test is a kinematic check, not a substitute for that integration study.
+
+The two archived SVGs are:
+- results/plots/fixed_speed_xe131_dsigma_450kev.svg
+- results/plots/xe131_gcn_jj55_response_ratio_450kev.svg
+
+This milestone remains a fixed-speed, single-isotope diagnostic with the A*u mass approximation and zero-width prescription. It is not a natural-xenon halo-folded spectrum, detector-level LZ prediction, event-rate calculation, or exclusion.
