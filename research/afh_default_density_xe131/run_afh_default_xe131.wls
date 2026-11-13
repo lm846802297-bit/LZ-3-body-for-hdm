@@ -17,7 +17,7 @@ wmExpr = ResponseNuclear[y, 1, 0, 0];
 If[wmExpr === $Failed || wmExpr === Null, Print["ERROR: AFH ResponseNuclear did not return W_M^{00}."]; Exit[3]];
 qGrid = N[Range[0, Round[qMax/dq]]*dq, 16];
 rows = Table[
-  Module[{q = qGrid[[i]], yy, wm, rAFH, rEqualRaw, er},
+  Module[{q = qGrid[[i]], yy, wm, rAFH, rEqualRaw, rEqualFormula, factor4Residual, er},
     yy = (q*bGeVInv/2.0)^2;
     wm = N[wmExpr /. y -> yy, 30];
     rAFH = 4.0 Pi/(2.0 JA + 1.0)*wm;
