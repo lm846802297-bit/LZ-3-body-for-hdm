@@ -11,9 +11,9 @@ The manuscript uses the raw AFH v6.0 package response and converts it to the phy
 \mathcal R_A(E_R)=\frac{16\pi}{2J_A+1}
 W_{M,\mathrm{AFH,v6}}^{00}(y),
 \qquad
-y=\left(\frac{b_Aq}{2}\right)^2,
+y=\left(\frac{b_A|\mathbf q|}{2}\right)^2,
 \qquad
-q=\sqrt{2m_AE_R+E_R^2},
+|\mathbf q|=\sqrt{2m_AE_R+E_R^2},
 \qquad
 \mathcal R_A(0)=A^2 .
 }
