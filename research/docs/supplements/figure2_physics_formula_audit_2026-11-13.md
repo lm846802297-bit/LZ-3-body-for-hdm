@@ -272,7 +272,7 @@ R_A^{\rm phys}(q)
 
 代码交叉检查：
 - Xe-131 AFH 输出同时保留 raw 与 physical normalized columns；
-- \`recompute_afh_four_benchmarks.py\` 读取 \`R_equal_pn_normalized\)，要求 \(R_A(0)=A^2\)；
+- \`recompute_afh_four_benchmarks.py\` 读取 \`R_equal_pn_normalized\`，要求 \(R_A(0)=A^2\)；
 - \`compute_four_benchmark_dsigma.py\` 将该物理响应直接代入 Eq. (6)，没有再乘一次 4；
 - 天然氙 selected sample 的 \`R_A\` 也是 physical response，halo fold 直接使用，不再额外乘 4。
 
