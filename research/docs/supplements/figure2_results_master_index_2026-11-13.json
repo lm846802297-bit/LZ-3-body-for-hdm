@@ -773,109 +773,109 @@
     },
     {
       "path": "research/afh_default_density_natural_xenon_halo/results/afh_response_input_sha256.txt",
-      "sha256": "389edcc04d0cb1b62ef3c0f8ab6ac2ad5b38b3f6d5da2c682c02b3e51d0b121f",
+      "sha256": "696360203b84737964b0a24667f4d0d65a565e846e54743fbe704caedf61632d",
       "bytes": 494,
       "role": "checksum-only provenance for full 16807-row AFH response source"
     },
     {
       "path": "research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py",
-      "sha256": "f4a45e82112ac49b5449d193d17aa962b0efc09011fe225de0ef456503776610",
+      "sha256": "eb2928b2c6ec35bbcd2c12ea4647fb7afd91dda78d2b21867d69bbf96104472d",
       "bytes": 12350,
       "role": "AFH natural-xenon selected-point fold runner; now records response sample SHA-256"
     },
     {
       "path": "research/afh_default_density_natural_xenon_halo/validate_archived_results.py",
-      "sha256": "6223721156d3963629e9dc35e927ebf0ecd2ffa003d9f123295122f5076062e2",
+      "sha256": "b49cc80e9659fe0e3deac624491f7279c943b91ddb622273f6b9c32701df0c85",
       "bytes": 3362,
       "role": "archive validator; now verifies selected response sample SHA-256"
     },
     {
       "path": "research/afh_default_density_natural_xenon_halo/output/ame2020_direct_exactq_fold/metadata.json",
-      "sha256": "38d02362a888131362eef801e7f079e68c7aa2328c4f1c94ece7e5354ad4959d",
+      "sha256": "37809b55a95265a2d8962aa8f7a1b49e3dbaa91d0c42649d1a73c9f9077c2af0",
       "bytes": 4490,
       "role": "AME2020 direct exact-q selected-point fold metadata"
     },
     {
       "path": "research/afh_default_density_natural_xenon_halo/output/ame2020_direct_exactq_fold/seven_isotope_halo_rates.csv",
-      "sha256": "755217e6f0d44b22023b920e56d74c6d709102d1e3fbf009a00fcdbdd51dfb80",
+      "sha256": "50df02b841f75d242eaeb73e1bcdffee641c3a3319a2335294de43069ff770d5",
       "bytes": 15058,
       "role": "AME2020 direct exact-q selected-point seven-isotope rates"
     },
     {
       "path": "research/afh_default_density_natural_xenon_halo/output/ame2020_direct_exactq_fold/SHA256SUMS.txt",
-      "sha256": "a3de78278145049b5ee4dfde2cee76b39e34aaa7ed83692d52f8790fc094f39d",
+      "sha256": "1819a1f863ba5fc1ca6f8b6a64cafccfbc61fdf6aa91712188524973e9380d31",
       "bytes": 1177,
       "role": "AME2020 direct exact-q output checksum manifest"
     },
     {
       "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/red_ms200_dm1/natural_xenon_continuous_spectrum.csv",
-      "sha256": "accca3714a2026b8fefdee4dcdf5b800e3d73b4165c15db6ff21596ffbceebd6",
+      "sha256": "ddb10da144c72ca741072f79c740567dc8e7d490aea9412ff73dfc17b025323f",
       "bytes": 24704,
       "role": "Red GCN/JJ55 continuous natural-xenon pre-detector spectrum"
     },
     {
       "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/red_ms200_dm1/metadata.json",
-      "sha256": "5061414350f7479728884cd815f01d1a9151ef05323a8f2597fdd578771f8f59",
+      "sha256": "79bd6d8ed513b47923deaedb91cd3e971fad4a6bd118d4b8ab03e13b673040b7",
       "bytes": 3035,
       "role": "Red continuous-spectrum metadata"
     },
     {
       "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/red_ms200_dm1/quadrature_crosschecks.csv",
-      "sha256": "e844078b03c77a8a32af710801e22b205e55cb00816ae633efe83f43fe5fa1ac",
+      "sha256": "5f2dd5d2554f4e6f5d6c6762971b69a52a25d46607f4f58bdb366478120a3a3a",
       "bytes": 5460,
       "role": "Red continuous-spectrum quadrature crosschecks"
     },
     {
       "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/green_ms300_dm1/natural_xenon_continuous_spectrum.csv",
-      "sha256": "6be7a54d8f0f642344e78b8b1610e045c112efbb290f7dd3e3580375780f542f",
+      "sha256": "17445601728b0c665d150ddcf39808e290c1fdfee65f21336ed5a04c406d8090",
       "bytes": 23634,
       "role": "Green GCN/JJ55 continuous natural-xenon pre-detector spectrum"
     },
     {
       "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/green_ms300_dm1/metadata.json",
-      "sha256": "4b91c67c39c35e064ddb6be996545ae71c4719902c5aab7e88ca45672897ccdc",
+      "sha256": "966ac2aeb22dfc523ea90f42bc364909045cde9198f539030ec81bc07d5c2b03",
       "bytes": 3033,
       "role": "Green continuous-spectrum metadata"
     },
     {
       "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/green_ms300_dm1/quadrature_crosschecks.csv",
-      "sha256": "60b9e7537069c71551a29102d92019021a37a1d6e3b65f2b0fab30aa81d6e96c",
+      "sha256": "5c326ecd921da16e37ce1711edc816199038a7195342fd2889c4c97f5af7e217",
       "bytes": 5091,
       "role": "Green continuous-spectrum quadrature crosschecks"
     },
     {
       "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/blue_ms300_dm10/natural_xenon_continuous_spectrum.csv",
-      "sha256": "c0daaa19cc0a4ef9008bee9317cd3f2be0e6e84d1a3a71cca0d2dd60e7c40674",
+      "sha256": "a3fa6753ad01a7e5eeff4a58375a5495ec35aa86fe71765a5a0159d1535288ee",
       "bytes": 23792,
       "role": "Blue GCN/JJ55 continuous natural-xenon pre-detector spectrum"
     },
     {
       "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/blue_ms300_dm10/metadata.json",
-      "sha256": "514ed11b617668f42de89a2e86a767fa13fad3b7eb1e2a3f44ab60d3c5a82b94",
+      "sha256": "6713e7e2c929f44efd82c8b17b5b59d449003a397f258c31dc97c48b3c34eec0",
       "bytes": 3034,
       "role": "Blue continuous-spectrum metadata"
     },
     {
       "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/blue_ms300_dm10/quadrature_crosschecks.csv",
-      "sha256": "26cacc276820807bb9d330e303288c0d4f5213490256642852b2d9e6d8156653",
+      "sha256": "0c3a6bdcce66fa5e237026ccfd5d67856c681788b89537ac35dbda8c84121f4c",
       "bytes": 5096,
       "role": "Blue continuous-spectrum quadrature crosschecks"
     },
     {
       "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/black_ms360_dm1/natural_xenon_continuous_spectrum.csv",
-      "sha256": "03d6250f85cfb218c0649791fc654b79c9927dc44e63440560ca105e6508df28",
+      "sha256": "0a380f165064efb84ba9f3d0699acf8b82068308b3e126177f87657aba48cb82",
       "bytes": 21279,
       "role": "Black GCN/JJ55 continuous natural-xenon pre-detector spectrum"
     },
     {
       "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/black_ms360_dm1/metadata.json",
-      "sha256": "01781095f1e46b48acbfe320342dda19ef32c22811826d565fe509d006c59c5d",
+      "sha256": "aecc9c88f75bebe8bf6679770def964d197217b2d15ca2439164387b31fa8c2c",
       "bytes": 3034,
       "role": "Black continuous-spectrum metadata"
     },
     {
       "path": "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/black_ms360_dm1/quadrature_crosschecks.csv",
-      "sha256": "354b500bad368943f72c2faf54bfaf0c28b6db9f42f5609bb6f01ad41e1d16e1",
+      "sha256": "c315b9558e3fea0be4d1e9fa92c3943a5b2605e1c7acaaea9103577507fdfbba",
       "bytes": 3774,
       "role": "Black continuous-spectrum quadrature crosschecks"
     },
