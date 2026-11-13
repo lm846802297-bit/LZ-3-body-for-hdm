@@ -10,6 +10,7 @@ on:
       - main
       - research/figure2-p0-4-mainline
       - research/afh-default-density-xe131-mainline
+      - research/afh-factor4-normalization-clean
     paths:
       - .github/workflows/afh-default-xe131.yml
       - research/afh_default_density_xe131/**
