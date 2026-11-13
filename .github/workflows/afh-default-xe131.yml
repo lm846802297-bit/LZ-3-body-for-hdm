@@ -1,4 +1,4 @@
-name: AFH response and natural-xenon target-mass validation
+name: AFH, Eq6 phase-space, and natural-xenon validation
 
 concurrency:
   group: afh-default-xe131-${{ github.ref }}
@@ -15,6 +15,8 @@ on:
       - .github/workflows/afh-default-xe131.yml
       - research/afh_default_density_xe131/**
       - research/afh_default_density_natural_xenon_halo/**
+      - research/figure2_full_reproduction/eq6_kernel.py
+      - research/figure2_full_reproduction/tests/test_eq6_kernel.py
   pull_request:
     branches:
       - main
@@ -92,6 +94,12 @@ jobs:
           python -m unittest discover \
             -s research/figure2_full_reproduction/tests \
             -p 'test_natural_xenon_joint.py' -v
+
+      - name: Run Eq. (6) three-body phase-space and amplitude regression tests
+        run: |
+          python -m unittest discover \
+            -s research/figure2_full_reproduction/tests \
+            -p 'test_eq6_kernel.py' -v
 
       - name: Recompute AFH default response
         run: |
