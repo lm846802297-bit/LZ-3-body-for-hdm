@@ -1,0 +1,151 @@
+name: AFH-7, Hybrid-9 and Helm-9 continuous xenon spectra
+
+concurrency:
+  group: afh-hybrid9-spectrum-${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - research/afh-natural-xenon-continuous-20261114
+    paths:
+      - .github/workflows/afh-natural-xenon-hybrid9.yml
+      - research/afh_default_density_natural_xenon_halo/run_afh7_hybrid9_continuous_spectrum.py
+      - research/afh_default_density_natural_xenon_halo/test_afh7_hybrid9_continuous_spectrum.py
+      - research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv
+      - research/afh_default_density_natural_xenon_halo/results/full_afh_v6_default_7_isotope_response/**
+      - research/figure2_full_reproduction/eq6_kernel.py
+      - v6/dmformfactor-V6.m
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+    paths:
+      - .github/workflows/afh-natural-xenon-hybrid9.yml
+      - research/afh_default_density_natural_xenon_halo/run_afh7_hybrid9_continuous_spectrum.py
+      - research/afh_default_density_natural_xenon_halo/test_afh7_hybrid9_continuous_spectrum.py
+      - research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv
+      - research/afh_default_density_natural_xenon_halo/results/full_afh_v6_default_7_isotope_response/**
+      - research/figure2_full_reproduction/eq6_kernel.py
+      - v6/dmformfactor-V6.m
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  calculate-and-validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Check out research branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: research/afh_default_density_xe131/requirements.txt
+
+      - name: Install numerical dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r research/afh_default_density_xe131/requirements.txt
+
+      - name: Compile runner and tests
+        run: |
+          python -m py_compile research/afh_default_density_natural_xenon_halo/run_afh7_hybrid9_continuous_spectrum.py
+          python -m py_compile research/afh_default_density_natural_xenon_halo/test_afh7_hybrid9_continuous_spectrum.py
+
+      - name: Run Helm, exact-q, kinematics and threshold-kernel tests
+        run: |
+          python -m unittest discover \
+            -s research/afh_default_density_natural_xenon_halo \
+            -p 'test_afh7_hybrid9_continuous_spectrum.py' -v
+
+      - name: Generate AFH-7, Hybrid-9, A2 ceiling and Helm-9 spectra
+        run: |
+          python research/afh_default_density_natural_xenon_halo/run_afh7_hybrid9_continuous_spectrum.py \
+            --outdir research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14 \
+            --benchmarks red_ms200_dm1 green_ms300_dm1 black_ms360_dm1 blue_ms300_dm10
+
+      - name: Verify row counts, physical scenario ordering and SHA-256 manifest
+        run: |
+          python - <<'PY'
+          import csv
+          import hashlib
+          import json
+          import math
+          from pathlib import Path
+
+          out = Path("research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14")
+          meta = json.loads((out / "metadata.json").read_text(encoding="utf-8"))
+          assert meta["status"] == "PASS"
+          n_er = meta["recoil_grid_keV"]["points"]
+          with (out / "afh_hybrid9_response_model_comparison.csv").open(newline="", encoding="utf-8") as f:
+              response = list(csv.DictReader(f))
+          with (out / "afh_hybrid9_isotope_kernel_integrals.csv").open(newline="", encoding="utf-8") as f:
+              kernels = list(csv.DictReader(f))
+          with (out / "afh_hybrid9_natural_xenon_spectrum.csv").open(newline="", encoding="utf-8") as f:
+              spectra = list(csv.DictReader(f))
+          with (out / "afh_hybrid9_quadrature_crosschecks.csv").open(newline="", encoding="utf-8") as f:
+              checks = list(csv.DictReader(f))
+          assert len(response) == 9 * n_er, (len(response), n_er)
+          assert len(kernels) == 4 * 9 * n_er, (len(kernels), n_er)
+          assert len(spectra) == 4 * 4 * n_er, (len(spectra), n_er)
+          assert len(checks) == 4 * 4 * 9, len(checks)
+          assert {r["scenario"] for r in spectra} == {
+              "AFH-7", "Hybrid-9 (AFH-7 + Helm-2)",
+              "AFH-7 + A2-2 ceiling", "Helm-9"
+          }
+          for row in spectra:
+              assert math.isfinite(float(row["rate_events_kg_day_keV"]))
+          grouped = {}
+          for row in spectra:
+              grouped.setdefault((row["benchmark"], row["ER_keV"]), {})[row["scenario"]] = float(row["rate_events_kg_day_keV"])
+          for key, values in grouped.items():
+              a = values["AFH-7"]
+              h = values["Hybrid-9 (AFH-7 + Helm-2)"]
+              c = values["AFH-7 + A2-2 ceiling"]
+              assert h + max(1e-35, abs(c) * 1e-12) >= a, (key, a, h)
+              assert c + max(1e-35, abs(c) * 1e-12) >= h, (key, h, c)
+          assert meta["quadrature"]["max_speed_relative_difference"] <= meta["quadrature"]["relative_tolerance"]
+          assert meta["quadrature"]["max_kernel_relative_difference"] <= meta["quadrature"]["relative_tolerance"]
+          for line in (out / "SHA256SUMS.txt").read_text(encoding="utf-8").splitlines():
+              digest, name = line.split("  ", 1)
+              actual = hashlib.sha256((out / name).read_bytes()).hexdigest()
+              assert actual == digest, (name, actual, digest)
+          print(
+              "PASS: response rows=%d, isotope-kernel rows=%d, spectra rows=%d, "
+              "quadrature checks=%d; all scenario orderings and checksums verified."
+              % (len(response), len(kernels), len(spectra), len(checks))
+          )
+          PY
+
+      - name: Upload continuous AFH/Helm natural-xenon archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: afh7-hybrid9-natural-xenon-continuous-2026-11-14
+          path: research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Commit reproducible spectra and manifests
+        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14
+          if git diff --cached --quiet; then
+            echo "AFH/Helm continuous spectra are already up to date."
+          else
+            git commit -m "Archive AFH-7 and Hybrid-9 natural-xenon spectra"
+            BRANCH="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+            git push origin "HEAD:${BRANCH}"
+          fi
