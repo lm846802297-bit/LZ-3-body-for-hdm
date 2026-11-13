@@ -6,6 +6,14 @@
 - [Formula–symbol–text–code–result cross-reference](formula_symbol_code_cross_reference.md): stable F1–F12 identifiers, definitions, units, approximations, code entry points, archived outputs, and validation boundaries.
 - [Research decision register](supplements/research_decision_register.md): discussion candidates, adopted conventions, and scope boundaries. This is supplementary record H, not a formal main-report appendix.
 
+## Current audit and status registers
+
+- [Figure 2 results master index](supplements/figure2_results_master_index_2026-11-13.md): benchmark-to-input/parameter/output map, 48-file SHA-256 manifest, and explicit checksum-only / missing-input records.
+- [Machine-readable result manifest](supplements/figure2_results_master_index_2026-11-13.json): 8 result groups with repository paths, full SHA-256 digests, byte sizes, parameter sets, and scope boundaries.
+- [Physics formula cross-audit](supplements/figure2_physics_formula_audit_2026-11-13.md): original Lagrangian, two radiation diagrams, Dirac trace, three-body phase-space Jacobian, \(256\pi^3\), AFH factor four, \(v_{\min}\), and natural-xenon rate normalization.
+- [Scientific result status table](supplements/figure2_scientific_status_2026-11-13.md): separates verified, partially verified, missing-input, and not-yet-completed tasks.
+- [Anand / AFH coherent-response audit](../figure2_full_reproduction/ANAND_WM_RESPONSE_AUDIT.md): source-level AFH isoscalar convention and the physical equal-\(p,n\) response mapping.
+
 ## Earlier project notes
 
 - 01_model_and_amplitude.md: model definition, three-body amplitude, and propagator structure.
