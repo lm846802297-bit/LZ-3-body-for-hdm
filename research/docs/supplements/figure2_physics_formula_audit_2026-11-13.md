@@ -11,7 +11,7 @@
 1. **AFH factor-of-four 与 exact-\(q\) 定义：** 原始 `paper-source/main.tex` 把 AFH raw isoscalar response 的 \(4\pi W_M^{00}/(2J_A+1)\) 与物理 \(R_A(0)=A^2\) 并列，且将 \(y=b_A^2m_AE_R/2\) 写成无条件定义。这与 AFH v6.0 raw 输出不一致。现已将物理 response 改为 \(16\pi W_{M,\mathrm{AFH,v6}}^{00}/(2J_A+1)\)，并将 \(y\) 改为 exact spatial-\(q\) 定义。
 2. **SHA-256 字段误用 Git blob SHA-1：** 天然氙 metadata 的 `response_sample_sha256` 曾是 40 位 Git blob SHA-1，却标记为 SHA-256。现已换成实际文件的 64 位 SHA-256，并在 archive validator 与后续 runner 中加入自动检查。
 
-3. **Xe-131 原生 Mathematica/Python 对照：** 使用 Wolfram 14.0.0 对 2401 个 (q) 节点逐点比较；网格完全一致，原始 (W_M^{00})、AFH package response、physical raw response 与 (q=0)-normalized response 全部通过，最大相对差异 (3.59087\times10^{-9})。原生输出、manifest 和 SHA-256 已归档；该验证仅限 Xe-131 response-level。
+3. **Xe-131 原生 Mathematica/Python 对照：** 使用 Wolfram 14.0.0 对 2401 个 \(q\) 节点逐点比较；网格完全一致，原始 \(W_M^{00}\)、AFH package response、physical raw response 与 \(q=0\)-normalized response 全部通过，最大相对差异 \(3.59087\times10^{-9}\)。原生输出、manifest 和 SHA-256 已归档；该验证仅限 Xe-131 response-level。
 
 本轮没有改变三体振幅或既有物理数值结果。当前结果仍受 Dirac/Majorana 模型定义、条件性 \(\chi_2\) 宽度、AFH 缺失同位素、连续 (I_6) 收敛和完整 LZ likelihood 等边界限制。
 
@@ -376,7 +376,7 @@ N_{\rm sig}^{\rm ROI}
 | P1-05 | Xe-124、Xe-126 的 AFH default response 缺失；完整 16807 行七同位素响应表未提交 | 已审计官方 v6.0 `SetIsotope` dispatch：仅列出 128、129、130、131、132、134、136；124/126 进入缺失矩阵回退 | **缺失已确认；需独立核结构输入** |
 | P1-06 | 原始 Figure 2 的单同位素/天然氙靶定义不明确 | 不把当前 LZ 天然氙扩展误称为原图已确认靶定义 | <span>待补原始输入</span> |
 | P1-07 | 完整 AFH 天然氙连续谱与 LZ 二维 likelihood 未完成 | 继续保留为后续研究，不以 selected points 或一维效率折叠替代 | <span>尚未完成</span> |
-| P1-08 | Xe-131 AFH 原生 Mathematica/Python 2401 点独立比较 | Wolfram 14.0.0；相同 (q) 网格；四种响应量全部通过；最大相对差异 (3.59087\times10^{-9}) | **已完成（仅 response-level）** |
+| P1-08 | Xe-131 AFH 原生 Mathematica/Python 2401 点独立比较 | Wolfram 14.0.0；相同 \(q\) 网格；四种响应量全部通过；最大相对差异 \(3.59087\times10^{-9}\) | **已完成（仅 response-level）** |
 | P1-09 | AFH v6.0 Xe-124/Xe-126 默认矩阵是否只是提取遗漏 | 源文件第 1555–1597 行的 dispatch 仅包含七种 Xe 同位素；新增静态回归测试锁定该覆盖范围 | **已完成（source-level audit）** |
 
 ## 11. 审查范围与下一轮
@@ -386,6 +386,6 @@ N_{\rm sig}^{\rm ROI}
 下一轮应优先：
 1. 由模型作者/原始拉格朗日量固定 Dirac/Majorana 与 CP/手征约定；
 2. 为 Xe-124、Xe-126 寻找独立、可追溯的 one-body density matrix（轨道空间、相互作用、截断和归一化均需明确）；不能从邻近同位素插值。取得输入后再完成七同位素连续 AFH response grid 和天然氙谱；
-3. 不再重复 Xe-131 原生 Mathematica 2401 点计算；将工作转向七同位素 AFH 连续响应输入与完整 (I_6) 连续反冲网格收敛；
+3. 不再重复 Xe-131 原生 Mathematica 2401 点计算；将工作转向七同位素 AFH 连续响应输入与完整 \(I_6\) 连续反冲网格收敛；
 4. 只有在以上输入和模型约定固定后，才推进 LZ 二维 NEST/background/profile-likelihood recast。
 
