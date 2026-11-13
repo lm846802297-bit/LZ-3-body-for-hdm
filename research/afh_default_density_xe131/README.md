@@ -136,8 +136,9 @@ python .\compare_afh_mathematica_python.py `
 
 The native verifier compares the raw AFH `W_M^{00}`, the physical
 equal-proton/equal-neutron response with the factor four included exactly
-once, and the final q=0-normalized response. It rejects a changed q grid and
-does not interpolate. The acceptance tolerances are `rtol=2e-8` and
+once, and the final q=0-normalized response. It requires q-grid agreement
+within `1e-14 GeV` (CSV serialization roundoff only) and does not interpolate.
+The response acceptance tolerances are `rtol=2e-8` and
 `atol=2e-10`; the raw q=0 response is separately checked against the
 finite-density-matrix rounding tolerance of `2e-4`.
 
