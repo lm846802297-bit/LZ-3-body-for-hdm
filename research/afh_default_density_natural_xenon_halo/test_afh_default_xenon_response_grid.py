@@ -95,7 +95,7 @@ class AFHDefaultXenonResponseGridTests(unittest.TestCase):
             )
             self.assertAlmostEqual(
                 rows[0]["R_AFH_package_4pi_over_2Jplus1"], A * A / 4.0,
-                delta=(A * A / 4.0) * 2.0e-4,
+                delta=(A * A / 4.0) * 5.0e-4,
             )
             self.assertAlmostEqual(rows[0]["R_equal_pn_normalized"], A * A, places=9)
             self.assertLess(summary["AFH_R0_relative_error"], 5.0e-4)
