@@ -1,0 +1,55 @@
+{
+  "passed": true,
+  "points": 2401,
+  "python_csv_sha256": "c383af67a9e149c3ee215b2a1c1944aaecfb9e57813214ea011fdd2dd992f365",
+  "mathematica_csv_sha256": "f3a5ed1c94d5d58eb82b8ef113fe56b4d678c6edaac0b280a7e3cd08c57821f8",
+  "rtol": 2e-08,
+  "atol": 2e-10,
+  "q_grid_identical_within_export_precision": true,
+  "q_grid_max_abs_difference_GeV": 0.0,
+  "q_grid_export_atol_GeV": 1e-14,
+  "q_grid_start_GeV": 0.0,
+  "q_grid_end_GeV": 0.6,
+  "q_grid_step_GeV": 0.00025,
+  "expected_R_A_zero": 17161,
+  "factor4_contract": {
+    "python_R_equal_raw_equals_4_R_AFH": true,
+    "mathematica_R_equal_raw_equals_4_R_AFH": true
+  },
+  "q0_normalization_contract": {
+    "python_R_A_0": 17161.0,
+    "mathematica_R_A_0": 17161.0,
+    "python_passed": true,
+    "mathematica_passed": true
+  },
+  "comparisons": {
+    "raw_AFH_W_M00": {
+      "passed": true,
+      "max_absolute_difference": 1.5916157281026244e-12,
+      "max_relative_difference": 3.5908703199989993e-09,
+      "worst_index": 1026,
+      "worst_q_GeV": 0.2565
+    },
+    "AFH_package_R_4piW_over_2Jplus1": {
+      "passed": true,
+      "max_absolute_difference": 5.002220859751105e-12,
+      "max_relative_difference": 3.5908702819246855e-09,
+      "worst_index": 1026,
+      "worst_q_GeV": 0.2565
+    },
+    "physical_equal_pn_R_raw_factor4_once": {
+      "passed": true,
+      "max_absolute_difference": 2.000888343900442e-11,
+      "max_relative_difference": 3.5908702819246855e-09,
+      "worst_index": 1026,
+      "worst_q_GeV": 0.2565
+    },
+    "physical_equal_pn_R_q0_normalized": {
+      "passed": true,
+      "max_absolute_difference": 2.3646862246096134e-11,
+      "max_relative_difference": 3.590870120987367e-09,
+      "worst_index": 1026,
+      "worst_q_GeV": 0.2565
+    }
+  }
+}

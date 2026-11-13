@@ -267,7 +267,7 @@ AFH 原生 Mathematica runner 和 Python/Mathematica 比较程序已经归档：
 - verify_afh_xe131_native.wls
 - compare_afh_mathematica_python.py
 
-但 Wolfram kernel 尚未在当前计算环境中执行。因此原生 Mathematica 逐点对照仍为待完成项目。全网格 mpmath 是独立高精度数值实现，不应被称为官方 Mathematica 原生复算。
+Xe-131 原生 Mathematica/Wolfram 14.0.0 2401 点比较已完成并通过。四种响应量均与 Python 参考逐点一致于 (2\times10^{-8}) 相对容差、(2\times10^{-10}) 绝对容差内；最大相对差异 (3.59\times10^{-9})，q 网格完全一致。完整结果、源文件哈希和 manifest 见 [native audit record](../../afh_default_density_xe131/output/native_audit/NATIVE_MATHEMATICA_AUDIT.md)。mpmath 60 位验证仍作为独立高精度实现保留。该结果仅覆盖 Xe-131 AFH response-level.
 
 ## B.8 AFH 空间动量与精确三体反冲
 
