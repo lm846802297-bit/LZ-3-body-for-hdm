@@ -2,7 +2,7 @@
 
 ## Main report
 
-- [AFH v6.0 Xe-131 response, Eq. (6) three-body scattering, natural xenon, and LZ rate-level interface](09_afh_xe131_three_body_scattering_natural_xenon.md): current main report with the full text of formal Appendices A–G.
+- [AFH v6.0 Xe-131 response, Eq. (6) three-body scattering, natural xenon, and LZ rate-level interface](09_afh_xe131_three_body_scattering_natural_xenon.md): current main report. Its main text now walks through the interaction and virtual-state picture, the two-diagram Dirac amplitude and interference, three-body phase space and Eq. (6) prefactor, nuclear-response minima, isotope/halo folding, and the detector-efficiency projection; full technical derivations remain in formal Appendices A–G.
 - [Formula–symbol–text–code–result cross-reference](formula_symbol_code_cross_reference.md): stable F1–F12 identifiers, definitions, units, approximations, code entry points, archived outputs, and validation boundaries.
 - [Research decision register](supplements/research_decision_register.md): discussion candidates, adopted conventions, and scope boundaries. This is supplementary record H, not a formal main-report appendix.
 
