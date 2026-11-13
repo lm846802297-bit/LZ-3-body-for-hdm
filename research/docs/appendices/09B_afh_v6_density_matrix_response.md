@@ -298,3 +298,18 @@ y_{\rm exact}=\frac{b_A^2}{4}(2m_AE_R+E_R^2).
 
 代码默认值现统一为 exact_spatial；nr_approx 只用于敏感性对照，legacy_exact 保留为向后兼容别名。若响应样本与所选 q 不匹配，程序会显式报错。
 
+
+
+## B.9 AFH v6.0 默认氙同位素 dispatch 覆盖范围
+
+对仓库中提交的官方 AFH v6.0 源文件 `v6/dmformfactor-V6.m` 进行源代码级检查后，可以确认：默认氙核密度矩阵 dispatch 只包含
+
+\[
+A\in\{128,129,130,131,132,134,136\}.
+\]
+
+对应源代码位于默认矩阵选择分支，见 [源文件第 1555–1597 行](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/blob/main/v6/dmformfactor-V6.m#L1555-L1597)。当 `Ziso=54` 且质量数不属于上述集合时，程序进入通用回退分支并输出 `Cannot find default matrix which matches input M and Z!`。
+
+因此，Xe-124 和 Xe-126 的缺失不是本项目提取 CSV 时漏读，也不是 Python 转换器遗漏；它们确实没有出现在当前 AFH v6.0 官方包的默认 Xe dispatch 中。源文件其他位置出现的 `sdgI[124]` 和 `sdgI[126]` 是内部表索引，不能解释为 Xe-124/Xe-126 的默认核密度矩阵。
+
+本项目新增的 `test_official_v6_default_xenon_dispatch_coverage` 对上述七个质量数及缺失的 124、126 进行了静态回归检查。该结论只限定于当前 AFH v6.0 default-density dispatch，不排除未来从独立核结构计算或其他公开数据源取得这两种同位素的密度矩阵。
