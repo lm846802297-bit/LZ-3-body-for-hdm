@@ -68,12 +68,16 @@ jobs:
             -p 'test_afh7_hybrid9_continuous_spectrum.py' -v
 
       - name: Generate AFH-7, Hybrid-9, A2 ceiling and Helm-9 spectra
+        if: github.event_name != 'pull_request'
         run: |
           python research/afh_default_density_natural_xenon_halo/run_afh7_hybrid9_continuous_spectrum.py \
             --outdir research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14 \
-            --benchmarks red_ms200_dm1 green_ms300_dm1 black_ms360_dm1 blue_ms300_dm10
+            --benchmarks red_ms200_dm1 green_ms300_dm1 black_ms360_dm1 blue_ms300_dm10 \
+            --nv 24 --nw 6 --nz 6 --nphi 3 \
+            --nv-low 16 --nw-high 12 --nz-high 12 --nphi-high 6
 
       - name: Verify row counts, physical scenario ordering and SHA-256 manifest
+        if: github.event_name != 'pull_request'
         run: |
           python - <<'PY'
           import csv
@@ -127,6 +131,7 @@ jobs:
           PY
 
       - name: Upload continuous AFH/Helm natural-xenon archive
+        if: github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: afh7-hybrid9-natural-xenon-continuous-2026-11-14
@@ -135,7 +140,7 @@ jobs:
           retention-days: 90
 
       - name: Commit reproducible spectra and manifests
-        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
+        if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
         shell: bash
         run: |
           set -euo pipefail
