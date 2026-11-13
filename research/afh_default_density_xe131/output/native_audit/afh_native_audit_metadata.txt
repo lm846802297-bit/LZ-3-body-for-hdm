@@ -1,0 +1,17 @@
+WolframVersion = 14.0.0 for Microsoft Windows (64-bit) (December 13, 2023)
+AFHSourcePath = C:\Users\admin\Desktop\3 body HDM\v6\dmformfactor-V6.m
+AFHSourceSHA256 = dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372
+PythonCSVPath = C:\Users\admin\Desktop\3 body HDM\research\afh_default_density_xe131\output\afh_default_xe131_WM00.csv
+PythonCSV_SHA256 = c383af67a9e149c3ee215b2a1c1944aaecfb9e57813214ea011fdd2dd992f365
+NativeGridCSV_SHA256 = b957ee3a2df1d1028dc3283397c20e90556827eb6ddd7ea45d73363c423044ae
+NativeComparisonCSV_SHA256 = 76d9bab7196fedd9c172b31b1b6163bd91892c48a21f9ad5b48a98e68ab2bc0c
+NativeMinimaCSV_SHA256 = 74d0e837c51a5ea44fd6db1ee7994bf028637852e905322cb7b5f147ced1a68e
+q_nodes = 2401
+q_min_GeV = 0.
+q_max_GeV = 0.6
+q_step_GeV = 0.00025
+response_rtol = 2.*^-8
+response_atol = 2.*^-10
+raw_R_A_zero = 17159.583822859968
+raw_R_A_zero_relative_offset = -0.00008252299633071392
+zero_normalization_factor = 1.0000825298069378
