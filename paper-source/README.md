@@ -13,6 +13,7 @@ This directory contains the verbatim supplied source and an editorially cleaned 
 - SHA256SUMS: checksums for the original manuscript, cleaned manuscript, bibliography, and figure assets.
 - ASSET_MANIFEST.md: original asset inventory and hashes.
 - EDITORIAL_STATUS.md: completed editorial changes, unresolved source-data issue, and remaining scientific content.
+- The AFH-7/Hybrid-9 one-dimensional LZ rate-level fold and its reproducible outputs are indexed in research/lz_detector_response/README.md; they are not a full detector-level likelihood.
 
 ## Build
 

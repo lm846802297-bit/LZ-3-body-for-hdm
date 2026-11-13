@@ -1,6 +1,6 @@
 # Editorial cleanup status
 
-Date: 2026-11-11
+Date: 2026-11-14
 
 This is an editorial/source-consistency pass, not an independent validation of the physical amplitudes, propagators, widths, event-rate normalization, confidence-level construction, parameter inputs, or cosmological collision terms. The AFH response equation in the working manuscript has been corrected to match the separately documented AFH v6.0 raw-isoscalar convention; the original TeX remains unchanged.
 
@@ -22,6 +22,7 @@ The supplied TeX file is preserved verbatim as main_original.tex. The working ma
 - Added SHA-256 verification to build.sh before compilation.
 - Corrected the working-manuscript AFH response definition: the raw AFH v6.0 isoscalar response is mapped to the physical equal-proton/equal-neutron response with one factor of four, plus a q-independent finite-density-matrix-precision normalization constant. The manuscript now uses exact spatial q in the AFH response argument; the original source is preserved unchanged.
 - Added a canonical file index for the corrected Xe-131 four-benchmark cross sections and explicitly marked the historical mis-populated AFH CSV as superseded.
+- Added a standalone AFH-7/Hybrid-9 LZ efficiency-fold program and regression tests. The end-to-end workflow passed (run #43527099172) and archived eight benchmark/scenario yields with source hashes, JSON metadata and a SHA-256 manifest. This is a one-dimensional rate-level fold, not an LZ likelihood.
 
 ## Figure 2: unresolved mass-label inconsistency
 
@@ -67,10 +68,10 @@ Two non-fatal metadata/package notices remain: REVTeX assumes no affiliation bec
 5. Conclusions supported by completed results.
 6. The scalar–pseudoscalar branch: its corresponding 2 -> 3 amplitude, nuclear response, cross section, and parameter scan.
 7. A sourced discussion of the assumption that V remains in equilibrium with the SM through the relevant temperature range, including vector decays to hadrons/mesons where applicable.
-8. Complete benchmark table and detector-level LZ treatment (efficiency, energy response, exposure, backgrounds/likelihood, and statistical construction).
+8. Complete detector-level LZ treatment beyond the completed one-dimensional rate-level folds: energy response/resolution, two-dimensional S1c/log10(S2c) signal PDFs, NEST nuisance covariance, backgrounds/likelihood, and statistical construction.
 
 ## Non-goals
 
-- No amplitude, propagator, width, trace, nuclear response, event-rate integral, cosmological collision term, or numerical scan has been validated in this pass.
+- No new amplitude, propagator, width, trace, nuclear response, cosmological collision term, or parameter scan has been validated by these manuscript edits. The AFH equation reflects the separate normalization audit; the AFH-7/Hybrid-9 fold tests validate only the rate-level efficiency integration and archive path, not a detector likelihood.
 - No figure data have been redrawn, rescaled, or relabeled.
 - No claim is made that the manuscript is submission-ready or that the model explains the LZ event.
