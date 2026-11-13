@@ -40,21 +40,24 @@ The two response models share the same Eq. (6) kernel; the differences in the de
 - The χ2 s-channel pole is closed throughout the scan; minimum clearance is 85.663520 keV.
 - Sampled four-momentum closure residual: ≤2.416e-13 GeV; sampled mass-shell/K² residual: ≤4.657e-10 GeV².
 
-## Kinematic endpoint
+## Kinematic endpoints
 
-Solving the boundary equation
+Solving the two roots of the boundary equation
 
 \[
 W_{\max}^2(E_R)=W_{\min}^2=(m_{\chi_1}+m_s)^2
 \]
 
-with the same target-rest-frame kinematics gives
+with the same target-rest-frame kinematics gives the open recoil interval
 
 \[
-E_R^{\max}=654.9555833089706\;\mathrm{keV}.
+E_R^{\min}=109.1502861924\;\mathrm{keV},\qquad
+E_R^{\max}=654.9555833090\;\mathrm{keV}.
 \]
 
-The archived 5-keV curve ends at 650 keV, so the final 4.9556 keV of the open interval is not represented by the coarse curve. The endpoint bracket is now covered by a regression test (654.955 keV open, 654.956 keV closed). A dedicated high-order Eq. (6) integration scan approaching the endpoint remains a follow-up; the endpoint bracket test is not presented as an integral-convergence result.
+The committed 5-keV curve covers 130--650 keV only. It therefore omits 20.8497 keV of the open interval at the lower end and 4.9556 keV at the upper end. The regression test now brackets both boundaries (109.149 keV closed / 109.151 keV open; 654.955 keV open / 654.956 keV closed).
+
+A dedicated high-order Eq. (6) integration scan in both omitted endpoint regions remains a follow-up. The endpoint bracket test is a kinematic check, not an integral-convergence result. Until those scans are done, this archive must be described as an interior-window spectrum, not the complete kinematically allowed recoil spectrum.
 
 ## Figures and plotting source
 
