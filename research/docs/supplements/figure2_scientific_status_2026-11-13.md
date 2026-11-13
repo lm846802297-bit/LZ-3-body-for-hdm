@@ -16,11 +16,11 @@
 
 | 子任务 | 当前状态 | 已有证据 | 尚存边界 |
 |---|---|---|---|
-| vector–vector 分支的两张辐射图 | **部分验证** | 主报告 §1.1–1.2、附录 A.5；\`eq6_kernel.py\` 的 before/after propagator 和完整振幅相加 | 当前按 Dirac、实耦合实现；原模型未完全固定 Dirac/Majorana 与复耦合相位 |
+| vector–vector 分支的两张辐射图 | **部分验证** | 主报告 §1.1–1.2、附录 A.5；`eq6_kernel.py` 的 before/after propagator 和完整振幅相加 | 当前按 Dirac、实耦合实现；原模型未完全固定 Dirac/Majorana 与复耦合相位 |
 | Dirac \(L_{00}\) trace 的程序实现 | **已验证（限定 Dirac 基准）** | 显式自旋求和与 Dirac trace 对照；before、after、interference 三项恢复完整迹；450 keV pointwise benchmark 与回归测试 | 不能自动外推为 Majorana 外部态 |
 | \(\chi_2\) 条件性 pole width | **部分验证** | 附录 A.6 的 Dirac–scalar 两体衰变推导；代码宽度函数 | 依赖纯 scalar Yukawa、实标量、单一开放衰变道；不是完整自能 |
-| \(q^\mu,t,Q\) 运动学关系 | **已验证** | 核质量壳解析推导；\`rate_kinematics.py\` 与 \`joint_xe131.py\` 使用 exact spatial \(Q\) | fixed-speed Xe-131 与 natural-xenon 使用不同且已记录的核质量输入方案 |
-| \(W_{\min},W_{\max}\) 与三体相空间开放条件 | **已验证** | 主报告 §2.4、附录 A.2；\`eq6_kernel.limits\` 与 \`rate_kinematics.wmax_squared\` 一致 | 不是对任意 UV 模型和任意传播子方案的验证 |
+| \(q^\mu,t,Q\) 运动学关系 | **已验证** | 核质量壳解析推导；`rate_kinematics.py` 与 `joint_xe131.py` 使用 exact spatial \(Q\) | fixed-speed Xe-131 与 natural-xenon 使用不同且已记录的核质量输入方案 |
+| \(W_{\min},W_{\max}\) 与三体相空间开放条件 | **已验证** | 主报告 §2.4、附录 A.2；`eq6_kernel.limits` 与 `rate_kinematics.wmax_squared` 一致 | 不是对任意 UV 模型和任意传播子方案的验证 |
 | \(W^2,z,\phi_*\) 相空间 Jacobian 与 \(256\pi^3\) | **已验证（解析层）** | 附录 A.4.1；本轮独立分解 \(d\Phi_3\)、flux、azimuthal average；\([I_6]={\rm GeV}^2\) 维度检查 | 数值求积收敛仍按 benchmark / selected-point 范围报告，不声称对全参数空间穷举 |
 | 三体 \(v_{\min}\) 闭式公式 | **已验证** | 从 \(W_{\max}=m_{\chi_1}+m_s\) 独立推导；64 组输入与独立求根最大 \(|\Delta\beta|=3.89\times10^{-13}\) | 仍需对新增质量区间和完整连续谱网格做专门数值检查 |
 | 450 keV pointwise \(L_{00}\) benchmark | **已验证（单点数值范围）** | \(48\times40\times24\) 求积、run manifest、局部验证记录、SHA-256 manifest | 单点 kernel 结果，不代表整条 \(d\sigma/dE_R\)、halo-fold 或 LZ 事件数 |
@@ -30,7 +30,7 @@
 
 | 子任务 | 当前状态 | 已有证据 | 尚存边界 |
 |---|---|---|---|
-| AFH v6.0 Xe-131 67 项密度矩阵提取 | **已验证（Python source translation）** | 官方 v6.0 来源哈希、67 项逐项解析、CSV 与 source translation 对照 | 原始 ZIP 和 \`.m\` 源文件只记录 checksum provenance，未作为仓库文件提交 |
+| AFH v6.0 Xe-131 67 项密度矩阵提取 | **已验证（Python source translation）** | 官方 v6.0 来源哈希、67 项逐项解析、CSV 与 source translation 对照 | 原始 ZIP 和 `.m` 源文件只记录 checksum provenance，未作为仓库文件提交 |
 | AFH Xe-131 2401 点响应 | **部分验证** | 0–0.6 GeV、2401 节点；独立 60 位 mpmath 有限和对照；六项 Python regression tests | 原生 Mathematica/Wolfram runner 尚未执行 |
 | AFH factor-of-four 物理归一化 | **已验证（当前 AFH v6.0 接口约定）** | raw \(A^2/4\)；setter \(c_{\rm set}=2g_{VN}\)；physical \(R_A(0)=A^2\)；代码不重复乘 4；源论文已修正 | 若更换 AFH 版本或响应接口，必须重新核对 setter 约定 |
 | AFH Xe-131 响应极小值 | **部分验证** | 固定文献 \(b_A\)、精确空间 \(q\)、AFH default 67 项矩阵，三个 Figure 2 范围内的主要极小值已提取 | 这些是核响应极小值，不自动等于完整截面或 halo 事件率极小值 |
@@ -56,7 +56,7 @@
 |---|---|---|---|
 | Figure 2 结果总索引 | **已验证（当前归档范围）** | [机器可读总清单](figure2_results_master_index_2026-11-13.json)：8 组、48 个文件条目，含 SHA-256、参数和用途 | 对外部未提交输入只保留 checksum provenance，不能将其标记为已下载/可复现 |
 | AFH response sample SHA-256 | **已修正，待 workflow 再验** | 40 位 Git blob SHA-1 已替换为真实 64 位 SHA-256；runner 和 validator 增加校验 | 本轮尚未宣称新的 GitHub Actions run 已通过 |
-| 原始论文 AFH response 公式 | **已修正** | \`paper-source/main.tex\` 改为 factor 4 physical mapping 和 exact spatial \(q\)；\`paper-source/SHA256SUMS\` 同步 | 合并后仍需在正式 Overleaf / PDF 构建中检查排版 |
+| 原始论文 AFH response 公式 | **已修正** | `paper-source/main.tex` 改为 factor 4 physical mapping 和 exact spatial \(q\)；`paper-source/SHA256SUMS` 同步 | 合并后仍需在正式 Overleaf / PDF 构建中检查排版 |
 | 主报告—附录 A–G—代码公式索引 | **部分验证** | F1–F12 公式索引、附录 A–G、代码入口和主报告已交叉检查 | 仍需按最终固定的 Dirac/Majorana 模型约定做一轮完整 UV 层复核 |
 
 ## 6. 不得混淆的四组结果
