@@ -1,7 +1,7 @@
 # AFH v6.0 Xe-131 核响应、三体暗物质散射与天然氙反冲率
 
 > 整理日期：2026-11-11（原始主报告整理日期）
-> 最近文档更新：2026-11-13（补入 Wolfram 14.0.0 原生 Mathematica/Python 2401 点响应审计及 SHA-256 归档；更新 F6 验证状态。该结果限定于 Xe-131 AFH response-level，不代表完整天然氙连续谱或 LZ likelihood）
+> 最近文档更新：2026-11-14（新增 P1-PhaseSpace 三体积分变量映射、阈值稳定性、代表点角积分与 raw-\(d\Phi_3\) 归一化数值审计；保留近极点和完整连续反冲网格未完成边界）
 > 对话来源：[ChatGPT 分享对话](https://chatgpt.com/share/6af4660e-e388-83ea-a86a-2482b065dcea)  
 > 对应研究仓库：`lm846802297-bit/LZ-3-body-for-hdm`  
 > 当前正式归档：main；PR #10 于 2026-11-13 合并，merge commit 724d9e7877fb76f4cc477fbb9e24e1e706bf37a6。PR #7 是此前研究分支内的历史合并记录。
@@ -28,6 +28,7 @@
 - **2026-11-13：** 将独立 Lorentz-invariant 三体相空间推导并入正文 §2.5.1–2.5.8 和附录 A.4.2；进一步补齐固定速度下 (m_{s,max}) 与 (E_R^*) 的解析极值、条件性 (chi_2	ochi_1s) 宽度、截断 SHM 实验室速度 PDF、天然氙靶核数及 halo 通量折叠的逐步推导，并同步主报告嵌入附录、独立附录文件和公式索引。本轮为解析推导与文档一致性更新，不修改数值程序、输入或归档结果。
 
 - **2026-11-13：** 将 `research/p1-mma-local` 中已完成的 Wolfram 14.0.0 原生 AFH Xe-131 2401 点结果、Python 对照、minima、源文件和 SHA-256 manifest 逐文件纳入本 PR；更新 README、附录 B/G、F6 索引和 P0–P2 状态。该归档不改变 Eq. (6) kernel 或天然氙连续谱的完成边界。
+- **2026-11-14：** 新增 P1-PhaseSpace 数值收敛审计：比较线性 \(W^2\)、线性 \(W\) 与 threshold-\(u^2\) 参数化，检查五个 \(v_{\min}\) 邻域速度点和代表点角积分，并以未归一化 Lorentz-invariant \(d\Phi_3\) 路径复核 Eq. (6) 前因子；新增六项回归测试和结果 SHA-256 归档。近极点积分、完整连续反冲网格和 halo fold 仍未完成。
 
 ## 摘要
 
@@ -724,6 +725,86 @@ I_6^{\rm raw}
 \underbrace{4}_{\text{AFH 响应从包定义到物理等核子耦合的转换}}.
 \]
 AFH 的因子 4 不参与上述相空间推导，也不能用来补偿或修改 \(256\pi^3\)。本节解析推导确认了 Eq. (6) 与当前 Python 积分约定的一致性；完整连续反冲网格上的 \(I_6\) 数值收敛仍按第 8 节单独验收。
+
+### 2.5.9 数值求积与阈值稳定性审计（P1-PhaseSpace，2026-11-14）
+
+上一节验证的是解析相空间测度与 Eq. (6) 的归一化关系。本节进一步检查实际 \(I_6\) 数值积分的变量映射、Jacobian、阈值端点和角积分收敛。完整表格、逐点 CSV、测试代码及 SHA-256 记录见[独立数值审计报告](supplements/phase_space_convergence_audit_2026-11-14.md)。
+
+令
+\[
+W_{\min}^2=(m_{\chi_1}+m_s)^2,\qquad
+\Delta=W_{\max}^2-W_{\min}^2,\qquad
+\delta=W^2-W_{\min}^2.
+\]
+有量纲 Källén 函数可因式分解为
+\[
+\lambda_K
+=\delta(4m_{\chi_1}m_s+\delta),
+\qquad
+\lambda_{\rm dim}
+=\frac{\delta(4m_{\chi_1}m_s+\delta)}
+       {(W_{\min}^2+\delta)^2}.
+\]
+在线性 \(W^2\) 变量下，\(\sqrt{\lambda_{\rm dim}}\sim\sqrt{\delta}\)，因此下端点存在平方根型 cusp。采用
+\[
+\boxed{W^2=W_{\min}^2+\Delta u^2,\quad 0\le u\le1},
+\qquad
+\boxed{dW^2=2\Delta u\,du}
+\]
+后，阈值附近的相空间权重满足
+\[
+\sqrt{\lambda_{\rm dim}}\,dW^2\propto u^2du,
+\]
+端点行为因而更加平滑。程序直接传递 \(\delta=\Delta u^2\)，并用因式分解形式计算 Källén 函数和末态三动量，避免从两个约 \(10^6\,{\rm GeV}^2\) 的数值相减恢复很小的阈值差。
+
+本轮独立比较了三种积分参数化：
+- 线性 \(W^2\)：\(W^2=W_{\min}^2+\Delta x\)，\(dW^2=\Delta dx\)；
+- 线性 \(W\)：\(W=W_{\min}+(W_{\max}-W_{\min})x\)，显式使用 \(dW^2=2W\,dW\)；
+- threshold-\(u^2\)：\(W^2=W_{\min}^2+\Delta u^2\)，显式使用 \(dW^2=2\Delta u\,du\)。
+
+统一采用 \(m_{\chi_1}=1\) TeV、\(m_A=122\) GeV、\(v=776\) km/s、\(\Delta m=1\) MeV 和条件性 pole-width、\(g_2=1\)。四组固定速度 benchmark 的结果为：
+
+| \(m_s\) | \(E_R\) | 线性 \(W^2\) 8×8×4 相对差异 | 线性 \(W^2\) 16×16×8 相对差异 | threshold-\(u^2\) 6×6×4 相对差异 |
+|---:|---:|---:|---:|---:|
+| 300 keV | 200 keV | \(2.37742\times10^{-4}\) | \(3.23494\times10^{-5}\) | \(4.02\times10^{-11}\) |
+| 300 keV | 267 keV | \(2.33199\times10^{-4}\) | \(3.17397\times10^{-5}\) | \(1.45\times10^{-11}\) |
+| 300 keV | 542 keV | \(2.42444\times10^{-4}\) | \(3.29824\times10^{-5}\) | \(9.03\times10^{-12}\) |
+| 200 keV | 101 keV | \(2.24319\times10^{-4}\) | \(3.05467\times10^{-5}\) | \(1.62\times10^{-10}\) |
+
+相对差异均以 threshold-\(u^2\) 的 \(48\times24\times16\) 结果为参考。线性 \(W\) 与线性 \(W^2\) 的同阶结果在四组 benchmark 上相差约 \(10^{-9}\)，验证了 \(2W\) Jacobian；但线性 \(W\) 仍保留阈值 cusp。threshold-\(u^2\) 的 \(6\times6\times4\) 最大相对差异为 \(1.62\times10^{-10}\)。
+
+另对 \(m_s=300\) keV、\(E_R=542\) keV 的运动学阈值邻域取
+\[
+v=v_{\min}+\{0.1,0.5,1,2,5\}\ {\rm km/s}.
+\]
+在最近的 \(v-v_{\min}=0.1\) km/s 点，\(\Delta W^2=2.42608832\times10^{-4}\ {\rm GeV}^2\)。以相同角阶数的 \(24\times4\times4\) threshold-\(u^2\) 结果为参考，线性 \(W^2\) 的 \(8\times8\times4\) 最大相对差异为 \(2.53\times10^{-4}\)，threshold-\(u^2\) 的 \(4\times4\times4\) 最大相对差异为 \(1.64\times10^{-10}\)。
+
+在 \(E_R=200\) keV 的代表点固定 \(n_u=8\)，将 \(z\) 阶数从 2 增至 24、将 \(\phi_*\) 阶数从 2 增至 20，最大相对差异分别为 \(2.81\times10^{-12}\) 和 \(3.58\times10^{-12}\)。这只证明该代表点角积分平滑，不能外推至近传播子极点区域。
+
+最后，保留未归一化 \(d\phi_*\) 的 Lorentz-invariant 相空间路径，独立计算
+\[
+I_6^{\rm raw}
+=\int dW^2\,dz\,d\phi_*\,
+\sqrt{\lambda_{\rm dim}}\,\mathcal L_{00},
+\qquad I_6^{\rm raw}=2\pi I_6.
+\]
+在 \(m_{\chi_1}=1\) TeV、\(m_s=300\) keV、\(\Delta m=1\) MeV、\(m_A=122\) GeV、\(E_R=200\) keV、\(v=776\) km/s 的 \(8\times8\times4\) 检查点：
+\[
+I_6=868218.71218827\ {\rm GeV}^2,\qquad
+I_6^{\rm raw}=5455179.0558397\ {\rm GeV}^2,
+\]
+\[
+\frac{I_6^{\rm raw}}{2\pi I_6}=1.
+\]
+取 \(m_V=10\) GeV、耦合乘积平方 \(C^2=1\)、\(R_A=1\)，Eq. (6) 平均方位角路径与直接 raw-\(d\Phi_3\) 路径均给出
+\[
+\frac{d\sigma}{dE_R}=0.19897140857689\ {\rm GeV}^{-3},
+\]
+两条路径之比为 1。该数值检查没有使用 AFH factor 4；AFH 核响应归一化仍是独立问题。
+
+**验证边界：** 本轮完成四组 fixed-speed benchmark、五个阈值邻域速度点、三种 \(W\) 参数化、代表点角积分以及 raw-\(d\Phi_3\) 前因子数值对照；新增六项回归测试本地全部通过。当前尚未完成近传播子极点窄峰积分、不同宽度处方的系统收敛比较、完整连续反冲网格误差控制或天然氙 halo fold。故本轮结论限定为所测非近极点 benchmark 和阈值邻域，不升级为全参数空间收敛证明。
+
+复算入口为 research/figure2_full_reproduction/phase_space_convergence.py；回归测试为 research/figure2_full_reproduction/tests/test_phase_space_convergence.py。结果 CSV 和归档包位于 research/figure2_full_reproduction/results/。
 
 ### 2.6 参数分别控制归一化、阈值还是谱形？
 
@@ -1625,7 +1706,7 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 |---|---|---|---|
 | F1 精确空间动量、四动量转移与 \(t\) | 已验证 | 核质量壳关系、28 个 AFH 样本 q 审计、exact/NR 对照 | NR 仅为小反冲敏感性对照 |
 | F2 \(W_{\min}^2,W_{\max}^2\) 与相空间开闭 | 条件性验证 | limits、wmax_squared、开闭区间和阈值回归 | 尚未对更宽质量—速度区域做独立扫描 |
-| F3 三体相空间变量与 \(I_6\) | 条件性验证 | 独立 \(d\Phi_3\) 推导、\(256\pi^3\) 因子核查、方位角平均权重测试、代表点积分收敛 | 完整连续反冲网格的 \(I_6\) 收敛仍需验证 |
+| F3 三体相空间变量与 \(I_6\) | 条件性验证（代表点和阈值邻域收敛通过） | 独立 \(d\Phi_3\) 推导、三种变量映射、四组 fixed-speed benchmark、五个阈值邻域速度点、角积分阶数与 raw-\(d\Phi_3\) 前因子对照；六项回归测试通过 | 近传播子极点、不同宽度处方系统比较、完整连续反冲网格与 halo fold 仍需验证 |
 | F4 两张辐射图与 Dirac trace | 条件性验证 | before/after/干涉分解、显式自旋求和、壳条件与四动量闭合 | 目前是代表性测试点，不是全参数扫描 |
 | F5 单同位素固定速度 Eq. (6) | 条件性验证 | 四 benchmark 的 AFH/GCN/JJ55 响应替换与截面重构 | 共用既有 \(I_6\)，并非 640 个独立三体积分重算 |
 | F6 AFH 响应与因子 4 归一化 | 已验证（限定 Xe-131 response-level） | 原始 \(A^2/4\)、物理 \(A^2\)；2401 点 mpmath 与原生 Mathematica/Python 比较通过；最大相对差异 \(3.59\times10^{-9}\) | 完整 AFH 天然氙连续谱仍缺 Xe-124/Xe-126 输入和完整同位素响应网格 |
@@ -1640,7 +1721,7 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 | AFH 完整天然氙连续谱 | 未完成 | 七种可用同位素 selected-point rate 已完成 | 需要七同位素完整响应网格；Xe-124/Xe-126 还缺 AFH density matrix |
 | 完整 LZ detector-level recast | 未完成 | GCN/JJ55 一维效率加权 rate-level yields | 需要二维信号 PDF、NEST nuisance、背景和 profile likelihood |
 
-**P0 判定：** 精确空间动量 Python 复算、60 位 mpmath 全网格检查、Wolfram 14.0.0 原生 Mathematica/Python 2401 点比较和归档输出核验均已完成。**P1 判定：** F1–F12 的追溯索引和重点一致性检查已完成；F3 的解析相空间 Jacobian 与 \(256\pi^3\) 已独立验证，但完整连续反冲网格收敛仍未完成。**P2 判定：** 完整 AFH 天然氙连续谱和完整 LZ likelihood 仍未完成，不能因 Xe-131 response-level 对照通过而升级状态。
+**P0 判定：** 精确空间动量 Python 复算、60 位 mpmath 全网格检查、Wolfram 14.0.0 原生 Mathematica/Python 2401 点比较和归档输出核验均已完成。**P1 判定：** F1–F12 的追溯索引和重点一致性检查已完成；F3 除解析相空间 Jacobian 与 \(256\pi^3\) 已独立验证外，还完成四组 fixed-speed benchmark、五个阈值邻域速度点、三种变量映射、代表点角积分和 raw-\(d\Phi_3\) 数值复核；近极点及完整连续反冲网格收敛仍未完成。**P2 判定：** 完整 AFH 天然氙连续谱和完整 LZ likelihood 仍未完成，不能因 Xe-131 response-level 对照通过而升级状态。
 
 ## 13. 公式—符号—程序—结果交叉引用
 
@@ -1652,7 +1733,7 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 |---|---|---|---|
 | F1 | \(q^\mu\)、\(Q=|\mathbf q|\)、\(t\) 的关系 | [A.1](appendices/09A_three_body_kinematics_amplitude.md)、[G.1–G.5](appendices/09G_recoil_momentum_convention_audit.md) | `rate_kinematics.py`、`eq6_kernel.py` |
 | F2 | \(W_{\min}^2,W_{\max}^2\)、相空间开闭、\(m_{s,\max}\) 与最优 \(E_R^*\) | §2.4、§6.3 | [A.2–A.2.1](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.limits`、`rate_kinematics.wmax_squared` | 四 benchmark corrected CSV；逐速度阈值结果 | 固定同位素和入射速度；最优反冲能量最大化运动学质量上限，不是事件率峰值。 |
-| F3 | 三体 Lorentz-invariant 相空间、\((W^2,z,\phi_*)\) Jacobian 与 \(I_6\) | §2.5.1–2.5.8 | [A.3–A.4.2](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.py`：`build_point`、`reduced_kernel` | phase-space prefactor tests；joint-Xe131 convergence；quadrature crosschecks | \(I_6\) 为 GeV\(^2\)；\(256\pi^3\) 来自不变相空间、通量和方位角平均；完整连续反冲网格收敛仍单独验收。 |
+| F3 | 三体 Lorentz-invariant 相空间、\((W^2,z,\phi_*)\) Jacobian 与 \(I_6\) | §2.5.1–2.5.9 | [A.3–A.4.2](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.py`：`build_point`、`reduced_kernel`；`phase_space_convergence.py`：独立变量映射和 raw-\(d\Phi_3\) 路径 | `phase_space_*_convergence.csv`；`phase_space_li_prefactor_crosscheck.csv`；六项回归测试；P1-PhaseSpace audit archive | \(I_6\) 为 GeV\(^2\)；代表点与阈值邻域的数值收敛已验证；近极点和完整连续反冲网格仍单独验收。 |
 | F4 | 两张辐射图、干涉项和 \(\mathcal L_{00}\) | [A.5–A.6](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.vertices`、`spin_trace` |
 | F5 | 单同位素固定速度截面 Eq. (6) | [A.4.1](appendices/09A_three_body_kinematics_amplitude.md) | joint_xe131.py、compute_four_benchmark_dsigma.py、run_user_dsigma_curve.py |
 | F6 | AFH \(b_A,y,W_M^{00},R_A^{\rm phys}\) | [B.2–B.4](appendices/09B_afh_v6_density_matrix_response.md)、[C](appendices/09C_afh_isoscalar_factor4_normalization.md)、[G](appendices/09G_recoil_momentum_convention_audit.md) | `run_afh_default_xe131.py`、`joint_xe131.py` |

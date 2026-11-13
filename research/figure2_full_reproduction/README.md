@@ -259,3 +259,24 @@ This milestone remains a fixed-speed, single-isotope diagnostic with the A*u mas
 ## AFH Xe-131 native response validation
 
 The independent Wolfram 14.0.0 native Mathematica/Python 2401-point response comparison is archived at [NATIVE_MATHEMATICA_AUDIT.md](../afh_default_density_xe131/output/native_audit/NATIVE_MATHEMATICA_AUDIT.md). This validates the Xe-131 AFH response layer only; it does not validate the full Eq. (6) continuous recoil integral, the seven-isotope AFH continuous spectrum, or an LZ detector likelihood.
+
+## P1-PhaseSpace numerical convergence audit (2026-11-14)
+
+The additional runner `phase_space_convergence.py` independently checks the phase-space integration layer while reusing the committed `eq6_kernel.py` Dirac trace and amplitude. It compares linear \(W^2\), linear \(W\) with the explicit \(dW^2=2W\,dW\) Jacobian, and the threshold-regularized mapping
+
+\[
+W^2=W_{\min}^2+(W_{\max}^2-W_{\min}^2)u^2,\qquad dW^2=2(W_{\max}^2-W_{\min}^2)u\,du.
+\]
+
+The stable Källén evaluation carries \(\delta=W^2-W_{\min}^2\) explicitly and uses \(\lambda_K=\delta(4m_{\chi_1}m_s+\delta)\).
+
+Reproduce the audit from the repository root:
+
+```bash
+python research/figure2_full_reproduction/phase_space_convergence.py --mode all --reference-order 48
+python -m unittest discover -s research/figure2_full_reproduction/tests -p 'test_phase_space_convergence.py' -v
+```
+
+The runner writes mapping, angular, threshold-neighborhood, raw-\(d\Phi_3\) prefactor, metadata, and SHA-256 outputs below `research/figure2_full_reproduction/results/phase_space_convergence_2026-11-14/`. The committed audit report and archived CSV tables are linked from `research/docs/README.md`.
+
+The 2026-11-14 audit covers four fixed-speed benchmarks and five \(v_{\min}\)-offset checks. At the tested non-pole points, threshold-\(u^2\) mapping converges much faster than linear \(W^2\); the raw-\(d\Phi_3\) route reproduces the Eq. (6) prefactor. This does **not** establish near-pole convergence, a full continuous recoil grid, a complete halo fold, or a detector likelihood. The new six-test module reuses the existing Dirac spin trace and is not an independent second amplitude calculation.
