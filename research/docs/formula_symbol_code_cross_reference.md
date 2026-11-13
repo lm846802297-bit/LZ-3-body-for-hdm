@@ -1,7 +1,7 @@
 # 公式—符号—正文—程序—结果交叉引用索引
 
 > 所属主报告：[09_afh_xe131_three_body_scattering_natural_xenon.md](09_afh_xe131_three_body_scattering_natural_xenon.md)  
-> 研究分支：`research/figure2-p0-4-mainline`  
+> 当前编辑分支：`research/afh-lz-efficiency-factor4-20261114`；历史基线：`research/figure2-p0-4-mainline`  
 > 文档性质：可追溯性索引；本文件不引入新的物理假设，也不声称完成新的数值验证。
 
 ## 1. 使用方法与统一约定

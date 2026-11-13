@@ -32,7 +32,12 @@ The raw AFH isoscalar output satisfies
 \[
 \frac{4\pi}{2J_A+1}W_{M,\mathrm{AFH}}^{00}(0)\simeq\frac{A^2}{4}.
 \]
-For equal physical proton/neutron couplings, the response entering the cross section is four times this raw AFH response, normalized to \(R_A(0)=A^2=17161\). The factor of four is included exactly once.
+For equal physical proton/neutron couplings, the physical response is
+\[
+R_A^{\rm phys}(q)=C_A\frac{16\pi}{2J_A+1}W_{M,\mathrm{AFH}}^{00}(y),
+\qquad C_A=\frac{A^2}{4R_{\rm AFH,raw}(0)}.
+\]
+The factor of four maps the raw AFH response to the physical equal-\(p,n\) response exactly once; \(C_A\) only removes the tiny overall offset from finite-decimal density-matrix coefficients. For Xe-131, \(C_A=1.0000825298069376\), and \(R_A^{\rm phys}(0)=A^2=17161\).
 
 ## AFH response momentum
 
