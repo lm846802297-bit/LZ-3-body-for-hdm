@@ -4534,3 +4534,173 @@ Xe-131 AFH default response 的原生 Mathematica/Python 2401 点比较已通过
 | 连续反冲谱 | 待完成 | 需要完整七同位素 AFH 响应输入 |
 | 原生 Mathematica 复算 | 已完成 PASS | Wolfram 14.0.0；2401 点；最大相对差异 \(3.59\times10^{-9}\)；manifest 与 SHA-256 均已归档 |
 
+
+
+## 附录 H：完整 Eq. (6) 微分截面的 Mathematica–Python 对照
+
+本附录把已完成的 AFH 核响应验证，与尚待完成的完整三体截面验证分开。**2401 个 \(q\) 节点的 Mathematica/Python 对照只验证 \(R_A(q)\)，不验证 \(I_6\)，也不验证完整 \(d\sigma_A/dE_R\)。** 因此，以下原生计算器和比较器是本轮新增的独立验收链；在 Wolfram Engine 实际运行并完成逐点比较之前，不将完整截面标记为 PASS。
+
+### H.1 从公式 (6) 拆分出独立三体积分
+
+在本文的 Dirac 基准实现中，
+\[
+\mathcal L_{00}(W^2,z,\phi_*)
+=\frac12\operatorname{Tr}\!\left[
+(\not p'+m_{\chi_1})\Gamma^0
+(\not p+m_{\chi_1})\overline{\Gamma}^{\,0}
+\right],
+\qquad
+\overline{\Gamma}^{\,0}
+=\gamma^0(\Gamma^0)^\dagger\gamma^0.
+\]
+这里的 \(\Gamma^0\) 是靶核静止系中的时间分量，包含 scalar emission before/after 两张图；两张图先相加，再计算平方，因此保留它们的干涉项。初态自旋平均 \(1/2\) 只出现一次。
+
+定义无量纲 Källén 函数
+\[
+\lambda_{\rm dim}(W^2)
+=\frac{
+[W^2-(m_{\chi_1}+m_s)^2]
+[W^2-(m_{\chi_1}-m_s)^2]
+}{W^4}.
+\]
+那么三体积分写为
+\[
+\boxed{
+I_6(v,E_R)=
+\int_{W_{\min}^2}^{W_{\max}^2}dW^2
+\sqrt{\lambda_{\rm dim}(W^2)}
+\int_{-1}^{1}dz\,
+\frac{1}{2\pi}\int_0^{2\pi}d\phi_*
+\,\mathcal L_{00}(W^2,z,\phi_*)
+}.
+\]
+其中
+\[
+W_{\min}^2=(m_{\chi_1}+m_s)^2,
+\qquad
+W_{\max}^2=m_{\chi_1}^2
++2p_{\chi_1}\sqrt{2m_AE_R+E_R^2}
+-2(E_{\chi_1}+m_A)E_R.
+\]
+因为 \(\mathcal L_{00}\) 无量纲，\(dW^2\) 带有 \({\rm GeV}^2\)，所以
+\[
+[I_6]={\rm GeV}^2.
+\]
+这一积分不含核响应、矢量传播子和整体耦合 prefactor；这些量在下一步独立装配。
+
+### H.2 AFH 物理响应与因子 4 的唯一放置位置
+
+对 AFH v6.0 原生输出，先定义 package convention 下的响应
+\[
+R_A^{\rm package}(q)
+=\frac{4\pi}{2J_A+1}W_{M,\rm AFH}^{00}(q).
+\]
+该量的零动量极限是 \(A^2/4\)，不是本文等物理质子/中子耦合所需的 \(A^2\)。有限小数密度矩阵还产生一个独立的整体归一化偏差，因此定义
+\[
+C_0=\frac{A^2}{4R_A^{\rm package}(0)},
+\qquad
+\boxed{R_A^{\rm phys}(q)=4C_0R_A^{\rm package}(q)}.
+\]
+于是 \(R_A^{\rm phys}(0)=A^2\)。因子 4 来自 AFH v6.0 isoscalar 接口的系数约定；\(C_0\) 只修正有限精度密度矩阵的整体偏移，两者不是同一件事。
+
+本文 Eq. (6) 的整体耦合仍写为每核子物理耦合 \(g_{VN}\)，因此完整截面使用 \(R_A^{\rm phys}\)，**不再在振幅或截面 prefactor 中额外乘 4**。作为程序防错控制，另计算
+\[
+\left(\frac{d\sigma_A}{dE_R}\right)_{\rm no4}
+=
+\left(\frac{d\sigma_A}{dE_R}\right)_{\rm phys}/4.
+\]
+每一个开相空间点都必须满足
+\[
+\frac{(d\sigma_A/dE_R)_{\rm phys}}
+{(d\sigma_A/dE_R)_{\rm no4}}=4.
+\]
+这个控制只用于检验因子 4 没有丢失或重复计数，不是另一种物理预测。
+
+### H.3 完整微分截面的数值装配
+
+在上述约定下，
+\[
+\boxed{
+\frac{d\sigma_A}{dE_R}
+=
+\frac{m_A(g_1g_2g_{VN})^2}
+{256\pi^3p_{\chi_1}^2}
+\frac{R_A^{\rm phys}(E_R)}
+{(m_V^2+2m_AE_R)^2}
+I_6(v,E_R)
+}.
+\]
+\(R_A^{\rm phys}\) 无量纲，\(I_6\) 为 \({\rm GeV}^2\)，自然单位下 \(d\sigma_A/dE_R\) 为 \({\rm GeV}^{-3}\)。转为 \({\rm cm}^2/{\rm keV}\) 时使用
+\[
+1\ {\rm GeV}^{-3}
+=0.3893793721\times10^{-33}\ {\rm cm}^2/{\rm keV}.
+\]
+AFH 的响应变量使用精确空间动量
+\[
+q=|\mathbf q|=\sqrt{2m_AE_R+E_R^2},
+\]
+而传播子中的不变量仍为
+\[
+t=-2m_AE_R.
+\]
+不能把空间 \(q^2\) 与四动量不变量 \(t\) 混用。
+
+### H.4 本轮原生 Mathematica 与 Python 的分工
+
+新增程序：
+
+- **research/afh_default_density_xe131/run_afh_eq6_full_dsigma.wls**：在 Wolfram Language 中独立构造三体末态四动量、计算完整 Dirac trace、执行 \(W^2,z,\phi_*\) 求积，并装配完整截面。它只读取已经归档的 AFH 2401 点响应表，不重新运行 AFH package。
+- **research/afh_default_density_xe131/compare_full_dsigma_mathematica.py**：独立调用 research/figure2_full_reproduction/eq6_kernel.py 重新计算同一组 \(I_6\)，使用 SciPy PCHIP 独立插值 AFH 响应，再与 Mathematica CSV 逐点比较。
+- **research/afh_default_density_xe131/output/NATIVE_MATHEMATICA_FULL_DSIGMA_AUDIT.md**：记录固定输入、代码路径、验收标准和未完成边界。
+
+首轮完整网格采用四组固定速度 benchmark，\(v=800\ {\rm km/s}\)，\(m_{\chi_1}=1\ {\rm TeV}\)，\(m_V=10\ {\rm GeV}\)，\(m_A=131u\)，\((g_1g_2g_{VN})^2=10^{-8}\)，\(g_2=1\)。四组 \((m_s,\Delta m)\) 分别为 \((200\,{\rm keV},1\,{\rm MeV})\)、\((300\,{\rm keV},1\,{\rm MeV})\)、\((360\,{\rm keV},1\,{\rm MeV})\) 和 \((300\,{\rm keV},10\,{\rm MeV})\)。这里 \(g_2=1\) 是对图注耦合乘积的一种 benchmark 分解，并不能由耦合乘积本身唯一推出。
+
+主宽度方案使用在 pole mass 处计算的常数 \(\Gamma_{\chi_2}\)，并将其放入 after-emission 传播子分母
+\[
+W^2-m_{\chi_2}^2+i\,m_{\chi_2}\Gamma_{\chi_2}.
+\]
+本轮采用的 \(\Gamma_{\chi_2}\) 仍是条件性结果：Dirac \(\chi_{1,2}\)、实标量、纯 scalar \(g_2\) 顶点，并假设 \(\chi_2\to\chi_1s\) 是唯一开放衰变道。零宽度方案可单独运行作为诊断，但不与 pole-width 结果混为一个 benchmark。
+
+### H.5 初步 Python 预检与旧归档差异
+
+在 green benchmark 的 \(E_R=200\ {\rm keV}\) 点，按当前 eq6_kernel.py 的 Dirac 实现、\(m_A=131u\)、\(v=800\ {\rm km/s}\)、\(g_2=1\) 和常数 pole-width，分析环境中的独立 Python 预检得到：
+
+| 求积阶数 \((n_W,n_z,n_\phi)\) | \(I_6\ [{\rm GeV}^2]\) |
+|---|---:|
+| \((16,16,8)\) | \(1.4336191378\times10^6\) |
+| \((24,24,12)\) | \(1.4335877039\times10^6\) |
+| \((32,32,16)\) | \(1.4335798097\times10^6\) |
+| \((48,40,24)\) | \(1.4335756754\times10^6\) |
+
+最高两组相对差异约为 \(2.9\times10^{-6}\)。这是单点 Python 预检，不是 Mathematica/Python 对照结果。
+
+同时，旧归档 output/figure2_four_benchmarks_dsigma_AFH_GCN_JJ55.csv 在同一 benchmark、同一 \(E_R=200\ {\rm keV}\) 的 GCN 行记录
+\[
+I_6^{\rm archived}=1.43367807229\times10^6\ {\rm GeV}^2.
+\]
+它相对上述新 \((16,16,8)\) 预检值高约 \(4.11\times10^{-5}\)。因此旧四 benchmark 表格不能直接充当本轮新代码的验收真值；需要先追踪旧积分网格的生成版本、宽度实现和求积映射，再以同一新 kernel 在 Mathematica/Python 两端重新计算。这个差异目前是待解释的归档一致性问题，不应擅自归因于 AFH 因子 4。
+
+在同一预检点，使用归档的 \(R_A^{\rm phys}=9.56772226605\) 和新 Python \(I_6\) 得到
+\[
+\left.\frac{d\sigma_A}{dE_R}\right|_{\rm phys}
+\simeq2.95827575\times10^{-8}\ {\rm GeV}^{-3},
+\]
+而故意不乘因子 4 的控制值为
+\[
+\left.\frac{d\sigma_A}{dE_R}\right|_{\rm no4}
+\simeq7.39568938\times10^{-9}\ {\rm GeV}^{-3}.
+\]
+两者比值为 4。这只证明该点的代数装配按预期传递因子 4；尚不能替代原生 Mathematica 的完整截面对照。
+
+### H.6 验收状态
+
+| 层次 | 当前状态 | 说明 |
+|---|---|---|
+| AFH Xe-131 \(R_A(q)\) | **已验证** | 原生 Mathematica/Python 2401 点比较已通过 |
+| AFH package \(\to R_A^{\rm phys}\) 因子 4 | **已验证（response-level）** | \(R_A^{\rm phys}=4C_0R_A^{\rm package}\)，\(C_0\) 单独记录 |
+| Python 单点 \(I_6\) 求积预检 | **条件性验证** | green benchmark 单点求积阶数对照已完成 |
+| 完整网格 Mathematica \(I_6\) | **待执行** | 新 WLS runner 已提交，尚无 Wolfram 运行产物 |
+| 完整 \(d\sigma_A/dE_R\) Mathematica/Python 逐点对照 | **未完成** | 必须等待 WLS 输出 CSV 和 Python comparator 的机器可读 PASS |
+| 完整宽度与 UV 自能 | **未完成** | 当前 pole width 仍是 Dirac/纯 scalar/单道条件性宽度 |
+
+完整网格的第一层使用 \(16\times16\times8\)；随后对阈值附近、AFH 响应极小值附近和积分收敛最慢的点进行 \(48\times40\times24\) 高阶复算。代码间对照和求积收敛是两个独立验收：前者检查 Mathematica 与 Python 是否实现同一积分，后者检查该积分本身是否达到所需精度。
