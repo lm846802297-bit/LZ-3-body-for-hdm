@@ -1,15 +1,15 @@
 # Figure 2 三体暗物质计算：物理公式交叉审查
 
 日期：2026-11-13  
-审查对象：\`paper-source/main.tex\`、主报告、附录 A–G、Eq. (6) kernel、AFH 响应生成与自然氙 halo-fold 程序。  
+审查对象：`paper-source/main.tex`、主报告、附录 A–G、Eq. (6) kernel、AFH 响应生成与自然氙 halo-fold 程序。  
 审查原则：解析推导、代码实现、输入约定和数值验证分别判定；其中一项通过不自动代表其余层次通过。
 
 ## 1. 审查结论摘要
 
 本轮完成了当前 vector–vector、Dirac 外部态基准下的主要公式交叉审查。Eq. (6) 的三体相空间、\(256\pi^3\) 前因子、精确反冲动量、三体 \(v_{\min}\) 和天然氙速率单位链相互一致。发现并修正了两项真实文档/完整性问题：
 
-1. **AFH factor-of-four 与 exact-\(q\) 定义：** 原始 \`paper-source/main.tex\` 把 AFH raw isoscalar response 的 \(4\pi W_M^{00}/(2J_A+1)\) 与物理 \(R_A(0)=A^2\) 并列，且将 \(y=b_A^2m_AE_R/2\) 写成无条件定义。这与 AFH v6.0 raw 输出不一致。现已将物理 response 改为 \(16\pi W_{M,\mathrm{AFH,v6}}^{00}/(2J_A+1)\)，并将 \(y\) 改为 exact spatial-\(q\) 定义。
-2. **SHA-256 字段误用 Git blob SHA-1：** 天然氙 metadata 的 \`response_sample_sha256\` 曾是 40 位 Git blob SHA-1，却标记为 SHA-256。现已换成实际文件的 64 位 SHA-256，并在 archive validator 与后续 runner 中加入自动检查。
+1. **AFH factor-of-four 与 exact-\(q\) 定义：** 原始 `paper-source/main.tex` 把 AFH raw isoscalar response 的 \(4\pi W_M^{00}/(2J_A+1)\) 与物理 \(R_A(0)=A^2\) 并列，且将 \(y=b_A^2m_AE_R/2\) 写成无条件定义。这与 AFH v6.0 raw 输出不一致。现已将物理 response 改为 \(16\pi W_{M,\mathrm{AFH,v6}}^{00}/(2J_A+1)\)，并将 \(y\) 改为 exact spatial-\(q\) 定义。
+2. **SHA-256 字段误用 Git blob SHA-1：** 天然氙 metadata 的 `response_sample_sha256` 曾是 40 位 Git blob SHA-1，却标记为 SHA-256。现已换成实际文件的 64 位 SHA-256，并在 archive validator 与后续 runner 中加入自动检查。
 
 本轮没有改变三体振幅代码、核响应数值表或已归档物理结果。当前结果仍受 Dirac/Majorana 模型定义、条件性 \(\chi_2\) 宽度、AFH 缺失同位素和完整 LZ likelihood 等边界限制。
 
@@ -17,15 +17,15 @@
 
 | 审查对象 | 主报告 / 附录 | 代码实现 | 审查结论 |
 |---|---|---|---|
-| vector–vector 相互作用与两张辐射图 | 主报告 §1.1–1.2；附录 A.5–A.6；\`paper-source/main.tex\` | \`eq6_kernel.py\`: \`vertices\`, \`spin_trace\` | 当前 Dirac、实耦合基准下结构一致；Dirac/Majorana 和完整 CP/手征约定仍未由原模型文本唯一固定 |
-| \(q^\mu,t,Q\) 的定义 | 主报告 §1.3；附录 G；附录 B.2 | \`rate_kinematics.py\`: \`momentum_transfer\`; \`joint_xe131.py\`: \`NuclearResponse.at_recoil\` | 一致：AFH 用空间 \(Q\)，传播子用 \(t\) |
-| \(W_{\min},W_{\max}\) 与 Källén 因子 | 主报告 §2.4；附录 A.2–A.4 | \`eq6_kernel.py\`: \`limits\`, \`lambda_dimensionless\`, \`build_point\` | 解析式与实现一致 |
-| \(L_{00}\) 的 Dirac trace 和干涉 | 主报告 §2.3；附录 A.5 | \`eq6_kernel.py\`: \`spin_trace\` | 自旋平均、末态求和、两图相干相加一致；适用范围限于 Dirac 基准 |
-| \(256\pi^3\) 前因子 | 主报告 §2.5；附录 A.4.1 | \`eq6_kernel.py\` 的 \(I_6\) 与 \`joint_xe131.py\` 的 Eq. (6) 前因子 | 独立相空间推导通过 |
-| AFH factor 4 与 \(R_A(0)\) | 主报告 §3.2–3.3；附录 B、C | AFH response CSV；\`compute_four_benchmark_dsigma.py\`; \`recompute_afh_four_benchmarks.py\` | raw-to-physical 映射一致；已修正源论文 |
-| 三体 \(v_{\min}\) | 主报告 §6.3；附录 E.2 | \`rate_kinematics.py\`: \`vmin_three_body_beta\` | 解析推导一致；独立求根数值对照通过 |
-| 天然氙速率与单位 | 主报告 §6–7；附录 D、E | \`run_natural_xenon_halo_fold.py\`; \`run_afh_natural_xenon_halo_fold.py\` | 通量、靶数、丰度、单位换算一致；AFH 仍为 selected points |
-| LZ 一维效率折叠 | 主报告 §11.6；LZ rate-level metadata | \`fold_lz_2026_rate_level.py\` | 解析分段积分与稠密梯形交叉检查一致；不等于二维 likelihood |
+| vector–vector 相互作用与两张辐射图 | 主报告 §1.1–1.2；附录 A.5–A.6；`paper-source/main.tex` | `eq6_kernel.py`: `vertices`, `spin_trace` | 当前 Dirac、实耦合基准下结构一致；Dirac/Majorana 和完整 CP/手征约定仍未由原模型文本唯一固定 |
+| \(q^\mu,t,Q\) 的定义 | 主报告 §1.3；附录 G；附录 B.2 | `rate_kinematics.py`: `momentum_transfer`; `joint_xe131.py`: `NuclearResponse.at_recoil` | 一致：AFH 用空间 \(Q\)，传播子用 \(t\) |
+| \(W_{\min},W_{\max}\) 与 Källén 因子 | 主报告 §2.4；附录 A.2–A.4 | `eq6_kernel.py`: `limits`, `lambda_dimensionless`, `build_point` | 解析式与实现一致 |
+| \(L_{00}\) 的 Dirac trace 和干涉 | 主报告 §2.3；附录 A.5 | `eq6_kernel.py`: `spin_trace` | 自旋平均、末态求和、两图相干相加一致；适用范围限于 Dirac 基准 |
+| \(256\pi^3\) 前因子 | 主报告 §2.5；附录 A.4.1 | `eq6_kernel.py` 的 \(I_6\) 与 `joint_xe131.py` 的 Eq. (6) 前因子 | 独立相空间推导通过 |
+| AFH factor 4 与 \(R_A(0)\) | 主报告 §3.2–3.3；附录 B、C | AFH response CSV；`compute_four_benchmark_dsigma.py`; `recompute_afh_four_benchmarks.py` | raw-to-physical 映射一致；已修正源论文 |
+| 三体 \(v_{\min}\) | 主报告 §6.3；附录 E.2 | `rate_kinematics.py`: `vmin_three_body_beta` | 解析推导一致；独立求根数值对照通过 |
+| 天然氙速率与单位 | 主报告 §6–7；附录 D、E | `run_natural_xenon_halo_fold.py`; `run_afh_natural_xenon_halo_fold.py` | 通量、靶数、丰度、单位换算一致；AFH 仍为 selected points |
+| LZ 一维效率折叠 | 主报告 §11.6；LZ rate-level metadata | `fold_lz_2026_rate_level.py` | 解析分段积分与稠密梯形交叉检查一致；不等于二维 likelihood |
 
 ## 3. 粒子物理：相互作用、内部传播子与自旋振幅
 
@@ -85,7 +85,7 @@ W_{\max}<m_{\chi_2}
 \qquad
 \overline\Gamma^{\,0}=\gamma^0(\Gamma^0)^\dagger\gamma^0.
 \]
-这里 \(1/2\) 是初态 Dirac 自旋平均，末态自旋求和由完备关系完成。代码中的 \`spin_trace\` 分别计算 before、after 和完整振幅；干涉项由完整迹减去两个单图平方得到。
+这里 \(1/2\) 是初态 Dirac 自旋平均，末态自旋求和由完备关系完成。代码中的 `spin_trace` 分别计算 before、after 和完整振幅；干涉项由完整迹减去两个单图平方得到。
 
 当前计算隐含实耦合约定；若 \(g_1,g_2\) 有一般复相位，两个图的耦合因子和相对相位必须从完整拉格朗日量重新保留。原始模型文本也没有唯一固定 \(\chi_{1,2}\) 是 Dirac 还是 Majorana。因此当前数值结果不能自动外推为 Majorana 版本。
 
@@ -123,7 +123,7 @@ Q=|\mathbf q|=\sqrt{2m_AE_R+E_R^2},
 \[
 y=(b_AQ/2)^2
 \]
-进入 AFH 响应。代码中的 \`momentum_transfer\`、\`NuclearResponse.at_recoil\` 和三体 \`limits\` 都使用 exact spatial \(Q\)。NR 近似 \(\sqrt{2m_AE_R}\) 仅作为敏感性对照，不应与传播子不变量 \(t\) 混写。
+进入 AFH 响应。代码中的 `momentum_transfer`、`NuclearResponse.at_recoil` 和三体 `limits` 都使用 exact spatial \(Q\)。NR 近似 \(\sqrt{2m_AE_R}\) 仅作为敏感性对照，不应与传播子不变量 \(t\) 混写。
 
 固定速度 Xe-131 曲线采用 \(M_A=131u\)，天然氙折叠采用逐同位素 NIST 核质量。这是两条计算链明确记录的质量输入差异，不是同一结果中混用两种 \(m_A\)。
 
@@ -241,7 +241,7 @@ v_{\min}=c\beta_{\min}.
 \]
 \(\Delta m\) 不进入该阈值，因为 \(\chi_2\) 是内部态，不是末态粒子；阈值由 \(m_{\chi_1},m_s,m_A,E_R\) 决定。
 
-**独立数值对照：** 对四组 benchmark、四个代表性 Xe 同位素质量和四个反冲点，共 64 组输入，用独立求根解 \(W_{\max}^2-(m_{\chi_1}+m_s)^2=0\)，与 \`rate_kinematics.py\` 的闭式 \(\beta_{\min}\) 比较。最大 \(|\Delta\beta|=3.89\times10^{-13}\)，对应速度差约 \(1.17\times10^{-7}\) km/s。该检查验证闭式阈值与 exact-\(Q\) 的 \(W_{\max}\) 公式相容；它不是对所有可能模型输入的穷举扫描。
+**独立数值对照：** 对四组 benchmark、四个代表性 Xe 同位素质量和四个反冲点，共 64 组输入，用独立求根解 \(W_{\max}^2-(m_{\chi_1}+m_s)^2=0\)，与 `rate_kinematics.py` 的闭式 \(\beta_{\min}\) 比较。最大 \(|\Delta\beta|=3.89\times10^{-13}\)，对应速度差约 \(1.17\times10^{-7}\) km/s。该检查验证闭式阈值与 exact-\(Q\) 的 \(W_{\max}\) 公式相容；它不是对所有可能模型输入的穷举扫描。
 
 ## 7. AFH factor-of-four：从 raw package 到物理核子耦合
 
@@ -272,15 +272,15 @@ R_A^{\rm phys}(q)
 
 代码交叉检查：
 - Xe-131 AFH 输出同时保留 raw 与 physical normalized columns；
-- \`recompute_afh_four_benchmarks.py\` 读取 \`R_equal_pn_normalized\`，要求 \(R_A(0)=A^2\)；
-- \`compute_four_benchmark_dsigma.py\` 将该物理响应直接代入 Eq. (6)，没有再乘一次 4；
-- 天然氙 selected sample 的 \`R_A\` 也是 physical response，halo fold 直接使用，不再额外乘 4。
+- `recompute_afh_four_benchmarks.py` 读取 `R_equal_pn_normalized`，要求 \(R_A(0)=A^2\)；
+- `compute_four_benchmark_dsigma.py` 将该物理响应直接代入 Eq. (6)，没有再乘一次 4；
+- 天然氙 selected sample 的 `R_A` 也是 physical response，halo fold 直接使用，不再额外乘 4。
 
 因此当前 AFH factor 4 只出现一次。夸克—核子匹配 \(g_{VN}=3g_{Vq}\) 不受此核归一化因子影响。
 
 ### 7.1 已修正的原始工作稿
 
-原始 \`paper-source/main.tex\` 曾同时写
+原始 `paper-source/main.tex` 曾同时写
 \[
 \mathcal R_A=\frac{4\pi}{2J_A+1}W_M^{00},
 \qquad \mathcal R_A(0)=A^2,
@@ -292,7 +292,7 @@ R_A^{\rm phys}(q)
 \qquad
 y=(b_AQ/2)^2,\quad Q^2=2m_AE_R+E_R^2.
 \]
-\`paper-source/SHA256SUMS\` 中 \`main.tex\` 的 hash 已同步更新。历史原稿 \`main_original.tex\` 保留不动，以保留来源追溯。
+`paper-source/SHA256SUMS` 中 `main.tex` 的 hash 已同步更新。历史原稿 `main_original.tex` 保留不动，以保留来源追溯。
 
 ## 8. 从单同位素截面到天然氙速率
 
@@ -344,7 +344,7 @@ N_{\rm sig}^{\rm ROI}
 |---|---|---|---|
 | P1-01 | 原始工作稿 AFH response 使用 \(4\pi W_M/(2J+1)\) 却声明 \(R_A(0)=A^2\) | 改为 \(16\pi W_{M,\rm AFH,v6}/(2J+1)\)，明确 raw \(A^2/4\) 到 physical \(A^2\) 的映射 | **已修正** |
 | P1-02 | 原始工作稿将 \(y=b_A^2m_AE_R/2\) 写成无条件定义 | 改为 \(y=(b_AQ/2)^2\)，并标明前式为小反冲近似 | **已修正** |
-| P1-03 | 天然氙 metadata 的 \`response_sample_sha256\` 实际为 40 位 Git blob SHA-1 | 替换为文件真实 64 位 SHA-256；runner 和 validator 增加校验 | **已修正** |
+| P1-03 | 天然氙 metadata 的 `response_sample_sha256` 实际为 40 位 Git blob SHA-1 | 替换为文件真实 64 位 SHA-256；runner 和 validator 增加校验 | **已修正** |
 | P1-04 | Dirac/Majorana、复耦合相位、完整 \(\chi_2\) 自能未由原始模型文本固定 | 明确保留为模型输入/理论扩展，不将条件性宽度推广 | <span>待补模型定义</span> |
 | P1-05 | Xe-124、Xe-126 的 AFH default response 缺失；完整 16807 行七同位素响应表未提交 | 在主索引中登记 checksum-only provenance 与缺失输入 | <span>待补输入</span> |
 | P1-06 | 原始 Figure 2 的单同位素/天然氙靶定义不明确 | 不把当前 LZ 天然氙扩展误称为原图已确认靶定义 | <span>待补原始输入</span> |
