@@ -10,13 +10,14 @@ nw = ToExpression[getArg["--nw", "16"]];
 nz = ToExpression[getArg["--nz", "16"]];
 nphi = ToExpression[getArg["--nphi", "8"]];
 widthScheme = getArg["--width-scheme", "pole"];
+w2Mapping = getArg["--w2-mapping", "threshold_u2"];
 erStart = ToExpression[getArg["--er-start-kev", "5"]];
 erStop = ToExpression[getArg["--er-stop-kev", "800"]];
 erStep = ToExpression[getArg["--er-step-kev", "5"]];
 erListString = getArg["--er-list-kev", ""];
 benchmarkArg = getArg["--benchmark", "all"];
 If[!(And @@ (IntegerQ /@ {nw, nz, nphi})) || Min[nw, nz, nphi] < 1, Exit[2]];
-If[!MemberQ[{"pole", "zero"}, widthScheme] || erStep <= 0 || erStop < erStart, Exit[2]];
+If[!MemberQ[{"pole", "zero"}, widthScheme] || !MemberQ[{"threshold_u2", "linear_w2"}, w2Mapping] || erStep <= 0 || erStop < erStart, Exit[2]];
 
 here = DirectoryName[$InputFileName];
 responsePath = FileNameJoin[{here, "afh_default_xe131_WM00_mathematica.csv"}];
@@ -119,7 +120,7 @@ boost4[v_List, betaVec_List] := Module[{b2, b, gam, bh, par},
   Join[{gam*(v[[1]] + b*par)}, v[[2 ;; 4]] + (((gam - 1.)*par + gam*b*v[[1]])*bh)]
 ];
 
-buildPoint[mchi_, ms_, mA_, ER_, speed_, w2_, z_, phi_] := Module[
+buildPoint[mchi_, ms_, mA_, ER_, speed_, w2_, deltaW2_, z_, phi_] := Module[
   {beta0, gamma0c, energy, pz, p, qmag, cq, sq, q, kTotal, betaK,
    pStar, e3, ref, e1, e2, lam, w, kAbs, eK, eP, nvec, k, pPrime},
   beta0 = speed/cKms; gamma0c = 1./Sqrt[1. - beta0^2];
@@ -134,10 +135,11 @@ buildPoint[mchi_, ms_, mA_, ER_, speed_, w2_, z_, phi_] := Module[
   pStar = boost4[p, -betaK]; e3 = pStar[[2 ;; 4]]/Norm[pStar[[2 ;; 4]]];
   ref = If[Abs[{1., 0., 0.}.e3] > 0.9, {0., 1., 0.}, {1., 0., 0.}];
   e1 = Cross[ref, e3]; e1 = e1/Norm[e1]; e2 = Cross[e3, e1];
-  lam = (w2 - (mchi + ms)^2)*(w2 - (mchi - ms)^2);
-  If[lam < -1.*10^-8, Abort[]];
+  lam = deltaW2*(4.*mchi*ms + deltaW2);
+  If[lam < -1.*10^-12, Abort[]];
   kAbs = Sqrt[Max[0., lam]]/(2.*w);
-  eK = (w2 - mchi^2 + ms^2)/(2.*w); eP = (w2 + mchi^2 - ms^2)/(2.*w);
+  eK = (2.*ms*(mchi + ms) + deltaW2)/(2.*w);
+  eP = (2.*mchi*(mchi + ms) + deltaW2)/(2.*w);
   nvec = z*e3 + Sqrt[Max[0., 1. - z^2]]*(Cos[phi]*e1 + Sin[phi]*e2);
   k = boost4[Join[{eK}, kAbs*nvec], betaK];
   pPrime = boost4[Join[{eP}, -kAbs*nvec], betaK];
@@ -161,25 +163,37 @@ chi2Width[mchi_, ms_, deltaM_, g2_] := Module[{m2 = mchi + deltaM, lam},
   If[lam <= 0., 0., g2^2/(16.*Pi*m2^3)*Sqrt[lam]*((m2 + mchi)^2 - ms^2)]
 ];
 
-reducedKernel[mchi_, ms_, deltaM_, mA_, ER_, speed_, width_, nW_, nZ_, nPhi_] := Module[
+reducedKernel[mchi_, ms_, deltaM_, mA_, ER_, speed_, width_, nW_, nZ_, nPhi_, mapping_] := Module[
   {wMin2, wMax2, wRule, zRule, phiRule, total = 0., wPair, zPair, phiPair,
-   w2, weightW, z, weightZ, phi, weightPhi, lambdaDim, angular, azimuth, point,
-   beta0, gamma0c},
+   w2, deltaW2, deltaW2Max, u, weightW, z, weightZ, phi, weightPhi,
+   lambdaDim, angular, azimuth, point, beta0, gamma0c},
   wMin2 = (mchi + ms)^2; beta0 = speed/cKms; gamma0c = 1./Sqrt[1. - beta0^2];
   wMax2 = mchi^2 + 2.*mchi*gamma0c*beta0*Sqrt[2.*mA*ER + ER^2] -
     2.*(mchi*gamma0c + mA)*ER;
   If[wMax2 <= wMin2, Return[0.]];
-  wRule = gaussLegendreRule[nW, wMin2, wMax2];
-  zRule = gaussLegendreRule[nZ, -1., 1.]; phiRule = gaussLegendreRule[nPhi, 0., 2.*Pi];
+  deltaW2Max = wMax2 - wMin2;
+  wRule = If[mapping === "threshold_u2",
+    gaussLegendreRule[nW, -1., 1.],
+    gaussLegendreRule[nW, wMin2, wMax2]];
+  zRule = gaussLegendreRule[nZ, -1., 1.];
+  phiRule = gaussLegendreRule[nPhi, 0., 2.*Pi];
   Do[
-    w2 = wPair[[1]]; weightW = wPair[[2]];
-    lambdaDim = ((w2 - (mchi + ms)^2)*(w2 - (mchi - ms)^2))/w2^2;
+    If[mapping === "threshold_u2",
+      u = 0.5*(wPair[[1]] + 1.);
+      deltaW2 = deltaW2Max*u^2;
+      w2 = wMin2 + deltaW2;
+      weightW = 0.5*wPair[[2]]*(2.*deltaW2Max*u),
+      w2 = wPair[[1]];
+      deltaW2 = w2 - wMin2;
+      weightW = wPair[[2]]
+    ];
+    lambdaDim = deltaW2*(4.*mchi*ms + deltaW2)/w2^2;
     angular = 0.;
     Do[
       z = zPair[[1]]; weightZ = zPair[[2]]; azimuth = 0.;
       Do[
         phi = phiPair[[1]]; weightPhi = phiPair[[2]];
-        point = buildPoint[mchi, ms, mA, ER, speed, w2, z, phi];
+        point = buildPoint[mchi, ms, mA, ER, speed, w2, deltaW2, z, phi];
         azimuth += (weightPhi/(2.*Pi))*spinTrace[point, mchi, mchi + deltaM, width],
         {phiPair, phiRule}];
       angular += weightZ*azimuth,
@@ -204,7 +218,7 @@ Do[
     If[open, minPoleClearance = Min[minPoleClearance, clearanceGeV]];
     {rPackage, rPhysical, qValue} = responseAt[ER];
     If[!NumericQ[rPackage] || !NumericQ[rPhysical] || !NumericQ[qValue], Exit[9]];
-    i6Value = If[open, reducedKernel[mchi, ms, deltaM, mA, ER, speedKms, width, nw, nz, nphi], 0.];
+    i6Value = If[open, reducedKernel[mchi, ms, deltaM, mA, ER, speedKms, width, nw, nz, nphi, w2Mapping], 0.];
     denominator = (mV^2 + 2.*mA*ER)^2;
     prefactor = mA*gProductSquared/(256.*Pi^3*pChi^2*denominator);
     dsigma = If[open, prefactor*rPhysical*i6Value, 0.];
@@ -213,7 +227,7 @@ Do[
     factor4Residual = If[open, Abs[factor4Ratio - 4.]/4., 0.];
     maxFactor4GridResidual = Max[maxFactor4GridResidual, factor4Residual];
     AppendTo[rows, {benchmark, erKev, qValue, rPackage, rPhysical, rPhysical/4., c0,
-      i6Value, widthScheme, g2, gammaPole, wMin2, wMax2, clearanceGeV*10^6,
+      i6Value, widthScheme, w2Mapping, g2, gammaPole, wMin2, wMax2, clearanceGeV*10^6,
       If[open, 1, 0], nw, nz, nphi, pChi, denominator, dsigma, dsigmaNo4,
       factor4Ratio, dsigma*0.3893793721*10^-33}],
     {erKev, erGrid}];
@@ -221,7 +235,7 @@ Do[
   {bench, selectedBenchmarks}];
 
 header = {"benchmark", "ER_keV", "q_GeV", "R_A_AFH_package", "R_A_physical_normalized",
-  "R_A_physical_without_factor4", "C0", "I6_GeV2", "width_scheme", "g2",
+  "R_A_physical_without_factor4", "C0", "I6_GeV2", "width_scheme", "W2_mapping", "g2",
   "Gamma_chi2_pole_GeV", "Wmin2_GeV2", "Wmax2_GeV2", "chi2_pole_clearance_keV",
   "phase_space_open", "nW", "nz", "nphi", "pchi_GeV", "mediator_denominator_GeV4",
   "dsigma_dER_GeVminus3", "dsigma_without_factor4_GeVminus3", "dsigma_factor4_ratio",
@@ -244,7 +258,7 @@ meta = <|
   "integration" -> <|"I6_recomputed_in_Wolfram_Language" -> True,
     "quadrature" -> <|"nW" -> nw, "nz" -> nz, "nphi" -> nphi|>,
     "definition" -> "Integral dW2 sqrt(lambda_dim) dz (1/(2 Pi)) dphi L00",
-    "width_scheme" -> widthScheme|>,
+    "width_scheme" -> widthScheme, "W2_mapping" -> w2Mapping|>,
   "AFH" -> <|"source_table" -> "afh_default_xe131_WM00_mathematica.csv",
     "native_AFH_package_rerun" -> False, "q_nodes" -> Length[qGrid],
     "raw_package_R0" -> rPackageGrid[[1]], "C0" -> c0, "physical_R0" -> rPhysicalGrid[[1]],
