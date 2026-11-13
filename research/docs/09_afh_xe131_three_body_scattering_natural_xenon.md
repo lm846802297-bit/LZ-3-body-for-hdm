@@ -398,7 +398,7 @@ LZ 指 LUX-ZEPLIN 暗物质实验。其核心靶体是双相液氙时间投影�
 0.998158.
 \]
 
-Xe-124 与 Xe-126 合计约 \(0.001842\)，因为当前提供的 AFH v6.0 响应集合没有相应内置密度矩阵，故本轮没有纳入。**七种可用同位素的丰度没有重新归一化**，不能把缺失的丰度简单重新分配给其余同位素。
+Xe-124 与 Xe-126 合计约 \(0.001842\)，当前 AFH v6.0 default dispatch 没有这两种同位素的内置密度矩阵。因此 AFH-7 纯 AFH 场景不纳入它们；Hybrid-9 仅将 Helm 用作这两种同位素的明确标注补充，不把 Helm 贡献称为 AFH 响应。**七种 AFH 可用同位素的丰度没有重新归一化**，也不把缺失丰度重新分配给其余同位素。
 
 每种同位素分别使用：
 
@@ -765,6 +765,17 @@ To separate spectral hardness from overall normalization, I also integrated the 
 | Black | 92.84% / 92.76% | \(2.65\times10^{-9}\) / \(2.67\times10^{-9}\) |
 | Blue | 8.57% / 8.74% | \(1.07\times10^{-6}\) / \(1.13\times10^{-6}\) |
 
+The corresponding AFH-7/Hybrid-9 tail diagnostics are:
+
+| Benchmark | AFH-7 tail events (fraction) | Hybrid-9 tail events (fraction) |
+|---|---:|---:|
+| Red | \(6.7310\times10^{-3}\) (2.1215%) | \(6.8092\times10^{-3}\) (2.1406%) |
+| Green | \(1.1683\times10^{-4}\) (8.3577%) | \(1.1760\times10^{-4}\) (8.3969%) |
+| Black | \(2.6512\times10^{-9}\) (92.7494%) | \(2.6512\times10^{-9}\) (92.7494%) |
+| Blue | \(9.5137\times10^{-7}\) (8.3140%) | \(9.5763\times10^{-7}\) (8.3532%) |
+
+These are recoil-energy tail integrals without energy-resolution smearing; they are not reconstructed-energy likelihood-window probabilities.
+
 This separates two distinct properties. Red has the largest total accepted rate but places only about 2.3% of its accepted events above 225 keV. Black has an extremely hard spectrum, with more than 92% of its already tiny accepted rate above 225 keV, but its total rate is only about \(3\times10^{-9}\) events. Green and Blue are intermediate in spectral hardness but remain strongly rate-suppressed at the reference coupling. Thus a hard spectrum alone does not establish an explanation of the 248 keV event: the normalization must also be viable.
 
 A nuclear-response distinction is also necessary. The LZ 2026 paper states that its published theory spectra use WimPyDD with one-body density matrices developed for DMFormFactor-v6, modified as described in Ref. [31]. The continuous spectra archived in this repository include GCN/JJ55 as independent nuclear-model comparisons, AFH-7 using seven official AFH v6.0 default responses, and Hybrid-9 using Helm only for the two isotopes whose AFH default density matrices are unavailable. Hybrid-9 is a labelled fallback, not a full AFH-9 result; none of these calculations is claimed to reproduce the LZ collaboration's modified nuclear-response inputs.
@@ -813,16 +824,7 @@ AFH-7 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失�
 - Black 的高能尾部比例超过 92%，但总接受事件数只有约 \(3\times10^{-9}\)；
 - Green 与 Blue 的高能尾部比例约为 8.6%–8.8%，但在参考耦合下总事件数仍很小。
 
-因此，单独拥有较硬的高能谱尾并不足以解释 248 keV 候选事件；总归一化、探测器响应和完整统计模型同样重要。AFH-7/Hybrid-9 在相同 225–269.9 keV 诊断区间的高能尾事件数和占比分别为：
-
-| Benchmark | AFH-7 tail events (fraction) | Hybrid-9 tail events (fraction) |
-|---|---:|---:|
-| Red | \(6.7310\times10^{-3}\) (2.1215%) | \(6.8092\times10^{-3}\) (2.1406%) |
-| Green | \(1.1683\times10^{-4}\) (8.3577%) | \(1.1760\times10^{-4}\) (8.3969%) |
-| Black | \(2.6512\times10^{-9}\) (92.7494%) | \(2.6512\times10^{-9}\) (92.7494%) |
-| Blue | \(9.5137\times10^{-7}\) (8.3140%) | \(9.5763\times10^{-7}\) (8.3532%) |
-
-这些高能尾结果仍是未做能量分辨卷积的反冲能量诊断，不是重建能量 likelihood window。
+因此，单独拥有较硬的高能谱尾并不足以解释 248 keV 候选事件；总归一化、探测器响应和完整统计模型同样重要。AFH-7/Hybrid-9 的相同 225–269.9 keV 诊断区间高能尾事件数与占比见 §11.5；它们同样是未做能量分辨卷积的反冲能量诊断，不是重建能量 likelihood window。
 
 ### 12.4 本阶段结论的适用边界
 
@@ -836,7 +838,7 @@ AFH-7 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失�
 4. 不能把 248 keV 单个候选事件当作信号计数进行拟合；
 5. 不能把 mpmath 高精度交叉检查描述为官方 Mathematica 原生验证。
 
-后续物理工作仍取决于完整 AFH 响应输入、原生 Mathematica 对照，以及 LZ 的二维 NEST 响应、校准协方差、背景数据和 profile likelihood。本文的阶段性结论不替代这些尚未完成的工作。
+若要形成九种天然同位素均采用 AFH default density matrix 的完整 AFH-9，仍需取得缺失的 Xe-124/Xe-126 官方 AFH 响应；此外，原生 Mathematica 对照以及 LZ 的二维 NEST 响应、校准协方差、背景数据和 profile likelihood 仍待完成。本文的阶段性结论不替代这些尚未完成的工作。
 
 ## 13. 公式—符号—程序—结果交叉引用
 
@@ -2543,7 +2545,7 @@ python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_hal
 
 若显式选择 nr_approx，程序会因输入样本仍采用 exact spatial q 而报错，除非同时提供在 NR q 处重新计算的匹配响应值。该检查用于防止把一个 q 点的 \(R_A\) 错误地标记成另一个 q 点的响应。
 
-本节的 selected-point 速率保留 exact spatial q，不进行经验重标度。NR 近似的响应变化见附录 G；连续反冲谱仍需恢复完整七同位素 AFH 响应网格后再开展。
+本节的 selected-point 速率保留 exact spatial q，不进行经验重标度。NR 近似的响应变化见附录 G。AFH-7/Hybrid-9 连续谱已另由 `research/afh_default_density_natural_xenon_halo/run_afh7_hybrid9_continuous_spectrum.py` 生成；该连续谱不改变本节 selected-point 归档的用途。
 
 ---
 
@@ -2712,7 +2714,7 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 | AFH 空间 q 与 NR 近似 | 已完成审计与代码保护 | 历史 selected-point 样本匹配 exact spatial q；AFH-7 连续谱逐同位素直接使用 exact spatial q；Xe-131 四点 NR 近似响应差异约 5.5–225 ppm | 后续扩展到更多核质量和 halo 参数 |
 | Xe-124/Xe-126 | 输入缺失 | 缺失丰度合计 0.001842 | 取得密度矩阵并补算响应、阈值和速率 |
 | 天然氙连续反冲谱 | GCN/JJ55 已完成；AFH 为 selected points | 四组 GCN/JJ55 连续谱，5–800 keV、七种可用同位素、exact spatial q 和截断 SHM | 完整七同位素 AFH 响应网格及连续 AFH 谱；Xe-124/Xe-126 AFH 输入 |
-| LZ efficiency-weighted rate-level fold | GCN/JJ55 已完成初步折叠 | Fig. S2 一维效率曲线及灰色包络；2.84 tonne-year；四组 benchmark 事件数；解析分段积分与稠密梯形对照 | NEST 二维响应、能量分辨/重建、nuisance covariance、背景样本和 profile likelihood；AFH 连续谱尚不能折叠 |
+| LZ efficiency-weighted rate-level fold | GCN/JJ55 与 AFH-7/Hybrid-9 均已完成 | Fig. S2 一维效率曲线及灰色包络；2.84 tonne-year；四组 benchmark × 核响应方案；解析分段积分、稠密梯形对照、输入/输出 SHA-256 归档 | NEST 二维响应、能量分辨/重建、nuisance covariance、背景样本和 profile likelihood |
 
 这张表把软件测试、局部数值收敛和物理模型完整性分开。测试通过只说明被测试的代码路径满足相应断言，不等于所有参数点、所有核模型、halo 假设或实验响应都已验证。
 
@@ -2726,7 +2728,7 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 4. 将该效率曲线与 GCN/JJ55 连续天然氙谱在 \(5.4\le E_R\le269.9\) keV 内折叠，得到四组 benchmark 的 preliminary rate-level expected event yields；
 5. 对分段线性谱与分段线性效率的乘积执行区间解析积分，并以稠密梯形积分交叉检查。
 
-这组事件数**只对应 GCN/JJ55 连续核响应谱**。AFH 当前只有 selected-point 天然氙速率，因此不能将 GCN/JJ55 的连续谱折叠结果标记为 AFH 预测。效率曲线的机器可读 HEPData 端点当前受到 HTTP 403 challenge；归档数据来自官方 PDF 的可复现矢量提取，而不是声称下载到了 HEPData 原始 YAML/JSON 表。
+GCN/JJ55 事件数只对应相应连续核响应谱；AFH-7/Hybrid-9 事件数另行归档，Hybrid-9 不是完整 AFH-9。效率曲线的机器可读 HEPData 端点当前受到 HTTP 403 challenge；归档数据来自官方 PDF 的可复现矢量提取，而不是声称下载到了 HEPData 原始 YAML/JSON 表。
 
 完整 detector-level recast 仍至少需要：
 
