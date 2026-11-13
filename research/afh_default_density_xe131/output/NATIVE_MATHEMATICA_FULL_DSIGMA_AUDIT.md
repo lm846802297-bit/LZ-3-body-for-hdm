@@ -45,7 +45,22 @@ W_{\max}^2=m_{\chi_1}^2+
 \]
 The target-rest-frame time component Gamma^0 includes both scalar-emission diagrams and their interference. The initial-spin average 1/2 is included once. The azimuthal weights are divided by 2 pi.
 
-The Wolfram Language runner reconstructs the boosted three-body four-momenta and evaluates the 4x4 Dirac trace. It does not import Python I6 values. It reads only the already archived native AFH response table.
+For the full-cross-section audit, the default W^2 mapping is threshold-regularized:
+\[
+u=\frac{x+1}{2},\qquad
+W^2=W_{\min}^2+(W_{\max}^2-W_{\min}^2)u^2,
+\qquad
+dW^2=2(W_{\max}^2-W_{\min}^2)u\,du.
+\]
+The dimensionless Kallen factor is evaluated in the stable form
+\[
+\lambda_{\rm dim}
+=\frac{\Delta W^2(4m_{\chi_1}m_s+\Delta W^2)}{W^4},
+\qquad \Delta W^2=W^2-W_{\min}^2.
+\]
+This avoids subtracting nearly equal squared masses at the threshold. The old linear-W^2 mapping remains available only as a diagnostic through \texttt{--w2-mapping linear_w2}; the production default is \texttt{threshold_u2}.
+
+The Wolfram Language runner reconstructs the boosted three-body four-momenta and evaluates the 4x4 Dirac trace. It does not import Python I6 values. It reads only the already archived native AFH response table. The Python comparator independently recomputes the same integral with \texttt{phase_space_convergence.integrate_i6}, using the mapping recorded in the Mathematica CSV.
 
 ## 3. Cross-section assembly and factor-four ledger
 
@@ -81,14 +96,14 @@ The response uses exact spatial q = sqrt(2 m_A E_R + E_R^2); the mediator propag
 Full-grid command from the repository root:
 
 ~~~powershell
-wolframscript -file research/afh_default_density_xe131/run_afh_eq6_full_dsigma.wls --nw 16 --nz 16 --nphi 8 --width-scheme pole
+wolframscript -file research/afh_default_density_xe131/run_afh_eq6_full_dsigma.wls --nw 16 --nz 16 --nphi 8 --w2-mapping threshold_u2 --width-scheme pole
 python research/afh_default_density_xe131/compare_full_dsigma_mathematica.py --mathematica-csv research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131.csv --out-csv research/afh_default_density_xe131/output/full_dsigma_mathematica/pointwise_comparison.csv --metadata research/afh_default_density_xe131/output/full_dsigma_mathematica/comparison_metadata.json
 ~~~
 
 High-order anchor example:
 
 ~~~powershell
-wolframscript -file research/afh_default_density_xe131/run_afh_eq6_full_dsigma.wls --benchmark green_ms300_dm1 --er-list-kev 200,300,500 --nw 48 --nz 40 --nphi 24 --width-scheme pole --out-csv research/afh_default_density_xe131/output/full_dsigma_mathematica/green_high_order.csv
+wolframscript -file research/afh_default_density_xe131/run_afh_eq6_full_dsigma.wls --benchmark green_ms300_dm1 --er-list-kev 200,300,500 --nw 48 --nz 40 --nphi 24 --w2-mapping threshold_u2 --width-scheme pole --out-csv research/afh_default_density_xe131/output/full_dsigma_mathematica/green_high_order.csv
 ~~~
 
 The Python comparator must be run on each Mathematica output. The full grid uses 16x16x8; high-order anchors assess quadrature convergence separately. Agreement between codes at one order is not itself a convergence test.
@@ -102,7 +117,9 @@ The Python comparator must be run on each Mathematica output. The full grid uses
 5. The chi2 pole clearance remains positive at every open point in the fixed-speed scan.
 6. High-order anchors demonstrate quadrature convergence separately.
 
-The comparator defaults to 2e-7 relative tolerance for I6 and d sigma/dE_R, 2e-10 for AFH PCHIP response, and 2e-12 for the factor-four identities.
+The comparator defaults to 2e-7 relative tolerance for I6 and d sigma/dE_R, 2e-10 for AFH PCHIP response, and 2e-12 for q, C0, unit conversion, and factor-four identities. It also compares the no-factor-four control against the independently recomputed Python cross section divided by four.
+
+An earlier preflight reported a 4.11e-5 difference between the linear-W^2 kernel and one historical archived I6 value. This is not evidence of an AFH normalization error. The new full audit therefore uses threshold_u2 by default and will re-evaluate that point against a matched high-order reference; the source of the historical-grid difference remains open until the native run is available.
 
 ## 6. Scientific status
 
