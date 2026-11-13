@@ -22,9 +22,21 @@ class FixedSpeedXe131CurveTests(unittest.TestCase):
         wmin2, wmax2 = recoil_interval(1000.0, 300e-6, mA, 655e-6, 776.0)
         self.assertLessEqual(wmax2, wmin2)
 
-    def test_kinematic_endpoint_bracket(self):
-        # The exact endpoint is about 654.955583 keV for this benchmark.
+    def test_kinematic_endpoint_brackets(self):
+        # Open interval: approximately [109.150286, 654.955583] keV.
         mA = 131 * 0.93149410242
+
+        # Lower boundary: 109.149 keV is closed; 109.151 keV is open.
+        wmin2, wmax2 = recoil_interval(
+            1000.0, 300e-6, mA, 109.149e-6, 776.0
+        )
+        self.assertLessEqual(wmax2, wmin2)
+        wmin2, wmax2 = recoil_interval(
+            1000.0, 300e-6, mA, 109.151e-6, 776.0
+        )
+        self.assertGreater(wmax2, wmin2)
+
+        # Upper boundary: 654.955 keV is open; 654.956 keV is closed.
         wmin2, wmax2 = recoil_interval(
             1000.0, 300e-6, mA, 654.955e-6, 776.0
         )
