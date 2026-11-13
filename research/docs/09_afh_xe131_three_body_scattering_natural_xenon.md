@@ -1,7 +1,7 @@
 # AFH v6.0 Xe-131 核响应、三体暗物质散射与天然氙反冲率
 
 > 整理日期：2026-11-11（原始主报告整理日期）
-> 最近文档更新：2026-11-13（合并正文与附录中的逐步推导：三体相空间/Jacobian、最优反冲与最大标量质量、条件性 pole width、SHM 实验室速度 PDF、天然氙靶数和通量事件率；不改变模型输入或既有数值结果）
+> 最近文档更新：2026-11-13（补入 Wolfram 14.0.0 原生 Mathematica/Python 2401 点响应审计及 SHA-256 归档；更新 F6 验证状态。该结果限定于 Xe-131 AFH response-level，不代表完整天然氙连续谱或 LZ likelihood）
 > 对话来源：[ChatGPT 分享对话](https://chatgpt.com/share/6af4660e-e388-83ea-a86a-2482b065dcea)  
 > 对应研究仓库：`lm846802297-bit/LZ-3-body-for-hdm`  
 > 当前正式归档：main；PR #10 于 2026-11-13 合并，merge commit 724d9e7877fb76f4cc477fbb9e24e1e706bf37a6。PR #7 是此前研究分支内的历史合并记录。
@@ -26,6 +26,8 @@
 - **2026-11-13：** 建立 P0 Figure 2 benchmark / 输入 / 参数 / 输出 / SHA-256 总索引（8 组、48 个文件条目），P1 物理公式交叉审查和 P2 科学结果状态表，并在第 13.5 节加入导航。交叉审查发现原始工作稿的 AFH raw-to-physical factor-of-four 与 exact spatial-q 定义不一致，已修正 `paper-source/main.tex` 并刷新 `paper-source/SHA256SUMS`；同时将天然氙 metadata 中误写为 SHA-256 的 40 位 Git blob SHA-1 改为真实 64 位文件 SHA-256，并在 runner / validator 中加入检查。本轮修复的是公式定义和 provenance，不重算已归档物理数值。
 
 - **2026-11-13：** 将独立 Lorentz-invariant 三体相空间推导并入正文 §2.5.1–2.5.8 和附录 A.4.2；进一步补齐固定速度下 (m_{s,max}) 与 (E_R^*) 的解析极值、条件性 (chi_2	ochi_1s) 宽度、截断 SHM 实验室速度 PDF、天然氙靶核数及 halo 通量折叠的逐步推导，并同步主报告嵌入附录、独立附录文件和公式索引。本轮为解析推导与文档一致性更新，不修改数值程序、输入或归档结果。
+
+- **2026-11-13：** 将 `research/p1-mma-local` 中已完成的 Wolfram 14.0.0 原生 AFH Xe-131 2401 点结果、Python 对照、minima、源文件和 SHA-256 manifest 逐文件纳入本 PR；更新 README、附录 B/G、F6 索引和 P0–P2 状态。该归档不改变 Eq. (6) kernel 或天然氙连续谱的完成边界。
 
 ## 摘要
 
