@@ -91,6 +91,38 @@ At completion, report the exact model branch and assumptions; derivation/code/in
 
 Use a focused branch and PR. Never describe the LZ candidate as explained or a model as viable unless the full required evidence supports that statement.
 
+## Git history and merge strategy
+
+The following rules are mandatory for research PRs:
+
+- Use **Merge Commit by default** for substantive physics, derivation,
+  numerical-computation, validation, and result-archival work. Preserve the
+  individual topic commits and their parent relationships in `main`.
+- Do not squash a multi-stage scientific investigation merely to shorten the
+  commit history. Squash is reserved for documentation-only edits, minor
+  maintenance, or small cohesive changes whose intermediate commits have no
+  independent audit value.
+- If Squash Merge is used as an exception, the PR record and final commit
+  message must capture the complete milestone, benchmark, exact code/input
+  provenance, reproduction commands, checks actually run, outputs, and
+  limitations. Remember that the original topic commits remain in the PR
+  record but are not ancestors of the squash commit on `main`.
+- Use Rebase and Merge only when clean atomic commits and a linear history are
+  explicitly desired. It rewrites commit SHAs; do not use it casually when
+  commit identities are referenced by run manifests, logs, or external
+  provenance.
+- Keep commits logically coherent and use informative messages. Do not create
+  meaningless commits just to preserve a long history.
+- State the intended merge method during review. Do not rewrite or squash a
+  reviewed research branch without making that history change explicit.
+- After merging, verify the merge commit and the archived files on `main`.
+  The merge method does not replace scientific validation.
+
+These rules apply prospectively. They do not rewrite the history of PRs already
+merged before this policy was adopted. See
+[research/WORKFLOW.md](research/WORKFLOW.md#merge-strategy-and-research-traceability)
+for the complete procedure.
+
 ## CI is optional; research work must not wait for CI
 
 Continuous integration (CI) is optional supporting infrastructure. It is not a prerequisite, acceptance gate, or merge condition for research work.
