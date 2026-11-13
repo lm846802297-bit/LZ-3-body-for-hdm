@@ -28,6 +28,7 @@ Z = 54
 ISOTOPES = (128, 129, 130, 131, 132, 134, 136)
 Q_MAX_GEV = 0.60
 Q_STEP_GEV = 0.00025
+Q0_PACKAGE_RELATIVE_TOLERANCE = 5.0e-4  # rounded AFH built-in density-matrix coefficients
 EXPECTED_ENTRIES = {128: 21, 129: 39, 130: 21, 131: 67, 132: 21, 134: 21, 136: 21}
 MATRIX_FIELDS = (
     "index", "coefficient", "rank", "isospin",
@@ -177,7 +178,7 @@ def compute_isotope_grid(
     package_zero = records[0]["R_AFH_package_4pi_over_2Jplus1"]
     expected_zero = A * A / 4.0
     zero_relative_error = abs(package_zero / expected_zero - 1.0)
-    if zero_relative_error > 2.0e-4:
+    if zero_relative_error > Q0_PACKAGE_RELATIVE_TOLERANCE:
         raise RuntimeError(
             f"Xe-{A}: AFH package R(0) differs from A^2/4 by "
             f"{zero_relative_error:.6e}"
@@ -332,6 +333,7 @@ def generate(afh_package: Path, weights_path: Path, outdir: Path) -> dict:
         "missing_default_isotopes": missing,
         "natural_atom_fraction_coverage": available_fraction,
         "A2_weighted_zero_q_coherent_coverage": available_a2_weight / total_a2_weight,
+        "q0_package_normalization_relative_tolerance": Q0_PACKAGE_RELATIVE_TOLERANCE,
         "response_rows": len(combined_rows),
         "response_file": combined_path.name,
         "response_file_sha256": sha256_file(combined_path),
