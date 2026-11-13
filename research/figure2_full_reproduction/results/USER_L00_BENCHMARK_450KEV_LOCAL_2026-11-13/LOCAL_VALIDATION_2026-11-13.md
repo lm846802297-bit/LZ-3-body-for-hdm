@@ -75,3 +75,8 @@ The separate fixed-speed Xe-131 curve helper and its workflow are excluded from 
 - SHA256SUMS — checksums of the five native files above (excluding the checksum file itself).
 
 No ZIP/TAR bundle is used as the research-result submission.
+
+
+## 7. Main-branch archival status
+
+The native pointwise benchmark output and this local validation record are now archived on the canonical main branch through PR #10, merged as commit 724d9e7877fb76f4cc477fbb9e24e1e706bf37a6. This later archival note does not change the original local execution provenance above: the numerical acceptance used the stated main-kernel blob, Python 3.13.5 and NumPy 2.3.5, and did not use GitHub Actions. The separate PR #5/source-branch history is retained as provenance; it is not the basis for claiming that CI ran or that a full detector-level calculation was completed.
