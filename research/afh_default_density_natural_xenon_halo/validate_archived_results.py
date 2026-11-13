@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Lightweight integrity checks for the archived AFH natural-xenon halo fold."""
 from __future__ import annotations
-import csv, json, math
+import csv, hashlib, json, math
 from pathlib import Path
 
 HERE=Path(__file__).resolve().parent
@@ -28,6 +28,8 @@ assert len(rates)==14
 # The archived samples use the exact mass-shell value; q_NR=sqrt(2*m_A*E_R)
 # is only the small-recoil approximation.
 metadata=json.loads((R/"metadata.json").read_text(encoding="utf-8"))
+sample_sha256=hashlib.sha256((I/"afh_response_samples.csv").read_bytes()).hexdigest()
+assert metadata["response_sample_sha256"]==sample_sha256
 assert metadata["response_q_convention"]=="exact_spatial"
 weights_by_A={int(r["A"]):r for r in weights}
 for sample in resp:
@@ -72,4 +74,5 @@ print(f"PASS: {len(iso)} isotope rows, {len(rates)} rate rows, "
       f"AFH abundance coverage={coverage:.6f}, "
       f"max kernel-grid delta={max(abs(float(r['rel_884_to_16168'])) for r in kc):.3e}, "
       f"max speed-grid delta={max(abs(float(r['relative_difference_nv64_to_nv32'])) for r in sc):.3e}, "
-      f"AFH response q={metadata['response_q_convention']}")
+      f"AFH response q={metadata['response_q_convention']}, "
+      f"response sample SHA-256={sample_sha256[:12]}...")
