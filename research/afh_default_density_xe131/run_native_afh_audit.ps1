@@ -87,11 +87,13 @@ try {
     if ($LASTEXITCODE -ne 0) { throw "Final Python/MMA comparison failed with exit code $LASTEXITCODE." }
 
     $nativeMetadata = Join-Path $auditDir "afh_native_audit_metadata.txt"
+    $mathematicaMetadata = Join-Path $scriptDir "afh_default_xe131_mathematica_metadata.txt"
     $metadataLines = Get-Content -LiteralPath $nativeMetadata
     $wolframVersionLine = $metadataLines | Where-Object { $_ -like "WolframVersion = *" } | Select-Object -First 1
     $hashFiles = @(
         $pythonCsv,
         $mathematicaCsv,
+        $mathematicaMetadata,
         $comparisonJson,
         (Join-Path $auditDir "afh_native_audit_grid.csv"),
         (Join-Path $auditDir "afh_native_audit_comparison.csv"),
@@ -115,6 +117,7 @@ try {
         wolframVersion = $wolframVersion
         pythonReferenceCsvSha256 = (Get-FileHash -LiteralPath $pythonCsv -Algorithm SHA256).Hash.ToLowerInvariant()
         mathematicaNativeCsvSha256 = (Get-FileHash -LiteralPath $mathematicaCsv -Algorithm SHA256).Hash.ToLowerInvariant()
+        mathematicaMetadataSha256 = (Get-FileHash -LiteralPath $mathematicaMetadata -Algorithm SHA256).Hash.ToLowerInvariant()
         comparisonJsonSha256 = (Get-FileHash -LiteralPath $comparisonJson -Algorithm SHA256).Hash.ToLowerInvariant()
         nativeGridCsvSha256 = (Get-FileHash -LiteralPath (Join-Path $auditDir "afh_native_audit_grid.csv") -Algorithm SHA256).Hash.ToLowerInvariant()
         nativeComparisonCsvSha256 = (Get-FileHash -LiteralPath (Join-Path $auditDir "afh_native_audit_comparison.csv") -Algorithm SHA256).Hash.ToLowerInvariant()
@@ -124,9 +127,14 @@ try {
     $manifestPath = Join-Path $auditDir "afh_native_audit_manifest.json"
     $manifest | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath $manifestPath -Encoding UTF8
 
+    $bundlePath = Join-Path $outputDir "afh-native-audit-results.zip"
+    $bundleItems = @((Join-Path $auditDir "*"), $mathematicaCsv, $mathematicaMetadata)
+    Compress-Archive -Path $bundleItems -DestinationPath $bundlePath -Force
+
     Write-Host ""
     Write-Host "PASS: AFH native Mathematica/Python audit completed."
     Write-Host "Manifest: $manifestPath"
+    Write-Host "Bundle: $bundlePath"
     Write-Host "Artifacts: $auditDir"
 }
 finally {
