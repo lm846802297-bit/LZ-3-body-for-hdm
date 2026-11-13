@@ -1,0 +1,15 @@
+{
+  "status": "PASS",
+  "afhArchiveSha256": null,
+  "afhSourceFileSha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+  "densityMatrixCsvSha256": "f656145ba2fb9da741b77faed4c01d0dc457c955fa340928b5dbf9cee9bc5d45",
+  "wolframVersion": "14.0.0 for Microsoft Windows (64-bit) (December 13, 2023)",
+  "pythonReferenceCsvSha256": "c383af67a9e149c3ee215b2a1c1944aaecfb9e57813214ea011fdd2dd992f365",
+  "mathematicaNativeCsvSha256": "f3a5ed1c94d5d58eb82b8ef113fe56b4d678c6edaac0b280a7e3cd08c57821f8",
+  "mathematicaMetadataSha256": "c1ae8347a043bf8e522be60c239df594cc997b64dc3648d1726d0ac0e1e502fb",
+  "comparisonJsonSha256": "26d27d4b67944a7bd0fd4fe42e7152a71bd4e169545197c0eb6f417ea537395f",
+  "nativeGridCsvSha256": "b957ee3a2df1d1028dc3283397c20e90556827eb6ddd7ea45d73363c423044ae",
+  "nativeComparisonCsvSha256": "76d9bab7196fedd9c172b31b1b6163bd91892c48a21f9ad5b48a98e68ab2bc0c",
+  "nativeMinimaCsvSha256": "74d0e837c51a5ea44fd6db1ee7994bf028637852e905322cb7b5f147ced1a68e",
+  "nativeMetadataSha256": "2b2a1af9d790bfb7f6fa00ba2745fce862d55e2520683b403f269b4a68f69ead"
+}

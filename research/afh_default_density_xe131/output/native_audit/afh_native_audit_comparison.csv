@@ -1,0 +1,4 @@
+"quantity","max_absolute_difference","max_tolerance_ratio","worst_q_GeV","failed_points"
+"W_M00_AFH_package",1.5916157281026244e-12,0.0018570880058366036,0.2565,0
+"R_equal_pn_raw",2.000888343900442e-11,0.02084326289135951,0.2565,0
+"R_equal_pn_normalized",2.3646862246096134e-11,0.0208447824355717,0.2565,0
