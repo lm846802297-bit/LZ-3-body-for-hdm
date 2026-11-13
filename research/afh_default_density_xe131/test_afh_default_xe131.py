@@ -3,7 +3,6 @@ import csv
 import importlib.util
 import json
 import math
-import re
 import subprocess
 import sys
 import tempfile
@@ -34,12 +33,12 @@ class AFHDefaultXe131Tests(unittest.TestCase):
     def test_official_v6_default_xenon_dispatch_coverage(self):
         source_path = HERE.parents[1] / "v6" / "dmformfactor-V6.m"
         source = source_path.read_text(encoding="utf-8")
-        masses = [
-            int(value) for value in re.findall(
-                r"If\\[Ziso\\s*==\\s*54\\s*&&\\s*Mxx\\s*==\\s*(\\d+)\\s*,",
-                source,
-            )
-        ]
+        marker = "If[Ziso==54&&Mxx=="
+        masses = []
+        for line in source.splitlines():
+            if marker in line:
+                value = line.split(marker, 1)[1].split(",", 1)[0]
+                masses.append(int(value))
         self.assertEqual(masses, [128, 129, 130, 131, 132, 134, 136])
         self.assertIn(
             "Cannot find default matrix which matches input M and Z!",
