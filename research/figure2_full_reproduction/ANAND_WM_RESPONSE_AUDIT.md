@@ -28,7 +28,7 @@ Q=\sqrt{2m_AE_R+E_R^2},
 \]
 The factor four is included exactly once, while the cross-section prefactor retains the physical per-nucleon coupling \(g_{VN}\). The commonly used \(y\simeq b_A^2m_AE_R/2\) is only the \(E_R\ll m_A\) approximation.
 
-Source: \`paper-source/main.tex\`, Section “2 -> 3 cross section”, immediately before Eq. (radiative-recoil), citing Anand, Fitzpatrick and Haxton, arXiv:1308.6288.
+Source: `paper-source/main.tex`, Section “2 -> 3 cross section”, immediately before Eq. (radiative-recoil), citing Anand, Fitzpatrick and Haxton, arXiv:1308.6288.
 
 This fixes the interpretation: the Figure 2 calculation uses the **isoscalar coherent-charge nuclear response** in the Anand et al. formalism, mapped to the physical equal-\(p,n\) nucleon coupling. A Helm form factor is not the source prescription and must not be substituted for it.
 
