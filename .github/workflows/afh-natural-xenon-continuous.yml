@@ -1,0 +1,98 @@
+name: AFH natural-xenon seven-isotope continuous response
+
+concurrency:
+  group: afh-natural-xenon-continuous-\${{ github.ref }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches:
+      - research/afh-natural-xenon-continuous-20261114
+    paths:
+      - .github/workflows/afh-natural-xenon-continuous.yml
+      - research/afh_default_density_natural_xenon_halo/generate_afh_default_xenon_response_grid.py
+      - research/afh_default_density_natural_xenon_halo/test_afh_default_xenon_response_grid.py
+      - research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv
+      - research/afh_default_density_xe131/run_afh_default_xe131.py
+      - v6/dmformfactor-V6.m
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  generate-seven-isotope-afh-grid:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Check out research branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: research/afh_default_density_xe131/requirements.txt
+
+      - name: Install numerical dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r research/afh_default_density_xe131/requirements.txt
+
+      - name: Run AFH source, isotope, normalization, and Xe-131 regression tests
+        run: |
+          python -m unittest discover \
+            -s research/afh_default_density_natural_xenon_halo \
+            -p "test_afh_default_xenon_response_grid.py" -v
+
+      - name: Generate the full 7-isotope AFH v6.0 response grid
+        run: |
+          python research/afh_default_density_natural_xenon_halo/generate_afh_default_xenon_response_grid.py \
+            --afh-package v6/dmformfactor-V6.m \
+            --weights research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv \
+            --outdir research/afh_default_density_natural_xenon_halo/results/full_afh_v6_default_7_isotope_response
+
+      - name: Verify output row count, isotope coverage, and checksums
+        run: |
+          python - <<'PY'
+          import csv, hashlib, json
+          from pathlib import Path
+          out = Path("research/afh_default_density_natural_xenon_halo/results/full_afh_v6_default_7_isotope_response")
+          meta = json.loads((out / "metadata.json").read_text())
+          response = out / meta["response_file"]
+          with response.open(newline="") as stream:
+              rows = list(csv.DictReader(stream))
+          assert len(rows) == 16807, len(rows)
+          assert sorted({int(row["A"]) for row in rows}) == [128,129,130,131,132,134,136]
+          assert meta["available_isotopes"] == [128,129,130,131,132,134,136]
+          assert [x["A"] for x in meta["missing_default_isotopes"]] == [124,126]
+          digest = hashlib.sha256(response.read_bytes()).hexdigest()
+          assert digest == meta["response_file_sha256"], (digest, meta["response_file_sha256"])
+          print(f"PASS: {len(rows)} response rows; SHA-256 {digest}")
+          PY
+
+      - name: Upload full AFH seven-isotope response artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: afh-v6-natural-xenon-seven-isotope-response
+          path: research/afh_default_density_natural_xenon_halo/results/full_afh_v6_default_7_isotope_response/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Commit generated response grid to the research branch
+        if: github.event_name == 'push' && github.ref == 'refs/heads/research/afh-natural-xenon-continuous-20261114'
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/afh_default_density_natural_xenon_halo/results/full_afh_v6_default_7_isotope_response
+          if git diff --cached --quiet; then
+            echo "Generated response grid is already up to date."
+          else
+            git commit -m "Archive full seven-isotope AFH response grid"
+            git push origin "HEAD:\${GITHUB_REF_NAME}"
+          fi
