@@ -27,7 +27,7 @@ jobs:
           import sys
 
           root = Path(".")
-          allowed_root_dirs = {".git", ".github", "paper-source", "research"}
+          allowed_root_dirs = {".git", ".github", "paper-source", "research", "v6"}
           errors = []
 
           unexpected = sorted(
