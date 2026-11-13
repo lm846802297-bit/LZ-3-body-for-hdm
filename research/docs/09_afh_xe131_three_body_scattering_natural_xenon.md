@@ -787,13 +787,15 @@ Xe-128 至 Xe-136 这组可用同位素的处方值约为 \(2.284596\)–\(2.304
 
 这是本轮最重要的归一化问题之一。
 
-AFH v6.0 的原始 isoscalar response 并不直接等于以物理单核子耦合 \(g_{VN}\) 定义的等质子、等中子相干响应。AFH 程序中的系数约定使用
+AFH v6.0 的原始 isoscalar response 并不直接等于以物理单核子耦合 \(g_{VN}\) 定义的等质子、等中子相干响应。标准 isospin 基底中的系数定义为
 
 \[
-c^0=\frac{c^p+c^n}{2},
+c_{\rm std}^{0}=\frac{c^p+c^n}{2},
 \qquad
-c^1=\frac{c^p-c^n}{2}.
+c_{\rm std}^{1}=\frac{c^p-c^n}{2}.
 \]
+
+AFH 分发版 Mathematica setter 的接口输入是另一个量 \(c_{\rm set}\)，其内部映射见附录 C.1；不能把 setter 输入与标准 isospin 系数混为同一个符号。
 
 其内置 isoscalar response 在零动量处满足
 
