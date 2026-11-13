@@ -103,3 +103,6 @@ Continuous integration (CI) is optional supporting infrastructure. It is not a p
 - Base review and merge decisions on the actual diff, reproducibility, scientific evidence, scope, and the checks that are genuinely relevant to the change—not on whether a CI badge is green. Do not configure CI status checks as required branch-protection gates under this repository policy. Do not change repository protection settings without explicit authorization.
 - CI becomes mandatory for a particular task only when the author explicitly requests it for that task.
 
+## 9. PR merge strategy and history preservation
+
+For research and substantive repository changes, use **Create a merge commit** by default. Preserve meaningful topic-branch commits so later reviewers can trace derivations, implementation changes, numerical corrections, tests, and result provenance. Squash merge is reserved for trivial, indivisible maintenance/documentation batches with no useful per-commit research history. Rebase and merge is allowed only when linear history is explicitly desired and commits are already meaningful and reviewable. Follow [research/WORKFLOW.md](research/WORKFLOW.md#6-merge-strategy-and-commit-history-policy); do not rewrite reviewed history merely to shorten the log. Merge strategy is independent of scientific validation.
