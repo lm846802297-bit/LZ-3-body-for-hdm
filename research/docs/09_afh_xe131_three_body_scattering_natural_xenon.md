@@ -1,10 +1,10 @@
 # AFH v6.0 Xe-131 核响应、三体暗物质散射与天然氙反冲率
 
-> 整理日期：2026-11-11  
-> 最近文档更新：2026-11-12（合并后编辑一致性整理；本轮未开展新的物理验证计算）  
+> 整理日期：2026-11-11（原始主报告整理日期）
+> 最近文档更新：2026-11-13（同步 main 归档状态、450 keV benchmark 记录和复现导航；本轮文档编辑未新增物理计算）
 > 对话来源：[ChatGPT 分享对话](https://chatgpt.com/share/6af4660e-e388-83ea-a86a-2482b065dcea)  
 > 对应研究仓库：`lm846802297-bit/LZ-3-body-for-hdm`  
-> 当前归档位置：`research/figure2-p0-4-mainline`；PR #7 已于 2026-11-12 squash-merged（`f4f2ee91f6a51399dd3b5c06d64878b7f79322d7`）  
+> 当前正式归档：main；PR #10 于 2026-11-13 合并，merge commit 724d9e7877fb76f4cc477fbb9e24e1e706bf37a6。PR #7 是此前研究分支内的历史合并记录。
 > 研究对象：\(\chi_1+A\rightarrow\chi_1+A+s\) 三体核反冲过程
 
 ## 文档更新记录
@@ -19,6 +19,9 @@
 - **2026-11-12：** 新增独立的阶段性结论章节，汇总理论核响应、天然氙结果、LZ rate-level event yields 与当前不可声称的实验结论。
 - **2026-11-12：** 新增公式—符号—正文—程序—结果交叉引用索引；在 Eq. (6)、AFH 响应、halo-folded rate 和 LZ rate-level 公式旁加入推导与程序入口，并新增第 13 节快速导航。该工作为文档追溯性整理，不代表新增物理验证或数值计算。
 - **2026-11-12：** 交叉核对主报告与附录 A 的 \(I_6\) 维度约定，将主公式明确写为无量纲 \(\lambda_{\rm dim}\)；在正文补出三体 \(v_{\min,A}\) 显式表达式，并补齐 \(a_A,\theta_q,N_{\rm Av}\) 的符号定义。该工作为公式记号和追溯性修订，不代表新增数值计算。
+- **2026-11-13：** 将 450 keV supplied benchmark 的 pointwise \(\mathcal L_{00}\)/\(I_6\) 本地验收记录纳入主报告导航；明确其条件性 Dirac / pure-scalar / single-open-channel 宽度假设及单一诊断运动学点，不将其解释为天然氙速率。
+- **2026-11-13：** 将独立的 Xe-131 fixed-speed 450 keV 曲线纳入结果覆盖表：GCN/JJ55 response、\(v=776\) km/s、\(M_A=131u\)、zero-width，105 个内部网格点；明确两端未覆盖的开放相空间区间仍需高阶积分。
+- **2026-11-13：** PR #10 将研究成果正式提升至 main；同步修订主报告、附录 F、公式索引和 README 导航。该轮只做文档追溯和状态整理，不新增物理验证或数值计算。
 
 ## 摘要
 
@@ -28,13 +31,14 @@
 2. **核结构输入：** 采用 AFH/DMFormFactor v6.0 内置的 Xe-131 default density matrix，严格使用文献给出的谐振子长度处方，不把 \(b_A\) 当作拟合参数；并处理 AFH 原始 isoscalar response 与物理等质子、等中子耦合之间的因子 4。
 3. **真实天然氙靶的理论速率：** 对可用氙同位素按天然丰度求和，并对实验室系暗物质速度分布积分，得到 \(dR/dE_R\)。这一步与固定速度下的 \(d\sigma_A/dE_R\) 是不同的物理量。
 
-目前已经形成 AFH default Xe-131 响应、GCN/JJ55 核模型对照、四组固定速度 benchmark、AFH 天然氙 selected-point halo-folded rates，以及 GCN/JJ55 天然氙连续反冲谱。LZ 2026 Fig. S2 的一维 final-ROI efficiency 曲线及灰色系统包络也已从官方 PDF 提取，并与独立数字化结果对照；基于 GCN/JJ55 连续谱、2.84 tonne-year exposure 和该效率曲线，已得到初步 efficiency-weighted rate-level event yields。该结果不是完整的 LZ likelihood recast。Xe-131 AFH Python 响应已通过 60 位精度 mpmath 对全部 2401 个 q 节点的独立有限和对照；原生 Mathematica 程序仍未在 Wolfram kernel 中实际运行。进一步核查 AFH 原始定义后，确认其响应变量 \(y=(q b_A/2)^2\) 中的 \(q\) 是空间动量转移；现有 28 个天然氙响应样本采用的 exact spatial q 与精确三体质量壳关系一致。exact spatial q 作为默认，NR-q 仅作小反冲近似对照。当前 AFH 天然氙结果仍限于 selected points；连续谱和 LZ rate-level yields 使用 GCN/JJ55 响应，不能混称为 AFH 连续谱或完整实验重铸。
+目前已经形成 AFH default Xe-131 响应、GCN/JJ55 核模型对照、四组固定速度 benchmark、AFH 天然氙 selected-point halo-folded rates，以及 GCN/JJ55 天然氙连续反冲谱。LZ 2026 Fig. S2 的一维 final-ROI efficiency 曲线及灰色系统包络也已从官方 PDF 提取，并与独立数字化结果对照；基于 GCN/JJ55 连续谱、2.84 tonne-year exposure 和该效率曲线，已得到初步 efficiency-weighted rate-level event yields。该结果不是完整的 LZ likelihood recast。Xe-131 AFH Python 响应已通过 60 位精度 mpmath 对全部 2401 个 q 节点的独立有限和对照；原生 Mathematica 程序仍未在 Wolfram kernel 中实际运行。进一步核查 AFH 原始定义后，确认其响应变量 \(y=(q b_A/2)^2\) 中的 \(q\) 是空间动量转移；现有 28 个天然氙响应样本采用的 exact spatial q 与精确三体质量壳关系一致。exact spatial q 作为默认，NR-q 仅作小反冲近似对照。当前 AFH 天然氙结果仍限于 selected points；连续谱和 LZ rate-level yields 使用 GCN/JJ55 响应，不能混称为 AFH 连续谱或完整实验重铸。 另外，仓库还归档了一个独立的 450 keV benchmark：其一是单一运动学点的 \(\mathcal L_{00}\) 与 reduced \(I_6\) 对照，使用条件性标量 pole width；其二是 Xe-131 固定速度微分截面曲线，使用 GCN/JJ55 响应、\(v=776\) km/s、\(M_A=131u\) 和 zero-width prescription。两者的输入与物理层级不同，均不替代天然氙 halo fold 或 LZ detector-level likelihood。
 
 | 研究层级 | 当前归档结果 | 明确边界 |
 |---|---|---|
 | AFH Xe-131 核响应 | 2401 个 \(q\) 节点；60 位精度 mpmath 独立有限和对照 | 原生 Mathematica/Wolfram kernel 对照仍待完成 |
 | AFH 天然氙速率 | 七种可用同位素的 selected-point halo fold | Xe-124/Xe-126 缺少当前 AFH default density matrix；尚无完整 AFH 连续谱 |
 | GCN/JJ55 天然氙谱 | 四组 benchmark 的连续反冲谱，覆盖当前可用七种同位素 | 是独立核模型对照，不代表 LZ 合作组使用的修改后 WimPyDD 核输入 |
+| 450 keV supplied benchmark | 单点 \(\mathcal L_{00}\)/\(I_6\) 本地验收；另有 105 点 Xe-131 fixed-speed curve | 不是天然氙 halo rate；curve 使用 \(M_A=131u\)、zero width，且未积分两端开放区间 |
 | LZ rate-level interface | Fig. S2 一维效率曲线与 2.84 tonne-year exposure 折叠，得到 GCN/JJ55 预期事件数 | 未构造二维 \(S1_c\)–\(\log_{10}S2_c\) PDF、完整 nuisance/background likelihood 或实验排除 |
 
 
@@ -603,6 +607,8 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 ### 仓库内的主要研究记录
 
 - 公式—符号—正文—程序—结果交叉引用索引：`research/docs/formula_symbol_code_cross_reference.md`（F1–F12 公式追溯、单位、近似、代码入口和结果文件）。
+- 450 keV pointwise L00 benchmark：research/figure2_full_reproduction/results/USER_L00_BENCHMARK_G1_G2_GVN_1_DELTA_M_450KEV.md；本地验收记录：research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md。
+- 450 keV fixed-speed Xe-131 curve：research/figure2_full_reproduction/results/USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md；该结果仅是内部反冲能量网格上的固定速度诊断。
 - AFH default Xe-131 README：`research/afh_default_density_xe131/README.md`
 - AFH 因子 4 归一化映射：`research/afh_default_density_xe131/AFH_COUPLING_NORMALIZATION_MAPPING.md`
 - AFH Xe-131 源码与归一化审计：`research/afh_default_density_xe131/AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md`
@@ -621,7 +627,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 
 ---
 
-**归档状态说明：** 本文是 AFH 核响应、三体积分、天然氙同位素、halo folding 与 LZ rate-level 接口的阶段性研究主报告。PR #7 已于 2026-11-12 squash-merge 至 `research/figure2-p0-4-mainline`，合并提交为 `f4f2ee91f6a51399dd3b5c06d64878b7f79322d7`。本次编辑只统一文档中的完成状态、物理范围和复现边界，没有新增物理验证或数值计算。
+**归档状态说明：** 本文是 AFH 核响应、三体积分、天然氙同位素、halo folding 与 LZ rate-level 接口的阶段性研究主报告。PR #7（merge commit f4f2ee91f6a51399dd3b5c06d64878b7f79322d7）是此前将报告纳入研究分支的历史记录；随后 PR #10 已于 2026-11-13 将研究主线正式合并到默认分支 main，merge commit 为 724d9e7877fb76f4cc477fbb9e24e1e706bf37a6。本轮文档更新只补齐 450 keV 结果导航、复现说明和归档状态，不新增物理验证或数值计算。
 
 ---
 
@@ -812,6 +818,31 @@ AFH 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失的 
 
 后续物理工作仍取决于完整 AFH 响应输入、原生 Mathematica 对照，以及 LZ 的二维 NEST 响应、校准协方差、背景数据和 profile likelihood。本文的阶段性结论不替代这些尚未完成的工作。
 
+### 12.5 450 keV supplied benchmark 与固定速度曲线
+
+450 keV 结果包含两个彼此独立的计算层级，必须分开引用。
+
+**A. 单一运动学点的 \(\mathcal L_{00}\) 与 \(I_6\) benchmark。** 输入为 \(g_1=g_2=g_{VN}=1\)、\(m_{\chi_1}=1\) TeV、\(\Delta m=450\) keV、\(m_s=300\) keV 和 \(m_V=10\) GeV。由于 supplied particle benchmark 本身没有指定唯一的点态运动学，数值验收沿用明确标记的诊断点：\(m_A=122\) GeV、\(E_R=200\) keV、\(v=776\) km/s、\(W^2\) midpoint、\(z=0.2\)、\(\phi_*=1.1\)。在该点，zero-width 与条件性 Dirac / pure-scalar / single-open-channel pole-width 结果分别为
+\[
+\mathcal L_{00}^{(0)}=3.3933323921\times10^{14},\qquad
+\mathcal L_{00}^{(\Gamma)}=3.2510906491\times10^{14},
+\]
+\[
+I_6^{(0)}=1.6218103154\times10^7\ {\rm GeV}^2,\qquad
+I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
+\]
+对应变化分别为 \(-4.1918\%\) 和 \(-4.8017\%\)。显式自旋求和与 Dirac trace 的相对差异为 \(2.22\times10^{-16}\)，最大四动量闭合残差为 \(2.13\times10^{-13}\) GeV；\((40,32,20)\) 与 \((48,40,24)\) 的 \(I_6\) 相对差异约为 \(6.54\times10^{-7}\)（zero width）和 \(6.66\times10^{-7}\)（pole width）。这些数值只验收该点态 trace 和 reduced integral，不代表完整矢量加标量自能或任何 halo-folded spectrum。
+
+**B. Xe-131 fixed-speed differential curve。** 另一份独立曲线使用 \(m_{\chi_1}=1\) TeV、\(\Delta m=450\) keV、\(m_s=300\) keV、\(m_V=10\) GeV、\((g_1g_2g_{VN})^2=1\)，固定 \(v=776\) km/s，采用 \(m_A=131u\) 的质量近似、GCN/JJ55 response tables 和 zero-width prescription。已归档 105 个内部点（130–650 keV，5 keV 间隔）；该网格上的最大值位于 175 keV，GCN/JJ55 分别为 \(1.874622684\times10^{-32}\) 和 \(1.985254401\times10^{-32}\) cm\(^2\)/keV。1 keV 局部细化得到的 dip 位置是离散采样极小值，不是连续极小值。
+
+该固定速度开放反冲区间约为
+\[
+109.150286\ {\rm keV}<E_R<654.955583\ {\rm keV}.
+\]
+当前曲线只覆盖 130–650 keV；两端尚未完成高阶 \(I_6\) 积分。边界 bracket 测试只证明运动学开放/关闭位置，不等于端点附近的积分收敛验证。该曲线也不是截断 SHM 的 halo average：即使速度数值取到 776 km/s，也不能将单一速度点当作对速度分布的积分。
+
+完整复现命令、输入质量方案、响应插值和限制分别记录在附录 F.7、固定速度曲线结果记录及 pointwise benchmark local-validation record 中。
+
 ## 13. 公式—符号—程序—结果交叉引用
 
 本节提供正文核心公式的快速导航。完整符号表、单位、近似条件、程序函数和机器可读结果路径集中维护在独立文件：[公式—符号—正文—程序—结果交叉引用索引](formula_symbol_code_cross_reference.md)。
@@ -824,7 +855,7 @@ AFH 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失的 
 | F2 | \(W_{\min}^2,W_{\max}^2\) 与相空间开放条件 | [A.2](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.limits` |
 | F3 | 三体相空间分解和 \(I_6\) | [A.3–A.4.1](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.reduced_kernel` |
 | F4 | 两张辐射图、干涉项和 \(\mathcal L_{00}\) | [A.5–A.6](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.vertices`、`spin_trace` |
-| F5 | 单同位素固定速度截面 Eq. (6) | [A.4.1](appendices/09A_three_body_kinematics_amplitude.md) | `joint_xe131.py`、`compute_four_benchmark_dsigma.py` |
+| F5 | 单同位素固定速度截面 Eq. (6) | [A.4.1](appendices/09A_three_body_kinematics_amplitude.md) | joint_xe131.py、compute_four_benchmark_dsigma.py、run_user_dsigma_curve.py |
 | F6 | AFH \(b_A,y,W_M^{00},R_A^{\rm phys}\) | [B.2–B.4](appendices/09B_afh_v6_density_matrix_response.md)、[C](appendices/09C_afh_isoscalar_factor4_normalization.md)、[G](appendices/09G_recoil_momentum_convention_audit.md) | `run_afh_default_xe131.py`、`joint_xe131.py` |
 | F7 | \(m_A,x_A,N_T\) 天然氙靶归一化 | [D.1–D.5](appendices/09D_natural_xenon_isotope_target.md) | 两个天然氙 halo/spectrum runner |
 | F8 | 三体阈值速度 \(v_{\min,A}\) | [A.2](appendices/09A_three_body_kinematics_amplitude.md)、[E.2](appendices/09E_halo_velocity_vmin_folding.md) | `rate_kinematics.vmin_three_body_beta` |
@@ -2680,6 +2711,8 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 | AFH 原生 Mathematica | 待完成 | WLS runner 和比较脚本已归档；Python/mPMath 全网格交叉验证已通过 | 实际运行 Wolfram kernel 并保存逐点差异 |
 | GCN/JJ55 对照 | 已完成归档 | 三种响应、四 benchmark、1920 行 long table | 对照共享既有 \(I_6\)，不是 640 次独立重算 |
 | 三体运动学/Dirac trace | 已完成代表性检查 | 壳条件、四动量闭合、显式自旋求和、干涉分解 | 扩展到更宽的参数和质量网格 |
+| 450 keV pointwise \(\mathcal L_{00}\)/\(I_6\) benchmark | 已完成本地验收 | 六项 regression tests、显式自旋求和、四动量闭合、三阶求积对照；见 local validation record | 仅覆盖指定诊断运动学点；pole width 依赖 Dirac / pure-scalar / single-channel 假设 |
+| 450 keV Xe-131 fixed-speed curve | 已归档的内部网格诊断 | 105 点 130–650 keV、独立 PCHIP 重构、Eq. (6) anchor convergence、运动学端点 bracket | 109.150–654.956 keV 两端尚未完成高阶积分；固定速度、Au 质量近似、zero width，不是 halo rate |
 | 三体积分收敛 | 已有 selected-point 验证 | 六个天然氙点 \(8×8×4\) 对 \(16×16×8\)，最大差异 \(2.19×10^{-4}\)；独立 Eq. (6) 测试点 \(16×16×8\) 对 \(32×32×16\)，相对差异小于 \(5×10^{-5}\) | 连续反冲谱全网格收敛 |
 | 天然氙速度积分 | 已有 selected-point 验证（exact spatial q） | 五个点 32 对 64 速度节点，最大差异 \(3.31×10^{-6}\)；98 个逐同位素贡献和 14 个总速率在 exact_spatial 默认模式下复现，最大总速率差异 \(2.67×10^{-12}\)，CI run 43044583357 | 连续谱和 halo 参数扫描 |
 | AFH 空间 q 与 NR 近似 | 已完成审计与代码保护 | 28 个天然氙样本匹配 exact spatial q；Xe-131 四点 NR 近似响应差异约 5.5–225 ppm；halo fold CI run 43044583357 通过 | 连续反冲谱需要完整七同位素 AFH 响应网格 |
@@ -2720,6 +2753,73 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 5. 任何新的 \(q_{\rm resp}\)、核质量、halo 参数、宽度方案或求积阶数都应产生新的输出和 metadata，不覆盖历史结果。
 6. 主报告包含完整附录 A–G；本目录中的七份独立附录与主报告对应章节保持同步。
 7. 程序、CSV、JSON 和源文件继续保存在各自计算目录，文档只解释其定义、来源、调用方式和验证边界。
+## F.7 450 keV supplied benchmark：复现与适用边界
+
+本节记录两个独立的 450 keV benchmark。它们共享粒子质量点，但并不共享全部运动学、核响应或传播子处方。
+
+### F.7.1 Pointwise \(\mathcal L_{00}\) 与 reduced \(I_6\)
+
+输入为 \(g_1=g_2=g_{VN}=1\)、\(m_{\chi_1}=1\) TeV、\(\Delta m=450\) keV、\(m_s=300\) keV、\(m_V=10\) GeV。点态运动学为显式指定的诊断点：\(m_A=122\) GeV、\(E_R=200\) keV、\(v=776\) km/s、\(W^2\) midpoint、\(z=0.2\)、\(\phi_*=1.1\)。这不是由 supplied particle benchmark 唯一确定的运动学点。
+
+从仓库根目录复现：
+
+~~~bash
+python research/figure2_full_reproduction/run_user_l00_benchmark.py \
+  --nw 48 --nz 40 --nphi 24 \
+  --output /tmp/USER_L00_BENCHMARK_450KEV_48x40x24.json
+python -m unittest discover \
+  -s research/figure2_full_reproduction/tests \
+  -p test_user_l00_benchmark.py -v
+~~~
+
+本地验收记录位于：
+
+- results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md；
+- 同目录的 JSON、quadrature convergence CSV、run manifest、validation log 和 SHA256SUMS。
+
+该结果比较 zero-width 与条件性 pole-width；后者只在 Dirac 费米子、实标量、纯 scalar off-diagonal Yukawa 且仅 \(\chi_2\to\chi_1s\) 通道开放的假设下成立。它不是完整 vector-plus-scalar self-energy，也不是 halo-folded 或 detector-level prediction。该本地验收没有使用 GitHub Actions；不能将未运行的 CI 描述为通过。
+
+### F.7.2 Fixed-speed Xe-131 \(d\sigma/dE_R\) 曲线
+
+该曲线采用 \(v=776\) km/s、\(m_A=131u\)、GCN/JJ55 response tables 和 zero-width prescription，扫描 130–650 keV 共 105 个内部点。它与 F.7.1 的 \(m_A=122\) GeV 点态 trace benchmark 不是同一核质量或传播子宽度方案。
+
+从仓库根目录复现：
+
+~~~bash
+python research/figure2_full_reproduction/run_user_dsigma_curve.py \
+  --step-keV 5 --nw 20 --nz 16 --nphi 12 \
+  --output /tmp/xe131_dsigma_450kev.csv
+python research/figure2_full_reproduction/plot_user_dsigma_curve.py
+python -m unittest discover \
+  -s research/figure2_full_reproduction/tests \
+  -p test_user_dsigma_curve.py -v
+~~~
+
+结果与 provenance：
+
+- results/fixed_speed_xe131_dsigma_450kev.csv；
+- results/local_minima_refinement_1keV.csv；
+- results/kernel_quadrature_convergence_450kev.csv；
+- results/metadata_user_dsigma_450kev.json；
+- results/USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md；
+- results/SHA256SUMS_user_dsigma_450kev.txt；
+- results/plots/fixed_speed_xe131_dsigma_450kev.svg；
+- results/plots/xe131_gcn_jj55_response_ratio_450kev.svg。
+
+开放反冲区间约为 109.150286–654.955583 keV；当前曲线只覆盖 130–650 keV。两端的 kinematic bracket tests 不等于端点附近的高阶积分收敛，故当前归档只能称为内部网格 fixed-speed diagnostic。它不是天然氙 halo-folded spectrum、事件率、LZ detector-level prediction 或 exclusion。
+
+### F.7.3 两项 benchmark 的不可互换性
+
+| 项目 | Pointwise L00 benchmark | Fixed-speed Xe-131 curve |
+|---|---|---|
+| 核质量 | 122 GeV 诊断近似 | 131 u 质量近似 |
+| 运动学 | 单一点：200 keV、776 km/s、指定角变量 | 105 个反冲能量点、固定 776 km/s |
+| 核响应 | 点态 \(\mathcal L_{00}\)/\(I_6\)，不构成完整核响应谱 | GCN/JJ55 响应表 |
+| 宽度 | zero-width 与条件性 scalar pole-width 对照 | zero width |
+| 输出层级 | pointwise trace 与 reduced integral | 单同位素固定速度 \(d\sigma/dE_R\) |
+| 不能声称 | 完整自能、halo rate、LZ 预测 | 完整开放区间、halo rate、detector likelihood |
+
+
 
 ---
 
