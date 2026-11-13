@@ -31,7 +31,7 @@
 | 子任务 | 当前状态 | 已有证据 | 尚存边界 |
 |---|---|---|---|
 | AFH v6.0 Xe-131 67 项密度矩阵提取 | **已验证（source + translation）** | 官方 v6.0 来源哈希、67 项逐项解析、CSV 与 source translation 对照；`v6/dmformfactor-V6.m` 已提交 | 原始 ZIP 仍为 checksum-only provenance；完整七同位素响应表未提交 |
-| AFH Xe-131 2401 点响应 | **已验证（限定 response-level）** | 0–0.6 GeV、2401 节点；60 位 mpmath 与 Wolfram 14.0.0 原生 Mathematica/Python 逐点比较；四种响应量全部通过，最大相对差异 (3.59087\times10^{-9}) | 仅验证 Xe-131 AFH response-level，不代表三体 kernel、天然氙连续谱或 LZ likelihood |
+| AFH Xe-131 2401 点响应 | **已验证（限定 response-level）** | 0–0.6 GeV、2401 节点；60 位 mpmath 与 Wolfram 14.0.0 原生 Mathematica/Python 逐点比较；四种响应量全部通过，最大相对差异 \(3.59087\times10^{-9}\) | 仅验证 Xe-131 AFH response-level，不代表三体 kernel、天然氙连续谱或 LZ likelihood |
 | AFH factor-of-four 物理归一化 | **已验证（当前 AFH v6.0 接口约定）** | raw \(A^2/4\)；setter \(c_{\rm set}=2g_{VN}\)；physical \(R_A(0)=A^2\)；代码不重复乘 4；源论文已修正 | 若更换 AFH 版本或响应接口，必须重新核对 setter 约定 |
 | AFH Xe-131 响应极小值 | **部分验证** | 固定文献 \(b_A\)、精确空间 \(q\)、AFH default 67 项矩阵，三个 Figure 2 范围内的主要极小值已提取 | 这些是核响应极小值，不自动等于完整截面或 halo 事件率极小值 |
 | AFH 七同位素 selected-point 响应 | **部分验证** | 七种可用同位素；28 个 halo-fold 样本；另有 56 个 NIST/AME2020 direct exact-\(q\) 响应点的 60 位 mpmath 检查 | 不是连续响应网格；完整 16807 行响应表未提交 |
@@ -72,4 +72,4 @@
 - **P1 关闭条件：** 原始拉格朗日量、主报告、附录 A–G、代码和单位约定无未解释的符号冲突；Dirac/Majorana 与宽度模型的边界由物理输入明确固定。
 - **P2 关闭条件：** 每个科学结论都有状态、证据、输入缺口和适用范围；任何 selected-point、fixed-speed 或 rate-level 结果都不被表述为更高层的完整验证。
 
-当前 P0 总索引已建立，P1 已修正公式和 provenance 不一致；Xe-131 原生 Mathematica/Python 2401 点响应验证已完成。剩余开放项集中在模型定义、Xe-124/Xe-126 AFH 输入、完整 AFH 连续谱与 (I_6) 连续反冲网格收敛，以及完整 LZ detector likelihood。
+当前 P0 总索引已建立，P1 已修正公式和 provenance 不一致；Xe-131 原生 Mathematica/Python 2401 点响应验证已完成。剩余开放项集中在模型定义、Xe-124/Xe-126 AFH 输入、完整 AFH 连续谱与 \(I_6\) 连续反冲网格收敛，以及完整 LZ detector likelihood。
