@@ -248,9 +248,56 @@ Before merging:
 - assumptions, limitations, and validation status are explicit;
 - no unrelated manuscript or research files have entered the PR.
 
-Use a merge commit by default. After merging, verify that the result is on
-main, then delete the topic branch if no further work depends on it.
-Continue future work from a fresh branch created from the updated main.
+### Merge strategy and research traceability
+
+**Use a merge commit by default for substantive research PRs.** This includes
+physics derivations, amplitude or kinematic changes, numerical implementations,
+parameter scans, independent validations, scientific corrections, and PRs
+that archive calculation outputs. A merge commit preserves the topic branch's
+individual commits and their parent relationships in the ancestry of `main`,
+while also recording the PR integration boundary. This makes it possible to
+trace which derivation, code change, test, or numerical correction produced a
+later result.
+
+Prepare meaningful commits before opening the PR:
+
+- Prefer small, logically coherent commits for distinct derivation steps,
+  implementation changes, tests, input/provenance updates, and result
+  generation.
+- Use commit messages that identify the physics or engineering change; avoid
+  opaque sequences of messages such as "update", "fix", or "try again".
+- Do not manufacture commits solely to increase the count. A commit should
+  represent a meaningful, reviewable change.
+
+**Squash merge is an exception, not the default.** It is appropriate for
+documentation-only edits, typo/formatting changes, small repository
+housekeeping, or a genuinely small cohesive change whose intermediate commits
+have no independent audit value. Do not squash a multi-stage derivation,
+calculation, numerical investigation, or validation PR merely to shorten the
+`main` history. Squash creates one new commit on `main`; the original topic
+commits remain visible in the PR record, but they are not ancestors of the
+squash commit and therefore are not part of the `main` commit history. When
+squash is justified, the PR description and final commit message must preserve
+the complete milestone summary, benchmark, exact source/input revisions,
+reproduction commands, checks actually run, archived outputs, and limitations.
+
+**Rebase and merge is also an exception.** Use it only when the topic branch
+contains clean, meaningful commits and a linear `main` history is specifically
+desired. Rebase-and-merge rewrites commit identities (SHAs) as commits are
+replayed onto `main`; avoid it when original commit SHAs are cited by run
+manifests, logs, external data products, or other provenance records, unless
+those references are deliberately updated and verified.
+
+Choose and state the intended merge method during PR review. Do not rewrite or
+squash a reviewed research branch without making the history change explicit.
+The merge method is a source-history decision, not a scientific acceptance
+criterion: a merge commit does not validate physics, and a squash commit does
+not invalidate a reproducible result. The evidence, scope, and validation
+status must be assessed separately.
+
+After merging, verify the merge commit and the required files on `main`.
+Then delete the topic branch only if no further work depends on it. Continue
+future work from a fresh branch created from the updated `main`.
 
 ## 7. Current repository convention
 
