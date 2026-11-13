@@ -188,7 +188,7 @@ The high-order JSON is byte-identical to the existing results/user_l00_benchmark
 
 ## Fixed-speed Xe-131 differential cross-section curve (450 keV benchmark)
 
-The runner and its local diagnostic outputs are archived on main at run_user_dsigma_curve.py and in the results directory. It scans the fixed-speed Xe-131 recoil interval at v=776 km/s on a 5 keV grid, evaluates Eq. (6), and compares the AFH GCN/JJ55 nuclear responses. The propagator prescription is zero width. The isotope mass is A*u, consistent with the current response archive, not the AME2020 exact isotope mass.
+The runner and its local diagnostic outputs are archived on main at run_user_dsigma_curve.py and in the results directory. It scans the fixed-speed Xe-131 recoil interval at v=776 km/s on a 5 keV grid, evaluates Eq. (6), and compares the GCN and JJ55 nuclear responses. The propagator prescription is zero width. The isotope mass is A*u, consistent with the current response archive, not the AME2020 exact isotope mass.
 
 ### Code-level review
 
