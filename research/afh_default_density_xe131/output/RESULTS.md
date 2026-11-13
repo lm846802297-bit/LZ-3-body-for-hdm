@@ -46,7 +46,7 @@ mapping \(q=\sqrt{2M_AE_R+E_R^2}\). The NR approximation
 
 ## Scope and caution
 
-This result is only the AFH default Xe-131 nuclear response. It is not the complete three-body differential cross section, not a halo-folded spectrum, and not a natural-xenon rate. The manuscript's equation identifying `4 pi W_M^{00}/(2J_A+1)` directly with a response normalized to A^2 must be corrected or its W convention explicitly redefined by a factor of four.
+This result is only the AFH default Xe-131 nuclear response. It is not the complete three-body differential cross section, not a halo-folded spectrum, and not a natural-xenon rate. The paper source now defines the physical equal-proton/equal-neutron response as `16 pi W_M00_AFH/(2 J_A+1)`, with the AFH isoscalar factor of four included exactly once. The raw package response remains separately archived as `4 pi W_M00_AFH/(2 J_A+1)` and is normalized to A^2/4 at zero momentum before the physical conversion.
 
 The GCN/JJ55 results previously archived from dmscatter are separate nuclear-structure calculations and are not substituted here.
 
