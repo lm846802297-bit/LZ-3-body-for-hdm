@@ -254,3 +254,8 @@ The two archived SVGs are:
 - results/plots/xe131_gcn_jj55_response_ratio_450kev.svg
 
 This milestone remains a fixed-speed, single-isotope diagnostic with the A*u mass approximation and zero-width prescription. It is not a natural-xenon halo-folded spectrum, detector-level LZ prediction, event-rate calculation, or exclusion.
+
+
+## AFH Xe-131 native response validation
+
+The independent Wolfram 14.0.0 native Mathematica/Python 2401-point response comparison is archived at [NATIVE_MATHEMATICA_AUDIT.md](../afh_default_density_xe131/output/native_audit/NATIVE_MATHEMATICA_AUDIT.md). This validates the Xe-131 AFH response layer only; it does not validate the full Eq. (6) continuous recoil integral, the seven-isotope AFH continuous spectrum, or an LZ detector likelihood.
