@@ -26,6 +26,7 @@
 | 三体 \(v_{\min}\) 闭式公式 | **已验证** | 从 \(W_{\max}=m_{\chi_1}+m_s\) 独立推导；64 组输入与独立求根最大 \(|\Delta\beta|=3.89\times10^{-13}\) | 仍需对新增质量区间和完整连续谱网格做专门数值检查 |
 | 450 keV pointwise \(L_{00}\) benchmark | **已验证（单点数值范围）** | \(48\times40\times24\) 求积、run manifest、局部验证记录、SHA-256 manifest | 单点 kernel 结果，不代表整条 \(d\sigma/dE_R\)、halo-fold 或 LZ 事件数 |
 | 固定速度 Xe-131 \(d\sigma/dE_R\) 曲线 | **部分验证** | 105 个内部能量点、GCN/JJ55、metadata 与 SHA-256 校验 | 与 450 keV pointwise \(L_{00}\) 不同；端点外推/积分和 halo-fold 不包含在该曲线内 |
+| 完整 (d\sigma_A/dE_R) Mathematica/Python 端到端对照 | **尚未完成** | 新增 Wolfram Language runner、Python 独立重算器和主报告附录 H；固定 AFH native 2401 点响应作为输入 | Wolfram 原生 (I_6) 尚未运行；历史四 benchmark CSV 复用归档 (I_6)，不能充当 Mathematica 独立对照；还需解释 green benchmark 200 keV 归档值与当前 Python 预检的 (4.11\times10^{-5}) 差异 |
 
 ## 3. AFH 核响应与核靶输入
 
@@ -33,7 +34,7 @@
 |---|---|---|---|
 | AFH v6.0 Xe-131 67 项密度矩阵提取 | **已验证（source + translation）** | 官方 v6.0 来源哈希、67 项逐项解析、CSV 与 source translation 对照；`v6/dmformfactor-V6.m` 已提交 | 原始 ZIP 仍为 checksum-only provenance；完整七同位素响应表未提交 |
 | AFH Xe-131 2401 点响应 | **已验证（限定 response-level）** | 0–0.6 GeV、2401 节点；60 位 mpmath 与 Wolfram 14.0.0 原生 Mathematica/Python 逐点比较；四种响应量全部通过，最大相对差异 \(3.59087\times10^{-9}\) | 仅验证 Xe-131 AFH response-level，不代表三体 kernel、天然氙连续谱或 LZ likelihood |
-| AFH factor-of-four 物理归一化 | **已验证（当前 AFH v6.0 接口约定）** | raw \(A^2/4\)；setter \(c_{\rm set}=2g_{VN}\)；physical \(R_A(0)=A^2\)；代码不重复乘 4；源论文已修正 | 若更换 AFH 版本或响应接口，必须重新核对 setter 约定 |
+| AFH factor-of-four 物理归一化 | **已验证（response-level）** | raw (A^2/4)；setter (c_{\rm set}=2g_{VN})；physical (R_A(0)=A^2)；原生 2401 点响应表与 Python 对照通过；主报告附录 H 定义了 no-factor-four 截面控制 | 已验证的是 AFH package 到物理核响应的映射；因子 4 从响应传递到完整 (d\sigma/dE_R) 的 Mathematica/Python 端到端验收仍待完成 |
 | AFH Xe-131 响应极小值 | **部分验证** | 固定文献 \(b_A\)、精确空间 \(q\)、AFH default 67 项矩阵，三个 Figure 2 范围内的主要极小值已提取 | 这些是核响应极小值，不自动等于完整截面或 halo 事件率极小值 |
 | AFH 七同位素 selected-point 响应 | **部分验证** | 七种可用同位素；28 个 halo-fold 样本；另有 56 个 NIST/AME2020 direct exact-\(q\) 响应点的 60 位 mpmath 检查 | 不是连续响应网格；完整 16807 行响应表未提交 |
 | Xe-124、Xe-126 AFH default 密度矩阵 | **AFH v6.0 default dispatch 未提供** | 官方源文件第 1555–1597 行只列出 128、129、130、131、132、134、136；124/126 进入通用回退；新增静态 dispatch 回归测试 | 需独立、可追溯的核结构密度矩阵；0.1842% 原子丰度不是事件率误差上界 |
@@ -59,6 +60,7 @@
 | AFH response sample SHA-256 | **已验证（PR #27 CI）** | 真实 64 位 SHA-256 与 28 点输入文件一致；archive validator 已检查 sample digest、exact-spatial-q、98 个同位素贡献和 14 个总速率点 | GitHub Actions run `43458906653` 的 archived-sample/SHA-256/exact-q 步骤通过；连续 AFH 谱仍未完成 |
 | 原始论文 AFH response 公式 | **已修正** | `paper-source/main.tex` 改为 factor 4 physical mapping 和 exact spatial \(q\)；`paper-source/SHA256SUMS` 同步 | 合并后仍需在正式 Overleaf / PDF 构建中检查排版 |
 | 主报告—附录 A–G—代码公式索引 | **部分验证** | F1–F12 公式索引、附录 A–G、代码入口和主报告已交叉检查 | 仍需按最终固定的 Dirac/Majorana 模型约定做一轮完整 UV 层复核 |
+| 完整 Eq. (6) 截面对照程序 | **已提交，尚未运行** | 新增 run_afh_eq6_full_dsigma.wls、compare_full_dsigma_mathematica.py、主报告附录 H 与附录 A.8 | 没有 Wolfram 运行产物和逐点 comparison CSV；不把脚本存在或 CI 通过等同于物理结果验证 |
 
 ## 6. 不得混淆的四组结果
 
