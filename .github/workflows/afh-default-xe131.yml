@@ -65,6 +65,10 @@ jobs:
             -s research/afh_default_density_natural_xenon_halo \
             -p "test_target_number.py" -v
 
+      - name: Validate archived natural-xenon AFH samples, SHA-256 and exact spatial q
+        run: |
+          python research/afh_default_density_natural_xenon_halo/validate_archived_results.py
+
       - name: Parse native Windows PowerShell runner
         shell: pwsh
         run: |
