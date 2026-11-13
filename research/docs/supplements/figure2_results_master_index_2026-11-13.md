@@ -4,7 +4,7 @@
 适用分支：\`docs/update-figure2-documentation-20261113\`  
 用途：将 benchmark、物理输入、参数、结果文件、验证记录和 SHA-256 汇总到同一入口。
 
-机器可读清单：[figure2_results_master_index_2026-11-13.json](figure2_results_master_index_2026-11-13.json)。该 JSON 收录 8 个结果组和 47 个文件条目，记录每个文件的仓库相对路径、完整 SHA-256、字节数（可用时）及用途。
+机器可读清单：[figure2_results_master_index_2026-11-13.json](figure2_results_master_index_2026-11-13.json)。该 JSON 收录 8 个结果组和 48 个文件条目，记录每个文件的仓库相对路径、完整 SHA-256、字节数（可用时）及用途。
 
 ## 1. 结果总览
 
