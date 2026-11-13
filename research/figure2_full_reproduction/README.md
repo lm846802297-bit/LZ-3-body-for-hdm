@@ -190,3 +190,73 @@ The supplied 450 keV benchmark now has a self-contained local acceptance record 
 - run_manifest.json, validation_log.txt, and SHA256SUMS: execution provenance and native-file integrity record.
 
 The high-order JSON is byte-identical to the existing results/user_l00_benchmark_delta_m_450kev.json archive. The additional directory preserves the local validation and convergence evidence as a complete, self-contained record. The local acceptance used the same eq6_kernel.py and run_user_l00_benchmark.py blob IDs currently present on main. It validates only the stated pointwise L00 and reduced Eq. (6) integral under the conditional Dirac/pure-scalar/single-channel width assumptions; it is not a halo-folded or detector-level prediction.
+
+
+## Fixed-speed Xe-131 differential cross-section curve (450 keV benchmark)
+
+A separate runner is staged at run_user_dsigma_curve.py. It scans the fixed-speed Xe-131 recoil interval at v=776 km/s on a 5 keV grid, evaluates Eq. (6), and compares the AFH GCN/JJ55 nuclear responses. The propagator prescription is zero width. The isotope mass is A*u, consistent with the current response archive, not the AME2020 exact isotope mass.
+
+### Code-level review
+
+- Corrected the phase-space call: eq6_kernel.limits takes five arguments (mchi, ms, mA, ER, speed_kms). Delta m enters reduced_kernel, not limits. The original six-argument call raised TypeError before any scan point could be evaluated.
+- Added three local regression tests: an open recoil point, a closed recoil point above threshold, and the GeV^-3 to cm^2/keV conversion. All three pass locally; py_compile passes.
+- A code-path smoke test using a synthetic response stub produced 210 rows (105 open recoil energies times two response choices). This is only a software smoke test, not a physical result.
+
+### Response-table diagnostics
+
+- Both GCN and JJ55 tables contain 2,401 q nodes from 0 to 0.6 GeV, with spacing 0.00025 GeV.
+- For the proposed 130–650 keV open recoil interval, exact spatial recoil q runs from 0.1781199 to 0.3982887 GeV. The requested q range is inside the tabulated range; no extrapolation is required.
+- PCHIP versus linear interpolation has a maximum absolute spread of about 5.31e-4 in R_A over the scan. The largest relative spreads occur near the deep response minimum at 270 keV: 2.32% for GCN and 4.63% for JJ55, where R_A is very small. This is an interpolation-scheme sensitivity diagnostic, not a direct exact-q interpolation error bound. PCHIP values at the two minima were cross-checked against SciPy's PchipInterpolator using the local four-node stencil.
+
+## Local physical curve calculation — 2026-11-13
+
+The fixed-speed Xe-131 differential curve has now been calculated locally and independently checked at the level of the archived response interpolation and Eq. (6) quadrature.
+
+- 105 open recoil points, 130–650 keV in 5 keV steps; 655 keV is closed.
+- Benchmark: mχ1 = 1 TeV, Δm = 450 keV, ms = 300 keV, mV = 10 GeV, v = 776 km/s, (g1 g2 gVN)^2 = 1.
+- Both AFH GCN and JJ55 responses are included; q = sqrt(2 mA ER + ER^2), with mA = 131 u.
+- Maximum dσ/dER: GCN 1.874622684e-32 cm²/keV and JJ55 1.985254401e-32 cm²/keV, both at 175 keV.
+- A 1-keV local refinement resolves sampled dips at GCN 269/551 keV and JJ55 270/555 keV. These are sampled grid minima, not continuous minimizers.
+- Ten-anchor independent SciPy PCHIP check: maximum absolute difference 3.553e-15; maximum relative difference 4.929e-14.
+- Full-grid independent PCHIP reconstruction at all 105 exact recoil q values: maximum relative difference 4.64e-10 (GCN) and 3.80e-10 (JJ55), consistent with the rounded R_A values in the pointwise CSV.
+- Eq. (6) quadrature comparison (20,16,12) vs (24,20,16), ten anchors: maximum relative change 7.346e-6.
+- The χ2 s-channel pole is closed throughout this recoil interval; the minimum clearance is 85.663520 keV.
+
+The corrected local validation report is recorded at
+`results/USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md`.
+The native outputs are now committed to this branch:
+
+- `results/fixed_speed_xe131_dsigma_450kev.csv`
+- `results/local_minima_refinement_1keV.csv`
+- `results/kernel_quadrature_convergence_450kev.csv`
+- `results/metadata_user_dsigma_450kev.json`
+- `results/USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md`
+- `results/SHA256SUMS_user_dsigma_450kev.txt`
+
+The SHA256 manifest is calculated against the committed LF-normalized file contents. The local archive also retains the original run metadata and a separate checksum manifest.
+
+### Scope boundary and follow-up
+
+The numerical output and native provenance are now present. Before promotion, the remaining review is scientific scope: keep the A*u mass approximation and zero-width prescription explicitly confined to this benchmark, and do not interpret this fixed-speed, single-isotope curve as a halo-folded or detector-level LZ prediction.
+
+This remains a fixed-speed, zero-width diagnostic using the A*u Xe-131 mass. It is not the AME2020 direct-exact-q result, a natural-xenon halo-folded recoil spectrum, a detector-level LZ prediction, or an exclusion/likelihood calculation.
+
+### Reproduce the fixed-speed Xe-131 curve and figures
+
+From the repository root:
+
+```bash
+python research/figure2_full_reproduction/run_user_dsigma_curve.py \
+  --step-keV 5 --nw 20 --nz 16 --nphi 12 \
+  --output /tmp/xe131_dsigma_450kev.csv
+python research/figure2_full_reproduction/plot_user_dsigma_curve.py
+python -m unittest discover -s research/figure2_full_reproduction/tests -p 'test_user_dsigma_curve.py' -v
+```
+
+The committed 105-point curve covers the interior window 130–650 keV. The full open interval is approximately [109.150286, 654.955583] keV, so 20.8497 keV at the lower end and 4.9556 keV at the upper end are not yet included. Both boundary brackets are tested; high-order Eq. (6) integration in the omitted endpoint regions remains follow-up work.
+
+The two archived SVGs are:
+- results/plots/fixed_speed_xe131_dsigma_450kev.svg
+- results/plots/xe131_gcn_jj55_response_ratio_450kev.svg
+
+This milestone remains a fixed-speed, single-isotope diagnostic with the A*u mass approximation and zero-width prescription. It is not a natural-xenon halo-folded spectrum, detector-level LZ prediction, event-rate calculation, or exclusion.

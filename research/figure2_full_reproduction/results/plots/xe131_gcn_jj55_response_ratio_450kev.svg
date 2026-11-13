@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="600" y="42" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="27" font-weight="700" fill="#17212b">Xe-131 nuclear-response ratio: GCN / JJ55</text>
+<text x="600" y="73" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#536170">m_chi1 = 1 TeV, Delta m = 450 keV, m_s = 300 keV, m_V = 10 GeV; v = 776 km/s; ratio uses the common Eq. (6) kernel</text>
+<text transform="translate(35 365) rotate(-90)" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="19" fill="#17212b">R_A(GCN) / R_A(JJ55)</text>
+<line x1="145" y1="630" x2="1135" y2="630" stroke="#e6e9ed" stroke-width="1"/>
+<text x="130" y="635" text-anchor="end" font-family="Arial,Helvetica,sans-serif" font-size="14" fill="#344454">0</text>
+<line x1="145" y1="554.2857142857142" x2="1135" y2="554.2857142857142" stroke="#e6e9ed" stroke-width="1"/>
+<text x="130" y="559.2857142857142" text-anchor="end" font-family="Arial,Helvetica,sans-serif" font-size="14" fill="#344454">5</text>
+<line x1="145" y1="478.57142857142856" x2="1135" y2="478.57142857142856" stroke="#e6e9ed" stroke-width="1"/>
+<text x="130" y="483.57142857142856" text-anchor="end" font-family="Arial,Helvetica,sans-serif" font-size="14" fill="#344454">10</text>
+<line x1="145" y1="402.85714285714283" x2="1135" y2="402.85714285714283" stroke="#e6e9ed" stroke-width="1"/>
+<text x="130" y="407.85714285714283" text-anchor="end" font-family="Arial,Helvetica,sans-serif" font-size="14" fill="#344454">15</text>
+<line x1="145" y1="327.1428571428571" x2="1135" y2="327.1428571428571" stroke="#e6e9ed" stroke-width="1"/>
+<text x="130" y="332.1428571428571" text-anchor="end" font-family="Arial,Helvetica,sans-serif" font-size="14" fill="#344454">20</text>
+<line x1="145" y1="251.42857142857142" x2="1135" y2="251.42857142857142" stroke="#e6e9ed" stroke-width="1"/>
+<text x="130" y="256.42857142857144" text-anchor="end" font-family="Arial,Helvetica,sans-serif" font-size="14" fill="#344454">25</text>
+<line x1="145" y1="175.71428571428572" x2="1135" y2="175.71428571428572" stroke="#e6e9ed" stroke-width="1"/>
+<text x="130" y="180.71428571428572" text-anchor="end" font-family="Arial,Helvetica,sans-serif" font-size="14" fill="#344454">30</text>
+<line x1="145" y1="100" x2="1135" y2="100" stroke="#e6e9ed" stroke-width="1"/>
+<text x="130" y="105" text-anchor="end" font-family="Arial,Helvetica,sans-serif" font-size="14" fill="#344454">35</text>
+<line x1="183.0769230769231" y1="100" x2="183.0769230769231" y2="630" stroke="#e6e9ed" stroke-width="1"/>
+<line x1="183.0769230769231" y1="630" x2="183.0769230769231" y2="637" stroke="#344454" stroke-width="1.5"/>
+<text x="183.0769230769231" y="661" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#344454">150</text>
+<line x1="278.2692307692308" y1="100" x2="278.2692307692308" y2="630" stroke="#e6e9ed" stroke-width="1"/>
+<line x1="278.2692307692308" y1="630" x2="278.2692307692308" y2="637" stroke="#344454" stroke-width="1.5"/>
+<text x="278.2692307692308" y="661" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#344454">200</text>
+<line x1="373.46153846153845" y1="100" x2="373.46153846153845" y2="630" stroke="#e6e9ed" stroke-width="1"/>
+<line x1="373.46153846153845" y1="630" x2="373.46153846153845" y2="637" stroke="#344454" stroke-width="1.5"/>
+<text x="373.46153846153845" y="661" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#344454">250</text>
+<line x1="468.65384615384613" y1="100" x2="468.65384615384613" y2="630" stroke="#e6e9ed" stroke-width="1"/>
+<line x1="468.65384615384613" y1="630" x2="468.65384615384613" y2="637" stroke="#344454" stroke-width="1.5"/>
+<text x="468.65384615384613" y="661" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#344454">300</text>
+<line x1="563.8461538461538" y1="100" x2="563.8461538461538" y2="630" stroke="#e6e9ed" stroke-width="1"/>
+<line x1="563.8461538461538" y1="630" x2="563.8461538461538" y2="637" stroke="#344454" stroke-width="1.5"/>
+<text x="563.8461538461538" y="661" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#344454">350</text>
+<line x1="659.0384615384615" y1="100" x2="659.0384615384615" y2="630" stroke="#e6e9ed" stroke-width="1"/>
+<line x1="659.0384615384615" y1="630" x2="659.0384615384615" y2="637" stroke="#344454" stroke-width="1.5"/>
+<text x="659.0384615384615" y="661" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#344454">400</text>
+<line x1="754.2307692307693" y1="100" x2="754.2307692307693" y2="630" stroke="#e6e9ed" stroke-width="1"/>
+<line x1="754.2307692307693" y1="630" x2="754.2307692307693" y2="637" stroke="#344454" stroke-width="1.5"/>
+<text x="754.2307692307693" y="661" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#344454">450</text>
+<line x1="849.4230769230769" y1="100" x2="849.4230769230769" y2="630" stroke="#e6e9ed" stroke-width="1"/>
+<line x1="849.4230769230769" y1="630" x2="849.4230769230769" y2="637" stroke="#344454" stroke-width="1.5"/>
+<text x="849.4230769230769" y="661" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#344454">500</text>
+<line x1="944.6153846153846" y1="100" x2="944.6153846153846" y2="630" stroke="#e6e9ed" stroke-width="1"/>
+<line x1="944.6153846153846" y1="630" x2="944.6153846153846" y2="637" stroke="#344454" stroke-width="1.5"/>
+<text x="944.6153846153846" y="661" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#344454">550</text>
+<line x1="1039.8076923076924" y1="100" x2="1039.8076923076924" y2="630" stroke="#e6e9ed" stroke-width="1"/>
+<line x1="1039.8076923076924" y1="630" x2="1039.8076923076924" y2="637" stroke="#344454" stroke-width="1.5"/>
+<text x="1039.8076923076924" y="661" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#344454">600</text>
+<line x1="1135" y1="100" x2="1135" y2="630" stroke="#e6e9ed" stroke-width="1"/>
+<line x1="1135" y1="630" x2="1135" y2="637" stroke="#344454" stroke-width="1.5"/>
+<text x="1135" y="661" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="15" fill="#344454">650</text>
+<line x1="145" y1="630" x2="1135" y2="630" stroke="#344454" stroke-width="2"/>
+<line x1="145" y1="100" x2="145" y2="630" stroke="#344454" stroke-width="2"/>
+<text x="640" y="715" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="19" fill="#17212b">Nuclear recoil energy E_R [keV]</text>
+<line x1="145" y1="614.8571428571429" x2="1135" y2="614.8571428571429" stroke="#7c8792" stroke-width="1.8" stroke-dasharray="8 6"/>
+<path d="M145.00,615.89 L154.52,615.82 L164.04,615.78 L173.56,615.74 L183.08,615.72 L192.60,615.71 L202.12,615.70 L211.63,615.69 L221.15,615.70 L230.67,615.70 L240.19,615.71 L249.71,615.72 L259.23,615.74 L268.75,615.76 L278.27,615.79 L287.79,615.82 L297.31,615.85 L306.83,615.89 L316.35,615.94 L325.87,616.00 L335.38,616.08 L344.90,616.18 L354.42,616.30 L363.94,616.48 L373.46,616.73 L382.98,617.14 L392.50,617.92 L402.02,619.97 L411.54,227.55 L421.06,609.63 L430.58,612.74 L440.10,613.72 L449.62,614.20 L459.13,614.49 L468.65,614.69 L478.17,614.83 L487.69,614.94 L497.21,615.03 L506.73,615.11 L516.25,615.17 L525.77,615.23 L535.29,615.28 L544.81,615.33 L554.33,615.37 L563.85,615.41 L573.37,615.45 L582.88,615.49 L592.40,615.53 L601.92,615.57 L611.44,615.60 L620.96,615.64 L630.48,615.68 L640.00,615.71 L649.52,615.75 L659.04,615.79 L668.56,615.83 L678.08,615.87 L687.60,615.91 L697.12,615.95 L706.63,616.00 L716.15,616.04 L725.67,616.09 L735.19,616.14 L744.71,616.20 L754.23,616.26 L763.75,616.32 L773.27,616.38 L782.79,616.45 L792.31,616.53 L801.83,616.61 L811.35,616.70 L820.87,616.80 L830.38,616.91 L839.90,617.04 L849.42,617.18 L858.94,617.33 L868.46,617.52 L877.98,617.72 L887.50,617.97 L897.02,618.24 L906.54,618.55 L916.06,618.84 L925.58,618.85 L935.10,617.15 L944.62,598.61 L954.13,166.49 L963.65,563.59 L973.17,595.89 L982.69,604.21 L992.21,607.78 L1001.73,609.72 L1011.25,610.94 L1020.77,611.76 L1030.29,612.36 L1039.81,612.82 L1049.33,613.18 L1058.85,613.47 L1068.37,613.72 L1077.88,613.92 L1087.40,614.10 L1096.92,614.26 L1106.44,614.40 L1115.96,614.53 L1125.48,614.64 L1135.00,614.75" fill="none" stroke="#3d6d4f" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+<text x="1127" y="604.8571428571429" text-anchor="end" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#68747f">equal response</text>
+<text x="600" y="745" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="13" fill="#66727e">For a common Eq. (6) kernel, this is also the fixed-speed d sigma_GCN / d sigma_JJ55 ratio.</text>
+</svg>
