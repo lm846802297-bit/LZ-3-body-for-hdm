@@ -46,10 +46,10 @@ class AFHDefaultXe131Tests(unittest.TestCase):
         mma_verifier = (HERE / "verify_afh_xe131_native.wls").read_text(encoding="utf-8")
         comparator = (HERE / "compare_afh_mathematica_python.py").read_text(encoding="utf-8")
 
-        self.assertIn(r"\\frac{16\\pi}{2J_A+1}", paper)
-        self.assertIn(r"W_{M,\\mathrm{AFH,v6}}^{00}", paper)
-        self.assertIn(r"q=\\sqrt{2m_AE_R+E_R^2}", paper)
-        self.assertNotIn(r"\\mathcal R_A(E_R)=4\\pi W_M^{00}", paper)
+        self.assertIn(r"\frac{16\pi}{2J_A+1}", paper)
+        self.assertIn(r"W_{M,\mathrm{AFH,v6}}^{00}", paper)
+        self.assertIn(r"q=\sqrt{2m_AE_R+E_R^2}", paper)
+        self.assertNotIn(r"\mathcal R_A(E_R)=4\pi W_M^{00}", paper)
 
         self.assertIn("rEqualRaw = 4.0*rAFH;", mma_runner)
         self.assertIn("rRaw[q_?NumericQ] := 16 Pi/(2 jA + 1) wm[q];", mma_verifier)
