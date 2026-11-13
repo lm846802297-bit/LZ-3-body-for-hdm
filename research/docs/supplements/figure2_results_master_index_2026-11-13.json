@@ -235,7 +235,7 @@
         },
         {
           "path": "research/afh_default_density_natural_xenon_halo/results/metadata.json",
-          "sha256": "7a34c3c5f2e4a55b00611d8ae4ef6681a38e9d57baa639f45619d4fc9efbd90",
+          "sha256": "53320158c5f6af3850ad911d49eac9ee6e4b1b1be81c4429732538390ea93b3b",
           "bytes": 4310,
           "role": "AFH natural-xenon selected-point fold parameters and provenance; sample SHA-256 corrected"
         },
@@ -283,13 +283,13 @@
         },
         {
           "path": "research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py",
-          "sha256": "7da4cbb0e1f62f40649f532bef47158e0ec96a673afa85b87d2a64e58faccd5c",
+          "sha256": "c6bcf6e0acaff2aac626b559ecdb6fbaf789a320affb7e171697fd798922b3c4",
           "bytes": 12123,
           "role": "AFH natural-xenon selected-point fold runner; now records response sample SHA-256"
         },
         {
           "path": "research/afh_default_density_natural_xenon_halo/validate_archived_results.py",
-          "sha256": "b49cc80e9659fe0e3deac624491f7279c943b91ddb622273f6b9c32701df0c85",
+          "sha256": "6223721156d3963629e9dc35e927ebf0ecd2ffa003d9f123295122f5076062e2",
           "bytes": 3362,
           "role": "archive validator; now verifies selected response sample SHA-256"
         },
@@ -537,7 +537,7 @@
         },
         {
           "path": "research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md",
-          "sha256": "4f1791c1e2b212469f7b639ef8a37d0bbb04ea793e82f9fb073ae62ed1caabf3",
+          "sha256": "e88554cb94b8f502f7bdcfc06ed2261979565453c45a793c51d13ecc1a9ea2af",
           "role": "pointwise L00 local validation record"
         }
       ]
@@ -651,7 +651,7 @@
     },
     {
       "path": "research/afh_default_density_natural_xenon_halo/results/metadata.json",
-      "sha256": "7a34c3c5f2e4a55b00611d8ae4ef6681a38e9d57baa639f45619d4fc9efbd90d",
+      "sha256": "53320158c5f6af3850ad911d49eac9ee6e4b1b1be81c4429732538390ea93b3b",
       "bytes": 4310,
       "role": "AFH natural-xenon selected-point fold parameters and provenance; sample SHA-256 corrected"
     },
@@ -699,13 +699,13 @@
     },
     {
       "path": "research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py",
-      "sha256": "7da4cbb0e1f62f40649f532bef47158e0ec96a673afa85b87d2a64e58faccd5c",
+      "sha256": "c6bcf6e0acaff2aac626b559ecdb6fbaf789a320affb7e171697fd798922b3c4",
       "bytes": 12123,
       "role": "AFH natural-xenon selected-point fold runner; now records response sample SHA-256"
     },
     {
       "path": "research/afh_default_density_natural_xenon_halo/validate_archived_results.py",
-      "sha256": "b49cc80e9659fe0e3deac624491f7279c943b91ddb622273f6b9c32701df0c85",
+      "sha256": "6223721156d3963629e9dc35e927ebf0ecd2ffa003d9f123295122f5076062e2",
       "bytes": 3362,
       "role": "archive validator; now verifies selected response sample SHA-256"
     },
@@ -843,7 +843,7 @@
     },
     {
       "path": "research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md",
-      "sha256": "4f1791c1e2b212469f7b639ef8a37d0bbb04ea793e82f9fb073ae62ed1caabf3",
+      "sha256": "e88554cb94b8f502f7bdcfc06ed2261979565453c45a793c51d13ecc1a9ea2af",
       "role": "pointwise L00 local validation record",
       "bytes": 5375
     },
