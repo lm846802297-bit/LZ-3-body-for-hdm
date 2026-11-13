@@ -60,8 +60,13 @@ def main():
 
     q_py = column(py, "q_GeV")
     q_wl = column(wl, "q_GeV")
-    if not np.array_equal(q_py, q_wl):
-        raise SystemExit("q grids are not exactly equal; no interpolation is allowed")
+    q_grid_max_abs_difference = float(np.max(np.abs(q_py - q_wl)))
+    q_grid_atol = 1e-14  # allow only CSV floating-point serialization roundoff
+    if not np.allclose(q_py, q_wl, rtol=0.0, atol=q_grid_atol):
+        raise SystemExit(
+            f"q grids differ by {q_grid_max_abs_difference:.3e} GeV; "
+            "no interpolation is allowed"
+        )
 
     # The same physical response is represented by 4 times the AFH package
     # isoscalar response when the cross-section prefactor contains g_VN^2.
@@ -99,7 +104,9 @@ def main():
         "points": len(py),
         "rtol": args.rtol,
         "atol": args.atol,
-        "q_grid_identical": True,
+        "q_grid_identical_within_export_precision": True,
+        "q_grid_max_abs_difference_GeV": q_grid_max_abs_difference,
+        "q_grid_export_atol_GeV": q_grid_atol,
         "q_grid_start_GeV": float(q_py[0]),
         "q_grid_end_GeV": float(q_py[-1]),
         "q_grid_step_GeV": float(q_py[1] - q_py[0]),
