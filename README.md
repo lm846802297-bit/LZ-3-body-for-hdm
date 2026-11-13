@@ -39,6 +39,7 @@
 
 - paper-source/：原始论文源码、工作稿和图件；
 - research/：研究文档、计算程序、单元测试、审计记录和数值结果；
+- v6/：已归档的 AFH DMFormFactor v6.0 Mathematica 源文件；原始 ZIP 仍只保留 SHA-256 provenance。
 - .github/workflows/：可选的计算调度与自动化验证。科学研究不以 CI 运行成功为前提。
 
 ## 主要研究记录
