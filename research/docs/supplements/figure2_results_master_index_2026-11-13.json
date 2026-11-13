@@ -71,30 +71,6 @@
           "sha256": "da6c0ac49d9fd44b41263676f356a8a7b10c898e8ad9b58224602c602a1c8d90",
           "bytes": 3683,
           "role": "AFH Xe-131 source, normalization, b_A, q grid and minima metadata"
-        },
-        {
-          "path": "research/afh_default_density_xe131/output/afh_default_vs_gcn_jj55_cross_section.csv",
-          "sha256": "d1efcdd994b3b1b3dafabb5e39942bb2677c84cd1b69d7660d07435e3722e389",
-          "bytes": 525,
-          "role": "AFH/GCN/JJ55 response comparison input"
-        },
-        {
-          "path": "research/afh_default_density_xe131/output/figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv",
-          "sha256": "43acdbb49053fe9967c6389922658d8176200505f26096228a7f787e389271f7",
-          "bytes": 203356,
-          "role": "four benchmark Xe-131 fixed-speed cross-section response substitution"
-        },
-        {
-          "path": "research/afh_default_density_xe131/output/figure2_four_benchmarks_dsigma_metadata.json",
-          "sha256": "98a049ccfc8210d9f0d3f0c10f45155acea97a9dab4dc73b5bec8a0a01d709e5",
-          "bytes": 1669,
-          "role": "four benchmark dsigma metadata"
-        },
-        {
-          "path": "research/afh_default_density_xe131/output/four_benchmark_metadata.json",
-          "sha256": "9ba064ce439c97e0d7a23185a33b391b9ea7eca98fc8ccbd888b21fd5d5d5ebc",
-          "bytes": 1217,
-          "role": "four benchmark parameter metadata"
         }
       ]
     },
