@@ -61,7 +61,12 @@
     "exact_kinematic_endpoint_keV": 654.9555833089706,
     "last_archived_grid_point_keV": 650,
     "uncovered_open_interval_to_endpoint_keV": 4.9555833089706,
-    "endpoint_refinement_status": "Dedicated high-order Eq. (6) integration near the endpoint remains a follow-up; this archive contains an endpoint bracket regression test only."
+    "endpoint_refinement_status": "Dedicated high-order Eq. (6) integration in both omitted endpoint regions remains a follow-up; the regression test checks kinematic boundary brackets only.",
+    "exact_kinematic_lower_endpoint_keV": 109.15028619236098,
+    "exact_kinematic_upper_endpoint_keV": 654.9555833089706,
+    "uncovered_lower_open_interval_keV": 20.84971380763902,
+    "uncovered_upper_open_interval_keV": 4.9555833089706,
+    "coverage_status": "Interior window 130-650 keV; not the complete kinematically open recoil interval."
   },
   "quadrature": {
     "full_curve_order_nW_nz_nphi": [
@@ -97,7 +102,10 @@
     "minimum_d1_propagator_gap_lower_bound_GeV2": 1.5000001125736162,
     "minimum_d2_propagator_gap_lower_bound_GeV2": 0.17132710956502706,
     "endpoint_equation": "W_max^2(E_R) = W_min^2 = (m_chi1 + m_s)^2",
-    "exact_ER_max_keV": 654.9555833089706
+    "exact_ER_max_keV": 654.9555833089706,
+    "lower_endpoint_equation": "W_max^2(E_R) = W_min^2 = (m_chi1 + m_s)^2",
+    "upper_endpoint_equation": "W_max^2(E_R) = W_min^2 = (m_chi1 + m_s)^2",
+    "exact_ER_min_keV": 109.15028619236098
   },
   "validation": {
     "all_105_recoil_points_open": true,
