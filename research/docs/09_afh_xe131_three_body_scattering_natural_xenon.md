@@ -33,7 +33,10 @@
 3. **真实天然氙靶的理论速率：** 对可用氙同位素按天然丰度求和，并对实验室系暗物质速度分布积分，得到 \(dR/dE_R\)。这一步与固定速度下的 \(d\sigma_A/dE_R\) 是不同的物理量。
 
 目前已经形成 AFH default Xe-131 响应、GCN/JJ55 核模型对照、四组固定速度 benchmark、AFH 天然氙 selected-point halo-folded rates，以及 GCN/JJ55 天然氙连续反冲谱。LZ 2026 Fig. S2 的一维 final-ROI efficiency 曲线及灰色系统包络也已从官方 PDF 提取，并与独立数字化结果对照；基于 GCN/JJ55 连续谱、2.84 tonne-year exposure 和该效率曲线，已得到初步 efficiency-weighted rate-level event yields。该结果不是完整的 LZ likelihood recast。Xe-131 AFH Python 响应已通过 60 位精度 mpmath 对全部 2401 个 q 节点的独立有限和对照；原生 Mathematica 程序仍未在 Wolfram kernel 中实际运行。进一步核查 AFH 原始定义后，确认其响应变量 \(y=(q b_A/2)^2\) 中的 \(q\) 是空间动量转移；现有 28 个天然氙响应样本采用的 exact spatial q 与精确三体质量壳关系一致。exact spatial q 作为默认，NR-q 仅作小反冲近似对照。当前 AFH 天然氙结果仍限于 selected points；连续谱和 LZ rate-level yields 使用 GCN/JJ55 响应，不能混称为 AFH 连续谱或完整实验重铸。
-本轮正文还补入了从相互作用拉格朗日量到两张树图、Dirac trace、三体相空间和 Eq. (6) 整体前因子的连贯推导；并解释核响应极小值、三体阈值、halo 端点和 LZ 效率折叠各自代表的物理机制。完整的 Lorentz boost、相空间归一化、AFH 密度矩阵有限和、因子 4、同位素输入和 halo 数值约定仍分别保留在附录 A–G，避免正文与附录互相替代。 另外，仓库还归档了一个独立的 450 keV benchmark：其一是单一运动学点的 \(\mathcal L_{00}\) 与 reduced \(I_6\) 对照，使用条件性标量 pole width；其二是 Xe-131 固定速度微分截面曲线，使用 GCN/JJ55 响应、\(v=776\) km/s、\(M_A=131u\) 和 zero-width prescription。两者的输入与物理层级不同，均不替代天然氙 halo fold 或 LZ detector-level likelihood。
+
+本轮正文还补入了从相互作用拉格朗日量到两张树图、Dirac trace、三体相空间和 Eq. (6) 整体前因子的连贯推导；并解释核响应极小值、三体阈值、halo 端点和 LZ 效率折叠各自代表的物理机制。完整的 Lorentz boost、相空间归一化、AFH 密度矩阵有限和、因子 4、同位素输入和 halo 数值约定仍分别保留在附录 A–G，避免正文与附录互相替代。
+
+另外，仓库还归档了一个独立的 450 keV benchmark：其一是单一运动学点的 \(\mathcal L_{00}\) 与 reduced \(I_6\) 对照，使用条件性标量 pole width；其二是 Xe-131 固定速度微分截面曲线，使用 GCN/JJ55 响应、\(v=776\) km/s、\(M_A=131u\) 和 zero-width prescription。两者的输入与物理层级不同，均不替代天然氙 halo fold 或 LZ detector-level likelihood。
 
 | 研究层级 | 当前归档结果 | 明确边界 |
 |---|---|---|
@@ -92,6 +95,8 @@ g_{VN}=3g_{Vq},
 而不是简单的 \(\chi_1+A\to\chi_2+A\)。
 
 论文源文件还列出了 scalar–pseudoscalar 的另一种相互作用结构。本文 Eq. (6)、当前 Dirac kernel 和以下核响应讨论针对上面的 vector–vector 基准；不能把另一种模型的顶点或耦合约定混入这条数值计算链。
+
+相互作用的原始写法见论文工作稿 [paper-source/main.tex](../../paper-source/main.tex) 的 Model 一节；本段只解释当前采用的 vector–vector 计算分支。
 
 ### 1.2 为什么 \(\chi_2\) 是虚中间态，而不是末态粒子？
 
@@ -453,7 +458,9 @@ d\sigma=\frac{|\mathcal M|^2}{2\Lambda_{\rm in}}d\Phi_3,
 | 核模型与 \(b_A\) | \(R_A(E_R)\) | 决定核相干响应的有限动量形状和极小值 |
 | halo 参数 | \(f_{\rm lab}(v)\)、\(v_{\max}\) | 决定哪些速度能贡献以及高速度尾部的权重 |
 
+
 在当前 \(m_V=10\) GeV benchmark 中，\(m_V^2=100\ {\rm GeV}^2\)，而 Xe 核在 \(E_R=0.2\)–\(0.8\) MeV 时的 \(2m_AE_R\) 只有约 \(0.05\)–\(0.20\ {\rm GeV}^2\)。因此该 benchmark 处于重媒介子近似 \(m_V^2\gg |t|\) 的区域，传播子因子在所考察反冲窗口内变化很小，主要给出近似整体归一化 \(\propto m_V^{-4}\)。这时谱形的显著结构主要来自核响应 \(R_A\) 与三体积分 \(I_6\)，而不是矢量传播子的快速反冲依赖。若研究更轻的 \(m_V\)，这一判断必须重新评估。
+
 特别要避免把耦合乘积 \((g_1g_2g_{VN})^2\) 当成足以确定所有传播子效应的参数：若改变 \(g_2\) 而同时调整其他耦合以保持该乘积不变，条件性 \(\Gamma_{\chi_2}\propto |g_2|^2\) 仍会改变。因此，比较不同耦合点时必须同时报告 \(g_2\) 和宽度处方。
 
 ## 3. AFH v6.0 default Xe-131 核响应
@@ -680,7 +687,7 @@ E_R(Q)=\sqrt{m_A^2+Q^2}-m_A.
 
 ### 4.1 核模型对照应如何作物理解读？
 
-在相同同位素、相同 \(E_R\)、相同入射速度和相同粒子物理输入下，AFH、GCN、JJ55 的差异只通过各自的 \(R_A(E_R)\) 进入 Eq. (6)。因此同一运动学点上的截面比可以直接用响应比解释。表中三个主要极小值的位置在不同核模型间相对接近，说明这些结构与 Xe 核有限尺寸及主要壳结构的动量尺度有关；但极小值深度差异明显，说明核波函数和密度矩阵对相消程度十分敏感。
+在相同同位素、相同 \(E_R\)、相同入射速度和相同粒子物理输入下，AFH、GCN、JJ55 的差异只通过各自的 \(R_A(E_R)\) 进入 Eq. (6)。因此同一运动学点上的截面比可以直接用响应比解释。表中三个主要极小值的位置在不同核模型间相对接近，这提示这些结构与 Xe 核有限尺寸及主要壳结构的动量尺度有关；但极小值深度差异明显，说明核波函数和密度矩阵对相消程度十分敏感。
 
 这类差异不应被压缩成一个常数“核模型误差条”：响应模型可能同时改变极小值的深度、位置和极小值之间的谱形。反过来，也不能仅凭某个模型在一个 \(E_R\) 点给出更大的 \(R_A\)，就断言它在整个 LZ 能区给出更大的事件数。天然氙的逐同位素求和和速度阈值会重新加权这些差异。
 
@@ -849,6 +856,7 @@ Q_A=\sqrt{2m_AE_R+E_R^2},
 \]
 
 > **公式追溯：** 完整阈值推导见[附录 E，§E.2](appendices/09E_halo_velocity_vmin_folding.md)；数值实现和逐同位素阈值输出见[索引 F8](formula_symbol_code_cross_reference.md)。
+
 这一阈值公式可以从三体相空间边界直接推导，而不是套用弹性散射的标准表达式。令
 \[
 Q_A=\sqrt{2m_AE_R+E_R^2},\qquad
