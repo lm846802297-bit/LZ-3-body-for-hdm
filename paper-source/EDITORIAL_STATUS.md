@@ -2,7 +2,7 @@
 
 Date: 2026-11-11
 
-This is an editorial and source-organization pass. It does not validate or change the physical amplitudes, propagators, widths, nuclear response, event-rate normalization, confidence-level construction, parameter inputs, or cosmological collision terms.
+This is an editorial/source-consistency pass, not an independent validation of the physical amplitudes, propagators, widths, event-rate normalization, confidence-level construction, parameter inputs, or cosmological collision terms. The AFH response equation in the working manuscript has been corrected to match the separately documented AFH v6.0 raw-isoscalar convention; the original TeX remains unchanged.
 
 The supplied TeX file is preserved verbatim as main_original.tex. The working manuscript is main.tex.
 
@@ -20,6 +20,8 @@ The supplied TeX file is preserved verbatim as main_original.tex. The working ma
 - Reworded the lead-in to the elastic energy integral to remove an underfull line without changing its meaning.
 - Used texorpdfstring for the math subsection heading so hyperref can create a clean PDF bookmark.
 - Added SHA-256 verification to build.sh before compilation.
+- Corrected the working-manuscript AFH response definition: the raw AFH v6.0 isoscalar response is mapped to the physical equal-proton/equal-neutron response with one factor of four, plus a q-independent finite-density-matrix-precision normalization constant. The manuscript now uses exact spatial q in the AFH response argument; the original source is preserved unchanged.
+- Added a canonical file index for the corrected Xe-131 four-benchmark cross sections and explicitly marked the historical mis-populated AFH CSV as superseded.
 
 ## Figure 2: unresolved mass-label inconsistency
 

@@ -57,5 +57,8 @@
     "conditional pole width assumes Dirac fermions, real scalar and pure scalar off-diagonal Yukawa",
     "no event-rate spectra, natural-xenon sum, detector response or likelihood",
     "native Mathematica execution remains pending because no Wolfram kernel is installed"
-  ]
+  ],
+  "archive_status": "superseded_historical",
+  "canonical_replacement": "figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv",
+  "superseded_reason": "The historical AFH response column in figure2_four_benchmarks_dsigma_AFH_GCN_JJ55.csv was copied from GCN; use the corrected long-form or wide-form archive."
 }
