@@ -1,0 +1,97 @@
+{
+  "status": "PASS",
+  "calculation": "LZ 2026 final-WIMP-search-ROI efficiency fold of AFH-7 and Hybrid-9 natural-xenon spectra",
+  "input_files": {
+    "spectrum_csv": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/afh_hybrid9_natural_xenon_spectrum.csv",
+    "spectrum_csv_sha256": "12508b7710fafa006f4a9748370b697d6be622f7ee58f2f4e14e69c47df4f4ad",
+    "spectrum_metadata_json": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/metadata.json",
+    "spectrum_metadata_sha256": "05bd6ed2a9126f7d0c477d601064dd15a1047bb952b79183c414fb809cfbc991",
+    "efficiency_csv": "research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv",
+    "efficiency_csv_sha256": "a0917cd29eef20fbbdc9383b81012f4bd9a669859779e39a8b6ccf47dd8a47ed",
+    "efficiency_metadata_json": "research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_metadata.json",
+    "efficiency_metadata_sha256": "79cc439938dab45435cfa19f779f5856c2c7d28154f6a92a87d60c4cc7d94a24",
+    "afh_source_file": "v6/dmformfactor-V6.m",
+    "afh_source_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+    "isotope_weights_sha256": "fd1bb996e5f582c74c3c86d129f1d2dded510c65237d0a7b2ba08861f1d8c991",
+    "afh_response_grid_sha256": {
+      "128": "9ad02a86b28371b7aabce8f07ccf495c1823250500ece3e857dbb55066107be7",
+      "129": "cf19b0f8493a9c3795893eeff9911b765c849afe22729b5e366a72554601f508",
+      "130": "6d944cd28b67fe3a319d17a271a36774f9644e9430b247f7c8c6a225ac4424da",
+      "131": "1bf0994078abc7ab0e91bf8f82a9a4edbaa5569116b59dd754303d3e1cb8d364",
+      "132": "f886d0f0cada9c62f2ad277b45620cf1dd8bd3c38f40e0814a508197dc7aeada",
+      "134": "29492909dc14692a7833735fbf2d7dfbb848807c4cff3cf66246bb037655d089",
+      "136": "63f6b9bfded9e7b2c73cfb09cec1ebc40d2addfef835da1f668cec14079a1df1"
+    }
+  },
+  "source_response_convention": "AFH direct finite-sum at exact spatial q; PCHIP grid is diagnostic only; Helm fallback is separate",
+  "source_response_evaluation": "official v6.0 density matrices parsed from source and direct finite-sum evaluation at every recoil q",
+  "selected_scenarios": {
+    "AFH-7": "AFH v6.0 default-density responses for Xe-128, Xe-129, Xe-130, Xe-131, Xe-132, Xe-134 and Xe-136; Xe-124/Xe-126 omitted without renormalizing the remaining natural abundances.",
+    "Hybrid-9 (AFH-7 + Helm-2)": "AFH v6.0 for the seven supported isotopes; Helm is used only as an explicitly labelled fallback for Xe-124 and Xe-126."
+  },
+  "benchmark_parameters": {
+    "red_ms200_dm1": {
+      "ms_MeV": 0.2,
+      "delta_m_MeV": 1.0
+    },
+    "green_ms300_dm1": {
+      "ms_MeV": 0.3,
+      "delta_m_MeV": 1.0
+    },
+    "black_ms360_dm1": {
+      "ms_MeV": 0.36,
+      "delta_m_MeV": 1.0
+    },
+    "blue_ms300_dm10": {
+      "ms_MeV": 0.3,
+      "delta_m_MeV": 10.0
+    }
+  },
+  "recoil_grid_points_per_group": 84,
+  "output_rows": 8,
+  "roi_keV": [
+    5.4,
+    269.9
+  ],
+  "candidate_tail_diagnostic": {
+    "candidate_energy_keV": 248.0,
+    "candidate_statistical_uncertainty_keV": 23.0,
+    "integration_interval_keV": [
+      225.0,
+      269.9
+    ],
+    "upper_edge_clipped_by_search_roi": true,
+    "systematic_energy_uncertainty_used": false,
+    "energy_resolution_smearing_used": false,
+    "interpretation": "spectral-shape diagnostic only; not an event likelihood"
+  },
+  "exposure_tonne_year": 2.84,
+  "exposure_kg_day": 1037310.0,
+  "efficiency_source": "LZ 2026 Fig. S2 digitized central final WIMP-search ROI NR efficiency and gray envelope",
+  "efficiency_envelope_treatment": "gray detector-systematic range; no confidence level assigned by LZ",
+  "integration_method": "exact analytic integral of piecewise-linear rate times piecewise-linear efficiency over the union of their knots",
+  "dense_trapezoid_crosscheck_steps": 10000,
+  "maximum_dense_trapezoid_relative_difference_vs_exact": 3.723807355804354e-07,
+  "maximum_dense_trapezoid_refinement_relative_difference": 2.2465670868054843e-07,
+  "abundance_renormalization": "none",
+  "limitations": [
+    "AFH-7 omits Xe-124 and Xe-126 because official AFH v6.0 default density matrices are unavailable; remaining natural abundances are not renormalized",
+    "Hybrid-9 uses Helm only for Xe-124 and Xe-126; those two contributions are not AFH results",
+    "source spectra reuse the archived three-body kernel and natural-xenon halo fold; this script recomputes neither",
+    "the efficiency gray envelope has no confidence level assigned by LZ",
+    "no NEST S1c/log10(S2c) PDFs or nuisance covariance",
+    "no energy-resolution smearing or event-by-event reconstructed-energy response",
+    "no background model, profile likelihood or confidence-level construction",
+    "not a 90% confidence-level exclusion and not an official LZ likelihood"
+  ],
+  "detector_level_scope": {
+    "efficiency_applied": true,
+    "energy_resolution_smearing_applied": false,
+    "two_dimensional_signal_pdf_applied": false,
+    "background_likelihood_applied": false,
+    "is_exclusion_limit": false
+  },
+  "source_commit": "5628fc6a3302321cfa34caeb7bdd07c3c3c50866",
+  "output_csv": "/home/runner/work/_temp/afh7_hybrid9_rate_level/lz_2026_afh7_hybrid9_rate_level_event_yields.csv",
+  "output_csv_sha256": "39e93deacc12e488179201bfb7e22b9eaf85cb986b8fba2aa323055a31c88c6e"
+}
