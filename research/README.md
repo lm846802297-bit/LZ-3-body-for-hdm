@@ -32,3 +32,10 @@ Keep the following quantities separate:
 - Keep the manuscript source and original figures in paper-source/.
 - Record assumptions and validation boundaries alongside each result; passing software tests does not by itself settle unspecified model assumptions.
 - Preserve native outputs, run manifests, source/input revisions, and checksums; do not use ZIP/TAR delivery bundles as substitutes for extracted research files.
+
+
+## Figure 2 P0–P2 audit records
+
+- [Figure 2 numerical-results master index](docs/supplements/figure2_results_master_index_2026-11-13.md): benchmark/input/output provenance and SHA-256 inventory, including the native AFH Xe-131 Mathematica audit.
+- [Figure 2 physics-formula audit](docs/supplements/figure2_physics_formula_audit_2026-11-13.md): equation, implementation, normalization, and validation cross-checks.
+- [Figure 2 scientific-status table](docs/supplements/figure2_scientific_status_2026-11-13.md): verified scope and remaining scientific boundaries.
