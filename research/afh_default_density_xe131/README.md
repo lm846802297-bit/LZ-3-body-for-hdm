@@ -128,7 +128,9 @@ Wolfram Engine or Mathematica with `wolframscript` on `PATH`, and the
 original AFH v6.0 source archive. The outputs are written to
 `output/native_audit/`, including the raw-response comparison, minima,
 Wolfram version, source hashes, CSV hashes, and
-`afh_native_audit_manifest.json`.
+`afh_native_audit_manifest.json`. The runner also bundles the complete review
+set (native CSV, metadata, comparison tables, minima, and manifest) as
+`output/afh-native-audit-results.zip` for upload or archival.
 
 A successful Python GitHub Actions run is **not** a substitute for this native
 Wolfram execution. The native audit is considered complete only when the
