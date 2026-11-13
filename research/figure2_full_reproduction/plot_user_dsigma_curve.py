@@ -81,10 +81,14 @@ def make_cross_section(rows: list[dict[str, str]], minima: list[dict[str, str]])
     add_x_axis(parts)
     parts.append(f'<path d="{path_for(rows, "dsigma_GCN_cm2_per_keV", ymap)}" fill="none" stroke="{BLUE}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>')
     parts.append(f'<path d="{path_for(rows, "dsigma_JJ55_cm2_per_keV", ymap)}" fill="none" stroke="{AMBER}" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>')
-    for row in minima:
-        er = float(row["ER_keV"])
-        field = "dsigma_GCN_cm2_per_keV" if er in (269.0, 551.0) else "dsigma_JJ55_cm2_per_keV"
-        color = BLUE if field.startswith("dsigma_GCN") else AMBER
+    marker_specs = (
+        (269.0, "dsigma_GCN_cm2_per_keV", BLUE),
+        (551.0, "dsigma_GCN_cm2_per_keV", BLUE),
+        (270.0, "dsigma_JJ55_cm2_per_keV", AMBER),
+        (555.0, "dsigma_JJ55_cm2_per_keV", AMBER),
+    )
+    for er, field, color in marker_specs:
+        row = next(item for item in minima if float(item["ER_keV"]) == er)
         parts.append(f'<circle cx="{xmap(er):.2f}" cy="{ymap(float(row[field])):.2f}" r="5.5" fill="#ffffff" stroke="{color}" stroke-width="2.5"/>')
     parts.extend([
         f'<line x1="830" y1="112" x2="875" y2="112" stroke="{BLUE}" stroke-width="3"/><text x="885" y="117" font-family="Arial,Helvetica,sans-serif" font-size="16" fill="#17212b">GCN</text>',
