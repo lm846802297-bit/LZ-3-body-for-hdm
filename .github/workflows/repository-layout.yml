@@ -63,3 +63,6 @@ jobs:
 
           print("Repository layout check passed.")
           PY
+
+      - name: Verify Figure 2 benchmark/input/output SHA-256 manifest
+        run: python research/docs/supplements/validate_figure2_manifest.py
