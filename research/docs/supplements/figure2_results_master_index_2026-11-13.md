@@ -1,7 +1,7 @@
 # Figure 2 三体暗物质计算：数值结果总索引
 
 日期：2026-11-13  
-适用分支：`docs/update-figure2-documentation-20261113`  
+适用分支：`research/afh-mainline-integration-20261113`  
 用途：将 benchmark、物理输入、参数、结果文件、验证记录和 SHA-256 汇总到同一入口。
 
 机器可读清单：[figure2_results_master_index_2026-11-13.json](figure2_results_master_index_2026-11-13.json)。该 JSON 收录 9 个结果组和 60 个文件条目，记录每个文件的仓库相对路径、完整 SHA-256、字节数（可用时）及用途。
@@ -25,7 +25,7 @@
 
 - AFH v6.0 source archive：SHA-256 `4e0f70e6e780f3f4a40faa14792cae239d1989cf15d1e211b4fd7389b0460727`。
 - AFH Mathematica source `v6/dmformfactor-V6.m`：SHA-256 `dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372`；该 `.m` 文件已提交，原始 ZIP 仍为 checksum-only provenance。
-- 两者为来源校验信息，原始 ZIP / `.m` 并未作为当前仓库文件提交；仓库提交了 67 项 Xe-131 密度矩阵及其 Python source translation。
+- 原始 ZIP 仍只保留来源 SHA-256 provenance，未提交到仓库；`.m` 源文件已提交至 `v6/dmformfactor-V6.m`，并按上面的 SHA-256 核验。仓库同时提交了 67 项 Xe-131 密度矩阵及其 Python source translation。
 - AFH raw isoscalar response 的零动量归一化为 \(A^2/4\)；物理等质子、等中子耦合的 response 为 \(A^2\)，因子 4 只计一次。
 - AFH 物理响应使用 \(Q=\sqrt{2m_AE_R+E_R^2}\) 和 \(y=(b_AQ/2)^2\)。\(y\simeq b_A^2m_AE_R/2\) 仅是小反冲近似。
 
