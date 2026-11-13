@@ -205,12 +205,24 @@ $\bar u(p')\Gamma^\mu u(p)$, where
 Here $\Gamma_{\chi_2}=\Gamma(\chi_2\to\chi_1 s)$ is evaluated at the pole mass.
 Both diagrams and their interference are retained.
 
-At leading order in the non-relativistic nuclear current, vector
-exchange probes the coherent charge response.
-For equal proton and neutron couplings, $g_p=g_n=g_{VN}$, we use the response function
-$\mathcal R_A(E_R)=4\pi W_M^{00}(y)/(2J_A+1)$,
-where $y=b_A^2m_AE_R/2$ and $\mathcal R_A(0)=A^2$
-\cite{Anand:2013yka}.
+At leading order in the nuclear charge response, vector exchange
+probes the coherent proton--neutron sum. For equal physical nucleon
+couplings, $g_p=g_n=g_{VN}$, the raw AFH v6.0 package output
+$W_{M,\mathrm{AFH,v6}}^{00}(y)$ is converted to the physical response
+\begin{equation}
+\mathcal R_A(E_R)
+=\frac{16\pi}{2J_A+1}
+W_{M,\mathrm{AFH,v6}}^{00}(y),
+\qquad
+y=\left(\frac{b_A |\mathbf q|}{2}\right)^2,
+\qquad
+|\mathbf q|=\sqrt{2m_AE_R+E_R^2},
+\label{eq:afh-physical-response}
+\end{equation}
+so that $\mathcal R_A(0)=A^2$. The factor of four relative to
+$4\pi W_{M,\mathrm{AFH,v6}}^{00}/(2J_A+1)$ is the AFH v6.0
+isoscalar-coupling conversion and is included exactly once; it is not
+absorbed into $g_{VN}$.
 The differential cross section is
 \begin{equation}
 \begin{split}
