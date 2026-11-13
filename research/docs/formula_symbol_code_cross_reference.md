@@ -1,8 +1,8 @@
 # 公式—符号—正文—程序—结果交叉引用索引
 
 > 所属主报告：[09_afh_xe131_three_body_scattering_natural_xenon.md](09_afh_xe131_three_body_scattering_natural_xenon.md)  
-> 当前审计分支：`research/afh-factor4-normalization-clean`（PR #25，目标 `main`）  
-> 文档性质：可追溯性索引；本文件不引入新的物理假设，也不声称完成新的数值验证。
+> 当前主线集成分支：`research/afh-mainline-integration-20261113`（PR #27，目标 `main`）  
+> 文档性质：可追溯性索引；P1-PhaseSpace 的数值验证范围和结果见独立审计报告，不改变振幅或 UV 模型假设。
 
 ## 1. 使用方法与统一约定
 
@@ -23,7 +23,7 @@
 |---|---|---|---|---|---|---|
 | F1 | 核反冲四动量、精确空间动量 \(Q\) 与不变量 \(t\) | §2、§12.1 | [附录 A，§A.1](appendices/09A_three_body_kinematics_amplitude.md)；[附录 G，§G.1–G.5](appendices/09G_recoil_momentum_convention_audit.md) | [rate_kinematics.py](../figure2_full_reproduction/rate_kinematics.py)：`momentum_transfer`；[eq6_kernel.py](../figure2_full_reproduction/eq6_kernel.py)：`limits`、`build_point` | [natural_xenon_q_convention_audit.csv](../afh_default_density_natural_xenon_halo/results/natural_xenon_q_convention_audit.csv)；[xe131_fixed_benchmark_q_comparison.csv](../afh_default_density_natural_xenon_halo/results/xe131_fixed_benchmark_q_comparison.csv) | 初态核静止、初末核均在质量壳上。AFH 使用空间动量 \(Q=|\mathbf q|\)；传播子使用 \(t=-2m_AE_R\)。两者不是同一个 \(q^2\)。  | 已验证 |
 | F2 | 三体子系统边界、相空间开闭、\(m_{s,\max}\) 与最优 \(E_R^*\) | §2.4、§6.3 | [附录 A，§A.2–A.2.1](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.py`：`limits`；`rate_kinematics.py`：`wmax_squared` | corrected benchmark CSV；逐速度阈值结果 | 最优反冲点只最大化运动学允许的标量质量，不代表速率峰值。 |
-| F3 | 三体相空间分解、\((W^2,z,\phi_*)\) Jacobian 与 reduced kernel \(I_6\) | §2.5.1–2.5.8 | [附录 A，§A.3–A.4.2](appendices/09A_three_body_kinematics_amplitude.md) | [eq6_kernel.py](../figure2_full_reproduction/eq6_kernel.py)：`build_point`、`reduced_kernel` | phase-space prefactor tests；joint-Xe131 convergence；quadrature crosschecks | \(I_6\) 单位 GeV\(^2\)；\(256\pi^3\) 已从不变测度独立推导；完整连续反冲网格收敛仍待验收。 |
+| F3 | 三体相空间分解、\((W^2,z,\phi_*)\) Jacobian 与 reduced kernel \(I_6\) | §2.5.1–2.5.9 | [附录 A，§A.3–A.4.2](appendices/09A_three_body_kinematics_amplitude.md) | [eq6_kernel.py](../figure2_full_reproduction/eq6_kernel.py)：`build_point`、`reduced_kernel`；[phase_space_convergence.py](../figure2_full_reproduction/phase_space_convergence.py)：(W^2/W/u^2) 映射与 raw-(d\Phi_3) 路径 | `phase_space_mapping_convergence.csv`、`phase_space_angular_convergence.csv`、`phase_space_threshold_convergence.csv`、`phase_space_li_prefactor_crosscheck.csv`；六项测试与 [P1 audit report](supplements/phase_space_convergence_audit_2026-11-14.md) | (I_6) 单位 GeV(^2)；代表点和阈值邻域收敛通过；近极点及完整连续反冲网格仍待验收。 |
 | F4 | 前发射、后发射、干涉项及 \(\mathcal L_{00}\) Dirac trace | §2 中 \(\mathcal L_{00}\) 的定义；完整图结构在附录 | [附录 A，§A.5–A.6](appendices/09A_three_body_kinematics_amplitude.md) | [eq6_kernel.py](../figure2_full_reproduction/eq6_kernel.py)：`vertices`、`spin_trace`；[test_eq6_kernel.py](../figure2_full_reproduction/tests/test_eq6_kernel.py) | kernel 测试、四动量闭合与壳条件检查；积分阶数对照见附录 F.4 | 两张辐射图先在振幅层面相加，再平方；干涉项不能省略。当前 pole width 只放在 after 图可能接近极点的传播子中。  | 条件性验证 |
 | F5 | 单同位素、固定速度微分截面 Eq. (6) | §2 Eq. (6)、§2.3 归一化推导；§5 benchmark | [附录 A，§A.4.1–A.4.2](appendices/09A_three_body_kinematics_amplitude.md) | [joint_xe131.py](../figure2_full_reproduction/joint_xe131.py)：`differential_cross_section`；[compute_four_benchmark_dsigma.py](../afh_default_density_xe131/compute_four_benchmark_dsigma.py) | [figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv](../afh_default_density_xe131/output/figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv)；[four_benchmark_metadata.json](../afh_default_density_xe131/output/four_benchmark_metadata.json) | \(R_A\) 无量纲，\(I_6\) 为 GeV\(^2\)，故自然单位下 \(d\sigma/dE_R\) 为 GeV\(^{-3}\)。换算为 cm\(^2\)/keV 使用 \(0.389379\times10^{-33}\) cm\(^2\)/keV per GeV\(^{-3}\)。四 benchmark 的 \(v=800\) km/s 是固定速度诊断，不在截断 SHM 的 776 km/s 支持区间内。  | 条件性验证 |
 | F6 | AFH 谐振子变量、密度矩阵响应及物理归一化 \(R_A^{\rm phys}\) | §3.1–§3.3 | [附录 B，§B.1–B.4，特别是 B.2.1](appendices/09B_afh_v6_density_matrix_response.md)；[附录 C，§C.1–C.6](appendices/09C_afh_isoscalar_factor4_normalization.md)；[附录 G，§G.1–G.5](appendices/09G_recoil_momentum_convention_audit.md) | run_afh_default_xe131.py、run_afh_default_xe131.wls、verify_afh_xe131_native.wls、compare_afh_mathematica_python.py | Python response CSV；[native Mathematica CSV](../afh_default_density_xe131/afh_default_xe131_WM00_mathematica.csv)；[native comparison JSON](../afh_default_density_xe131/output/native_audit/afh_mathematica_python_comparison.json)；[native manifest](../afh_default_density_xe131/output/native_audit/afh_native_audit_manifest.json)；[audit record](../afh_default_density_xe131/output/native_audit/NATIVE_MATHEMATICA_AUDIT.md) | AFH v6.0 Xe-131 default，67 项密度矩阵，固定文献 \(b_A\)，2401 个 \(q\) 节点。原始 AFH isoscalar 零动量归一化 \(A^2/4\)，物理等质子等中子响应 \(R_A^{\rm phys}(0)=A^2\)；因子 4 只计一次。mpmath 与 Wolfram 14.0 原生对照均通过，最大相对差异 \(3.59\times10^{-9}\)；q=0 有限精度形状修正另为 \(1.0000825298\)。完整 AFH 天然氙连续谱仍未完成。 | 已验证（Xe-131 response-level） |
@@ -146,10 +146,10 @@
 
 
 
-## 7. 本轮验证状态口径（2026-11-13）
+## 7. 本轮验证状态口径（2026-11-14）
 
 - **已验证：** 在明确声明的输入、单位和适用范围内，公式、程序与归档结果已完成可重复的数值闭合；不代表超出该范围的模型扫描也已验证。
 - **条件性验证：** 核心实现与代表性回归检查通过，但仍受独立推导、参数覆盖、核模型输入或物理假设限制。
 - **未完成：** 尚无对应的数值结果或所需物理输入；不得以 CI 通过、脚本存在或其他核模型结果替代。
 
-F1–F12 的逐项状态见第 2 节。F6 的 AFH 振子长度处方说明见 B.2.1；F7 的核质量与靶数推导见 D.1.1、D.3.1，F9 的实验室速度 PDF 推导见 E.1.1，F10 的通量折叠推导见 E.3.1，F12 的条件性宽度推导见 A.6.1。F3 的三体相空间 Jacobian 与整体 \\(256\\pi^3\\) 因子已从 Lorentz-invariant 测度独立推导，并纳入主文档 §2.5.1–2.5.8 与附录 A.4.2；完整连续反冲网格的 \\(I_6\\) 收敛仍需单独验收。F6 的 Python/60 位 mpmath 网格与原生 Wolfram/Mathematica 2401 点运行均已通过；F10–F11 的 AFH 连续谱和完整 LZ likelihood 均未完成。
+F1–F12 的逐项状态见第 2 节。F6 的 AFH 振子长度处方说明见 B.2.1；F7 的核质量与靶数推导见 D.1.1、D.3.1，F9 的实验室速度 PDF 推导见 E.1.1，F10 的通量折叠推导见 E.3.1，F12 的条件性宽度推导见 A.6.1。F3 的三体相空间 Jacobian 与整体 \\(256\\pi^3\\) 因子已从 Lorentz-invariant 测度独立推导；P1-PhaseSpace 进一步完成四组 fixed-speed benchmark、五个阈值邻域速度点、三种积分映射、代表点角积分和 raw-\\(d\\Phi_3\\) 前因子数值对照，CI run [43491572746](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43491572746) 复算四组 CSV 并通过。近极点与完整连续反冲网格的 \\(I_6\\) 收敛仍需单独验收。F6 的 Python/60 位 mpmath 网格与原生 Wolfram/Mathematica 2401 点运行均已通过；F10–F11 的 AFH 连续谱和完整 LZ likelihood 均未完成。

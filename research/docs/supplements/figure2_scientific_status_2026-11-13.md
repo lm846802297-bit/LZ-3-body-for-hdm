@@ -1,6 +1,6 @@
 # Figure 2 三体暗物质计算：科学结果状态表
 
-日期：2026-11-13  
+日期：2026-11-14  
 本表按“当前可证明的范围”给状态，不把某个局部 benchmark 的通过推广成整个模型或整条连续谱均已验证。
 
 ## 1. 状态定义
@@ -21,7 +21,8 @@
 | \(\chi_2\) 条件性 pole width | **部分验证** | 附录 A.6 的 Dirac–scalar 两体衰变推导；代码宽度函数 | 依赖纯 scalar Yukawa、实标量、单一开放衰变道；不是完整自能 |
 | \(q^\mu,t,Q\) 运动学关系 | **已验证** | 核质量壳解析推导；`rate_kinematics.py` 与 `joint_xe131.py` 使用 exact spatial \(Q\) | fixed-speed Xe-131 与 natural-xenon 使用不同且已记录的核质量输入方案 |
 | \(W_{\min},W_{\max}\) 与三体相空间开放条件 | **已验证** | 主报告 §2.4、附录 A.2；`eq6_kernel.limits` 与 `rate_kinematics.wmax_squared` 一致 | 不是对任意 UV 模型和任意传播子方案的验证 |
-| \(W^2,z,\phi_*\) 相空间 Jacobian 与 \(256\pi^3\) | **已验证（解析层）** | 附录 A.4.1；本轮独立分解 \(d\Phi_3\)、flux、azimuthal average；\([I_6]={\rm GeV}^2\) 维度检查 | 数值求积收敛仍按 benchmark / selected-point 范围报告，不声称对全参数空间穷举 |
+| \(W^2,z,\phi_*\) 相空间 Jacobian 与 \(256\pi^3\) | **已验证（解析层）** | 正文 §2.5.1–2.5.8、附录 A.4.1–A.4.2；独立分解 \(d\Phi_3\)、flux、azimuthal average；\([I_6]={\rm GeV}^2\) 维度检查 | 解析结论限定于未极化相干靶和 leading \(J_A^0\) 近似；数值收敛另列如下 |
+| \(I_6\) 数值求积收敛（P1-PhaseSpace） | **部分验证（四个固定速度点和阈值邻域）** | 线性 \(W^2\)、线性 \(W\)、threshold-\(u^2\) 对照；四组 benchmark、五个 \(v_{\min}\) 邻域点；角积分阶数扫描；raw-\(d\Phi_3\) 与 Eq. (6) 截面比为 1；六项回归测试和 CI run [43491572746](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43491572746) 通过 | 未覆盖近传播子极点窄峰、不同宽度处方系统比较、完整连续反冲网格、halo fold 或 detector likelihood |
 | 三体 \(v_{\min}\) 闭式公式 | **已验证** | 从 \(W_{\max}=m_{\chi_1}+m_s\) 独立推导；64 组输入与独立求根最大 \(|\Delta\beta|=3.89\times10^{-13}\) | 仍需对新增质量区间和完整连续谱网格做专门数值检查 |
 | 450 keV pointwise \(L_{00}\) benchmark | **已验证（单点数值范围）** | \(48\times40\times24\) 求积、run manifest、局部验证记录、SHA-256 manifest | 单点 kernel 结果，不代表整条 \(d\sigma/dE_R\)、halo-fold 或 LZ 事件数 |
 | 固定速度 Xe-131 \(d\sigma/dE_R\) 曲线 | **部分验证** | 105 个内部能量点、GCN/JJ55、metadata 与 SHA-256 校验 | 与 450 keV pointwise \(L_{00}\) 不同；端点外推/积分和 halo-fold 不包含在该曲线内 |
@@ -72,4 +73,4 @@
 - **P1 关闭条件：** 原始拉格朗日量、主报告、附录 A–G、代码和单位约定无未解释的符号冲突；Dirac/Majorana 与宽度模型的边界由物理输入明确固定。
 - **P2 关闭条件：** 每个科学结论都有状态、证据、输入缺口和适用范围；任何 selected-point、fixed-speed 或 rate-level 结果都不被表述为更高层的完整验证。
 
-当前 P0 总索引已建立，P1 已修正公式和 provenance 不一致；Xe-131 原生 Mathematica/Python 2401 点响应验证已完成。剩余开放项集中在模型定义、Xe-124/Xe-126 AFH 输入、完整 AFH 连续谱与 \(I_6\) 连续反冲网格收敛，以及完整 LZ detector likelihood。
+当前 P0 总索引已建立，P1 已修正公式和 provenance 不一致；Xe-131 原生 Mathematica/Python 2401 点响应验证已完成。P1-PhaseSpace 的代表点和阈值邻域数值收敛及 raw-\(d\Phi_3\) 前因子对照也已通过本地六项测试和 CI 复算。剩余开放项集中在模型定义、近传播子极点积分、完整连续反冲网格、Xe-124/Xe-126 AFH 输入、完整 AFH 连续谱，以及完整 LZ detector likelihood。
