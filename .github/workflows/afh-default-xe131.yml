@@ -1,4 +1,4 @@
-name: AFH default Xe-131 nuclear response
+name: AFH, Eq6 phase-space, and natural-xenon validation
 
 concurrency:
   group: afh-default-xe131-${{ github.ref }}
@@ -10,9 +10,13 @@ on:
       - main
       - research/figure2-p0-4-mainline
       - research/afh-default-density-xe131-mainline
+      - research/afh-factor4-normalization-clean
     paths:
       - .github/workflows/afh-default-xe131.yml
       - research/afh_default_density_xe131/**
+      - research/afh_default_density_natural_xenon_halo/**
+      - research/figure2_full_reproduction/eq6_kernel.py
+      - research/figure2_full_reproduction/tests/test_eq6_kernel.py
   pull_request:
     branches:
       - main
@@ -20,6 +24,7 @@ on:
     paths:
       - .github/workflows/afh-default-xe131.yml
       - research/afh_default_density_xe131/**
+      - research/afh_default_density_natural_xenon_halo/**
 
 permissions:
   contents: write
@@ -46,6 +51,35 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r research/afh_default_density_xe131/requirements.txt
 
+      - name: Compile Python/MMA comparison utility
+        run: |
+          python -m py_compile research/afh_default_density_xe131/compare_afh_mathematica_python.py
+
+      - name: Compile natural-xenon halo-fold runner
+        run: |
+          python -m py_compile research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py
+
+      - name: Verify natural-xenon target-number metadata
+        run: |
+          python -m unittest discover \
+            -s research/afh_default_density_natural_xenon_halo \
+            -p "test_target_number.py" -v
+
+      - name: Parse native Windows PowerShell runner
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile(
+            "research/afh_default_density_xe131/run_native_afh_audit.ps1",
+            [ref]$tokens,
+            [ref]$errors
+          ) | Out-Null
+          if ($errors.Count -gt 0) {
+            $errors | Format-List | Out-String | Write-Error
+            exit 1
+          }
+
       - name: Run AFH response and four-benchmark regression tests
         run: |
           python -m unittest discover \
@@ -60,6 +94,12 @@ jobs:
           python -m unittest discover \
             -s research/figure2_full_reproduction/tests \
             -p 'test_natural_xenon_joint.py' -v
+
+      - name: Run Eq. (6) three-body phase-space and amplitude regression tests
+        run: |
+          python -m unittest discover \
+            -s research/figure2_full_reproduction/tests \
+            -p 'test_eq6_kernel.py' -v
 
       - name: Recompute AFH default response
         run: |
