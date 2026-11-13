@@ -297,6 +297,12 @@
           "path": "research/afh_default_density_natural_xenon_halo/input/afh_selected_exact_q_responses.csv",
           "sha256": "4d7267390be6aa8fa5f4e051719f7aa4f4adb19ca05a4f30e6427f7b4a7a41cd",
           "role": "AME2020 direct exact-q selected response input"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/natural_xenon_halo_metadata_nist_mass.json",
+          "sha256": "95a5645b96f4a7f8a775211d7c6327d2bbbbe6ae90ab657aa2d9a470018943b8",
+          "bytes": 1772,
+          "role": "natural-xenon halo-fold target-number metadata using the exact nine-isotope abundance-weighted mean atomic mass"
         }
       ]
     },
@@ -1016,6 +1022,12 @@
       "sha256": "bc9a7179da4a7a73cb105b6f54e95d3fc121acadac64c2bffd76f2162d2bdd67",
       "bytes": 237475,
       "role": "complete native AFH Mathematica audit result archive"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/natural_xenon_halo_metadata_nist_mass.json",
+      "sha256": "95a5645b96f4a7f8a775211d7c6327d2bbbbe6ae90ab657aa2d9a470018943b8",
+      "bytes": 1772,
+      "role": "natural-xenon halo-fold target-number metadata using the exact nine-isotope abundance-weighted mean atomic mass"
     }
   ]
 }
