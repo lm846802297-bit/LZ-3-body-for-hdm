@@ -651,7 +651,7 @@
     },
     {
       "path": "research/afh_default_density_natural_xenon_halo/results/metadata.json",
-      "sha256": "7a34c3c5f2e4a55b00611d8ae4ef6681a38e9d57baa639f45619d4fc9efbd90",
+      "sha256": "7a34c3c5f2e4a55b00611d8ae4ef6681a38e9d57baa639f45619d4fc9efbd90d",
       "bytes": 4310,
       "role": "AFH natural-xenon selected-point fold parameters and provenance; sample SHA-256 corrected"
     },
