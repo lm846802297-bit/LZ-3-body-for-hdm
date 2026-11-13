@@ -50,3 +50,10 @@ These are deliberately separate diagnostics with different assumptions; neither 
 
 - [Detector-response inputs and rate-level archive README](../lz_detector_response/README.md)
 - Main report: §11.1–§11.5; numerical interface and remaining requirements: Appendix F.5.
+
+
+## Figure 2 audit supplements
+
+- [Numerical-results master index](supplements/figure2_results_master_index_2026-11-13.md)
+- [Physics-formula cross-audit](supplements/figure2_physics_formula_audit_2026-11-13.md)
+- [Scientific-status table](supplements/figure2_scientific_status_2026-11-13.md)
