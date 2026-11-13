@@ -134,6 +134,8 @@ class AFHDefaultXe131Tests(unittest.TestCase):
         self.assertIn("dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372", runner)
         self.assertIn("f656145ba2fb9da741b77faed4c01d0dc457c955fa340928b5dbf9cee9bc5d45", runner)
         self.assertIn("afh_native_audit_manifest.json", runner)
+        self.assertIn("Compress-Archive", runner)
+        self.assertIn("afh-native-audit-results.zip", runner)
         self.assertIn("WolframVersion = ", verifier)
         self.assertIn("NativeGridCSV_SHA256 = ", verifier)
 
