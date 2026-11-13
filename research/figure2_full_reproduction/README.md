@@ -253,7 +253,7 @@ python research/figure2_full_reproduction/plot_user_dsigma_curve.py
 python -m unittest discover -s research/figure2_full_reproduction/tests -p 'test_user_dsigma_curve.py' -v
 ```
 
-The committed 105-point curve covers 130–650 keV. The exact kinematic endpoint is 654.9555833089706 keV; the final 4.9556 keV is reserved for a dedicated endpoint-focused quadrature refinement. The endpoint bracket test is a kinematic check, not a substitute for that integration study.
+The committed 105-point curve covers the interior window 130–650 keV. The full open interval is approximately [109.150286, 654.955583] keV, so 20.8497 keV at the lower end and 4.9556 keV at the upper end are not yet included. Both boundary brackets are tested; high-order Eq. (6) integration in the omitted endpoint regions remains follow-up work.
 
 The two archived SVGs are:
 - results/plots/fixed_speed_xe131_dsigma_450kev.svg
