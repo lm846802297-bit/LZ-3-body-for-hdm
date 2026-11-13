@@ -22,6 +22,7 @@ The main report contains the complete Appendices A–G. The seven files below ar
 - `appendices/09E_halo_velocity_vmin_folding.md`: halo velocity distribution, three-body minimum speed, and rate folding.
 - `appendices/09F_numerical_validation_reproduction.md`: code entry points, numerical validation, and reproduction instructions.
 - `appendices/09G_recoil_momentum_convention_audit.md`: exact spatial momentum, nuclear mass-shell mapping, and NR recoil approximation audit.
+- `appendices/09H_afh_natural_xenon_missing_isotopes.md`: AFH v6.0 Xe-124/Xe-126 source gap, natural-abundance coverage, and a separately labelled Helm-2 hybrid fallback.
 
 ## Formula and symbol index
 
