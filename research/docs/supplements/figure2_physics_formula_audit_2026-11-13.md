@@ -373,10 +373,11 @@ N_{\rm sig}^{\rm ROI}
 | P1-02 | 原始工作稿将 \(y=b_A^2m_AE_R/2\) 写成无条件定义 | 改为 \(y=(b_AQ/2)^2\)，并标明前式为小反冲近似 | **已修正** |
 | P1-03 | 天然氙 metadata 的 `response_sample_sha256` 实际为 40 位 Git blob SHA-1 | 替换为文件真实 64 位 SHA-256；runner 和 validator 增加校验 | **已修正** |
 | P1-04 | Dirac/Majorana 性质与完整 \(\chi_2\) 自能未由原始模型文本固定；benchmark 已明确采用实 \(g_1,g_2\) | 明确保留为模型输入/理论扩展，不将条件性宽度推广 | <span>待补模型定义</span> |
-| P1-05 | Xe-124、Xe-126 的 AFH default response 缺失；完整 16807 行七同位素响应表未提交 | 在主索引中登记 checksum-only provenance 与缺失输入 | <span>待补输入</span> |
+| P1-05 | Xe-124、Xe-126 的 AFH default response 缺失；完整 16807 行七同位素响应表未提交 | 已审计官方 v6.0 `SetIsotope` dispatch：仅列出 128、129、130、131、132、134、136；124/126 进入缺失矩阵回退 | **缺失已确认；需独立核结构输入** |
 | P1-06 | 原始 Figure 2 的单同位素/天然氙靶定义不明确 | 不把当前 LZ 天然氙扩展误称为原图已确认靶定义 | <span>待补原始输入</span> |
 | P1-07 | 完整 AFH 天然氙连续谱与 LZ 二维 likelihood 未完成 | 继续保留为后续研究，不以 selected points 或一维效率折叠替代 | <span>尚未完成</span> |
 | P1-08 | Xe-131 AFH 原生 Mathematica/Python 2401 点独立比较 | Wolfram 14.0.0；相同 (q) 网格；四种响应量全部通过；最大相对差异 (3.59087\times10^{-9}) | **已完成（仅 response-level）** |
+| P1-09 | AFH v6.0 Xe-124/Xe-126 默认矩阵是否只是提取遗漏 | 源文件第 1555–1597 行的 dispatch 仅包含七种 Xe 同位素；新增静态回归测试锁定该覆盖范围 | **已完成（source-level audit）** |
 
 ## 11. 审查范围与下一轮
 
@@ -384,7 +385,7 @@ N_{\rm sig}^{\rm ROI}
 
 下一轮应优先：
 1. 由模型作者/原始拉格朗日量固定 Dirac/Majorana 与 CP/手征约定；
-2. 取得完整 AFH 七同位素 response 输入，补齐 Xe-124、Xe-126，并生成连续 AFH 天然氙谱；
+2. 为 Xe-124、Xe-126 寻找独立、可追溯的 one-body density matrix（轨道空间、相互作用、截断和归一化均需明确）；不能从邻近同位素插值。取得输入后再完成七同位素连续 AFH response grid 和天然氙谱；
 3. 不再重复 Xe-131 原生 Mathematica 2401 点计算；将工作转向七同位素 AFH 连续响应输入与完整 (I_6) 连续反冲网格收敛；
 4. 只有在以上输入和模型约定固定后，才推进 LZ 二维 NEST/background/profile-likelihood recast。
 
