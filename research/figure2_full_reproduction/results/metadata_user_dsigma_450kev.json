@@ -1,0 +1,125 @@
+{
+  "calculation": "Fixed-speed Xe-131 dσ/dER curve for the supplied 450 keV benchmark",
+  "status": "locally recomputed; fixed-speed single-isotope diagnostic; not halo-folded or detector-level",
+  "benchmark": {
+    "m_chi1_GeV": 1000.0,
+    "delta_m_keV": 450.0,
+    "m_chi2_GeV": 1000.00045,
+    "m_s_keV": 300.0,
+    "m_V_GeV": 10.0,
+    "speed_km_s": 776.0,
+    "coupling_product_squared": 1.0,
+    "width_scheme": "zero"
+  },
+  "target": {
+    "isotope": "Xe-131",
+    "A": 131,
+    "Z": 54,
+    "mass_scheme": "A*u approximation; not AME2020",
+    "atomic_mass_unit_GeV": 0.93149410242,
+    "m_A_GeV": 122.02572741702
+  },
+  "nuclear_response": {
+    "models": ["GCN", "JJ55"],
+    "source_directory": "research/figure2_full_reproduction/results/anand_wm_response/",
+    "GCN_file": "xe131_GCN_WM.csv",
+    "GCN_git_blob_sha1": "2bbdcd8ae055803975cbcd18bb657c078e0f06a7",
+    "JJ55_file": "xe131_JJ55_WM.csv",
+    "JJ55_git_blob_sha1": "d35455e01f005941a84983a517e2440e26e0d0a7",
+    "grid_points": 2401,
+    "q_min_GeV": 0.0,
+    "q_max_GeV": 0.6,
+    "q_step_GeV": 0.00025,
+    "R_A_at_q0": 17160.9875693,
+    "A_squared": 17161,
+    "relative_zero_momentum_normalization_difference": 7.24357555e-7,
+    "interpolation": "PCHIP; exact spatial q=sqrt(2*m_A*E_R+E_R^2)"
+  },
+  "equation": {
+    "formula": "dσ/dER = m_A (g1*g2*gVN)^2 R_A I6 / [256 π^3 p_chi1^2 (m_V^2+2 m_A E_R)^2]",
+    "I6_definition": "integral dW2 sqrt(lambda_dimensionless) integral dz azimuthally averaged L00",
+    "units": {
+      "I6": "GeV^2",
+      "dσ/dER": "GeV^-3",
+      "converted": "cm^2/keV"
+    },
+    "unit_conversion_factor_GeVminus3_to_cm2_per_keV": 3.893793721e-34
+  },
+  "scan": {
+    "ER_min_keV": 130.0,
+    "ER_max_keV": 650.0,
+    "ER_step_keV": 5.0,
+    "points": 105,
+    "open_points": 105,
+    "next_tested_point_keV": 655.0,
+    "655_keV_phase_space_open": false,
+    "q_min_GeV": 0.1781199203582384,
+    "q_max_GeV": 0.39828867438345017
+  },
+  "quadrature": {
+    "full_curve_order_nW_nz_nphi": [20, 16, 12],
+    "independent_anchor_order_nW_nz_nphi": [24, 20, 16],
+    "anchor_energies_keV": [130, 200, 260, 265, 270, 275, 350, 540, 555, 650],
+    "max_relative_difference": 7.345821801951757e-6,
+    "min_relative_difference": 4.163840942261743e-6
+  },
+  "kinematic_audit": {
+    "minimum_open_phase_space_margin_keV": 1.6377659903810127,
+    "maximum_Wmax_minus_mchi1_keV": 364.3364800609561,
+    "minimum_chi2_pole_clearance_keV": 85.6635199397715,
+    "chi2_pole_accessible_in_scan": false,
+    "minimum_d1_propagator_gap_lower_bound_GeV2": 1.5000001125736162,
+    "minimum_d2_propagator_gap_lower_bound_GeV2": 0.17132710956502706
+  },
+  "validation": {
+    "all_105_recoil_points_open": true,
+    "all_response_values_nonnegative": true,
+    "all_kernel_values_positive": true,
+    "all_cross_sections_positive": true,
+    "pchip_independent_scipy_anchor_check": {
+      "anchor_recoil_energies_keV": [130, 200, 260, 265, 270, 275, 350, 540, 555, 650],
+      "max_absolute_difference": 3.552713678800501e-15,
+      "max_relative_difference": 4.929390229335695e-14,
+      "method": "SciPy PchipInterpolator on four local bracketing nodes"
+    },
+    "quadrature_max_relative_difference": 7.345821801951757e-6,
+    "max_sampled_four_momentum_residual_GeV": 2.4158453015843406e-13,
+    "max_sampled_mass_shell_or_K2_residual_GeV2": 4.656612873077393e-10
+  },
+  "result_summary": {
+    "GCN": {
+      "global_maximum": {"ER_keV": 175.0, "dsigma_cm2_per_keV": 1.8746226837847815e-32},
+      "sampled_local_minima_1keV": [
+        {"ER_keV": 269.0, "dsigma_cm2_per_keV": 1.7176188111155845e-36},
+        {"ER_keV": 551.0, "dsigma_cm2_per_keV": 9.427717286004592e-37}
+      ]
+    },
+    "JJ55": {
+      "global_maximum": {"ER_keV": 175.0, "dsigma_cm2_per_keV": 1.9852544006091583e-32},
+      "sampled_local_minima_1keV": [
+        {"ER_keV": 270.0, "dsigma_cm2_per_keV": 1.676281693128496e-37},
+        {"ER_keV": 555.0, "dsigma_cm2_per_keV": 3.7323007403451857e-38}
+      ]
+    }
+  },
+  "source_provenance": {
+    "eq6_kernel_blob_sha1": "7c796b48c3f3c2cb9079ddbf1e632cc0b9ce207c",
+    "response_loader_blob_sha1": "12b0f7c3f9408e2a58721e599f7fe1172def2848"
+  },
+  "limitations": [
+    "Single isotope Xe-131; no natural-xenon isotope sum.",
+    "Fixed incident speed 776 km/s; no halo velocity distribution.",
+    "A*u approximate target mass; not AME2020.",
+    "GCN/JJ55 PCHIP nuclear response tables.",
+    "Zero-width prescription is safe only for this scanned kinematic window because the chi2 pole is closed.",
+    "No detector efficiency, energy resolution, exposure, event selection, or LZ likelihood.",
+    "The squared coupling product is a reference normalization; the result scales linearly with it."
+  ],
+  "output_files": [
+    "fixed_speed_xe131_dsigma_450kev.csv",
+    "local_minima_refinement_1keV.csv",
+    "kernel_quadrature_convergence_450kev.csv",
+    "USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md",
+    "SHA256SUMS"
+  ]
+}
