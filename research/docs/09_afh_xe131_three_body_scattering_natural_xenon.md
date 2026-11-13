@@ -22,6 +22,7 @@
 - **2026-11-13：** 完成 P0–P2 阶段审查：PR #25 最新 CI（run 43381653706）重新生成 Xe-131 AFH 2401 点响应、60 位 mpmath 全网格对照、28 个天然氙精确空间 q 样本审计及四 benchmark；完成 F1–F12 正文—附录—代码—结果追溯，补充科学状态表。P0 的 Python/归档闭环已完成；原生 Wolfram/Mathematica 仍明确标记为待执行。
 - **2026-11-13：** 修正旧天然氙 metadata 中平均摩尔质量的三位小数舍入，改为由全部九种天然同位素输入加权得到的 131.29276144779053 g/mol，并记录每 kg 靶核数；该平均质量使用全天然丰度，与 AFH 响应仅覆盖七种同位素（0.998158）是两个不同范围。
 - **2026-11-13：** 完成 P1-PhaseSpace 独立推导：从单粒子 Lorentz-invariant 测度重新推导两体相空间、第一段 (t\leftrightarrow E_R) Jacobian、第二段 (z,\phi_*) 变量、(dW^2/(2\pi)) 分解及不变通量；确认在当前 (J_A^0) 相干近似和方位角平均定义下 Eq. (6) 的系数为 (256\pi^3)。同步增加方位角平均权重与相空间系数回归测试。
+- **2026-11-13：** 天然氙 exact-spatial halo-fold workflow #242（run ID `43392874875`）通过：98 个逐同位素贡献、14 个总速率，最大 kernel-grid 差异 (2.189\times10^{-4})，最大速度网格差异 (3.303\times10^{-6})，相对归档总速率最大差异 (2.671677\times10^{-12})。
 - **2026-11-13：** 新增 CI workflow run #318（ID `43392874996`）通过：AFH response 30 tests、q-convention 6 tests、independent numerical validation 3 tests，以及 Eq. (6) 三体相空间/振幅 12 tests 全部 PASS。新增的 `test_phase_space_prefactor_256_pi3` 与 `test_phi_quadrature_weights_are_normalized_average` 均通过；该结果验证程序对解析归一化的实现，不替代完整连续反冲网格的积分收敛审计。
 
 ## 摘要
@@ -554,7 +555,7 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 - 四组 benchmark 的 AFH/GCN/JJ55 响应替换表完成逐点重构检查，并已统一改用 exact spatial q；
 - 天然氙 Eq. (6) kernel 与速度积分完成 selected-point 网格收敛检查；
 - 天然氙归档完整性验证 workflow 通过；
-- AFH exact_spatial 默认模式重新计算 98 个逐同位素贡献和 14 个总速率，与归档结果的最大总速率相对差异为 \\(2.67\\times10^{-12}\\)，CI run 43044583357 通过；
+- AFH exact_spatial 默认模式重新计算 98 个逐同位素贡献和 14 个总速率，与归档结果的最大总速率相对差异为 \\(2.67\\times10^{-12}\\)，CI workflow #242 (run ID 43392874875) 通过；
 - 核响应 (q) 与精确三体运动学 (q) 的定义、质量壳推导及 NR 近似对照见正式附录 G。
 - **P0 最新复算（PR #25，CI run 43381653706）：** 2401 个 Xe-131 精确空间 q 节点重新生成；60 位 mpmath 对照最大振幅绝对差 \(3.98\times10^{-14}\)，最大响应绝对差除以 \(A^2\) 为 \(1.22\times10^{-15}\)。28 个天然氙 AFH 样本全部匹配 exact spatial q，最大 \(\Delta q\) 为 0.408764 keV、最大相对 q 偏移为 1.137567 ppm。四 benchmark、q-convention 与 mpmath artifacts 均成功上传。
 - **P0 归档比较：** 已生成的 AFH Xe-131 响应、四 benchmark corrected/wide 表、selected ratios、天然氙 q 审计与固定 Xe-131 q 对照等 7 个归档输出与对应复算结果逐字节一致；这证明 Python 复算与当前归档闭合，不替代原生 Mathematica 对照。
