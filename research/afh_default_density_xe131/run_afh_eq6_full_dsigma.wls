@@ -15,7 +15,7 @@ erStop = ToExpression[getArg["--er-stop-kev", "800"]];
 erStep = ToExpression[getArg["--er-step-kev", "5"]];
 erListString = getArg["--er-list-kev", ""];
 benchmarkArg = getArg["--benchmark", "all"];
-If[!And @@ (IntegerQ /@ {nw, nz, nphi}) || Min[nw, nz, nphi] < 1, Exit[2]];
+If[!(And @@ (IntegerQ /@ {nw, nz, nphi})) || Min[nw, nz, nphi] < 1, Exit[2]];
 If[!MemberQ[{"pole", "zero"}, widthScheme] || erStep <= 0 || erStop < erStart, Exit[2]];
 
 here = DirectoryName[$InputFileName];
@@ -50,7 +50,7 @@ responseRows = Rest[rawCSV];
 qGrid = N[responseRows[[All, 1]]];
 rPackageGrid = N[responseRows[[All, 4]]];
 rPhysicalGrid = N[responseRows[[All, 7]]];
-If[Length[qGrid] =!= 2401 || !And @@ Thread[Differences[qGrid] > 0], Exit[4]];
+If[Length[qGrid] =!= 2401 || !(And @@ Thread[Differences[qGrid] > 0]), Exit[4]];
 If[Abs[rPhysicalGrid[[1]] - A^2] > 1.*10^-7, Exit[4]];
 c0 = A^2/(4.*rPackageGrid[[1]]);
 responseNodeResidual = Max[MapThread[
@@ -213,7 +213,7 @@ Do[
     factor4Residual = If[open, Abs[factor4Ratio - 4.]/4., 0.];
     maxFactor4GridResidual = Max[maxFactor4GridResidual, factor4Residual];
     AppendTo[rows, {benchmark, erKev, qValue, rPackage, rPhysical, rPhysical/4., c0,
-      i6Value, widthScheme, g2, gammaPole, wMin2, wMax2, clearance,
+      i6Value, widthScheme, g2, gammaPole, wMin2, wMax2, clearanceGeV*10^6,
       If[open, 1, 0], nw, nz, nphi, pChi, denominator, dsigma, dsigmaNo4,
       factor4Ratio, dsigma*0.3893793721*10^-33}],
     {erKev, erGrid}];
