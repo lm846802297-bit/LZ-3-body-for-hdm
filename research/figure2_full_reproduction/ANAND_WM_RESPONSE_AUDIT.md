@@ -4,17 +4,26 @@ Date: 2026-11-11
 
 ## 1. Exact response used by the manuscript
 
-The working manuscript defines the nuclear factor explicitly as
+The manuscript uses the raw AFH v6.0 package response and converts it to the physical equal-proton/equal-neutron response:
 
 \[
 \boxed{
-\mathcal R_A(E_R)=\frac{4\pi}{2J_A+1}W_M^{00}(y),
+\mathcal R_A(E_R)=\frac{16\pi}{2J_A+1}
+W_{M,\mathrm{AFH,v6}}^{00}(y),
 \qquad
-y=\frac{b_A^2m_AE_R}{2},
+y=\left(\frac{b_A|\mathbf q|}{2}\right)^2,
+\qquad
+|\mathbf q|=\sqrt{2m_AE_R+E_R^2},
 \qquad
 \mathcal R_A(0)=A^2 .
 }
 \]
+
+The factor four is required because the raw AFH v6.0 isoscalar package response obeys
+\[
+\frac{4\pi}{2J_A+1}W_{M,\mathrm{AFH,v6}}^{00}(0)=\frac{A^2}{4}.
+\]
+It is included exactly once in the physical response, while the cross-section prefactor retains the per-nucleon coupling \(g_{VN}\).
 
 Source: `paper-source/main.tex`, Section “2 -> 3 cross section”, immediately before Eq. (radiative-recoil), citing Anand, Fitzpatrick and Haxton, arXiv:1308.6288.
 
@@ -24,13 +33,17 @@ This fixes the interpretation: the Figure 2 calculation uses the **isoscalar coh
 
 In the Anand formalism, (W_X^{\tau\tau'}(y)) are nuclear response functions, while (R_X^{\tau\tau'}) denote dark-matter response functions built from the non-relativistic operator coefficients.
 
-The manuscript's (mathcal R_A(E_R)) is its own shorthand for the normalized nuclear factor
+The manuscript's \(\mathcal R_A(E_R)\) is its own shorthand for the physical equal-\(p,n\) nuclear factor
 \[
-\mathcal R_A(E_R)=\frac{4\pi}{2J_A+1}W_M^{00}(y),
+\mathcal R_A(E_R)=\frac{16\pi}{2J_A+1}W_{M,\mathrm{AFH,v6}}^{00}(y),
 \]
-not one of Anand's dark-matter response coefficients (R_X^{\tau\tau'}).
+not one of Anand's dark-matter response coefficients \(R_X^{\tau\tau'}\).
 
-The superscript (00) selects the isoscalar-isoscalar channel. This selects the relevant isoscalar channel for equal proton and neutron couplings, but the AFH package normalization must be handled explicitly: its raw (4\pi/(2J_A+1))W_M^{00} is A^2/4 at q=0. The physical equal-nucleon-coupling response is the sum of the four proton/neutron channels, equivalently four times this AFH isoscalar package response. Only that physical combination has the required R_A(0)=A^2.
+The superscript (00) selects the isoscalar-isoscalar channel. This is the relevant nuclear channel for equal proton and neutron couplings, but the AFH package normalization must be handled explicitly: its raw
+\[
+\frac{4\pi}{2J_A+1}W_{M,\mathrm{AFH,v6}}^{00}
+\]
+is \(A^2/4\) at \(q=0\). The physical equal-nucleon-coupling response is four times this AFH isoscalar package response. Only that physical combination has the required \(\mathcal R_A(0)=A^2\).
 
 ## 3. Consequence for the Figure 2 spectral shape
 
