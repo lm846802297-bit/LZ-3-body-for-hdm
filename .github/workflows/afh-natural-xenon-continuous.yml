@@ -15,6 +15,17 @@ on:
       - research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv
       - research/afh_default_density_xe131/run_afh_default_xe131.py
       - v6/dmformfactor-V6.m
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+    paths:
+      - .github/workflows/afh-natural-xenon-continuous.yml
+      - research/afh_default_density_natural_xenon_halo/generate_afh_default_xenon_response_grid.py
+      - research/afh_default_density_natural_xenon_halo/test_afh_default_xenon_response_grid.py
+      - research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv
+      - research/afh_default_density_xe131/run_afh_default_xe131.py
+      - v6/dmformfactor-V6.m
   workflow_dispatch:
 
 permissions:
@@ -28,6 +39,7 @@ jobs:
       - name: Check out research branch
         uses: actions/checkout@v4
         with:
+          ref: ${{ github.head_ref || github.ref_name }}
           persist-credentials: true
 
       - name: Set up Python
@@ -83,7 +95,7 @@ jobs:
           retention-days: 90
 
       - name: Commit generated response grid to the research branch
-        if: github.event_name == 'push' && github.ref == 'refs/heads/research/afh-natural-xenon-continuous-20261114'
+        if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository)
         shell: bash
         run: |
           set -euo pipefail
@@ -94,5 +106,6 @@ jobs:
             echo "Generated response grid is already up to date."
           else
             git commit -m "Archive full seven-isotope AFH response grid"
-            git push origin "HEAD:${GITHUB_REF_NAME}"
+            BRANCH="${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}"
+          git push origin "HEAD:${BRANCH}"
           fi
