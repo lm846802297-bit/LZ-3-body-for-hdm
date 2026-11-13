@@ -34,15 +34,29 @@ This fixes the interpretation: the Figure 2 calculation uses the **isoscalar coh
 
 ## 2. Notation: distinguish nuclear and dark-matter responses
 
-In the Anand formalism, (W_X^{\tau\tau'}(y)) are nuclear response functions, while (R_X^{\tau\tau'}) denote dark-matter response functions built from the non-relativistic operator coefficients.
+In the Anand formalism, \(W_X^{\tau\tau'}(y)\) are nuclear response functions, while \(R_X^{\tau\tau'}\) denote dark-matter response functions built from the non-relativistic operator coefficients.
 
-The manuscript's (mathcal R_A(E_R)) is its own shorthand for the normalized nuclear factor
+The manuscript's \(\mathcal R_A^{\mathrm{phys}}(E_R)\) is its own shorthand for the physical coherent nuclear factor multiplying the per-nucleon coupling \(g_{VN}^2\):
 \[
-\mathcal R_A(E_R)=\frac{4\pi}{2J_A+1}W_M^{00}(y),
+\mathcal R_A^{\mathrm{phys}}(E_R)
+=\frac{16\pi}{2J_A+1}W_{M,\mathrm{AFH,v6}}^{00}(y).
 \]
-not one of Anand's dark-matter response coefficients (R_X^{\tau\tau'}).
+It is not one of Anand's dark-matter response coefficients \(R_X^{\tau\tau'}\).
 
-The superscript (00) selects the isoscalar-isoscalar channel. This selects the relevant isoscalar channel for equal proton and neutron couplings, but the AFH package normalization must be handled explicitly: its raw (4\pi/(2J_A+1))W_M^{00} is A^2/4 at q=0. The physical equal-nucleon-coupling response is the sum of the four proton/neutron channels, equivalently four times this AFH isoscalar package response. Only that physical combination has the required R_A(0)=A^2.
+The superscript \(00\) selects the isoscalar-isoscalar channel. The raw AFH v6.0 package response obeys
+\[
+R_{\mathrm{AFH,raw}}(q)
+=\frac{4\pi}{2J_A+1}W_{M,\mathrm{AFH,v6}}^{00}(y),
+\qquad
+R_{\mathrm{AFH,raw}}(0)=\frac{A^2}{4}.
+\]
+The physical equal-proton/equal-neutron response is four times this package-normalized response:
+\[
+R_A^{\mathrm{phys}}(q)=4R_{\mathrm{AFH,raw}}(q),
+\qquad
+R_A^{\mathrm{phys}}(0)=A^2.
+\]
+The factor four maps the AFH setter convention \(c_{\rm set}=2g_{VN}\) to the physical nucleon coupling \(g_p=g_n=g_{VN}\). It must appear exactly once, either in the response or in the amplitude-level coupling contraction, never in both.
 
 ## 3. Consequence for the Figure 2 spectral shape
 
