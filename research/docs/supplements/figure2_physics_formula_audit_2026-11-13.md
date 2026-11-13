@@ -87,7 +87,7 @@ W_{\max}<m_{\chi_2}
 \]
 这里 \(1/2\) 是初态 Dirac 自旋平均，末态自旋求和由完备关系完成。代码中的 `spin_trace` 分别计算 before、after 和完整振幅；干涉项由完整迹减去两个单图平方得到。
 
-当前计算隐含实耦合约定；若 \(g_1,g_2\) 有一般复相位，两个图的耦合因子和相对相位必须从完整拉格朗日量重新保留。原始模型文本也没有唯一固定 \(\chi_{1,2}\) 是 Dirac 还是 Majorana。因此当前数值结果不能自动外推为 Majorana 版本。
+主稿现已明确固定 benchmark 的 \(g_1,g_2\in\mathbb R\)，因此两张图可提出相同的实耦合乘积并按相干和计算。若推广到一般复耦合，before/after 两图分别携带共轭配对的耦合因子，其相对相位必须保留在振幅中。原始模型文本仍未唯一固定 \(\chi_{1,2}\) 是 Dirac 还是 Majorana，因此当前数值结果不能自动外推为 Majorana 版本。
 
 条件性宽度
 \[
@@ -294,6 +294,31 @@ y=(b_AQ/2)^2,\quad Q^2=2m_AE_R+E_R^2.
 \]
 `paper-source/SHA256SUMS` 中 `main.tex` 的 hash 已同步更新。历史原稿 `main_original.tex` 保留不动，以保留来源追溯。
 
+### 7.2 GCN/JJ55 的 coherent-sum 表不能再乘 AFH 因子 4
+
+AFH v6.0 raw package 的 \(W_{M,\mathrm{AFH}}^{00}\) 是其 setter / isoscalar 接口定义下的 raw response，零动量极限为 \(A^2/4\)，所以在论文前因子已经提出物理 \(g_{VN}^2\) 时，需要乘一次 4。
+
+这条映射不能机械地应用到 GCN/JJ55 表。当前 GCN/JJ55 CSV 先给出质子—中子基底的四个矩阵项，并定义
+\[
+W_{M,\mathrm{coherent\ sum}}
+=W_{M,pp}+W_{M,np}+W_{M,pn}+W_{M,nn}.
+\]
+其表中 \(R_A=4\pi W_{M,\mathrm{coherent\ sum}}/(2J_A+1)\) 已是物理等 \(p,n\) coherent response，Xe-131 在 \(q=0\) 的表值为
+\[
+R_A(0)=17160.9875693,\qquad A^2=17161,
+\]
+微小差异来自输入矩阵元素的有限打印精度。joint_xe131.py 读取的正是这些 GCN/JJ55 coherent-sum 表，并要求 \(R_A(0)\simeq A^2\)。
+
+因此三种记账方式必须明确区分：
+
+| 输入来源 | 零动量归一化 | 进入 Eq. (6) 前的处理 |
+|---|---:|---|
+| AFH v6.0 raw isoscalar package response | \(A^2/4\) | 乘 4，或等价地把 setter 的 \(2g_{VN}\) 平方放入振幅；只能选一种 |
+| GCN/JJ55 proton-neutron coherent sum | \(\simeq A^2\) | 直接使用，不再乘 4 |
+| 论文 Eq. (6) 统一物理响应 | \(A^2\) | 所有核模型均以同一物理 \(R_A\) 进入截面 |
+
+这里 GCN/JJ55 CSV 的历史列名 RA=4pi/(2J_A+1)*W_M00 应按该文件实际的 W_M_coherent_sum 解释，不能将其中的 W_M00 与 AFH v6.0 setter 返回的 raw \(W_{M,\mathrm{AFH}}^{00}\) 混为同一个归一化对象。这个命名歧义已在本审查记录中明确标注；没有对 GCN/JJ55 数据再施加额外因子。
+
 ## 8. 从单同位素截面到天然氙速率
 
 对每个同位素单独计算 \(m_A,R_A,v_{\min,A},I_{6,A}\)，再按原始天然丰度 \(x_A\) 求和：
@@ -345,7 +370,7 @@ N_{\rm sig}^{\rm ROI}
 | P1-01 | 原始工作稿 AFH response 使用 \(4\pi W_M/(2J+1)\) 却声明 \(R_A(0)=A^2\) | 改为 \(16\pi W_{M,\rm AFH,v6}/(2J+1)\)，明确 raw \(A^2/4\) 到 physical \(A^2\) 的映射 | **已修正** |
 | P1-02 | 原始工作稿将 \(y=b_A^2m_AE_R/2\) 写成无条件定义 | 改为 \(y=(b_AQ/2)^2\)，并标明前式为小反冲近似 | **已修正** |
 | P1-03 | 天然氙 metadata 的 `response_sample_sha256` 实际为 40 位 Git blob SHA-1 | 替换为文件真实 64 位 SHA-256；runner 和 validator 增加校验 | **已修正** |
-| P1-04 | Dirac/Majorana、复耦合相位、完整 \(\chi_2\) 自能未由原始模型文本固定 | 明确保留为模型输入/理论扩展，不将条件性宽度推广 | <span>待补模型定义</span> |
+| P1-04 | Dirac/Majorana 性质与完整 \(\chi_2\) 自能未由原始模型文本固定；benchmark 已明确采用实 \(g_1,g_2\) | 明确保留为模型输入/理论扩展，不将条件性宽度推广 | <span>待补模型定义</span> |
 | P1-05 | Xe-124、Xe-126 的 AFH default response 缺失；完整 16807 行七同位素响应表未提交 | 在主索引中登记 checksum-only provenance 与缺失输入 | <span>待补输入</span> |
 | P1-06 | 原始 Figure 2 的单同位素/天然氙靶定义不明确 | 不把当前 LZ 天然氙扩展误称为原图已确认靶定义 | <span>待补原始输入</span> |
 | P1-07 | 完整 AFH 天然氙连续谱与 LZ 二维 likelihood 未完成 | 继续保留为后续研究，不以 selected points 或一维效率折叠替代 | <span>尚未完成</span> |
