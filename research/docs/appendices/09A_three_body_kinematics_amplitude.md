@@ -128,6 +128,87 @@ W_{\max}^2\ge W_{\min}^2.
 
 唯一确定。数值构造还检查 \(|\cos\theta_q|\le1\)，以排除不物理点。
 
+
+### A.2.1 固定入射速度下的最大标量质量与最优反冲能量
+
+前面的相空间开放条件给出
+\[
+m_s\le W_{\max}(E_R)-m_{\chi_1}.
+\]
+若固定入射速度，寻找该速度下允许的最大 \(m_s\)，等价于对 \(W_{\max}^2(E_R)\) 关于 \(E_R\) 最大化。这里
+\[
+Q(E_R)=\sqrt{2m_AE_R+E_R^2},
+\qquad
+W_{\max}^2=m_{\chi_1}^2+2p_{\chi_1}Q-2(E_\chi+m_A)E_R.
+\]
+因为 \(W_{\max}>0\)，最大化 \(W_{\max}\) 与最大化 \(W_{\max}^2\) 等价。求导得
+\[
+\frac{dW_{\max}^2}{dE_R}
+=2p_{\chi_1}\frac{m_A+E_R}{Q}
+-2(E_\chi+m_A).
+\]
+令导数为零，并定义
+\[
+B=E_\chi+m_A,\qquad x=m_A+E_R,
+\]
+则
+\[
+p_{\chi_1}x=BQ,\qquad Q^2=x^2-m_A^2.
+\]
+平方后
+\[
+p_{\chi_1}^2x^2=B^2(x^2-m_A^2),
+\]
+所以
+\[
+(B^2-p_{\chi_1}^2)x^2=B^2m_A^2.
+\]
+靶核静止系中
+\[
+B^2-p_{\chi_1}^2
+=(E_\chi+m_A)^2-p_{\chi_1}^2
+=m_{\chi_1}^2+m_A^2+2m_AE_\chi
+=s_{\rm tot}.
+\]
+取物理正根，
+\[
+x=\frac{Bm_A}{\sqrt{s_{\rm tot}}},
+\]
+从而
+\[
+\boxed{
+E_R^*=m_A\left(\frac{E_\chi+m_A}{\sqrt{s_{\rm tot}}}-1\right),
+\qquad
+Q^*=\frac{m_Ap_{\chi_1}}{\sqrt{s_{\rm tot}}}.
+}
+\]
+将其代回 \(W_{\max}^2\)，得到
+\[
+W_{\max}^2(E_R^*)=(\sqrt{s_{\rm tot}}-m_A)^2.
+\]
+因此
+\[
+\boxed{
+m_{s,\max}(v)
+=\sqrt{s_{\rm tot}}-m_A-m_{\chi_1},
+\quad
+s_{\rm tot}=m_{\chi_1}^2+m_A^2+2m_AE_\chi.
+}
+\]
+在 \(\beta\ll1\) 时，令
+\[
+\mu_A=\frac{m_{\chi_1}m_A}{m_{\chi_1}+m_A},
+\]
+可展开为
+\[
+m_{s,\max}\simeq\frac12\mu_A\beta^2,
+\qquad
+E_R^*\simeq
+\frac{m_A}{2}
+\left(\frac{m_{\chi_1}}{m_{\chi_1}+m_A}\right)^2\beta^2.
+\]
+这两个近似式展示了暗物质入射动能如何在核反冲与末态标量质量门槛之间分配。\(E_R^*\) 只最大化运动学质量上限；真实谱还乘有核响应、传播子和三体矩阵元，故该点一般不是事件率峰值。
+
 ## A.3 在 \(K\) 静止系构造三体末态
 
 给定 \(W^2\) 后，子过程
@@ -940,6 +1021,72 @@ I_6=
 论文参数空间还要求可达 halo 速度下 \(W_{\max}<m_{\chi_2}\)，以排除真实 \(\chi_2\) 产生。这个全局参数筛选是独立的运动学审计；不能把它误认为 reduced kernel 对所有输入自动执行的通用保护。
 
 当前实现明确采用 Dirac 外部自旋子。原始模型文本尚未把 \(\chi_{1,2}\) 的 Dirac/Majorana 性质和完整 CP/手征约定全部固定，因此 Majorana 版本不在当前结果的自动适用范围内。
+
+
+### A.6.1 从 Dirac 标量 Yukawa 振幅推导条件性二体宽度
+
+明确采用
+\[
+\mathcal L_{\chi\chi s}
+=-g_2s\,\bar\chi_1\chi_2
+-g_2^*s\,\bar\chi_2\chi_1
+\]
+的纯标量、非对角 Yukawa 相互作用，并考虑
+\[
+\chi_2(P)\longrightarrow\chi_1(p)+s(k),
+\qquad
+P^2=m_{\chi_2}^2,\quad
+p^2=m_{\chi_1}^2,\quad
+k^2=m_s^2.
+\]
+树级振幅为
+\[
+\mathcal M=g_2\,\bar u_1(p)u_2(P).
+\]
+对初态 \(\chi_2\) 自旋平均、末态 \(\chi_1\) 自旋求和，使用
+\[
+\sum_su_s(p)\bar u_s(p)=\slashed p+m
+\]
+得到
+\[
+\begin{aligned}
+\overline{|\mathcal M|^2}
+&=\frac{|g_2|^2}{2}
+\operatorname{Tr}\!\left[
+(\slashed p+m_{\chi_1})(\slashed P+m_{\chi_2})
+\right]\\
+&=2|g_2|^2(p\cdot P+m_{\chi_1}m_{\chi_2})\\
+&=|g_2|^2
+\left[(m_{\chi_2}+m_{\chi_1})^2-m_s^2\right],
+\end{aligned}
+\]
+其中最后一步使用
+\[
+2p\cdot P=m_{\chi_2}^2+m_{\chi_1}^2-m_s^2.
+\]
+在 \(\chi_2\) 静止系，二体末态动量大小为
+\[
+|\mathbf p_*|
+=\frac{\sqrt{\lambda_K(m_{\chi_2}^2,m_{\chi_1}^2,m_s^2)}}
+{2m_{\chi_2}},
+\]
+且角积分后的二体衰变宽度为
+\[
+\Gamma=\frac{|\mathbf p_*|}{8\pi m_{\chi_2}^2}
+\overline{|\mathcal M|^2}.
+\]
+代入即得
+\[
+\boxed{
+\Gamma_{\chi_2\to\chi_1s}
+=\frac{|g_2|^2}{16\pi m_{\chi_2}^3}
+\sqrt{\lambda_K(m_{\chi_2}^2,m_{\chi_1}^2,m_s^2)}
+\left[(m_{\chi_2}+m_{\chi_1})^2-m_s^2\right].
+}
+\]
+该式仅在 \(m_{\chi_2}\ge m_{\chi_1}+m_s\) 时对应开放衰变道。末态 \(\chi_1\) 与 \(s\) 是不同粒子，不存在额外的 \(1/2!\) 因子；若有其他开放衰变道，总宽度应将它们的部分宽度相加。
+
+这不是任意 Dirac/Majorana、标量/赝标量或完整 UV 模型的通用宽度。本文当前 pole prescription 采用 Dirac 外部态、实标量、纯标量耦合和单一开放衰变道。该宽度只进入可能接近极点的 after 传播子；它不改变 \(W_{\min}\) 或三体相空间边界，也不能替代完整的 Dyson 自能计算。对应代码入口为 \(\texttt{chi2\_width\_dirac\_scalar}\)，详见索引 F12。
 
 ## A.7 求积、数值检查与复现入口
 
