@@ -35,7 +35,7 @@ The gray band is retained as a detector-systematic range. LZ does not assign
 a confidence level to that envelope. The curve is not rescaled to force exact
 agreement with the rounded published mean efficiency.
 
-The event-level pilot uses the Table S5 NR mean-yield vector with the public LZ WS2024 detector class and compares its tuned NR width vector with generic NEST defaults. Its first paired 248-keV run is a one-energy, one-position sanity check, not a full reproduction of the published NR band. The paper's Fig. 2 band is constructed from flat-in-energy NR spectra and evaluated at fixed S1c; the flat-spectrum band pilot is implemented separately and still omits spatial averaging and calibration nuisance covariance.\n\nThe rate-level event-yield files fold the continuous natural-xenon spectra
+The event-level pilot uses the Table S5 NR mean-yield vector with the public LZ WS2024 detector class and compares its tuned NR width vector with generic NEST defaults. Its first paired 248-keV run is a one-energy, one-position sanity check, not a full reproduction of the published NR band. The paper's Fig. 2 band is constructed from flat-in-energy NR spectra and evaluated at fixed S1c. The flat-spectrum pilot tests both the 5.4–269.9 keV analysis-window prior and the approximately 0.1–330 keV AmBe calibration-range prior at the candidate's approximate reconstructed position; it still omits full spatial sampling and calibration nuisance covariance.\n\nThe rate-level event-yield files fold the continuous natural-xenon spectra
 with the digitized central efficiency and its gray envelope over the
 5.4–269.9 keV analysis window. They are rate-level diagnostics only: they do
 not include the two-dimensional S1c/log10(S2c) signal PDFs, NEST nuisance
