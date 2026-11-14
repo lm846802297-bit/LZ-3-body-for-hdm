@@ -189,6 +189,13 @@ fixed-speed benchmarks, Xe-131 \(m_A=131u\), \(m_{\chi_1}=1\) TeV,
   \(\le 10^{-3}\); peak-height difference \(\le 5\times10^{-3}\).
   Peak and response-minimum locations are reported as diagnostics rather
   than silently forced to agree.
+- Near the three AFH response minima, a 1-keV \(E_R\) step maps to
+  approximately \(0.773\), \(0.476\), and \(0.334\) MeV in spatial
+  momentum \(Q\), respectively. These are larger than the native
+  \(0.25\)-MeV \(q\)-grid spacing. Thus 1 keV is the first fine-grid
+  comparison, not an assumption that the response minima are fully resolved;
+  if their positions/depths remain grid-sensitive, perform a local
+  0.5-keV (or finer, if needed) refinement around the affected minimum.
 
 Run from the repository root on the Windows machine with Wolfram Engine and
 Python available:
