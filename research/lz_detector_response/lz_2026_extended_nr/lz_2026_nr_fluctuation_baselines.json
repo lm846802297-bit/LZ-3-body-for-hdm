@@ -25,29 +25,78 @@
     "generic_nest_default": {
       "source_file": "include/NEST/NEST.hh",
       "source_url": "https://github.com/NESTCollaboration/nest/blob/423b9745a5bfbb0402514f1d7955e67445de0810/include/NEST/NEST.hh",
-      "full_13_element_NRERWidthsParam": [0.4, 0.4, 0.04, 0.5, 0.19, 2.25, -0.001, 0.046452, 0.45, 0.205, -0.2, 0.0, 0.0],
+      "full_13_element_NRERWidthsParam": [
+        0.4,
+        0.4,
+        0.04,
+        0.5,
+        0.19,
+        2.25,
+        -0.001,
+        0.046452,
+        0.45,
+        0.205,
+        -0.2,
+        0,
+        0
+      ],
       "NR_relevant_index_value_pairs": {
-        "0": 0.4, "1": 0.4, "2": 0.04, "3": 0.5,
-        "4": 0.19, "5": 2.25, "11": 0.0, "12": 0.0
+        "0": 0.4,
+        "1": 0.4,
+        "2": 0.04,
+        "3": 0.5,
+        "4": 0.19,
+        "5": 2.25,
+        "11": 0,
+        "12": 0
       },
       "status": "Upstream generic NEST default; not evidence of a fitted LZ 2026 setting."
     },
     "lz_ws2024_tuned": {
       "source_file": "include/Detectors/LZ_WS2024.hh",
       "source_url": "https://github.com/NESTCollaboration/nest/blob/423b9745a5bfbb0402514f1d7955e67445de0810/include/Detectors/LZ_WS2024.hh",
-      "full_13_element_NRERWidthsParam": [0.404, 0.393, 0.0383, 0.497, 0.1906, 2.220, 0.3, 0.04311, 0.46894, 0.15505, -0.26564, 0.0, 0.0],
+      "full_13_element_NRERWidthsParam": [
+        0.404,
+        0.393,
+        0.0383,
+        0.497,
+        0.1906,
+        2.22,
+        0.3,
+        0.04311,
+        0.46894,
+        0.15505,
+        -0.26564,
+        0,
+        0
+      ],
       "NR_relevant_index_value_pairs": {
-        "0": 0.404, "1": 0.393, "2": 0.0383, "3": 0.497,
-        "4": 0.1906, "5": 2.220, "11": 0.0, "12": 0.0
+        "0": 0.404,
+        "1": 0.393,
+        "2": 0.0383,
+        "3": 0.497,
+        "4": 0.1906,
+        "5": 2.22,
+        "11": 0,
+        "12": 0
       },
       "source_comment": "The detector file identifies itself as LZ SR3 or WS2024 and says the listed vectors were adjusted to match LZ tritium and D-D calibration data. It recommends NEST v2.4.0.",
       "status": "LZ-specific calibration-tuned candidate; stronger provenance than generic defaults, but not confirmed as the exact 2026 extended-NR analysis configuration."
     }
   },
   "comparison": {
-    "nr_relevant_indices": [0, 1, 2, 3, 4, 5, 11, 12],
+    "nr_relevant_indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      11,
+      12
+    ],
     "relative_change_ws2024_vs_generic_percent": {
-      "0": 1.0,
+      "0": 1,
       "1": -1.75,
       "2": -4.25,
       "3": -0.6,
@@ -66,5 +115,58 @@
   "recommended_use": {
     "baseline": "Run the LZ_WS2024-tuned vector as the primary documented candidate and generic NEST defaults as a comparison.",
     "production_gate": "Do not label either result as an exact LZ 2026 detector-response reproduction until the 2026 configuration or an explicit collaboration statement confirms the choice and detector settings."
+  },
+  "detector_response_candidate": {
+    "source_file": "include/Detectors/LZ_WS2024.hh",
+    "source_url": "https://github.com/NESTCollaboration/nest/blob/423b9745a5bfbb0402514f1d7955e67445de0810/include/Detectors/LZ_WS2024.hh",
+    "source_description": "LZ SR3/WS2024 detector class; source comment says tuned to tritium and D-D calibration data and recommends NEST v2.4.0.",
+    "settings": {
+      "g1_phd_per_photon": 0.1122,
+      "g1_gas_phd_per_gas_photon": 0.076404,
+      "double_photoelectron_probability": 0.214,
+      "s2_threshold_phe": 783,
+      "gas_field_kV_per_cm": 8.301178,
+      "gas_gap_mm": 8,
+      "temperature_K": 175.9,
+      "pressure_bar": 1.86,
+      "drift_field_V_per_cm": 96.5,
+      "electron_lifetime_us": 9000,
+      "OldW13eV": true,
+      "top_drift_mm": 1461,
+      "anode_mm": 1469
+    },
+    "source_formula_recomputed": {
+      "xenon_gas_density_g_per_cm3": 0.0171989279766,
+      "liquid_extraction_field_kV_per_cm": 4.49277701853,
+      "extraction_efficiency": 0.726195341878,
+      "electroluminescence_yield_photons_per_extracted_electron": 613.190384122,
+      "single_electron_size_phd": 46.8501981084,
+      "g2_phd_per_electron": 34.0223956324,
+      "s2_threshold_phd": 644.975288303
+    },
+    "comparison_to_2026_paper": {
+      "paper_g1": {
+        "value": 0.11,
+        "uncertainty": 0.002,
+        "source": "arXiv:2609.02823v1 main detector section"
+      },
+      "g1_difference_sigma": 1.1,
+      "paper_g2": {
+        "value": 34.5,
+        "uncertainty": 1.1,
+        "source": "arXiv:2609.02823v1 main detector section"
+      },
+      "g2_difference_sigma": -0.4341857887,
+      "paper_s2_threshold_phd": 645,
+      "threshold_difference_phd": -0.024711697,
+      "paper_table_s3_reference_field_V_per_cm": 97
+    },
+    "caveats": [
+      "The detector file recommends NEST v2.4.0; the 2026 paper states NEST v2.4.5.",
+      "The old 12-entry mean-yield vector in the detector class must be overridden by the 15-entry 2026 Table S5 vector.",
+      "The 2026 Table S4 double-skewed-Gaussian ER fluctuation model is not represented by the 13-entry WS2024 width vector.",
+      "The class's analytic spatial corrections have not been proven identical to the 2026 final spatial response."
+    ],
+    "recommended_role": "Primary candidate for an NR-only event-level pilot, with generic NEST NR-width defaults as a controlled comparison; not an exact 2026 response claim."
   }
 }
