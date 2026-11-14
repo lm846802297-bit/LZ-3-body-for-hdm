@@ -47,7 +47,7 @@ jobs:
       - name: Generate full calibration-range NR bands
         run: |
           mkdir -p nr-band-output
-          for config in eft2024 ws2024 generic; do
+          for config in eft2024 eftmean_wswidth eftmean_genericwidth ws2024 generic; do
             ./lz_2026_nr_flat_spectrum_eft2024 0.1 330.0 200000 20261118 ${config} uniform_tpc > nr-band-output/${config}_uniform_tpc.csv
             ./lz_2026_nr_flat_spectrum_eft2024 0.1 330.0 100000 20261119 ${config} candidate > nr-band-output/${config}_candidate.csv
           done
