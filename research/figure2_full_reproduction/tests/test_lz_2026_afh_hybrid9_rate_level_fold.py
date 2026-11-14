@@ -7,6 +7,15 @@ import sys
 HERE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE))
 
+REPO_ROOT = Path(__file__).resolve().parents[3]
+sys.path.insert(0, str(REPO_ROOT / "research" / "afh_default_density_natural_xenon_halo" / "tests"))
+sys.path.insert(0, str(REPO_ROOT / "research" / "lz_detector_response" / "lz_2026_extended_nr"))
+
+# Imported TestCase classes are intentionally collected by the existing
+# rate-level-fold CI workflow, which already runs this module pattern.
+from test_recoil_grid_convergence import RecoilGridConvergenceTests  # noqa: E402,F401
+from test_audit_lz_nr_conditional_2d_pdf import ConditionalPDFAuditTests  # noqa: E402,F401
+
 from fold_lz_2026_afh_hybrid9_rate_level import (  # noqa: E402
     SCENARIOS,
     fold_one_group,
