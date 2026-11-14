@@ -93,7 +93,7 @@ R_A^{\rm phys}(q)I_6(v,E_R)
 
 - Mathematica 完整截面 runner 读取已归档的 2401 点 AFH 表第 1、4、7 列，使用第 7 列 \(R_A^{\rm phys}\)，不重跑 AFH。
 - Python comparator 独立计算 \(I_6\)，使用 SciPy PCHIP，并逐点比较 \(q,C_0,R_{\rm package},R_A^{\rm phys},I_6,d\sigma/dE_R\)、去因子 4 对照及单位换算。
-- Mathematica 的 \(\cos\theta_q\) 已改用 \(\Delta W^2=W^2-W_{\min}^2\) 的阈值稳定表达式，与 Python 的稳定构点表达式对齐，避免直接以 \(W^2-m_{\chi_1}^2\) 组合大数。
+- Mathematica 与 Python 均改为显式计算 \(\Delta W^2_{\max}=2p_{\chi_1}Q-2(E_{\chi_1}+m_A)E_R-2m_{\chi_1}m_s-m_s^2\)，避免从两个 \(m_{\chi_1}^2\) 量级的不变量相减得到窄相空间宽度；构点中的 \(\cos\theta_q\) 也直接使用 \(\Delta W^2\)。
 - paper-source/main.tex 已显式写出 \(C_0\)，并将其说明为有限精度数值归一化；paper-source/SHA256SUMS 已同步刷新。
 - 以上是响应定义和源码一致性审计，不是完整截面数值验收。原生 Mathematica 全网格运行、Python 逐点比较及 5 keV/1 keV 反冲能量网格收敛仍待执行。此前记录的线性 \(W^2\) 与历史 \(I_6\) 行约 \(4.11\times10^{-5}\) 差异仍保持 open，不归因于 AFH 因子 4。
 
