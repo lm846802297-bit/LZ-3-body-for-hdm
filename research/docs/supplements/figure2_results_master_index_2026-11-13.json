@@ -606,13 +606,13 @@
       },
       "files": [
         {
-          "path": "research/afh_default_density_xe131/afh_default_xe131_WM00_mathematica.csv",
+          "path": "research/afh_default_density_xe131/output/native_exports/afh_default_xe131_WM00_mathematica.csv",
           "sha256": "f3a5ed1c94d5d58eb82b8ef113fe56b4d678c6edaac0b280a7e3cd08c57821f8",
           "bytes": 355835,
           "role": "2401-point native Mathematica AFH response table"
         },
         {
-          "path": "research/afh_default_density_xe131/afh_default_xe131_mathematica_metadata.txt",
+          "path": "research/afh_default_density_xe131/output/native_exports/afh_default_xe131_mathematica_metadata.txt",
           "sha256": "c1ae8347a043bf8e522be60c239df594cc997b64dc3648d1726d0ac0e1e502fb",
           "bytes": 939,
           "role": "native Mathematica execution metadata and source provenance"
@@ -964,13 +964,13 @@
       "role": "official AFH v6.0 Mathematica source; committed and verified against source-file SHA-256"
     },
     {
-      "path": "research/afh_default_density_xe131/afh_default_xe131_WM00_mathematica.csv",
+      "path": "research/afh_default_density_xe131/output/native_exports/afh_default_xe131_WM00_mathematica.csv",
       "sha256": "f3a5ed1c94d5d58eb82b8ef113fe56b4d678c6edaac0b280a7e3cd08c57821f8",
       "bytes": 355835,
       "role": "2401-point native Mathematica AFH response table"
     },
     {
-      "path": "research/afh_default_density_xe131/afh_default_xe131_mathematica_metadata.txt",
+      "path": "research/afh_default_density_xe131/output/native_exports/afh_default_xe131_mathematica_metadata.txt",
       "sha256": "c1ae8347a043bf8e522be60c239df594cc997b64dc3648d1726d0ac0e1e502fb",
       "bytes": 939,
       "role": "native Mathematica execution metadata and source provenance"
