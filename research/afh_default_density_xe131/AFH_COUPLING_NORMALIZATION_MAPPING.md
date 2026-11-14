@@ -54,17 +54,29 @@ The contraction (c_0^2 W_M^{00}) then gives
 = g_{VN}^2,[4W_{M,m AFH}^{00}].
 ]
 
-Accordingly, if the cross-section prefactor is written with (g_{VN}^2), the physical response is
+Accordingly, if the cross-section prefactor is written with the
+per-nucleon coupling $g_{VN}^2$, the physical response for the
+finite-precision Xe-131 table is
+\[
+\boxed{
+\mathcal R_A^{\rm phys}(q)
+=4C_0\frac{4\pi}{2J_A+1}W_{M,\rm AFH}^{00}(y)
+=\frac{16\pi C_0}{2J_A+1}W_{M,\rm AFH}^{00}(y)
+},
+\qquad
+C_0=\frac{A^2}{4R_{A,\rm AFH}^{00}(0)},
+\]
+where $R_{A,\rm AFH}^{00}(q)=4\pi W_{M,\rm AFH}^{00}(q)/(2J_A+1)$.
+In the exact unrounded-density-matrix limit $C_0=1$, recovering the
+usual $16\pi W_M^{00}/(2J_A+1)$ expression. For the supplied Xe-131
+table, $C_0=1.0000825298069378$. This is a $q$-independent numerical
+shape normalization, not a second isospin factor or a physical
+coupling correction.
 
-[
-oxed{
-mathcal R_A^{m phys}(E_R)
-=rac{16pi}{2J_A+1}W_{M,m AFH}^{00}(y)
-}
-]
-
-or, equivalently, retain (4pi W_{M,m AFH}^{00}/(2J_A+1)) and explicitly use the AFH isoscalar coefficient (2g_{VN}) in the amplitude-level coupling contraction.
-
+Equivalently, retain $4\pi W_{M,\rm AFH}^{00}/(2J_A+1)$ and explicitly
+use the AFH isoscalar coefficient $2g_{VN}$ in the amplitude-level
+coupling contraction.
+ 
 ## 3. What must not be done
 
 - Do not use the raw AFH (W_M^{00}) with a per-nucleon (g_{VN}) and simultaneously assert (mathcal R_A(0)=A^2).
