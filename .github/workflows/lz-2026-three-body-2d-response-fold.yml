@@ -7,6 +7,7 @@ on:
     paths:
       - research/lz_detector_response/cpp/lz_2026_nr_full_calibration_band.cc
       - research/lz_detector_response/fold_lz_2026_three_body_2d_response.py
+      - research/lz_detector_response/tests/test_lz_2026_three_body_2d_response.py
       - research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/**
       - .github/workflows/lz-2026-three-body-2d-response-fold.yml
   workflow_dispatch:
@@ -44,6 +45,8 @@ jobs:
             -Inest/build/_deps/gcem-src/include \
             research/lz_detector_response/cpp/lz_2026_nr_full_calibration_band.cc \
             nest/build/libNESTCore.a -o lz_2026_nr_full_calibration_band
+      - name: Test response-fold numerical primitives
+        run: python -m unittest research/lz_detector_response/tests/test_lz_2026_three_body_2d_response.py
       - name: Generate exact-ROI response samples
         run: |
           mkdir -p response-output folded-output
