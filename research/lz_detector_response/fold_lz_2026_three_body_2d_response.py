@@ -4,8 +4,10 @@
 The response MC is uniform in true recoil energy over the exact analysis ROI and
 uniform in active-TPC volume. Per-energy-bin cell probabilities are therefore
 estimated as N_cell/N_generated_in_bin (not normalized only over positive cells).
-The output is a pre-selection observable intensity. The published scalar WIMP-search
-efficiency is deliberately NOT multiplied into this 2D PDF.
+The output is a NEST-level-accepted, pre-final-analysis intensity. Positive signed
+S1c/S2c filters already apply NEST's Parametric S1 PMT-occupancy coincidence
+approximation and NEST's configured S2 pulse threshold. The published final
+WIMP-search efficiency is deliberately NOT multiplied into this 2D intensity.
 """
 from __future__ import annotations
 import argparse, csv, json, math, statistics
@@ -104,7 +106,7 @@ def main():
       "response_spatial_prior":"uniform active-TPC cylinder volume; not calibration-source geometry",
       "response_binning":{"energy_keV":E_WIDTH,"S1c_phd":S1_WIDTH,"log10S2c_dex":LOGS2_WIDTH},
       "response_probability_definition":"P(cell|E-bin) estimated by N_cell/N_generated_in_energy_bin; positive S1c/S2c cells retain their unconditional probability mass. Zero/nonpositive observables are tracked as lost probability, not renormalized away.",
-      "selection_and_efficiency":"No detector efficiency or event-selection efficiency is multiplied into this 2D intensity. The separately published energy-only final-ROI efficiency cannot specify a selected 2D shape; applying it here would risk double counting and would not reproduce selection migration.",
+      "selection_and_efficiency":"Positive signed S1c/S2c filtering already applies the NEST Parametric S1 PMT-occupancy coincidence approximation and the NEST S2 pulse threshold. No additional trigger, SS reconstruction, data-analysis, WS-ROI, FV, veto, or live-time selection is applied. The published energy-only final-ROI efficiency is not multiplied into this 2D intensity because its overlap with NEST-level acceptance must first be audited and it does not specify a selected 2D migration kernel.",
       "benchmark_results":[]}
     intensity_path=args.out_dir/"signal_2d_intensity.csv"
     with intensity_path.open("w",newline="",encoding="utf-8") as f:
@@ -153,7 +155,7 @@ def main():
                       "sum_of_2d_cells_events_kg_day":cell_sum,
                       "cell_sum_relative_closure_error":closure,
                       "response_energy_bin_integrals":bin_records,
-                      "conditional_pdf_normalization":"For a PDF conditional on positive S1c and S2c, divide each cell intensity by positive_S1c_S2c_rate; for an unconditioned pre-selection intensity, retain the rates as written."
+                      "conditional_pdf_normalization":"For a PDF conditional on NEST-level accepted positive S1c and S2c, divide each cell intensity by positive_S1c_S2c_rate; the exported cell rates are NEST-level-accepted intensities, not final LZ-selected rates."
                     })
     # Export response MC acceptance/validity by family and energy bin for auditing.
     response_audit={"families":{}}
