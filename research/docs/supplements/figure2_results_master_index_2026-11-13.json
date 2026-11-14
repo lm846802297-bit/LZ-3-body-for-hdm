@@ -125,15 +125,15 @@
         },
         {
           "path": "research/afh_default_density_xe131/output/figure2_four_benchmarks_dsigma_metadata.json",
-          "sha256": "98a049ccfc8210d9f0d3f0c10f45155acea97a9dab4dc73b5bec8a0a01d709e5",
-          "bytes": 1669,
-          "role": "four benchmark dsigma metadata"
+          "sha256": "d560d4b433c63e7e869e2ed295472eb9226b633c97fc78b9d807003975e7e759",
+          "bytes": 1978,
+          "role": "current four-benchmark differential-cross-section metadata"
         },
         {
           "path": "research/afh_default_density_xe131/output/four_benchmark_metadata.json",
-          "sha256": "9ba064ce439c97e0d7a23185a33b391b9ea7eca98fc8ccbd888b21fd5d5d5ebc",
-          "bytes": 1217,
-          "role": "four benchmark parameter metadata"
+          "sha256": "8f6bbcb3f96e16bdb3c10d4b719c987eac1b2d1ad4046f32dcf6f84a1bef27e1",
+          "bytes": 1737,
+          "role": "current four-benchmark parameter metadata"
         }
       ]
     },
