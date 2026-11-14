@@ -61,7 +61,7 @@ int main(int argc, char** argv) {
     const auto& widths = (width_set == "ws2024")
         ? kLZWS2024Widths : kGenericWidths;
     const auto g2_params = calc.CalculateG2(0);
-    const std::vector<double> eryields = NEST::default_ERYieldsParam;
+    const std::vector<double> eryields = default_ERYieldsParam;
     std::vector<int64_t> s1_wf_time, s2_wf_time;
     std::vector<double> s1_wf_amp, s2_wf_amp;
 
