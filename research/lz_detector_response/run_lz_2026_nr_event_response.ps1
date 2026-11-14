@@ -16,6 +16,7 @@ $NestDir = Join-Path $PSScriptRoot ("_deps\nest-" + $NestCommit)
 $BuildDir = Join-Path $PSScriptRoot "_build-nr-event-response"
 $ParameterFile = Join-Path $PSScriptRoot "lz_2026_extended_nr\lz_2026_nr_yield_params_s5.txt"
 $SummaryScript = Join-Path $PSScriptRoot "lz_2026_extended_nr\summarize_nr_event_response.py"
+$TestsDir = Join-Path $PSScriptRoot "tests"
 
 function Invoke-Checked {
     param([scriptblock]$Command, [string]$Description)
@@ -44,6 +45,12 @@ $actualCommit = (git -C $NestDir rev-parse HEAD).Trim()
 if ($actualCommit -ne $NestCommit) {
     throw "NEST source pin mismatch: expected $NestCommit, got $actualCommit"
 }
+
+Invoke-Checked { python -c "import sys; raise SystemExit(0 if sys.version_info >= (3, 10) else 1)" } "Check Python >= 3.10"
+
+Invoke-Checked {
+    python -m unittest discover -s $TestsDir -p "test_lz_2026_nr_*.py" -v
+} "Run NR mean-yield and event-response configuration tests"
 
 if (-not (Test-Path $ParameterFile)) {
     throw "Missing LZ 2026 Table S5 parameter file: $ParameterFile"
