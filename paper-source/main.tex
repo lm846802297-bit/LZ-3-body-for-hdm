@@ -210,22 +210,35 @@ Both diagrams and their interference are retained.
 
 At leading order in the nuclear charge response, vector exchange
 probes the coherent proton--neutron sum. For equal physical nucleon
-couplings, $g_p=g_n=g_{VN}$, the raw AFH v6.0 package output
-$W_{M,\mathrm{AFH,v6}}^{00}(y)$ is converted to the physical response
+couplings, $g_p=g_n=g_{VN}$, define the raw AFH v6.0 package response
 \begin{equation}
+R_{A,\mathrm{package}}^{00}(q)
+=\frac{4\pi}{2J_A+1}
+W_{M,\mathrm{AFH,v6}}^{00}(y).
+\end{equation}
+The physical equal-proton/equal-neutron response used with the
+per-nucleon coupling $g_{VN}$ is
+\begin{equation}
+\begin{split}
 \mathcal R_A(E_R)
-=\frac{16\pi}{2J_A+1}
-W_{M,\mathrm{AFH,v6}}^{00}(y),
-\qquad
-y=\left(\frac{b_A |\mathbf q|}{2}\right)^2,
-\qquad
-|\mathbf q|=\sqrt{2m_AE_R+E_R^2},
+&=4C_0 R_{A,\mathrm{package}}^{00}(q)
+=\frac{16\pi C_0}{2J_A+1}
+W_{M,\mathrm{AFH,v6}}^{00}(y),\\
+C_0&=\frac{A^2}{4R_{A,\mathrm{package}}^{00}(0)},\qquad
+y=\left(\frac{b_A |\mathbf q|}{2}\right)^2,\\
+|\mathbf q|&=\sqrt{2m_AE_R+E_R^2},
+\end{split}
 \label{eq:afh-physical-response}
 \end{equation}
-so that $\mathcal R_A(0)=A^2$. The factor of four relative to
-$4\pi W_{M,\mathrm{AFH,v6}}^{00}/(2J_A+1)$ is the AFH v6.0
-isoscalar-coupling conversion and is included exactly once; it is not
-absorbed into $g_{VN}$. For $E_R\ll m_A$, the exact argument reduces to
+so that the tabulated response obeys $\mathcal R_A(0)=A^2$.
+The factor of four is the AFH v6.0 isoscalar-coupling conversion and
+is included exactly once; it is not absorbed into $g_{VN}$.
+The $q$-independent factor $C_0$ only removes the small overall
+normalization offset from the finite-decimal Xe-131 density-matrix
+entries; it is a numerical shape normalization, not an additional
+physical coupling factor. In the exact unrounded density-matrix limit,
+$C_0=1$. For the supplied Xe-131 table, $C_0=1.0000825298069378$.
+For $E_R\ll m_A$, the exact argument reduces to
 $y\simeq b_A^2m_AE_R/2$, the usual non-relativistic approximation
 \cite{Anand:2013yka}.
 The differential cross section is
