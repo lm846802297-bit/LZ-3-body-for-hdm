@@ -45,6 +45,8 @@ TOLERANCES = {
     "common_node_kernel_relative": 1.0e-10,
     "roi_raw_integral_relative": 5.0e-3,
     "roi_efficiency_weighted_relative": 5.0e-3,
+    "roi_lower_envelope_relative": 5.0e-3,
+    "roi_upper_envelope_relative": 5.0e-3,
     "tail_efficiency_weighted_relative": 1.0e-2,
     "peak_height_relative": 1.0e-2,
     "peak_position_shift_keV": 1.0,
@@ -205,6 +207,8 @@ def compare_group(
         common_max <= TOLERANCES["common_node_rate_relative"]
         and metrics["roi_raw_integral_relative_difference"] <= TOLERANCES["roi_raw_integral_relative"]
         and metrics["roi_efficiency_weighted_relative_difference"] <= TOLERANCES["roi_efficiency_weighted_relative"]
+        and metrics["roi_lower_envelope_relative_difference"] <= TOLERANCES["roi_lower_envelope_relative"]
+        and metrics["roi_upper_envelope_relative_difference"] <= TOLERANCES["roi_upper_envelope_relative"]
         and metrics["tail_weighted_relative_difference"] <= TOLERANCES["tail_efficiency_weighted_relative"]
         and peak_height_rel <= TOLERANCES["peak_height_relative"]
         and peak_shift <= TOLERANCES["peak_position_shift_keV"]
