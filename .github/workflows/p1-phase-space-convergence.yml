@@ -1,0 +1,112 @@
+name: P1 phase-space convergence
+
+on:
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  phase-space-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install numerical dependency
+        run: python -m pip install --upgrade numpy
+      - name: Compile audit and tests
+        run: |
+          python -m py_compile research/figure2_full_reproduction/phase_space_convergence.py
+          python -m py_compile research/figure2_full_reproduction/tests/test_phase_space_convergence.py
+      - name: Run P1 phase-space regression tests
+        run: |
+          python -m unittest discover \
+            -s research/figure2_full_reproduction/tests \
+            -p 'test_eq6_kernel.py' -v
+          python -m unittest discover \
+            -s research/figure2_full_reproduction/tests \
+            -p 'test_phase_space_convergence.py' -v
+      - name: Reproduce benchmark, threshold, historical 800 km/s and off-shell near-pole scans
+        run: |
+          python research/figure2_full_reproduction/phase_space_convergence.py \
+            --output-dir /tmp/p1_phase_space_reproduction \
+            --reference-order 48 --mode all
+      - name: Preserve independent reproduction outputs for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1-phase-space-reproduction
+          path: /tmp/p1_phase_space_reproduction/
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Compare fresh CSV outputs with the committed audit archive
+        run: |
+          python - <<'PY'
+          import csv
+          import math
+          from pathlib import Path
+
+          reference = Path("research/figure2_full_reproduction/results")
+          fresh = Path("/tmp/p1_phase_space_reproduction")
+          names = (
+              "phase_space_mapping_convergence.csv",
+              "phase_space_angular_convergence.csv",
+              "phase_space_threshold_convergence.csv",
+              "phase_space_li_prefactor_crosscheck.csv",
+              "phase_space_historical_800_anchor.csv",
+          )
+          failures = []
+          for name in names:
+              with (reference / name).open(newline="", encoding="utf-8") as stream:
+                  old = list(csv.DictReader(stream))
+              with (fresh / name).open(newline="", encoding="utf-8") as stream:
+                  new = list(csv.DictReader(stream))
+              if len(old) != len(new):
+                  failures.append(f"{name}: row count {len(new)} != {len(old)}")
+                  continue
+              for row_index, (a, b) in enumerate(zip(old, new), start=2):
+                  if set(a) != set(b):
+                      failures.append(f"{name}:{row_index}: columns differ")
+                      break
+                  for key in a:
+                      if key == "mass_scheme":
+                          historical_alias = {
+                              a[key], b[key]
+                          } == {
+                              "historical_A_times_u_approx",
+                              "coarse_mA_122_GeV_approx",
+                          }
+                          same_coarse_mass = math.isclose(
+                              float(a["mA_GeV"]), 122.0, rel_tol=0.0, abs_tol=1e-12
+                          ) and math.isclose(
+                              float(b["mA_GeV"]), 122.0, rel_tol=0.0, abs_tol=1e-12
+                          )
+                          if a[key] != b[key] and not (historical_alias and same_coarse_mass):
+                              failures.append(f"{name}:{row_index}:{key}: {a[key]} != {b[key]}")
+                              break
+                          continue
+                      try:
+                          av, bv = float(a[key]), float(b[key])
+                      except (TypeError, ValueError):
+                          if a[key] != b[key]:
+                              failures.append(f"{name}:{row_index}:{key}: {a[key]} != {b[key]}")
+                              break
+                      else:
+                          if not math.isclose(av, bv, rel_tol=5e-8, abs_tol=1e-12):
+                              failures.append(f"{name}:{row_index}:{key}: {av} != {bv}")
+                              break
+          if failures:
+              raise SystemExit("\n".join(failures))
+          print("Fresh phase-space scans reproduce all committed CSV tables within tolerance.")
+          print("Accepted only the historical/coarse label alias when both mA_GeV values are exactly 122; all physical and numerical columns were compared.")
+          print("The off-shell near-pole scan is preserved separately in the p1-phase-space-reproduction artifact; it is not yet a committed reference CSV.")
+          PY

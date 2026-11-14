@@ -121,12 +121,21 @@ def chi2_width_dirac_scalar_at_mass(parent_mass, mchi, ms, g2):
     All masses and the returned width are in GeV.
     """
     M = float(parent_mass)
-    lam = (M**4 + mchi**4 + ms**4
-           - 2*M*M*mchi*mchi
-           - 2*M*M*ms*ms
-           - 2*mchi*mchi*ms*ms)
-    if lam <= 0:
+    # Factorize the Kallen function around the two-body threshold.
+    # The expanded quartic expression subtracts O(mchi^4) terms to obtain
+    # O(mchi^2 * (M-mchi-ms)) near threshold and loses many digits.
+    threshold = mchi + ms
+    if M <= threshold:
         return 0.0
+    # Compensated subtraction preserves the small excess above a heavy threshold.
+    excess = math.fsum((M, -mchi, -ms))
+    if excess <= 0.0:
+        return 0.0
+    lam = (
+        excess * (excess + 2.0 * ms)
+        * (2.0 * mchi + excess)
+        * (2.0 * mchi + excess + 2.0 * ms)
+    )
     return (abs(g2)**2/(16*math.pi*M**3)
             * math.sqrt(lam) * ((M+mchi)**2-ms*ms))
 

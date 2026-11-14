@@ -119,8 +119,9 @@ def main():
             if (A,er) not in response:
                 raise ValueError(f"missing AFH response sample for Xe-{A}, ER={er} keV")
 
+    target_nuclei_per_kg=AVOGADRO*1000.0/mean_atomic_weight
     rate_factor=(args.rho_GeV_cm3/args.mchi_GeV)*C_CM_S * (
-        AVOGADRO*1000.0/mean_atomic_weight
+        target_nuclei_per_kg
     )*GEV2_TO_CM2*1e-6*86400.0
     speed_orders, speed_weights=leggauss(args.nv)
     results=[]
@@ -214,6 +215,9 @@ def main():
         "abundance_source":"NIST Atomic Weights and Isotopic Compositions for Xenon",
         "abundance_convention":"natural atomic fractions; no renormalization",
         "mean_atomic_weight_g_mol":mean_atomic_weight,
+        "target_nuclei_per_kg":target_nuclei_per_kg,
+        "target_number_mass_average_source":"abundance-weighted sum over all nine rows in input/natural_xenon_isotope_weights.csv",
+        "target_number_scope":"all nine natural xenon isotopes; full natural abundance; separate from the seven-isotope AFH response availability",
         "mass_scheme":"(NIST atomic isotope mass - 54 electron masses)*u; electronic binding neglected",
         "response_q_convention":canonical_response_q,
         "response_q_formula":("sqrt(2*m_A*E_R+E_R^2) [exact spatial transfer]" if canonical_response_q=="exact_spatial" else "sqrt(2*m_A*E_R) [non-relativistic approximation]"),

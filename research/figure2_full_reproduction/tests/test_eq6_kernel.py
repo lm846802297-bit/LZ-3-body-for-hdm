@@ -70,6 +70,37 @@ class Eq6Tests(unittest.TestCase):
             0.0
         )
 
+    def test_running_width_is_stable_immediately_above_threshold(self):
+        from decimal import Decimal, localcontext
+
+        parent_mass = float("1000.00030001")
+        mchi = 1000.0
+        ms = 0.0003
+        width = eq6.chi2_width_dirac_scalar_at_mass(
+            parent_mass, mchi, ms, 1.0
+        )
+        self.assertGreater(width, 0.0)
+
+        # Independent high-precision evaluation of the factorized Kallen form.
+        with localcontext() as context:
+            context.prec = 60
+            M = Decimal.from_float(parent_mass)
+            m = Decimal.from_float(mchi)
+            s = Decimal.from_float(ms)
+            excess = M - m - s
+            lam = (
+                excess * (excess + 2 * s)
+                * (2 * m + excess)
+                * (2 * m + excess + 2 * s)
+            )
+            expected = (
+                lam.sqrt() * ((M + m) ** 2 - s ** 2)
+                / (Decimal(16) * Decimal(str(math.pi)) * M ** 3)
+            )
+        self.assertLess(
+            abs(width / float(expected) - 1.0), 2e-12
+        )
+
     def test_width_schemes_are_distinct_and_finite(self):
         zero = eq6.reduced_kernel(
             self.M, self.ms, self.dm, self.mA, self.ER, self.v,
@@ -86,6 +117,27 @@ class Eq6Tests(unittest.TestCase):
         self.assertTrue(all(math.isfinite(x) and x > 0 for x in (zero,pole,running)))
         self.assertNotEqual(zero, pole)
         self.assertNotEqual(pole, running)
+
+    def test_phase_space_prefactor_256_pi3(self):
+        # dPhi3/(dER dW2 dz dphi*) =
+        # (1/(2*pi))*(1/(8*pi*pchi))*(sqrt(lambda_dim)/(32*pi**2)).
+        # Integrating phi* with the 1/(2*pi) average gives 1/(256*pi**3*pchi).
+        raw = (1.0/(2.0*math.pi))*(1.0/(8.0*math.pi))*(1.0/(32.0*math.pi**2))
+        self.assertAlmostEqual(raw, 1.0/(512.0*math.pi**4), places=16)
+        self.assertAlmostEqual(2.0*math.pi*raw, 1.0/(256.0*math.pi**3), places=16)
+
+    def test_phi_quadrature_weights_are_normalized_average(self):
+        # phi = pi*(x+1), so (1/(2*pi))*dphi = dx/2.
+        # This is the average used by reduced_kernel, not an unnormalized integral.
+        for nphi in (4, 8, 16, 32):
+            x, w = eq6._cached_leggauss(nphi)
+            phi = math.pi*(x+1.0)
+            average_weights = 0.5*w
+            self.assertAlmostEqual(float(np.sum(average_weights)), 1.0, places=14)
+            self.assertAlmostEqual(float(np.sum(w)), 2.0, places=14)
+            # The mapped linear test function is integrated exactly by Gauss-Legendre.
+            self.assertAlmostEqual(float(np.dot(average_weights, x)), 0.0, places=14)
+            self.assertEqual(len(phi), nphi)
 
     def test_regression_azimuthal_average_normalization(self):
         # Historical benchmark from the independent Eq. (6) audit.

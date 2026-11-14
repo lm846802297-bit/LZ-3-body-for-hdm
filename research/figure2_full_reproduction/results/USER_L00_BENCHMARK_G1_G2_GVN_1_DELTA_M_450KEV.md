@@ -2,6 +2,8 @@
 
 Date: 2026-11-11
 
+> **Numerical erratum (2026-11-14).** This document preserves the original 2026-11-11/13 benchmark, whose conditional \(\chi_2\) width used the expanded quartic Källén expression. A cancellation-safe threshold-factorized implementation has since replaced it. At the same \(m_{\chi_1}=1\) TeV, \(m_s=300\) keV, \(\Delta m=450\) keV and \(g_2=1\), the width changes from \(53.38560839\) keV to \(53.38215472\) keV (relative shift \(-6.4693\times10^{-5}\)). The archived JSON/CSV below remain historical provenance, not current-source numerical outputs; the regression expectations were refreshed against the stable implementation. A new high-order stable-width archive should supersede these values before quoting them as current results.
+
 ## 1. Supplied model point
 
 This benchmark supplements the earlier Eq. (6) diagnostics with the parameter
