@@ -188,3 +188,40 @@ outputs to main.
 - The final Mathematica full \(d\sigma_A/dE_R\) run and pointwise comparison
   remain deferred until the Python calculation and all non-Mathematica work
   are complete.
+
+
+## Completed Python run (2026-11-14)
+
+GitHub Actions run 43591097068 completed successfully. The archived artifact is
+named python-xe131-full-dsigma-factor4-audit (artifact ID 14112736343).
+
+Measured results:
+
+| Quantity | Result |
+|---|---:|
+| Differential-cross-section rows | 652 |
+| Kinematically open rows | 500 |
+| Kinematically closed rows | 152 |
+| High-order anchor comparisons | 16 |
+| Maximum \(I_6\) relative difference, 16x16x8 vs 48x40x24 | \(1.663669202400797\times10^{-11}\) |
+| Maximum AFH factor-four mapping residual | \(3.556786241889844\times10^{-16}\) |
+| Physical/no-factor-four algebraic ratio residual | 0 |
+| Unit-conversion algebraic residual | 0 |
+| \(C_0\) | 1.0000825298069376 |
+| Physical response at \(q=0\) | 17161 = \(131^2\) |
+
+The zero residuals in the physical/no-factor-four ratio and unit-conversion
+checks are algebraic assembly checks: the control uses the same prefactor and
+\(I_6\), replacing only \(R_A^{\rm phys}\) by \(R_A^{\rm phys}/4\). They verify
+that the implementation applies the factor four once and does not introduce
+another factor in the prefactor; they are not independent cross-code tests.
+
+SHA-256:
+- AFH response input: 1b936abf07f54a669ae0680fe230ca7d858297f579ba3113bbbc55c3e76ed83c
+- Differential-cross-section CSV: cca2ef09696cd7896674088b742e1c4a062b02b4033ab06c6a4f0d708264e44b
+- High-order anchor CSV: c83da70e2fe45de2c0b32d0b4969c729de7d1893989926090998542bf7a3bf08
+
+The run metadata explicitly records that Mathematica/Wolfram was not invoked.
+The independent native Mathematica full-cross-section comparison remains
+pending and must be completed before this audit is promoted to a full
+cross-code validation.
