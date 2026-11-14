@@ -4674,11 +4674,13 @@ W^2-m_{\chi_2}^2+i\,m_{\chi_2}\Gamma_{\chi_2}.
 
 最高两组相对差异约为 \(2.9\times10^{-6}\)。这是单点 Python 预检，不是 Mathematica/Python 对照结果。
 
-同时，旧归档 output/figure2_four_benchmarks_dsigma_AFH_GCN_JJ55.csv 在同一 benchmark、同一 \(E_R=200\ {\rm keV}\) 的 GCN 行记录
+随后完成的 P1 historical-800 anchor audit 将质量常数与求积映射分开。旧归档值为
 \[
-I_6^{\rm archived}=1.43367807229\times10^6\ {\rm GeV}^2.
+I_6^{\rm archived}=1.4336780722867665\times10^6\ {\rm GeV}^2.
 \]
-它相对上述新 \((16,16,8)\) 预检值高约 \(4.11\times10^{-5}\)。因此旧四 benchmark 表格不能直接充当本轮新代码的验收真值；需要先追踪旧积分网格的生成版本、宽度实现和求积映射，再以同一新 kernel 在 Mathematica/Python 两端重新计算。这个差异目前是待解释的归档一致性问题，不应擅自归因于 AFH 因子 4。
+同一 legacy \((16,16,8)\) linear-\(W^2\) kernel 在 \(m_A=131\times0.9315=122.0265\) GeV 时给出 \(1.43367910043\times10^6\ {\rm GeV}^2\)，与旧归档只差 \(7.17\times10^{-7}\)；改用 NIST 核质量 \(m_A=122.025727417\) GeV 后则为 \(1.43361913779\times10^6\ {\rm GeV}^2\)，相对旧归档低 \(4.11072\times10^{-5}\)。这强烈表明旧归档采用了四舍五入的 \(0.9315\) GeV/u，而后续 metadata 记录的是 NIST 常数；残余 \(7.17\times10^{-7}\) 仍保留为 provenance/rounding mismatch。
+
+另一个独立效应是求积映射：在固定质量方案下，legacy linear-\(W^2\) \((16,16,8)\) 与 threshold-\(u^2\) \((48,40,24)\) 高阶参考相差约 \(3.156\times10^{-5}\)。threshold-\(u^2\) \((16,16,8)\) 与其高阶参考的差异小于 \(10^{-8}\)。因此旧归档的 \(4.11\times10^{-5}\) 偏移主要来自质量常数约定，不能再解释为单纯的求积映射误差；约 \(3.16\times10^{-5}\) 的线性 \(W^2\) 数值误差是另一项独立效应。两者都不涉及 AFH 因子 4。
 
 在同一预检点，使用归档的 \(R_A^{\rm phys}=9.56772226605\) 和新 Python \(I_6\) 得到
 \[
@@ -4698,7 +4700,7 @@ I_6^{\rm archived}=1.43367807229\times10^6\ {\rm GeV}^2.
 |---|---|---|
 | AFH Xe-131 \(R_A(q)\) | **已验证** | 原生 Mathematica/Python 2401 点比较已通过 |
 | AFH package \(\to R_A^{\rm phys}\) 因子 4 | **已验证（response-level）** | \(R_A^{\rm phys}=4C_0R_A^{\rm package}\)，\(C_0\) 单独记录 |
-| Python 单点 \(I_6\) 求积预检 | **条件性验证** | green benchmark 单点求积阶数对照已完成 |
+| Python 单点 \(I_6\) 求积预检 | **条件性验证** | green benchmark 单点求积阶数对照已完成；800 km/s 历史点的质量常数与映射误差已分离 |
 | 完整网格 Mathematica \(I_6\) | **待执行** | 新 WLS runner 已提交，尚无 Wolfram 运行产物 |
 | 完整 \(d\sigma_A/dE_R\) Mathematica/Python 逐点对照 | **未完成** | 必须等待 WLS 输出 CSV 和 Python comparator 的机器可读 PASS |
 | 完整宽度与 UV 自能 | **未完成** | 当前 pole width 仍是 Dirac/纯 scalar/单道条件性宽度 |
