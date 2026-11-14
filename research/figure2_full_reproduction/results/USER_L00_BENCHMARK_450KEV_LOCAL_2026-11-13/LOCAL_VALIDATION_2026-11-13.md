@@ -1,5 +1,7 @@
 # Local validation — supplied L00 benchmark, Δm = 450 keV
 
+> **Status note (2026-11-14):** The numerical values in this 2026-11-13 local archive were generated with the pre-fix expanded quartic Källén expression in the conditional scalar width. The current kernel uses a cancellation-safe threshold-factorized expression with compensated excess subtraction. For the 450-keV benchmark, the conditional width changes from \(53.38560839\) keV to \(53.38215472\) keV (\(-6.4693\times10^{-5}\) relative). The original files and their checksums are retained as historical execution provenance; do not treat their old width-dependent L00/\(I_6\) values as regenerated current-source results. The current regression tests use the corrected width.
+
 Date: 2026-11-13  
 Repository: lm846802297-bit/LZ-3-body-for-hdm  
 PR: https://github.com/lm846802297-bit/LZ-3-body-for-hdm/pull/5  
