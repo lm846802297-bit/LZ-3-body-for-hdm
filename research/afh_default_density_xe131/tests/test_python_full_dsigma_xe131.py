@@ -5,9 +5,9 @@ import sys
 import unittest
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parents[1]
-REPO = HERE.parents[1]
-sys.path.insert(0, str(HERE))
+STUDY_DIR = Path(__file__).resolve().parents[1]
+REPO = STUDY_DIR.parents[1]
+sys.path.insert(0, str(STUDY_DIR))
 sys.path.insert(0, str(REPO / "research" / "figure2_full_reproduction"))
 
 import run_python_full_dsigma_xe131 as runner
@@ -18,7 +18,7 @@ class PythonFullDifferentialCrossSectionTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.response = runner.load_response_table(
-            HERE / "output" / "afh_default_xe131_WM00.csv"
+            STUDY_DIR / "output" / "afh_default_xe131_WM00.csv"
         )
 
     def test_afh_response_factor_four_on_all_2401_nodes(self):
