@@ -4164,7 +4164,7 @@ AFH Xe-131 回归测试：
 
 ~~~bash
 python -m unittest discover \
-  -s research/afh_default_density_xe131 \
+  -s research/afh_default_density_xe131/tests \
   -p 'test_*.py' -v
 ~~~
 
