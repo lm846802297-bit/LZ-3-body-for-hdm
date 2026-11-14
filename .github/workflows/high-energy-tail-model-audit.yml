@@ -1,0 +1,81 @@
+name: High-energy LZ candidate-window nuclear-model audit
+
+on:
+  push:
+    branches:
+      - main
+      - research/phase2-tail-mathematica-20261114
+    paths:
+      - .github/workflows/high-energy-tail-model-audit.yml
+      - research/afh_default_density_natural_xenon_halo/audit_high_energy_tail_model_sensitivity.py
+      - research/afh_default_density_natural_xenon_halo/test_high_energy_tail_model_sensitivity.py
+      - research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/**
+      - research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/**
+      - research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/high-energy-tail-model-audit.yml
+      - research/afh_default_density_natural_xenon_halo/audit_high_energy_tail_model_sensitivity.py
+      - research/afh_default_density_natural_xenon_halo/test_high_energy_tail_model_sensitivity.py
+      - research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/**
+      - research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/**
+      - research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Run unit and regression tests
+        run: |
+          python -m unittest research/afh_default_density_natural_xenon_halo/test_high_energy_tail_model_sensitivity.py -v
+
+      - name: Recompute high-energy tail comparison
+        run: |
+          python research/afh_default_density_natural_xenon_halo/audit_high_energy_tail_model_sensitivity.py \
+            --outdir "$RUNNER_TEMP/high_energy_tail_audit"
+
+      - name: Validate output archive
+        run: |
+          python - <<'PY'
+          import csv
+          import json
+          import math
+          from pathlib import Path
+
+          out = Path("${{ runner.temp }}/high_energy_tail_audit")
+          meta = json.loads((out / "metadata.json").read_text(encoding="utf-8"))
+          with (out / "high_energy_tail_model_sensitivity.csv").open(newline="", encoding="utf-8") as f:
+              rows = list(csv.DictReader(f))
+          assert meta["status"] == "PASS"
+          assert meta["row_count"] == 24 == len(rows)
+          assert {r["benchmark"] for r in rows} == {
+              "red_ms200_dm1", "green_ms300_dm1", "black_ms360_dm1", "blue_ms300_dm10"
+          }
+          for row in rows:
+              for key in ("tail_expected_events_central", "full_roi_expected_events_central"):
+                  value = float(row[key])
+                  assert math.isfinite(value) and value >= 0.0, (key, row)
+          print("PASS: 24 benchmark/model folds, finite event yields, source metadata and efficiency envelopes.")
+          PY
+
+      - name: Upload reproducible tail audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: high-energy-tail-nuclear-model-audit
+          path: ${{ runner.temp }}/high_energy_tail_audit/
+          if-no-files-found: error
+          retention-days: 90
