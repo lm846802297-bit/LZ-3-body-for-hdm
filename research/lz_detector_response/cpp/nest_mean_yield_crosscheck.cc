@@ -1,4 +1,4 @@
-#include <cstdlib>
+// This executable calls the pinned NEST GetYieldNR implementation directly.\n#include <cstdlib>
 #include <iomanip>
 #include <iostream>
 #include <stdexcept>
