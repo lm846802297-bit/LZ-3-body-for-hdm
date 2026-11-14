@@ -1,0 +1,59 @@
+name: LZ 2026 flat-spectrum NR band pilot
+
+on:
+  push:
+    branches:
+      - research/figure2-p0-4-mainline
+    paths:
+      - research/lz_detector_response/cpp/lz_2026_nr_flat_spectrum_band.cc
+      - research/lz_detector_response/summarize_lz_2026_nr_flat_band.py
+      - .github/workflows/lz-2026-nr-flat-band-pilot.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  flat-band-pilot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+      - name: Check out pinned NEST source
+        uses: actions/checkout@v4
+        with:
+          repository: NESTCollaboration/nest
+          ref: 423b9745a5bfbb0402514f1d7955e67445de0810
+          path: nest
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Configure and build pinned NEST core
+        run: |
+          cmake -S nest -B nest/build \
+            -DBUILD_EXAMPLES=OFF -DBUILD_GARFIELD=OFF -DBUILD_ROOT=OFF -DG4=OFF
+          cmake --build nest/build --target NESTCore --parallel 2
+      - name: Compile flat-spectrum NR band driver
+        run: |
+          g++ -std=c++17 -O2 \
+            -Inest/include -Inest/include/Detectors \
+            -Inest/build/_deps/gcem-src/include \
+            research/lz_detector_response/cpp/lz_2026_nr_flat_spectrum_band.cc \
+            nest/build/libNESTCore.a -o lz_2026_nr_flat_spectrum_band
+      - name: Generate flat-spectrum NR band samples
+        run: |
+          mkdir -p band-output
+          ./lz_2026_nr_flat_spectrum_band 5.4 269.9 200000 20261117 ws2024 > band-output/ws2024.csv
+          ./lz_2026_nr_flat_spectrum_band 5.4 269.9 200000 20261117 generic > band-output/generic.csv
+          python research/lz_detector_response/summarize_lz_2026_nr_flat_band.py \
+            band-output/ws2024.csv band-output/generic.csv > band-output/band-summary.json
+          cat band-output/band-summary.json
+      - name: Upload flat-spectrum NR band outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-flat-spectrum-nr-band-pilot
+          path: band-output/
+          if-no-files-found: error
+          retention-days: 30
