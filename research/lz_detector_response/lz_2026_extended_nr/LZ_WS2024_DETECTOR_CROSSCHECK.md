@@ -83,3 +83,18 @@ Relevant 2026 paper statements:
 - Table S3 references 97 V/cm.
 - Table S4 gives the final double-skewed-Gaussian ER fluctuation parameters.
 - Table S5 gives the 15-parameter NR mean light-/charge-yield model.
+
+
+## 7. Important distinction: raw S2 threshold versus corrected S2c
+
+The 644.98 phd value above is only the detector's configured threshold (783 phe) converted to phd by removing the double-photoelectron factor. NEST's GetS2 implementation tests the threshold against the **raw pulse area in phe**, then forms the reported S2c by applying the electron-lifetime correction and position correction. Therefore 644.98 phd is not the threshold boundary on the corrected S2c observable.
+
+For the pilot's reference-depth position, the spatial correction is unity and the drift time is the detector's (dt_{cntr}=525\,\mu\mathrm{s}). With the WS2024 electron lifetime (9000\,\mu\mathrm{s}), the corresponding threshold boundary in corrected S2c is
+
+[
+S2c_{\rm threshold}
+=\frac{783}{1+0.214}\exp\left(\frac{525}{9000}\right)
+=683.72\,\mathrm{phd}.
+]
+
+The 645 phd comparison to the paper must therefore be interpreted as a raw-threshold conversion only. Whether the paper's quoted 645 phd is defined before or after the same lifetime correction must be checked against its precise observable definition; do not identify it automatically with the corrected S2c cut. The event driver preserves NEST's sign-based threshold flag and records both the raw-threshold phd equivalent and the reference-depth corrected-S2c threshold.
