@@ -65,9 +65,8 @@ class AFHDefaultXe131Tests(unittest.TestCase):
         physical_normalized = 131**2 * physical_raw/physical_raw
         self.assertAlmostEqual(physical_normalized, 131**2, places=10)
 
-    def test_paper_python_and_mma_share_physical_factor4_convention(self):
-        repo_root = HERE.parents[1]
-        paper = (repo_root / "paper-source" / "main.tex").read_text(encoding="utf-8")
+    def test_python_and_mma_share_physical_factor4_convention(self):
+        normalization_audit = (HERE / "AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md").read_text(encoding="utf-8")
         mma_runner = (HERE / "run_afh_default_xe131.wls").read_text(encoding="utf-8")
         mma_verifier = (HERE / "verify_afh_xe131_native.wls").read_text(encoding="utf-8")
         comparator = (HERE / "compare_afh_mathematica_python.py").read_text(encoding="utf-8")
