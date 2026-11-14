@@ -17,7 +17,7 @@ from typing import Any
 import sys
 
 HERE = Path(__file__).resolve().parent
-FIG_DIR = HERE.parents[1] / "figure2_full_reproduction"
+FIG_DIR = HERE.parent / "figure2_full_reproduction"
 sys.path.insert(0, str(FIG_DIR))
 
 from fold_lz_2026_rate_level import (
@@ -27,7 +27,7 @@ from fold_lz_2026_rate_level import (
 )
 
 DEFAULT_EFFICIENCY = (
-    HERE.parents[1]
+    HERE.parent
     / "lz_detector_response"
     / "lz_2026_extended_nr"
     / "lz_2026_nr_efficiency_digitized.csv"
