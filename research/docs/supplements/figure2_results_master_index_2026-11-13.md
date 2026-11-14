@@ -62,7 +62,7 @@
 
 ## 4. 本轮完整性修复
 
-- 原始 `paper-source/main.tex` 中 AFH response 的 \(4\pi\) 归一化与 \(R_A(0)=A^2\) 不相容；已修正为物理响应 \(16\pi W_{M,\mathrm{AFH,v6}}^{00}/(2J_A+1)\)，并把 \(y\) 改为 exact spatial-\(q\) 定义。
+- 原始 `paper-source/main.tex` 中 AFH response 的 \(4\pi\) 归一化与 \(R_A(0)=A^2\) 不相容；现已修正为有限精度 Xe-131 表的物理响应 \(16\pi C_0W_{M,\mathrm{AFH,v6}}^{00}/(2J_A+1)\)，其中 \(C_0=1.0000825298069378\) 单独修正密度矩阵打印精度；因子 4 只计一次，并把 \(y\) 改为 exact spatial-\(q\) 定义。
 - 已同步更新 `paper-source/SHA256SUMS` 中 `main.tex` 的 SHA-256。
 - 天然氙 metadata 的 `response_sample_sha256` 曾误存 Git blob SHA-1（40 位），字段却标为 SHA-256；现已改为实际文件 SHA-256：
   `919bae8f7d3dbe89d090c3ab182e743049e4088b8add57671b635c1d5426aa47`。
