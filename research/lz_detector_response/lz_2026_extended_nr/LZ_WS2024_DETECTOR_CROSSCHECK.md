@@ -18,7 +18,7 @@ The file identifies itself as the LZ SR3/WS2024 detector input and says its resp
 | (g_1) | 0.1122 phd/photon |
 | Gas gain (g_{1,gas}) | 0.076404 phd/gas photon |
 | Double-photoelectron probability | 0.214 |
-| S2 threshold | 783 phe |
+| Raw S2 threshold (before lifetime correction) | 783 phe |
 | Gas field | 8.301178 kV/cm |
 | Gas gap | 8 mm |
 | Temperature | 175.9 K |
@@ -51,7 +51,7 @@ Comparison with the 2026 paper:
 | S2 threshold | (783/(1+0.214)=644.98\,\mathrm{phd}) | 645 phd | -0.02 phd |
 | Drift field | 96.5 V/cm | Table S3 reference: 97 V/cm | -0.5 V/cm |
 
-The close agreement in (g_2) and the exact S2-threshold conversion are useful consistency checks. They do not alone establish that the full detector response is identical.
+The close agreement in (g_2) and the raw-threshold conversion are useful consistency checks. The 644.98 phd value is not the threshold boundary on corrected S2c. They do not alone establish that the full detector response is identical.
 
 ## 4. What can be reused for an NR-only candidate simulation
 
