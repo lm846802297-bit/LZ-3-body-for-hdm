@@ -303,6 +303,12 @@ def compare_runs(
         "exposure_tonne_year": EXPOSURE_TONNE_YEAR,
         "efficiency_source": str(efficiency_csv),
         "efficiency_source_sha256": sha256_file(efficiency_csv),
+        "input_provenance": {
+            "five_keV_csv_sha256": sha256_file(coarse_csv),
+            "five_keV_metadata_sha256": sha256_file(coarse_metadata),
+            "one_keV_csv_sha256": sha256_file(fine_csv),
+            "one_keV_metadata_sha256": sha256_file(fine_metadata),
+        },
         "tolerances": TOLERANCES,
         "scope": [
             "natural-xenon AFH-7 and Hybrid-9 spectra",
