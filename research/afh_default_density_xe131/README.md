@@ -206,12 +206,13 @@ existing 5 keV-grid Eq. (6) integral and replace only the nuclear response;
 they are not a fresh independent recomputation of all 640 three-body
 integrals.
 
-The manuscript source `paper-source/main.tex` now explicitly uses
-`R_A = 16 pi W_M00_AFH/(2 J_A+1)` for the raw AFH v6.0 response and the
-physical equal-proton/equal-neutron coupling. This gives `R_A(0)=A^2`.
-The factor four is applied exactly once, in the nuclear response. The
-independent historical code-convention check is documented in
-`AFH_COUPLING_NORMALIZATION_MAPPING.md`.
+The research calculation adopts
+`R_A = 16 pi W_M00_AFH/(2 J_A+1)` for the physical equal-proton/equal-neutron
+response, giving `R_A(0)=A^2`; the factor four is applied exactly once in the
+nuclear response. The manuscript file `paper-source/main.tex` is deliberately
+not modified by this research-integration change. Any manuscript synchronization
+must be reviewed and merged separately. The source-level code-convention
+check is documented in `AFH_COUPLING_NORMALIZATION_MAPPING.md`.
 
 The selected-point natural-xenon isotope sum and halo velocity fold are
 implemented separately in
