@@ -140,8 +140,13 @@ int main(int argc, char** argv) {
     const double drift_time_us =
         (detector.get_TopDrift() - z_mm) / drift_velocity;
 
-    const double s2_threshold_phd =
+    const double s2_threshold_raw_equiv_phd =
         detector.get_s2_thr() / (1.0 + detector.get_P_dphe());
+    // GetS2 applies the electron-lifetime correction to S2c after testing
+    // the raw pulse-area threshold. At the reference depth posDepSm=1.
+    const double s2c_threshold_reference_phd =
+        s2_threshold_raw_equiv_phd *
+        std::exp(drift_time_us / detector.get_eLife_us());
 
     std::vector<double> nr_width_parameters;
     if (baseline == "ws2024") {
@@ -161,7 +166,8 @@ int main(int argc, char** argv) {
     output
         << "baseline,energy_keV,event_id,field_V_cm,density_g_cm3,"
            "x_mm,y_mm,z_mm,drift_time_us,drift_velocity_mm_per_us,"
-           "g1_phd_per_photon,g2_phd_per_electron,s2_threshold_phd,"
+           "g1_phd_per_photon,g2_phd_per_electron,s2_threshold_raw_equiv_phd,"
+           "s2c_threshold_reference_phd,"
            "mean_photons,mean_electrons,photons,electrons,ions,excitons,"
            "recomb_probability,s1c_signed_phd,s2c_signed_phd,"
            "s1_trigger_pass,s2_threshold_pass,log10_s2c_if_pass\n";
@@ -177,7 +183,9 @@ int main(int argc, char** argv) {
               << " drift_time_us=" << drift_time_us
               << " g1=" << detector.get_g1()
               << " g2=" << g2_parameters[3]
-              << " s2_threshold_phd=" << s2_threshold_phd << "\n";
+              << " s2_threshold_raw_equiv_phd=" << s2_threshold_raw_equiv_phd
+              << " s2c_threshold_reference_phd="
+              << s2c_threshold_reference_phd << "\n";
 
     std::vector<int64_t> s1_waveform_time;
     std::vector<int64_t> s2_waveform_time;
@@ -238,7 +246,8 @@ int main(int argc, char** argv) {
                << field_V_cm << ',' << density << ',' << x_mm << ',' << y_mm
                << ',' << z_mm << ',' << drift_time_us << ','
                << drift_velocity << ',' << detector.get_g1() << ','
-               << g2_parameters[3] << ',' << s2_threshold_phd << ','
+               << g2_parameters[3] << ',' << s2_threshold_raw_equiv_phd << ','
+               << s2c_threshold_reference_phd << ','
                << result.yields.PhotonYield << ','
                << result.yields.ElectronYield << ','
                << result.quanta.photons << ',' << result.quanta.electrons
