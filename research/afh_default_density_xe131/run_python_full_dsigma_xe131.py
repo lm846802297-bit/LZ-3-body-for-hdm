@@ -364,7 +364,7 @@ def run(args: argparse.Namespace) -> dict:
                 float(row["dsigma_cm2_per_keV"])
                 - float(row["dsigma_dER_GeVminus3"]) * GEV2_TO_CM2_PER_KEV
             )
-            / max(abs(float(row["dsigma_cm2_per_keV"]), 1.0e-300)
+            / max(abs(float(row["dsigma_cm2_per_keV"])), 1.0e-300)
             for row in rows
         ),
         default=0.0,
