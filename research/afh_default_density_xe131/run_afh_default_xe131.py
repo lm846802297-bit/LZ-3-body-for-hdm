@@ -186,7 +186,7 @@ def main() -> None:
     parser.add_argument("--afh-package", type=Path, default=None,
                         help="Optional official dmformfactor-V6.m for provenance re-parse")
     parser.add_argument("--density-matrix-csv", type=Path,
-                        default=Path(__file__).with_name("afh_default_xe131_density_matrix.csv"),
+                        default=Path(__file__).resolve().parent / "input" / "afh_default_xe131_density_matrix.csv",
                         help="Extracted built-in sdgXe131 67-entry matrix")
     parser.add_argument("--outdir", type=Path, required=True)
     args = parser.parse_args()

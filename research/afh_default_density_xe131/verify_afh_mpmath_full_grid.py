@@ -109,7 +109,7 @@ def read_response(path: Path):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--matrix-csv", type=Path,
-                        default=Path(__file__).with_name("afh_default_xe131_density_matrix.csv"))
+                        default=Path(__file__).resolve().parent / "input" / "afh_default_xe131_density_matrix.csv")
     parser.add_argument("--response-csv", type=Path, required=True)
     parser.add_argument("--outdir", type=Path, required=True)
     parser.add_argument("--dps", type=int, default=60)

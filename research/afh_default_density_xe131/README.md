@@ -1,5 +1,13 @@
 # AFH default Xe-131 nuclear response
 
+## Directory map
+
+- `input/`: AFH default density matrix and fixed-speed base cross-section input.
+- `audit/`: normalization, momentum-convention, and AME2020 audit reports/scripts.
+- `tests/`: Xe-131 response, four-benchmark, and AME2020 regression tests.
+- `output/`: response grids, canonical cross sections, native Mathematica audit, and historical diagnostics.
+- Study-root Python/Wolfram files remain stable calculation entry points because existing workflows call these paths directly.
+
 ## Adopted source input
 
 This stage uses the **built-in AFH/DMFormFactor v6.0 default density matrix** for
@@ -26,7 +34,7 @@ and the source's unit conversion is `Femtometer = 5.0677/GeV`. For Xe-131,
 `b_A = 2.2923417985218975 fm`.
 
 The extracted 67-entry matrix is preserved in
-`afh_default_xe131_density_matrix.csv`. The Python runner can optionally
+`input/afh_default_xe131_density_matrix.csv`. The Python runner can optionally
 re-parse the official `.m` file and verify that the archived matrix matches
 all source entries.
 
@@ -60,7 +68,7 @@ R_equal(q) = A^2 * R_AFH(q)/R_AFH(0)
 This preserves the AFH q-dependence and removes only the small overall
 finite-precision offset. The source-based derivation and manuscript
 normalization issue are documented in
-`AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md`.
+`audit/AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md`.
 
 ## Numerical result
 
@@ -93,14 +101,14 @@ To verify the extracted matrix against the official AFH source as well:
 ```bash
 python run_afh_default_xe131.py \
   --afh-package /path/to/dmformfactor-V6.m \
-  --density-matrix-csv afh_default_xe131_density_matrix.csv \
+  --density-matrix-csv input/afh_default_xe131_density_matrix.csv \
   --outdir output
 ```
 
 Run regression tests with:
 
 ```bash
-python -m unittest test_afh_default_xe131.py
+python -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
 For a native AFH Mathematica calculation, use
@@ -212,7 +220,7 @@ response, giving `R_A(0)=A^2`; the factor four is applied exactly once in the
 nuclear response. The manuscript file `paper-source/main.tex` is deliberately
 not modified by this research-integration change. Any manuscript synchronization
 must be reviewed and merged separately. The source-level code-convention
-check is documented in `AFH_COUPLING_NORMALIZATION_MAPPING.md`.
+check is documented in `audit/AFH_COUPLING_NORMALIZATION_MAPPING.md`.
 
 The selected-point natural-xenon isotope sum and halo velocity fold are
 implemented separately in
@@ -234,7 +242,7 @@ calculations and are not relabeled or substituted for AFH default.
 ## AME2020/CODATA2022 nuclear-mass update
 
 The current mainline-based AME2020 study is documented in
-[AME2020_CODATA2022_MASS_RECALC.md](AME2020_CODATA2022_MASS_RECALC.md).
+[AME2020_CODATA2022_MASS_RECALC.md](audit/AME2020_CODATA2022_MASS_RECALC.md).
 It adds a third nuclear-mass prescription alongside the historical \(A u\)
 and NIST nuclear-mass schemes:
 

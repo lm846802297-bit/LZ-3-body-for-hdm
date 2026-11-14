@@ -12,7 +12,7 @@ on:
       - research/afh_default_density_natural_xenon_halo/verify_afh_selected_q_mpmath.py
       - research/figure2_full_reproduction/isotope_mass_schemes.py
       - research/afh_default_density_natural_xenon_halo/input/afh_response_samples.csv
-      - research/afh_default_density_xe131/afh_default_xe131_density_matrix.csv
+      - research/afh_default_density_xe131/input/afh_default_xe131_density_matrix.csv
       - research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv
       - research/afh_default_density_xe131/run_afh_default_xe131.py
 
@@ -71,7 +71,7 @@ jobs:
           python research/afh_default_density_natural_xenon_halo/extract_afh_xenon_default_matrices.py \
             --package "$AFH_PACKAGE" \
             --out-dir "$RUNNER_TEMP/afh_default_density_matrices" \
-            --xe131-reference research/afh_default_density_xe131/afh_default_xe131_density_matrix.csv \
+            --xe131-reference research/afh_default_density_xe131/input/afh_default_xe131_density_matrix.csv \
             --archive-sha256 "$AFH_ARCHIVE_SHA256"
 
       - name: Generate all seven 2401-node AFH response curves
@@ -93,9 +93,9 @@ jobs:
           python -m unittest \
             research/figure2_full_reproduction/tests/test_isotope_mass_schemes.py -v
           python -m unittest \
-            research/afh_default_density_xe131/test_ame2020_xe131_halo_partial.py -v
+            research/afh_default_density_xe131/tests/test_ame2020_xe131_halo_partial.py -v
           python -m unittest \
-            research/afh_default_density_xe131/test_ame2020_hybrid_natural_xenon.py -v
+            research/afh_default_density_xe131/tests/test_ame2020_hybrid_natural_xenon.py -v
 
       - name: Upload response grids and regression records
         if: always()
