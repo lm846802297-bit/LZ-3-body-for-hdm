@@ -6,6 +6,8 @@ import unittest
 MODULE_PATH = Path(__file__).resolve().parents[1] / "lz_2026_extended_nr" / "lz_2026_nr_mean_yield.py"
 spec = importlib.util.spec_from_file_location("lz2026_nr_yield", MODULE_PATH)
 module = importlib.util.module_from_spec(spec)
+import sys
+sys.modules[spec.name] = module
 spec.loader.exec_module(module)
 
 
