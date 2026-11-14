@@ -12,6 +12,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from scipy.integrate import trapezoid
 
 BENCHMARKS = (
     "red_ms200_dm1",
@@ -138,8 +139,8 @@ def summarize_benchmark(coarse: pd.DataFrame, fine: pd.DataFrame, name: str):
         float(np.max(np.abs(ratio1 - 4.0) / 4.0)) if len(ratio1) else 0.0,
     )
 
-    area5 = float(np.trapezoid(c["dsigma_cm2_per_keV"], c["ER_keV"]))
-    area1 = float(np.trapezoid(f["dsigma_cm2_per_keV"], f["ER_keV"]))
+    area5 = float(trapezoid(c["dsigma_cm2_per_keV"], c["ER_keV"]))
+    area1 = float(trapezoid(f["dsigma_cm2_per_keV"], f["ER_keV"]))
     area_rel = rel(area5, area1)
 
     c_open = c.loc[c["phase_space_open"]]
