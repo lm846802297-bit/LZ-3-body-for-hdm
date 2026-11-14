@@ -21,7 +21,7 @@ At the pinned NEST source:
 
 The current fold filters on positive signed \`s1c\` and \`s2c\`. Thus the existing 2D intensity already includes the **NEST-parametric S1 threefold-coincidence acceptance** and the **NEST 120-phe S2 pulse threshold**. These are already applied and must not be multiplied in a second time.
 
-Important qualification: NEST's Parametric S1 coincidence is its analytical coincidence approximation, using the configured PMT count, coincidence level, window, and spike estimate. It is not a waveform-by-waveform reconstruction of the collaboration's three-PMT trigger.
+Important qualification: NEST's Parametric S1 coincidence is an analytical PMT-occupancy approximation using the spike estimate, `coinLevel`, and `numPMTs`. The detector header also sets `coinWind = 150 ns`, but the Parametric branch does not explicitly apply that time window. It is therefore not a waveform-by-waveform reconstruction of the collaboration's three-PMT-in-time trigger.
 
 Primary source files:
 - [Pinned NEST GetS1/GetS2 implementation](https://github.com/NESTCollaboration/nest/blob/541b6430dae6ea289cf110c99f174a9187f7fdee/src/NEST.cpp)
@@ -35,7 +35,7 @@ Primary source files:
 |---|---|---|
 | NR mean quanta and fluctuations | NEST EFT2024 candidate | Included |
 | S1 photon detection and SPE response | NEST GetS1 Parametric | Included |
-| S1 threefold coincidence | NEST Parametric probability, 150 ns, level 3, 481 PMTs | Included approximately |
+| S1 threefold coincidence | NEST Parametric PMT-occupancy probability, level 3, 481 PMTs; no explicit 150-ns window in this branch | Included approximately, not full timing coincidence |
 | NEST S2 pulse threshold | 120 phe in EFT2024 configuration | Included |
 | Position-dependent S1/S2 response | Public NEST detector maps, uniform active-volume positions | Included as a proxy |
 | DAQ trigger efficiency | Not simulated by the event driver | Missing |
