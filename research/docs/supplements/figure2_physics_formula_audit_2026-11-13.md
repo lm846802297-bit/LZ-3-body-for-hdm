@@ -1,6 +1,6 @@
 # Figure 2 三体暗物质计算：物理公式交叉审查
 
-日期：2026-11-13  
+日期：2026-11-15（P0 响应定义补充审计）  
 审查对象：`paper-source/main.tex`、主报告、附录 A–G、Eq. (6) kernel、AFH 响应生成与自然氙 halo-fold 程序。  
 审查原则：解析推导、代码实现、输入约定和数值验证分别判定；其中一项通过不自动代表其余层次通过。
 
@@ -8,7 +8,7 @@
 
 本轮完成了当前 vector–vector、Dirac 外部态基准下的主要公式交叉审查。Eq. (6) 的三体相空间、\(256\pi^3\) 前因子、精确反冲动量、三体 \(v_{\min}\) 和天然氙速率单位链相互一致。发现并修正了两项真实文档/完整性问题，并完成一项独立原生实现验证：
 
-1. **AFH factor-of-four 与 exact-\(q\) 定义：** 原始 `paper-source/main.tex` 把 AFH raw isoscalar response 的 \(4\pi W_M^{00}/(2J_A+1)\) 与物理 \(R_A(0)=A^2\) 并列，且将 \(y=b_A^2m_AE_R/2\) 写成无条件定义。这与 AFH v6.0 raw 输出不一致。现已将物理 response 改为 \(16\pi W_{M,\mathrm{AFH,v6}}^{00}/(2J_A+1)\)，并将 \(y\) 改为 exact spatial-\(q\) 定义。
+1. **AFH factor-of-four、有限精度归一化与 exact-\(q\) 定义：** 原始 paper-source/main.tex 曾把 AFH raw isoscalar response 与物理 \(R_A(0)=A^2\) 并列。源级映射要求物理等质子/中子响应为 raw package response 的四倍；实际有限小数密度矩阵还需要独立的、与 \(q\) 无关的数值归一化 \(C_0=A^2/[4R_{A,\mathrm{package}}^{00}(0)]\)。现已将论文公式明确写为 \(R_A^{\rm phys}=4C_0R_{A,\mathrm{package}}^{00}=16\pi C_0W_{M,\mathrm{AFH,v6}}^{00}/(2J_A+1)\)，并将 \(y\) 改为 exact spatial-\(q\) 定义。对 Xe-131，\(C_0=1.0000825298069378\)；在未舍入密度矩阵极限中 \(C_0=1\)。
 2. **SHA-256 字段误用 Git blob SHA-1：** 天然氙 metadata 的 `response_sample_sha256` 曾是 40 位 Git blob SHA-1，却标记为 SHA-256。现已换成实际文件的 64 位 SHA-256，并在 archive validator 与后续 runner 中加入自动检查。
 
 3. **Xe-131 原生 Mathematica/Python 对照：** 使用 Wolfram 14.0.0 对 2401 个 \(q\) 节点逐点比较；网格完全一致，原始 \(W_M^{00}\)、AFH package response、physical raw response 与 \(q=0\)-normalized response 全部通过，最大相对差异 \(3.59087\times10^{-9}\)。原生输出、manifest 和 SHA-256 已归档；该验证仅限 Xe-131 response-level。
@@ -24,10 +24,78 @@
 | \(W_{\min},W_{\max}\) 与 Källén 因子 | 主报告 §2.4；附录 A.2–A.4 | `eq6_kernel.py`: `limits`, `lambda_dimensionless`, `build_point` | 解析式与实现一致 |
 | \(L_{00}\) 的 Dirac trace 和干涉 | 主报告 §2.3；附录 A.5 | `eq6_kernel.py`: `spin_trace` | 自旋平均、末态求和、两图相干相加一致；适用范围限于 Dirac 基准 |
 | \(256\pi^3\) 前因子 | 主报告 §2.5；附录 A.4.1 | `eq6_kernel.py` 的 \(I_6\) 与 `joint_xe131.py` 的 Eq. (6) 前因子 | 独立相空间推导通过 |
-| AFH factor 4 与 \(R_A(0)\) | 主报告 §3.2–3.3；附录 B、C | AFH response CSV；`compute_four_benchmark_dsigma.py`; `recompute_afh_four_benchmarks.py` | raw-to-physical 映射一致；已修正源论文 |
+| AFH factor 4、\(C_0\) 与 \(R_A(0)\) | 主报告 §3.2–3.3；附录 B、C；`paper-source/main.tex` | AFH response CSV；`run_afh_eq6_full_dsigma.wls` | factor 4 是耦合约定转换；\(C_0\) 是有限精度数值归一化；论文与完整截面代码定义已统一 |
 | 三体 \(v_{\min}\) | 主报告 §6.3；附录 E.2 | `rate_kinematics.py`: `vmin_three_body_beta` | 解析推导一致；独立求根数值对照通过 |
 | 天然氙速率与单位 | 主报告 §6–7；附录 D、E | `run_natural_xenon_halo_fold.py`; `run_afh_natural_xenon_halo_fold.py` | 通量、靶数、丰度、单位换算一致；AFH 仍为 selected points |
 | LZ 一维效率折叠 | 主报告 §11.6；LZ rate-level metadata | `fold_lz_2026_rate_level.py` | 解析分段积分与稠密梯形交叉检查一致；不等于二维 likelihood |
+
+## 2.1 P0：响应定义与完整截面入口的专项审计（2026-11-15）
+
+本轮将响应定义审计置于反冲能量网格收敛之前。冻结 AFH v6.0 内置 Xe-131 的 67 项密度矩阵、原生 Mathematica 2401 点 \(q\) 表及固定 \(b_A=2.2923417985\ {\rm fm}\)，不重新生成或拟合核响应。
+
+### 响应归一化账本
+
+定义
+\[
+R_{A,\rm package}^{00}(q)
+=\frac{4\pi}{2J_A+1}W_{M,\rm AFH}^{00}(q),
+\qquad
+C_0=\frac{A^2}{4R_{A,\rm package}^{00}(0)}.
+\]
+则实际有限精度 Xe-131 表用于完整截面的物理响应为
+\[
+R_A^{\rm phys}(q)=4C_0R_{A,\rm package}^{00}(q)
+=\frac{16\pi C_0}{2J_A+1}W_{M,\rm AFH}^{00}(q).
+\]
+数值输入为
+\[
+R_{A,\rm package}^{00}(0)=4289.895955714993,\quad
+A^2/4=4290.25,\quad
+C_0=1.0000825298069378.
+\]
+这里因子 4 来自 AFH v6.0 的 isoscalar coefficient convention：每核子等耦合 \(g_p=g_n=g_{VN}\) 对应 AFH setter 中 \(c_0=2g_{VN}\)，响应为耦合平方，故得到 4。\(C_0\) 则只补偿打印密度矩阵有限小数位造成的整体 \(q=0\) 偏差；它不是第二个物理因子，也不改变响应形状或极小值位置。
+
+### 运动学变量和截面组装
+
+\[
+Q=|\mathbf q|=\sqrt{2m_AE_R+E_R^2},\qquad
+t=q_\mu q^\mu=-2m_AE_R.
+\]
+AFH 的 \(y=(b_AQ/2)^2\) 使用空间动量 \(Q\)，传播子分母使用 \(m_V^2-t=m_V^2+2m_AE_R\)。两者不能互换。
+
+完整三体积分定义为
+\[
+I_6(v,E_R)=\int_{W_{\min}^2}^{W_{\max}^2}dW^2
+\sqrt{\lambda_{\rm dim}(W^2)}
+\int_{-1}^{1}dz\,\frac{1}{2\pi}
+\int_0^{2\pi}d\phi_*\,\mathcal L_{00},
+\]
+其中
+\[
+\lambda_{\rm dim}
+=\frac{[W^2-(m_{\chi_1}+m_s)^2]
+[W^2-(m_{\chi_1}-m_s)^2]}{W^4}.
+\]
+完整微分截面由
+\[
+\frac{d\sigma_A}{dE_R}
+=\frac{m_A(g_1g_2g_{VN})^2}
+{256\pi^3p_{\chi_1}^2(m_V^2+2m_AE_R)^2}
+R_A^{\rm phys}(q)I_6(v,E_R)
+\]
+给出。因子 4 仅存在于 \(R_A^{\rm phys}\)；前因子仍使用 per-nucleon \(g_{VN}\)。去因子 4 对照应满足每个开放点
+\[
+\frac{(d\sigma/dE_R)_{\rm phys}}
+{(d\sigma/dE_R)_{\rm no4}}=4.
+\]
+
+### 源码级检查与状态边界
+
+- Mathematica 完整截面 runner 读取已归档的 2401 点 AFH 表第 1、4、7 列，使用第 7 列 \(R_A^{\rm phys}\)，不重跑 AFH。
+- Python comparator 独立计算 \(I_6\)，使用 SciPy PCHIP，并逐点比较 \(q,C_0,R_{\rm package},R_A^{\rm phys},I_6,d\sigma/dE_R\)、去因子 4 对照及单位换算。
+- Mathematica 的 \(\cos\theta_q\) 已改用 \(\Delta W^2=W^2-W_{\min}^2\) 的阈值稳定表达式，与 Python 的稳定构点表达式对齐，避免直接以 \(W^2-m_{\chi_1}^2\) 组合大数。
+- paper-source/main.tex 已显式写出 \(C_0\)，并将其说明为有限精度数值归一化；paper-source/SHA256SUMS 已同步刷新。
+- 以上是响应定义和源码一致性审计，不是完整截面数值验收。原生 Mathematica 全网格运行、Python 逐点比较及 5 keV/1 keV 反冲能量网格收敛仍待执行。此前记录的线性 \(W^2\) 与历史 \(I_6\) 行约 \(4.11\times10^{-5}\) 差异仍保持 open，不归因于 AFH 因子 4。
 
 ## 3. 粒子物理：相互作用、内部传播子与自旋振幅
 
