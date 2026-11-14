@@ -45,7 +45,8 @@
         "response_q": "sqrt(2 m_A E_R + E_R^2)",
         "raw_AFH_zero_limit": "A^2/4",
         "physical_zero_limit": "A^2",
-        "physical_mapping": "R_A=16 pi W_M,AFH,v6^(00)/(2 J_A+1)"
+        "physical_mapping": "R_A_phys=4*C0*R_A_package=16*pi*C0*W_M,AFH,v6^(00)/(2*J_A+1)",
+        "C0": 1.0000825298069378
       },
       "files": [
         {
