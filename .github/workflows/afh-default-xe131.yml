@@ -67,6 +67,9 @@ jobs:
       - name: Validate Figure 2 source/output manifest
         run: python research/docs/supplements/validate_figure2_manifest.py
 
+      - name: Remove Python bytecode caches created by tests
+        run: find research -type d -name __pycache__ -prune -exec rm -rf {} +
+
       - name: Verify no generated calculation outputs are being committed by CI
         run: |
           git status --short
