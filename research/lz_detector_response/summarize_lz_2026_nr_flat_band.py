@@ -6,7 +6,7 @@ from pathlib import Path
 
 OBS_S1=540.07916
 OBS_S2=9267.53
-BIN_WIDTH=10.0
+BIN_WIDTH=5.0
 
 def summarize(path):
     bins=defaultdict(list)
