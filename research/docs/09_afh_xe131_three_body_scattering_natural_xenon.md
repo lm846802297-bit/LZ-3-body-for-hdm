@@ -4113,15 +4113,15 @@ python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_hal
 
 ### AFH Xe-131
 
-- afh_default_xe131_density_matrix.csv：67 项官方内置矩阵提取结果；
+- input/afh_default_xe131_density_matrix.csv：67 项官方内置矩阵提取结果；
 - output/afh_default_xe131_WM00.csv：2401 点响应网格；
 - output/minima.csv：细化极小值；
 - output/figure2_dip_check.csv：101、267、542 keV 参考点；
 - output/metadata.json：源文件哈希、质量、\(b_A\)、归一化和限制；
 - output/mpmath_full_grid_summary.json：2401 点、60 位精度 mpmath 全网格验证汇总；
 - CI artifact afh-xe131-mpmath-full-grid-validation：完整逐点比较 CSV 和 JSON summary。
-- AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md：来源和归一化审计；
-- AFH_COUPLING_NORMALIZATION_MAPPING.md：接口耦合映射。
+- audit/AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md：来源和归一化审计；
+- audit/AFH_COUPLING_NORMALIZATION_MAPPING.md：接口耦合映射。
 
 ### 四 benchmark 截面对照
 
