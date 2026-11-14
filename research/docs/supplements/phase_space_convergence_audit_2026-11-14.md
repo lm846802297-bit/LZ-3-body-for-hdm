@@ -319,4 +319,10 @@ A supplementary scan probes four \(\Delta m\) values just above the kinematic on
 
 The first high-order artifact used \(n_W=4096\) as the running-width, \(g_2=1\) reference. At the closest selected pole gap (about \(0.829\) keV), the successive sine-squared values still varied non-monotonically: \(512\to1024\) changed by \(-8.76\times10^{-6}\), \(1024\to2048\) by \(+4.51\times10^{-5}\), and \(2048\to4096\) by \(-1.82\times10^{-5}\). Thus \(n_W=4096\) is a provisional reference, not a demonstrated convergence plateau. The scan is being extended to \(n_W=8192\) at the closest-gap point, retaining the 512/1024/2048/4096 comparisons. Do not quote the 4096-order value as converged until the extended result is reviewed.
 
+A conditioning issue was identified in the running-width helper: the expanded quartic Källén expression subtracts terms of order \(m_\chi^4\) to recover a much smaller threshold quantity. At the closest-gap point, the old expression gave \(\Gamma(W_{\max})=32.002429\) keV, while the algebraically equivalent threshold-factorized expression gave \(32.007345\) keV, a relative shift of \(1.54\times10^{-4}\). The Python helper and the native Wolfram runner have now been changed to use
+\[
+\lambda=(M-m_\chi-m_s)(M-m_\chi+m_s)(M+m_\chi-m_s)(M+m_\chi+m_s),
+\]
+with the first two factors evaluated as \(\delta(\delta+2m_s)\), \(\delta=M-m_\chi-m_s\). A high-precision regression test immediately above threshold was added. The latest P1 rerun is therefore the first one that tests the near-pole integral with the cancellation-safe running width.
+
 The output is kept separate from the committed reference CSV comparison until its numerical stability is established. The fresh output is uploaded by the P1 GitHub Actions workflow as the \`p1-phase-space-reproduction\` artifact. This is a numerical prescription/convergence diagnostic only; it does not determine the physical \(\chi_2\) self-energy or justify treating a pole outside the kinematically allowed interval as an on-shell state.
