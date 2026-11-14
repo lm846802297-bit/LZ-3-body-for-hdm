@@ -10,7 +10,7 @@ HEPData DOI: 10.17182/hepdata.182472.v1
 The LZ 2026 extended-NR paper exposes enough information to build a substantially better detector-response recast than an efficiency-only fold:
 
 - a 303-point digitization of the final WIMP-search NR efficiency is already archived in this repository;
-- the paper states that its tuned NEST v2.4.5 best-fit response parameters are included in the HEPData release;
+- the paper states that its tuned LZ-tuned NEST best-fit response parameters (the paper's stated version label must be reconciled with the public NEST tag v2.4.5beta) are included in the HEPData release;
 - the paper publishes the candidate event coordinates and reconstructed recoil energy;
 - the paper documents the simultaneous science, prompt-veto, and delayed-veto sample structure and the extended unbinned likelihood.
 
@@ -33,7 +33,7 @@ These values are paper-level inputs and should be versioned alongside the recast
 
 ## 2. Public detector-response information
 
-The paper identifies NEST v2.4.5 as the tuned detector-response model. The best-fit NEST parameters are stated to be in the HEPData data release, and the Supplemental Material provides the model details.
+The paper identifies NEST as the tuned detector-response model; the public upstream release currently exposes the pre-release tag v2.4.5beta (commit 19bc9bc), so the exact LZ analysis software snapshot must be checked against the paper/HEPData files before pinning it. The best-fit NEST parameters are stated to be in the HEPData data release, and the Supplemental Material provides the model details.
 
 The repository already contains:
 - lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv
@@ -96,7 +96,7 @@ This is not a license to choose running width because it gives a smaller effect.
 
 ### P1: Build a validated NEST response layer
 
-1. Obtain the LZ-tuned NEST v2.4.5 NR parameter table from the HEPData release.
+1. Obtain the LZ-tuned NR parameter table from the HEPData release; separately verify whether its NEST snapshot is exactly upstream v2.4.5beta or a collaboration-specific revision.
 2. Pin the exact NEST release/commit and compile/run configuration.
 3. Reproduce mean NR light and charge yields over the analysis recoil-energy range.
 4. Reproduce fluctuations and generate conditional S1c/log10(S2c) PDFs.
@@ -132,3 +132,57 @@ Do not normalize the model to one event and call that a confidence limit. Do not
 ## Status
 
 This audit is a public-input availability assessment. It does not claim that the HEPData package has been fully downloaded or that the official likelihood has been reproduced. The existing rate-level event-yield archive remains a useful cross-check, not the final detector-level analysis.
+
+
+## 8. Version pinning and execution gate (updated 2026-11-15)
+
+### NEST version identity
+
+The public upstream NEST release page currently lists v2.4.5beta, dated 2025-12-08, at commit 19bc9bc; it is explicitly marked as a pre-release. The associated Zenodo software archive is DOI 10.5281/zenodo.17851406. Do not silently relabel this as a stable v2.4.5 release.
+
+Before generating detector PDFs:
+1. Retrieve the LZ HEPData NEST parameter table and any linked code/configuration resources.
+2. Compare the LZ paper's version string and parameter names against upstream v2.4.5beta.
+3. If the HEPData package identifies a different commit or modified detector header, pin that exact snapshot instead.
+4. Archive the source commit, detector header, parameter table, compiler/build options, RNG seed policy, and output schema.
+5. Keep a clean upstream build and a separately patched LZ-tuned build; never edit upstream silently.
+
+The public upstream release notes indicate that v2.4.5beta includes NR fluctuation-model changes, energy-dependent NR quanta parameters, and a truncated Maxwell-Boltzmann halo update. These features make exact version pinning important for both detector response and avoiding accidental coupling of the detector simulation to a halo implementation.
+
+### Detector-response implementation contract
+
+For each true recoil energy ER, produce:
+- mean photon and electron yields;
+- event-level distributions of detected S1c and S2c;
+- conditional response samples or normalized 2D PDFs;
+- trigger/reconstruction/selection pass flags and efficiencies, stored separately from the conditional PDF unless the official definition includes them;
+- statistical errors from finite Monte Carlo and parameter variations.
+
+The response must use the LZ-tuned NR parameters and detector configuration, not generic NEST defaults. Validate against:
+- published NR calibration bands in the S1c--log10(S2c) plane;
+- published mean light/charge yield information where available;
+- the archived 303-point final WIMP-search NR efficiency curve;
+- the candidate coordinate (S1c,S2c) = (540.1,9268) phd as a location check, not as a calibration datum.
+
+Avoid double counting: if the conditional PDF is normalized before analysis cuts, apply cuts once; if a generated PDF is already post-selection, do not multiply by the same efficiency again.
+
+### Independent-coupling and width closure gate
+
+The archived width note derives Gamma(chi2 -> chi1 s) only under the conditional assumptions of Dirac fermions, a pure scalar transition coupling g2, and no other open decay channels. These assumptions are not yet established by the source model.
+
+The final detector response must not proceed to physics parameter scans until the model input contract states:
+- Dirac or Majorana nature of chi1 and chi2;
+- exact scalar interaction and chiral/CP structure;
+- all open chi2 decay channels and their branching fractions;
+- whether g2 is independent, fixed by a symmetry, or related to other couplings;
+- whether the propagator uses a pole scheme or a self-energy-derived running form.
+
+The existing pole-width versus running-width comparison is diagnostic only. It does not establish the correct scheme. In particular, the archived benchmark with g2=3 shows an approximately 45--48% change in the reduced kernel under the constant pole-width prescription, while the running-width ansatz gives a much smaller shift. The choice must follow the Lagrangian and a consistent self-energy treatment, not the preferred numerical outcome.
+
+### No-scan rule
+
+Until the NEST response and width/coupling closure gates pass:
+- no large parameter scan;
+- no 90% CL statement from rate-level event counts;
+- no claim to reproduce the official LZ likelihood;
+- rate-level yields remain diagnostics only.
