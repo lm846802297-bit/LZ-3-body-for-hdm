@@ -377,3 +377,41 @@ The native Wolfram runner now reads the already archived AFH-native response
 from output/native_exports/afh_default_xe131_WM00_mathematica.csv; the
 Python comparator defaults to the independent source-translated response
 table at output/afh_default_xe131_WM00.csv.
+
+
+## Native Mathematica vs Python full-cross-section comparison
+
+The Python-only full-grid job has completed and archived its CSV, metadata and
+high-order anchors. The remaining independent check is to execute the native
+Wolfram Language integrator and compare its output point by point with the
+Python implementation.
+
+On Windows, from a PowerShell session at the repository root, run:
+
+~~~powershell
+python -m pip install -r research/afh_default_density_xe131/requirements.txt
+powershell -ExecutionPolicy Bypass -File research/afh_default_density_xe131/run_native_full_dsigma_windows.ps1
+~~~
+
+This requires Mathematica or Wolfram Engine with wolframscript available on
+PATH. The script checks both archived native and Python AFH response tables,
+runs the Wolfram I6 integration, and then calls
+compare_full_dsigma_mathematica.py for the independent Python recomputation.
+The default output is written under the system temporary directory, not into
+the source tree.
+
+The Wolfram and Python default recoil grids now both contain the regular
+5--800 keV grid plus the explicit 101, 200, 267 and 542 keV anchors. The
+comparison uses a 2e-7 tolerance for I6 and d sigma/dER. For the independently
+translated AFH response table, it uses 2e-8, consistent with the already
+archived 2401-node Mathematica/Python AFH response comparison (maximum
+relative difference 3.59e-9). The factor-four mapping, q, C0, and unit
+conversion checks retain their tighter 2e-12 tolerance.
+
+A successful run writes:
+- mathematica_full_dsigma_xe131.csv and its metadata;
+- mathematica_python_full_dsigma_comparison.csv;
+- mathematica_python_full_dsigma_comparison.json.
+
+Do not mark the full Mathematica/Python cross-section comparison complete
+until this run reports PASS and the comparison metadata has been reviewed.
