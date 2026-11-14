@@ -53,8 +53,9 @@ jobs:
 
       - name: Run Python differential-cross-section and normalization tests
         run: |
-          python -m unittest \
-            research.afh_default_density_xe131.tests.test_python_full_dsigma_xe131 -v
+          python -m unittest discover \
+            -s research/afh_default_density_xe131/tests \
+            -p 'test_python_full_dsigma_xe131.py' -v
 
       - name: Compute the complete 5--800 keV Xe-131 fixed-speed differential cross section
         run: |
@@ -105,6 +106,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: python-xe131-full-dsigma-factor4-audit
-          path: \${{ runner.temp }}/python_full_dsigma_xe131/
+          path: ${{ runner.temp }}/python_full_dsigma_xe131/
           if-no-files-found: error
           retention-days: 90
