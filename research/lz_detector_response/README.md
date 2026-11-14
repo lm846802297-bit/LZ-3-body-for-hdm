@@ -102,6 +102,7 @@ raw CSV plus JSON/CSV summaries outside the repository under
 - `S2c` is the signed corrected-phd value returned by `GetS2()[7]`.
 - NEST uses the sign to flag S1 coincidence failure and S2 threshold failure;
   the raw signed values are retained in the CSV.
+- NEST tests the S2 threshold before lifetime correction: the raw 783 phe threshold is 644.98 phd after DPE conversion, while the reference-depth corrected-S2c boundary is about 683.72 phd. Both are recorded separately; the sign flag from GetS2 is authoritative.
 - S1 uses the full PMT-level S1 mode. S2 uses NEST's integrated `Full` mode,
   not the waveform mode; this retains extraction, lifetime, EL gain, DPE/SPE
   and pulse-area fluctuations, but does not create the detailed S2 waveform
