@@ -43,13 +43,14 @@ int main(int argc, char** argv) {
 
     if (!(e_min > 0. && e_max > e_min) || n_events <= 0)
       throw std::invalid_argument("invalid energy range or event count");
-    if (config != "eft2024" && config != "ws2024" && config != "generic")
-      throw std::invalid_argument("config must be eft2024, ws2024, or generic");
+    if (config != "eft2024" && config != "ws2024" && config != "generic" &&
+        config != "eftmean_wswidth" && config != "eftmean_genericwidth")
+      throw std::invalid_argument("config must be eft2024, ws2024, generic, eftmean_wswidth, or eftmean_genericwidth");
     if (position_mode != "candidate" && position_mode != "uniform_tpc")
       throw std::invalid_argument("position must be candidate or uniform_tpc");
 
     LZ_Detector_2024 detector;
-    if (config == "eft2024" || config == "generic")
+    if (config != "ws2024")
       detector.SetEFT2024Configuration();
     // The default constructor selects the WS2024 detector/model configuration.
 
@@ -59,6 +60,12 @@ int main(int argc, char** argv) {
     if (config == "generic") {
       nr_yields = default_NRYieldsParam;
       er_yields = default_ERYieldsParam;
+      nr_er_widths = default_NRERWidthsParam;
+    } else if (config == "eftmean_wswidth") {
+      // Isolate NR fluctuation effect: retain EFT2024/Table-S5 mean yields and
+      // EFT2024 detector settings, but replace only the NR-relevant width entries.
+      nr_er_widths = LZ_Detector_2024::get_ws_nr_er_width_params();
+    } else if (config == "eftmean_genericwidth") {
       nr_er_widths = default_NRERWidthsParam;
     }
 
