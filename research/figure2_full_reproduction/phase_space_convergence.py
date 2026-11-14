@@ -383,6 +383,7 @@ def run_historical_800_anchor(output_dir: Path):
     archived_i6 = 1433678.0722867665
     mass_schemes = (
         ("historical_A_times_u_approx", 122.0),
+        ("rounded_u_0p9315", 131.0 * 0.9315),
         ("NIST_Xe131_nuclear_mass", 131.0 * 0.93149410242),
     )
     rows = []
