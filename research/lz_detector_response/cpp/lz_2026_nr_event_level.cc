@@ -11,7 +11,7 @@
 
 #include "NEST/NEST.hh"
 #include "Detectors/LZ_WS2024.hh"
-#include "RandomGen.hh"
+#include "NEST/RandomGen.hh"
 
 namespace {
 const std::vector<double> kLZ2026NRYields = {
