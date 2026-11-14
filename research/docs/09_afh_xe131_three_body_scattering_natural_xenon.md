@@ -28,7 +28,7 @@
 - **2026-11-13：** 将独立 Lorentz-invariant 三体相空间推导并入正文 §2.5.1–2.5.8 和附录 A.4.2；进一步补齐固定速度下 (m_{s,max}) 与 (E_R^*) 的解析极值、条件性 (chi_2	ochi_1s) 宽度、截断 SHM 实验室速度 PDF、天然氙靶核数及 halo 通量折叠的逐步推导，并同步主报告嵌入附录、独立附录文件和公式索引。本轮为解析推导与文档一致性更新，不修改数值程序、输入或归档结果。
 
 - **2026-11-13：** 将 `research/p1-mma-local` 中已完成的 Wolfram 14.0.0 原生 AFH Xe-131 2401 点结果、Python 对照、minima、源文件和 SHA-256 manifest 逐文件纳入本 PR；更新 README、附录 B/G、F6 索引和 P0–P2 状态。该归档不改变 Eq. (6) kernel 或天然氙连续谱的完成边界。
-- **2026-11-14：** 新增 P1-PhaseSpace 数值收敛审计：比较线性 \(W^2\)、线性 \(W\) 与 threshold-\(u^2\) 参数化，检查五个 \(v_{\min}\) 邻域速度点和代表点角积分，并以未归一化 Lorentz-invariant \(d\Phi_3\) 路径复核 Eq. (6) 前因子；新增六项回归测试和结果 SHA-256 归档。近极点积分、完整连续反冲网格和 halo fold 仍未完成。
+- **2026-11-14：** 新增 P1-PhaseSpace 数值收敛审计：比较线性 \(W^2\)、线性 \(W\) 与 threshold-\(u^2\) 参数化，检查五个 \(v_{\min}\) 邻域速度点和代表点角积分，并以未归一化 Lorentz-invariant \(d\Phi_3\) 路径复核 Eq. (6) 前因子；新增六项回归测试和结果 SHA-256 归档；随后测试模块扩展为九项。近极点积分、完整连续反冲网格和 halo fold 仍未完成。
 
 ## 摘要
 
@@ -802,7 +802,7 @@ I_6^{\rm raw}=5455179.0558397\ {\rm GeV}^2,
 \]
 两条路径之比为 1。该数值检查没有使用 AFH factor 4；AFH 核响应归一化仍是独立问题。
 
-**验证边界：** 本轮完成四组 fixed-speed benchmark、五个阈值邻域速度点、三种 \(W\) 参数化、代表点角积分以及 raw-\(d\Phi_3\) 前因子数值对照；新增六项回归测试本地全部通过。当前尚未完成近传播子极点窄峰积分、不同宽度处方的系统收敛比较、完整连续反冲网格误差控制或天然氙 halo fold。故本轮结论限定为所测非近极点 benchmark 和阈值邻域，不升级为全参数空间收敛证明。
+**验证边界：** 本轮完成四组 fixed-speed benchmark、五个阈值邻域速度点、三种 \(W\) 参数化、代表点角积分以及 raw-\(d\Phi_3\) 前因子数值对照；新增六项回归测试本地全部通过。GitHub Actions 已通过 13/13 Eq. (6) kernel 测试、9/9 P1 相空间测试及历史 CSV 逐列复现（run [43581233498](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43581233498)）。初次归档比较失败已定位为 `relative_to_archived=I_6/I_6^{\\rm archive}-1` 这一近零派生残差被错误使用相对容差；比较器现仅对该列使用绝对容差 5×10⁻⁸，原始物理积分列仍采用相对 5×10⁻⁸、绝对 10⁻¹²。历史物理输入和归档数据未修改。虽然 CI 已完成 benchmark、阈值、历史 800 km/s 和离壳近极点扫描，但近极点宽度处方的系统收敛比较、完整连续反冲网格误差控制和天然氙 halo fold 仍未完成。故本轮结论仍限定为已测 benchmark 和阈值邻域，不升级为全参数空间收敛证明。
 
 复算入口为 research/figure2_full_reproduction/phase_space_convergence.py；回归测试为 research/figure2_full_reproduction/tests/test_phase_space_convergence.py。结果 CSV 和归档包位于 research/figure2_full_reproduction/results/。
 
