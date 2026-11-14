@@ -74,8 +74,17 @@ The independent kinematic check strongly favors a legend-unit typo (MeV written 
 
 ## Reproduction
 
-Run:
-\`\`\`bash
-python kinematic_threshold.py
-\`\`\`
-Requires Python, NumPy, and SciPy. The script writes \`phase_space_threshold.csv\`.
+Run from the repository root:
+
+~~~bash
+python research/figure2_kinematic_audit/calculations/kinematic_threshold.py
+~~~
+
+The script writes the machine-readable table to
+`research/figure2_kinematic_audit/results/phase_space_threshold.csv`.
+
+Run regression tests with:
+
+~~~bash
+python -m unittest discover -s research/figure2_kinematic_audit/tests -v
+~~~

@@ -68,7 +68,8 @@ def minimum_speed_for_mass(ms_kev: float) -> tuple[float, float]:
 
 
 def main() -> None:
-    out = Path(__file__).resolve().parent
+    out = Path(__file__).resolve().parent.parent / "results"
+    out.mkdir(parents=True, exist_ok=True)
     rows = []
     for speed in SPEEDS_KM_S:
         mmax, er_at_max = optimize_mass(speed)
