@@ -133,3 +133,83 @@ An earlier preflight reported a 4.11e-5 difference between the linear-W^2 kernel
 | Natural-xenon continuous AFH spectrum and LZ likelihood | **Outside this audit** |
 
 No native full-cross-section run, output CSV, or pointwise Mathematica–Python PASS is claimed until the Wolfram runner has completed and the generated artifacts have been compared.
+
+
+## 7. P0 response-definition reconciliation and P1 recoil-grid plan — 2026-11-15
+
+### P0: response convention now explicit in both manuscript and runner
+
+For the finite-decimal Xe-131 AFH table, the numerical response used by the full-cross-section runner is
+\[
+R_A^{\rm phys}(q)=4C_0R_{A,\rm package}^{00}(q),\qquad
+C_0=\frac{A^2}{4R_{A,\rm package}^{00}(0)}.
+\]
+The manuscript now states this same convention. For the archived Xe-131 input,
+\(R_{A,\rm package}^{00}(0)=4289.895955714993\) and
+\(C_0=1.0000825298069378\). The factor four is the AFH isoscalar-to-equal-\(p,n\)
+coupling conversion; \(C_0\) is only a \(q\)-independent correction for the
+finite decimal precision of the tabulated density matrix. In the exact
+unrounded-matrix limit, \(C_0=1\).
+
+The Mathematica four-momentum reconstruction now evaluates
+\[
+\cos\theta_q=
+\frac{2m_{\chi_1}m_s+m_s^2+\Delta W^2+
+2(E_{\chi_1}+m_A)E_R}{2p_{\chi_1}Q},
+\qquad
+\Delta W^2=W^2-W_{\min}^2,
+\]
+rather than forming \(W^2-m_{\chi_1}^2\) from two large nearly equal
+quantities. This is algebraically equivalent to the original expression and
+matches the threshold-stable Python construction. No new numerical result is
+claimed from this source-level stabilization.
+
+### P1: 5-keV versus 1-keV \(E_R\) grid
+
+The new local PowerShell runner is run_afh_er_grid_convergence.ps1; the
+comparison utility is compare_er_grid_convergence.py. Both use the same four
+fixed-speed benchmarks, Xe-131 \(m_A=131u\), \(m_{\chi_1}=1\) TeV,
+\(m_V=10\) GeV, \(v=800\) km/s, \((g_1g_2g_{VN})^2=10^{-8}\),
+\(g_2=1\), constant pole width, threshold-\(u^2\) mapping, and
+\((n_W,n_z,n_\phi)=(16,16,8)\).
+
+- Coarse grid: \(E_R=5,10,\ldots,800\) keV (160 points per benchmark).
+- Fine grid: \(E_R=5,6,\ldots,800\) keV (796 points per benchmark).
+- The AFH 2401-node response table is reused; AFH is not rerun.
+- Each Mathematica grid is independently compared point by point with Python
+  before the two recoil grids are compared.
+- The two grids must agree at every shared 5-keV node. The energy-grid
+  comparison then evaluates the integrated fixed-speed \(d\sigma_A/dE_R\)
+  area, the peak height and location, and the three AFH response minima
+  windows \(85\!-\!120\), \(250\!-\!290\), and \(525\!-\!565\) keV.
+- The acceptance thresholds are: common-node \(I_6\) and \(d\sigma/dE_R\)
+  relative differences \(\le 2\times10^{-7}\); response interpolation
+  differences \(\le 2\times10^{-10}\); \(C_0\) and factor-four identity
+  residuals \(\le 2\times10^{-12}\); integrated-area difference
+  \(\le 10^{-3}\); peak-height difference \(\le 5\times10^{-3}\).
+  Peak and response-minimum locations are reported as diagnostics rather
+  than silently forced to agree.
+
+Run from the repository root on the Windows machine with Wolfram Engine and
+Python available:
+
+~~~powershell
+.\research\afh_default_density_xe131\run_afh_er_grid_convergence.ps1
+~~~
+
+The runner writes both native Mathematica CSVs and metadata, both independent
+Python pointwise comparison CSVs and metadata, and the final 5-keV/1-keV
+summary under
+research/afh_default_density_xe131/output/er_grid_convergence_2026-11-15/.
+
+A separate high-order quadrature anchor remains necessary: run the existing
+green benchmark at \(E_R=200,300,500\) keV with
+\((n_W,n_z,n_\phi)=(48,40,24)\), then compare those values with the
+\(16\times16\times8\) results. Recoil-grid convergence and
+\(W^2,z,\phi_*\) quadrature convergence are separate acceptance questions.
+
+**Execution status:** source, manuscript normalization, runner and comparison
+utility are prepared and committed. The native Mathematica 5-keV and 1-keV
+full-grid runs, their Python pointwise comparisons, and the P1 numerical
+acceptance remain pending. No PASS is claimed until those local outputs and
+their provenance are archived.
