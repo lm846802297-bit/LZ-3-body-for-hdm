@@ -10,7 +10,7 @@ HEPData DOI: 10.17182/hepdata.182472.v1
 The LZ 2026 extended-NR paper exposes enough information to build a substantially better detector-response recast than an efficiency-only fold:
 
 - a 303-point digitization of the final WIMP-search NR efficiency is already archived in this repository;
-- the paper states that its tuned LZ-tuned NEST best-fit response parameters (the paper's stated version label must be reconciled with the public NEST tag v2.4.5beta) are included in the HEPData release;
+- the paper says best-fit NEST parameters are in the Data Release, but the supplied HEPData v1 ZIP contains only 46 tables and no separate NEST configuration resource; a separate public NEST EFT2024 configuration candidate has since been found at commit 541b643;
 - the paper publishes the candidate event coordinates and reconstructed recoil energy;
 - the paper documents the simultaneous science, prompt-veto, and delayed-veto sample structure and the extended unbinned likelihood.
 
@@ -33,7 +33,7 @@ These values are paper-level inputs and should be versioned alongside the recast
 
 ## 2. Public detector-response information
 
-The paper identifies NEST as the tuned detector-response model; the public upstream release currently exposes the pre-release tag v2.4.5beta (commit 19bc9bc), so the exact LZ analysis software snapshot must be checked against the paper/HEPData files before pinning it. The best-fit NEST parameters are stated to be in the HEPData data release, and the Supplemental Material provides the model details.
+The paper identifies NEST v2.4.5 as the tuned detector-response model. The supplied HEPData v1 ZIP has 46 tables but no NEST header/configuration or additional_resources entry. A separate public LZ-specific candidate exists in NEST commit 541b643: LZ_Detector_2024::SetEFT2024Configuration(), added in commit 307fb27. An independent study uses this commit but explicitly says the connection to the exact collaboration build is circumstantial; do not call it officially confirmed. See LZ_2026_NEST_CONFIGURATION_PROVENANCE.md.
 
 The repository already contains:
 - lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv
@@ -77,7 +77,7 @@ Consequently, a faithful recast needs more than the public NR efficiency curve:
 | Input | Current status | Action |
 |---|---|---|
 | NR efficiency central curve and gray band | Already digitized and archived | Keep as rate-level cross-check |
-| NEST v2.4.5 best-fit NR parameters | Paper says available in HEPData | Retrieve machine-readable tables and pin version |
+| NEST 2026 NR/ER means and fluctuations | Table S3–S5 in paper plus public EFT2024 candidate vectors at NEST commit 541b643; no separate config in supplied HEPData ZIP | Compare exact vectors and keep provenance caveat |
 | NR calibration cloud in S1c/log10(S2c) | Published in paper figures | Digitize only for validation, not as substitute for full calibration data |
 | Candidate event coordinate | Published: (540.1, 9268) phd | Include in diagnostic plots |
 | Candidate reconstructed energy | Published with stat/sys uncertainties | Use only with correct response/energy mapping |
@@ -186,3 +186,18 @@ Until the NEST response and width/coupling closure gates pass:
 - no 90% CL statement from rate-level event counts;
 - no claim to reproduce the official LZ likelihood;
 - rate-level yields remain diagnostics only.
+
+
+## 13. Corrected NEST/HEPData provenance and parameter-family distinction (2026-11-15)
+
+The supplied HEPData v1 ZIP was re-opened and `submission.yaml` was checked directly: it contains no `additional_resources` field and the ZIP contains only the 46 table YAML files. The HEPData record JSON endpoint returned HTTP 403, so the archive conclusion is explicitly scoped to the supplied table export; do not claim that an independent NEST file was downloaded from HEPData.
+
+A separate public LZ-specific executable configuration was located in NEST commit `541b6430dae6ea289cf110c99f174a9187f7fdee`, method `LZ_Detector_2024::SetEFT2024Configuration()`, added in commit `307fb27d4c2f9b48dba27529bb57bc243e0ce2dc`. It contains the higher-precision Table S5 NR vector, Table S3 ER vector (with the executable sentinel (m_6=-1), whereas Table S3 prints 0), and a 17-element NRERWidthsParam vector containing the Table S4 ER fluctuation values. The source commit is not a tagged NEST release and its identity with the exact LZ 2026 production build is not established.
+
+Keep four families separate:
+1. **Printed Tables S3–S5:** rounded mean-yield and ER fluctuation parameters as published; Table S5 alone is NR mean yield, not the full NR fluctuation model.
+2. **EFT2024 public NEST candidate:** full-precision NR/ER mean vectors, 17-element NRERWidthsParam, and detector overrides (g_1=0.1104), (g_{1,gas}=0.07753555), (s2\_thr=120\,\mathrm{phe}), (eLife=15000\,\mu\mathrm{s}).
+3. **WS2024 configuration:** separate 2024 LZ mean-yield and 13-element width vectors, with its own detector gains/threshold/lifetime.
+4. **Generic NEST defaults:** upstream generic defaults; not LZ-tuned.
+
+The earlier NR band pilots used rounded Table S5 means with WS2024 or generic width vectors and default WS2024 detector overrides. They are hybrid API/sensitivity checks, not the EFT2024 candidate response. Their numerical residuals are retained for reproducibility but superseded as the primary response result. The next band run uses NEST commit 541b643 and explicitly compares EFT2024, WS2024, and generic parameter families.
