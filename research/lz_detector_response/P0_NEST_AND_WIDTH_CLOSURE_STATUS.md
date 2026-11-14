@@ -388,3 +388,20 @@ Run and artifact:
 - Report: `lz_2026_extended_nr/LZ_2026_NR_EVENT_LEVEL_PILOT_248KEV.md`.
 
 **Important correction to the next-step definition:** the 2026 paper states that its NR band is formed using flat-in-energy NR recoil spectra and evaluated along lines of fixed S1c; Fig. 2 reports the mean and 10th–90th percentiles in ({S1_c,\log_{10}S2_c}). A single monoenergetic 248-keV simulation is therefore only a sanity check, not a reproduction of the published NR band. A second workflow now generates a flat 5.4–269.9 keV spectrum at the central reference position and bins (log_{10}S2_c) by S1c. This first pass still omits the spatial averaging, full FV, and calibration nuisance treatment. See [the 2026 paper, Fig. 2 description and calibration section](https://arxiv.org/abs/2609.02823).
+
+
+## 17. Flat-spectrum NR band checked at the candidate reconstructed position (2026-11-15)
+
+The first flat-spectrum band pilot used a central reference position. This was refined after checking the paper's Fig. 3: the candidate is reconstructed at (z=26.4\,\mathrm{cm}) above the cathode and near (r=45.9\,\mathrm{cm}). The event generator now uses (x=459\,\mathrm{mm},y=0,z=264\,\mathrm{mm}), invoking the WS2024 detector class's position-dependent S1/S2 corrections.
+
+The paper's Fig. 2 caption states that bands are built from flat-in-energy recoil spectra and evaluated along fixed-S1c lines; the NR calibration coverage is D-D 0–74 keV and AmBe 0–330 keV. Because the caption does not state the exact flat-spectrum interval, two alternatives were simulated (200,000 events per width vector, same seed): uniform 5.4–269.9 keV (analysis window) and uniform 0.1–330 keV (approximately the full AmBe NR calibration range).
+
+Using a 5-phd S1c bin (540\le S1_c<545\), the candidate's position relative to the median NR band is:
+- analysis-window prior: (-1.54\sigma_{eq}) (WS2024), (-1.61\sigma_{eq}) (generic);
+- full AmBe-range prior: (-1.65\sigma_{eq}) (WS2024), (-1.59\sigma_{eq}) (generic).
+
+Here (sigma_{eq}=(Q_{90}-Q_{10})/2.5631), a Gaussian-equivalent scale derived from the central 80% interval. The range (-1.54) to (-1.65\sigma_{eq}) is close to the paper's stated (-1.5\sigma) displacement. This is a strong local-position cross-check, but not an exact reproduction: the exact flat-spectrum prior, full spatial sampling, exact 2026 best-fit NEST configuration, nuisance covariance, and full calibration distributions remain to be established.
+
+- Workflow: [run 43638132096](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43638132096), successful.
+- Artifact ID: `14130821456`, SHA-256 `4fd583cb3f7cf0eaeff6be3b06be1a51d1739b3db3cdac9fc5ad6a0a0a113559`.
+- Full report: `lz_2026_extended_nr/LZ_2026_NR_FLAT_BAND_PILOT.md`.
