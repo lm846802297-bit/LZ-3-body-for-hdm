@@ -18,6 +18,12 @@ class EnergyGridConvergenceTests(unittest.TestCase):
             self.assertAlmostEqual(edges[-1], 269.9)
             self.assertTrue(all(b > a for a, b in zip(edges, edges[1:])))
 
+    def test_partial_terminal_bins_preserve_exact_roi_width(self):
+        for width in (1.0, 5.0, 10.0):
+            edges = MOD.make_edges(MOD.ROI_MIN_KEV, MOD.ROI_MAX_KEV, width)
+            self.assertAlmostEqual(sum(b - a for a, b in zip(edges, edges[1:])), 264.5)
+            self.assertAlmostEqual(edges[-1] - edges[-2], 0.5 if width == 1.0 else (4.5 if width == 5.0 else 4.5))
+
     def test_roi_mask_uses_published_boundaries(self):
         self.assertTrue(MOD.ws_roi_pass(3.0, 646.0, 10**2.75))
         self.assertTrue(MOD.ws_roi_pass(600.0, 646.0, 10**4.15))
