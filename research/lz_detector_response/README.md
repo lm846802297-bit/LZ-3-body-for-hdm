@@ -15,6 +15,13 @@ high-efficiency nuclear-recoil region.
   extraction method, axis calibration, checks, and digitization caveats.
 - `lz_2026_extended_nr/rate_level_event_yields/`: archived
   efficiency-weighted expected event yields and their calculation metadata.
+- `lz_2026_extended_nr/lz_2026_nest_nr_mean_yield_parameters.json`: exact
+  LZ 2026 Supplemental Table S5 NR mean-yield parameter set and NEST source pin.
+- `lz_2026_extended_nr/lz_2026_nr_mean_yield.py`: independent Python port
+  of the NEST NR mean-yield equations, including the high-energy p(E) branch.
+- `LZ_2026_PUBLIC_INPUTS_AUDIT.md` and `P0_NEST_AND_WIDTH_CLOSURE_STATUS.md`:
+  public-input availability and P0 closure status.
+- `tests/test_lz_2026_nr_mean_yield.py`: unit tests for the isolated mean-yield port.
 
 ## Provenance and interpretation
 
