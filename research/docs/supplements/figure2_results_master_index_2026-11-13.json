@@ -543,7 +543,7 @@
         },
         {
           "path": "research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md",
-          "sha256": "e88554cb94b8f502f7bdcfc06ed2261979565453c45a793c51d13ecc1a9ea2af",
+          "sha256": "beea8c7420428a75ce5bb38c28eb590ca338048c3c7830683ca8912785a05b38",
           "role": "pointwise L00 local validation record"
         }
       ]
