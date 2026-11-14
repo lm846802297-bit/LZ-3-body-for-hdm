@@ -26,6 +26,8 @@
 
 ## 仓库结构
 
+- [完整文件分类与研究导航](research/FILE_MAP.md)：说明各目录的科学职责、数据状态和结果使用边界。
+
 - `paper-source/`：原始论文源码、工作稿和图件。
 - `research/`：集中保存全部研究文档、计算程序、单元测试、审计记录和数值结果；目录索引见 `research/README.md`。
 - `.github/workflows/`：可复现计算与自动化验证。
