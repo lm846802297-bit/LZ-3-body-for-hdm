@@ -178,7 +178,7 @@ Until Tracks A and B pass their validation gates:
 
 - LZ Collaboration, arXiv:2609.02823v1, especially Supplemental Material Table S5 and the detector-response/likelihood sections.
 - HEPData data release, DOI: 10.17182/hepdata.182472.v1.
-- NESTCollaboration/nest source, pinned commit `30811ea2f8a6de1262eef35278745226dc5d582a`.
+- NESTCollaboration/nest source, selected commit pin `423b9745a5bfbb0402514f1d7955e67445de0810` (contains the 15-parameter high-energy NR suppression).
 - NEST v2.4.5beta prerelease tag `19bc9bc`, retained as a version comparison, not the selected implementation pin.
 
 
@@ -207,3 +207,48 @@ The field, density, isotope mass scaling convention, and OldW13eV flag must be c
 
 The first audit pinned the then-current NEST master HEAD. A subsequent history check found the exact earlier commit introducing the LZ high-energy NR suppression:
 `423b9745a5bfbb0402514f1d7955e67445de0810` (2026-08-16, commit message “Add energy-dependent NR charge-yield suppression”). The JSON parameter archive has been updated to this commit and its exact source blob. This avoids pinning unrelated later changes while retaining the p(E) code used by the LZ 2026 mean-yield model.
+
+
+## 10. Progress update: C++ cross-language validation passed (2026-11-15)
+
+The direct C++ wrapper now compiles against the pinned NEST core and calls `NESTcalc::GetYieldNR` itself. The workflow uses the pinned source commit `423b9745a5bfbb0402514f1d7955e67445de0810` and the GCEM and detector-header include paths required by that build.
+
+Successful CI:
+- Run ID: `43630666034`
+- URL: https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43630666034
+- Python unit tests: 6 passed
+- Cross-language cases: isotopes A = 128, 131, 136; both `OldW13eV=true/false`; 11 recoil energies per case from 5.4 to 330 keV, including 74.7 keV and 248 keV
+- Scalar comparisons: 264
+- Worst scaled absolute difference: `3.331e-16`
+
+This validates the independent Python port of the **NR mean-yield equations only** against the pinned NEST C++ implementation. It does not validate the NR fluctuation model, LZ detector configuration, S1/S2 response, or the official LZ likelihood.
+
+### Detector conditions that can now be fixed
+
+The LZ 2026 extended-NR analysis uses the 220-live-day WS2024 dataset (27 March 2023--1 April 2024). The associated WS2024 drift field is 97 V/cm. The LZ 2026 paper reports the calibrated gains:
+- `g1 = 0.110 +/- 0.002 phd/photon`
+- `g2 = 34.5 +/- 1.1 phd/electron`
+
+These are now verified detector-level inputs for the analysis period. They should not be confused with the older SR1/WS2022 values. The paper's `g1`/`g2` gains do not by themselves determine all underlying NEST optical, extraction, and single-electron parameters.
+
+### Inputs still not fixed for production response
+
+- liquid-xenon density used by the LZ-tuned NEST configuration;
+- the precise molar-mass convention and isotope scaling used in the collaboration configuration;
+- `OldW13eV` setting in the LZ 2026 release (the public WS2024 NEST header sets it true, but that header is not itself proof of the final 2026 analysis configuration);
+- the exact NR fluctuation vector used in the 2026 BACCARAT/NEST production;
+- detector spatial maps and event-level S1/S2 response configuration;
+- whether the HEPData release includes the full detector header or only fitted model parameters.
+
+The NEST cross-check driver deliberately tests both `OldW13eV` modes and uses an explicit molar mass and density. Its numerical agreement is not evidence that either mode is the official LZ choice.
+
+## 11. Next detector-response milestone
+
+Before producing a production S1/S2 PDF grid:
+1. Resolve the LZ 2026 HEPData payload and inventory all files, not only the paper's Table S5.
+2. Confirm density, molar mass, `OldW13eV`, NRERWidthsParam, and all detector gain/extraction settings.
+3. Build a NEST event-level driver using the 15-parameter Table S5 mean-yield vector and the confirmed fluctuation vector.
+4. Generate NR calibration samples over the DD and AmBe energy ranges and compare the median and 10--90% band to the published Figure 2 calibration data.
+5. Only after that validation, produce conditional PDFs in `{S1c, log10(S2c)}` and integrate the official WS ROI cuts.
+
+Until these gates pass, retain the current module as a validated mean-yield component, not a complete LZ response model.
