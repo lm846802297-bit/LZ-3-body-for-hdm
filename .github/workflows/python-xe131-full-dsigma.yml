@@ -1,0 +1,110 @@
+name: Python Xe-131 full differential cross section and factor-four audit
+
+on:
+  push:
+    branches:
+      - research/python-xe131-full-dsigma-20261114
+    paths:
+      - .github/workflows/python-xe131-full-dsigma.yml
+      - research/afh_default_density_xe131/run_python_full_dsigma_xe131.py
+      - research/afh_default_density_xe131/tests/test_python_full_dsigma_xe131.py
+      - research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv
+      - research/figure2_full_reproduction/eq6_kernel.py
+      - research/figure2_full_reproduction/phase_space_convergence.py
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+    paths:
+      - .github/workflows/python-xe131-full-dsigma.yml
+      - research/afh_default_density_xe131/run_python_full_dsigma_xe131.py
+      - research/afh_default_density_xe131/tests/test_python_full_dsigma_xe131.py
+      - research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv
+      - research/figure2_full_reproduction/eq6_kernel.py
+      - research/figure2_full_reproduction/phase_space_convergence.py
+
+permissions:
+  contents: read
+
+jobs:
+  python-full-dsigma:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: research/afh_default_density_xe131/requirements.txt
+
+      - name: Install numerical dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r research/afh_default_density_xe131/requirements.txt
+
+      - name: Compile Python runner and tests
+        run: |
+          python -m py_compile research/afh_default_density_xe131/run_python_full_dsigma_xe131.py
+          python -m py_compile research/afh_default_density_xe131/tests/test_python_full_dsigma_xe131.py
+
+      - name: Run Python differential-cross-section and normalization tests
+        run: |
+          python -m unittest \
+            research.afh_default_density_xe131.tests.test_python_full_dsigma_xe131 -v
+
+      - name: Compute the complete 5--800 keV Xe-131 fixed-speed differential cross section
+        run: |
+          python research/afh_default_density_xe131/run_python_full_dsigma_xe131.py \
+            --outdir "$RUNNER_TEMP/python_full_dsigma_xe131" \
+            --nw 16 --nz 16 --nphi 8 \
+            --anchor-order 48 40 24 \
+            --max-anchor-relative-difference 1e-3
+
+      - name: Validate the full-grid output and factor-four ledger
+        run: |
+          python - <<'PY'
+          import csv
+          import json
+          import math
+          import os
+          from pathlib import Path
+
+          out = Path(os.environ["RUNNER_TEMP"]) / "python_full_dsigma_xe131"
+          meta = json.loads((out / "python_full_dsigma_xe131_metadata.json").read_text())
+          with (out / "python_full_dsigma_xe131.csv").open(newline="") as stream:
+              rows = list(csv.DictReader(stream))
+          with (out / "python_full_dsigma_quadrature_anchors.csv").open(newline="") as stream:
+              anchors = list(csv.DictReader(stream))
+          assert meta["status"] == "PASS"
+          assert meta["mathematica_or_wolfram_invoked"] is False
+          assert len(rows) == 4 * len(set(float(r["ER_keV"]) for r in rows))
+          assert len(anchors) == 4 * 4
+          assert meta["acceptance"]["max_factor4_ratio_relative_residual"] <= 2e-12
+          assert meta["acceptance"]["max_factor4_mapping_relative_residual"] <= 2e-12
+          assert meta["acceptance"]["max_unit_conversion_relative_residual"] <= 2e-14
+          for row in rows:
+              assert math.isfinite(float(row["I6_GeV2"]))
+              assert math.isfinite(float(row["dsigma_dER_GeVminus3"]))
+              if int(row["phase_space_open"]):
+                  assert abs(float(row["dsigma_factor4_ratio"]) - 4.0) <= 8e-12
+              else:
+                  assert float(row["I6_GeV2"]) == 0.0
+                  assert float(row["dsigma_dER_GeVminus3"]) == 0.0
+          print(
+              "PASS: %d differential-cross-section rows; %d high-order anchors; "
+              "factor-four and unit-conversion ledgers close."
+              % (len(rows), len(anchors))
+          )
+          PY
+
+      - name: Upload Python-only Xe-131 differential-cross-section archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-xe131-full-dsigma-factor4-audit
+          path: \${{ runner.temp }}/python_full_dsigma_xe131/
+          if-no-files-found: error
+          retention-days: 90
