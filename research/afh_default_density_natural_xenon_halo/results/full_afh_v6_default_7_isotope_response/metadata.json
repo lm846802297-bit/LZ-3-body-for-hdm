@@ -1,0 +1,215 @@
+{
+  "status": "PASS",
+  "source": "AFH DMFormFactor v6.0 committed source",
+  "source_file": "v6/dmformfactor-V6.m",
+  "source_file_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+  "weights_file": "research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv",
+  "weights_file_sha256": "fd1bb996e5f582c74c3c86d129f1d2dded510c65237d0a7b2ba08861f1d8c991",
+  "response_convention": "AFH exact spatial momentum q; y=(b_A q/2)^2",
+  "physical_response_convention": "R_equal_pn(q)=A^2 R_AFH_package(q)/R_AFH_package(0); AFH factor four applied exactly once",
+  "q_grid_GeV": {
+    "minimum": 0.0,
+    "maximum": 0.6,
+    "step": 0.00025,
+    "points_per_isotope": 2401
+  },
+  "available_isotopes": [
+    128,
+    129,
+    130,
+    131,
+    132,
+    134,
+    136
+  ],
+  "missing_default_isotopes": [
+    {
+      "A": 124,
+      "isotope": "Xe-124",
+      "J_A": 0.0,
+      "natural_atom_fraction": 0.000952,
+      "reason": "No sdgXeA default density matrix or SetIsotope default dispatch in AFH v6.0"
+    },
+    {
+      "A": 126,
+      "isotope": "Xe-126",
+      "J_A": 0.0,
+      "natural_atom_fraction": 0.00089,
+      "reason": "No sdgXeA default density matrix or SetIsotope default dispatch in AFH v6.0"
+    }
+  ],
+  "natural_atom_fraction_coverage": 0.9981580000000001,
+  "A2_weighted_zero_q_coherent_coverage": 0.998333992527348,
+  "q0_package_normalization_relative_tolerance": 0.0005,
+  "response_rows": 16807,
+  "response_file": "afh_v6_default_xenon_7isotope_response_16807.csv",
+  "response_file_sha256": "e6fbc061c66e551696abb9cd26e51fdc439840102b78a57c2b40041010737487",
+  "isotopes": [
+    {
+      "A": 128,
+      "J_A": 0.0,
+      "T_iso": 10.0,
+      "matrix_entries": 21,
+      "isoscalar_rank_counts": {
+        "0": 16
+      },
+      "b_A_fm": 2.2845956364531257,
+      "b_A_GeV_inverse": 11.577645306853507,
+      "AFH_package_R0": 4095.6211741568454,
+      "AFH_expected_R0_A2_over_4": 4096.0,
+      "AFH_R0_relative_error": 9.248677811390937e-05,
+      "physical_R0": 16384.0,
+      "A2": 16384,
+      "finite_precision_shape_normalization": 1.0000924953327093,
+      "grid_minimum_q_GeV": 0.486,
+      "grid_minimum_R_over_A2": 2.969911213355642e-13,
+      "isotope": "Xe-128",
+      "natural_atom_fraction": 0.019102,
+      "nuclear_mass_GeV": 119.113790862,
+      "density_matrix_sha256": "fa2017a7ea1951cad6407078aeebede34b9182d0554f38968d5033c6c16bbeb4"
+    },
+    {
+      "A": 129,
+      "J_A": 0.5,
+      "T_iso": 10.5,
+      "matrix_entries": 39,
+      "isoscalar_rank_counts": {
+        "0": 16,
+        "1": 9
+      },
+      "b_A_fm": 2.2871937024334894,
+      "b_A_GeV_inverse": 11.590811525822195,
+      "AFH_package_R0": 4159.791079045487,
+      "AFH_expected_R0_A2_over_4": 4160.25,
+      "AFH_R0_relative_error": 0.00011031090788127251,
+      "physical_R0": 16641.0,
+      "A2": 16641,
+      "finite_precision_shape_normalization": 1.0001103230777202,
+      "grid_minimum_q_GeV": 0.501,
+      "grid_minimum_R_over_A2": 4.381518036960921e-12,
+      "isotope": "Xe-129",
+      "natural_atom_fraction": 0.264006,
+      "nuclear_mass_GeV": 120.046449203,
+      "density_matrix_sha256": "a0bd848d443a073b80ad731cc87fcfb29d7c899da932d5a230e2e245295f158e"
+    },
+    {
+      "A": 130,
+      "J_A": 0.0,
+      "T_iso": 11.0,
+      "matrix_entries": 21,
+      "isoscalar_rank_counts": {
+        "0": 16
+      },
+      "b_A_fm": 2.2897756832598466,
+      "b_A_GeV_inverse": 11.603896230055925,
+      "AFH_package_R0": 4224.467459119418,
+      "AFH_expected_R0_A2_over_4": 4225.0,
+      "AFH_R0_relative_error": 0.0001260451788359651,
+      "physical_R0": 16900.0,
+      "A2": 16900,
+      "finite_precision_shape_normalization": 1.0001260610682259,
+      "grid_minimum_q_GeV": 0.4865,
+      "grid_minimum_R_over_A2": 6.43616916618911e-13,
+      "isotope": "Xe-130",
+      "natural_atom_fraction": 0.04071,
+      "nuclear_mass_GeV": 120.976758899,
+      "density_matrix_sha256": "38eedadeecc45acc637264b386f8e0d2b63c8dc9e811395e348fbb3e4da8beea"
+    },
+    {
+      "A": 131,
+      "J_A": 1.5,
+      "T_iso": 11.5,
+      "matrix_entries": 67,
+      "isoscalar_rank_counts": {
+        "0": 16,
+        "1": 9,
+        "2": 8,
+        "3": 6
+      },
+      "b_A_fm": 2.2923417985218975,
+      "b_A_GeV_inverse": 11.61690053236942,
+      "AFH_package_R0": 4289.895955714993,
+      "AFH_expected_R0_A2_over_4": 4290.25,
+      "AFH_R0_relative_error": 8.25229963306029e-05,
+      "physical_R0": 17161.0,
+      "A2": 17161,
+      "finite_precision_shape_normalization": 1.0000825298069376,
+      "grid_minimum_q_GeV": 0.49925,
+      "grid_minimum_R_over_A2": 1.6710677113115175e-08,
+      "isotope": "Xe-131",
+      "natural_atom_fraction": 0.212324,
+      "nuclear_mass_GeV": 121.909719835,
+      "density_matrix_sha256": "4ca110f6828ef6cebe4373fb0c9704220d8227c4a131bc2b5801dc2884e00a00"
+    },
+    {
+      "A": 132,
+      "J_A": 0.0,
+      "T_iso": 12.0,
+      "matrix_entries": 21,
+      "isoscalar_rank_counts": {
+        "0": 16
+      },
+      "b_A_fm": 2.2948922631920268,
+      "b_A_GeV_inverse": 11.629825522178235,
+      "AFH_package_R0": 4355.806154216505,
+      "AFH_expected_R0_A2_over_4": 4356.0,
+      "AFH_R0_relative_error": 4.4500868570884755e-05,
+      "physical_R0": 17424.0,
+      "A2": 17424,
+      "finite_precision_shape_normalization": 1.0000445028489864,
+      "grid_minimum_q_GeV": 0.487,
+      "grid_minimum_R_over_A2": 6.337412996802984e-13,
+      "isotope": "Xe-132",
+      "natural_atom_fraction": 0.269086,
+      "nuclear_mass_GeV": 122.840348604,
+      "density_matrix_sha256": "5a367bb5a4d278bf9c3c9f7e2aae8cd7252efe8c3371f1da2d06516c766f07f3"
+    },
+    {
+      "A": 134,
+      "J_A": 0.0,
+      "T_iso": 13.0,
+      "matrix_entries": 21,
+      "isoscalar_rank_counts": {
+        "0": 16
+      },
+      "b_A_fm": 2.2999470783389384,
+      "b_A_GeV_inverse": 11.655441808898239,
+      "AFH_package_R0": 4488.071750883163,
+      "AFH_expected_R0_A2_over_4": 4489.0,
+      "AFH_R0_relative_error": 0.00020678305120003238,
+      "physical_R0": 17956.0,
+      "A2": 17956,
+      "finite_precision_shape_normalization": 1.000206825819274,
+      "grid_minimum_q_GeV": 0.50275,
+      "grid_minimum_R_over_A2": 1.1260723996248542e-12,
+      "isotope": "Xe-134",
+      "natural_atom_fraction": 0.104357,
+      "nuclear_mass_GeV": 124.704491465,
+      "density_matrix_sha256": "843bd0d85d77f904c41b6a8ecb349369cadfec9d3b79f477406208e8dc410a7c"
+    },
+    {
+      "A": 136,
+      "J_A": 0.0,
+      "T_iso": 14.0,
+      "matrix_entries": 21,
+      "isoscalar_rank_counts": {
+        "0": 16
+      },
+      "b_A_fm": 2.304941760984924,
+      "b_A_GeV_inverse": 11.6807533621433,
+      "AFH_package_R0": 4623.993034602906,
+      "AFH_expected_R0_A2_over_4": 4624.0,
+      "AFH_R0_relative_error": 1.5063575030671572e-06,
+      "physical_R0": 18496.0,
+      "A2": 18496,
+      "finite_precision_shape_normalization": 1.0000015063597723,
+      "grid_minimum_q_GeV": 0.4915,
+      "grid_minimum_R_over_A2": 2.5971455125109908e-12,
+      "isotope": "Xe-136",
+      "natural_atom_fraction": 0.088573,
+      "nuclear_mass_GeV": 126.569174825,
+      "density_matrix_sha256": "9069106f11e2efd537380c62d7e4e63114ed84ec6bbfde687bd5da493d988df0"
+    }
+  ],
+  "scope_limit": "This is the complete 7-isotope AFH v6.0 default response grid. It is not a 9-isotope all-AFH grid: Xe-124 and Xe-126 lack default matrices."
+}

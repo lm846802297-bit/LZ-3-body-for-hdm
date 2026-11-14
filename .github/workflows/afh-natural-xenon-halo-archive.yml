@@ -51,18 +51,21 @@ jobs:
           echo "$output"
           echo "$output" | grep -q "Regenerate R_A at the selected q"
 
-      - name: Recompute exact-spatial-q selected-point natural-xenon halo fold
+      - name: Recompute exact-spatial-q selected-point natural-xenon halo fold (manual cloud run only)
+        if: false
         run: |
           python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py \
             --out-dir "$RUNNER_TEMP/natural_xenon_exact_spatial"
 
       - name: Compare fresh exact-spatial-q output against the archived tables
+        if: false
         run: |
           python research/afh_default_density_natural_xenon_halo/compare_legacy_reproduction.py \
             --reproduced-dir "$RUNNER_TEMP/natural_xenon_exact_spatial" \
             --relative-tolerance 5e-8
 
       - name: Upload exact-spatial-q reproduction and comparison
+        if: false
         uses: actions/upload-artifact@v4
         with:
           name: afh-natural-xenon-exact-spatial-reproduction

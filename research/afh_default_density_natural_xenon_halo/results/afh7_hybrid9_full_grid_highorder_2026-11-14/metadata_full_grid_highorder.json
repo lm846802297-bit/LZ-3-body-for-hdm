@@ -1,0 +1,37 @@
+{
+  "status": "PASS",
+  "date": "2026-11-14",
+  "branch": "research/afh-natural-xenon-continuous-20261114",
+  "execution_environment": "ChatGPT cloud Python kernel; Numba 0.65.1; Python 3.13.5; NumPy 2.3.5",
+  "github_actions_used_for_numerical_calculation": false,
+  "baseline_quadrature_order": "12x6x6x3",
+  "final_quadrature_order": "24x8x8x4",
+  "recoil_energy_points": 84,
+  "isotope_kernel_rows": 3024,
+  "kinematically_open_points": 1726,
+  "kinematically_closed_points": 1298,
+  "highorder_spectrum_rows": 1344,
+  "max_relative_differences": {
+    "speed_12_to24_all_open_points": 6.637349034610551e-06,
+    "kernel_6x6x3_to8x8x4_all_open_points": 6.023233023455532e-10,
+    "baseline_12x6x6x3_to_final_24x8x8x4": 6.637462826475371e-06,
+    "final_speed24_kernel_order_increment": 5.964295723970281e-10,
+    "speed_24_to48_worst32_points": 2.2174949521058807e-07,
+    "spectrum_baseline_to_highorder": 6.467719031455488e-06,
+    "jit_vs_python_reference_12_points": 5.329070518200751e-15
+  },
+  "acceptance_tolerance": 1e-05,
+  "spectrum_scenario_ordering_violations": 0,
+  "nonfinite_spectrum_rates": 0,
+  "AFH_supported_isotopes": [128, 129, 130, 131, 132, 134, 136],
+  "AFH_missing_default_isotopes": [124, 126],
+  "natural_atom_fraction_AFH7": 0.998158,
+  "natural_atom_fraction_missing": 0.001842,
+  "A2_weighted_AFH_coverage_at_q0": 0.998333992527348,
+  "detector_response_applied": false,
+  "archive": {
+    "file": "afh_hybrid9_full_grid_highorder_cloud_2026-11-14.zip",
+    "sha256": "e55442d3ad4289dfd6c16e8e6cdb43d669561df074beddefcf87e8d1024f3471",
+    "size_bytes": 736245
+  }
+}

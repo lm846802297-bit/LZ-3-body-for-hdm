@@ -207,10 +207,27 @@ Both diagrams and their interference are retained.
 
 At leading order in the non-relativistic nuclear current, vector
 exchange probes the coherent charge response.
-For equal proton and neutron couplings, $g_p=g_n=g_{VN}$, we use the response function
-$\mathcal R_A(E_R)=4\pi W_M^{00}(y)/(2J_A+1)$,
-where $y=b_A^2m_AE_R/2$ and $\mathcal R_A(0)=A^2$
-\cite{Anand:2013yka}.
+For equal physical proton and neutron couplings, $g_p=g_n=g_{VN}$, let
+$W_{M,\mathrm{AFH}}^{00}(y)$ denote the raw isoscalar response returned by
+the AFH v6.0 default-density implementation. Its package convention obeys
+\[
+\frac{4\pi}{2J_A+1}W_{M,\mathrm{AFH}}^{00}(0)\simeq\frac{A^2}{4}.
+\]
+Since the cross-section prefactor is written in terms of the physical
+per-nucleon coupling $g_{VN}$, the response entering the cross section is
+\[
+\mathcal R_A(E_R)
+=C_A\frac{16\pi}{2J_A+1}W_{M,\mathrm{AFH}}^{00}(y),
+\qquad
+C_A=\frac{A^2}{\frac{16\pi}{2J_A+1}W_{M,\mathrm{AFH}}^{00}(0)}.
+\]
+Here $y=(q b_A/2)^2$ and $q=\sqrt{2m_AE_R+E_R^2}$ is the exact spatial
+momentum transfer. The $q$-independent factor $C_A$ removes only the tiny
+overall offset caused by the finite decimal precision of the tabulated
+AFH density-matrix coefficients; it is unity for an unrounded matrix.
+Thus $\mathcal R_A(0)=A^2$. The factor of four mapping the AFH raw
+isoscalar response to the physical equal-$p,n$ response is included once,
+and is not also absorbed into $g_{VN}$ \cite{Anand:2013yka}.
 The differential cross section is
 \begin{equation}
 \begin{split}

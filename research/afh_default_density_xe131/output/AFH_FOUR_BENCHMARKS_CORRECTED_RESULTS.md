@@ -1,5 +1,7 @@
 # Corrected AFH-default Xe-131 four-benchmark comparison
 
+Canonical machine-readable outputs are `figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv` (long form) and `figure2_four_benchmarks_AFH_GCN_JJ55_wide_audit.csv` (wide audit). The earlier `figure2_four_benchmarks_dsigma_AFH_GCN_JJ55.csv` is historical and superseded; see [CROSS_SECTION_FILE_INDEX.md](CROSS_SECTION_FILE_INDEX.md).
+
 This archive gives the corrected 5 keV-grid AFH-default substitution for four fixed-speed benchmarks. The existing Eq. (6) integral I6 and particle/mediator prefactors are held fixed; only the nuclear response changes.
 
 ## Normalization

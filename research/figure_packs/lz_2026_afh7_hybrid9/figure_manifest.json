@@ -1,0 +1,138 @@
+{
+  "title": "LZ 3-body HDM scientific figure pack",
+  "source_repository": "lm846802297-bit/LZ-3-body-for-hdm",
+  "source_branch": "research/afh-lz-efficiency-factor4-20261114",
+  "pull_request": 29,
+  "generated_at": "2026-11-14",
+  "figure_count": 13,
+  "binary_assets_committed_to_repository": false,
+  "binary_asset_note": "PNG/PDF/ZIP files were generated and SHA-256 verified in the ChatGPT working session. This commit records metadata only because the available GitHub connector does not expose a direct local-binary upload operation.",
+  "figures": [
+    {
+      "id": "Fig01",
+      "file": "Fig01_Tree_level_diagrams.png",
+      "bytes": 104596,
+      "sha256": "c4f646e78fca1f5226525f6235b8d9719c26b6ea5894b1e7da636f8637b367b2",
+      "description": "Schematic tree-level topologies; not an amplitude derivation."
+    },
+    {
+      "id": "Fig02",
+      "file": "Fig02_Xe131_fixed_speed_benchmarks.png",
+      "bytes": 450502,
+      "sha256": "844274565712bf8b5bbc251962b5232368176797b7f4dcbe43254c0e12838ec8",
+      "description": "Xe-131 fixed-speed AFH/GCN/JJ55 benchmark at 800 km/s; diagnostic only, above the truncated-SHM endpoint."
+    },
+    {
+      "id": "Fig03",
+      "file": "Fig03_Natural_xenon_halo_spectra.png",
+      "bytes": 331420,
+      "sha256": "9253676ced66d737a98f66cce421316abdd520ee12e1e6e93cdb7d0fbbd271ce",
+      "description": "Natural-xenon halo-folded AFH-7 and Hybrid-9 spectra."
+    },
+    {
+      "id": "Fig04",
+      "file": "Fig04_Xe131_AFH_physical_normalization.png",
+      "bytes": 311976,
+      "sha256": "c6ec52fea625acff3af85c3752e5e5fdd75d3ce831995beeba9e1054ae6ef4a2",
+      "description": "Xe-131 AFH raw versus physical response; factor four applied once."
+    },
+    {
+      "id": "Fig05",
+      "file": "Fig05_Three_body_phase_space_I6.png",
+      "bytes": 208583,
+      "sha256": "ab13ff4c867114ca5a5b05230143cd15010d4d3f3cbf2e604410dd889a72e149",
+      "description": "Three-body phase-space integral I6 in GeV^2."
+    },
+    {
+      "id": "Fig06",
+      "file": "Fig06_LZ_2026_NR_efficiency.png",
+      "bytes": 151798,
+      "sha256": "81c7ddaac42e972f320a1d365c37765244d8c7899ada4d47851d20e2f232f597",
+      "description": "Digitized LZ 2026 one-dimensional final-ROI NR efficiency and gray envelope."
+    },
+    {
+      "id": "Fig07",
+      "file": "Fig07_LZ_AFH7_Hybrid9_expected_yields.png",
+      "bytes": 98224,
+      "sha256": "ab4978c7070b71e58f7146119239f301fd17dcee913890777db619ffaecf585d",
+      "description": "AFH-7/Hybrid-9 efficiency-folded rate-level expected yields; not a likelihood or exclusion."
+    },
+    {
+      "id": "Fig08",
+      "file": "Fig08_High_energy_tail_fraction.png",
+      "bytes": 144192,
+      "sha256": "f3818809086694a8f69348f62fd377a84568a1cc26877870a5e051d9110b25ca",
+      "description": "Unsmeared accepted-rate fraction in the 225–269.9 keV recoil interval."
+    },
+    {
+      "id": "Fig09",
+      "file": "Fig09_Natural_xenon_isotope_abundance.png",
+      "bytes": 88340,
+      "sha256": "c1570f1adb0e5201b78dba3ba66c03c01d51656e3b8b74c4e8026d87207b30c9",
+      "description": "Natural xenon abundances and AFH default-density coverage."
+    },
+    {
+      "id": "Fig10",
+      "file": "Fig10_Quadrature_convergence_audit.png",
+      "bytes": 160988,
+      "sha256": "3d6906cee37fd685b1f8a34a3644a69d8ecf22a5f9b218c3ed4a1ef3ed63a10d",
+      "description": "Benchmark- and isotope-level high-order quadrature convergence summary."
+    },
+    {
+      "id": "Fig11",
+      "file": "Fig11_AFH_vs_Helm_isotope_response_difference.png",
+      "bytes": 129722,
+      "sha256": "df10107f2b15c1d511f8eb2e6e7abd66890f46d6949c2fb767def6b043094e19",
+      "description": "AFH-versus-Helm normalized response differences for seven AFH-supported isotopes."
+    },
+    {
+      "id": "Fig12",
+      "file": "Fig12_Exact_q_vs_NR_approximation.png",
+      "bytes": 136553,
+      "sha256": "d67413b85b857f02aa414c944af5f0b381fa7da7c40da4554d15b1cc64c32320",
+      "description": "Exact spatial q versus the non-relativistic recoil approximation."
+    },
+    {
+      "id": "Fig13",
+      "file": "Fig13_Halo_cutoff_vs_untruncated_MB.png",
+      "bytes": 166234,
+      "sha256": "fa869f0da1f348b5346cc241832754fefc5913bbf8ea74e0d5a8407ab13838f6",
+      "description": "Truncated SHM versus untruncated Maxwell–Boltzmann tail diagnostic."
+    }
+  ],
+  "supplementary_files": [
+    {
+      "file": "LZ_Scientific_Figure_Atlas.pdf",
+      "bytes": 2810296,
+      "sha256": "fd22552cf092dc22bec70b84ba1bc90bf9352bd293dbdbd7f720c3583555bce2"
+    },
+    {
+      "file": "LZ_3body_scientific_figure_pack.zip",
+      "bytes": 4176199,
+      "sha256": "b89e80cc0a673407d36f21382a2caa17ce21689965185bbb8d2d9354163d2a68"
+    }
+  ],
+  "scope": {
+    "fixed_speed_fig02_km_s": 800,
+    "truncated_shm_vmax_km_s": 776,
+    "roi_keV": [
+      5.4,
+      269.9
+    ],
+    "exposure_tonne_year": 2.84,
+    "hybrid9_helm_fallback_isotopes": [
+      124,
+      126
+    ],
+    "abundance_renormalization": false,
+    "factor4_applied_once": true,
+    "rate_level_yields_are_likelihood": false,
+    "is_90_percent_CL_exclusion": false,
+    "original_confidence_level_contours_reproduced": false
+  },
+  "archive_integrity": {
+    "standalone_pdf_and_embedded_pdf_identical": true,
+    "pdf_sha256": "fd22552cf092dc22bec70b84ba1bc90bf9352bd293dbdbd7f720c3583555bce2",
+    "internal_manifest_and_sha256sums_verified": true
+  }
+}

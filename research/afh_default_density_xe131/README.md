@@ -150,9 +150,10 @@ q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}.
 
 This exact spatial q is used for the response interpolation and the three-body
 kinematic boundary. The common \(q_{\rm NR}=\sqrt{2m_AE_R}\) relation is retained
-only as a small-recoil approximation. The natural-xenon 28-point response
-archive uses exact spatial q and is consistent with the exact three-body
-kinematics. Numerical differences in the NR approximation are documented in
+only as a small-recoil approximation. The AFH-7/Hybrid-9 continuous-spectrum archive evaluates the seven supported
+isotope responses at exact spatial q and is consistent with the exact
+three-body kinematics. The earlier 28-point selected-sample archive remains
+available as a historical cross-check. Numerical differences in the NR approximation are documented in
 research/docs/appendices/09G_recoil_momentum_convention_audit.md.
 
 ## Scope and connection to the three-body calculation
@@ -166,10 +167,10 @@ they are not a fresh independent recomputation of all 640 three-body
 integrals.
 
 The manuscript source `paper-source/main.tex` now explicitly uses
-`R_A = 16 pi W_M00_AFH/(2 J_A+1)` for the raw AFH v6.0 response and the
-physical equal-proton/equal-neutron coupling. This gives `R_A(0)=A^2`.
-The factor four is applied exactly once, in the nuclear response. The
-independent historical code-convention check is documented in
+`R_A = C_A 16 pi W_M00_AFH/(2 J_A+1)` for the raw AFH v6.0 response and the
+physical equal-proton/equal-neutron coupling, with `C_A` fixed by the q=0
+sum rule. This gives `R_A(0)=A^2`; the factor four is applied exactly once.
+The independent historical code-convention check is documented in
 `AFH_COUPLING_NORMALIZATION_MAPPING.md`.
 
 The selected-point natural-xenon isotope sum and halo velocity fold are
@@ -252,3 +253,8 @@ The detailed seven-isotope diagnosis is in
 `../afh_default_density_natural_xenon_halo/audit/AFH_RESPONSE_INTERPOLATION_AUDIT.md`.
 Do not use the PCHIP-based values above as the final AME2020 rate prediction
 until that recomputation is complete.
+
+
+## Canonical four-benchmark cross-section files
+
+See [output/CROSS_SECTION_FILE_INDEX.md](output/CROSS_SECTION_FILE_INDEX.md) for the single canonical file-name mapping. The current long-form result is `output/figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv`; the matching wide audit is `output/figure2_four_benchmarks_AFH_GCN_JJ55_wide_audit.csv`. The historical `output/figure2_four_benchmarks_dsigma_AFH_GCN_JJ55.csv` is retained only for provenance and is superseded because its AFH response column was copied from GCN. It must not be used in downstream plots or calculations.

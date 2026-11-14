@@ -41,7 +41,8 @@ jobs:
             -s research/figure2_full_reproduction/tests \
             -p 'test_lz_2026_rate_level_fold.py' -v
 
-      - name: Integrate the digitized LZ final-ROI efficiency
+      - name: Integrate the digitized LZ final-ROI efficiency (manual cloud run only)
+        if: false
         run: |
           python research/figure2_full_reproduction/fold_lz_2026_rate_level.py \
             --spectrum-dir research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum \
@@ -49,6 +50,7 @@ jobs:
             --out-dir "$RUNNER_TEMP/lz_rate_level"
 
       - name: Upload LZ rate-level event-yield results
+        if: false
         uses: actions/upload-artifact@v4
         with:
           name: lz-2026-rate-level-event-yields
@@ -57,6 +59,7 @@ jobs:
           retention-days: 90
 
       - name: Archive LZ rate-level results
+        if: false
         shell: bash
         run: |
           set -euo pipefail

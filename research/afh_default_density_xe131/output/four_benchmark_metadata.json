@@ -25,10 +25,10 @@
     }
   },
   "first_open_grid_point_keV": {
-    "black_ms360_dm1": 190.0,
-    "blue_ms300_dm10": 100.0,
-    "green_ms300_dm1": 100.0,
-    "red_ms200_dm1": 35.0
+    "black_ms360_dm1": 190,
+    "blue_ms300_dm10": 100,
+    "green_ms300_dm1": 100,
+    "red_ms200_dm1": 35
   },
   "rows": {
     "long": 1920,
@@ -40,5 +40,18 @@
     "Conditional pole width, not a full self-energy calculation.",
     "No detector efficiency, resolution, cuts, or likelihood.",
     "Native Mathematica execution of AFH v6.0 remains pending."
+  ],
+  "canonical_files": {
+    "long_form": "figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv",
+    "wide_form": "figure2_four_benchmarks_AFH_GCN_JJ55_wide_audit.csv",
+    "audit": "FOUR_BENCHMARK_CROSS_SECTION_AUDIT.md",
+    "index": "CROSS_SECTION_FILE_INDEX.md"
+  },
+  "superseded_files": [
+    {
+      "file": "figure2_four_benchmarks_dsigma_AFH_GCN_JJ55.csv",
+      "status": "superseded_historical",
+      "reason": "The AFH response column was copied from GCN rather than populated from the AFH response table."
+    }
   ]
 }
