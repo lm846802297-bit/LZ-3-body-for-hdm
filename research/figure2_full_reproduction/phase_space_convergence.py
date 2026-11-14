@@ -113,18 +113,20 @@ def _integrate(
     """Integrate sqrt(lambda_dim)*L00 over dW2 dz and the selected phi measure."""
     if min(mchi, mA) <= 0.0 or min(ms, ER, speed_kms, delta_m) < 0.0:
         raise ValueError("invalid non-positive physical input")
-    wmin2, wmax2 = eq6.limits(mchi, ms, mA, ER, speed_kms)
-    if wmax2 <= wmin2:
+    wmin2 = (mchi + ms) ** 2
+    delta_max = eq6.delta_w2_max(mchi, ms, mA, ER, speed_kms)
+    if delta_max <= 0.0:
         return 0.0
+    wmax2 = wmin2 + delta_max
 
     xW, wW = _legendre(nW)
     xz, wz = _legendre(nz)
     xp, wp = _legendre(nphi)
 
     if mapping == "linear_w2":
-        W2_values = 0.5 * (wmax2 + wmin2) + 0.5 * (wmax2 - wmin2) * xW
-        W2_weights = 0.5 * (wmax2 - wmin2) * wW
-        delta_values = W2_values - wmin2
+        delta_values = 0.5 * delta_max * (xW + 1.0)
+        W2_values = wmin2 + delta_values
+        W2_weights = 0.5 * delta_max * wW
     elif mapping == "linear_w":
         Wmin, Wmax = math.sqrt(wmin2), math.sqrt(wmax2)
         W_values = 0.5 * (Wmax + Wmin) + 0.5 * (Wmax - Wmin) * xW
@@ -135,7 +137,7 @@ def _integrate(
     elif mapping == "threshold_u2":
         u_values = 0.5 * (xW + 1.0)
         u_weights = 0.5 * wW
-        delta = wmax2 - wmin2
+        delta = delta_max
         delta_values = delta * u_values * u_values
         W2_values = wmin2 + delta_values
         W2_weights = u_weights * (2.0 * delta * u_values)
