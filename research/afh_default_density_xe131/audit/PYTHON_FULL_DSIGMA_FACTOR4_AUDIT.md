@@ -225,3 +225,15 @@ The run metadata explicitly records that Mathematica/Wolfram was not invoked.
 The independent native Mathematica full-cross-section comparison remains
 pending and must be completed before this audit is promoted to a full
 cross-code validation.
+
+
+For reference, the fixed-speed spectra have the following grid maxima. These
+are numerical outputs for the stated \(v=800\) km/s benchmark and are not
+halo-averaged rates or detector event counts.
+
+| Benchmark | Open \(E_R\) range (keV) | Maximum \(d\sigma_A/dE_R\) (GeV\(^{-3}\)) | Grid location (keV) |
+|---|---:|---:|---:|
+| red, \(m_s=200\) keV, \(\Delta m=1\) MeV | 35--800 | \(9.62585\times10^{-7}\) | 50 |
+| green, \(m_s=300\) keV, \(\Delta m=1\) MeV | 100--750 | \(4.39465\times10^{-8}\) | 170 |
+| black, \(m_s=360\) keV, \(\Delta m=1\) MeV | 190--550 | \(1.40708\times10^{-9}\) | 355 |
+| blue, \(m_s=300\) keV, \(\Delta m=10\) MeV | 100--750 | \(3.50707\times10^{-10}\) | 170 |
