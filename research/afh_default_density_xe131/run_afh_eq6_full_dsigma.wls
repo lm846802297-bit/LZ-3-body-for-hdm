@@ -167,12 +167,13 @@ chi2Width[mchi_, ms_, deltaM_, g2_] := Module[{m2 = mchi + deltaM, lam},
 reducedKernel[mchi_, ms_, deltaM_, mA_, ER_, speed_, width_, nW_, nZ_, nPhi_, mapping_] := Module[
   {wMin2, wMax2, wRule, zRule, phiRule, total = 0., wPair, zPair, phiPair,
    w2, deltaW2, deltaW2Max, u, weightW, z, weightZ, phi, weightPhi,
-   lambdaDim, angular, azimuth, point, beta0, gamma0c},
+   lambdaDim, angular, azimuth, point, beta0, gamma0c, qMag},
   wMin2 = (mchi + ms)^2; beta0 = speed/cKms; gamma0c = 1./Sqrt[1. - beta0^2];
-  wMax2 = mchi^2 + 2.*mchi*gamma0c*beta0*Sqrt[2.*mA*ER + ER^2] -
-    2.*(mchi*gamma0c + mA)*ER;
-  If[wMax2 <= wMin2, Return[0.]];
-  deltaW2Max = wMax2 - wMin2;
+  qMag = Sqrt[2.*mA*ER + ER^2];
+  deltaW2Max = 2.*mchi*gamma0c*beta0*qMag -
+    2.*(mchi*gamma0c + mA)*ER - 2.*mchi*ms - ms^2;
+  If[deltaW2Max <= 0., Return[0.]];
+  wMax2 = wMin2 + deltaW2Max;
   wRule = If[mapping === "threshold_u2",
     gaussLegendreRule[nW, -1., 1.],
     gaussLegendreRule[nW, wMin2, wMax2]];
@@ -212,8 +213,10 @@ Do[
   Print["Starting ", benchmark, " ; Gamma_pole = ", ScientificForm[gammaPole, 6], " GeV"];
   Do[
     ER = erKev*10^-6; wMin2 = (mchi + ms)^2;
-    wMax2 = mchi^2 + 2.*pChi*Sqrt[2.*mA*ER + ER^2] - 2.*(eChi + mA)*ER;
-    open = wMax2 > wMin2;
+    qMag = Sqrt[2.*mA*ER + ER^2];
+    deltaW2Max = 2.*pChi*qMag - 2.*(eChi + mA)*ER - 2.*mchi*ms - ms^2;
+    wMax2 = wMin2 + deltaW2Max;
+    open = deltaW2Max > 0.;
     If[open && wMax2 >= mchi2^2, Print["On-shell chi2 region: ", benchmark, " ER=", erKev]; Exit[8]];
     clearanceGeV = If[wMax2 > 0., mchi2 - Sqrt[wMax2], Infinity];
     If[open, minPoleClearance = Min[minPoleClearance, clearanceGeV]];
