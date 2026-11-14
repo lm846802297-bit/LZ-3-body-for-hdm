@@ -108,8 +108,8 @@
     },
     {
       "file": "LZ_3body_scientific_figure_pack.zip",
-      "bytes": 4165901,
-      "sha256": "10e34bfd34110d8aeeba8395c014d9a5ec8e62c4fdc3c7fa573cb175eddb4b18"
+      "bytes": 4176199,
+      "sha256": "b89e80cc0a673407d36f21382a2caa17ce21689965185bbb8d2d9354163d2a68"
     }
   ],
   "scope": {
@@ -129,5 +129,10 @@
     "rate_level_yields_are_likelihood": false,
     "is_90_percent_CL_exclusion": false,
     "original_confidence_level_contours_reproduced": false
+  },
+  "archive_integrity": {
+    "standalone_pdf_and_embedded_pdf_identical": true,
+    "pdf_sha256": "fd22552cf092dc22bec70b84ba1bc90bf9352bd293dbdbd7f720c3583555bce2",
+    "internal_manifest_and_sha256sums_verified": true
   }
 }
