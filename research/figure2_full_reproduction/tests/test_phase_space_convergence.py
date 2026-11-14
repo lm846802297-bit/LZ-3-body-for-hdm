@@ -150,6 +150,43 @@ class PhaseSpaceConvergenceTests(unittest.TestCase):
             },
         )
 
+    def test_sine_squared_mapping_matches_threshold_mapping(self):
+        threshold = psc.integrate_i6(
+            self.mchi, self.ms, self.dm, self.mA, self.ER, self.speed,
+            nW=32, nz=8, nphi=8, mapping="threshold_u2",
+        )
+        sine = psc.integrate_i6(
+            self.mchi, self.ms, self.dm, self.mA, self.ER, self.speed,
+            nW=32, nz=8, nphi=8, mapping="sine2",
+        )
+        self.assertGreater(sine, 0.0)
+        self.assertLess(abs(sine / threshold - 1.0), 1e-8)
+
+    def test_near_pole_offshell_width_schemes_are_finite(self):
+        mchi, ms = 1000.0, 300e-6
+        mA = 131.0 * 0.93149410242
+        ER, speed, dm = 267e-6, 776.0, 362e-6
+        wmin2, wmax2 = eq6.limits(mchi, ms, mA, ER, speed)
+        pole_gap = mchi + dm - math.sqrt(wmax2)
+        self.assertGreater(pole_gap, 0.0)
+        self.assertGreater(math.sqrt(wmin2), mchi)
+
+        gamma_pole = eq6.chi2_width_dirac_scalar(mchi, ms, dm, 0.1)
+        gamma_running = eq6.chi2_width_dirac_scalar_at_mass(
+            math.sqrt(wmax2), mchi, ms, 0.1
+        )
+        self.assertGreater(gamma_pole, 0.0)
+        self.assertGreater(gamma_running, 0.0)
+
+        for scheme, g2 in (("zero", 1.0), ("pole", 0.1), ("running", 0.1), ("pole", 1.0), ("running", 1.0)):
+            value = psc.integrate_i6(
+                mchi, ms, dm, mA, ER, speed,
+                nW=64, nz=4, nphi=4, mapping="sine2",
+                width_scheme=scheme, g2=g2,
+            )
+            self.assertTrue(math.isfinite(value), (scheme, g2, value))
+            self.assertGreater(value, 0.0, (scheme, g2, value))
+
     def test_threshold_stable_point_preserves_mass_shells(self):
         wmin2, wmax2 = eq6.limits(
             self.mchi, self.ms, self.mA, self.ER, self.speed
