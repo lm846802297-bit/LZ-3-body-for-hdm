@@ -36,6 +36,15 @@ jobs:
           python research/figure2_full_reproduction/phase_space_convergence.py \
             --output-dir /tmp/p1_phase_space_reproduction \
             --reference-order 48 --mode all
+      - name: Preserve independent reproduction outputs for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: p1-phase-space-reproduction
+          path: /tmp/p1_phase_space_reproduction/
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Compare fresh CSV outputs with the committed audit archive
         run: |
           python - <<'PY'
