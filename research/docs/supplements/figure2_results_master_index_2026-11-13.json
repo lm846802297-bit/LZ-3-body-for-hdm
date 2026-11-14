@@ -671,15 +671,15 @@
   "files": [
     {
       "path": "paper-source/main.tex",
-      "sha256": "c8a1cfe3a9087c6f87c44730dc969e02e9ce41ea0a331a2c8de618b1ae4745c8",
-      "bytes": 19627,
-      "role": "corrected manuscript source; AFH factor-four and exact spatial-q definition"
+      "sha256": "8676fbeb3eb2c6cf0def983edd3223bc01f01cc77c732c8b6c37cf567e633adf",
+      "bytes": 19732,
+      "role": "current working manuscript source; not modified by the Phase II research integration"
     },
     {
       "path": "paper-source/SHA256SUMS",
-      "sha256": "e17a1a807b6873b8304323087793e68f58251fd2ca472876e0985bc8d9f2a79c",
+      "sha256": "3f27ffccf9f316d206add13af96cac2d2035557363b397bd6b2c8b9c3112b777",
       "bytes": 942,
-      "role": "manuscript source checksum manifest"
+      "role": "current manuscript source checksum manifest"
     },
     {
       "path": "research/afh_default_density_xe131/afh_default_xe131_density_matrix.csv",
@@ -713,15 +713,15 @@
     },
     {
       "path": "research/afh_default_density_xe131/output/figure2_four_benchmarks_dsigma_metadata.json",
-      "sha256": "98a049ccfc8210d9f0d3f0c10f45155acea97a9dab4dc73b5bec8a0a01d709e5",
-      "bytes": 1669,
-      "role": "four benchmark dsigma metadata"
+      "sha256": "d560d4b433c63e7e869e2ed295472eb9226b633c97fc78b9d807003975e7e759",
+      "bytes": 1978,
+      "role": "current four-benchmark differential-cross-section metadata"
     },
     {
       "path": "research/afh_default_density_xe131/output/four_benchmark_metadata.json",
-      "sha256": "9ba064ce439c97e0d7a23185a33b391b9ea7eca98fc8ccbd888b21fd5d5d5ebc",
-      "bytes": 1217,
-      "role": "four benchmark parameter metadata"
+      "sha256": "8f6bbcb3f96e16bdb3c10d4b719c987eac1b2d1ad4046f32dcf6f84a1bef27e1",
+      "bytes": 1737,
+      "role": "current four-benchmark parameter metadata"
     },
     {
       "path": "research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv",
