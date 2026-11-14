@@ -207,8 +207,8 @@ they are not a fresh independent recomputation of all 640 three-body
 integrals.
 
 The manuscript source `paper-source/main.tex` now explicitly uses
-`R_A = 16 pi W_M00_AFH/(2 J_A+1)` for the raw AFH v6.0 response and the
-physical equal-proton/equal-neutron coupling. This gives `R_A(0)=A^2`.
+`R_A = 16 pi C0 W_M00_AFH/(2 J_A+1)` for the finite-precision raw AFH v6.0 Xe-131 table and the
+physical equal-proton/equal-neutron coupling, with `C0=1.0000825298069378`. In the exact unrounded-density-matrix limit `C0=1`; the factor four is included exactly once.
 The factor four is applied exactly once, in the nuclear response. The
 independent historical code-convention check is documented in
 `AFH_COUPLING_NORMALIZATION_MAPPING.md`.
