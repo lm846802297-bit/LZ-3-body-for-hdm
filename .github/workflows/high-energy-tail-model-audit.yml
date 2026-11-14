@@ -41,7 +41,7 @@ jobs:
 
       - name: Run unit and regression tests
         run: |
-          python -m unittest research/afh_default_density_natural_xenon_halo/test_high_energy_tail_model_sensitivity.py -v
+          python -m unittest discover -s research/afh_default_density_natural_xenon_halo -p 'test_high_energy_tail_model_sensitivity.py' -v
 
       - name: Recompute high-energy tail comparison
         run: |
@@ -54,9 +54,10 @@ jobs:
           import csv
           import json
           import math
+          import os
           from pathlib import Path
 
-          out = Path("${{ runner.temp }}/high_energy_tail_audit")
+          out = Path(os.environ["RUNNER_TEMP"]) / "high_energy_tail_audit"
           meta = json.loads((out / "metadata.json").read_text(encoding="utf-8"))
           with (out / "high_energy_tail_model_sensitivity.csv").open(newline="", encoding="utf-8") as f:
               rows = list(csv.DictReader(f))
