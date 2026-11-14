@@ -372,3 +372,19 @@ Interpretation limits: this is an NR response pilot at one central reference pos
 
 
 **S2 threshold bookkeeping correction:** NEST tests the configured 783 phe threshold on raw S2 pulse area, then applies electron-lifetime/position corrections to S2c. The raw threshold after DPE conversion is 644.98 phd; at the pilot reference depth (525 us drift, 9000 us electron lifetime, unit spatial correction) the corresponding corrected-S2c boundary is 683.72 phd. The driver now records both values and preserves the sign-based NEST threshold flag. The 645 phd paper comparison is only a raw-threshold numerical comparison unless the paper's observable definition confirms otherwise.
+
+
+## 16. First event-level NEST pilot completed; flat-spectrum NR band is next (2026-11-15)
+
+A C++ driver now executes the pinned NEST event path `FullCalculation -> GetS1 -> GetS2` with the 2026 Table S5 mean-yield vector and the LZ WS2024 detector class. The driver extracts `s1[5]` and `s2[7]` as S1c and S2c, following the pinned `execNEST.cpp` `store_signals` mapping.
+
+The paired 248-keV run passed in GitHub Actions: 20,000 events per width vector, same seed `20261115`, same central position ((x=y=0), (t_d=525\,\mu s)), same field/density/detector settings; only the NRERWidthsParam vector differs. Mean S1c is 506.943 phd (WS2024) versus 506.776 phd (generic), and mean S2c is 10263.151 phd versus 10265.004 phd. The mean shifts are smaller than paired Monte Carlo standard errors; SD differences are about -0.23% (S1c) and +0.91% (S2c). This one-point test shows the two width candidates are very close in mean response, not that either is calibrated correctly.
+
+The HEPData Science sample's event at (S1_c=540.07916\,\mathrm{phd}), (S2_c=9267.53\,\mathrm{phd}) is recovered as the paper's candidate. The simple fixed-energy pilot gives 0.740% (WS2024) and 0.715% (generic) empirical fractions in the rectangular joint corner (S1_c\ge S1_{c,obs}), (S2_c\le S2_{c,obs}). These are descriptive Monte Carlo fractions only, not p-values or official NR compatibility probabilities.
+
+Run and artifact:
+- [Paired event-level workflow](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43637380941), run ID `43637380941`.
+- Artifact ID `14129604751`; SHA-256 `ec8325c5d152310896a683cb123383b899371ddda8a1fc820ad58b0ddabb8644`.
+- Report: `lz_2026_extended_nr/LZ_2026_NR_EVENT_LEVEL_PILOT_248KEV.md`.
+
+**Important correction to the next-step definition:** the 2026 paper states that its NR band is formed using flat-in-energy NR recoil spectra and evaluated along lines of fixed S1c; Fig. 2 reports the mean and 10th–90th percentiles in ({S1_c,\log_{10}S2_c}). A single monoenergetic 248-keV simulation is therefore only a sanity check, not a reproduction of the published NR band. A second workflow now generates a flat 5.4–269.9 keV spectrum at the central reference position and bins (log_{10}S2_c) by S1c. This first pass still omits the spatial averaging, full FV, and calibration nuisance treatment. See [the 2026 paper, Fig. 2 description and calibration section](https://arxiv.org/abs/2609.02823).
