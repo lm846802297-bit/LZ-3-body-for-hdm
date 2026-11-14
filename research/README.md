@@ -2,7 +2,10 @@
 
 All research materials are kept under this directory so the repository root stays uncluttered.
 
-## Research workflow
+## Navigation and research workflow
+
+- [Complete repository file map](FILE_MAP.md): scientific-stage classification, directory responsibilities, canonical-result warnings, and navigation order.
+
 
 Read WORKFLOW.md before starting a new study. Use _template/README.md for each new topic, and follow the PR checklist in .github/PULL_REQUEST_TEMPLATE.md.
 
