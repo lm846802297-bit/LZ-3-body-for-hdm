@@ -1,0 +1,83 @@
+{
+  "experiment": "LUX-ZEPLIN extended nuclear-recoil analysis",
+  "paper": "LZ Collaboration, arXiv:2609.02823v1 (2026-09-02)",
+  "paper_table": "Supplemental Material, Table S5, PDF page 17",
+  "hepdata_doi": "10.17182/hepdata.182472.v1",
+  "response_component": "NR mean light- and charge-yield model only",
+  "parameter_names_in_nest_vector_order": [
+    "alpha_keV_power_1_over_beta",
+    "beta",
+    "gamma_V_per_cm_power_1_over_delta",
+    "delta",
+    "epsilon_keV",
+    "zeta_keV",
+    "eta",
+    "theta_keV",
+    "iota",
+    "p_low_energy",
+    "f1_charge_turn_on",
+    "f2_light_turn_on",
+    "a_high_energy_power_suppression",
+    "b_high_energy_power_suppression",
+    "E0_keV"
+  ],
+  "nest_vector": [
+    11.2,
+    1.1,
+    0.052,
+    -0.0533,
+    10.8,
+    0.53,
+    1.4,
+    0.31,
+    2.5,
+    0.5,
+    1.39,
+    1.74,
+    0.023,
+    0.0289,
+    74.7
+  ],
+  "table_s5": {
+    "alpha": {"default": 11.0, "analysis": 11.2, "unit": "keV^(1/beta)"},
+    "beta": {"default": 1.1, "analysis": 1.1},
+    "gamma": {"default": 0.048, "analysis": 0.052, "unit": "(V/cm)^(1/delta)"},
+    "delta": {"default": -0.0533, "analysis": -0.0533},
+    "epsilon": {"default": 12.6, "analysis": 10.8, "unit": "keV"},
+    "zeta": {"default": 0.30, "analysis": 0.53, "unit": "keV"},
+    "eta": {"default": 2.0, "analysis": 1.4},
+    "theta": {"default": 0.30, "analysis": 0.31, "unit": "keV"},
+    "iota": {"default": 2.0, "analysis": 2.5},
+    "p": {"default": 0.50, "analysis": 0.50},
+    "f1": {"default": 1.0, "analysis": 1.39},
+    "f2": {"default": 1.0, "analysis": 1.74},
+    "a": {"default": null, "analysis": 0.0230},
+    "b": {"default": null, "analysis": 0.0289},
+    "E0": {"default": null, "analysis": 74.7, "unit": "keV"}
+  },
+  "high_energy_exponent": {
+    "below_or_at_E0": "p(E)=0.5",
+    "above_E0": "p(E)=0.5 + a*ln(1 + b*(E-E0))",
+    "a": 0.023,
+    "b": 0.0289,
+    "E0_keV": 74.7
+  },
+  "nest_source_pin": {
+    "repository": "https://github.com/NESTCollaboration/nest",
+    "branch": "master",
+    "commit": "30811ea2f8a6de1262eef35278745226dc5d582a",
+    "commit_date_utc": "2026-11-13T17:34:55Z",
+    "source_file": "src/NEST.cpp",
+    "source_blob_sha": "976bb6f2a96704d867d86f83fe8f86de42848012",
+    "relevant_implementation": "GetYieldNR uses NRYieldsParam[12:15] for a,b,E0 when vector length >= 15"
+  },
+  "versioning_warning": "The public v2.4.5beta tag (commit 19bc9bc, 2025-12-08) does not contain the 15-parameter high-energy p(E) implementation. Do not pin that prerelease tag for this LZ 2026 high-energy NR model. Pin the inspected source commit above unless the HEPData package or an official v2.4.5 release supplies a more precise release commit.",
+  "not_included": [
+    "NR fluctuation parameters and their tuned values, if any",
+    "LZ 2026 detector optical/electrical response settings and spatial maps",
+    "BACCARAT signal PDFs",
+    "S1/S2 reconstruction and event-selection response",
+    "NEST nuisance-parameter covariance"
+  ],
+  "interpretation": "This file records the exact Table S5 NR mean-yield parameter set. It is not by itself a complete LZ detector-response configuration or a two-dimensional S1c/log10(S2c) PDF."
+}
