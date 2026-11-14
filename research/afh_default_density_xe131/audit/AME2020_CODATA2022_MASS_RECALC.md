@@ -161,7 +161,7 @@ y_{\rm NR}=\frac{b_A^2m_AE_R}{2}.
 \]
 
 This distinction is also documented in the current mainline
-[Appendix G: AFH spatial momentum transfer and the NR recoil approximation](../docs/appendices/09G_recoil_momentum_convention_audit.md).
+[Appendix G: AFH spatial momentum transfer and the NR recoil approximation](../../docs/appendices/09G_recoil_momentum_convention_audit.md).
 The current implementation therefore uses:
 
 - exact_spatial: \(q_{\rm resp}=q_{\rm exact}\), the baseline AFH response input;
@@ -278,7 +278,7 @@ The calculation compares:
   \(16\times16\times8\) independent kernel cross-checks.
 
 The numerical tables are written to
-output/ame2020_q_convention_xe131_partial/, including separate
+../output/ame2020_q_convention_xe131_partial/, including separate
 mass-scheme and response-q rate-comparison CSV files.
 
 ### 4.1 Numerical result and convergence
@@ -379,7 +379,7 @@ The other six isotope terms remain at their NIST baseline. The NIST Xe-131 parti
 natural-xenon baseline with maximum relative difference
 (2.88978\times10^{-10}). The 14-row hybrid output and its input SHA-256
 records are archived in
-`output/ame2020_exact_spatial_xe131_partial/`. The largest absolute
+`../output/ame2020_exact_spatial_xe131_partial/`. The largest absolute
 change in the hybrid total over the 14 selected recoil/halo points is
 (7.86892\times10^{-6}), or 7.87 ppm. The hybrid calculation passed in
 [Actions run 43188435890](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43188435890).

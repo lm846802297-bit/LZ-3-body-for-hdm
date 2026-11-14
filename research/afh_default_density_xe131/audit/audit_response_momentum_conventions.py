@@ -11,7 +11,7 @@ from pathlib import Path
 import numpy as np
 from scipy.interpolate import PchipInterpolator
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(__file__).resolve().parents[1]
 NATURAL_INPUT = HERE.parent / "afh_default_density_natural_xenon_halo" / "input"
 U_GEV = 0.93149410242
 ME_U = 0.000548579909065

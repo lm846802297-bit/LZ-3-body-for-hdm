@@ -148,8 +148,8 @@ def write_csv(path: Path, rows: list[dict]) -> None:
 
 
 def main() -> None:
-    here = Path(__file__).resolve().parent
-    repo_root = here.parents[1]
+    study_dir = Path(__file__).resolve().parents[1]
+    repo_root = study_dir.parents[1]
     ap = argparse.ArgumentParser()
     ap.add_argument(
         "--baseline-isotope-contributions",
