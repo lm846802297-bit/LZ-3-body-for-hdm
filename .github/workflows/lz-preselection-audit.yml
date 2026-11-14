@@ -11,6 +11,7 @@ on:
       - research/lz_detector_response/lz_2026_extended_nr/audit_lz_nr_conditional_2d_pdf.py
       - research/lz_detector_response/lz_2026_extended_nr/test_audit_lz_nr_conditional_2d_pdf.py
       - research/lz_detector_response/lz_2026_extended_nr/S1_COINCIDENCE_AND_SELECTION_AUDIT.md
+      - research/lz_detector_response/lz_2026_extended_nr/lz_nr_event_level_selection_schema.json
   push:
     branches:
       - main
@@ -22,6 +23,7 @@ on:
       - research/lz_detector_response/lz_2026_extended_nr/audit_lz_nr_conditional_2d_pdf.py
       - research/lz_detector_response/lz_2026_extended_nr/test_audit_lz_nr_conditional_2d_pdf.py
       - research/lz_detector_response/lz_2026_extended_nr/S1_COINCIDENCE_AND_SELECTION_AUDIT.md
+      - research/lz_detector_response/lz_2026_extended_nr/lz_nr_event_level_selection_schema.json
 
 permissions:
   contents: read
@@ -50,6 +52,10 @@ jobs:
         run: |
           python -m py_compile research/afh_default_density_natural_xenon_halo/compare_5kev_1kev_recoil_grid.py
           python -m py_compile research/lz_detector_response/lz_2026_extended_nr/audit_lz_nr_conditional_2d_pdf.py
+
+      - name: Validate event-level cutflow schema
+        run: |
+          python -m json.tool research/lz_detector_response/lz_2026_extended_nr/lz_nr_event_level_selection_schema.json > /dev/null
 
       - name: Test recoil-grid comparator
         run: |
