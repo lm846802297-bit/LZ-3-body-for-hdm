@@ -41,6 +41,25 @@ class EnergyGridConvergenceTests(unittest.TestCase):
             MOD.integrate_linear([0.0, 10.0], [0.0, 10.0], 2.0, 8.0), 30.0
         )
 
+    def test_pooled_replicas_do_not_double_energy_width(self):
+        stats = {}
+        for replica, nest_cells, roi_cells, n_nest, n_roi in (
+            (0, {(0, 0): 5}, {(0, 0): 2}, 5, 2),
+            (1, {(0, 0): 4, (1, 0): 3}, {(0, 0): 3, (1, 0): 1}, 7, 4),
+        ):
+            stats[(0, replica)] = {
+                "lo": 5.4, "hi": 6.4, "n": 10,
+                "n_s1_coin": 8, "n_s2_threshold": 9,
+                "n_nest": n_nest, "n_ws_roi": n_roi,
+                "nest_cells": nest_cells, "roi_cells": roi_cells,
+            }
+        merged = MOD.merge_bin_stats(stats, [0], None)
+        self.assertAlmostEqual(merged["width"], 1.0)
+        self.assertAlmostEqual(merged["acceptance"]["nest"], 0.6)
+        self.assertAlmostEqual(merged["acceptance"]["ws_roi"], 0.3)
+        self.assertAlmostEqual(sum(merged["cell_probability"]["nest"].values()), 0.6)
+        self.assertAlmostEqual(sum(merged["cell_probability"]["ws_roi"].values()), 0.3)
+
     def test_total_variation(self):
         self.assertAlmostEqual(MOD.total_variation({(0, 0): 1.0}, {(0, 0): 2.0}), 0.0)
         self.assertAlmostEqual(
