@@ -38,7 +38,7 @@ The NEST execNEST.cpp NESTObservableArray::store_signals implementation identifi
 - GetS1()[5]: S1c, corrected pulse area in phd;
 - GetS2()[7]: S2c, corrected pulse area in phd.
 
-The signs are meaningful. NEST negates the S1 observables when the S1 coincidence condition fails, and negates the S2 observables when the configured S2 threshold fails. The driver therefore retains signed values in the raw CSV and separately writes pass flags. Do not take absolute values before applying the flags.
+The signs are meaningful. NEST negates the S1 observables when the S1 coincidence condition fails, and negates the S2 observables when the configured S2 threshold fails. The S2 threshold is tested on raw pulse area in phe before lifetime/position correction; S2c is subsequently corrected. At the pilot reference depth, the 783 phe threshold corresponds to 644.98 phd before lifetime correction and about 683.72 phd in corrected S2c after the 525 us drift-time correction. The driver records both quantities and retains signed values in the raw CSV. Do not take absolute values before applying the flags.
 
 ## 4. Detector point and response mode
 
@@ -94,7 +94,7 @@ The local PowerShell runner writes:
 - lz_2026_nr_response_generic.csv: raw event records for baseline B;
 - lz_2026_nr_response_summary.json: full distribution summaries;
 - lz_2026_nr_response_summary.csv: compact baseline/energy comparison;
-- lz_2026_nr_response_run_metadata.json: run configuration and source pin.
+- lz_2026_nr_response_run_metadata.json: run configuration and source pin.\n\nThe raw CSV also records the raw S2 threshold expressed in phd and its corrected-S2c equivalent at the reference depth. These are not interchangeable.
 
 The output directory defaults to %LOCALAPPDATA%\LZ-3-body-for-hdm\nr_event_response, outside the Git working tree.
 
