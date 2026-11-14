@@ -397,6 +397,9 @@ This requires Mathematica or Wolfram Engine with wolframscript available on
 PATH. The script checks both archived native and Python AFH response tables,
 runs the Wolfram I6 integration, and then calls
 compare_full_dsigma_mathematica.py for the independent Python recomputation.
+The comparison requires the complete 652-row grid and independently checks
+the incoming dark-matter momentum and mediator denominator in addition to
+I6, the nuclear response, the physical/no-factor-four rates, and units.
 The default output is written under the system temporary directory, not into
 the source tree.
 
