@@ -51,9 +51,11 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r research/afh_default_density_xe131/requirements.txt
 
-      - name: Compile Python/MMA comparison utility
+      - name: Compile Python response and full-cross-section comparison utilities
         run: |
           python -m py_compile research/afh_default_density_xe131/compare_afh_mathematica_python.py
+          python -m py_compile research/afh_default_density_xe131/compare_full_dsigma_mathematica.py
+          python -m py_compile research/afh_default_density_xe131/compare_er_grid_convergence.py
 
       - name: Compile natural-xenon halo-fold runner
         run: |
@@ -69,22 +71,27 @@ jobs:
         run: |
           python research/afh_default_density_natural_xenon_halo/validate_archived_results.py
 
-      - name: Parse native Windows PowerShell runner
+      - name: Parse native Windows PowerShell runners
         shell: pwsh
         run: |
-          $tokens = $null
-          $errors = $null
-          [System.Management.Automation.Language.Parser]::ParseFile(
+          foreach ($path in @(
             "research/afh_default_density_xe131/run_native_afh_audit.ps1",
-            [ref]$tokens,
-            [ref]$errors
-          ) | Out-Null
-          if ($errors.Count -gt 0) {
-            $errors | Format-List | Out-String | Write-Error
-            exit 1
+            "research/afh_default_density_xe131/run_afh_er_grid_convergence.ps1"
+          )) {
+            $tokens = $null
+            $errors = $null
+            [System.Management.Automation.Language.Parser]::ParseFile(
+              $path,
+              [ref]$tokens,
+              [ref]$errors
+            ) | Out-Null
+            if ($errors.Count -gt 0) {
+              $errors | Format-List | Out-String | Write-Error
+              exit 1
+            }
           }
 
-      - name: Run AFH response and four-benchmark regression tests
+      - name: Run AFH response, four-benchmark, and ER-grid regression tests
         run: |
           python -m unittest discover \
             -s research/afh_default_density_xe131 \
