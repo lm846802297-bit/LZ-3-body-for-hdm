@@ -328,14 +328,16 @@ R_{\rm AFH,raw}(0)=A^2/4.
 \[
 \boxed{
 R_A^{\rm phys}
-=4R_{\rm AFH,raw}
-=\frac{16\pi}{2J_A+1}W_{M,\rm AFH}^{00},
-\qquad R_A^{\rm phys}(0)=A^2.
+=4C_0R_{\rm AFH,raw}
+=\frac{16\pi C_0}{2J_A+1}W_{M,\rm AFH}^{00},
+\qquad R_A^{\rm phys}(0)=A^2,
+\qquad C_0=\frac{A^2}{4R_{\rm AFH,raw}(0)}.
 }
 \]
 Xe-131 raw source translation 给出 \(R_{\rm AFH,raw}(0)=4289.895955714993\)，理论 \(A^2/4=4290.25\)，相对偏差 \(8.2523\times10^{-5}\)，来自密度矩阵有限打印精度。形状表使用
 \[
 R_A^{\rm phys}(q)
+=4C_0R_{\rm AFH,raw}(q)
 =A^2\frac{R_{\rm AFH,raw}(q)}{R_{\rm AFH,raw}(0)}
 \]
 只消除整体常数偏差，不移动 \(q\) 极小值。
@@ -358,7 +360,7 @@ R_A^{\rm phys}(q)
 这对 AFH v6.0 raw package output 不成立。现已改为
 \[
 \mathcal R_A^{\rm phys}
-=\frac{16\pi}{2J_A+1}W_{M,\rm AFH,v6}^{00},
+=\frac{16\pi C_0}{2J_A+1}W_{M,\rm AFH,v6}^{00},
 \qquad
 y=(b_AQ/2)^2,\quad Q^2=2m_AE_R+E_R^2.
 \]
@@ -437,7 +439,7 @@ N_{\rm sig}^{\rm ROI}
 
 | 编号 | 问题 | 处理 | 状态 |
 |---|---|---|---|
-| P1-01 | 原始工作稿 AFH response 使用 \(4\pi W_M/(2J+1)\) 却声明 \(R_A(0)=A^2\) | 改为 \(16\pi W_{M,\rm AFH,v6}/(2J+1)\)，明确 raw \(A^2/4\) 到 physical \(A^2\) 的映射 | **已修正** |
+| P1-01 | 原始工作稿 AFH response 使用 \(4\pi W_M/(2J+1)\) 却声明 \(R_A(0)=A^2\) | 改为 \(16\pi C_0W_{M,\rm AFH,v6}/(2J_A+1)\)，明确 factor 4 与有限精度 \(C_0\) 的不同作用 | **已修正** |
 | P1-02 | 原始工作稿将 \(y=b_A^2m_AE_R/2\) 写成无条件定义 | 改为 \(y=(b_AQ/2)^2\)，并标明前式为小反冲近似 | **已修正** |
 | P1-03 | 天然氙 metadata 的 `response_sample_sha256` 实际为 40 位 Git blob SHA-1 | 替换为文件真实 64 位 SHA-256；runner 和 validator 增加校验 | **已修正** |
 | P1-04 | Dirac/Majorana 性质与完整 \(\chi_2\) 自能未由原始模型文本固定；benchmark 已明确采用实 \(g_1,g_2\) | 明确保留为模型输入/理论扩展，不将条件性宽度推广 | <span>待补模型定义</span> |
