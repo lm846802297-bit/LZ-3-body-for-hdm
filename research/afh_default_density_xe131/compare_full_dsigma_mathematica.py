@@ -33,7 +33,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--mathematica-csv", type=Path, required=True)
     ap.add_argument("--afh-response-csv", type=Path,
-                    default=HERE / "afh_default_xe131_WM00_mathematica.csv")
+                    default=HERE / "output" / "afh_default_xe131_WM00.csv")
     ap.add_argument("--out-csv", type=Path, required=True)
     ap.add_argument("--metadata", type=Path, required=True)
     ap.add_argument("--rtol", type=float, default=2e-7)
@@ -51,7 +51,7 @@ def main() -> None:
         raise ValueError("AFH response table must contain 2401 q nodes")
 
     q = response.q_GeV.to_numpy(float)
-    r_package = response.R_AFH_4Pi_over_2Jplus1.to_numpy(float)
+    r_package = response.R_AFH_package_4pi_over_2Jplus1.to_numpy(float)
     r_physical = response.R_equal_pn_normalized.to_numpy(float)
     if not np.all(np.isfinite(q)) or not np.all(np.diff(q) > 0):
         raise ValueError("AFH q grid must be finite and strictly increasing")
