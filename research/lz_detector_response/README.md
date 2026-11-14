@@ -116,3 +116,8 @@ raw CSV plus JSON/CSV summaries outside the repository under
 
 The code and assumptions are documented in
 `lz_2026_extended_nr/LZ_2026_NR_EVENT_RESPONSE_PILOT.md`.
+
+
+## NEST configuration status
+
+The HEPData v1 ZIP is a 46-table export and contains no separate NEST configuration resource. A separate public LZ-specific EFT2024 configuration candidate is available in NEST commit `541b643`; it is not in a tagged NEST release and its identity with the exact LZ 2026 production build is not proven. Use the provenance report and machine-readable JSON before selecting parameters. Earlier Table-S5-plus-WS2024-width pilot results are historical hybrid checks, not the primary EFT2024 response.
