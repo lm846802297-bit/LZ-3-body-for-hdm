@@ -174,20 +174,19 @@ reducedKernel[mchi_, ms_, deltaM_, mA_, ER_, speed_, width_, nW_, nZ_, nPhi_, ma
     2.*(mchi*gamma0c + mA)*ER - 2.*mchi*ms - ms^2;
   If[deltaW2Max <= 0., Return[0.]];
   wMax2 = wMin2 + deltaW2Max;
-  wRule = If[mapping === "threshold_u2",
-    gaussLegendreRule[nW, -1., 1.],
-    gaussLegendreRule[nW, wMin2, wMax2]];
+  (* Integrate in a unit interval for both mappings; keep DeltaW2 explicit. *)
+  wRule = gaussLegendreRule[nW, -1., 1.];
   zRule = gaussLegendreRule[nZ, -1., 1.];
   phiRule = gaussLegendreRule[nPhi, 0., 2.*Pi];
   Do[
+    u = 0.5*(wPair[[1]] + 1.);
     If[mapping === "threshold_u2",
-      u = 0.5*(wPair[[1]] + 1.);
       deltaW2 = deltaW2Max*u^2;
       w2 = wMin2 + deltaW2;
       weightW = 0.5*wPair[[2]]*(2.*deltaW2Max*u),
-      w2 = wPair[[1]];
-      deltaW2 = w2 - wMin2;
-      weightW = wPair[[2]]
+      deltaW2 = deltaW2Max*u;
+      w2 = wMin2 + deltaW2;
+      weightW = 0.5*deltaW2Max*wPair[[2]]
     ];
     lambdaDim = deltaW2*(4.*mchi*ms + deltaW2)/w2^2;
     angular = 0.;
