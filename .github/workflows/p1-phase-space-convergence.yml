@@ -30,7 +30,10 @@ jobs:
         run: |
           python -m unittest discover \
             -s research/figure2_full_reproduction/tests \
-            -p 'test_*.py' -v
+            -p 'test_eq6_kernel.py' -v
+          python -m unittest discover \
+            -s research/figure2_full_reproduction/tests \
+            -p 'test_phase_space_convergence.py' -v
       - name: Reproduce benchmark, threshold, historical 800 km/s and off-shell near-pole scans
         run: |
           python research/figure2_full_reproduction/phase_space_convergence.py \
