@@ -67,3 +67,15 @@ Before calling the NR band reproduced:
 - determine the exact flat-energy generation interval and spatial sampling used for Fig. 2;
 - compare the entire band over S1c, not only the candidate bin;
 - validate against the 0–330 keV AmBe calibration distribution and published 10th–90th percentiles without tuning to the candidate.
+
+
+## 7. Full S1c-band shape comparison for the 0.1–330 keV prior
+
+The 5-phd binning produced 148 populated S1c bins for each width choice. Comparing matching bins across the full generated S1c range:
+
+- Mean absolute median-curve difference: (9.63\times10^{-4}\) dex; maximum absolute difference: (7.03\times10^{-3}\) dex.
+- Mean absolute 10th-percentile difference: (1.42\times10^{-3}\) dex; maximum absolute difference: (1.62\times10^{-2}\) dex.
+- Mean absolute 90th-percentile difference: (1.36\times10^{-3}\) dex; maximum absolute difference: (6.92\times10^{-3}\) dex.
+- In the candidate bin, the WS2024-minus-generic median difference is only (+7.40\times10^{-4}\) dex.
+
+The two NR width candidates therefore give nearly coincident flat-spectrum NR band curves over the generated S1c range, particularly around the candidate. The plot generated from the artifact is available in the conversation as `lz_2026_nr_flat_band_candidate_position.png`; the underlying full CSV and JSON summary remain in the workflow artifact.
