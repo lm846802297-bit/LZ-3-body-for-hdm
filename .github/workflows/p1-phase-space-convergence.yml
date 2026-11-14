@@ -12,7 +12,7 @@ permissions:
 jobs:
   phase-space-tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 40
     steps:
       - name: Check out source
         uses: actions/checkout@v4
@@ -31,7 +31,7 @@ jobs:
           python -m unittest discover \
             -s research/figure2_full_reproduction/tests \
             -p 'test_phase_space_convergence.py' -v
-      - name: Reproduce benchmark, threshold and historical 800 km/s anchor scans
+      - name: Reproduce benchmark, threshold, historical 800 km/s and off-shell near-pole scans
         run: |
           python research/figure2_full_reproduction/phase_space_convergence.py \
             --output-dir /tmp/p1_phase_space_reproduction \
@@ -60,6 +60,7 @@ jobs:
               "phase_space_threshold_convergence.csv",
               "phase_space_li_prefactor_crosscheck.csv",
               "phase_space_historical_800_anchor.csv",
+              "phase_space_near_pole_convergence.csv",
           )
           failures = []
           for name in names:
