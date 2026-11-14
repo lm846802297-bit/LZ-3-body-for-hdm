@@ -23,7 +23,7 @@
 - **2026-11-13：** 将独立的 Xe-131 fixed-speed 450 keV 曲线纳入结果覆盖表：GCN/JJ55 response、\(v=776\) km/s、\(M_A=131u\)、zero-width，105 个内部网格点；明确两端未覆盖的开放相空间区间仍需高阶积分。
 - **2026-11-13：** PR #10 将研究成果正式提升至 main；同步修订主报告、附录 F、公式索引和 README 导航。该轮只做文档追溯和状态整理，不新增物理验证或数值计算。
 - **2026-11-13：** 扩充主报告正文的物理推导和解释：补入非对角相互作用与虚 \(\chi_2\) 图像、核反冲空间动量与四动量不变量的区别、两张辐射图的 Dirac trace 和干涉、三体相空间及 Eq. (6) 前因子的来源、AFH 响应极小值的核结构含义、\(m_s/\Delta m\) 的不同作用、三体 \(v_{\min}\) 与 SHM 端点抑制，以及 LZ 一维效率折叠的概率解释。本轮不修改模型输入、数值程序或已归档数值结果。
-- **2026-11-13：** 建立 P0 Figure 2 benchmark / 输入 / 参数 / 输出 / SHA-256 总索引（9 组、60 个文件条目，已纳入原生 Mathematica 输出和 AFH v6.0 `.m` 源文件），P1 物理公式交叉审查和 P2 科学结果状态表，并在第 13.5 节加入导航。交叉审查发现原始工作稿的 AFH raw-to-physical factor-of-four 与 exact spatial-q 定义不一致，已修正 `paper-source/main.tex` 并刷新 `paper-source/SHA256SUMS`；同时将天然氙 metadata 中误写为 SHA-256 的 40 位 Git blob SHA-1 改为真实 64 位文件 SHA-256，并在 runner / validator 中加入检查。本轮修复的是公式定义和 provenance，不重算已归档物理数值。
+- **2026-11-13：** 建立 P0 Figure 2 benchmark / 输入 / 参数 / 输出 / SHA-256 总索引（9 组、60 个文件条目，已纳入原生 Mathematica 输出和 AFH v6.0 `.m` 源文件），P1 物理公式交叉审查和 P2 科学结果状态表，并在第 13.5 节加入导航。交叉审查识别出原始工作稿中 AFH raw-to-physical factor-of-four 与 exact spatial-q 定义需要同步修正；研究代码和公式索引采用了修正后的物理约定。本次研究集成 PR 不修改 `paper-source/main.tex` 或其 SHA-256 manifest，稿件同步保留为单独审阅任务。同时将天然氙 metadata 中误写为 SHA-256 的 40 位 Git blob SHA-1 改为真实 64 位文件 SHA-256，并在 runner / validator 中加入检查。本轮修复的是研究公式定义和 provenance，不重算已归档物理数值。
 
 - **2026-11-13：** 将独立 Lorentz-invariant 三体相空间推导并入正文 §2.5.1–2.5.8 和附录 A.4.2；进一步补齐固定速度下 (m_{s,max}) 与 (E_R^*) 的解析极值、条件性 (chi_2	ochi_1s) 宽度、截断 SHM 实验室速度 PDF、天然氙靶核数及 halo 通量折叠的逐步推导，并同步主报告嵌入附录、独立附录文件和公式索引。本轮为解析推导与文档一致性更新，不修改数值程序、输入或归档结果。
 
