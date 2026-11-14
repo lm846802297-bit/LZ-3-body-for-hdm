@@ -86,6 +86,17 @@ class PhaseSpaceConvergenceTests(unittest.TestCase):
         )
         self.assertAlmostEqual(ds_li / ds_eq6, 1.0, places=13)
 
+    def test_threshold_interval_uses_stable_delta(self):
+        delta = eq6.delta_w2_max(
+            self.mchi, self.ms, self.mA, self.ER, self.speed
+        )
+        wmin2, wmax2 = eq6.limits(
+            self.mchi, self.ms, self.mA, self.ER, self.speed
+        )
+        self.assertGreater(delta, 0.0)
+        self.assertGreater(wmax2, wmin2)
+        self.assertLess(abs((wmax2 - wmin2) / delta - 1.0), 1e-7)
+
     def test_threshold_stable_point_preserves_mass_shells(self):
         wmin2, wmax2 = eq6.limits(
             self.mchi, self.ms, self.mA, self.ER, self.speed
