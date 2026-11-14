@@ -22,7 +22,7 @@ const std::vector<double> kTableS5 = {
 }
 
 int main(int argc, char** argv) {
-  if (argc != 6) {
+  if (argc != 5) {
     std::cerr << "Usage: lz_2026_nr_full_calibration_band model "
                  "n_events seed energy_max_keV\n"
                  "model: eft2024|tableS5|ws2024|generic\n";
