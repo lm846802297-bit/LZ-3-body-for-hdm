@@ -42,6 +42,7 @@ KG_DAY_PER_TONNE_YEAR = 1000.0 * 365.25
 # not to the pointwise difference between non-common interpolation nodes.
 TOLERANCES = {
     "common_node_rate_relative": 1.0e-10,
+    "common_node_kernel_relative": 1.0e-10,
     "roi_raw_integral_relative": 5.0e-3,
     "roi_efficiency_weighted_relative": 5.0e-3,
     "tail_efficiency_weighted_relative": 1.0e-2,
@@ -238,7 +239,11 @@ def compare_runs(
         raise ValueError("fine-grid upper energy differs between runs")
     if m5["recoil_grid_keV"]["high_energy_step"] != m1["recoil_grid_keV"]["high_energy_step"]:
         raise ValueError("high-energy coarse step differs between runs")
-    for key in ("particle_parameters", "halo", "quadrature", "response_convention"):
+    for key in (
+        "particle_parameters", "halo", "quadrature", "response_convention",
+        "width", "AFH_evaluation", "spatial_momentum", "rate_units",
+        "scenarios", "abundance_renormalization",
+    ):
         if m5.get(key) != m1.get(key):
             raise ValueError(f"run settings differ between 5-keV and 1-keV runs: {key}")
 
