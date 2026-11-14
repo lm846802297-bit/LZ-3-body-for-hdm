@@ -76,6 +76,8 @@ class NRResponseConfigurationTests(unittest.TestCase):
         self.assertIn("NEST::S2CalculationMode::Full", self.cpp)
         self.assertIn("const double s1c_signed = s1[5];", self.cpp)
         self.assertIn("const double s2c_signed = s2[7];", self.cpp)
+        self.assertIn("s2_threshold_raw_equiv_phd", self.cpp)
+        self.assertIn("s2c_threshold_reference_phd", self.cpp)
         self.assertIn("result.quanta.photons", self.cpp)
         self.assertIn("result.quanta.electrons", self.cpp)
 
