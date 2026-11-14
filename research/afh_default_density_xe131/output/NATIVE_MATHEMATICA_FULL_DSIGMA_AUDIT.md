@@ -151,7 +151,11 @@ coupling conversion; \(C_0\) is only a \(q\)-independent correction for the
 finite decimal precision of the tabulated density matrix. In the exact
 unrounded-matrix limit, \(C_0=1\).
 
-The Mathematica four-momentum reconstruction now evaluates
+The Mathematica four-momentum reconstruction now evaluates the phase-space width
+\[
+\Delta W^2_{\max}=2p_{\chi_1}Q-2(E_{\chi_1}+m_A)E_R-2m_{\chi_1}m_s-m_s^2,
+\]
+without subtracting two \(m_{\chi_1}^2\)-scale invariants. Both \(W^2\) mappings retain \(\Delta W^2\) explicitly. It then evaluates
 \[
 \cos\theta_q=
 \frac{2m_{\chi_1}m_s+m_s^2+\Delta W^2+
