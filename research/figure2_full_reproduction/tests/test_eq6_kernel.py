@@ -70,6 +70,37 @@ class Eq6Tests(unittest.TestCase):
             0.0
         )
 
+    def test_running_width_is_stable_immediately_above_threshold(self):
+        from decimal import Decimal, localcontext
+
+        parent_mass = float("1000.00030001")
+        mchi = 1000.0
+        ms = 0.0003
+        width = eq6.chi2_width_dirac_scalar_at_mass(
+            parent_mass, mchi, ms, 1.0
+        )
+        self.assertGreater(width, 0.0)
+
+        # Independent high-precision evaluation of the factorized Kallen form.
+        with localcontext() as context:
+            context.prec = 60
+            M = Decimal(str(parent_mass))
+            m = Decimal(str(mchi))
+            s = Decimal(str(ms))
+            excess = M - m - s
+            lam = (
+                excess * (excess + 2 * s)
+                * (2 * m + excess)
+                * (2 * m + excess + 2 * s)
+            )
+            expected = (
+                lam.sqrt() * ((M + m) ** 2 - s ** 2)
+                / (Decimal(16) * Decimal(str(math.pi)) * M ** 3)
+            )
+        self.assertLess(
+            abs(width / float(expected) - 1.0), 2e-12
+        )
+
     def test_width_schemes_are_distinct_and_finite(self):
         zero = eq6.reduced_kernel(
             self.M, self.ms, self.dm, self.mA, self.ER, self.v,
