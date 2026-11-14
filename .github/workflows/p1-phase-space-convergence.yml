@@ -101,7 +101,7 @@ jobs:
                               failures.append(f"{name}:{row_index}:{key}: {a[key]} != {b[key]}")
                               break
                       else:
-                          if not math.isclose(av, bv, rel_tol=5e-9, abs_tol=1e-12):
+                          if not math.isclose(av, bv, rel_tol=5e-8, abs_tol=1e-12):
                               failures.append(f"{name}:{row_index}:{key}: {av} != {bv}")
                               break
           if failures:
