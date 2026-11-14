@@ -90,3 +90,17 @@ The 303-point Figure S2 efficiency extraction is separately archived in `lz_2026
 ## 7. Reproducibility note
 
 The original ZIP was inspected directly from the supplied conversation upload. Its SHA-256 is recorded above. This audit file records the archive contents and validation results; it does not replace the original ZIP or claim that the raw ZIP has been copied into the Git repository.
+
+
+## 7. Related public LZ-specific NEST fluctuation candidate (separate from the HEPData ZIP)
+
+A further source audit found a public LZ detector class in the pinned NEST commit:
+
+- Source: [`include/Detectors/LZ_WS2024.hh`](https://github.com/NESTCollaboration/nest/blob/423b9745a5bfbb0402514f1d7955e67445de0810/include/Detectors/LZ_WS2024.hh)
+- The file identifies itself as the LZ SR3/WS2024 detector input and comments that its NEST yield and width vectors were adjusted to match tritium and D-D calibration data. It recommends NEST v2.4.0.
+- Its 13-element `NRERWidthsParam` is `{0.404, 0.393, 0.0383, 0.497, 0.1906, 2.220, 0.3, 0.04311, 0.46894, 0.15505, -0.26564, 0, 0}`.
+- In the NR branch of `GetQuanta`, the relevant entries are indices 0, 1, 2, 3, 4, 5, 11, and 12. Their values are close to the generic NEST defaults.
+
+This is a materially better-motivated candidate baseline than silently using generic defaults. However, it is a WS2024 calibration-tuned configuration, not explicit proof of the exact NR fluctuation settings used in the 2026 extended-NR analysis. The 2026 paper's Table S5 changes the NR mean-yield model, while the supplied HEPData ZIP does not include a separate response configuration. Therefore, the WS2024 width vector should be run as a documented candidate and compared with generic defaults, not labeled as confirmed 2026 input.
+
+The two candidate vectors and the source-code index mapping are archived in `lz_2026_nr_fluctuation_baselines.json`.
