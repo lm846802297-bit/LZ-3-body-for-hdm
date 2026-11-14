@@ -326,3 +326,17 @@ For the NR branch, `GetQuanta` uses indices 0, 1, 2, 3, 4, 5, 11, and 12. The co
 This is a more physically motivated baseline than an unqualified generic default. However, the detector file says it is for LZ SR3/WS2024 and recommends NEST v2.4.0; it does not prove that these exact width parameters were retained in the 2026 extended-NR analysis using NEST v2.4.5. The 2026 paper's Table S5 supplies the 15 NR mean-yield parameters, but does not tabulate the NR width vector.
 
 The two candidate vectors, source pin, index mapping, and comparison are recorded in `lz_2026_extended_nr/lz_2026_nr_fluctuation_baselines.json`. Recommended next calculation: run the LZ-WS2024-tuned width vector as the primary documented candidate and generic defaults as a sensitivity comparison. Do not label either as the exact 2026 response configuration until confirmed by a 2026 configuration file or explicit collaboration statement.
+
+
+## 15. LZ WS2024 detector settings cross-checked against the 2026 paper (2026-11-15)
+
+The same pinned NEST source's `LZ_WS2024.hh` detector class was audited. Recomputing its `CalculateG2` source formula using the class's T, pressure, gas field/gap, xenon molar mass, dielectric constants, and gas-light collection gives:
+
+- (g_1=0.1122\,\mathrm{phd/photon}), compared with the paper's (0.110\pm0.002);
+- (g_2=34.0224\,\mathrm{phd/electron}), compared with the paper's (34.5\pm1.1);
+- (783\,\mathrm{phe}/(1+0.214)=644.98\,\mathrm{phd}), matching the paper's 645 phd S2 threshold;
+- `FitEF` = 96.5 V/cm, close to the 97 V/cm reference shown in Table S3.
+
+The gain/threshold consistency is strong evidence that the WS2024 class is a useful detector-response candidate. It is still not proof of the exact 2026 setup: the header recommends NEST v2.4.0 while the paper says v2.4.5; its old 12-entry mean-yield vector must be overridden by Table S5; and its 13-element width vector does not contain the 2026 double-skewed-Gaussian ER fluctuation model from Table S4. Thus it is suitable as a **candidate NR-only event-level baseline**, not as a complete ER+NR or likelihood reproduction.
+
+Detailed source calculation and caveats are in `lz_2026_extended_nr/LZ_WS2024_DETECTOR_CROSSCHECK.md`; machine-readable values are in `lz_2026_extended_nr/lz_2026_nr_fluctuation_baselines.json`.
