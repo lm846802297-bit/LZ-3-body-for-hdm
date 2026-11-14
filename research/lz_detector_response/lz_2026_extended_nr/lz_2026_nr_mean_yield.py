@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 """LZ 2026 high-energy NR mean-yield model (Table S5).
 
+Cross-language validation is performed against the pinned NEST C++ source.
+
 Independent Python port of NEST GetYieldNR mean-yield equations, including
 the 15-parameter high-energy p(E) extension. This does not simulate NR
 quanta fluctuations, S1/S2 detector response, position maps, or selections.
