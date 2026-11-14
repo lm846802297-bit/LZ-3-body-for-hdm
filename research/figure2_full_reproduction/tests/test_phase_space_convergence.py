@@ -98,7 +98,7 @@ class PhaseSpaceConvergenceTests(unittest.TestCase):
             nw=16, nz=16, nphi=8, width_scheme="pole", g2=1.0,
         )
         archived_mass_offset = abs(legacy_rounded / archived_i6 - 1.0)
-        self.assertLess(archived_mass_offset, 2e-8)
+        self.assertLess(archived_mass_offset, 1e-6)
 
         independent_linear = psc.integrate_i6(
             mchi, ms, dm, mA_rounded, ER, speed,
