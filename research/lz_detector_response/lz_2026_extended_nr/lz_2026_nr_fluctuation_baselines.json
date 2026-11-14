@@ -163,7 +163,8 @@
       "g2_difference_sigma": -0.4341857887,
       "paper_s2_threshold_phd": 645,
       "threshold_difference_phd": -0.024711697,
-      "paper_table_s3_reference_field_V_per_cm": 97
+      "paper_table_s3_reference_field_V_per_cm": 97,
+      "paper_s2_threshold_definition_note": "The 645 phd paper value is numerically compared only with the raw 783 phe threshold after DPE conversion. NEST's corrected S2c threshold at the pilot reference depth is higher (683.718 phd) because GetS2 applies lifetime correction after thresholding. Confirm the paper's pre/post-correction definition before claiming an observable-level match."
     },
     "caveats": [
       "The detector file recommends NEST v2.4.0; the 2026 paper states NEST v2.4.5.",
