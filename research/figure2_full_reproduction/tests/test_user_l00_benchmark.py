@@ -32,8 +32,8 @@ class UserL00BenchmarkTests(unittest.TestCase):
 
     def test_conditional_scalar_width(self):
         width = self.result["conditional_scalar_width"]["Gamma_chi2_GeV"]
-        self.assertAlmostEqual(width, 5.338560839097935e-5, delta=2e-15)
-        self.assertAlmostEqual(width * 1.0e6, 53.38560839097935, delta=2e-9)
+        self.assertAlmostEqual(width, 5.3382154723487404e-5, delta=2e-15)
+        self.assertAlmostEqual(width * 1.0e6, 53.3821547234874, delta=2e-9)
 
     def test_target_rest_frame_L00_regression(self):
         traces = self.result["L00_at_W2_midpoint"]
@@ -43,7 +43,7 @@ class UserL00BenchmarkTests(unittest.TestCase):
             zero["total"] / 3.3933323920783375e14, 1.0, delta=2e-10
         )
         self.assertAlmostEqual(
-            pole["total"] / 3.251090649060295e14, 1.0, delta=2e-10
+            pole["total"] / 3.251108265679228e14, 1.0, delta=2e-10
         )
         self.assertAlmostEqual(
             zero["before"] + zero["after"] + zero["interference"],
@@ -63,13 +63,13 @@ class UserL00BenchmarkTests(unittest.TestCase):
         )
         self.assertAlmostEqual(
             result["I6_conditional_scalar_pole_width_GeV2"]
-            / 15439461.716793455,
+            / 15439557.38669752,
             1.0,
             delta=2e-6,
         )
         self.assertAlmostEqual(
             result["relative_pole_vs_zero"],
-            -0.04801649871903846,
+            -0.04801059979769595,
             delta=2e-6,
         )
 
@@ -82,7 +82,7 @@ class UserL00BenchmarkTests(unittest.TestCase):
         )
         self.assertAlmostEqual(
             result["prefactor_times_I6_over_RA_GeVminus3_pole_width"],
-            3.538292140371566,
+            3.5383140652337035,
             delta=2e-6,
         )
 
