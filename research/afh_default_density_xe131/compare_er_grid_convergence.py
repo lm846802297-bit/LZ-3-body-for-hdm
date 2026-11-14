@@ -120,6 +120,16 @@ def summarize_benchmark(coarse: pd.DataFrame, fine: pd.DataFrame, name: str):
         if not np.all(common[f"{field}_5keV"].astype(str).to_numpy()
                       == common[f"{field}_1keV"].astype(str).to_numpy()):
             raise AssertionError(f"{name}: calculation setting {field} differs between grids")
+    if not np.all(common["width_scheme_5keV"].astype(str).to_numpy() == "pole"):
+        raise AssertionError(f"{name}: expected pole-width prescription")
+    if not np.all(common["W2_mapping_5keV"].astype(str).to_numpy() == "threshold_u2"):
+        raise AssertionError(f"{name}: expected threshold_u2 mapping")
+    if not np.all(common["nW_5keV"].to_numpy(dtype=int) == 16):
+        raise AssertionError(f"{name}: expected nW=16")
+    if not np.all(common["nz_5keV"].to_numpy(dtype=int) == 16):
+        raise AssertionError(f"{name}: expected nz=16")
+    if not np.all(common["nphi_5keV"].to_numpy(dtype=int) == 8):
+        raise AssertionError(f"{name}: expected nphi=8")
 
     ratio5 = c.loc[c["phase_space_open"], "dsigma_factor4_ratio"].to_numpy(dtype=float)
     ratio1 = f.loc[f["phase_space_open"], "dsigma_factor4_ratio"].to_numpy(dtype=float)
@@ -166,7 +176,7 @@ def summarize_benchmark(coarse: pd.DataFrame, fine: pd.DataFrame, name: str):
         row[f"response_min{i}_ER_5keV"] = e5
         row[f"response_min{i}_ER_1keV"] = e1
         row[f"response_min{i}_shift_keV"] = abs(e5 - e1)
-        row[f"response_min{i}_R_over_A2_1keV"] = r1
+        row[f"response_min{i}_R_over_A2_1keV"] = r1 / (131.0 ** 2)
 
     row["status"] = (
         "PASS"
