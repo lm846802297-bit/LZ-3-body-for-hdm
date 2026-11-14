@@ -484,3 +484,32 @@ Full report: `lz_2026_extended_nr/LZ_2026_NR_ER_FULL_RESPONSE_CANDIDATE_REPORT.m
 
 ### Current status
 The four-family NR band and EFT2024/Table-S3/generic ER band and conditional 2D pilots are now available. Remaining gates: actual D-D/AmBe spatial source distributions, exact official NEST production snapshot confirmation, calibration nuisance covariance, event-level calibration clouds, and official BACCARAT signal/background PDFs. No official LZ likelihood reproduction is claimed.
+
+
+## 18. Three-body recoil spectra folded through the NR 2D NEST response (2026-11-15)
+
+The first end-to-end pre-selection observable fold is complete. The calculation reuses the archived continuous natural-xenon three-body recoil spectra (four benchmarks, GCN/JJ55) and generates exact-ROI event-level NEST response samples with 200,000 events for each of four response families: EFT2024, rounded Table S5 means plus EFT2024 widths, WS2024, and generic NEST.
+
+The response Monte Carlo uses (E_R\sim U(5.4,269.9)\,\mathrm{keV}), a uniform active-TPC cylinder volume proxy, NEST commit `541b6430dae6ea289cf110c99f174a9187f7fdee`, and 10-keV × 10-phd × 0.02-dex binning. It is not the actual calibration-source position distribution.
+
+For each energy bin, the probability mass is retained relative to all generated events:
+[
+P_{ij,k}=N_{ij,k}/N_{gen,k},quad sum_{ij}P_{ij,k}=P_{+,k}\leq1.
+]
+Thus non-positive S1/S2 events are not silently renormalized away. The rate spectrum is integrated piecewise-linearly over the ROI-clipped energy bins, and the resulting cell intensity is
+[
+R_{ij}=\sum_k \left[\int_{E_k\cap ROI}dE_R\,dR/dE_R\right]P_{ij,k}.
+]
+The output is pre-selection. The published energy-only efficiency curve is intentionally not multiplied into the 2D shape because it does not define cell-by-cell selection migration; the previous scalar-efficiency event-yield table remains separate.
+
+Results:
+- 32 folds completed: 4 particle benchmarks × 2 nuclear response models × 4 NEST response families.
+- All four families have rate-weighted positive-S1c/S2c fraction 1.000 to shown precision for these benchmark spectra; bins with non-positive-observable tails carry zero theoretical rate in these cases.
+- Maximum cell-sum closure error is below (2.7\times10^{-16}), compared with the (5\times10^{-12}) threshold.
+- Four unit tests passed, including partial ROI-bin integration and a test proving that positive-observable probabilities are not renormalized to unity.
+- For 2.84 tonne-year, pre-selection GCN/JJ55 expected counts are: red 0.353697/0.362225; green 0.00159681/0.00165418; black (3.72274\times10^{-9}/3.74021\times10^{-9}); blue (1.30720\times10^{-5}/1.35414\times10^{-5}).
+- Across benchmarks and GCN/JJ55, total-variation distances of normalized folded 2D shapes relative to EFT2024 are 0.162–0.249 (Table S5 hybrid), 0.606–0.927 (WS2024), and 0.806–0.992 (generic NEST). These are coarse-binned shape distances, not significances.
+
+Workflow [run 43645345194](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43645345194) passed. Artifact ID `14133509039`, SHA-256 `525e4156df371deff962d9676d50e08a9edfe00a6f67c2504681ab9f139659be`. Full report: `lz_2026_extended_nr/LZ_2026_THREE_BODY_NR_2D_RESPONSE_FOLD_REPORT.md`.
+
+Remaining gates: actual source spatial distributions, finer energy-bin convergence, full S1 coincidence/trigger/analysis selection, calibration nuisance covariance, ER/background PDFs, and only then a likelihood. This result is not an official LZ selected-event PDF, confidence interval, or exclusion.
