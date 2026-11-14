@@ -52,3 +52,35 @@ two-dimensional S1c/log10(S2c) signal PDFs, NEST nuisance covariance,
 energy-resolution smearing, background likelihood, or profile likelihood.
 They are not a 90% confidence-level exclusion and are not the official LZ
 likelihood.
+
+
+## 2D NEST response and selection audit
+
+The current Library artifact **lz_nr_conditional_2d_pdf.json** is a conditional
+NR response-shape artifact in \((S1_c,\log_{10}S2_c)\), not an official
+post-selection LZ PDF. It uses 10-keV true-energy bins and stores corrected
+S1c/S2c only; it does not retain the separate S1 coincidence flag, raw S2,
+per-energy generated denominator, event-level position, SS reconstruction,
+trigger, data-quality, or Skin/OD veto flags.
+
+The detailed source-level and selection audit is in
+lz_2026_extended_nr/S1_COINCIDENCE_AND_SELECTION_AUDIT.md. It records the
+pinned NEST v2.4.5-descendant commit, inherited three-PMT/150-ns S1
+coincidence settings, the official 2026 WS ROI and fiducial volume, and the
+missing event-level evidence. The structural checker is
+lz_2026_extended_nr/audit_lz_nr_conditional_2d_pdf.py; it reports global
+positive-observable fractions without mislabelling them as selection
+efficiencies.
+
+The natural-xenon recoil-grid comparator and local Windows runner are
+research/afh_default_density_natural_xenon_halo/compare_5kev_1kev_recoil_grid.py
+and research/afh_default_density_natural_xenon_halo/run_1kev_recoil_grid_convergence.ps1.
+They compare the archived 5-keV grid with a 1-keV grid over the LZ-sensitive
+5–270-keV interval and fold both against the published one-dimensional final
+WS-ROI efficiency. This remains a rate-level convergence test, not a 2D
+likelihood.
+
+**Release gate:** keep all current 2D results labelled *pre-selection signal
+prediction*. Do not start the final profile likelihood or claim a 90% CL
+result until the recoil-grid comparison and the complete event-selection
+audit have both passed.
