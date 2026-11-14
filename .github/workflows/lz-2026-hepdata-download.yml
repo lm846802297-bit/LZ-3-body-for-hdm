@@ -3,11 +3,12 @@ name: Extract LZ 2026 NR efficiency from official PDF (HEPData access check)
 on:
   push:
     branches:
-      - research/afh-default-density-xe131-mainline
+      - research/figure2-p0-4-mainline
     paths:
       - .github/workflows/lz-2026-hepdata-download.yml
       - research/figure2_full_reproduction/extract_lz_2026_nr_efficiency.py
       - research/figure2_full_reproduction/tests/test_lz_2026_efficiency_extraction.py
+      - research/lz_detector_response/P0_NEST_AND_WIDTH_CLOSURE_STATUS.md
   workflow_dispatch:
 
 permissions:
@@ -109,10 +110,10 @@ jobs:
           git rebase "origin/$GITHUB_REF_NAME"
           git push origin "HEAD:$GITHUB_REF_NAME"
 
-      - name: Upload HEPData retrieval attempt
+      - name: Upload complete HEPData retrieval attempt and PDF extraction
         uses: actions/upload-artifact@v4
         with:
-          name: lz-2026-efficiency-pdf-extraction-and-hepdata-status
+          name: lz-2026-hepdata-inventory-and-pdf-extraction
           path: ${{ runner.temp }}/lz_hepdata/
           if-no-files-found: error
           retention-days: 90
