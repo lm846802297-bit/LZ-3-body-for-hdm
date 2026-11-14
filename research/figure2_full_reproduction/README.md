@@ -262,21 +262,28 @@ The independent Wolfram 14.0.0 native Mathematica/Python 2401-point response com
 
 ## P1-PhaseSpace numerical convergence audit (2026-11-14)
 
-The additional runner `phase_space_convergence.py` independently checks the phase-space integration layer while reusing the committed `eq6_kernel.py` Dirac trace and amplitude. It compares linear \(W^2\), linear \(W\) with the explicit \(dW^2=2W\,dW\) Jacobian, and the threshold-regularized mapping
+The additional runner \`phase_space_convergence.py\` independently checks the phase-space integration layer while reusing the committed \`eq6_kernel.py\` Dirac trace and amplitude. It compares linear \(W^2\), linear \(W\) with the explicit \(dW^2=2W\,dW\) Jacobian, threshold-regularized \(u^2\), and a \(\sin^2\) map that clusters nodes at both \(W^2\) endpoints.
 
+The threshold map is
 \[
-W^2=W_{\min}^2+(W_{\max}^2-W_{\min}^2)u^2,\qquad dW^2=2(W_{\max}^2-W_{\min}^2)u\,du.
+W^2=W_{\min}^2+(W_{\max}^2-W_{\min}^2)u^2,
+\qquad dW^2=2(W_{\max}^2-W_{\min}^2)u\,du.
 \]
-
+The two-endpoint map is
+\[
+W^2=W_{\min}^2+\Delta\sin^2(\pi u/2),
+\qquad dW^2=(\pi\Delta/2)\sin(\pi u)\,du.
+\]
 The stable Källén evaluation carries \(\delta=W^2-W_{\min}^2\) explicitly and uses \(\lambda_K=\delta(4m_{\chi_1}m_s+\delta)\).
 
 Reproduce the audit from the repository root:
 
-```bash
+\`\`\`bash
 python research/figure2_full_reproduction/phase_space_convergence.py --mode all --reference-order 48
 python -m unittest discover -s research/figure2_full_reproduction/tests -p 'test_phase_space_convergence.py' -v
-```
+\`\`\`
 
-The runner writes mapping, angular, threshold-neighborhood, raw-\(d\Phi_3\) prefactor, metadata, and SHA-256 outputs below `research/figure2_full_reproduction/results/phase_space_convergence_2026-11-14/`. The committed audit report and archived CSV tables are linked from `research/docs/README.md`.
+The runner writes mapping, angular, threshold-neighborhood, raw-\(d\Phi_3\) prefactor, historical-800-km/s, and off-shell near-pole CSVs, plus metadata and SHA-256 outputs below \`research/figure2_full_reproduction/results/phase_space_convergence_2026-11-14/\`. The P1 GitHub Actions workflow uploads a short-lived reproduction artifact and compares the fresh CSV tables against the committed archive.
 
-The 2026-11-14 audit covers four fixed-speed benchmarks and five \(v_{\min}\)-offset checks. At the tested non-pole points, threshold-\(u^2\) mapping converges much faster than linear \(W^2\); the raw-\(d\Phi_3\) route reproduces the Eq. (6) prefactor. This does **not** establish near-pole convergence, a full continuous recoil grid, a complete halo fold, or a detector likelihood. The new six-test module reuses the existing Dirac spin trace and is not an independent second amplitude calculation.
+The audit covers four fixed-speed benchmarks, five \(v_{\min}\)-offset checks, the historical 800 km/s mass-convention anchor, and an off-shell near-pole scan at \(E_R=267\) keV and \(v=776\) km/s. The latter compares zero-width, constant pole-width and diagnostic running-width prescriptions for \(g_2=0.1,1\), while keeping the \(\chi_2\) pole above \(W_{\max}\). The sine-squared map provides a second endpoint-focused quadrature check. This is still not a full continuous recoil-grid convergence proof, a complete halo fold, or a detector likelihood. The nine-test module reuses the existing Dirac spin trace and is not an independent second amplitude calculation.
+
