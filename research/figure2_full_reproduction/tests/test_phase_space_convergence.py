@@ -31,6 +31,19 @@ class PhaseSpaceConvergenceTests(unittest.TestCase):
         )
         self.assertLess(abs(mapped / reference - 1.0), 2e-6)
 
+    def test_stable_and_reference_kernels_agree_at_common_order(self):
+        reference = eq6.reduced_kernel(
+            self.mchi, self.ms, self.dm, self.mA, self.ER, self.speed,
+            nw=16, nz=16, nphi=8, width_scheme="zero",
+        )
+        stable = psc.integrate_i6(
+            self.mchi, self.ms, self.dm, self.mA, self.ER, self.speed,
+            nW=16, nz=16, nphi=8, mapping="threshold_u2",
+            width_scheme="zero",
+        )
+        self.assertGreater(reference, 0.0)
+        self.assertLess(abs(stable / reference - 1.0), 2e-7)
+
     def test_w_and_w2_jacobians_agree(self):
         w2 = psc.integrate_i6(
             self.mchi, self.ms, self.dm, self.mA, self.ER, self.speed,
