@@ -86,6 +86,37 @@ class PhaseSpaceConvergenceTests(unittest.TestCase):
         )
         self.assertAlmostEqual(ds_li / ds_eq6, 1.0, places=13)
 
+    def test_historical_800km_s_i6_discrepancy_is_quadrature_mapping(self):
+        mchi, ms, dm = 1000.0, 300e-6, 1e-3
+        mA = 131.0 * 0.93149410242
+        ER, speed = 200e-6, 800.0
+        archived_i6 = 1433678.0722867665
+
+        legacy = eq6.reduced_kernel(
+            mchi, ms, dm, mA, ER, speed,
+            nw=16, nz=16, nphi=8, width_scheme="pole", g2=1.0,
+        )
+        self.assertAlmostEqual(legacy / archived_i6, 1.0, delta=2e-9)
+
+        independent_linear = psc.integrate_i6(
+            mchi, ms, dm, mA, ER, speed,
+            nW=16, nz=16, nphi=8, mapping="linear_w2",
+        )
+        self.assertAlmostEqual(independent_linear / legacy, 1.0, delta=2e-8)
+
+        high_order = psc.integrate_i6(
+            mchi, ms, dm, mA, ER, speed,
+            nW=48, nz=40, nphi=24, mapping="threshold_u2",
+        )
+        threshold_mapped = psc.integrate_i6(
+            mchi, ms, dm, mA, ER, speed,
+            nW=16, nz=16, nphi=8, mapping="threshold_u2",
+        )
+        self.assertLess(abs(threshold_mapped / high_order - 1.0), 1e-8)
+        legacy_shift = abs(legacy / high_order - 1.0)
+        self.assertGreater(legacy_shift, 1e-5)
+        self.assertLess(legacy_shift, 1e-4)
+
     def test_threshold_stable_point_preserves_mass_shells(self):
         wmin2, wmax2 = eq6.limits(
             self.mchi, self.ms, self.mA, self.ER, self.speed
