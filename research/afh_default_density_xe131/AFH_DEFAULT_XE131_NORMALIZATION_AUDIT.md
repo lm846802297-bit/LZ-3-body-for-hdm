@@ -90,14 +90,14 @@ The three dips in the Figure 2 range are therefore reproduced in location by the
 - Selected radial/angular amplitudes agree with an independent 60-digit `mpmath` evaluation of the AFH finite sums at relative/absolute precision better than `2e-11`.
 - The script is covered by six regression tests.
 
-## 7. Scope and manuscript normalization
+## 7. Scope, research normalization and manuscript boundary
 
-The manuscript source `paper-source/main.tex` has now been updated to define the physical equal-proton/equal-neutron response for the raw AFH v6.0 package output as
-`R_A = 16 pi W_M^{00}_AFH/(2J_A+1)`, so that `R_A(0)=A^2` while the cross-section prefactor retains the per-nucleon coupling `g_VN`. The factor four is included exactly once.
+The research calculation adopts the physical equal-proton/equal-neutron response for the raw AFH v6.0 package output as
+`R_A = 16 pi W_M^{00}_AFH/(2J_A+1)`, so that `R_A(0)=A^2` while the cross-section prefactor retains the per-nucleon coupling `g_VN`. The factor of four is included exactly once in the nuclear response. The manuscript source `paper-source/main.tex` is not modified by this research integration; manuscript synchronization is a separate review task.
 
 This factor is not a property of the nuclear density matrix. It comes from the isospin-coefficient convention in the distributed AFH v6.0 Mathematica code. An independent discussion appears in Oliver C. Gorton's 2024 UC Irvine dissertation, Sec. 2.2, pp. 29--30: the standard isospin conversion is written with factors of one half, while the distributed `dmformfactor-prc.m` and `dmformfactor-V6.m` scripts use (c_i^{0,1}=c_i^p\pm c_i^n); the same section gives (W_M^{00}(0)=(A/2)^2/(4\pi)). See https://www.escholarship.org/content/qt3ns8f1r8/qt3ns8f1r8.pdf.
 
 The four fixed-speed Xe-131 benchmark substitutions are now archived separately under `output/figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv`. They reuse the precomputed Eq. (6) integral grid and are therefore a controlled nuclear-response substitution, not a fresh independent recomputation of all three-body integrals.
 
-The natural-xenon isotope sum and halo velocity average remain open tasks. The Xe-131 AFH response itself now has a completed native Mathematica/Wolfram 14.0.0 comparison on 2401 q nodes. All four response quantities pass against the Python reference with maximum relative difference (3.59\times10^{-9}); the native grid, pointwise comparison, minima, metadata and SHA-256 manifest are archived under output/native_audit/. The natural-xenon halo fold remains selected-point only.
+The natural-xenon AFH-7 and Hybrid-9 continuous spectra, isotope-resolved halo fold and high-order quadrature audit are now archived in the adjacent natural-xenon study. The Xe-131 AFH response itself has a completed native Mathematica/Wolfram 14.0.0 comparison on 2401 q nodes. All four response quantities pass against the Python reference with maximum relative difference (3.59\times10^{-9}); the native grid, pointwise comparison, minima, metadata and SHA-256 manifest are archived under output/native_audit/. The full detector-level LZ likelihood remains outside the current scope.
 
