@@ -22,7 +22,7 @@ const std::vector<double> kTableS5 = {
 }
 
 int main(int argc, char** argv) {
-  if (argc != 5) {
+  if (argc != 6) {
     std::cerr << "Usage: lz_2026_nr_full_calibration_band model "
                  "n_events seed energy_max_keV\n"
                  "model: eft2024|tableS5|ws2024|generic\n";
@@ -32,8 +32,8 @@ int main(int argc, char** argv) {
     const std::string model = argv[1];
     const int n_events = std::stoi(argv[2]);
     const long seed = std::stol(argv[3]);
-    const double e_max = std::stod(argv[4]);
-    const double e_min = 0.1;
+    const double e_min = std::stod(argv[4]);
+    const double e_max = std::stod(argv[5]);
     if (model!="eft2024" && model!="tableS5" && model!="ws2024" && model!="generic")
       throw std::invalid_argument("unknown model family");
     if (n_events<=0 || !(e_max>e_min))
