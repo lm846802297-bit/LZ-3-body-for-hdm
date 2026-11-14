@@ -311,3 +311,10 @@ research/figure2_full_reproduction/results/phase_space_historical_800_anchor.csv
 The P1 workflow uploads its independent reproduction directory as the short-lived artifact p1-phase-space-reproduction; the repository CSV is compared row-by-row against that fresh output.
 
 This audit concerns the phase-space kernel only. It does not involve the AFH factor of four and does not validate the full native Mathematica \(d\sigma_A/dE_R\) calculation.
+
+
+## 11. Off-shell near-pole scan (CI artifact)
+
+A supplementary scan now probes four (Delta m) values just above the kinematic on-shell boundary at (E_R=267) keV and (v=776) km/s. For each point it compares linear-(W^2), threshold-(u^2), and endpoint-clustered (sin^2) mappings, with zero, constant-pole, and running-width prescriptions. The finite-width cases use (g_2=0.1,1), and the highest-order running-width reference is raised to (n_W=1024).
+
+This scan is deliberately kept separate from the committed reference CSV comparison until its full output has been reviewed. The fresh output is uploaded by the P1 GitHub Actions workflow as the `p1-phase-space-reproduction` artifact. It is a numerical prescription/convergence diagnostic only; it does not determine the physical (chi_2) self-energy or justify treating a pole outside the kinematically allowed interval as an on-shell state.
