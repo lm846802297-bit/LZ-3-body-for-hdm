@@ -58,6 +58,7 @@ jobs:
           python -m unittest discover -s research/afh_default_density_xe131 -p 'test_*.py' -v
           python -m unittest discover -s research/figure2_full_reproduction/tests -p 'test_eq6_kernel.py' -v
           python -m unittest discover -s research/figure2_full_reproduction/tests -p 'test_phase_space_convergence.py' -v
+          python -m unittest discover -s research/figure2_full_reproduction/tests -p 'test_user_l00_benchmark.py' -v
 
       - name: Run natural-xenon target and archived-data checks
         run: |
