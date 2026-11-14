@@ -126,7 +126,8 @@ buildPoint[mchi_, ms_, mA_, ER_, speed_, w2_, deltaW2_, z_, phi_] := Module[
   beta0 = speed/cKms; gamma0c = 1./Sqrt[1. - beta0^2];
   energy = mchi*gamma0c; pz = mchi*gamma0c*beta0; p = {energy, 0., 0., pz};
   qmag = Sqrt[2.*mA*ER + ER^2];
-  cq = (w2 - mchi^2 + 2.*(energy + mA)*ER)/(2.*pz*qmag);
+  (* Stable form from W2 = (mchi + ms)^2 + deltaW2; avoids subtracting mchi^2-scale terms. *)
+  cq = (2.*mchi*ms + ms^2 + deltaW2 + 2.*(energy + mA)*ER)/(2.*pz*qmag);
   If[Abs[cq] > 1. + 2.*10^-8, Print["Unphysical cos(theta_q) = ", cq]; Abort[]];
   cq = Min[1., Max[-1., cq]]; sq = Sqrt[Max[0., 1. - cq^2]];
   q = {ER, qmag*sq, 0., qmag*cq}; kTotal = p - q;
