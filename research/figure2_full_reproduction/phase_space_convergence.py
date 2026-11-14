@@ -375,72 +375,82 @@ def run_prefactor_check(output_dir: Path):
     return rows
 
 
+
 def run_historical_800_anchor(output_dir: Path):
-    """Resolve the archived green 200-keV I6 value at the original 800-km/s inputs."""
+    """Separate the historical A*u mass convention from W2 quadrature error."""
     mchi, ms, dm = 1000.0, 300e-6, 1e-3
-    mA = 131.0 * 0.93149410242
     ER, speed = 200e-6, 800.0
     archived_i6 = 1433678.0722867665
-
-    reference = integrate_i6(
-        mchi, ms, dm, mA, ER, speed,
-        nW=48, nz=40, nphi=24, mapping="threshold_u2",
+    mass_schemes = (
+        ("historical_A_times_u_approx", 122.0),
+        ("NIST_Xe131_nuclear_mass", 131.0 * 0.93149410242),
     )
-    legacy = eq6.reduced_kernel(
-        mchi, ms, dm, mA, ER, speed,
-        nw=16, nz=16, nphi=8, width_scheme="pole", g2=1.0,
-    )
-    configs = [
-        ("legacy_eq6_linear_W2", "linear_w2", 16, 16, 8, legacy),
-        ("independent_linear_W2", "linear_w2", 16, 16, 8, integrate_i6(
-            mchi, ms, dm, mA, ER, speed,
-            nW=16, nz=16, nphi=8, mapping="linear_w2",
-        )),
-        ("threshold_u2", "threshold_u2", 8, 8, 4, integrate_i6(
-            mchi, ms, dm, mA, ER, speed,
-            nW=8, nz=4, nphi=4, mapping="threshold_u2",
-        )),
-        ("threshold_u2", "threshold_u2", 16, 16, 8, integrate_i6(
-            mchi, ms, dm, mA, ER, speed,
-            nW=16, nz=16, nphi=8, mapping="threshold_u2",
-        )),
-        ("threshold_u2", "threshold_u2", 24, 24, 12, integrate_i6(
-            mchi, ms, dm, mA, ER, speed,
-            nW=24, nz=24, nphi=12, mapping="threshold_u2",
-        )),
-        ("threshold_u2_reference", "threshold_u2", 48, 40, 24, reference),
-    ]
     rows = []
-    for label, mapping, nW, nz, nphi, value in configs:
-        rows.append({
-            "case": "green_ER200_v800",
-            "mchi_GeV": f"{mchi:.14g}",
-            "ms_keV": f"{ms*1e6:.14g}",
-            "Delta_m_MeV": f"{dm*1e3:.14g}",
-            "mA_GeV": f"{mA:.14g}",
-            "ER_keV": f"{ER*1e6:.14g}",
-            "speed_km_s": f"{speed:.14g}",
-            "implementation": label,
-            "mapping": mapping,
-            "nW": nW,
-            "nz": nz,
-            "nphi": nphi,
-            "I6_GeV2": f"{value:.14g}",
-            "archived_I6_GeV2": f"{archived_i6:.14g}",
-            "relative_to_archived": f"{value/archived_i6-1.0:.12e}",
-            "reference_I6_GeV2": f"{reference:.14g}",
-            "relative_to_high_order_reference": f"{value/reference-1.0:.12e}",
+    summaries = []
+    for mass_scheme, mA in mass_schemes:
+        reference = integrate_i6(
+            mchi, ms, dm, mA, ER, speed,
+            nW=48, nz=40, nphi=24, mapping="threshold_u2",
+        )
+        legacy = eq6.reduced_kernel(
+            mchi, ms, dm, mA, ER, speed,
+            nw=16, nz=16, nphi=8, width_scheme="pole", g2=1.0,
+        )
+        configs = (
+            ("legacy_eq6_linear_W2", "linear_w2", 16, 16, 8, legacy),
+            ("independent_linear_W2", "linear_w2", 16, 16, 8, integrate_i6(
+                mchi, ms, dm, mA, ER, speed,
+                nW=16, nz=16, nphi=8, mapping="linear_w2",
+            )),
+            ("threshold_u2", "threshold_u2", 8, 8, 4, integrate_i6(
+                mchi, ms, dm, mA, ER, speed,
+                nW=8, nz=4, nphi=4, mapping="threshold_u2",
+            )),
+            ("threshold_u2", "threshold_u2", 16, 16, 8, integrate_i6(
+                mchi, ms, dm, mA, ER, speed,
+                nW=16, nz=16, nphi=8, mapping="threshold_u2",
+            )),
+            ("threshold_u2", "threshold_u2", 24, 24, 12, integrate_i6(
+                mchi, ms, dm, mA, ER, speed,
+                nW=24, nz=24, nphi=12, mapping="threshold_u2",
+            )),
+            ("threshold_u2_reference", "threshold_u2", 48, 40, 24, reference),
+        )
+        for label, mapping, nW, nz, nphi, value in configs:
+            rows.append({
+                "case": "green_ER200_v800",
+                "mass_scheme": mass_scheme,
+                "mchi_GeV": f"{mchi:.14g}",
+                "ms_keV": f"{ms*1e6:.14g}",
+                "Delta_m_MeV": f"{dm*1e3:.14g}",
+                "mA_GeV": f"{mA:.14g}",
+                "ER_keV": f"{ER*1e6:.14g}",
+                "speed_km_s": f"{speed:.14g}",
+                "implementation": label,
+                "mapping": mapping,
+                "nW": nW,
+                "nz": nz,
+                "nphi": nphi,
+                "I6_GeV2": f"{value:.14g}",
+                "archived_I6_GeV2": f"{archived_i6:.14g}",
+                "relative_to_archived": f"{value/archived_i6-1.0:.12e}",
+                "reference_I6_GeV2": f"{reference:.14g}",
+                "relative_to_high_order_reference": f"{value/reference-1.0:.12e}",
+            })
+        summaries.append({
+            "mass_scheme": mass_scheme,
+            "mA_GeV": mA,
+            "legacy_I6_GeV2": legacy,
+            "threshold_u2_reference_I6_GeV2": reference,
+            "legacy_relative_to_archive": legacy/archived_i6-1.0,
+            "legacy_relative_to_high_order": legacy/reference-1.0,
         })
     _write_csv(output_dir / "phase_space_historical_800_anchor.csv", rows)
-    print(
-        "historical 800-km/s anchor:",
-        json.dumps({
-            "archived_I6_GeV2": archived_i6,
-            "legacy_eq6_I6_GeV2": legacy,
-            "threshold_u2_reference_I6_GeV2": reference,
-            "legacy_relative_difference_to_reference": legacy/reference-1.0,
-        }),
-    )
+    print("historical 800-km/s anchor:", json.dumps({
+        "archived_I6_GeV2": archived_i6,
+        "mass_scheme_comparison": summaries,
+        "interpretation": "A*u versus NIST nuclear-mass input and linear-W2 versus threshold-u2 quadrature are reported separately.",
+    }))
     return rows
 
 
