@@ -133,11 +133,15 @@ all 2401 q nodes without interpolation, and writes a SHA-256 manifest.
 
 Required on the Windows machine: Python with the repository requirements,
 Wolfram Engine or Mathematica with `wolframscript` on `PATH`, and the
-either the original AFH v6.0 ZIP or its extracted dmformfactor-V6.m source file. The outputs are written to
-`output/native_audit/`, including the raw-response comparison, minima,
-Wolfram version, source hashes, CSV hashes, and
-`afh_native_audit_manifest.json`. The runner also bundles the complete review
-set (native CSV, metadata, comparison tables, minima, and manifest) as a local convenience file output/afh-native-audit-results.zip. The canonical repository record is the individually committed extracted files under output/native_audit/, not the ZIP bundle.
+either the original AFH v6.0 ZIP or its extracted dmformfactor-V6.m source file. The direct 2401-point Mathematica response export and its execution metadata are written to
+`output/native_exports/`. The independent Python/Wolfram pointwise comparison,
+minima, Wolfram version, source hashes, CSV hashes, and
+`afh_native_audit_manifest.json` are written to `output/native_audit/`.
+These are separate records: the direct native export is not the comparison grid.
+The runner bundles both directories into the local convenience archive
+`output/afh-native-audit-results.zip`. The canonical repository record is the
+individually committed content under `output/native_exports/` and
+`output/native_audit/`, not the ZIP bundle.
 
 A successful Python GitHub Actions run is **not** a substitute for this native
 Wolfram execution. The native audit is considered complete only when the
