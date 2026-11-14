@@ -42,11 +42,11 @@ jobs:
             -Inest/build/_deps/gcem-src/include \
             research/lz_detector_response/cpp/lz_2026_nr_event_level.cc \
             nest/build/libNESTCore.a -o lz_2026_nr_event_level
-      - name: Run 248 keV event-level samples
+      - name: Run paired 248 keV event-level samples
         run: |
           mkdir -p pilot-output
-          ./lz_2026_nr_event_level 248 5000 20261115 ws2024 > pilot-output/ws2024.csv
-          ./lz_2026_nr_event_level 248 5000 20261116 generic > pilot-output/generic.csv
+          ./lz_2026_nr_event_level 248 20000 20261115 ws2024 > pilot-output/ws2024.csv
+          ./lz_2026_nr_event_level 248 20000 20261115 generic > pilot-output/generic.csv
           python research/lz_detector_response/summarize_lz_2026_nr_event_level.py \
             pilot-output/ws2024.csv pilot-output/generic.csv \
             > pilot-output/summary.json
