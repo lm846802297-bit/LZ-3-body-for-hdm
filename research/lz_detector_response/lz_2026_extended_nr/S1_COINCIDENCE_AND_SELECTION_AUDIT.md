@@ -189,6 +189,12 @@ The denominator at every stage must be the preceding stage's numerator. Save bot
 
 The current driver source and its exact build/run command have not yet been recovered. The source-call verification and event-level rerun are therefore open; this document records the public NEST implementation and the missing evidence, not a claim that the existing simulation has passed the full selection.
 
+The machine-readable event-level field and cutflow contract is
+\`lz_nr_event_level_selection_schema.json\`. It explicitly distinguishes
+NEST's detector-level S2 threshold in phe from the published raw-S2 ROI in
+phd, and requires the S1 coincidence probability, random draw, pass flag,
+and \`scint[8]\` hit-count field to be archived separately.
+
 ## 7. 5-keV versus 1-keV recoil-grid convergence
 
 The natural-xenon halo-folded spectrum is the grid relevant to the detector pipeline. This is distinct from the fixed-speed Xe-131 diagnostic grid.
