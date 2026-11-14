@@ -142,7 +142,11 @@
       "electroluminescence_yield_photons_per_extracted_electron": 613.190384122,
       "single_electron_size_phd": 46.8501981084,
       "g2_phd_per_electron": 34.0223956324,
-      "s2_threshold_phd": 644.975288303
+      "s2_threshold_raw_equiv_phd": 644.975288303,
+      "s2c_threshold_at_reference_phd": 683.7178528482375,
+      "reference_drift_time_us": 525,
+      "electron_lifetime_us": 9000,
+      "threshold_note": "NEST tests the configured threshold on raw S2 pulse area in phe, before lifetime/position correction. 644.975 phd is the raw threshold after DPE conversion; at the central dtCntr reference depth, the corresponding corrected S2c threshold is 683.718 phd."
     },
     "comparison_to_2026_paper": {
       "paper_g1": {
