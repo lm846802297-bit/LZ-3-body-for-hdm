@@ -1,0 +1,70 @@
+{
+  "paper": "LZ Collaboration, arXiv:2609.02823v1 (2026-09-02)",
+  "purpose": "Record reproducible NR fluctuation candidates without claiming that either is confirmed as the exact 2026 analysis setting.",
+  "paper_status": {
+    "table_s5": "Publishes the 15-parameter NR mean light-/charge-yield model.",
+    "nr_fluctuation_vector": "No separate NRERWidthsParam vector is tabulated in Table S5 or present in the user-supplied 46-table HEPData ZIP.",
+    "interpretation": "The 2026 paper uses NEST v2.4.5 and says best-fit NEST response parameters are in the Data Release. The inspected ZIP is a tabular export and contains no separate NEST configuration file."
+  },
+  "source_pin": {
+    "repository": "https://github.com/NESTCollaboration/nest",
+    "commit": "423b9745a5bfbb0402514f1d7955e67445de0810",
+    "commit_date_utc": "2026-08-16T16:33:43Z"
+  },
+  "nr_relevant_indices": {
+    "0": "ion Fano factor",
+    "1": "exciton Fano factor",
+    "2": "NR non-binomial recombination-fluctuation amplitude",
+    "3": "NR recombination-fluctuation center in electron fraction",
+    "4": "NR recombination-fluctuation width",
+    "5": "NR recombination-fluctuation skewness",
+    "11": "linear energy/quanta dependence of ion Fano factor",
+    "12": "linear energy/quanta dependence of exciton Fano factor"
+  },
+  "candidates": {
+    "generic_nest_default": {
+      "source_file": "include/NEST/NEST.hh",
+      "source_url": "https://github.com/NESTCollaboration/nest/blob/423b9745a5bfbb0402514f1d7955e67445de0810/include/NEST/NEST.hh",
+      "full_13_element_NRERWidthsParam": [0.4, 0.4, 0.04, 0.5, 0.19, 2.25, -0.001, 0.046452, 0.45, 0.205, -0.2, 0.0, 0.0],
+      "NR_relevant_index_value_pairs": {
+        "0": 0.4, "1": 0.4, "2": 0.04, "3": 0.5,
+        "4": 0.19, "5": 2.25, "11": 0.0, "12": 0.0
+      },
+      "status": "Upstream generic NEST default; not evidence of a fitted LZ 2026 setting."
+    },
+    "lz_ws2024_tuned": {
+      "source_file": "include/Detectors/LZ_WS2024.hh",
+      "source_url": "https://github.com/NESTCollaboration/nest/blob/423b9745a5bfbb0402514f1d7955e67445de0810/include/Detectors/LZ_WS2024.hh",
+      "full_13_element_NRERWidthsParam": [0.404, 0.393, 0.0383, 0.497, 0.1906, 2.220, 0.3, 0.04311, 0.46894, 0.15505, -0.26564, 0.0, 0.0],
+      "NR_relevant_index_value_pairs": {
+        "0": 0.404, "1": 0.393, "2": 0.0383, "3": 0.497,
+        "4": 0.1906, "5": 2.220, "11": 0.0, "12": 0.0
+      },
+      "source_comment": "The detector file identifies itself as LZ SR3 or WS2024 and says the listed vectors were adjusted to match LZ tritium and D-D calibration data. It recommends NEST v2.4.0.",
+      "status": "LZ-specific calibration-tuned candidate; stronger provenance than generic defaults, but not confirmed as the exact 2026 extended-NR analysis configuration."
+    }
+  },
+  "comparison": {
+    "nr_relevant_indices": [0, 1, 2, 3, 4, 5, 11, 12],
+    "relative_change_ws2024_vs_generic_percent": {
+      "0": 1.0,
+      "1": -1.75,
+      "2": -4.25,
+      "3": -0.6,
+      "4": 0.3157894737,
+      "5": -1.3333333333,
+      "11": null,
+      "12": null
+    },
+    "note": "The two candidates are close for the NR-relevant entries. Indices 6-10 are ER-specific in the GetQuanta NR branch; they are retained in the full vector because the NEST API requires a 13-element vector."
+  },
+  "implementation_evidence": {
+    "full_calculation": "NESTcalc::FullCalculation passes NRERWidthsParam to GetQuanta.",
+    "nr_usage": "For Lindhard < 1, GetQuanta uses indices 0, 1, 2, 3, 4, 5, 11, and 12 through the ion/exciton Fano terms, RecombOmegaNR, and NR skewness.",
+    "warning": "This source-code audit identifies available candidate settings; it does not prove which vector the LZ 2026 collaboration used in the final analysis."
+  },
+  "recommended_use": {
+    "baseline": "Run the LZ_WS2024-tuned vector as the primary documented candidate and generic NEST defaults as a comparison.",
+    "production_gate": "Do not label either result as an exact LZ 2026 detector-response reproduction until the 2026 configuration or an explicit collaboration statement confirms the choice and detector settings."
+  }
+}
