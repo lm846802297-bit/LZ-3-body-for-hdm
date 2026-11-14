@@ -110,7 +110,7 @@ def compare(samples):
             groups[sample["position_mode"]][sample["config"]] = {
                 b["s1c_low_phd"]: b for b in sample[band_key]
             }
-        configs = ("eft2024", "ws2024", "generic")
+        configs = ("eft2024", "eftmean_wswidth", "eftmean_genericwidth", "ws2024", "generic")
         for position_mode, group in groups.items():
             for i, left_name in enumerate(configs):
                 for right_name in configs[i + 1:]:
