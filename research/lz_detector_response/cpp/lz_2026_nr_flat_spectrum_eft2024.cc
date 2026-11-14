@@ -88,6 +88,9 @@ int main(int argc, char** argv) {
               << " g1_gas=" << detector.get_g1_gas()
               << " s2_threshold_phe=" << detector.get_s2_thr()
               << " electron_lifetime_us=" << detector.get_eLife_us()
+              << " g2_phd_per_electron=" << g2_params.at(3)
+              << " el_yield_photons_per_e=" << g2_params.at(0)
+              << " extraction_efficiency=" << g2_params.at(1)
               << " drift_speed_mm_us=" << drift_speed << "\n";
 
     std::cout
@@ -126,8 +129,15 @@ int main(int argc, char** argv) {
           NEST::S2CalculationMode::Full, -1, s2_wf_time, s2_wf_amp,
           g2_params);
 
+      const double s1r = std::abs(s1.at(4));
       const double s1c = std::abs(s1.at(5));
+      const double s2r = std::abs(s2.at(6));
       const double s2c = std::abs(s2.at(7));
+      const bool s1_pass = s1.at(0) >= 0.;
+      const bool s2_pass = s2.at(7) >= 0.;
+      const bool analysis_roi_pass = s1_pass && s2_pass &&
+          s1c >= 3. && s1c <= 600. && s2r > 645. &&
+          s2c >= std::pow(10., 2.75) && s2c <= std::pow(10., 4.15);
       const double log_s2c = s2c > 0. ? std::log10(s2c) : -999.;
       std::cout << i << ',' << config << ',' << position_mode << ','
                 << energy << ',' << x_mm << ',' << y_mm << ',' << z_mm << ','
