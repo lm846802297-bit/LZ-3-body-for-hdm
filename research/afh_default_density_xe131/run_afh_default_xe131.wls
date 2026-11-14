@@ -43,11 +43,13 @@ If[!NumericQ[rAFH0] || packageNormRelErr > 2.0*10^-4,
 normalizationFactor = A^2/rows[[1, 5]];
 normalizedRows = Map[Append[#, normalizationFactor*#[[5]]] &, rows];
 normalizedRows = Map[Append[#, normalizationFactor*#[[5]]/A^2] &, normalizedRows];
-csvPath = FileNameJoin[{scriptDir, "afh_default_xe131_WM00_mathematica.csv"}];
+nativeOutputDir = FileNameJoin[{scriptDir, "output", "native_exports"}];
+If[!DirectoryQ[nativeOutputDir], CreateDirectory[nativeOutputDir, CreateIntermediateDirectories -> True]];
+csvPath = FileNameJoin[{nativeOutputDir, "afh_default_xe131_WM00_mathematica.csv"}];
 Export[csvPath,
   Prepend[normalizedRows, {"q_GeV", "y", "W_M00_AFH_package", "R_AFH_4Pi_over_2Jplus1",
     "R_equal_pn_raw", "ER_keV", "R_equal_pn_normalized", "R_over_A2"}], "CSV"];
-metaPath = FileNameJoin[{scriptDir, "afh_default_xe131_mathematica_metadata.txt"}];
+metaPath = FileNameJoin[{nativeOutputDir, "afh_default_xe131_mathematica_metadata.txt"}];
 metadata = {
   "source = AFH DMFormFactor v6.0; built-in sdgXe131, 67 entries",
   "SetIsotope = SetIsotope[54,131,default,default]",
