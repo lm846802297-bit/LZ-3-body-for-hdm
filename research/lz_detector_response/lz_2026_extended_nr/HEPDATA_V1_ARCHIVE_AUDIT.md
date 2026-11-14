@@ -104,3 +104,21 @@ A further source audit found a public LZ detector class in the pinned NEST commi
 This is a materially better-motivated candidate baseline than silently using generic defaults. However, it is a WS2024 calibration-tuned configuration, not explicit proof of the exact NR fluctuation settings used in the 2026 extended-NR analysis. The 2026 paper's Table S5 changes the NR mean-yield model, while the supplied HEPData ZIP does not include a separate response configuration. Therefore, the WS2024 width vector should be run as a documented candidate and compared with generic defaults, not labeled as confirmed 2026 input.
 
 The two candidate vectors and the source-code index mapping are archived in `lz_2026_nr_fluctuation_baselines.json`.
+
+
+## 8. Follow-up: separate public NEST configuration located (2026-11-15)
+
+The HEPData archive conclusion above remains unchanged: the supplied 46-table ZIP has no NEST configuration resource. A separate public LZ-specific candidate was located in the NEST Git repository, not in HEPData:
+
+- `include/Detectors/LZ_WS2024.hh`
+- `LZ_Detector_2024::SetEFT2024Configuration()`
+- configuration introduced in NEST commit `307fb27d4c2f9b48dba27529bb57bc243e0ce2dc` (2026-08-27)
+- audited full parameter vectors at commit `541b6430dae6ea289cf110c99f174a9187f7fdee` (2026-09-09)
+
+The configuration supplies full-precision EFT2024 NR and ER mean-yield vectors and a 17-element `NRERWidthsParam` vector containing both NR fluctuation parameters and the Table S4 ER double-skewed-Gaussian inputs. It also changes detector overrides (g_1=0.1104), (g_{1,gas}=0.07753555), (s2\_thr=120\,\mathrm{phe}), and (eLife=15000\,\mu\mathrm{s}).
+
+This public configuration is the strongest available LZ-specific executable candidate, but not a confirmed copy of the exact 2026 collaboration production build. An independent study using commit 541b643 explicitly states that the link is circumstantial and that this commit is not contained in a tagged NEST release. See:
+- `LZ_2026_NEST_CONFIGURATION_PROVENANCE.md`
+- `lz_2026_nest_eft2024_configuration_candidate.json`
+
+The prior event-level NR pilots used the rounded Table S5 NR means with WS2024 or generic widths and the default WS2024 detector overrides. Those were hybrid validation/sensitivity pilots, not the EFT2024 configuration. Retain them as historical checks; use the new NEST 541b643 EFT2024 driver for the primary public-candidate comparison.
