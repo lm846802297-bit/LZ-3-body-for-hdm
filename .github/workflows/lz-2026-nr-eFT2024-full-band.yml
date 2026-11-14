@@ -1,0 +1,69 @@
+name: LZ 2026 NR EFT2024 full-band candidate comparison
+
+on:
+  push:
+    branches:
+      - research/figure2-p0-4-mainline
+    paths:
+      - research/lz_detector_response/cpp/lz_2026_nr_flat_spectrum_eft2024.cc
+      - research/lz_detector_response/summarize_lz_2026_nr_flat_band_eft2024.py
+      - research/lz_detector_response/lz_2026_extended_nr/lz_2026_nest_eft2024_configuration_candidate.json
+      - .github/workflows/lz-2026-nr-eFT2024-full-band.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  nr-full-band:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+      - name: Check out pinned NEST EFT2024 configuration source
+        uses: actions/checkout@v4
+        with:
+          repository: NESTCollaboration/nest
+          ref: 541b6430dae6ea289cf110c99f174a9187f7fdee
+          path: nest
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Configure and build pinned NEST core
+        run: |
+          cmake -S nest -B nest/build \
+            -DBUILD_EXAMPLES=OFF -DBUILD_GARFIELD=OFF -DBUILD_ROOT=OFF -DG4=OFF
+          cmake --build nest/build --target NESTCore --parallel 2
+      - name: Compile EFT2024 full-band driver
+        run: |
+          g++ -std=c++17 -O2 \
+            -Inest/include -Inest/include/Detectors \
+            -Inest/build/_deps/gcem-src/include \
+            research/lz_detector_response/cpp/lz_2026_nr_flat_spectrum_eft2024.cc \
+            nest/build/libNESTCore.a -o lz_2026_nr_flat_spectrum_eft2024
+      - name: Generate full calibration-range NR bands
+        run: |
+          mkdir -p nr-band-output
+          for config in eft2024 ws2024 generic; do
+            ./lz_2026_nr_flat_spectrum_eft2024 0.1 330.0 200000 20261118 ${config} uniform_tpc > nr-band-output/${config}_uniform_tpc.csv
+            ./lz_2026_nr_flat_spectrum_eft2024 0.1 330.0 100000 20261119 ${config} candidate > nr-band-output/${config}_candidate.csv
+          done
+          python research/lz_detector_response/summarize_lz_2026_nr_flat_band_eft2024.py \
+            nr-band-output/eft2024_uniform_tpc.csv \
+            nr-band-output/ws2024_uniform_tpc.csv \
+            nr-band-output/generic_uniform_tpc.csv \
+            nr-band-output/eft2024_candidate.csv \
+            nr-band-output/ws2024_candidate.csv \
+            nr-band-output/generic_candidate.csv \
+            > nr-band-output/nr-band-summary.json
+          cat nr-band-output/nr-band-summary.json
+      - name: Upload full-band CSV and summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-nr-eFT2024-full-band
+          path: nr-band-output/
+          if-no-files-found: error
+          retention-days: 30
