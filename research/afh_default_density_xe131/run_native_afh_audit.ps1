@@ -81,13 +81,13 @@ try {
 
     Write-Host "[4/4] Produce the machine-readable comparison and SHA-256 manifest..."
     $pythonCsv = Join-Path $outputDir "afh_default_xe131_WM00.csv"
-    $mathematicaCsv = Join-Path $scriptDir "afh_default_xe131_WM00_mathematica.csv"
+    $mathematicaCsv = Join-Path (Join-Path $outputDir "native_exports") "afh_default_xe131_WM00_mathematica.csv"
     $comparisonJson = Join-Path $auditDir "afh_mathematica_python_comparison.json"
     & python ".\compare_afh_mathematica_python.py" --python-csv $pythonCsv --mathematica-csv $mathematicaCsv --output $comparisonJson
     if ($LASTEXITCODE -ne 0) { throw "Final Python/MMA comparison failed with exit code $LASTEXITCODE." }
 
     $nativeMetadata = Join-Path $auditDir "afh_native_audit_metadata.txt"
-    $mathematicaMetadata = Join-Path $scriptDir "afh_default_xe131_mathematica_metadata.txt"
+    $mathematicaMetadata = Join-Path (Join-Path $outputDir "native_exports") "afh_default_xe131_mathematica_metadata.txt"
     $metadataLines = Get-Content -LiteralPath $nativeMetadata
     $wolframVersionLine = $metadataLines | Where-Object { $_ -like "WolframVersion = *" } | Select-Object -First 1
     $hashFiles = @(
