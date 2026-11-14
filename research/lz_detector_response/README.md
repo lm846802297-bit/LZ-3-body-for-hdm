@@ -121,3 +121,18 @@ The code and assumptions are documented in
 ## NEST configuration status
 
 The HEPData v1 ZIP is a 46-table export and contains no separate NEST configuration resource. A separate public LZ-specific EFT2024 configuration candidate is available in NEST commit `541b643`; it is not in a tagged NEST release and its identity with the exact LZ 2026 production build is not proven. Use the provenance report and machine-readable JSON before selecting parameters. Earlier Table-S5-plus-WS2024-width pilot results are historical hybrid checks, not the primary EFT2024 response.
+
+
+## Three-body signal folded through the NR 2D response (new)
+
+The first end-to-end pre-selection fold is documented in
+`lz_2026_extended_nr/LZ_2026_THREE_BODY_NR_2D_RESPONSE_FOLD_REPORT.md`.
+
+- `cpp/lz_2026_nr_full_calibration_band.cc`: event-level NEST response sampler; now accepts explicit recoil-energy minimum and maximum.
+- `fold_lz_2026_three_body_2d_response.py`: constructs per-energy-bin response probabilities and folds the archived continuous natural-xenon three-body spectra into `(S1c, log10(S2c))) cell intensities.
+- `tests/test_lz_2026_three_body_2d_response.py`: numerical tests for exact piecewise-linear rate integration, partial ROI bins, and probability-mass preservation.
+- `.github/workflows/lz-2026-three-body-2d-response-fold.yml`: reproducible pinned-NEST workflow.
+
+The workflow passed as [run 43645345194](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43645345194). Its artifact contains four 200k-event response samples, the 2D cell-intensity CSV, and closure summaries. The 2D output is a pre-selection observable intensity. The energy-only final-ROI efficiency is deliberately kept separate because it does not specify the selected two-dimensional response and must not be double counted.
+
+The response uses a uniform active-TPC volume proxy, not the actual calibration-source spatial distribution. It is not the official production NEST configuration, full selected-event PDF, background likelihood, or confidence interval.
