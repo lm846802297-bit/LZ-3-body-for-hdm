@@ -1,0 +1,68 @@
+name: LZ 2026 ER EFT2024 band and 2D response
+
+on:
+  push:
+    branches:
+      - research/figure2-p0-4-mainline
+    paths:
+      - research/lz_detector_response/cpp/lz_2026_er_flat_spectrum_eft2024.cc
+      - research/lz_detector_response/summarize_lz_2026_er_response.py
+      - .github/workflows/lz-2026-er-eFT2024-2d-response.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  er-response:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+      - name: Check out pinned NEST EFT2024 configuration source
+        uses: actions/checkout@v4
+        with:
+          repository: NESTCollaboration/nest
+          ref: 541b6430dae6ea289cf110c99f174a9187f7fdee
+          path: nest
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Configure and build pinned NEST core
+        run: |
+          cmake -S nest -B nest/build \
+            -DBUILD_EXAMPLES=OFF -DBUILD_GARFIELD=OFF -DBUILD_ROOT=OFF -DG4=OFF
+          cmake --build nest/build --target NESTCore --parallel 2
+      - name: Compile ER event-level driver
+        run: |
+          g++ -std=c++17 -O2 \
+            -Inest/include -Inest/include/Detectors \
+            -Inest/build/_deps/gcem-src/include \
+            research/lz_detector_response/cpp/lz_2026_er_flat_spectrum_eft2024.cc \
+            nest/build/libNESTCore.a -o lz_2026_er_flat_spectrum_eft2024
+      - name: Generate ER flat-spectrum bands and conditional 2D PDFs
+        run: |
+          mkdir -p er-response-output
+          for config in eft2024 table_s3 generic; do
+            ./lz_2026_er_flat_spectrum_eft2024 0.1 300.0 200000 20261120 ${config} uniform_tpc > er-response-output/${config}_uniform_tpc.csv
+            ./lz_2026_er_flat_spectrum_eft2024 0.1 300.0 100000 20261121 ${config} candidate > er-response-output/${config}_candidate.csv
+          done
+          python research/lz_detector_response/summarize_lz_2026_er_response.py \
+            er-response-output/eft2024_uniform_tpc.csv \
+            er-response-output/table_s3_uniform_tpc.csv \
+            er-response-output/generic_uniform_tpc.csv \
+            er-response-output/eft2024_candidate.csv \
+            er-response-output/table_s3_candidate.csv \
+            er-response-output/generic_candidate.csv \
+            > er-response-output/er-response-summary.json
+          cat er-response-output/er-response-summary.json
+      - name: Upload ER band and 2D PDF outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-er-eFT2024-band-2d-pdf
+          path: er-response-output/
+          if-no-files-found: error
+          retention-days: 30
