@@ -502,15 +502,19 @@ def run_near_pole_scan(output_dir: Path):
                     else eq6.chi2_width_dirac_scalar_at_mass(wmax, mchi, ms, g2)
                 )
                 g2_for_integral = 1.0 if width_scheme == "zero" else g2
+                reference_order = 1024 if (width_scheme == "running" and g2 >= 1.0) else 256
                 reference = integrate_i6(
                     mchi, ms, delta_m, mA, ER, speed,
-                    nW=256, nz=8, nphi=8, mapping="sine2",
+                    nW=reference_order, nz=8, nphi=8, mapping="sine2",
                     width_scheme=width_scheme, g2=g2_for_integral,
                 )
-                for mapping, orders in mappings:
+                for mapping, base_orders in mappings:
+                    orders = base_orders
+                    if mapping == "sine2" and reference_order == 1024:
+                        orders = (*base_orders, 512, 1024)
                     for nW in orders:
                         value = (
-                            reference if mapping == "sine2" and nW == 256
+                            reference if mapping == "sine2" and nW == reference_order
                             else integrate_i6(
                                 mchi, ms, delta_m, mA, ER, speed,
                                 nW=nW, nz=8, nphi=8, mapping=mapping,
@@ -539,8 +543,9 @@ def run_near_pole_scan(output_dir: Path):
                             "nz": 8,
                             "nphi": 8,
                             "I6_GeV2": f"{value:.14g}",
-                            "sine2_256_reference_GeV2": f"{reference:.14g}",
-                            "relative_to_sine2_256": f"{value/reference-1.0:.12e}",
+                            "sine2_reference_nW": reference_order,
+                            "sine2_reference_GeV2": f"{reference:.14g}",
+                            "relative_to_sine2_reference": f"{value/reference-1.0:.12e}",
                         })
                 summaries.append({
                     "Delta_m_keV": delta_m_keV,
@@ -549,7 +554,8 @@ def run_near_pole_scan(output_dir: Path):
                     "g2": g2,
                     "Gamma_pole_keV": gamma_pole*1.0e6,
                     "Gamma_at_Wmax_keV": gamma_at_wmax*1.0e6,
-                    "sine2_256_reference_GeV2": reference,
+                    "sine2_reference_nW": reference_order,
+                    "sine2_reference_GeV2": reference,
                 })
     _write_csv(output_dir / "phase_space_near_pole_convergence.csv", rows)
     print("near-pole off-shell scan:", json.dumps({
@@ -618,7 +624,10 @@ def run_scan(
             "width_schemes": ["zero", "pole", "running"],
             "g2_values_for_finite_width": [0.1, 1.0],
             "pole_is_outside_phase_space": True,
-            "reference_quadrature": {"mapping": "sine2", "nW": 256, "nz": 8, "nphi": 8},
+            "reference_quadrature": {
+                "mapping": "sine2", "nW": 256, "nz": 8, "nphi": 8,
+                "running_g2_1_nW": 1024,
+            },
             "running_width_note": "diagnostic Breit-Wigner prescription; not a full self-energy",
         },
         "stable_threshold_kinematics": "delta = W2-Wmin2 is carried explicitly; lambda_dim = delta*(4*mchi*ms+delta)/W2^2",
