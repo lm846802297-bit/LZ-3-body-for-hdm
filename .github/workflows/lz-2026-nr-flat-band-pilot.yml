@@ -50,7 +50,7 @@ jobs:
           ./lz_2026_nr_flat_spectrum_band 0.1 330.0 200000 20261117 ws2024 > band-output/ws2024_0p1_330.csv
           ./lz_2026_nr_flat_spectrum_band 0.1 330.0 200000 20261117 generic > band-output/generic_0p1_330.csv
           python research/lz_detector_response/summarize_lz_2026_nr_flat_band.py \
-            band-output/ws2024_5p4_269p9.csv band-output/generic_5p4_269p9.csv \\
+            band-output/ws2024_5p4_269p9.csv band-output/generic_5p4_269p9.csv \
             band-output/ws2024_0p1_330.csv band-output/generic_0p1_330.csv > band-output/band-summary.json
           cat band-output/band-summary.json
       - name: Upload flat-spectrum NR band outputs
