@@ -152,6 +152,7 @@ class AFHDefaultXe131Tests(unittest.TestCase):
         self.assertIn("4e0f70e6e780f3f4a40faa14792cae239d1989cf15d1e211b4fd7389b0460727", runner)
         self.assertIn("dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372", runner)
         self.assertIn("f656145ba2fb9da741b77faed4c01d0dc457c955fa340928b5dbf9cee9bc5d45", runner)
+        self.assertIn('Join-Path (Join-Path $scriptDir "input") "afh_default_xe131_density_matrix.csv"', runner)
         self.assertIn("afh_native_audit_manifest.json", runner)
         self.assertIn("Compress-Archive", runner)
         self.assertIn("afh-native-audit-results.zip", runner)
