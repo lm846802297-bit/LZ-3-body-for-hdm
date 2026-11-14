@@ -15,6 +15,23 @@ class Eq6Tests(unittest.TestCase):
         self.assertEqual(eq6.reduced_kernel(self.M,.300,self.dm,self.mA,self.ER,self.v,nw=4,nz=4,nphi=4),0.)
     def test_open_interval(self):
         self.assertGreater(self.wmax,self.wmin)
+    def test_delta_w2_max_avoids_large_mass_subtraction(self):
+        mchi, ms = 1000.0, 360e-6
+        mA, ER, speed = 131.0 * 0.93149410242, 546e-6, 800.0
+        beta = speed / eq6.C_KM_S
+        gamma = 1.0 / math.sqrt(1.0 - beta * beta)
+        energy, momentum = mchi * gamma, mchi * gamma * beta
+        q = math.sqrt(2.0 * mA * ER + ER * ER)
+        wmin2 = (mchi + ms) ** 2
+        wmax_direct = mchi * mchi + 2.0 * momentum * q - 2.0 * (energy + mA) * ER
+        delta_direct = wmax_direct - wmin2
+        delta_stable = eq6.delta_w2_max(mchi, ms, mA, ER, speed)
+        self.assertGreater(delta_stable, 0.0)
+        self.assertLess(abs(delta_stable / delta_direct - 1.0), 5e-8)
+        wmin, wmax = eq6.limits(mchi, ms, mA, ER, speed)
+        self.assertGreater(wmax, wmin)
+        self.assertLess(abs((wmax - wmin) / delta_stable - 1.0), 1e-7)
+
     def test_mass_shell_and_four_momentum(self):
         W=.5*(self.wmin+self.wmax)
         pt=eq6.build_point(self.M,self.ms,self.mA,self.ER,self.v,W,.23,1.17)
