@@ -8,6 +8,8 @@ on:
       - research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_mean_yield.py
       - research/lz_detector_response/lz_2026_extended_nr/lz_2026_nest_nr_mean_yield_parameters.json
       - research/lz_detector_response/tests/test_lz_2026_nr_mean_yield.py
+      - research/lz_detector_response/cpp/nest_mean_yield_crosscheck.cc
+      - research/lz_detector_response/compare_lz_2026_nr_mean_yield_cpp.py
       - .github/workflows/lz-2026-nest-nr-mean-yield.yml
   workflow_dispatch:
 
@@ -18,14 +20,35 @@ jobs:
   mean-yield-tests:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
+      - name: Check out research repository
         uses: actions/checkout@v4
+      - name: Check out pinned NEST source
+        uses: actions/checkout@v4
+        with:
+          repository: NESTCollaboration/nest
+          ref: 423b9745a5bfbb0402514f1d7955e67445de0810
+          path: nest
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Run independent mean-yield tests
+      - name: Run independent Python unit tests
         run: |
           python -m unittest discover \
             -s research/lz_detector_response/tests \
             -p 'test_lz_2026_nr_mean_yield.py' -v
+      - name: Configure and build pinned NEST core
+        run: |
+          cmake -S nest -B nest/build \
+            -DBUILD_EXAMPLES=OFF -DBUILD_GARFIELD=OFF -DBUILD_ROOT=OFF -DG4=OFF
+          cmake --build nest/build --target NESTCore --parallel 2
+      - name: Compile direct NEST C++ cross-check
+        run: |
+          g++ -std=c++17 -O2 -Inest/include \
+            research/lz_detector_response/cpp/nest_mean_yield_crosscheck.cc \
+            nest/build/libNESTCore.a -o nest_mean_yield_crosscheck
+      - name: Compare Python port against NEST C++
+        run: |
+          python research/lz_detector_response/compare_lz_2026_nr_mean_yield_cpp.py \
+            --executable ./nest_mean_yield_crosscheck
