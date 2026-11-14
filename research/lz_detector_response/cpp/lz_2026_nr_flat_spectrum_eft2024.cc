@@ -96,7 +96,7 @@ int main(int argc, char** argv) {
     std::cout
       << "event,config,position_mode,energy_keV,x_mm,y_mm,z_mm,r_mm,"
          "drift_time_us,field_V_cm,density_g_cm3,n_photons,n_electrons,"
-         "s1c_phd,s2c_phd,log10_s2c_phd\n";
+         "s1r_phd,s1c_phd,s2r_phd,s2c_phd,log10_s2c_phd,s1_pass,s2_pass,analysis_roi_pass\n";
     std::cout << std::setprecision(12);
 
     for (int i = 0; i < n_events; ++i) {
@@ -143,8 +143,10 @@ int main(int argc, char** argv) {
                 << energy << ',' << x_mm << ',' << y_mm << ',' << z_mm << ','
                 << r_mm << ',' << drift_time << ',' << field << ',' << density
                 << ',' << result.quanta.photons << ','
-                << result.quanta.electrons << ',' << s1c << ',' << s2c << ','
-                << log_s2c << '\n';
+                << result.quanta.electrons << ',' << s1r << ',' << s1c << ','
+                << s2r << ',' << s2c << ',' << log_s2c << ','
+                << (s1_pass ? 1 : 0) << ',' << (s2_pass ? 1 : 0) << ','
+                << (analysis_roi_pass ? 1 : 0) << '\n';
     }
   } catch (const std::exception& e) {
     std::cerr << "ERROR: " << e.what() << '\n';
