@@ -157,6 +157,7 @@ class AFHDefaultXe131Tests(unittest.TestCase):
         self.assertIn("afh_native_audit_manifest.json", runner)
         self.assertIn('Join-Path (Join-Path $outputDir "native_exports") "afh_default_xe131_WM00_mathematica.csv"', runner)
         self.assertIn('nativeOutputDir = FileNameJoin[{scriptDir, "output", "native_exports"}]', mma_runner)
+        self.assertIn('FileNameJoin[{scriptDir, "..", "..", "v6", "dmformfactor-V6.m"}]', mma_runner)
         self.assertIn("Compress-Archive", runner)
         self.assertIn("afh-native-audit-results.zip", runner)
         self.assertIn("WolframVersion = ", verifier)
