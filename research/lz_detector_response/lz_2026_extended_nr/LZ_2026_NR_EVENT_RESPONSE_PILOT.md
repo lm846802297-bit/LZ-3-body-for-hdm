@@ -145,3 +145,14 @@ After local execution, inspect the CSV integrity, compare A/B distributions at 7
 - Table S5 vector: research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_yield_params_s5.txt
 - Summary program: research/lz_detector_response/lz_2026_extended_nr/summarize_nr_event_response.py
 - Configuration tests: research/lz_detector_response/tests/test_lz_2026_nr_event_response_config.py
+
+
+## 11. Pinned NEST source locations audited
+
+All source references below use commit 423b9745a5bfbb0402514f1d7955e67445de0810:
+
+- [runNESTvec call sequence in src/execNEST.cpp](https://github.com/NESTCollaboration/nest/blob/423b9745a5bfbb0402514f1d7955e67445de0810/src/execNEST.cpp): calls FullCalculation, then GetS1 and GetS2.
+- [NESTObservableArray::store_signals in src/execNEST.cpp](https://github.com/NESTCollaboration/nest/blob/423b9745a5bfbb0402514f1d7955e67445de0810/src/execNEST.cpp): documents S1c as S1 result index 5 and S2c as S2 result index 7.
+- [GetS1 and GetS2 implementations in src/NEST.cpp](https://github.com/NESTCollaboration/nest/blob/423b9745a5bfbb0402514f1d7955e67445de0810/src/NEST.cpp): preserve negative signs when the S1 coincidence or S2 pulse-area threshold fails.
+- [LZ_WS2024 detector class](https://github.com/NESTCollaboration/nest/blob/423b9745a5bfbb0402514f1d7955e67445de0810/include/Detectors/LZ_WS2024.hh): provides the detector settings and calibration-tuned NR width vector.
+- [generic NEST defaults and API declarations](https://github.com/NESTCollaboration/nest/blob/423b9745a5bfbb0402514f1d7955e67445de0810/include/NEST/NEST.hh): provides the generic NR width vector and FullCalculation/GetS1/GetS2 interfaces.
