@@ -179,3 +179,24 @@ Until Tracks A and B pass their validation gates:
 - HEPData data release, DOI: 10.17182/hepdata.182472.v1.
 - NESTCollaboration/nest source, pinned commit `30811ea2f8a6de1262eef35278745226dc5d582a`.
 - NEST v2.4.5beta prerelease tag `19bc9bc`, retained as a version comparison, not the selected implementation pin.
+
+
+## 9. Progress update: first independent mean-yield port
+
+The first isolated Python implementation is now committed:
+
+- `lz_2026_extended_nr/lz_2026_nr_mean_yield.py`
+- `tests/test_lz_2026_nr_mean_yield.py`
+- `.github/workflows/lz-2026-nest-nr-mean-yield.yml`
+
+The implementation ports the 15-parameter mean-yield equations from the pinned NEST source and requires the detector field, density, molar mass, isotope mass number, and OldW13eV flag explicitly. This prevents the 2024 detector settings from being silently inherited.
+
+CI run:
+- Run ID: `43626728281`
+- Result: success
+- Job: `mean-yield-tests`
+- Tested: 15-parameter vector, high-energy exponent turn-on, non-negative/additive mean quanta, isotope mass scaling, explicit OldW13eV dependence, and invalid-input handling.
+
+**Validation boundary:** the current tests are unit tests of the independent Python port. They are not yet a cross-language comparison against a compiled NEST executable, and they do not validate the LZ 2026 detector configuration. No final mean-yield curve or S1/S2 PDF is claimed yet.
+
+The field, density, isotope mass scaling convention, and OldW13eV flag must be confirmed against the LZ 2026 HEPData release or collaboration documentation before producing the production response grid.
