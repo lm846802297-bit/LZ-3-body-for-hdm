@@ -308,3 +308,21 @@ The user supplied `HEPData-ins3199115-v1.zip`. It was opened directly from the u
 - Full details and table-coverage exceptions are recorded in `lz_2026_extended_nr/HEPDATA_V1_ARCHIVE_AUDIT.md`.
 
 Consequently, the supplied ZIP resolves the missing observed-sample tables but does not close the production event-level NEST response-input gap. The production response and final likelihood remain frozen pending the separate response resource or an explicitly documented and validated substitute.
+
+
+## 14. LZ-specific NR fluctuation candidate found in pinned NEST source (2026-11-15)
+
+A source audit of NEST commit `423b9745a5bfbb0402514f1d7955e67445de0810` found `include/Detectors/LZ_WS2024.hh`. The file identifies itself as the LZ SR3/WS2024 detector input and explicitly documents calibration-adjusted vectors for tritium and D-D data. It includes the tuned width vector:
+
+```text
+NRERWidthsParam = {
+  0.404, 0.393, 0.0383, 0.497, 0.1906, 2.220,
+  0.3, 0.04311, 0.46894, 0.15505, -0.26564, 0., 0.
+}
+```
+
+For the NR branch, `GetQuanta` uses indices 0, 1, 2, 3, 4, 5, 11, and 12. The corresponding generic defaults are 0.4, 0.4, 0.04, 0.5, 0.19, 2.25, 0, and 0. The WS2024 values differ only modestly from the generic defaults for these NR-relevant entries.
+
+This is a more physically motivated baseline than an unqualified generic default. However, the detector file says it is for LZ SR3/WS2024 and recommends NEST v2.4.0; it does not prove that these exact width parameters were retained in the 2026 extended-NR analysis using NEST v2.4.5. The 2026 paper's Table S5 supplies the 15 NR mean-yield parameters, but does not tabulate the NR width vector.
+
+The two candidate vectors, source pin, index mapping, and comparison are recorded in `lz_2026_extended_nr/lz_2026_nr_fluctuation_baselines.json`. Recommended next calculation: run the LZ-WS2024-tuned width vector as the primary documented candidate and generic defaults as a sensitivity comparison. Do not label either as the exact 2026 response configuration until confirmed by a 2026 configuration file or explicit collaboration statement.
