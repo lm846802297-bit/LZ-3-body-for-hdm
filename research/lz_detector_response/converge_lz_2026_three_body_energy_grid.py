@@ -314,7 +314,7 @@ def main() -> None:
         "response_spatial_prior": "uniform active-TPC cylinder volume proxy; not the collaboration's 4.71-tonne fiducial-volume map or calibration-source geometry",
         "response_nest_commit": NEST_COMMIT,
         "response_probability": "N_cell/N_generated in each true-energy stratum; failed S1-coincidence or NEST S2-threshold events remain in the denominator and are not renormalized away",
-        "nest_level_definition": "NEST GetS1 Parametric coincidence pass AND NEST GetS2 threshold pass",
+        "nest_level_definition": "NEST GetS1 Parametric PMT-occupancy coincidence pass (coinLevel/numPMTs; no explicit coinWind timing in this mode) AND NEST GetS2 threshold pass",
         "ws_roi_definition": {
             "S1c_phd": [S1_MIN_PHD, S1_MAX_PHD],
             "raw_S2_phd_strictly_greater_than": S2_RAW_MIN_PHD,
