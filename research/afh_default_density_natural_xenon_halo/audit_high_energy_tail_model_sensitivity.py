@@ -175,7 +175,19 @@ def build_results(
             tail, full, tail_raw, full_raw = _integral_bundle(x, y, efficiency_x, efficiency)
             output.append(_make_output_row(benchmark, scenario, "AFH/Helm diagnostic", 7 if scenario == "AFH-7" else 9, tail, full, tail_raw, full_raw))
 
-        gcn_csv = gcn_root / benchmark / "natural_xenon_continuous_spectrum.csv"
+        gcn_benchmark_dir = gcn_root / benchmark
+        gcn_meta = json.loads((gcn_benchmark_dir / "metadata.json").read_text(encoding="utf-8"))
+        if gcn_meta.get("mass_scheme") != "nist_nuclear":
+            raise ValueError(f"{benchmark}: GCN/JJ55 metadata does not use NIST nuclear masses")
+        if not str(gcn_meta.get("response_q_convention", "")).startswith("exact spatial q"):
+            raise ValueError(f"{benchmark}: GCN/JJ55 metadata does not use exact spatial q")
+        if gcn_meta.get("halo_model") != "truncated SHM":
+            raise ValueError(f"{benchmark}: GCN/JJ55 metadata does not use truncated SHM")
+        if gcn_meta.get("abundance_renormalization") != "none":
+            raise ValueError(f"{benchmark}: GCN/JJ55 isotope abundances were renormalized")
+        if gcn_meta.get("available_isotopes") != [128, 129, 130, 131, 132, 134, 136]:
+            raise ValueError(f"{benchmark}: unexpected GCN/JJ55 isotope coverage")
+        gcn_csv = gcn_benchmark_dir / "natural_xenon_continuous_spectrum.csv"
         gcn_rows = read_csv(gcn_csv)
         gcn_rows = [
             row for row in gcn_rows
@@ -184,11 +196,6 @@ def build_results(
         ]
         for model in ("GCN", "JJ55"):
             selected, x, y = _validated_rate_rows(gcn_rows, "model", model)
-            for row in selected:
-                if row.get("response_q_convention") != "exact_spatial":
-                    raise ValueError(f"{benchmark}/{model}: response q is not exact spatial q")
-                if row.get("mass_scheme") != "nist_nuclear":
-                    raise ValueError(f"{benchmark}/{model}: mass scheme is not NIST nuclear")
             tail, full, tail_raw, full_raw = _integral_bundle(x, y, efficiency_x, efficiency)
             output.append(_make_output_row(benchmark, model, "seven-isotope shell-model", 7, tail, full, tail_raw, full_raw))
 
