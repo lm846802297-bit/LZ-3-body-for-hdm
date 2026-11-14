@@ -112,8 +112,9 @@ python -m unittest discover -s tests -p 'test_*.py' -v
 ```
 
 For a native AFH Mathematica calculation, use
-`run_afh_default_xe131.wls` with the official package file in this directory
-or set `DMFormFactorPath`.
+`run_afh_default_xe131.wls`; by default it loads the committed official source
+from `v6/dmformfactor-V6.m`. Set `DMFormFactorPath` to use another verified
+copy of the AFH v6.0 source.
 
 For an independent native Mathematica/Python comparison, use the one-command
 Windows PowerShell runner below. It accepts either the original AFH v6.0 ZIP
