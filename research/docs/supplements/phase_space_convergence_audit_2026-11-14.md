@@ -279,45 +279,35 @@ Python 回归测试：**7/7 PASS**。GitHub Actions 的独立 CI 结果需以最
 
 ## 10. Historical 800 km/s anchor: mass convention versus quadrature error
 
-The earlier archived green benchmark contains
+The archived green point is
+
 \[
-I_6^{\rm archive}=1{,}433{,}678.0722867665\;\mathrm{GeV}^2
+m_{\chi_1}=1000\;\mathrm{GeV},\quad
+m_s=300\;\mathrm{keV},\quad
+\Delta m=1\;\mathrm{MeV},\quad
+E_R=200\;\mathrm{keV},\quad
+v=800\;\mathrm{km/s},
 \]
-at (m_s=300\) keV, \(\Delta m=1\) MeV,
-(E_R=200\) keV and (v=800\) km/s. The new audit recomputes this point
-with both the historical (A\times0.9315\) GeV mass convention and the
-current NIST nuclear mass (m_A=131\times0.93149410242\) GeV. Each mass
-scheme is evaluated with the legacy linear-(W^2) (16\times16\times8)
-rule and with threshold-(u^2) (48\times40\times24) reference
-quadrature.
+with
+\[
+I_6^{\rm archive}=1{,}433{,}678.0722867665\;\mathrm{GeV}^2.
+\]
 
-| Xe-131 mass input | (m_A) [GeV] | Linear (W^2), 16×16×8 | Threshold (u^2), 48×40×24 | Linear vs high-order |
+The audit separates three Xe-131 mass inputs and the integration mapping. The pole is far outside the kinematic interval for this benchmark, so this is not a resonance scan.
+
+| Mass input | \(m_A\) [GeV] | Legacy linear-\(W^2\), 16×16×8 | Threshold-\(u^2\), 48×40×24 | Linear vs threshold reference |
 |---|---:|---:|---:|---:|
-| (A\times0.9315) | 122.026500000 | 1,433,679.100430 | 1,433,633.856281 | (3.15591\times10^{-5}) |
-| NIST nuclear mass | 122.025727417 | 1,433,619.137788 | 1,433,573.896448 | (3.15584\times10^{-5}) |
-| Historical approximation (m_A=122) GeV | 122.000000000 | 1,431,622.869812 | 1,431,577.686931 | (3.15616\times10^{-5}) |
+| Coarse historical value | 122.000000000 | 1,431,622.869812 | 1,431,577.686931 | \(3.15616\times10^{-5}\) |
+| \(A\times0.9315\;\mathrm{GeV}\) | 122.026500000 | 1,433,679.100430 | 1,433,633.856281 | \(3.15591\times10^{-5}\) |
+| NIST Xe-131 nuclear mass | 122.025727417 | 1,433,619.137788 | 1,433,573.896448 | \(3.15584\times10^{-5}\) |
 
-The (A\times0.9315) GeV legacy result differs from the archived value by
-only (7.17\times10^{-7}) relatively. In contrast, replacing the rounded
-(0.9315) conversion by the NIST constant shifts the legacy result by
-(4.18\times10^{-5}); the NIST legacy value is (4.11\times10^{-5})
-below the historical archive. This strongly indicates that the historical
-(I_6) table used the rounded (0.9315\) GeV mass conversion, despite the
-later metadata recording the NIST value. The residual (7.17\times10^{-7})
-is retained as a small provenance/rounding mismatch rather than forced to
-zero.
+The legacy result with \(m_A=A\times0.9315\;\mathrm{GeV}\) differs from the archived value by only \(+7.17\times10^{-7}\) relatively. The NIST-mass legacy result is lower than the archive by \(4.11072\times10^{-5}\); the coarse \(m_A=122\;\mathrm{GeV}\) input differs by \(-1.43352\times10^{-3}\). The numerical evidence therefore points strongly to the rounded \(0.9315\;\mathrm{GeV}\) conversion in the historical calculation, even though later metadata recorded the NIST mass. This is a provenance inference, not proof of the original author's input.
 
-A distinct numerical effect remains: at fixed mass convention, the legacy
-linear-(W^2) (16\times16\times8) result is about
-(3.16\times10^{-5}) above the threshold-(u^2) (48\times40\times24)
-reference. The threshold-(u^2) (16\times16\times8) result itself agrees
-with the high-order threshold reference within (10^{-8}). Therefore the
-old (4.11\times10^{-5}) archive mismatch must **not** be attributed solely
-to the (W^2) mapping: it is predominantly the mass-constant convention.
-The separate (3.16\times10^{-5}) offset is the measured quadrature-mapping
-effect.
+At fixed mass input, the linear-\(W^2\) 16×16×8 result is about \(3.156\times10^{-5}\) above the high-order threshold-\(u^2\) reference. In contrast, the threshold-\(u^2\) 8×8×4, 16×16×8 and 24×24×12 values agree with the 48×40×24 reference at approximately \(10^{-11}\)–\(10^{-12}\) relative precision for this point. The historical archive offset and the quadrature-mapping offset are therefore distinct effects: the former is dominated by the mass convention; the latter is the measured legacy linear-\(W^2\) quadrature error.
 
-This is a phase-space/kernel normalization audit only. It does not involve
-the AFH factor of four, and it does not validate the full native Mathematica
-(d\sigma_A/dE_R) calculation. The complete pointwise Mathematica–Python
-cross-section comparison remains the final validation gate.
+The exact CI-generated 18-row table is archived at:
+research/figure2_full_reproduction/results/phase_space_historical_800_anchor.csv
+
+The P1 workflow uploads its independent reproduction directory as the short-lived artifact p1-phase-space-reproduction; the repository CSV is compared row-by-row against that fresh output.
+
+This audit concerns the phase-space kernel only. It does not involve the AFH factor of four and does not validate the full native Mathematica \(d\sigma_A/dE_R\) calculation.
