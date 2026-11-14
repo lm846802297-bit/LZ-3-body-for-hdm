@@ -45,7 +45,7 @@ jobs:
           cmake --build nest/build --target NESTCore --parallel 2
       - name: Compile direct NEST C++ cross-check
         run: |
-          g++ -std=c++17 -O2 -Inest/include \
+          g++ -std=c++17 -O2 -Inest/include -Inest/build/_deps/gcem-src/include \
             research/lz_detector_response/cpp/nest_mean_yield_crosscheck.cc \
             nest/build/libNESTCore.a -o nest_mean_yield_crosscheck
       - name: Compare Python port against NEST C++
