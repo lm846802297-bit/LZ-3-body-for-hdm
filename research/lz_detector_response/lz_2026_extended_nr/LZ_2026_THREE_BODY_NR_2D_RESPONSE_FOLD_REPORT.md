@@ -36,7 +36,7 @@ For each of four response families, 200,000 events were simulated with:
 - the public `LZ_Detector_2024` detector class;
 - uniform true recoil energy over the exact ROI;
 - uniform active-TPC cylinder volume as the spatial prior;
-- NEST `FullCalculation -> GetS1 -> GetS2` event path;
+- NEST `FullCalculation -> GetS1 -> GetS2` event path, with `GetS1(S1CalculationMode::Parametric)` and `GetS2(S2CalculationMode::Full)`;
 - corrected observables `s1[5]` and `s2[7]).
 
 Response families are kept distinct:
