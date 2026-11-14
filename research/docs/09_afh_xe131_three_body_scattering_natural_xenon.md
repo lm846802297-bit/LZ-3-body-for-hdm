@@ -4168,7 +4168,7 @@ python -m unittest discover \
   -p 'test_*.py' -v
 ~~~
 
-若只运行 AFH 响应本身的六项测试，将匹配模式改为 tests/test_afh_default_xe131.py。
+若只运行 AFH 响应本身的测试，将匹配模式改为 test_afh_default_xe131.py。
 
 AFH mpmath 全网格独立验证：
 

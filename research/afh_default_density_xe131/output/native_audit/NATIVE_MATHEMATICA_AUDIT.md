@@ -106,8 +106,8 @@ The native 0–0.6 GeV grid also covers the higher-q region; the three-row minim
 
 ## Archived files
 
-- ../../afh_default_xe131_WM00_mathematica.csv
-- ../../afh_default_xe131_mathematica_metadata.txt
+- ../native_exports/afh_default_xe131_WM00_mathematica.csv
+- ../native_exports/afh_default_xe131_mathematica_metadata.txt
 - afh_native_audit_grid.csv
 - python_reference.csv
 - afh_native_audit_comparison.csv
