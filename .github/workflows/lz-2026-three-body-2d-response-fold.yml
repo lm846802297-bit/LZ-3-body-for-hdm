@@ -1,0 +1,68 @@
+name: LZ 2026 three-body to NR 2D response fold
+
+on:
+  push:
+    branches:
+      - research/figure2-p0-4-mainline
+    paths:
+      - research/lz_detector_response/cpp/lz_2026_nr_full_calibration_band.cc
+      - research/lz_detector_response/fold_lz_2026_three_body_2d_response.py
+      - research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/**
+      - .github/workflows/lz-2026-three-body-2d-response-fold.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  response-fold:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+      - name: Check out pinned NEST source
+        uses: actions/checkout@v4
+        with:
+          repository: NESTCollaboration/nest
+          ref: 541b6430dae6ea289cf110c99f174a9187f7fdee
+          path: nest
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Configure and build pinned NEST core
+        run: |
+          cmake -S nest -B nest/build \
+            -DBUILD_EXAMPLES=OFF -DBUILD_GARFIELD=OFF -DBUILD_ROOT=OFF -DG4=OFF
+          cmake --build nest/build --target NESTCore --parallel 2
+      - name: Compile full-volume NR response driver
+        run: |
+          g++ -std=c++17 -O2 \
+            -Inest/include -Inest/include/Detectors \
+            -Inest/build/_deps/gcem-src/include \
+            research/lz_detector_response/cpp/lz_2026_nr_full_calibration_band.cc \
+            nest/build/libNESTCore.a -o lz_2026_nr_full_calibration_band
+      - name: Generate exact-ROI response samples
+        run: |
+          mkdir -p response-output folded-output
+          for config in eft2024 tableS5 ws2024 generic; do
+            ./lz_2026_nr_full_calibration_band ${config} 200000 20261119 5.4 269.9 > response-output/${config}.csv
+          done
+      - name: Fold four three-body benchmarks and both nuclear responses
+        run: |
+          python research/lz_detector_response/fold_lz_2026_three_body_2d_response.py \
+            --response-dir response-output \
+            --spectrum-dir research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum \
+            --out-dir folded-output
+          cat folded-output/fold_summary.json
+      - name: Upload response samples and folded signal PDFs
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-three-body-nr-2d-response-fold
+          path: |
+            response-output/
+            folded-output/
+          if-no-files-found: error
+          retention-days: 30
