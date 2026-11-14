@@ -45,7 +45,7 @@ int main(int argc, char** argv) {
 
     LZ_Detector_2024 detector;
     NEST::NESTcalc calc(&detector);
-    NEST::RandomGen::rndm()->SetSeed(seed);
+    RandomGen::rndm()->SetSeed(seed);
 
     const double density = calc.SetDensity(detector.get_T_Kelvin(),
                                            detector.get_p_bar());
