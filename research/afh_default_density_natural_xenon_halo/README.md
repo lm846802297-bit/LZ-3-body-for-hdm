@@ -2,6 +2,21 @@
 
 This directory archives the selected-point natural-xenon halo-folded three-body rate using the AFH v6.0 built-in sdgXeA default density responses.
 
+## Directory map
+
+- `input/`: isotope weights, AFH density-matrix extracts, historical 28-point PCHIP samples, and the 56-point direct exact-q response input.
+- `audit/`: AFH response-interpolation audit and high-energy nuclear-model sensitivity program.
+- `tests/`: regression tests for AFH response generation, Hybrid-9 kinematics, target normalization, and the high-energy tail audit.
+- `output/`: generated isotope-response grids and selected-point direct exact-q fold tables.
+- `results/`: archived halo rates, continuous AFH-7/Hybrid-9 spectra, convergence summaries, audit reports, and bundle manifests.
+- Study-root Python files remain stable calculation and validation entry points; their paths are kept unchanged for existing workflows and documented commands.
+
+Run the regression suite from the repository root:
+
+~~~bash
+python -m unittest discover -s research/afh_default_density_natural_xenon_halo/tests -p 'test_*.py' -v
+~~~
+
 - Four Figure-2 benchmark parameter sets are retained.
 - Each available isotope uses its own NIST-derived nuclear mass, AFH response sample and three-body threshold.
 - Natural atomic abundances are used without renormalizing the seven available isotopes.
@@ -45,9 +60,9 @@ finite-sum evaluation confirms the direct response at the selected NIST-q
 points.
 
 **The legacy seven-isotope AME2020 fold script**
-`run_ame2020_natural_xenon_halo_fold.py` and its
-`output/ame2020_full_response/` tables remain PCHIP-based diagnostics.
-They are not the primary rate result.
+`run_ame2020_natural_xenon_halo_fold.py` writes the legacy
+`output/ame2020_full_response/` tables when run. These are PCHIP-based
+diagnostics, not the committed direct exact-q output or the primary rate result.
 
 The selected-point precision calculation has since been completed by
 `run_ame2020_direct_exactq_natural_xenon_halo_fold.py`. It consumes the
@@ -73,7 +88,7 @@ a coherent-charge ceiling only, not an AFH central prediction.
 
 The selected-point seven-isotope natural-xenon halo fold has now been recomputed locally using the 56 archived direct AFH finite-sum responses at exact spatial q, for both NIST and AME2020 nuclear masses. **No GitHub Actions / CI was used.**
 
-- Report: [AME2020_DIRECT_EXACT_Q_RECALCULATION_2026-11-12.md](AME2020_DIRECT_EXACT_Q_RECALCULATION_2026-11-12.md)
+- Report: [AME2020 direct exact-q recalculation](results/AME2020_DIRECT_EXACT_Q_RECALCULATION_2026-11-12.md)
 - Primary response: direct exact-q; PCHIP retained only as a diagnostic.
 - NIST/PCHIP historical total-rate reproduction: maximum relative difference 3.432e-12.
 - Speed quadrature 32 vs 64 nodes: maximum total-rate difference 3.303e-6.
@@ -93,8 +108,8 @@ The selected-point AME2020 direct exact-q calculation is archived as native sour
 - 56-point exact-q input: `input/afh_selected_exact_q_responses.csv`
 - 392 kernel/halo integrals and 784 isotope contributions: `output/ame2020_direct_exactq_fold/`
 - Output manifest: `output/ame2020_direct_exactq_fold/SHA256SUMS.txt`
-- Bundle manifest: `AME2020_DIRECT_EXACT_Q_SHA256SUMS.txt`
-- Full calculation report: `AME2020_DIRECT_EXACT_Q_RECALCULATION_2026-11-12.md`
+- Bundle manifest: `results/AME2020_DIRECT_EXACT_Q_SHA256SUMS.txt`
+- Full calculation report: `results/AME2020_DIRECT_EXACT_Q_RECALCULATION_2026-11-12.md`
 
 The calculation and numerical acceptance were performed locally; this runner is not a self-hosted GitHub Actions runner. The selected-point results are not a continuous recoil spectrum or a detector-level LZ prediction.
 
@@ -103,8 +118,8 @@ The calculation and numerical acceptance were performed locally; this runner is 
 
 The candidate-window tail (E_R=225\text{--}269.9\,\mathrm{keV}) has been integrated against the LZ 2026 one-dimensional final-ROI efficiency, using the 2.84 tonne-year exposure. The product of the piecewise-linear rate and efficiency is integrated analytically on the union of their knots.
 
-- Runner: `audit_high_energy_tail_model_sensitivity.py`
-- Tests: `test_high_energy_tail_model_sensitivity.py`
+- Runner: `audit/audit_high_energy_tail_model_sensitivity.py`
+- Tests: `tests/test_high_energy_tail_model_sensitivity.py`
 - Output: `results/high_energy_tail_model_sensitivity_2026-11-14.csv`
 - Full interpretation and model-scope boundaries:
   [09H — high-energy tail nuclear-model sensitivity](../docs/appendices/09H_high_energy_tail_nuclear_model_sensitivity.md)

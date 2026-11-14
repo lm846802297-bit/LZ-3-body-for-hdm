@@ -1,10 +1,14 @@
 from __future__ import annotations
 
 import math
+import sys
 import unittest
 from pathlib import Path
 
 import numpy as np
+
+HERE = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(HERE))
 
 from run_afh7_hybrid9_continuous_spectrum import (
     AFH_ISOTOPES,

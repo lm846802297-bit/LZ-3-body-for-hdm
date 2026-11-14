@@ -5,9 +5,9 @@ import math
 import unittest
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location(
-    "tail_audit", HERE / "audit_high_energy_tail_model_sensitivity.py"
+    "tail_audit", HERE / "audit" / "audit_high_energy_tail_model_sensitivity.py"
 )
 tail = importlib.util.module_from_spec(SPEC)
 assert SPEC.loader is not None
