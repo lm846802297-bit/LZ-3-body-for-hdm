@@ -62,12 +62,14 @@ def limits(mchi, ms, mA, ER, speed_kms):
     delta = delta_w2_max(mchi, ms, mA, ER, speed_kms)
     return wmin2, wmin2 + delta
 
-def build_point(mchi, ms, mA, ER, speed_kms, W2, z, phi):
+def build_point(mchi, ms, mA, ER, speed_kms, W2, z, phi, delta_W2=None):
     beta=speed_kms/C_KM_S; gamma=1/math.sqrt(1-beta*beta)
     E=mchi*gamma; pz=mchi*gamma*beta
     p=np.array([E,0.,0.,pz])
     qmag=math.sqrt(2*mA*ER+ER*ER)
-    cq=(W2-mchi*mchi+2*(E+mA)*ER)/(2*pz*qmag)
+    if delta_W2 is None:
+        delta_W2 = W2 - (mchi + ms)**2
+    cq=(2*mchi*ms+ms*ms+delta_W2+2*(E+mA)*ER)/(2*pz*qmag)
     if abs(cq)>1+2e-8: raise ValueError(f"unphysical cos(theta_q)={cq}")
     cq=min(1.,max(-1.,cq)); sq=math.sqrt(max(0.,1-cq*cq))
     q=np.array([ER,qmag*sq,0.,qmag*cq]); K=p-q
@@ -172,12 +174,13 @@ def reduced_kernel(mchi,ms,delta_m,mA,ER,speed_kms,width=0.,nw=16,nz=16,nphi=8,
     if delta_max <= 0.0:
         return 0.0
     xw,ww=_cached_leggauss(nw); xz,wz=_cached_leggauss(nz); xp,wp=_cached_leggauss(nphi)
-    wvals = wmin + 0.5 * delta_max * (xw + 1.0)
+    delta_vals = 0.5 * delta_max * (xw + 1.0)
+    wvals = wmin + delta_vals
     wweights = 0.5 * delta_max * ww
     phis=math.pi*(xp+1.); phiweights=.5*wp
     total=0.; mchi2=mchi+delta_m
     pole_width=chi2_width_dirac_scalar(mchi,ms,delta_m,g2) if width_scheme=="pole" else None
-    for W2,wwi in zip(wvals,wweights):
+    for W2,deltaW2,wwi in zip(wvals,delta_vals,wweights):
         lam=lambda_dimensionless(float(W2),mchi,ms)
         if lam<0: continue
         if width_scheme=="zero":
@@ -193,7 +196,8 @@ def reduced_kernel(mchi,ms,delta_m,mA,ER,speed_kms,width=0.,nw=16,nz=16,nphi=8,
         for z,wzi in zip(xz,wz):
             avg=0.
             for phi,wpi in zip(phis,phiweights):
-                pt=build_point(mchi,ms,mA,ER,speed_kms,float(W2),float(z),float(phi))
+                pt=build_point(mchi,ms,mA,ER,speed_kms,float(W2),float(z),float(phi),
+                                delta_W2=float(deltaW2))
                 avg+=wpi*spin_trace(pt,mchi,mchi2,width_here,running_width)["total"]
             angular+=wzi*avg
         total+=wwi*math.sqrt(lam)*angular
