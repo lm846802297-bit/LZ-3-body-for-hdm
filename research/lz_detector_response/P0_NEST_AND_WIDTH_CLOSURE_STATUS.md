@@ -252,3 +252,42 @@ Before producing a production S1/S2 PDF grid:
 5. Only after that validation, produce conditional PDFs in `{S1c, log10(S2c)}` and integrate the official WS ROI cuts.
 
 Until these gates pass, retain the current module as a validated mean-yield component, not a complete LZ response model.
+
+
+## 12. HEPData retrieval attempt and event-level NEST API audit (2026-11-15)
+
+### HEPData endpoint result
+
+A GitHub Actions retrieval job was run on the active research branch:
+
+- Run: https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43632033089
+- Result: workflow success for PDF extraction, digitization validation, and archive steps.
+- Artifact: lz-2026-hepdata-inventory-and-pdf-extraction (artifact ID 14128441663).
+
+Important: workflow success does NOT mean the HEPData payload was retrieved. The artifact DOWNLOAD_STATUS.txt records YAML endpoint HTTP 403 and JSON record endpoint HTTP 403. The arXiv PDF was downloaded and the efficiency extraction completed. The artifact contains the PDF, Fig. S2 SVG, the 303-point efficiency CSV, its metadata, and the status file; it contains no HEPData YAML/JSON payload. The HEPData inventory remains incomplete. Do not mark the full data-release inventory as complete.
+
+### What the NEST event-level API actually requires
+
+The pinned NEST source exposes this event chain:
+1. NESTcalc::FullCalculation(NEST::NR, ER, density, field, molarMass, A, NRYieldsParam, NRERWidthsParam, ...) produces fluctuated quanta;
+2. GetS1(...) maps photons to detected S1 observables using detector response and an S1 mode;
+3. GetS2(...) maps electrons to detected S2 observables using detector response and calculated g2_params.
+
+The 15-element Table S5 vector is only NRYieldsParam. FullCalculation also consumes NRERWidthsParam, which controls NR quanta/recombination fluctuations. The upstream default vector at pinned commit 423b9745a5bfbb0402514f1d7955e67445de0810 is {0.4, 0.4, 0.04, 0.5, 0.19, 2.25, -0.001, 0.046452, 0.45, 0.205, -0.2, 0., 0.}. This is an upstream default, NOT yet verified as the LZ 2026 fitted fluctuation vector.
+
+The 2026 paper Table S5 provides the mean-yield parameters only. Until the HEPData data-release files are retrieved and inspected, we must not silently treat the upstream default NR fluctuation vector as the LZ best-fit configuration.
+
+### Consequence for the pilot response
+
+An event-level C++ driver can be compiled now as an API/build test, but its outputs would be a generic NEST pilot, not the LZ 2026 signal PDF. To avoid a misleading physics result, do not archive or use such pilot distributions as production detector response.
+
+The production driver must require, as explicit versioned inputs: the official NRERWidthsParam vector (or a documented LZ decision to use fixed/default values); OldW13eV; density and isotope molar-mass convention; WS2024 field and detector response settings; g1, gas gain/extraction and single-electron response parameters; S1/S2 calculation modes; and position/field response configuration.
+
+### Corrected interpretation of current status
+
+- Mean-yield equations: validated against pinned NEST C++ (264 scalar comparisons; worst scaled difference 3.331e-16).
+- Event-level NEST API: source/API audited; no LZ 2026 event-level S1/S2 Monte Carlo has yet been validated.
+- HEPData inventory: attempted; blocked by HTTP 403; not complete.
+- Scalar one-loop self-energy: the conditional Dirac, real-scalar, pure-scalar-Yukawa contribution has already been derived and numerically implemented in P0-4B_SCALAR_SELF_ENERGY_AUDIT_ZH.md.
+- Full propagator self-energy: still open because the source model also has an off-diagonal vector interaction but does not specify m_V or the gauge/Goldstone completion; the Dirac/Majorana assignment is also unspecified.
+- Parameter scan and final LZ likelihood: remain frozen.
