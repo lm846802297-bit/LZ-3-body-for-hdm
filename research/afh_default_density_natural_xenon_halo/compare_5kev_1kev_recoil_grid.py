@@ -16,6 +16,7 @@ from pathlib import Path
 from typing import Any
 import sys
 
+HERE = Path(__file__).resolve().parent
 FIG_DIR = HERE.parents[1] / "figure2_full_reproduction"
 sys.path.insert(0, str(FIG_DIR))
 
@@ -25,7 +26,6 @@ from fold_lz_2026_rate_level import (
     read_efficiency_curves,
 )
 
-HERE = Path(__file__).resolve().parent
 DEFAULT_EFFICIENCY = (
     HERE.parents[1]
     / "lz_detector_response"
