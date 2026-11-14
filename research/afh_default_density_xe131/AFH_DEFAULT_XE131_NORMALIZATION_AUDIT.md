@@ -99,5 +99,5 @@ This factor is not a property of the nuclear density matrix. It comes from the i
 
 The four fixed-speed Xe-131 benchmark substitutions are now archived separately under `output/figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv`. They reuse the precomputed Eq. (6) integral grid and are therefore a controlled nuclear-response substitution, not a fresh independent recomputation of all three-body integrals.
 
-The natural-xenon isotope sum and halo velocity average remain open tasks. Native Mathematica execution of the AFH v6.0 runner also remains pending; the current AFH response values are from the source-translated Python implementation.
+The natural-xenon isotope sum and halo velocity average remain open tasks. The Xe-131 AFH response itself now has a completed native Mathematica/Wolfram 14.0.0 comparison on 2401 q nodes. All four response quantities pass against the Python reference with maximum relative difference (3.59\times10^{-9}); the native grid, pointwise comparison, minima, metadata and SHA-256 manifest are archived under output/native_audit/. The natural-xenon halo fold remains selected-point only.
 

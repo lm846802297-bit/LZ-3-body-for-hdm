@@ -83,6 +83,15 @@ y=\left(\frac{qb_A}{2}\right)^2,
 
 **为什么不能调节 \(b_A\) 拟合谷值？** 因为 \(b_A\) 决定 \(q\mapsto y\) 的映射，并进入所有径向振子矩阵元。改变它会系统性移动有限动量响应的节点和极小值，相当于改变核模型输入。若为了匹配图中某个谷值而任意调节 \(b_A\)，得到的就不再是 AFH default 处方，也无法再把结果称为对该文献核响应的复现。
 
+
+### B.2.1 该谐振子长度公式的性质
+
+\[
+b_A=
+\sqrt{\frac{41.467}{45A^{-1/3}-25A^{-2/3}}}\ {\rm fm}
+\]
+是 AFH/DMFormFactor v6.0 所采用的 default 核结构处方。这里的常数属于壳模型谐振子基底的经验/模型输入，不是从本文暗扇区拉格朗日量、Eq. (6) 或三体运动学推导出来的动力学关系。本研究的任务是忠实采用并评估该处方，而不是重新拟合它。若改变 \(b_A\)，就等于改变核结构模型输入，必须作为独立核模型变体报告。
+
 ## B.3 单粒子轨道、多极角动量与径向矩阵元
 
 AFH 源程序的轨道映射由单粒子振子主壳数 \(N\) 和总角动量 \(j\) 决定。当前 Python 翻译采用：
@@ -258,7 +267,7 @@ AFH 原生 Mathematica runner 和 Python/Mathematica 比较程序已经归档：
 - verify_afh_xe131_native.wls
 - compare_afh_mathematica_python.py
 
-但 Wolfram kernel 尚未在当前计算环境中执行。因此原生 Mathematica 逐点对照仍为待完成项目。全网格 mpmath 是独立高精度数值实现，不应被称为官方 Mathematica 原生复算。
+Xe-131 原生 Mathematica/Wolfram 14.0.0 2401 点比较已完成并通过。四种响应量均与 Python 参考逐点一致于 (2\times10^{-8}) 相对容差、(2\times10^{-10}) 绝对容差内；最大相对差异 (3.59\times10^{-9})，q 网格完全一致。完整结果、源文件哈希和 manifest 见 [native audit record](../../afh_default_density_xe131/output/native_audit/NATIVE_MATHEMATICA_AUDIT.md)。mpmath 60 位验证仍作为独立高精度实现保留。该结果仅覆盖 Xe-131 AFH response-level.
 
 ## B.8 AFH 空间动量与精确三体反冲
 
@@ -289,3 +298,18 @@ y_{\rm exact}=\frac{b_A^2}{4}(2m_AE_R+E_R^2).
 
 代码默认值现统一为 exact_spatial；nr_approx 只用于敏感性对照，legacy_exact 保留为向后兼容别名。若响应样本与所选 q 不匹配，程序会显式报错。
 
+
+
+## B.9 AFH v6.0 默认氙同位素 dispatch 覆盖范围
+
+对仓库中提交的官方 AFH v6.0 源文件 `v6/dmformfactor-V6.m` 进行源代码级检查后，可以确认：默认氙核密度矩阵 dispatch 只包含
+
+\[
+A\in\{128,129,130,131,132,134,136\}.
+\]
+
+对应源代码位于默认矩阵选择分支，见 [源文件第 1555–1597 行](../../../v6/dmformfactor-V6.m#L1555-L1597)。当 `Ziso=54` 且质量数不属于上述集合时，程序进入通用回退分支并输出 `Cannot find default matrix which matches input M and Z!`。
+
+因此，Xe-124 和 Xe-126 的缺失不是本项目提取 CSV 时漏读，也不是 Python 转换器遗漏；它们确实没有出现在当前 AFH v6.0 官方包的默认 Xe dispatch 中。源文件其他位置出现的 `sdgI[124]` 和 `sdgI[126]` 是内部表索引，不能解释为 Xe-124/Xe-126 的默认核密度矩阵。
+
+本项目新增的 `test_official_v6_default_xenon_dispatch_coverage` 对上述七个质量数及缺失的 124、126 进行了静态回归检查。该结论只限定于当前 AFH v6.0 default-density dispatch，不排除未来从独立核结构计算或其他公开数据源取得这两种同位素的密度矩阵。

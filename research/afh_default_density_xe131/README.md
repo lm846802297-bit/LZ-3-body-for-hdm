@@ -107,6 +107,47 @@ For a native AFH Mathematica calculation, use
 `run_afh_default_xe131.wls` with the official package file in this directory
 or set `DMFormFactorPath`.
 
+For an independent native Mathematica/Python comparison, use the one-command
+Windows PowerShell runner below. It accepts either the original AFH v6.0 ZIP
+archive or the extracted `dmformfactor-V6.m` file:
+
+```powershell
+.\run_native_afh_audit.ps1 -AfhSource "D:\path\to\v6.zip"
+```
+
+The runner verifies the supplied ZIP SHA-256
+(`4e0f70e6e780f3f4a40faa14792cae239d1989cf15d1e211b4fd7389b0460727`) or
+source-file SHA-256
+(`dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372`),
+checks the 67-entry Xe-131 density-matrix CSV, regenerates the Python
+reference from that exact source, runs both native Wolfram scripts, compares
+all 2401 q nodes without interpolation, and writes a SHA-256 manifest.
+
+Required on the Windows machine: Python with the repository requirements,
+Wolfram Engine or Mathematica with `wolframscript` on `PATH`, and the
+either the original AFH v6.0 ZIP or its extracted dmformfactor-V6.m source file. The outputs are written to
+`output/native_audit/`, including the raw-response comparison, minima,
+Wolfram version, source hashes, CSV hashes, and
+`afh_native_audit_manifest.json`. The runner also bundles the complete review
+set (native CSV, metadata, comparison tables, minima, and manifest) as a local convenience file output/afh-native-audit-results.zip. The canonical repository record is the individually committed extracted files under output/native_audit/, not the ZIP bundle.
+
+A successful Python GitHub Actions run is **not** a substitute for this native
+Wolfram execution. The native audit is considered complete only when the
+manifest reports `status = PASS` and the comparison JSON reports
+`"passed": true`.
+
+## Completed native Mathematica audit (2026-11-13)
+
+The local Windows/Wolfram run is now archived and reports **PASS**:
+
+- Wolfram 14.0.0, Windows 64-bit; official AFH v6.0 source SHA-256 dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372.
+- 2401 q nodes from 0 to 0.6 GeV in 0.25 MeV steps; Mathematica and Python grids are identical, with no interpolation.
+- Raw \(W_M^{00}\), package response, physical equal-p/n response, and q=0-normalized response all pass at rtol=2e-8, atol=2e-10; maximum relative difference is \(3.59087\times10^{-9}\) at \(q=0.2565\) GeV.
+- The factor-four response mapping is checked at every q node. The separate q=0 shape-normalization factor is \(1.0000825298069378\), correcting the \(8.2523\times10^{-5}\) finite-density-matrix offset; it is not another factor of four.
+- Full details and the native SHA-256 manifest are in output/native_audit/NATIVE_MATHEMATICA_AUDIT.md and output/native_audit/afh_native_audit_manifest.json.
+
+This validates the Xe-131 AFH response only. The natural-xenon AFH halo result remains selected-point; a full seven-isotope AFH continuous spectrum and the LZ detector-level likelihood remain open.
+
 ## Independent full-grid mpmath validation
 
 The CI workflow now evaluates the AFH finite sums independently with 60-digit
@@ -150,10 +191,9 @@ q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}.
 
 This exact spatial q is used for the response interpolation and the three-body
 kinematic boundary. The common \(q_{\rm NR}=\sqrt{2m_AE_R}\) relation is retained
-only as a small-recoil approximation. The AFH-7/Hybrid-9 continuous-spectrum archive evaluates the seven supported
-isotope responses at exact spatial q and is consistent with the exact
-three-body kinematics. The earlier 28-point selected-sample archive remains
-available as a historical cross-check. Numerical differences in the NR approximation are documented in
+only as a small-recoil approximation. The natural-xenon 28-point response
+archive uses exact spatial q and is consistent with the exact three-body
+kinematics. Numerical differences in the NR approximation are documented in
 research/docs/appendices/09G_recoil_momentum_convention_audit.md.
 
 ## Scope and connection to the three-body calculation
@@ -167,22 +207,23 @@ they are not a fresh independent recomputation of all 640 three-body
 integrals.
 
 The manuscript source `paper-source/main.tex` now explicitly uses
-`R_A = C_A 16 pi W_M00_AFH/(2 J_A+1)` for the raw AFH v6.0 response and the
-physical equal-proton/equal-neutron coupling, with `C_A` fixed by the q=0
-sum rule. This gives `R_A(0)=A^2`; the factor four is applied exactly once.
-The independent historical code-convention check is documented in
+`R_A = 16 pi W_M00_AFH/(2 J_A+1)` for the raw AFH v6.0 response and the
+physical equal-proton/equal-neutron coupling. This gives `R_A(0)=A^2`.
+The factor four is applied exactly once, in the nuclear response. The
+independent historical code-convention check is documented in
 `AFH_COUPLING_NORMALIZATION_MAPPING.md`.
 
 The selected-point natural-xenon isotope sum and halo velocity fold are
 implemented separately in
-`../afh_default_density_natural_xenon_halo/`. That calculation uses 28
-selected AFH samples (seven isotopes x four recoil energies), not seven
-complete 2401-point response grids. The provenance metadata now explicitly
+`../afh_default_density_natural_xenon_halo/`. The selected-point AME2020
+mass-scheme result remains distinct from the later seven-isotope AFH-7 and
+Hybrid-9 continuous spectra, which use full AFH default response grids and
+high-order quadrature checks. The provenance metadata now explicitly
 distinguishes the original 16,807-row source input from the committed
 28-row selected-sample file; the original all-isotope input itself is not
-currently committed. The AFH native Mathematica execution also remains
-pending; the current AFH numerical table is from the source-translated Python
-implementation.
+currently committed. The Xe-131 response table has an archived native Mathematica/Wolfram 14.0.0
+output and a 2401-point Python comparison (PASS). This response-level PASS
+does not by itself validate the full Eq. (6) three-body integral.
 
 The GCN/JJ55 files from `dmscatter` remain separate nuclear-structure
 calculations and are not relabeled or substituted for AFH default.
@@ -255,43 +296,37 @@ Do not use the PCHIP-based values above as the final AME2020 rate prediction
 until that recomputation is complete.
 
 
-## Canonical four-benchmark cross-section files
+## Full Eq. (6) Mathematica–Python differential-cross-section audit
 
-See [output/CROSS_SECTION_FILE_INDEX.md](output/CROSS_SECTION_FILE_INDEX.md) for the single canonical file-name mapping. The current long-form result is `output/figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv`; the matching wide audit is `output/figure2_four_benchmarks_AFH_GCN_JJ55_wide_audit.csv`. The historical `output/figure2_four_benchmarks_dsigma_AFH_GCN_JJ55.csv` is retained only for provenance and is superseded because its AFH response column was copied from GCN. It must not be used in downstream plots or calculations.
+The native AFH response layer is already validated: the archived Wolfram
+14.0.0 run compares all 2,401 Xe-131 (q) nodes against the Python
+translation and passes with a maximum relative difference of
+(3.59\times10^{-9}). The remaining, distinct task is the full three-body
+integral and differential cross section.
 
+The Wolfram runner
+`run_afh_eq6_full_dsigma.wls` reads the archived native AFH response table,
+reconstructs the three-body four-momenta and Dirac trace, and independently
+integrates (I_6). It does not rerun the AFH package. The Python comparator
+`compare_full_dsigma_mathematica.py` independently recomputes (I_6) using
+`phase_space_convergence.integrate_i6`, compares both AFH response
+conventions, the full cross section, the no-factor-four control and the
+(mathrm{cm^2/keV}) conversion.
 
-## Native Mathematica comparison against the Python full grid
-
-The repository now includes
-`validate_afh_mathematica_vs_python.wls`. Unlike the older
-`run_afh_default_xe131.wls`, this harness explicitly compares the native
-Wolfram-kernel result against the archived Python CSV at all 2,401 momentum
-nodes.
-
-From the repository root on a machine with Mathematica / Wolfram Engine and
-`wolframscript` installed:
+From the repository root, after the final Mathematica gate is authorized:
 
 ```powershell
-wolframscript -file research/afh_default_density_xe131/validate_afh_mathematica_vs_python.wls
+wolframscript -file research/afh_default_density_xe131/run_afh_eq6_full_dsigma.wls --nw 16 --nz 16 --nphi 8 --w2-mapping threshold_u2 --width-scheme pole
+python research/afh_default_density_xe131/compare_full_dsigma_mathematica.py --mathematica-csv research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131.csv --out-csv research/afh_default_density_xe131/output/full_dsigma_mathematica/pointwise_comparison.csv --metadata research/afh_default_density_xe131/output/full_dsigma_mathematica/comparison_metadata.json
 ```
 
-The default paths load `v6/dmformfactor-V6.m` and compare against
-`output/afh_default_xe131_WM00.csv`. Optional environment variables
-`DMFormFactorPath`, `AFHPythonReferenceCSV`, and `AFHMathematicaOutDir`
-override the package, reference CSV, and output directory.
+High-order anchors must be run separately, e.g. (48\times40\times24),
+because agreement between two implementations at one quadrature order is not
+a convergence test. The exact inputs, width assumptions, tolerances and
+scientific boundaries are documented in
+`output/NATIVE_MATHEMATICA_FULL_DSIGMA_AUDIT.md`.
 
-The script calls the official `SetIsotope[54,131,"default","default"]` and
-`ResponseNuclear[y,1,0,0]` functions in the Wolfram kernel, then writes a
-2,401-row pointwise comparison CSV and a JSON metadata summary. It checks the
-AFH package's (A^2/4) zero-momentum convention, the physical equal-(p,n)
-(R_A(0)=A^2) normalization, the q grid, the finite-precision factor (C_A),
-and the maximum full-grid response difference.
-
-**Execution status:** the harness is committed, but it has not yet been
-executed in a native Wolfram kernel. The Python/60-digit mpmath validation is
-not a substitute for this native Mathematica run. Do not mark the native
-comparison PASS until the generated CSV and metadata JSON are inspected and
-archived.
-
-See also the Phase II report:
-[09H — high-energy tail nuclear-model sensitivity](../docs/appendices/09H_high_energy_tail_nuclear_model_sensitivity.md).
+**Status:** implementation and Python-side phase-space convergence checks
+are prepared; the full native Wolfram run and pointwise comparator have not
+been executed. They remain deliberately deferred until the other
+non-Mathematica research work is complete.

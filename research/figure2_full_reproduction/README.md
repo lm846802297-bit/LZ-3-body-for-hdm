@@ -1,63 +1,57 @@
-# Independent Eq. (6) kernel — first numerical milestone
+# Eq. (6) kernel and Figure 2 numerical reproduction
 
-## Scope
+> Canonical archive: main  
+> Documentation update: 2026-11-13  
+> Scope: three-body kernel, nuclear-response comparisons, natural-xenon theory rates, and the separate 450 keV diagnostics below.
 
-This branch starts the independent numerical implementation of the paper's Eq. (6). It evaluates the fermion-line Dirac trace and the nested three-body phase-space integral over W^2, z=cos(theta*) and the azimuthal average. It deliberately does **not** perform the Galactic-halo velocity integral.
+## Scope and calculation layers
 
-The implementation uses the interaction and current written in `paper-source/main.tex`, assumes Dirac external spinors for this baseline, and takes the target-rest-frame time component Gamma^0 exactly as stated in the manuscript.
+This directory contains the Eq. (6) particle-physics kernel and the numerical runners that connect it to selected nuclear-response and natural-xenon calculations. The calculations are related, but they do not all share the same mass scheme, width prescription, nuclear input, or physical output layer.
 
-## What is implemented
+1. **Kernel layer:** reconstruct the final-state four-momenta, evaluate the Dirac trace, retain interference between the two scalar-emission orderings, and integrate the reduced three-body kernel over \(W^2,z,\phi_*\).
+2. **Fixed-speed cross-section layer:** combine the kernel with a specified single-isotope nuclear response to obtain \(d\sigma_A/dE_R\).
+3. **Natural-xenon theory-rate layer:** sum isotope-specific contributions and fold over an explicitly selected laboratory-frame halo distribution. The GCN/JJ55 continuous-spectrum runner is a separate nuclear-model comparison; AFH default-density natural-xenon results are archived in the sibling study directory and remain selected-point only.
+4. **Detector-interface layer:** fold GCN/JJ55 continuous spectra with the LZ 2026 one-dimensional final-ROI efficiency. This gives rate-level expected event yields, not the official LZ likelihood.
+5. **450 keV diagnostics:** a pointwise \(\mathcal L_{00}/I_6\) benchmark with a conditional scalar pole-width comparison, and a separate fixed-speed Xe-131 curve with GCN/JJ55 responses, \(m_A=131u\), and zero width. These two diagnostics are not interchangeable.
 
-- Exact reconstruction of p, p', k and q in the target rest frame from (v, ER, W^2, z, phi*).
-- The two manuscript diagrams:
-  `Gamma_before^0 = gamma^0 (slash(p-k)+m_chi2) / ((p-k)^2-m_chi2^2)`
-  and
-  `Gamma_after^0 = (slash(p'+k)+m_chi2) gamma^0 / (W^2-m_chi2^2+i m_chi2 Gamma_chi2)`.
-- Initial-spin average and final-spin sum:
-  `L00 = 1/2 Tr[(slash(p')+m) Gamma^0 (slash(p)+m) bar(Gamma)^0]`.
-- Explicit interference term, not an incoherent sum.
-- Gauss-Legendre integration over W^2 and z; uniform Gauss-Legendre representation of the azimuthal average.
+## Core Eq. (6) implementation
 
-## Numerical checks performed
+The kernel uses the interaction/current written in paper-source/main.tex and explicitly records the Dirac-spinor baseline. It does not silently assume a Majorana implementation or supply missing UV/gauge-sector information.
 
-1. Four-momentum closure and all external mass-shell conditions at a representative open-phase-space point.
-2. The trace agrees with an explicit sum over the four initial/final spin combinations to relative precision better than 5e-15 at the tested point.
-3. The decomposition before + after + interference reproduces the full trace.
-4. A closed-phase-space test for m_s=300 MeV returns exactly zero.
-5. The reduced integral converges under increasing quadrature order at the representative point.
+- Exact reconstruction of \(p,p',k,q\) in the target-rest frame from \((v,E_R,W^2,z,\phi_*)\).
+- Both manuscript scalar-emission diagrams are included coherently.
+- The initial-spin average and final-spin sum are obtained from the Dirac trace.
+- The before/after interference term is retained.
+- Gauss-Legendre integration is used for \(W^2\) and \(z\), with the azimuthal average normalized consistently with Eq. (6).
 
-## Representative diagnostic point
+## Reproduce the core regression tests
 
-- m_chi1 = 1 TeV; m_A = 122 GeV (approximate Xe-131 nuclear mass).
-- m_s = 300 keV; Delta m = 1 MeV.
-- E_R = 200 keV; v = 776 km/s.
-- W_min^2 = 1,000,000.60000009 GeV^2.
-- W_max^2 = 1,000,000.69482081 GeV^2.
-- Reduced Eq. (6) integral (no overall prefactor): 8.78073e5 GeV^2 at (nW,nz,nphi)=(32,32,16).
+From the repository root:
 
-This is a numerical-kernel diagnostic, **not** a prediction for d sigma/dE_R or an event-rate point.
-
-## Important unresolved model inputs
-
-- The manuscript does not define whether chi1, chi2 are Dirac or Majorana, nor fully specify chiral/CP conventions. The current code is explicitly the Dirac-spinor implementation of the written current; a Majorana variant is not silently assumed.
-- The pole width depends on g2 separately. The Figure 2 caption only fixes (g1 g2 gVN)^2, which does not determine g2 and hence does not determine Gamma_chi2. The width is an explicit input to the kernel, not inferred from the product.
-- m_V and the numerical xenon response R_A(E_R) are needed to turn this reduced kernel into the complete cross section.
-- The original halo distribution is not needed for Eq. (6), and is intentionally excluded at this stage.
-
-## Reproduce
-
-Requires Python 3 and NumPy.
-
-```bash
+~~~bash
 python -m unittest discover -s research/figure2_full_reproduction/tests -v
-```
+~~~
 
-The next milestone is not yet a halo scan. It is to finish the model-definition audit, establish the width convention and g2 benchmark, and independently cross-check the trace and integral over a wider kinematic grid.
+A passing test suite validates only its covered code paths. It does not by itself establish the completeness of the particle model, a full UV self-energy, a continuous AFH natural-xenon spectrum, or an LZ detector likelihood.
 
+## Historical first numerical milestone
+
+The initial kernel milestone used a representative diagnostic point:
+
+- \(m_{\chi_1}=1\) TeV; approximate \(m_A=122\) GeV;
+- \(m_s=300\) keV; \(\Delta m=1\) MeV;
+- \(E_R=200\) keV; \(v=776\) km/s;
+- \(W_{\min}^2=1{,}000{,}000.60000009\) GeV\(^2\);
+- \(W_{\max}^2=1{,}000{,}000.69482081\) GeV\(^2\);
+- \(I_6=8.78073\times10^5\) GeV\(^2\) at \((n_W,n_z,n_\phi)=(32,32,16)\).
+
+The original representative-point checks covered four-momentum closure, external mass shells, explicit spin sums, before/after/interference decomposition, closed-phase-space behavior, and quadrature convergence. This historical milestone did not include a halo integral; later natural-xenon halo-fold and continuous-spectrum runners are documented separately above and in the main report's Appendix F.
+
+Important model inputs remain explicit: the manuscript does not fully define Dirac/Majorana and chiral/CP conventions; the width depends on \(g_2\) separately; and a complete vector-sector self-energy requires the missing vector/gauge/Goldstone information. Do not infer these inputs from the product \((g_1g_2g_{VN})^2\).
 
 ## P0-4 propagator-width audit
 
-The follow-up branch now includes a first comparison of:
+The archived implementation includes a comparison of:
 - zero width;
 - constant pole width;
 - a diagnostic running-width ansatz using the current virtual mass W.
@@ -145,7 +139,7 @@ The width is conditional on the Dirac / pure-scalar / single-open-channel assump
 
 ## Supplied L00 benchmark: Delta m = 450 keV
 
-A separate benchmark has been added for
+A separate benchmark is archived for
 \(g_1=g_2=g_{VN}=1\), \(m_{\chi_1}=1\) TeV,
 \(m_{\chi_2}=1\) TeV \(+450\) keV, \(m_V=10\) GeV, and
 \(m_s=300\) keV.
@@ -194,7 +188,7 @@ The high-order JSON is byte-identical to the existing results/user_l00_benchmark
 
 ## Fixed-speed Xe-131 differential cross-section curve (450 keV benchmark)
 
-A separate runner is staged at run_user_dsigma_curve.py. It scans the fixed-speed Xe-131 recoil interval at v=776 km/s on a 5 keV grid, evaluates Eq. (6), and compares the AFH GCN/JJ55 nuclear responses. The propagator prescription is zero width. The isotope mass is A*u, consistent with the current response archive, not the AME2020 exact isotope mass.
+The runner and its local diagnostic outputs are archived on main at run_user_dsigma_curve.py and in the results directory. It scans the fixed-speed Xe-131 recoil interval at v=776 km/s on a 5 keV grid, evaluates Eq. (6), and compares the GCN and JJ55 nuclear responses. The propagator prescription is zero width. The isotope mass is A*u, consistent with the current response archive, not the AME2020 exact isotope mass.
 
 ### Code-level review
 
@@ -224,7 +218,7 @@ The fixed-speed Xe-131 differential curve has now been calculated locally and in
 
 The corrected local validation report is recorded at
 `results/USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md`.
-The native outputs are now committed to this branch:
+The native outputs are archived on main:
 
 - `results/fixed_speed_xe131_dsigma_450kev.csv`
 - `results/local_minima_refinement_1keV.csv`
@@ -237,7 +231,7 @@ The SHA256 manifest is calculated against the committed LF-normalized file conte
 
 ### Scope boundary and follow-up
 
-The numerical output and native provenance are now present. Before promotion, the remaining review is scientific scope: keep the A*u mass approximation and zero-width prescription explicitly confined to this benchmark, and do not interpret this fixed-speed, single-isotope curve as a halo-folded or detector-level LZ prediction.
+The numerical output and native provenance are archived on main. The remaining scientific follow-up is: keep the A*u mass approximation and zero-width prescription explicitly confined to this benchmark, and do not interpret this fixed-speed, single-isotope curve as a halo-folded or detector-level LZ prediction.
 
 This remains a fixed-speed, zero-width diagnostic using the A*u Xe-131 mass. It is not the AME2020 direct-exact-q result, a natural-xenon halo-folded recoil spectrum, a detector-level LZ prediction, or an exclusion/likelihood calculation.
 
@@ -260,3 +254,29 @@ The two archived SVGs are:
 - results/plots/xe131_gcn_jj55_response_ratio_450kev.svg
 
 This milestone remains a fixed-speed, single-isotope diagnostic with the A*u mass approximation and zero-width prescription. It is not a natural-xenon halo-folded spectrum, detector-level LZ prediction, event-rate calculation, or exclusion.
+
+
+## AFH Xe-131 native response validation
+
+The independent Wolfram 14.0.0 native Mathematica/Python 2401-point response comparison is archived at [NATIVE_MATHEMATICA_AUDIT.md](../afh_default_density_xe131/output/native_audit/NATIVE_MATHEMATICA_AUDIT.md). This validates the Xe-131 AFH response layer only; it does not validate the full Eq. (6) continuous recoil integral, the seven-isotope AFH continuous spectrum, or an LZ detector likelihood.
+
+## P1-PhaseSpace numerical convergence audit (2026-11-14)
+
+The additional runner `phase_space_convergence.py` independently checks the phase-space integration layer while reusing the committed `eq6_kernel.py` Dirac trace and amplitude. It compares linear \(W^2\), linear \(W\) with the explicit \(dW^2=2W\,dW\) Jacobian, and the threshold-regularized mapping
+
+\[
+W^2=W_{\min}^2+(W_{\max}^2-W_{\min}^2)u^2,\qquad dW^2=2(W_{\max}^2-W_{\min}^2)u\,du.
+\]
+
+The stable Källén evaluation carries \(\delta=W^2-W_{\min}^2\) explicitly and uses \(\lambda_K=\delta(4m_{\chi_1}m_s+\delta)\).
+
+Reproduce the audit from the repository root:
+
+```bash
+python research/figure2_full_reproduction/phase_space_convergence.py --mode all --reference-order 48
+python -m unittest discover -s research/figure2_full_reproduction/tests -p 'test_phase_space_convergence.py' -v
+```
+
+The runner writes mapping, angular, threshold-neighborhood, raw-\(d\Phi_3\) prefactor, metadata, and SHA-256 outputs below `research/figure2_full_reproduction/results/phase_space_convergence_2026-11-14/`. The committed audit report and archived CSV tables are linked from `research/docs/README.md`.
+
+The 2026-11-14 audit covers four fixed-speed benchmarks and five \(v_{\min}\)-offset checks. At the tested non-pole points, threshold-\(u^2\) mapping converges much faster than linear \(W^2\); the raw-\(d\Phi_3\) route reproduces the Eq. (6) prefactor. This does **not** establish near-pole convergence, a full continuous recoil grid, a complete halo fold, or a detector likelihood. The new six-test module reuses the existing Dirac spin trace and is not an independent second amplitude calculation.

@@ -22,7 +22,7 @@
   "abundance_source": "NIST Atomic Weights and Isotopic Compositions for Xenon",
   "abundance_url": "https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ele=Xe",
   "abundance_convention": "natural atomic fractions; no renormalization of the seven available isotopes",
-  "mean_atomic_weight_for_target_number_g_mol": 131.29276144787175,
+  "mean_atomic_weight_for_target_number_g_mol": 131.29276144779053,
   "isotope_nuclear_mass_scheme": "(NIST neutral-atom relative atomic mass - 54*m_e)*u; electronic binding energy neglected",
   "u_GeV": 0.93149410242,
   "electron_mass_u": 0.000548579909065,
@@ -94,7 +94,7 @@
     267,
     542
   ],
-  "native_Mathematica_validation": "pending; response samples are from the source-translated AFH v6.0 table",
+  "native_Mathematica_validation": "PASS for Xe-131 response-level only: Wolfram 14.0.0 native 2401-point comparison; identical q grid; maximum relative difference 3.5908703199989993e-9. This does not validate the seven-isotope AFH continuous response or the full Eq. (6)/LZ likelihood.",
   "response_q_convention": "exact_spatial",
   "response_q_formula": "sqrt(2*m_A*E_R+E_R^2)",
   "kinematic_q_convention": "sqrt(2*m_A*E_R+E_R^2)",
@@ -116,5 +116,8 @@
   "source_archive_archived": false,
   "source_file": "v6/dmformfactor-V6.m",
   "source_file_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
-  "response_sample_sha256": "0a5716bcd5cc2f78569e39420594cdcc9c5b2b0e"
+  "response_sample_sha256": "919bae8f7d3dbe89d090c3ab182e743049e4088b8add57671b635c1d5426aa47",
+  "target_nuclei_per_kg": 4.586803334466193e+24,
+  "target_number_mass_average_source": "abundance-weighted sum over all nine rows in input/natural_xenon_isotope_weights.csv",
+  "target_number_scope": "all nine natural xenon isotopes; full natural abundance; separate from the seven-isotope AFH response availability"
 }
