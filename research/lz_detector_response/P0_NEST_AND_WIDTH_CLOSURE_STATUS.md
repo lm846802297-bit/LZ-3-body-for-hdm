@@ -447,3 +447,40 @@ The previous pilot used the rounded Table S5 NR mean vector, WS2024 or generic w
 It generates the full 0.1–330 keV flat NR band both at the candidate position and under a uniform-active-TPC spatial proxy. The latter is an explicit approximation, not the actual calibration-source spatial distribution.
 
 **Current validation boundary:** exact source vectors and code mappings are now audited; the new event-level band workflow is running. The EFT2024 candidate still needs comparison against the digitized full published NR band and the calibration data before being called a reproduction.
+
+
+## 18. HEPData configuration audit, full NR band, and ER/2D response pilots (2026-11-15)
+
+### HEPData audit
+The original supplied `HEPData-ins3199115-v1.zip` was inspected directly: 47 members (one `submission.yaml` plus 46 table YAMLs); no `additional_resources` key; no NEST header, configuration, NRERWidthsParam, or calibration event cloud. SHA-256: `ab02f6eacd1008a260f0eb8f441beb206069e18f10c6b7b2f44fcfd70463f1f1`. The HEPData v1 archive is therefore a table/data release, not the source of a standalone NEST config.
+
+A separate public LZ-specific candidate is `LZ_Detector_2024::SetEFT2024Configuration()` in NEST commit `541b6430dae6ea289cf110c99f174a9187f7fdee`, added by commit `307fb27d4c2f9b48dba27529bb57bc243e0ce2dc`. It contains higher-precision Table S5 NR yields, Table S3 executable ER yields (m6=-1 sentinel), and a 17-element NRERWidthsParam vector with the Table S4 ER double-skew-Gaussian parameters. Independent arXiv:2610.27105 uses this commit but says the connection to the exact LZ Letter build is circumstantial. It is a public candidate, not a confirmed official production snapshot.
+
+### Full S1c NR band proxy
+[Workflow run 43643756589](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43643756589) passed with 200,000 events each for EFT2024, rounded Table S5 + EFT2024 widths, WS2024, and generic NEST. True NR energy was uniform 0.1–330 keV and position uniform in the public active-TPC cylinder. This is a full-S1c-range response proxy, not the actual D-D/AmBe calibration source distribution.
+
+In the candidate bin 540–545 phd, the observed event lies at:
+- EFT2024: (-1.89\sigma_{eq}) below median;
+- Table S5 + EFT2024 widths: (-2.31\sigma_{eq});
+- WS2024: (-4.81\sigma_{eq});
+- Generic NEST: (-6.69\sigma_{eq}).
+
+This corrects the earlier hybrid-pilot interpretation. Earlier values near (-1.5\sigma) came from mixing rounded Table S5 means with WS2024/generic widths and WS2024 detector settings; they are not a demonstration that both independent width models reproduce the 2026 NR band. The EFT2024 full-volume proxy is the best public candidate, but its (-1.89\sigma_{eq}) still differs from the paper's quoted (-1.5\sigma). Do not tune it to force agreement; source spatial distributions, exact final build, and exact band-generation details remain unknown.
+
+Artifact ID `14132668480`, SHA-256 `6fc29a0756185aae151b2fab18f40f852b6b90ee2260f99ec6d6f234c15e3c3e`.
+
+### ER band and conditional 2D response
+[Workflow run 43642038888](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43642038888) passed. It generated 200,000 uniform-volume ER events for EFT2024 (m6=-1), literal Table S3 (m6=0), and generic NEST; plus 100,000 candidate-position events per family. Uniform ER energy prior: 0.1–300 keV. It exported conditional sparse histograms in 10-keV energy bins, 10-phd S1c bins, and 0.02-dex log10(S2c) bins.
+
+At S1c 540–545 phd, the event is (-6.69\sigma_{eq}) below the EFT2024 ER median, (-6.31\sigma_{eq}) below the literal Table S3 alternative, and (-9.97\sigma_{eq}) below generic NEST. The EFT2024 value is close to the paper's quoted (-6.7\sigma) ER displacement. This is a strong model cross-check, not an official response reproduction.
+
+The 17-element EFT2024 fluctuation vector feeds the ER Table S4 double-skew-Gaussian recombination-`omega` model through `RecombOmegaER`. The separate ER charge-sampling skewness remains the NEST `SkewnessER=-999` LUX Run04 energy/field-dependent branch; it must not be confused with the Table S4 two-component parameters.
+
+Artifact ID `14132651289`, SHA-256 `f1a903a68c75f9c787549a64bb69c0d8b661ef0d777ffa2a769b19aee9666c69`.
+
+Full report: `lz_2026_extended_nr/LZ_2026_NR_ER_FULL_RESPONSE_CANDIDATE_REPORT.md`. NR 2D sparse exporter: `summarize_lz_2026_nr_conditional_2d_pdf.py`.
+
+**Selection contract:** current 2D histograms are conditional on positive reconstructed observables and are not official post-selection PDFs. Apply detector/analysis efficiency once, separately. Do not combine already selected PDFs with the same efficiency a second time.
+
+### Current status
+The four-family NR band and EFT2024/Table-S3/generic ER band and conditional 2D pilots are now available. Remaining gates: actual D-D/AmBe spatial source distributions, exact official NEST production snapshot confirmation, calibration nuisance covariance, event-level calibration clouds, and official BACCARAT signal/background PDFs. No official LZ likelihood reproduction is claimed.
