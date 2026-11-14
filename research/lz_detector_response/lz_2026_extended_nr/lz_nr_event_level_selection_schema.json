@@ -1,0 +1,327 @@
+{
+  "schema_version": "1.0",
+  "purpose": "Required event-level fields and per-true-energy-bin cutflow for an auditable LZ 2026 NR response rerun. This is a data contract, not a claim that the current compact 2D artifact contains these fields.",
+  "pinned_model": {
+    "nest_commit": "541b6430dae6ea289cf110c99f174a9187f7fdee",
+    "detector_class": "LZ_Detector_2024",
+    "configuration_setter": "SetEFT2024Configuration",
+    "s1_coincidence": {
+      "coin_level_pmt": 3,
+      "coincidence_window_ns": 150,
+      "number_of_pmts": 481,
+      "single_pe_threshold_phe": 0.1,
+      "required_captured_fields": [
+        "s1_nhits_after_coincidence_window",
+        "s1_coin_probability",
+        "s1_coin_uniform_draw",
+        "s1_coin_pass"
+      ]
+    }
+  },
+  "event_fields": {
+    "event_id": {
+      "type": "integer",
+      "required": true
+    },
+    "rng_seed": {
+      "type": "integer",
+      "required": true
+    },
+    "true_nr_energy_keV": {
+      "type": "number",
+      "unit": "keV",
+      "required": true
+    },
+    "event_weight": {
+      "type": "number",
+      "required": true
+    },
+    "true_position_mm": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "x": {
+          "type": "number"
+        },
+        "y": {
+          "type": "number"
+        },
+        "z": {
+          "type": "number"
+        }
+      }
+    },
+    "reconstructed_position_mm": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "x": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "y": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "z": {
+          "type": [
+            "number",
+            "null"
+          ]
+        }
+      }
+    },
+    "drift_time_us": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "required": true
+    },
+    "s1_raw_phe": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "unit": "phe",
+      "required": true
+    },
+    "s1_raw_phd": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "unit": "phd",
+      "required": true
+    },
+    "s1c_phd": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "unit": "phd",
+      "required": true
+    },
+    "s1_signed_value": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "required": true,
+      "description": "Preserve NEST's sign; do not take abs() before storing."
+    },
+    "s1_nhits_after_coincidence_window": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "required": true,
+      "description": "NEST scintillation[8]; this is the post-window detected-hit count used by the coincidence model, not a saved list of distinct PMT channels."
+    },
+    "s1_coin_probability": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "required": true,
+      "description": "Probability evaluated by the pinned NEST coincidence code."
+    },
+    "s1_coin_uniform_draw": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "required": true,
+      "description": "Uniform random variate used for the sampled coincidence decision."
+    },
+    "s1_coin_pass": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "required": true
+    },
+    "s2_raw_phe": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "unit": "phe",
+      "required": true
+    },
+    "s2_raw_phd": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "unit": "phd",
+      "required": true,
+      "description": "Uncorrected S2 used for the published S2 > 645 phd ROI condition."
+    },
+    "s2c_phd": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "unit": "phd",
+      "required": true
+    },
+    "extracted_electron_count": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "required": true
+    },
+    "nest_s2_threshold_pass": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "required": true,
+      "description": "Keep separate from the published LZ analysis S2 threshold."
+    },
+    "s2_trigger_pass": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "required": true
+    },
+    "number_s1_pulses": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "required": true
+    },
+    "number_s2_pulses": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "required": true
+    },
+    "s2_split_flag": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "required": true
+    },
+    "single_scatter_pass": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "required": true
+    },
+    "data_quality_pass": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "required": true
+    },
+    "s1c_roi_pass": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "required": true
+    },
+    "raw_s2_roi_pass": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "required": true
+    },
+    "s2c_roi_pass": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "required": true
+    },
+    "fiducial_volume_pass": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "required": true
+    },
+    "skin_prompt_veto": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "required": true
+    },
+    "od_prompt_veto": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "required": true
+    },
+    "skin_delayed_veto": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "required": true
+    },
+    "od_delayed_veto": {
+      "type": [
+        "boolean",
+        "null"
+      ],
+      "required": true
+    },
+    "final_sample_category": {
+      "type": "string",
+      "enum": [
+        "science",
+        "prompt_veto",
+        "delayed_veto",
+        "rejected"
+      ],
+      "required": true
+    }
+  },
+  "energy_bin_cutflow_fields": [
+    "energy_low_keV",
+    "energy_high_keV",
+    "n_generated",
+    "n_s1_coincidence_pass",
+    "n_nest_s2_threshold_pass",
+    "n_s2_trigger_pass",
+    "n_single_scatter_pass",
+    "n_data_quality_pass",
+    "n_roi_pass",
+    "n_fiducial_volume_pass",
+    "n_science",
+    "n_prompt_veto",
+    "n_delayed_veto"
+  ],
+  "validation_invariants": [
+    "All counts are non-negative integers.",
+    "n_generated is stored separately in every true-energy bin.",
+    "Each cumulative cutflow count must not exceed the preceding stage count.",
+    "n_science + n_prompt_veto + n_delayed_veto must equal n_fiducial_volume_pass if the three categories are exhaustive and mutually exclusive.",
+    "Store absolute counts and conditional efficiencies; never infer efficiencies from normalized 2D PDFs.",
+    "The NEST detector-level s2_thr in phe is not the LZ analysis requirement raw S2 > 645 phd.",
+    "The published final-ROI efficiency curve must not be multiplied by a second copy of S1 coincidence or trigger efficiency unless the published curve has first been decomposed."
+  ],
+  "selection_layers": {
+    "nest_detector_response": "S1 PMT coincidence and detector-level pulse thresholds",
+    "lz_reconstruction": "pulse finding, S1/S2 multiplicity, single-scatter classification, S2 splitting",
+    "lz_analysis": "data-quality cuts, S1c/S2/S2c ROI, fiducial volume",
+    "veto_partition": "science, prompt-veto, delayed-veto"
+  }
+}
