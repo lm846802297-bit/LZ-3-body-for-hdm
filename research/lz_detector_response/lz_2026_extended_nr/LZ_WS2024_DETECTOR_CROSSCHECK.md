@@ -48,10 +48,10 @@ Comparison with the 2026 paper:
 |---|---:|---:|---:|
 | (g_1) | 0.1122 | (0.110\pm0.002) | +1.10 (sigma) |
 | (g_2) | 34.0224 | (34.5\pm1.1) | -0.43 (sigma) |
-| S2 threshold | (783/(1+0.214)=644.98\,\mathrm{phd}) | 645 phd | -0.02 phd |
+| Raw S2 threshold (before lifetime correction) | (783/(1+0.214)=644.98\,\mathrm{phd}) | 645 phd | -0.02 phd |
 | Drift field | 96.5 V/cm | Table S3 reference: 97 V/cm | -0.5 V/cm |
 
-The close agreement in (g_2) and the raw-threshold conversion are useful consistency checks. The 644.98 phd value is not the threshold boundary on corrected S2c. They do not alone establish that the full detector response is identical.
+The close agreement in (g_2) and the raw-threshold conversion are useful consistency checks. The 644.98 phd value is not the threshold boundary on corrected S2c, because NEST applies the threshold before lifetime and position corrections. These checks do not alone establish that the full detector response is identical.
 
 ## 4. What can be reused for an NR-only candidate simulation
 
