@@ -160,7 +160,7 @@ spinTrace[point_List, mchi_, mchi2_, width_] := Module[
 
 chi2Width[mchi_, ms_, deltaM_, g2_] := Module[
   {m2 = mchi + deltaM, excess, lam},
-  excess = m2 - mchi - ms;
+  excess = m2 - (mchi + ms);
   If[excess <= 0., Return[0.]];
   (* Factorized threshold form avoids subtracting nearly equal squared masses. *)
   lam = excess*(excess + 2.*ms)*(2.*mchi + excess)*
