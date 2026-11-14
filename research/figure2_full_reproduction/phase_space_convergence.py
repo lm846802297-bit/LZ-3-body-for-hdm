@@ -139,6 +139,17 @@ def _integrate(
         delta_values = delta * u_values * u_values
         W2_values = wmin2 + delta_values
         W2_weights = u_weights * (2.0 * delta * u_values)
+    elif mapping == "sine2":
+        # Clusters quadrature nodes at both W^2 endpoints:
+        # W^2 = Wmin^2 + Delta*sin^2(pi*u/2).
+        u_values = 0.5 * (xW + 1.0)
+        u_weights = 0.5 * wW
+        delta = wmax2 - wmin2
+        angle = 0.5 * math.pi * u_values
+        delta_values = delta * np.sin(angle) ** 2
+        W2_values = wmin2 + delta_values
+        jacobian = 0.5 * math.pi * delta * np.sin(math.pi * u_values)
+        W2_weights = u_weights * jacobian
     else:
         raise ValueError("unknown W mapping")
 
@@ -382,7 +393,7 @@ def run_historical_800_anchor(output_dir: Path):
     ER, speed = 200e-6, 800.0
     archived_i6 = 1433678.0722867665
     mass_schemes = (
-        ("historical_A_times_u_approx", 122.0),
+        ("coarse_mA_122_GeV_approx", 122.0),
         ("rounded_u_0p9315", 131.0 * 0.9315),
         ("NIST_Xe131_nuclear_mass", 131.0 * 0.93149410242),
     )
@@ -455,6 +466,102 @@ def run_historical_800_anchor(output_dir: Path):
     return rows
 
 
+def run_near_pole_scan(output_dir: Path):
+    """Audit off-shell points just above the kinematic chi2-pole boundary."""
+    mchi, ms = 1000.0, 300e-6
+    mA = 131.0 * 0.93149410242
+    ER, speed = 267e-6, 776.0
+    wmin2, wmax2 = eq6.limits(mchi, ms, mA, ER, speed)
+    wmin, wmax = math.sqrt(wmin2), math.sqrt(wmax2)
+    dm_edge_keV = (wmax - mchi) * 1.0e6
+
+    # Every selected pole lies just above Wmax: no real chi2 is produced.
+    delta_m_keV_values = (362.0, 365.0, 370.0, 400.0)
+    mappings = (
+        ("linear_w2", (32, 64, 128)),
+        ("threshold_u2", (32, 64, 128, 256)),
+        ("sine2", (32, 64, 128, 256)),
+    )
+    rows = []
+    summaries = []
+    for delta_m_keV in delta_m_keV_values:
+        delta_m = delta_m_keV * 1.0e-6
+        pole_mass = mchi + delta_m
+        pole_gap_keV = (pole_mass - wmax) * 1.0e6
+        if pole_gap_keV <= 0.0:
+            raise ArithmeticError("near-pole scan accidentally entered the on-shell region")
+        for width_scheme in ("zero", "pole", "running"):
+            g2_values = (0.0,) if width_scheme == "zero" else (0.1, 1.0)
+            for g2 in g2_values:
+                gamma_pole = (
+                    0.0 if width_scheme == "zero"
+                    else eq6.chi2_width_dirac_scalar(mchi, ms, delta_m, g2)
+                )
+                gamma_at_wmax = (
+                    0.0 if width_scheme == "zero"
+                    else eq6.chi2_width_dirac_scalar_at_mass(wmax, mchi, ms, g2)
+                )
+                reference = integrate_i6(
+                    mchi, ms, delta_m, mA, ER, speed,
+                    nW=256, nz=8, nphi=8, mapping="sine2",
+                    width_scheme=width_scheme, g2=max(g2, 1.0),
+                )
+                for mapping, orders in mappings:
+                    for nW in orders:
+                        value = (
+                            reference if mapping == "sine2" and nW == 256
+                            else integrate_i6(
+                                mchi, ms, delta_m, mA, ER, speed,
+                                nW=nW, nz=8, nphi=8, mapping=mapping,
+                                width_scheme=width_scheme, g2=max(g2, 1.0),
+                            )
+                        )
+                        rows.append({
+                            "ER_keV": f"{ER*1.0e6:.12g}",
+                            "speed_km_s": f"{speed:.12g}",
+                            "mchi_GeV": f"{mchi:.14g}",
+                            "ms_keV": f"{ms*1.0e6:.12g}",
+                            "mA_GeV": f"{mA:.14g}",
+                            "Wmin_GeV": f"{wmin:.14g}",
+                            "Wmax_GeV": f"{wmax:.14g}",
+                            "pole_mass_GeV": f"{pole_mass:.14g}",
+                            "pole_edge_delta_m_keV": f"{dm_edge_keV:.12g}",
+                            "Delta_m_keV": f"{delta_m_keV:.12g}",
+                            "pole_gap_keV": f"{pole_gap_keV:.12g}",
+                            "pole_inside_phase_space": "false",
+                            "width_scheme": width_scheme,
+                            "g2": f"{g2:.12g}",
+                            "Gamma_pole_keV": f"{gamma_pole*1.0e6:.12g}",
+                            "Gamma_at_Wmax_keV": f"{gamma_at_wmax*1.0e6:.12g}",
+                            "mapping": mapping,
+                            "nW": nW,
+                            "nz": 8,
+                            "nphi": 8,
+                            "I6_GeV2": f"{value:.14g}",
+                            "sine2_256_reference_GeV2": f"{reference:.14g}",
+                            "relative_to_sine2_256": f"{value/reference-1.0:.12e}",
+                        })
+                summaries.append({
+                    "Delta_m_keV": delta_m_keV,
+                    "pole_gap_keV": pole_gap_keV,
+                    "width_scheme": width_scheme,
+                    "g2": g2,
+                    "Gamma_pole_keV": gamma_pole*1.0e6,
+                    "Gamma_at_Wmax_keV": gamma_at_wmax*1.0e6,
+                    "sine2_256_reference_GeV2": reference,
+                })
+    _write_csv(output_dir / "phase_space_near_pole_convergence.csv", rows)
+    print("near-pole off-shell scan:", json.dumps({
+        "Wmin_GeV": wmin, "Wmax_GeV": wmax,
+        "on_shell_boundary_Delta_m_keV": dm_edge_keV,
+        "all_selected_points_off_shell": all(
+            row["pole_inside_phase_space"] == "false" for row in rows
+        ),
+        "summary": summaries,
+    }))
+    return rows
+
+
 def run_scan(
     output_dir: Path, nref: int = 48,
     modes: Iterable[str] = ("mapping", "angular", "threshold", "prefactor"),
@@ -471,6 +578,8 @@ def run_scan(
             results[mode] = run_prefactor_check(output_dir)
         elif mode == "historical_800":
             results[mode] = run_historical_800_anchor(output_dir)
+        elif mode == "near_pole":
+            results[mode] = run_near_pole_scan(output_dir)
         else:
             raise ValueError(f"unknown scan mode: {mode}")
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -480,6 +589,7 @@ def run_scan(
         "phase_space_threshold_convergence.csv",
         "phase_space_li_prefactor_crosscheck.csv",
         "phase_space_historical_800_anchor.csv",
+        "phase_space_near_pole_convergence.csv",
     ]
     output_records = {}
     for name in output_names:
@@ -506,7 +616,7 @@ def run_scan(
             "mV_GeV": 10.0, "coupling_product_squared": 1.0, "RA": 1.0,
             "comparison": "Eq. (6) normalized-phi result versus direct raw-dphi Lorentz-invariant dPhi3 measure",
         },
-        "scope": "four selected fixed-speed 776-km/s benchmark points, five vmin-offset threshold checks, and one historical 800-km/s green benchmark anchor; not a halo fold, full model scan, resonance-boundary scan, or detector likelihood",
+        "scope": "four selected fixed-speed 776-km/s benchmark points, five vmin-offset threshold checks, one historical 800-km/s green benchmark anchor, and an off-shell near-pole convergence scan; not a halo fold, full model scan, or detector likelihood",
         "matrix_element_source": "eq6_kernel.py committed Dirac trace and spinor amplitude; unchanged by this audit",
         "audit_script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "outputs": output_records,
@@ -530,11 +640,11 @@ def main():
     )
     parser.add_argument("--reference-order", type=int, default=48)
     parser.add_argument(
-        "--mode", choices=("all", "mapping", "angular", "threshold", "prefactor", "historical_800"),
+        "--mode", choices=("all", "mapping", "angular", "threshold", "prefactor", "historical_800", "near_pole"),
         default="all",
     )
     args = parser.parse_args()
-    modes = ("mapping", "angular", "threshold", "prefactor", "historical_800") if args.mode == "all" else (args.mode,)
+    modes = ("mapping", "angular", "threshold", "prefactor", "historical_800", "near_pole") if args.mode == "all" else (args.mode,)
     results = run_scan(args.output_dir, args.reference_order, modes)
     print("completed:", ", ".join(results))
     for mode, rows in results.items():
