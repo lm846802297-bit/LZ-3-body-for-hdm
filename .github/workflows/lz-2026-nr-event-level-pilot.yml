@@ -1,0 +1,60 @@
+name: LZ 2026 NR event-level NEST pilot
+
+on:
+  push:
+    branches:
+      - research/figure2-p0-4-mainline
+    paths:
+      - research/lz_detector_response/cpp/lz_2026_nr_event_level.cc
+      - research/lz_detector_response/summarize_lz_2026_nr_event_level.py
+      - .github/workflows/lz-2026-nr-event-level-pilot.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  event-level-pilot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+      - name: Check out pinned NEST source
+        uses: actions/checkout@v4
+        with:
+          repository: NESTCollaboration/nest
+          ref: 423b9745a5bfbb0402514f1d7955e67445de0810
+          path: nest
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Configure and build pinned NEST core
+        run: |
+          cmake -S nest -B nest/build \
+            -DBUILD_EXAMPLES=OFF -DBUILD_GARFIELD=OFF -DBUILD_ROOT=OFF -DG4=OFF
+          cmake --build nest/build --target NESTCore --parallel 2
+      - name: Compile LZ event-level pilot
+        run: |
+          g++ -std=c++17 -O2 \
+            -Inest/include -Inest/include/Detectors \
+            -Inest/build/_deps/gcem-src/include \
+            research/lz_detector_response/cpp/lz_2026_nr_event_level.cc \
+            nest/build/libNESTCore.a -o lz_2026_nr_event_level
+      - name: Run 248 keV event-level samples
+        run: |
+          mkdir -p pilot-output
+          ./lz_2026_nr_event_level 248 5000 20261115 ws2024 > pilot-output/ws2024.csv
+          ./lz_2026_nr_event_level 248 5000 20261116 generic > pilot-output/generic.csv
+          python research/lz_detector_response/summarize_lz_2026_nr_event_level.py \
+            pilot-output/ws2024.csv pilot-output/generic.csv \
+            > pilot-output/summary.json
+          cat pilot-output/summary.json
+      - name: Upload event-level pilot results
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-nr-event-level-pilot
+          path: pilot-output/
+          if-no-files-found: error
+          retention-days: 30
