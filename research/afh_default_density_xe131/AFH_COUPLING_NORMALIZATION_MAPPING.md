@@ -71,7 +71,7 @@ or, equivalently, retain (4pi W_{M,m AFH}^{00}/(2J_A+1)) and explicitly use the
 - Do not multiply by four twice: once in (mathcal R_A) and again in the coupling.
 - Do not change (g_{VN}=3g_{Vq}); this is a separate quark-to-nucleon matching relation.
 - Do not alter the AFH density matrix or (b_A) to fix a normalization convention.
-- The Eq. (6) manuscript definition has now been updated to use the physical AFH-v6 response with the factor four included exactly once.
+- The research Eq. (6) implementation adopts the physical AFH-v6 response with the factor four included exactly once. The manuscript source is unchanged by this research integration; manuscript synchronization must be reviewed separately.
 
 ## 4. Numerical normalization used for the response shape
 
