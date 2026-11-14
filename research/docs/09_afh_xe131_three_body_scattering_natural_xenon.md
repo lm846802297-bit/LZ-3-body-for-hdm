@@ -1424,8 +1424,8 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 - 450 keV pointwise L00 benchmark：[输入与计算记录](../figure2_full_reproduction/results/USER_L00_BENCHMARK_G1_G2_GVN_1_DELTA_M_450KEV.md)；[本地验收记录](../figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md)。
 - 450 keV fixed-speed Xe-131 curve：[结果记录](../figure2_full_reproduction/results/USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md)；该结果仅是内部反冲能量网格上的固定速度诊断。
 - AFH default Xe-131 README：`research/afh_default_density_xe131/README.md`
-- AFH 因子 4 归一化映射：`research/afh_default_density_xe131/AFH_COUPLING_NORMALIZATION_MAPPING.md`
-- AFH Xe-131 源码与归一化审计：`research/afh_default_density_xe131/AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md`
+- AFH 因子 4 归一化映射：`research/afh_default_density_xe131/audit/AFH_COUPLING_NORMALIZATION_MAPPING.md`
+- AFH Xe-131 源码与归一化审计：`research/afh_default_density_xe131/audit/AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md`
 - AFH/GCN/JJ55 对照：`research/afh_default_density_xe131/output/AFH_DEFAULT_VS_GCN_JJ55_COMPARISON.md`
 - 四组 benchmark corrected results：`research/afh_default_density_xe131/output/AFH_FOUR_BENCHMARKS_CORRECTED_RESULTS.md`
 - 四组 benchmark 截面审计：`research/afh_default_density_xe131/output/FOUR_BENCHMARK_CROSS_SECTION_AUDIT.md`
@@ -2911,7 +2911,7 @@ python -m unittest discover -s research/figure2_full_reproduction/tests -v
 
 提取后的密度矩阵归档在
 
-**research/afh_default_density_xe131/afh_default_xe131_density_matrix.csv**。
+**research/afh_default_density_xe131/input/afh_default_xe131_density_matrix.csv**。
 
 每一行包含：
 
@@ -3409,8 +3409,8 @@ https://www.escholarship.org/content/qt3ns8f1r8/qt3ns8f1r8.pdf
 
 仓库中的源代码归一化记录：
 
-- research/afh_default_density_xe131/AFH_COUPLING_NORMALIZATION_MAPPING.md
-- research/afh_default_density_xe131/AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md
+- research/afh_default_density_xe131/audit/AFH_COUPLING_NORMALIZATION_MAPPING.md
+- research/afh_default_density_xe131/audit/AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md
 - research/figure2_full_reproduction/ANAND_WM_RESPONSE_AUDIT.md
 
 最终论文 Eq. (6) 的选择是：前因子保留物理单核子耦合 \(g_{VN}\)，核响应使用 \(16\pi W_{M,\rm AFH}^{00}/(2J_A+1)\)，因子 4 只出现一次。
@@ -4103,7 +4103,7 @@ python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_hal
 | AFH Xe-131 响应 | research/afh_default_density_xe131/run_afh_default_xe131.py | 解析密度矩阵并计算 \(W_M^{00}\) |
 | AFH Xe-131 Mathematica runner | research/afh_default_density_xe131/run_afh_default_xe131.wls | 调用官方 AFH 包生成原生响应 |
 | AFH mpmath full-grid validation | research/afh_default_density_xe131/verify_afh_mpmath_full_grid.py | 独立 60 位精度有限和对照全部 2401 个 q 节点 |
-| q convention audit | research/afh_default_density_xe131/audit_response_momentum_conventions.py | 对照论文响应 q、精确运动学 q 和 Xe-131 的响应差异 |
+| q convention audit | research/afh_default_density_xe131/audit/audit_response_momentum_conventions.py | 对照论文响应 q、精确运动学 q 和 Xe-131 的响应差异 |
 | Mathematica/Python 对照 | research/afh_default_density_xe131/verify_afh_xe131_native.wls | 原生 AFH 与 Python 网格比较 |
 | 四 benchmark 响应替换 | research/afh_default_density_xe131/recompute_afh_four_benchmarks.py | AFH/GCN/JJ55 同网格截面对照 |
 | 四 benchmark 截面重构 | research/afh_default_density_xe131/compute_four_benchmark_dsigma.py | 从 \(R_A,I_6\) 重构 Eq. (6) 截面 |
@@ -4113,15 +4113,15 @@ python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_hal
 
 ### AFH Xe-131
 
-- afh_default_xe131_density_matrix.csv：67 项官方内置矩阵提取结果；
+- input/afh_default_xe131_density_matrix.csv：67 项官方内置矩阵提取结果；
 - output/afh_default_xe131_WM00.csv：2401 点响应网格；
 - output/minima.csv：细化极小值；
 - output/figure2_dip_check.csv：101、267、542 keV 参考点；
 - output/metadata.json：源文件哈希、质量、\(b_A\)、归一化和限制；
 - output/mpmath_full_grid_summary.json：2401 点、60 位精度 mpmath 全网格验证汇总；
 - CI artifact afh-xe131-mpmath-full-grid-validation：完整逐点比较 CSV 和 JSON summary。
-- AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md：来源和归一化审计；
-- AFH_COUPLING_NORMALIZATION_MAPPING.md：接口耦合映射。
+- audit/AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md：来源和归一化审计；
+- audit/AFH_COUPLING_NORMALIZATION_MAPPING.md：接口耦合映射。
 
 ### 四 benchmark 截面对照
 
@@ -4164,11 +4164,11 @@ AFH Xe-131 回归测试：
 
 ~~~bash
 python -m unittest discover \
-  -s research/afh_default_density_xe131 \
+  -s research/afh_default_density_xe131/tests \
   -p 'test_*.py' -v
 ~~~
 
-若只运行 AFH 响应本身的六项测试，将匹配模式改为 test_afh_default_xe131.py。
+若只运行 AFH 响应本身的测试，将匹配模式改为 test_afh_default_xe131.py。
 
 AFH mpmath 全网格独立验证：
 
@@ -4181,7 +4181,7 @@ python research/afh_default_density_xe131/verify_afh_mpmath_full_grid.py \
 q 约定审计（需要一份新生成的 AFH Xe-131 响应 CSV）：
 
 ~~~bash
-python research/afh_default_density_xe131/audit_response_momentum_conventions.py \
+python research/afh_default_density_xe131/audit/audit_response_momentum_conventions.py \
   --xe131-response-csv research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv \
   --outdir research/afh_default_density_xe131/output/q_convention_audit
 ~~~

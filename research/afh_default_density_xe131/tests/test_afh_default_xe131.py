@@ -8,7 +8,7 @@ import sys
 import tempfile
 import unittest
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("afh_runner", HERE / "run_afh_default_xe131.py")
 afh = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(afh)
@@ -17,7 +17,7 @@ spec.loader.exec_module(afh)
 class AFHDefaultXe131Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.rows = afh.read_density_matrix_csv(HERE / "afh_default_xe131_density_matrix.csv")
+        cls.rows = afh.read_density_matrix_csv(HERE / "input" / "afh_default_xe131_density_matrix.csv")
         cls.b_fm = math.sqrt(41.467 / (45*131**(-1/3) - 25*131**(-2/3)))
         cls.b = cls.b_fm * 5.0677
         cls.Tiso = abs(131/2 - 54)
@@ -66,7 +66,7 @@ class AFHDefaultXe131Tests(unittest.TestCase):
         self.assertAlmostEqual(physical_normalized, 131**2, places=10)
 
     def test_python_and_mma_share_physical_factor4_convention(self):
-        normalization_audit = (HERE / "AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md").read_text(encoding="utf-8")
+        normalization_audit = (HERE / "audit" / "AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md").read_text(encoding="utf-8")
         mma_runner = (HERE / "run_afh_default_xe131.wls").read_text(encoding="utf-8")
         mma_verifier = (HERE / "verify_afh_xe131_native.wls").read_text(encoding="utf-8")
         comparator = (HERE / "compare_afh_mathematica_python.py").read_text(encoding="utf-8")
@@ -149,10 +149,15 @@ class AFHDefaultXe131Tests(unittest.TestCase):
     def test_native_runner_pins_official_source_and_matrix_hashes(self):
         runner = (HERE / "run_native_afh_audit.ps1").read_text(encoding="utf-8")
         verifier = (HERE / "verify_afh_xe131_native.wls").read_text(encoding="utf-8")
+        mma_runner = (HERE / "run_afh_default_xe131.wls").read_text(encoding="utf-8")
         self.assertIn("4e0f70e6e780f3f4a40faa14792cae239d1989cf15d1e211b4fd7389b0460727", runner)
         self.assertIn("dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372", runner)
         self.assertIn("f656145ba2fb9da741b77faed4c01d0dc457c955fa340928b5dbf9cee9bc5d45", runner)
+        self.assertIn('Join-Path (Join-Path $scriptDir "input") "afh_default_xe131_density_matrix.csv"', runner)
         self.assertIn("afh_native_audit_manifest.json", runner)
+        self.assertIn('Join-Path (Join-Path $outputDir "native_exports") "afh_default_xe131_WM00_mathematica.csv"', runner)
+        self.assertIn('nativeOutputDir = FileNameJoin[{scriptDir, "output", "native_exports"}]', mma_runner)
+        self.assertIn('FileNameJoin[{scriptDir, "..", "..", "v6", "dmformfactor-V6.m"}]', mma_runner)
         self.assertIn("Compress-Archive", runner)
         self.assertIn("afh-native-audit-results.zip", runner)
         self.assertIn("WolframVersion = ", verifier)

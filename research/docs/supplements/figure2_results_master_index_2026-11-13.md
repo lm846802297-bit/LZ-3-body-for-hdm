@@ -88,8 +88,8 @@ The native Wolfram 14.0.0 response calculation is archived separately from the P
 
 Native result files:
 
-- `research/afh_default_density_xe131/afh_default_xe131_WM00_mathematica.csv`
-- `research/afh_default_density_xe131/afh_default_xe131_mathematica_metadata.txt`
+- `research/afh_default_density_xe131/output/native_exports/afh_default_xe131_WM00_mathematica.csv`
+- `research/afh_default_density_xe131/output/native_exports/afh_default_xe131_mathematica_metadata.txt`
 - `research/afh_default_density_xe131/output/native_audit/afh_mathematica_python_comparison.json`
 - `research/afh_default_density_xe131/output/native_audit/afh_native_audit_comparison.csv`
 - `research/afh_default_density_xe131/output/native_audit/afh_native_audit_grid.csv`
