@@ -86,47 +86,69 @@ class PhaseSpaceConvergenceTests(unittest.TestCase):
         )
         self.assertAlmostEqual(ds_li / ds_eq6, 1.0, places=13)
 
-    def test_historical_800km_s_linear_W2_offset_and_threshold_mapping(self):
+    def test_historical_800km_s_mass_constant_and_quadrature_are_separate(self):
         mchi, ms, dm = 1000.0, 300e-6, 1e-3
-        mA = 131.0 * 0.93149410242
         ER, speed = 200e-6, 800.0
         archived_i6 = 1433678.0722867665
+        mA_rounded = 131.0 * 0.9315
+        mA_nist = 131.0 * 0.93149410242
 
-        legacy = eq6.reduced_kernel(
-            mchi, ms, dm, mA, ER, speed,
+        legacy_rounded = eq6.reduced_kernel(
+            mchi, ms, dm, mA_rounded, ER, speed,
             nw=16, nz=16, nphi=8, width_scheme="pole", g2=1.0,
         )
+        archived_mass_offset = abs(legacy_rounded / archived_i6 - 1.0)
+        self.assertLess(archived_mass_offset, 2e-8)
+
         independent_linear = psc.integrate_i6(
-            mchi, ms, dm, mA, ER, speed,
+            mchi, ms, dm, mA_rounded, ER, speed,
             nW=16, nz=16, nphi=8, mapping="linear_w2",
         )
-        self.assertAlmostEqual(independent_linear / legacy, 1.0, delta=2e-8)
+        self.assertAlmostEqual(independent_linear / legacy_rounded, 1.0, delta=2e-8)
 
-        high_order = psc.integrate_i6(
-            mchi, ms, dm, mA, ER, speed,
+        high_order_rounded = psc.integrate_i6(
+            mchi, ms, dm, mA_rounded, ER, speed,
             nW=48, nz=40, nphi=24, mapping="threshold_u2",
         )
-        threshold_mapped = psc.integrate_i6(
-            mchi, ms, dm, mA, ER, speed,
+        threshold_rounded = psc.integrate_i6(
+            mchi, ms, dm, mA_rounded, ER, speed,
             nW=16, nz=16, nphi=8, mapping="threshold_u2",
         )
-        self.assertLess(abs(threshold_mapped / high_order - 1.0), 1e-8)
+        self.assertLess(abs(threshold_rounded / high_order_rounded - 1.0), 1e-8)
 
-        archived_offset = abs(legacy / archived_i6 - 1.0)
+        legacy_nist = eq6.reduced_kernel(
+            mchi, ms, dm, mA_nist, ER, speed,
+            nw=16, nz=16, nphi=8, width_scheme="pole", g2=1.0,
+        )
+        mass_constant_shift = abs(legacy_nist / legacy_rounded - 1.0)
+        self.assertGreater(mass_constant_shift, 3e-5)
+        self.assertLess(mass_constant_shift, 5e-5)
+
+        high_order_nist = psc.integrate_i6(
+            mchi, ms, dm, mA_nist, ER, speed,
+            nW=48, nz=40, nphi=24, mapping="threshold_u2",
+        )
+        threshold_nist = psc.integrate_i6(
+            mchi, ms, dm, mA_nist, ER, speed,
+            nW=16, nz=16, nphi=8, mapping="threshold_u2",
+        )
+        self.assertLess(abs(threshold_nist / high_order_nist - 1.0), 1e-8)
+
+        quadrature_shift = abs(legacy_rounded / high_order_rounded - 1.0)
+        self.assertGreater(quadrature_shift, 1e-5)
+        self.assertLess(quadrature_shift, 1e-4)
         print(
             "800 km/s historical anchor:",
             {
-                "legacy_linear_W2_I6": legacy,
-                "independent_linear_W2_I6": independent_linear,
-                "threshold_u2_16x16x8_I6": threshold_mapped,
-                "threshold_u2_48x40x24_I6": high_order,
                 "archived_I6": archived_i6,
-                "legacy_relative_offset_to_archive": legacy / archived_i6 - 1.0,
-                "high_order_relative_offset_to_archive": high_order / archived_i6 - 1.0,
+                "legacy_rounded_u_0p9315": legacy_rounded,
+                "threshold_u2_rounded_u_0p9315": high_order_rounded,
+                "legacy_NIST_mass": legacy_nist,
+                "threshold_u2_NIST_mass": high_order_nist,
+                "mass_constant_relative_shift": legacy_nist / legacy_rounded - 1.0,
+                "quadrature_relative_shift": legacy_rounded / high_order_rounded - 1.0,
             },
         )
-        self.assertGreater(archived_offset, 3e-5)
-        self.assertLess(archived_offset, 5e-5)
 
     def test_threshold_stable_point_preserves_mass_shells(self):
         wmin2, wmax2 = eq6.limits(
