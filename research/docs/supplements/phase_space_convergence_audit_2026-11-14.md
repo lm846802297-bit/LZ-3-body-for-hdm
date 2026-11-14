@@ -245,16 +245,17 @@ D=m_V^2+2m_AE_R,
 
 稳定阈值点构造后，代表点的最大四动量闭合残差约为 \(2.5\times10^{-13}\) GeV；外腿质量壳和 \(K^2-W^2\) 的绝对残差在 \(4\times10^{-10}\ {\rm GeV}^2\) 量级。
 
-新增 6 个回归测试，覆盖：
+新增 7 个回归测试，覆盖：
 
 1. threshold-\(u^2\) 与高阶参考值；
 2. 线性 \(W\) 和线性 \(W^2\) Jacobian 对照；
 3. \(v_{\min}+0.1\) km/s 的阈值邻域；
 4. \(z\) 和 \(\phi_*\) 独立收敛；
 5. raw \(d\phi_*\) 与 normalized azimuthal average；
-6. 稳定末态构造的质量壳和四动量闭合。
+6. 稳定末态构造的质量壳和四动量闭合；
+7. 原始 800 km/s green、200 keV 归档点的质量常数与积分映射分离审计。
 
-本地测试：**6/6 PASS**。GitHub Actions 的独立 CI 结果需以新 PR 实际运行记录为准。
+Python 回归测试：**7/7 PASS**。GitHub Actions 的独立 CI 结果需以最新 PR 实际运行记录为准。
 
 ## 9. 当前结论与尚未完成事项
 
@@ -275,3 +276,48 @@ D=m_V^2+2m_AE_R,
 - 将收敛后的 \(I_6\) 接入完整天然氙 halo fold。
 
 因此，本轮支持的结论是：**在所测的非近极点 benchmark 和阈值邻域，threshold-\(u^2\) 映射显著改善了 \(I_6\) 的数值收敛，并且 \(256\pi^3\) 归一化通过 raw-\(d\Phi_3\) 数值对照。** 不能把这一结论扩大为全参数空间已完成误差控制。
+
+## 10. Historical 800 km/s anchor: mass convention versus quadrature error
+
+The earlier archived green benchmark contains
+\[
+I_6^{\rm archive}=1{,}433{,}678.0722867665\;\mathrm{GeV}^2
+\]
+at (m_s=300\) keV, \(\Delta m=1\) MeV,
+(E_R=200\) keV and (v=800\) km/s. The new audit recomputes this point
+with both the historical (A\times0.9315\) GeV mass convention and the
+current NIST nuclear mass (m_A=131\times0.93149410242\) GeV. Each mass
+scheme is evaluated with the legacy linear-(W^2) (16\times16\times8)
+rule and with threshold-(u^2) (48\times40\times24) reference
+quadrature.
+
+| Xe-131 mass input | (m_A) [GeV] | Linear (W^2), 16×16×8 | Threshold (u^2), 48×40×24 | Linear vs high-order |
+|---|---:|---:|---:|---:|
+| (A\times0.9315) | 122.026500000 | 1,433,679.100430 | 1,433,633.856281 | (3.15591\times10^{-5}) |
+| NIST nuclear mass | 122.025727417 | 1,433,619.137788 | 1,433,573.896448 | (3.15584\times10^{-5}) |
+| Historical approximation (m_A=122) GeV | 122.000000000 | 1,431,622.869812 | 1,431,577.686931 | (3.15616\times10^{-5}) |
+
+The (A\times0.9315) GeV legacy result differs from the archived value by
+only (7.17\times10^{-7}) relatively. In contrast, replacing the rounded
+(0.9315) conversion by the NIST constant shifts the legacy result by
+(4.18\times10^{-5}); the NIST legacy value is (4.11\times10^{-5})
+below the historical archive. This strongly indicates that the historical
+(I_6) table used the rounded (0.9315\) GeV mass conversion, despite the
+later metadata recording the NIST value. The residual (7.17\times10^{-7})
+is retained as a small provenance/rounding mismatch rather than forced to
+zero.
+
+A distinct numerical effect remains: at fixed mass convention, the legacy
+linear-(W^2) (16\times16\times8) result is about
+(3.16\times10^{-5}) above the threshold-(u^2) (48\times40\times24)
+reference. The threshold-(u^2) (16\times16\times8) result itself agrees
+with the high-order threshold reference within (10^{-8}). Therefore the
+old (4.11\times10^{-5}) archive mismatch must **not** be attributed solely
+to the (W^2) mapping: it is predominantly the mass-constant convention.
+The separate (3.16\times10^{-5}) offset is the measured quadrature-mapping
+effect.
+
+This is a phase-space/kernel normalization audit only. It does not involve
+the AFH factor of four, and it does not validate the full native Mathematica
+(d\sigma_A/dE_R) calculation. The complete pointwise Mathematica–Python
+cross-section comparison remains the final validation gate.
