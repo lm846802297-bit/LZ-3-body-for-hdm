@@ -39,21 +39,72 @@
     74.7
   ],
   "table_s5": {
-    "alpha": {"default": 11.0, "analysis": 11.2, "unit": "keV^(1/beta)"},
-    "beta": {"default": 1.1, "analysis": 1.1},
-    "gamma": {"default": 0.048, "analysis": 0.052, "unit": "(V/cm)^(1/delta)"},
-    "delta": {"default": -0.0533, "analysis": -0.0533},
-    "epsilon": {"default": 12.6, "analysis": 10.8, "unit": "keV"},
-    "zeta": {"default": 0.30, "analysis": 0.53, "unit": "keV"},
-    "eta": {"default": 2.0, "analysis": 1.4},
-    "theta": {"default": 0.30, "analysis": 0.31, "unit": "keV"},
-    "iota": {"default": 2.0, "analysis": 2.5},
-    "p": {"default": 0.50, "analysis": 0.50},
-    "f1": {"default": 1.0, "analysis": 1.39},
-    "f2": {"default": 1.0, "analysis": 1.74},
-    "a": {"default": null, "analysis": 0.0230},
-    "b": {"default": null, "analysis": 0.0289},
-    "E0": {"default": null, "analysis": 74.7, "unit": "keV"}
+    "alpha": {
+      "default": 11,
+      "analysis": 11.2,
+      "unit": "keV^(1/beta)"
+    },
+    "beta": {
+      "default": 1.1,
+      "analysis": 1.1
+    },
+    "gamma": {
+      "default": 0.048,
+      "analysis": 0.052,
+      "unit": "(V/cm)^(1/delta)"
+    },
+    "delta": {
+      "default": -0.0533,
+      "analysis": -0.0533
+    },
+    "epsilon": {
+      "default": 12.6,
+      "analysis": 10.8,
+      "unit": "keV"
+    },
+    "zeta": {
+      "default": 0.3,
+      "analysis": 0.53,
+      "unit": "keV"
+    },
+    "eta": {
+      "default": 2,
+      "analysis": 1.4
+    },
+    "theta": {
+      "default": 0.3,
+      "analysis": 0.31,
+      "unit": "keV"
+    },
+    "iota": {
+      "default": 2,
+      "analysis": 2.5
+    },
+    "p": {
+      "default": 0.5,
+      "analysis": 0.5
+    },
+    "f1": {
+      "default": 1,
+      "analysis": 1.39
+    },
+    "f2": {
+      "default": 1,
+      "analysis": 1.74
+    },
+    "a": {
+      "default": null,
+      "analysis": 0.023
+    },
+    "b": {
+      "default": null,
+      "analysis": 0.0289
+    },
+    "E0": {
+      "default": null,
+      "analysis": 74.7,
+      "unit": "keV"
+    }
   },
   "high_energy_exponent": {
     "below_or_at_E0": "p(E)=0.5",
@@ -64,14 +115,15 @@
   },
   "nest_source_pin": {
     "repository": "https://github.com/NESTCollaboration/nest",
-    "branch": "master",
-    "commit": "30811ea2f8a6de1262eef35278745226dc5d582a",
-    "commit_date_utc": "2026-11-13T17:34:55Z",
+    "branch": "commit-pinned",
+    "commit": "423b9745a5bfbb0402514f1d7955e67445de0810",
+    "commit_date_utc": "2026-08-16T16:33:43Z",
+    "commit_message": "Add energy-dependent NR charge-yield suppression (#210)",
     "source_file": "src/NEST.cpp",
-    "source_blob_sha": "976bb6f2a96704d867d86f83fe8f86de42848012",
+    "source_blob_sha": "7e19ee148879ae80a982f91652b90c1fc9e10256",
     "relevant_implementation": "GetYieldNR uses NRYieldsParam[12:15] for a,b,E0 when vector length >= 15"
   },
-  "versioning_warning": "The public v2.4.5beta tag (commit 19bc9bc, 2025-12-08) does not contain the 15-parameter high-energy p(E) implementation. Do not pin that prerelease tag for this LZ 2026 high-energy NR model. Pin the inspected source commit above unless the HEPData package or an official v2.4.5 release supplies a more precise release commit.",
+  "versioning_warning": "The public v2.4.5beta tag (commit 19bc9bc, 2025-12-08) predates the high-energy p(E) implementation and must not be used for the LZ 2026 extended-NR mean-yield model. The selected source pin is the NEST commit that introduced the energy-dependent NR charge-yield suppression on 2026-08-16, before the LZ paper submission. It is a source commit pin, not a claim that this commit is an official tagged v2.4.5 release.",
   "not_included": [
     "NR fluctuation parameters and their tuned values, if any",
     "LZ 2026 detector optical/electrical response settings and spatial maps",
