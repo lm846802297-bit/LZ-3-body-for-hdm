@@ -264,7 +264,7 @@ A GitHub Actions retrieval job was run on the active research branch:
 - Result: workflow success for PDF extraction, digitization validation, and archive steps.
 - Artifact: lz-2026-hepdata-inventory-and-pdf-extraction (artifact ID 14128441663).
 
-Important: workflow success does NOT mean the HEPData payload was retrieved. The artifact DOWNLOAD_STATUS.txt records YAML endpoint HTTP 403 and JSON record endpoint HTTP 403. The arXiv PDF was downloaded and the efficiency extraction completed. The artifact contains the PDF, Fig. S2 SVG, the 303-point efficiency CSV, its metadata, and the status file; it contains no HEPData YAML/JSON payload. The HEPData inventory remains incomplete. Do not mark the full data-release inventory as complete.
+Important: workflow success does NOT mean the HEPData payload was retrieved. The artifact DOWNLOAD_STATUS.txt records YAML endpoint HTTP 403 and JSON record endpoint HTTP 403. The arXiv PDF was downloaded and the efficiency extraction completed. The artifact contains the PDF, Fig. S2 SVG, the 303-point efficiency CSV, its metadata, and the status file; it contains no HEPData YAML/JSON payload. At the time of this workflow run, the endpoint attempt was blocked. A subsequent user-supplied v1 archive has now been received and audited; see Section 13. The ZIP is a table export and does not include the separate NEST response configuration resource.
 
 ### What the NEST event-level API actually requires
 
@@ -275,7 +275,7 @@ The pinned NEST source exposes this event chain:
 
 The 15-element Table S5 vector is only NRYieldsParam. FullCalculation also consumes NRERWidthsParam, which controls NR quanta/recombination fluctuations. The upstream default vector at pinned commit 423b9745a5bfbb0402514f1d7955e67445de0810 is {0.4, 0.4, 0.04, 0.5, 0.19, 2.25, -0.001, 0.046452, 0.45, 0.205, -0.2, 0., 0.}. This is an upstream default, NOT yet verified as the LZ 2026 fitted fluctuation vector.
 
-The 2026 paper Table S5 provides the mean-yield parameters only. Until the HEPData data-release files are retrieved and inspected, we must not silently treat the upstream default NR fluctuation vector as the LZ best-fit configuration.
+The 2026 paper Table S5 provides the mean-yield parameters only. The supplied HEPData v1 table ZIP has now been inspected and contains no separate NEST configuration resource or tuned NRERWidthsParam vector. We must not silently treat the upstream default NR fluctuation vector as the LZ best-fit configuration.
 
 ### Consequence for the pilot response
 
@@ -287,7 +287,24 @@ The production driver must require, as explicit versioned inputs: the official N
 
 - Mean-yield equations: validated against pinned NEST C++ (264 scalar comparisons; worst scaled difference 3.331e-16).
 - Event-level NEST API: source/API audited; no LZ 2026 event-level S1/S2 Monte Carlo has yet been validated.
-- HEPData inventory: attempted; blocked by HTTP 403; not complete.
+- HEPData v1 table archive: user-supplied ZIP parsed and structurally validated (46 YAML tables); separate NEST response resource remains unlocated.
 - Scalar one-loop self-energy: the conditional Dirac, real-scalar, pure-scalar-Yukawa contribution has already been derived and numerically implemented in P0-4B_SCALAR_SELF_ENERGY_AUDIT_ZH.md.
 - Full propagator self-energy: still open because the source model also has an off-diagonal vector interaction but does not specify m_V or the gauge/Goldstone completion; the Dirac/Majorana assignment is also unspecified.
 - Parameter scan and final LZ likelihood: remain frozen.
+
+
+## 13. User-supplied HEPData v1 archive received and audited (2026-11-15)
+
+The user supplied `HEPData-ins3199115-v1.zip`. It was opened directly from the uploaded file and all 46 table YAML files were parsed.
+
+- Archive size: 40,657 bytes.
+- SHA-256: `ab02f6eacd1008a260f0eb8f441beb206069e18f10c6b7b2f44fcfd70463f1f1`.
+- Three event samples: Science 1,710 points; PromptVeto 66; DelayedVeto 55.
+- 43 model tables: 40 L01s–L20v tables and O01s, O01v, O04s.
+- All columns have matching row counts; all values are numeric and finite; no structural parse errors were found.
+- The Science sample's maximum-S1 point is (S1_c=540.07916\,\mathrm{phd}), (log_{10}(S2_c/\mathrm{phd})=3.966964), hence (S2_c=9267.53\,\mathrm{phd}). This matches the event of interest reported in the paper ((S1_c\simeq540.1\,\mathrm{phd}), (S2_c=9268\,\mathrm{phd})).
+- The ZIP contains observed search samples and model-limit tables. It does not contain calibration event samples or a separate NEST configuration resource, NRERWidthsParam fit, S1/S2 PDFs, or nuisance covariance.
+- The 15-entry Table S5 NR mean-yield vector remains in `lz_2026_nest_nr_mean_yield_parameters.json`; it is not a fluctuation vector.
+- Full details and table-coverage exceptions are recorded in `lz_2026_extended_nr/HEPDATA_V1_ARCHIVE_AUDIT.md`.
+
+Consequently, the supplied ZIP resolves the missing observed-sample tables but does not close the production event-level NEST response-input gap. The production response and final likelihood remain frozen pending the separate response resource or an explicitly documented and validated substitute.
