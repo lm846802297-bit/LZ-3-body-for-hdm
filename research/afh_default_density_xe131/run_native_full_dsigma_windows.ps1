@@ -69,7 +69,8 @@ $compareArgs = @(
     "--out-csv", $comparisonCsv,
     "--metadata", $comparisonMetadata,
     "--rtol", "$RelativeTolerance",
-    "--response-rtol", "$ResponseTolerance"
+    "--response-rtol", "$ResponseTolerance",
+    "--require-full-grid"
 )
 & $python.Source @compareArgs
 if ($LASTEXITCODE -ne 0) {
