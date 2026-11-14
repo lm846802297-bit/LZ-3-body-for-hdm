@@ -169,7 +169,7 @@ def read_response(path: Path) -> dict:
 
 
 def merge_bin_stats(stats: dict, fine_ids: list[int], replica: int | None) -> dict:
-    """Merge fine-bin empirical probabilities with true-energy-width weights."""
+    """Merge fine-bin probabilities, pooling replicas without double-counting energy width."""
     n_generated = 0
     n_s1 = n_s2 = n_nest = n_roi = 0
     weighted_accept = {"nest": 0.0, "ws_roi": 0.0}
@@ -177,32 +177,40 @@ def merge_bin_stats(stats: dict, fine_ids: list[int], replica: int | None) -> di
     width_sum = 0.0
     for ibin in fine_ids:
         replicas = (0, 1) if replica is None else (replica,)
+        records = []
         for rep in replicas:
             rec = stats.get((ibin, rep))
             if rec is None:
                 raise ValueError(f"missing fine-bin/replica statistics: bin={ibin}, replica={rep}")
-            width = rec["hi"] - rec["lo"]
-            n = rec["n"]
-            if n <= 0:
-                raise ValueError(f"empty fine energy bin {ibin}, replica {rep}")
-            width_sum += width
-            n_generated += n
-            n_s1 += rec["n_s1_coin"]
-            n_s2 += rec["n_s2_threshold"]
-            n_nest += rec["n_nest"]
-            n_roi += rec["n_ws_roi"]
-            # The two replicas are separate MC samples of the same stratum.
-            # Each has the same generated count, so their pooled empirical
-            # probability is count/n_generated; width weighting is applied
-            # after pooling the replica samples for this fine bin.
-            cell_nest = rec["nest_cells"]
-            cell_roi = rec["roi_cells"]
-            for cell, count in cell_nest.items():
-                weighted_cells["nest"][cell] += width * count / n
-            for cell, count in cell_roi.items():
-                weighted_cells["ws_roi"][cell] += width * count / n
-            weighted_accept["nest"] += width * rec["n_nest"] / n
-            weighted_accept["ws_roi"] += width * rec["n_ws_roi"] / n
+            records.append(rec)
+        width = records[0]["hi"] - records[0]["lo"]
+        if any(
+            abs((rec["hi"] - rec["lo"]) - width) > 1e-10
+            or abs(rec["lo"] - records[0]["lo"]) > 1e-10
+            or abs(rec["hi"] - records[0]["hi"]) > 1e-10
+            for rec in records[1:]
+        ):
+            raise ValueError(f"replica energy-bin mismatch for fine bin {ibin}")
+        n = sum(rec["n"] for rec in records)
+        if n <= 0:
+            raise ValueError(f"empty fine energy bin {ibin}")
+        width_sum += width
+        n_generated += n
+        n_s1 += sum(rec["n_s1_coin"] for rec in records)
+        n_s2 += sum(rec["n_s2_threshold"] for rec in records)
+        n_nest += sum(rec["n_nest"] for rec in records)
+        n_roi += sum(rec["n_ws_roi"] for rec in records)
+
+        for mode, cell_key_name in (("nest", "nest_cells"), ("ws_roi", "roi_cells")):
+            combined = defaultdict(int)
+            for rec in records:
+                for cell, count in rec[cell_key_name].items():
+                    combined[cell] += count
+            for cell, count in combined.items():
+                weighted_cells[mode][cell] += width * count / n
+        weighted_accept["nest"] += width * sum(rec["n_nest"] for rec in records) / n
+        weighted_accept["ws_roi"] += width * sum(rec["n_ws_roi"] for rec in records) / n
+
     if width_sum <= 0.0:
         raise ValueError("zero merged energy width")
     return {
@@ -218,7 +226,6 @@ def merge_bin_stats(stats: dict, fine_ids: list[int], replica: int | None) -> di
             for mode, cells in weighted_cells.items()
         },
     }
-
 
 def fold_grid(
     stats: dict,
