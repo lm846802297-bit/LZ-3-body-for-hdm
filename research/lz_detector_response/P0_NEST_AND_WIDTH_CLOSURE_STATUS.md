@@ -405,3 +405,6 @@ Here (sigma_{eq}=(Q_{90}-Q_{10})/2.5631), a Gaussian-equivalent scale derived fr
 - Workflow: [run 43638132096](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43638132096), successful.
 - Artifact ID: `14130821456`, SHA-256 `4fd583cb3f7cf0eaeff6be3b06be1a51d1739b3db3cdac9fc5ad6a0a0a113559`.
 - Full report: `lz_2026_extended_nr/LZ_2026_NR_FLAT_BAND_PILOT.md`.
+
+
+The full 0.1–330 keV band comparison also contains 148 populated 5-phd S1c bins. Across matching bins, the mean absolute difference between WS2024 and generic-width median curves is (9.63\times10^{-4}) dex (maximum (7.03\times10^{-3}) dex); in the candidate bin the median difference is (7.40\times10^{-4}) dex. The complete report now includes these full-band shape diagnostics. This confirms that the two candidate NR width vectors produce nearly coincident band curves in this pilot; it does not select or validate either vector against the collaboration's calibration fit.
