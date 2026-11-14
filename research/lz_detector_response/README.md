@@ -46,3 +46,72 @@ official LZ likelihood.
 See the main study report and
 `research/figure2_full_reproduction/fold_lz_2026_rate_level.py` for the
 calculation and limitations.
+
+
+## NR event-level response pilot (new)
+
+The next stage after the Table S5 mean-yield validation is a direct event-level
+NEST comparison. The driver calls the pinned NEST implementation in this order:
+
+1. `FullCalculation(NR, ...)` to obtain fluctuated intrinsic quanta;
+2. `GetS1(..., S1CalculationMode::Full)` to simulate the S1 response;
+3. `GetS2(..., S2CalculationMode::Full)` to simulate the integrated S2 area response.
+
+The code does **not** replace the detector response with the shortcut
+`S1 = g1 * Nph` or `S2 = g2 * Ne`.
+
+Two NR fluctuation baselines are compared while keeping the 2026 Table S5
+15-parameter mean-yield vector and the LZ WS2024 detector class fixed:
+
+- `ws2024`: the calibration-tuned NR width vector in
+  `LZ_WS2024.hh`;
+- `generic`: the generic NEST default NR width vector at the pinned commit.
+
+The simulation uses 2,000 events per energy by default at
+5.4, 10, 50, 74.7, 100, 150, 200, 248, and 269.9 keV. Events are placed at
+the detector's central `dtCntr` reference depth, with x=y=0 and no position
+smearing. The same seed is used for both width baselines at each energy.
+
+### Run locally on Windows
+
+From a Visual Studio 2022 Developer PowerShell (or another shell in which
+CMake can find an MSVC C++17 toolchain), run:
+
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+cd <path-to-repository>\research\lz_detector_response
+.\run_lz_2026_nr_event_response.ps1
+```
+
+Optional pilot size and seed:
+
+```powershell
+.\run_lz_2026_nr_event_response.ps1 -EventsPerEnergy 5000 -Seed 20261115
+```
+
+Prerequisites: Git, CMake, a C++17 compiler (Visual Studio 2022 Build Tools
+with the Desktop development with C++ workload is recommended), and Python
+3.10 or newer. The script checks out the exact NEST commit, configures and
+builds NESTCore, compiles the event driver, runs both baselines, and writes
+raw CSV plus JSON/CSV summaries outside the repository under
+`%LOCALAPPDATA%\LZ-3-body-for-hdm\nr_event_response` by default.
+
+### Observable and limitations
+
+- `S1c` is the signed corrected-phd value returned by `GetS1()[5]`.
+- `S2c` is the signed corrected-phd value returned by `GetS2()[7]`.
+- NEST uses the sign to flag S1 coincidence failure and S2 threshold failure;
+  the raw signed values are retained in the CSV.
+- S1 uses the full PMT-level S1 mode. S2 uses NEST's integrated `Full` mode,
+  not the waveform mode; this retains extraction, lifetime, EL gain, DPE/SPE
+  and pulse-area fluctuations, but does not create the detailed S2 waveform
+  or its waveform-mode diffusion/electron-train treatment.
+- The detector class is an LZ SR3/WS2024 candidate, not confirmed as the exact
+  2026 extended-NR configuration. The mean-yield vector is updated to 2026
+  Table S5; spatial response maps and the complete analysis selection are
+  not reproduced.
+- The output is an NR detector-response pilot, not the official LZ signal PDF,
+  background model, nuisance likelihood, or exclusion.
+
+The code and assumptions are documented in
+`lz_2026_extended_nr/LZ_2026_NR_EVENT_RESPONSE_PILOT.md`.
