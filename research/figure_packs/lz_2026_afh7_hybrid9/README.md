@@ -4,7 +4,7 @@ This directory records the provenance and scientific interpretation of the 13-fi
 
 ## Deliverables
 
-The companion figure pack contains 13 PNG figures, a landscape PDF atlas, a figure index, and a JSON manifest. The binary files were generated and checksum-verified in the working session. **This PR metadata commit does not contain the PNG/PDF/ZIP bytes**; the GitHub connector available for this session can create text files and Git blobs but does not provide a direct local-binary upload path. The binary pack therefore remains attached to the ChatGPT conversation rather than being represented as repository files.
+The generated companion pack contains 13 PNG figures, a landscape PDF atlas, a figure index, a JSON manifest, and an internal SHA-256 list. The archive and standalone PDF have been byte-verified; the PDF embedded in the ZIP is identical to the standalone PDF. **The PNG/PDF/ZIP binaries are not committed to this Git tree**; this directory contains their provenance metadata and checksums. The ZIP and PDF are delivered separately with the research handoff.
 
 ## Figure index
 
