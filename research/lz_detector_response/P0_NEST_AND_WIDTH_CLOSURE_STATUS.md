@@ -408,3 +408,42 @@ Here (sigma_{eq}=(Q_{90}-Q_{10})/2.5631), a Gaussian-equivalent scale derived fr
 
 
 The full 0.1–330 keV band comparison also contains 148 populated 5-phd S1c bins. Across matching bins, the mean absolute difference between WS2024 and generic-width median curves is (9.63\times10^{-4}) dex (maximum (7.03\times10^{-3}) dex); in the candidate bin the median difference is (7.40\times10^{-4}) dex. The complete report now includes these full-band shape diagnostics. This confirms that the two candidate NR width vectors produce nearly coincident band curves in this pilot; it does not select or validate either vector against the collaboration's calibration fit.
+
+
+## 13. Corrected NEST configuration provenance: EFT2024 public candidate found (2026-11-15)
+
+### HEPData result
+
+The supplied `HEPData-ins3199115-v1.zip` contains `submission.yaml` plus 46 table YAML files; the submission has no `additional_resources` field. No NEST configuration, calibration sample, or fluctuation vector is in this ZIP. The record JSON endpoint returned HTTP 403, so the finding is scoped to the supplied HEPData table archive. Do not say that the NEST header was retrieved from HEPData.
+
+### Separate NEST public source
+
+A distinct LZ-specific executable configuration is present in the upstream NEST repository:
+- `include/Detectors/LZ_WS2024.hh`;
+- `LZ_Detector_2024::SetEFT2024Configuration()`;
+- added by commit `307fb27d4c2f9b48dba27529bb57bc243e0ce2dc` on 2026-08-27;
+- full vectors audited at commit `541b6430dae6ea289cf110c99f174a9187f7fdee` on 2026-09-09.
+
+This is the public EFT2024 candidate. An independent study (arXiv:2610.27105) uses this exact commit, notes that the EFT2024 configuration is not in any tagged NEST release, and explicitly says the connection to the exact LZ Letter build is circumstantial. It is therefore the strongest public candidate, not a confirmed official production build.
+
+### Exact vectors now recorded
+
+Machine-readable record: `lz_2026_extended_nr/lz_2026_nest_eft2024_configuration_candidate.json`.
+
+- EFT2024 NR mean: `{11.21, 1.113, 0.0522, -0.0533, 10.8, 0.53, 1.41, 0.31, 2.5, 0.5, 1.39, 1.74, 0.023, 0.0289, 74.7}`.
+- EFT2024 ER mean: `{12.31, 84.91, 0.5707, 2.804, 34.04, -1, 82.57, 4.557, 0.2207, 0.1272}`.
+- EFT2024 17-element NRERWidthsParam: `{1.076, 1.061, -0.707, 0.5, 0.19, 2.25, -0.000905, 0.03174, 2.588, 0.3627, -0.3583, 0.0, 0.02377, 0.06211, 5.2, 1.359, -2.599}`.
+- Detector overrides: (g_1=0.1104), (g_{1,gas}=0.07753555), (s2\_thr=120\,\mathrm{phe}), (eLife=15000\,\mu\mathrm{s}).
+
+Table S5 is the rounded NR mean-yield presentation, not the NR fluctuation model. Table S3's printed (m_6=0) differs from the executable vector's (m_6=-1); in `GetYieldBetaGR`, negative (m_6) is a sentinel enabling density/W-value corrections. Table S4's eight ER fluctuation values map into entries 7–10 and 13–16 of the 17-element vector, with the code's component normalization. The ER charge-sampling skewness is a separate `GetQuanta` input/model and must not be confused with Table S4's (alpha_i).
+
+### Correction to earlier NR pilot interpretation
+
+The previous pilot used the rounded Table S5 NR mean vector, WS2024 or generic width parameters, and the default WS2024 detector overrides; it did not call `SetEFT2024Configuration()`. Those outputs remain valid API/sensitivity checks but are hybrid configurations, not the primary LZ-specific candidate. The new workflow `.github/workflows/lz-2026-nr-eFT2024-full-band.yml` builds NEST commit 541b643 and compares:
+1. EFT2024 full public LZ candidate;
+2. WS2024 full LZ baseline;
+3. generic NEST yield/width defaults on the same EFT2024 detector overrides.
+
+It generates the full 0.1–330 keV flat NR band both at the candidate position and under a uniform-active-TPC spatial proxy. The latter is an explicit approximation, not the actual calibration-source spatial distribution.
+
+**Current validation boundary:** exact source vectors and code mappings are now audited; the new event-level band workflow is running. The EFT2024 candidate still needs comparison against the digitized full published NR band and the calibration data before being called a reproduction.
