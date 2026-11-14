@@ -84,9 +84,9 @@ class Eq6Tests(unittest.TestCase):
         # Independent high-precision evaluation of the factorized Kallen form.
         with localcontext() as context:
             context.prec = 60
-            M = Decimal(str(parent_mass))
-            m = Decimal(str(mchi))
-            s = Decimal(str(ms))
+            M = Decimal.from_float(parent_mass)
+            m = Decimal.from_float(mchi)
+            s = Decimal.from_float(ms)
             excess = M - m - s
             lam = (
                 excess * (excess + 2 * s)
