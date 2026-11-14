@@ -3,7 +3,7 @@
 ClearAll["Global`*"];
 scriptDir = DirectoryName[$InputFileName];
 envPath = Environment["DMFormFactorPath"];
-packagePath = If[StringQ[envPath] && envPath =!= "", envPath, FileNameJoin[{scriptDir, "dmformfactor-V6.m"}]];
+packagePath = If[StringQ[envPath] && envPath =!= "", envPath, FileNameJoin[{scriptDir, "..", "..", "v6", "dmformfactor-V6.m"}]];
 If[!FileExistsQ[packagePath], Print["ERROR: AFH dmformfactor-V6.m not found: ", packagePath]; Exit[2]];
 Get[packagePath];
 A = 131; Z = 54; JA = 3/2;
