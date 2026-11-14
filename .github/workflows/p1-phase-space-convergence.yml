@@ -60,7 +60,6 @@ jobs:
               "phase_space_threshold_convergence.csv",
               "phase_space_li_prefactor_crosscheck.csv",
               "phase_space_historical_800_anchor.csv",
-              "phase_space_near_pole_convergence.csv",
           )
           failures = []
           for name in names:
@@ -89,4 +88,5 @@ jobs:
           if failures:
               raise SystemExit("\n".join(failures))
           print("Fresh phase-space scans reproduce all committed CSV tables within tolerance.")
+          print("The off-shell near-pole scan is preserved separately in the p1-phase-space-reproduction artifact; it is not yet a committed reference CSV.")
           PY
