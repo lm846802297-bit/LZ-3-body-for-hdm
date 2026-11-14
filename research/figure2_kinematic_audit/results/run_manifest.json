@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "study": "figure2_kinematic_audit",
+  "status": "reproducible",
+  "calculation": "independent three-body phase-space threshold check",
+  "command": "python research/figure2_kinematic_audit/calculations/kinematic_threshold.py",
+  "source": {
+    "path": "calculations/kinematic_threshold.py",
+    "sha256": "6f874845c2c89e71c7eaaebfe898c1222aded4533d4bb61a7b6c262f58d324ff"
+  },
+  "parameters": {
+    "m_chi_GeV": 1000.0,
+    "m_Xe_GeV": 122.0,
+    "incident_speeds_km_s": [544.0, 600.0, 770.0, 776.0, 800.0],
+    "tested_scalar_masses_keV": [200.0, 300.0, 360.0, 300000.0, 360000.0],
+    "recoil_scan_keV": [0.1, 1000.0],
+    "recoil_scan_points": 20000
+  },
+  "verification_environment": {
+    "python": "3.13.5",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0"
+  },
+  "outputs": [
+    {
+      "path": "phase_space_threshold.csv",
+      "format": "CSV",
+      "rows_excluding_header": 25,
+      "bytes": 1925,
+      "sha256": "38941533a50222db64bdeab96e5ef3e7a1a769d87f0d58855651ac9c7012b6ae"
+    }
+  ],
+  "validation": {
+    "regenerated_after_path_reorganization": true,
+    "byte_for_byte_match_with_pre_move_csv": true,
+    "regression_tests": 4,
+    "regression_tests_passed": 4,
+    "scope": "kinematic phase-space check only; not a differential rate or detector likelihood"
+  }
+}
