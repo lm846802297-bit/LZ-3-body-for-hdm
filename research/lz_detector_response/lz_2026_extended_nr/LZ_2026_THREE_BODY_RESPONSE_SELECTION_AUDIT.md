@@ -53,7 +53,21 @@ The LZ 2026 paper defines the WS ROI as \(3\leq S1_c\leq600\) phd, raw \(S2>645\
 
 The paper's veto partition is also separate from the NR response: prompt veto uses Skin \(>2.5\) phd within \(\pm0.25\,\mu s\) or OD \(>4.5\) phd within \(\pm0.3\,\mu s\) of TPC S1; delayed veto uses Skin/OD signals above 300/200 keV within 600 \(\mu s\), outside the prompt window. The likelihood fits science, prompt-veto, and delayed-veto samples simultaneously.
 
-## 3. Cumulative efficiency curves in Supplemental Fig. S2
+## 3. Reconstructed event-selection requirements inherited from WS2024
+
+The 2026 paper states that its data/analysis selections are unchanged from the 4.2 tonne-year WS2024 analysis, except for the ROI, FV, and sideband handling. The WS2024 paper provides the following reconstruction details that are absent from the current NEST-only response driver:
+
+- **DAQ trigger:** the digital filter is designed primarily for S2 pulses; the WS2024 trigger efficiency is 95% for S2 pulses corresponding to 3.5 extracted electrons.
+- **S1 pulse classification:** a pulse is classified as S1 only if coincident photons are recorded in at least three PMTs. Undersized PMT responses and photon transit-time differences can cause missed S1s. The SS S1-identification efficiency is above 90% for all S1 pulse sizes and rises to 100% above 35 phd; it is calibrated by comparing automated reconstruction with manual event categorization of tritium and DD samples.
+- **Single-scatter classification:** SS means one S1 preceding one S2. The SS efficiency depends on both S1 and S2 pulse classification. Electron diffusion can split S2 pulses; the splitting probability is below 1% on average for the relevant pulses, based on waveform simulations.
+- **Accidental-rejection cuts:** pulse-shape selections reject accidental S1-S2 pairings. Their rejection power is 99.5% for known accidental events in the WIMP ROI, evaluated using unphysical-drift-time sidebands.
+- **Live-time exclusions:** hold-offs follow large S2 signals and periods with elevated accidental rates. In WS2024, the cumulative exclusions leave 81.5% of collected live time, corresponding to 220.0 live days.
+- **Fiducial volume:** the radial boundary is a depth- and azimuth-dependent contour, with additional drift-time and field-cage-resistor exclusions. The 2026 analysis uses \(4.71\pm0.08\) tonnes; a uniform active-cylinder prior is not the FV.
+- **Veto samples:** the 2026 analysis separates science, prompt-veto, and delayed-veto samples. Prompt and delayed definitions are given in the main paper and must be modelled as sample partitions/tagging efficiencies, not as a single generic multiplicative loss.
+
+These items make clear why the NEST sign flags are insufficient to claim full LZ S1/SS selection. The NEST Parametric occupancy model is a useful partial detector-response ingredient, but it does not replace pulse finding, timing coincidence, SS reconstruction, waveform-based accidental rejection, FV reconstruction, or live-time handling.
+
+## 4. Cumulative efficiency curves in Supplemental Fig. S2
 
 The published figure contains four cumulative curves:
 
@@ -80,7 +94,7 @@ Extractor:
 - \`extract_lz_2026_nr_selection_efficiency_components.py\`
 - Output: \`lz_2026_nr_selection_efficiency_components.csv\` and metadata JSON.
 
-## 4. 1/5/10-keV convergence definition
+## 5. 1/5/10-keV convergence definition
 
 The new response driver stratifies the exact \(5.4\)--\(269.9\) keV interval into 1-keV true-energy strata, with a final 0.5-keV partial stratum. Each stratum has equal Monte Carlo statistics and two event replicas.
 
@@ -113,7 +127,7 @@ Two acceptance definitions are kept separate:
 
 The second definition is still **not** the full LZ selection. It deliberately excludes trigger, SS reconstruction, analysis cuts, FV, and veto selections. The convergence outputs must not be labelled final selected signal PDFs.
 
-## 5. No-profile-likelihood gate
+## 6. No-profile-likelihood gate
 
 Do not start the final profile likelihood until all of the following are resolved:
 
@@ -126,7 +140,8 @@ Do not start the final profile likelihood until all of the following are resolve
 
 Until then, report rate-level and 2D response predictions with their exact acceptance definition and provenance; do not call them official LZ selected signal PDFs or exclusion limits.
 
-## 6. Public-paper source anchors
+## 7. Public-paper source anchors
 
 - [LZ 2026 extended-NR paper, arXiv:2609.02823](https://arxiv.org/abs/2609.02823): SS/data-analysis/FV requirement and exact WS ROI; 4.71-t FV; prompt/delayed veto definitions; three-sample likelihood; Supplemental Fig. S2 cumulative efficiency.
+- [LZ WS2024 4.2 tonne-year analysis, arXiv:2410.17036](https://arxiv.org/abs/2410.17036): S2 trigger efficiency, three-PMT S1 classification, SS reconstruction efficiency, S2 splitting, accidental pulse-shape cuts, FV geometry, veto and live-time exclusions.
 - [LZ 4.2 tonne-year WS2024 analysis, arXiv:2410.17036](https://arxiv.org/abs/2410.17036): the 2026 paper identifies this as the starting analysis whose selections remain unchanged apart from ROI, FV, and sideband handling. The separate covariant EFT first-science-run paper is arXiv:2404.17666 and is not Ref. [5] in the 2026 paper.
