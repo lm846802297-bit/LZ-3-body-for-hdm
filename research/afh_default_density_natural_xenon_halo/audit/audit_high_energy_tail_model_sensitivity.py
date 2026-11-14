@@ -13,8 +13,8 @@ import json
 import math
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-HERE = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[3]
+HERE = Path(__file__).resolve().parents[1]
 AFH_DIR = HERE / "results" / "afh7_hybrid9_continuous_2026-11-14"
 GCN_DIR = ROOT / "research" / "figure2_full_reproduction" / "results" / "natural_xenon_continuous_spectrum"
 EFFICIENCY_CSV = ROOT / "research" / "lz_detector_response" / "lz_2026_extended_nr" / "lz_2026_nr_efficiency_digitized.csv"

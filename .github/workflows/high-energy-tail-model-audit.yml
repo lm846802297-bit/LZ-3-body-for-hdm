@@ -7,8 +7,8 @@ on:
       - research/phase2-tail-mathematica-20261114
     paths:
       - .github/workflows/high-energy-tail-model-audit.yml
-      - research/afh_default_density_natural_xenon_halo/audit_high_energy_tail_model_sensitivity.py
-      - research/afh_default_density_natural_xenon_halo/test_high_energy_tail_model_sensitivity.py
+      - research/afh_default_density_natural_xenon_halo/audit/audit_high_energy_tail_model_sensitivity.py
+      - research/afh_default_density_natural_xenon_halo/tests/test_high_energy_tail_model_sensitivity.py
       - research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/**
       - research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/**
       - research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv
@@ -17,8 +17,8 @@ on:
       - main
     paths:
       - .github/workflows/high-energy-tail-model-audit.yml
-      - research/afh_default_density_natural_xenon_halo/audit_high_energy_tail_model_sensitivity.py
-      - research/afh_default_density_natural_xenon_halo/test_high_energy_tail_model_sensitivity.py
+      - research/afh_default_density_natural_xenon_halo/audit/audit_high_energy_tail_model_sensitivity.py
+      - research/afh_default_density_natural_xenon_halo/tests/test_high_energy_tail_model_sensitivity.py
       - research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/**
       - research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/**
       - research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv
@@ -41,11 +41,11 @@ jobs:
 
       - name: Run unit and regression tests
         run: |
-          python -m unittest discover -s research/afh_default_density_natural_xenon_halo -p 'test_high_energy_tail_model_sensitivity.py' -v
+          python -m unittest discover -s research/afh_default_density_natural_xenon_halo/tests -p 'test_high_energy_tail_model_sensitivity.py' -v
 
       - name: Recompute high-energy tail comparison
         run: |
-          python research/afh_default_density_natural_xenon_halo/audit_high_energy_tail_model_sensitivity.py \
+          python research/afh_default_density_natural_xenon_halo/audit/audit_high_energy_tail_model_sensitivity.py \
             --outdir "$RUNNER_TEMP/high_energy_tail_audit"
 
       - name: Validate output archive

@@ -11,7 +11,7 @@ on:
     paths:
       - .github/workflows/afh-natural-xenon-hybrid9.yml
       - research/afh_default_density_natural_xenon_halo/run_afh7_hybrid9_continuous_spectrum.py
-      - research/afh_default_density_natural_xenon_halo/test_afh7_hybrid9_continuous_spectrum.py
+      - research/afh_default_density_natural_xenon_halo/tests/test_afh7_hybrid9_continuous_spectrum.py
       - research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv
       - research/afh_default_density_natural_xenon_halo/results/full_afh_v6_default_7_isotope_response/**
       - research/figure2_full_reproduction/eq6_kernel.py
@@ -23,7 +23,7 @@ on:
     paths:
       - .github/workflows/afh-natural-xenon-hybrid9.yml
       - research/afh_default_density_natural_xenon_halo/run_afh7_hybrid9_continuous_spectrum.py
-      - research/afh_default_density_natural_xenon_halo/test_afh7_hybrid9_continuous_spectrum.py
+      - research/afh_default_density_natural_xenon_halo/tests/test_afh7_hybrid9_continuous_spectrum.py
       - research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv
       - research/afh_default_density_natural_xenon_halo/results/full_afh_v6_default_7_isotope_response/**
       - research/figure2_full_reproduction/eq6_kernel.py
@@ -59,12 +59,12 @@ jobs:
       - name: Compile runner and tests
         run: |
           python -m py_compile research/afh_default_density_natural_xenon_halo/run_afh7_hybrid9_continuous_spectrum.py
-          python -m py_compile research/afh_default_density_natural_xenon_halo/test_afh7_hybrid9_continuous_spectrum.py
+          python -m py_compile research/afh_default_density_natural_xenon_halo/tests/test_afh7_hybrid9_continuous_spectrum.py
 
       - name: Run Helm, exact-q, kinematics and threshold-kernel tests
         run: |
           python -m unittest discover \
-            -s research/afh_default_density_natural_xenon_halo \
+            -s research/afh_default_density_natural_xenon_halo/tests \
             -p 'test_afh7_hybrid9_continuous_spectrum.py' -v
 
       - name: Generate AFH-7, Hybrid-9, A2 ceiling and Helm-9 spectra (manual cloud run only)

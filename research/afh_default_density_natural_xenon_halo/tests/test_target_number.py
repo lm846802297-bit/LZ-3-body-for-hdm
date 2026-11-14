@@ -6,7 +6,7 @@ import math
 import unittest
 from pathlib import Path
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(__file__).resolve().parents[1]
 REPO = HERE.parents[1]
 INPUT = HERE / "input" / "natural_xenon_isotope_weights.csv"
 ACTIVE_METADATA = HERE / "results" / "metadata.json"

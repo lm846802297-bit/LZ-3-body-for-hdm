@@ -179,8 +179,8 @@ wolframscript -file research/afh_default_density_xe131/validate_afh_mathematica_
 
 ## 8. 可复现文件
 
-- 计算程序：`research/afh_default_density_natural_xenon_halo/audit_high_energy_tail_model_sensitivity.py`
-- 单元/回归测试：`research/afh_default_density_natural_xenon_halo/test_high_energy_tail_model_sensitivity.py`
+- 计算程序：`research/afh_default_density_natural_xenon_halo/audit/audit_high_energy_tail_model_sensitivity.py`
+- 单元/回归测试：`research/afh_default_density_natural_xenon_halo/tests/test_high_energy_tail_model_sensitivity.py`
 - 输出 CSV：`research/afh_default_density_natural_xenon_halo/results/high_energy_tail_model_sensitivity_2026-11-14.csv`
 - 原生 Mathematica 验证：`research/afh_default_density_xe131/validate_afh_mathematica_vs_python.wls`
 - AFH-7/Hybrid-9 原始谱与 metadata：`research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/`

@@ -30,7 +30,10 @@ jobs:
           python-version: "3.12"
 
       - name: Install numerical dependency
-        run: python -m pip install --upgrade numpy
+        run: python -m pip install --upgrade numpy scipy sympy
+
+      - name: Run natural-xenon regression tests
+        run: python -m unittest discover -s research/afh_default_density_natural_xenon_halo/tests -p 'test_*.py' -v
 
       - name: Validate archived isotope contributions, rate sums and quadrature records
         run: python research/afh_default_density_natural_xenon_halo/validate_archived_results.py
