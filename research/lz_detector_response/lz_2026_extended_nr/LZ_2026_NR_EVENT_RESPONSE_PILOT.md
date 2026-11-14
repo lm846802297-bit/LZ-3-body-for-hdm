@@ -94,7 +94,9 @@ The local PowerShell runner writes:
 - lz_2026_nr_response_generic.csv: raw event records for baseline B;
 - lz_2026_nr_response_summary.json: full distribution summaries;
 - lz_2026_nr_response_summary.csv: compact baseline/energy comparison;
-- lz_2026_nr_response_run_metadata.json: run configuration and source pin.\n\nThe raw CSV also records the raw S2 threshold expressed in phd and its corrected-S2c equivalent at the reference depth. These are not interchangeable.
+- lz_2026_nr_response_run_metadata.json: run configuration and source pin.
+
+The raw CSV also records the raw S2 threshold expressed in phd and its corrected-S2c equivalent at the reference depth. These are not interchangeable.
 
 The output directory defaults to %LOCALAPPDATA%\LZ-3-body-for-hdm\nr_event_response, outside the Git working tree.
 
