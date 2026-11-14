@@ -31,3 +31,4 @@ The main report contains the complete Appendices A–G. The seven files below ar
 ## Supplementary documents (not part of the main report appendices)
 
 - `supplements/research_decision_register.md`: discussion summary, adopted conventions, and scope boundaries.
+- [LZ 2026 scientific figure pack index](../figure_packs/lz_2026_afh7_hybrid9/README.md): 13-figure atlas index, scientific caveats, manifest, and SHA-256 checksums. The PNG/PDF binaries are not included in this metadata-only PR commit.
