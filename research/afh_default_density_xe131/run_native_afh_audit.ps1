@@ -46,7 +46,7 @@ try {
         throw "AFH source SHA-256 mismatch. Expected $expectedSourceSha, got $sourceSha."
     }
 
-    $matrixPath = Join-Path $scriptDir "afh_default_xe131_density_matrix.csv"
+    $matrixPath = Join-Path (Join-Path $scriptDir "input") "afh_default_xe131_density_matrix.csv"
     $matrixSha = (Get-FileHash -LiteralPath $matrixPath -Algorithm SHA256).Hash.ToLowerInvariant()
     if ($matrixSha -ne $expectedMatrixSha) {
         throw "Archived 67-entry Xe-131 density-matrix SHA-256 mismatch. Expected $expectedMatrixSha, got $matrixSha."
