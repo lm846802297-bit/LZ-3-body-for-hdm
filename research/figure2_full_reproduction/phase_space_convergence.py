@@ -375,6 +375,75 @@ def run_prefactor_check(output_dir: Path):
     return rows
 
 
+def run_historical_800_anchor(output_dir: Path):
+    """Resolve the archived green 200-keV I6 value at the original 800-km/s inputs."""
+    mchi, ms, dm = 1000.0, 300e-6, 1e-3
+    mA = 131.0 * 0.93149410242
+    ER, speed = 200e-6, 800.0
+    archived_i6 = 1433678.0722867665
+
+    reference = integrate_i6(
+        mchi, ms, dm, mA, ER, speed,
+        nW=48, nz=40, nphi=24, mapping="threshold_u2",
+    )
+    legacy = eq6.reduced_kernel(
+        mchi, ms, dm, mA, ER, speed,
+        nw=16, nz=16, nphi=8, width_scheme="pole", g2=1.0,
+    )
+    configs = [
+        ("legacy_eq6_linear_W2", "linear_w2", 16, 16, 8, legacy),
+        ("independent_linear_W2", "linear_w2", 16, 16, 8, integrate_i6(
+            mchi, ms, dm, mA, ER, speed,
+            nW=16, nz=16, nphi=8, mapping="linear_w2",
+        )),
+        ("threshold_u2", "threshold_u2", 8, 8, 4, integrate_i6(
+            mchi, ms, dm, mA, ER, speed,
+            nW=8, nz=4, nphi=4, mapping="threshold_u2",
+        )),
+        ("threshold_u2", "threshold_u2", 16, 16, 8, integrate_i6(
+            mchi, ms, dm, mA, ER, speed,
+            nW=16, nz=16, nphi=8, mapping="threshold_u2",
+        )),
+        ("threshold_u2", "threshold_u2", 24, 24, 12, integrate_i6(
+            mchi, ms, dm, mA, ER, speed,
+            nW=24, nz=24, nphi=12, mapping="threshold_u2",
+        )),
+        ("threshold_u2_reference", "threshold_u2", 48, 40, 24, reference),
+    ]
+    rows = []
+    for label, mapping, nW, nz, nphi, value in configs:
+        rows.append({
+            "case": "green_ER200_v800",
+            "mchi_GeV": f"{mchi:.14g}",
+            "ms_keV": f"{ms*1e6:.14g}",
+            "Delta_m_MeV": f"{dm*1e3:.14g}",
+            "mA_GeV": f"{mA:.14g}",
+            "ER_keV": f"{ER*1e6:.14g}",
+            "speed_km_s": f"{speed:.14g}",
+            "implementation": label,
+            "mapping": mapping,
+            "nW": nW,
+            "nz": nz,
+            "nphi": nphi,
+            "I6_GeV2": f"{value:.14g}",
+            "archived_I6_GeV2": f"{archived_i6:.14g}",
+            "relative_to_archived": f"{value/archived_i6-1.0:.12e}",
+            "reference_I6_GeV2": f"{reference:.14g}",
+            "relative_to_high_order_reference": f"{value/reference-1.0:.12e}",
+        })
+    _write_csv(output_dir / "phase_space_historical_800_anchor.csv", rows)
+    print(
+        "historical 800-km/s anchor:",
+        json.dumps({
+            "archived_I6_GeV2": archived_i6,
+            "legacy_eq6_I6_GeV2": legacy,
+            "threshold_u2_reference_I6_GeV2": reference,
+            "legacy_relative_difference_to_reference": legacy/reference-1.0,
+        }),
+    )
+    return rows
+
+
 def run_scan(
     output_dir: Path, nref: int = 48,
     modes: Iterable[str] = ("mapping", "angular", "threshold", "prefactor"),
@@ -389,6 +458,8 @@ def run_scan(
             results[mode] = run_threshold_scan(output_dir)
         elif mode == "prefactor":
             results[mode] = run_prefactor_check(output_dir)
+        elif mode == "historical_800":
+            results[mode] = run_historical_800_anchor(output_dir)
         else:
             raise ValueError(f"unknown scan mode: {mode}")
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -397,6 +468,7 @@ def run_scan(
         "phase_space_angular_convergence.csv",
         "phase_space_threshold_convergence.csv",
         "phase_space_li_prefactor_crosscheck.csv",
+        "phase_space_historical_800_anchor.csv",
     ]
     output_records = {}
     for name in output_names:
@@ -423,7 +495,7 @@ def run_scan(
             "mV_GeV": 10.0, "coupling_product_squared": 1.0, "RA": 1.0,
             "comparison": "Eq. (6) normalized-phi result versus direct raw-dphi Lorentz-invariant dPhi3 measure",
         },
-        "scope": "four selected fixed-speed benchmark points plus five vmin-offset threshold checks; not a halo fold, full model scan, resonance-boundary scan, or detector likelihood",
+        "scope": "four selected fixed-speed 776-km/s benchmark points, five vmin-offset threshold checks, and one historical 800-km/s green benchmark anchor; not a halo fold, full model scan, resonance-boundary scan, or detector likelihood",
         "matrix_element_source": "eq6_kernel.py committed Dirac trace and spinor amplitude; unchanged by this audit",
         "audit_script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "outputs": output_records,
@@ -447,11 +519,11 @@ def main():
     )
     parser.add_argument("--reference-order", type=int, default=48)
     parser.add_argument(
-        "--mode", choices=("all", "mapping", "angular", "threshold", "prefactor"),
+        "--mode", choices=("all", "mapping", "angular", "threshold", "prefactor", "historical_800"),
         default="all",
     )
     args = parser.parse_args()
-    modes = ("mapping", "angular", "threshold", "prefactor") if args.mode == "all" else (args.mode,)
+    modes = ("mapping", "angular", "threshold", "prefactor", "historical_800") if args.mode == "all" else (args.mode,)
     results = run_scan(args.output_dir, args.reference_order, modes)
     print("completed:", ", ".join(results))
     for mode, rows in results.items():
