@@ -1,0 +1,31 @@
+name: LZ 2026 NEST NR mean-yield validation
+
+on:
+  push:
+    branches:
+      - research/figure2-p0-4-mainline
+    paths:
+      - research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_mean_yield.py
+      - research/lz_detector_response/lz_2026_extended_nr/lz_2026_nest_nr_mean_yield_parameters.json
+      - research/lz_detector_response/tests/test_lz_2026_nr_mean_yield.py
+      - .github/workflows/lz-2026-nest-nr-mean-yield.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  mean-yield-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run independent mean-yield tests
+        run: |
+          python -m unittest discover \
+            -s research/lz_detector_response/tests \
+            -p 'test_lz_2026_nr_mean_yield.py' -v
