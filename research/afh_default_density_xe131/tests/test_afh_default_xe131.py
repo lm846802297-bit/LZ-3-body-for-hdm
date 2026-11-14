@@ -8,7 +8,7 @@ import sys
 import tempfile
 import unittest
 
-HERE = Path(__file__).resolve().parent
+HERE = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("afh_runner", HERE / "run_afh_default_xe131.py")
 afh = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(afh)
@@ -17,7 +17,7 @@ spec.loader.exec_module(afh)
 class AFHDefaultXe131Tests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.rows = afh.read_density_matrix_csv(HERE / "afh_default_xe131_density_matrix.csv")
+        cls.rows = afh.read_density_matrix_csv(HERE / "input" / "afh_default_xe131_density_matrix.csv")
         cls.b_fm = math.sqrt(41.467 / (45*131**(-1/3) - 25*131**(-2/3)))
         cls.b = cls.b_fm * 5.0677
         cls.Tiso = abs(131/2 - 54)
@@ -66,7 +66,7 @@ class AFHDefaultXe131Tests(unittest.TestCase):
         self.assertAlmostEqual(physical_normalized, 131**2, places=10)
 
     def test_python_and_mma_share_physical_factor4_convention(self):
-        normalization_audit = (HERE / "AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md").read_text(encoding="utf-8")
+        normalization_audit = (HERE / "audit" / "AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md").read_text(encoding="utf-8")
         mma_runner = (HERE / "run_afh_default_xe131.wls").read_text(encoding="utf-8")
         mma_verifier = (HERE / "verify_afh_xe131_native.wls").read_text(encoding="utf-8")
         comparator = (HERE / "compare_afh_mathematica_python.py").read_text(encoding="utf-8")
