@@ -187,6 +187,18 @@ class PhaseSpaceConvergenceTests(unittest.TestCase):
             self.assertTrue(math.isfinite(value), (scheme, g2, value))
             self.assertGreater(value, 0.0, (scheme, g2, value))
 
+        narrow_width = psc.integrate_i6(
+            mchi, ms, dm, mA, ER, speed,
+            nW=64, nz=4, nphi=4, mapping="sine2",
+            width_scheme="pole", g2=0.1,
+        )
+        broad_width = psc.integrate_i6(
+            mchi, ms, dm, mA, ER, speed,
+            nW=64, nz=4, nphi=4, mapping="sine2",
+            width_scheme="pole", g2=1.0,
+        )
+        self.assertGreater(narrow_width / broad_width, 10.0)
+
     def test_threshold_stable_point_preserves_mass_shells(self):
         wmin2, wmax2 = eq6.limits(
             self.mchi, self.ms, self.mA, self.ER, self.speed
