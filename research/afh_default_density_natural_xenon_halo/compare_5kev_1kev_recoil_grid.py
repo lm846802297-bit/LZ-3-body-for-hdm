@@ -14,6 +14,10 @@ import json
 import math
 from pathlib import Path
 from typing import Any
+import sys
+
+FIG_DIR = HERE.parents[1] / "figure2_full_reproduction"
+sys.path.insert(0, str(FIG_DIR))
 
 from fold_lz_2026_rate_level import (
     candidate_tail_bounds,
