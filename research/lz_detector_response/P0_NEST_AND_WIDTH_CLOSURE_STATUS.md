@@ -57,17 +57,18 @@ The LZ paper cites NEST v2.4.5 (2026). The public GitHub release page currently 
 
 Inspection of that prerelease source shows that its `GetYieldNR` implementation does not yet contain the 15-parameter high-energy p(E) extension. Therefore the v2.4.5beta tag is not sufficient for reproducing the LZ 2026 Table S5 model.
 
-The current NEST master source inspected for this audit is pinned to:
+The NEST source history identifies the exact commit that introduced the high-energy NR charge-yield suppression:
 
 - repository: https://github.com/NESTCollaboration/nest
-- commit: `30811ea2f8a6de1262eef35278745226dc5d582a`
-- commit date: 2026-11-13 17:34:55 UTC
+- commit: `423b9745a5bfbb0402514f1d7955e67445de0810`
+- commit date: 2026-08-16 16:33:43 UTC
+- commit message: Add energy-dependent NR charge-yield suppression (#210)
 - source file: `src/NEST.cpp`
-- source blob: `976bb6f2a96704d867d86f83fe8f86de42848012`
+- source blob: `7e19ee148879ae80a982f91652b90c1fc9e10256`
 
-This implementation contains the 15-parameter branch in `GetYieldNR`, reading a, b, and E0 from vector entries 12, 13, and 14 when the vector length is at least 15.
+This commit predates the LZ paper submission and contains the 15-parameter branch in `GetYieldNR`, reading a, b, and E0 from vector entries 12, 13, and 14 when the vector length is at least 15. This is a more precise source pin than the later master HEAD.
 
-**Reproducibility rule:** pin the inspected commit and record its SHA. Do not silently substitute the older v2.4.5beta tag. If the HEPData package or an official final v2.4.5 release supplies a more precise release commit, compare it and update the pin only after a source-level equivalence check.
+**Reproducibility rule:** pin this source commit and record its SHA. Do not silently substitute the older v2.4.5beta tag. It is a commit pin, not a claim that the commit is an official tagged v2.4.5 release. If the HEPData package or an official final v2.4.5 release supplies a more precise release commit, compare it and update the pin only after a source-level equivalence check.
 
 ## 3. What Table S5 does not provide
 
@@ -200,3 +201,9 @@ CI run:
 **Validation boundary:** the current tests are unit tests of the independent Python port. They are not yet a cross-language comparison against a compiled NEST executable, and they do not validate the LZ 2026 detector configuration. No final mean-yield curve or S1/S2 PDF is claimed yet.
 
 The field, density, isotope mass scaling convention, and OldW13eV flag must be confirmed against the LZ 2026 HEPData release or collaboration documentation before producing the production response grid.
+
+
+### Source-history refinement
+
+The first audit pinned the then-current NEST master HEAD. A subsequent history check found the exact earlier commit introducing the LZ high-energy NR suppression:
+`423b9745a5bfbb0402514f1d7955e67445de0810` (2026-08-16, commit message “Add energy-dependent NR charge-yield suppression”). The JSON parameter archive has been updated to this commit and its exact source blob. This avoids pinning unrelated later changes while retaining the p(E) code used by the LZ 2026 mean-yield model.
