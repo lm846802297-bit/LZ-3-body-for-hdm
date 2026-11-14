@@ -101,7 +101,14 @@ jobs:
                               failures.append(f"{name}:{row_index}:{key}: {a[key]} != {b[key]}")
                               break
                       else:
-                          if not math.isclose(av, bv, rel_tol=5e-8, abs_tol=1e-12):
+                          if key == "relative_to_archived":
+                              # This is a derived residual near zero. Its absolute
+                              # uncertainty inherits the 5e-8 relative tolerance
+                              # of I6, so a relative comparison is ill-conditioned.
+                              matches = math.isclose(av, bv, rel_tol=0.0, abs_tol=5e-8)
+                          else:
+                              matches = math.isclose(av, bv, rel_tol=5e-8, abs_tol=1e-12)
+                          if not matches:
                               failures.append(f"{name}:{row_index}:{key}: {av} != {bv}")
                               break
           if failures:
