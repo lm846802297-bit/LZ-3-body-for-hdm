@@ -913,11 +913,13 @@ R_A^{\rm phys}(0)=A^2.
 \[
 R_A^{\rm phys}(E_R)
 =
-\frac{16\pi}{2J_A+1}
+\frac{16\pi C_0}{2J_A+1}
 W_{M,\mathrm{AFH}}^{00}(y).
 \]
 
-> **公式追溯：** \(b_A\)、\(y\) 和 AFH 密度矩阵有限和见[附录 B，§B.2–B.4](appendices/09B_afh_v6_density_matrix_response.md)；raw-to-physical response 映射及因子 4 见[附录 C](appendices/09C_afh_isoscalar_factor4_normalization.md)；空间动量约定见[附录 G](appendices/09G_recoil_momentum_convention_audit.md)。对应程序和 2401 点输出见[索引 F6](formula_symbol_code_cross_reference.md)。
+其中 \(C_0=A^2/[4R_{\rm AFH,raw}(0)]\) 是有限小数密度矩阵的 \(q=0\) 形状归一化；精确未舍入密度矩阵极限下 \(C_0=1\)。对本 Xe-131 表，\(C_0=1.0000825298069378\)。它不改变 AFH 的 \(q\) 依赖，也不是额外的物理耦合因子。
+
+> **公式追溯：** \(b_A\)、\(y\) 和 AFH 密度矩阵有限和见[附录 B，§B.2–B.4](appendices/09B_afh_v6_density_matrix_response.md)；raw-to-physical response 映射、因子 4 与 \(C_0\) 见[附录 C](appendices/09C_afh_isoscalar_factor4_normalization.md)；空间动量约定见[附录 G](appendices/09G_recoil_momentum_convention_audit.md)。对应程序和 2401 点输出见[索引 F6](formula_symbol_code_cross_reference.md)。
 
 **因子 4 只能计入一次。** 不能既在 \(R_A\) 中乘 4，又在粒子—核子耦合处再乘一次；也不能把 AFH 原始 \(A^2/4\) 归一化响应直接当成物理 \(A^2\) 响应使用。
 
@@ -995,7 +997,7 @@ W_{M,\rm AFH}^{00}(y)
 与正文采用的物理等质子、等中子耦合归一化相对应，
 \[
 R_A^{\rm phys}(Q)
-=\frac{16\pi}{2J_A+1}W_{M,\rm AFH}^{00}(y),
+=\frac{16\pi C_0}{2J_A+1}W_{M,\rm AFH}^{00}(y),
 \qquad y=\left(\frac{Qb_A}{2}\right)^2.
 \]
 其中 \(\mathcal A_J\) 是给定多极 \(J\) 下对密度矩阵条目、角矩阵元和径向矩阵元的相干求和。当前 Xe-131 计算保留 \(J=0,2\)。因此：
@@ -3304,7 +3306,7 @@ R_A^{\rm phys}(0)=A^2.
 由上一节 AFH 原始响应的 \(A^2/4\) 归一化，得到
 
 \[
-R_A^{\rm phys}(q)=4R_{\rm AFH,raw}(q).
+R_A^{\rm phys}(q)=4C_0R_{\rm AFH,raw}(q).
 \]
 
 因此
@@ -3313,7 +3315,7 @@ R_A^{\rm phys}(q)=4R_{\rm AFH,raw}(q).
 \boxed{
 R_A^{\rm phys}(q)
 =
-\frac{16\pi}{2J_A+1}
+\frac{16\pi C_0}{2J_A+1}
 W_{M,\rm AFH}^{00}(y)
 }
 \]
@@ -3331,7 +3333,7 @@ R_A^{\rm phys}(0)=A^2.
 | 对象 | 定义 | 零动量归一化 |
 |---|---|---:|
 | AFH 原始 isoscalar response | \(R_{\rm AFH,raw}=4\pi W_M^{00}/(2J_A+1)\) | \(A^2/4\) |
-| 物理等 \(p,n\) 相干响应 | \(R_A^{\rm phys}=4R_{\rm AFH,raw}\) | \(A^2\) |
+| 物理等 \(p,n\) 相干响应 | \(R_A^{\rm phys}=4C_0R_{\rm AFH,raw}\) | \(A^2\) |
 | 论文 Eq. (6) 中的核响应 | 前因子保留 \(g_{VN}^2\)，使用 \(R_A^{\rm phys}\) | \(A^2\) |
 
 等价的另一种记账方式是保留原始 AFH response，但把 \(c_{\rm set}=2g_{VN}\) 的平方显式放在粒子—核子耦合收缩中。两种方式只能选一种，不能既把响应乘 4，又把耦合平方再乘 4。
@@ -3384,7 +3386,7 @@ A^2
 }.
 \]
 
-等价地，它是在 \(16\pi W_M^{00}/(2J_A+1)\) 上乘一个 \(q\) 无关的微小修正因子。这个修正不改变 \(q\) 依赖，也不移动响应极小值；它不是对 \(b_A\)、密度矩阵或谷值的拟合。
+等价地，有限精度表的响应为 \(4C_0R_{\rm AFH,raw}\)，即在 \(16\pi W_M^{00}/(2J_A+1)\) 上乘以 \(C_0\) 这一 \(q\) 无关的微小修正因子。这个修正不改变 \(q\) 依赖，也不移动响应极小值；它不是对 \(b_A\)、密度矩阵或谷值的拟合。
 
 ### C.6 独立文献和源代码核查
 
@@ -3413,7 +3415,7 @@ https://www.escholarship.org/content/qt3ns8f1r8/qt3ns8f1r8.pdf
 - research/afh_default_density_xe131/AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md
 - research/figure2_full_reproduction/ANAND_WM_RESPONSE_AUDIT.md
 
-最终论文 Eq. (6) 的选择是：前因子保留物理单核子耦合 \(g_{VN}\)，核响应使用 \(16\pi W_{M,\rm AFH}^{00}/(2J_A+1)\)，因子 4 只出现一次。
+最终论文 Eq. (6) 的选择是：前因子保留物理单核子耦合 \(g_{VN}\)，有限精度 Xe-131 表使用 \(16\pi C_0W_{M,\rm AFH}^{00}/(2J_A+1)\)；因子 4 只出现一次，\(C_0\) 单独修正密度矩阵打印精度。
 
 ---
 
