@@ -124,7 +124,11 @@ def chi2_width_dirac_scalar_at_mass(parent_mass, mchi, ms, g2):
     # Factorize the Kallen function around the two-body threshold.
     # The expanded quartic expression subtracts O(mchi^4) terms to obtain
     # O(mchi^2 * (M-mchi-ms)) near threshold and loses many digits.
-    excess = M - mchi - ms
+    threshold = mchi + ms
+    if M <= threshold:
+        return 0.0
+    # Compensated subtraction preserves the small excess above a heavy threshold.
+    excess = math.fsum((M, -mchi, -ms))
     if excess <= 0.0:
         return 0.0
     lam = (
