@@ -22,7 +22,7 @@
 | \(q^\mu,t,Q\) 运动学关系 | **已验证** | 核质量壳解析推导；`rate_kinematics.py` 与 `joint_xe131.py` 使用 exact spatial \(Q\) | fixed-speed Xe-131 与 natural-xenon 使用不同且已记录的核质量输入方案 |
 | \(W_{\min},W_{\max}\) 与三体相空间开放条件 | **已验证** | 主报告 §2.4、附录 A.2；`eq6_kernel.limits` 与 `rate_kinematics.wmax_squared` 一致 | 不是对任意 UV 模型和任意传播子方案的验证 |
 | \(W^2,z,\phi_*\) 相空间 Jacobian 与 \(256\pi^3\) | **已验证（解析层）** | 正文 §2.5.1–2.5.8、附录 A.4.1–A.4.2；独立分解 \(d\Phi_3\)、flux、azimuthal average；\([I_6]={\rm GeV}^2\) 维度检查 | 解析结论限定于未极化相干靶和 leading \(J_A^0\) 近似；数值收敛另列如下 |
-| \(I_6\) 数值求积收敛（P1-PhaseSpace） | **部分验证（四个固定速度点和阈值邻域）** | 线性 \(W^2\)、线性 \(W\)、threshold-\(u^2\) 对照；四组 benchmark、五个 \(v_{\min}\) 邻域点；角积分阶数扫描；raw-\(d\Phi_3\) 与 Eq. (6) 截面比为 1；六项回归测试和 CI run [43491572746](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43491572746) 通过 | 未覆盖近传播子极点窄峰、不同宽度处方系统比较、完整连续反冲网格、halo fold 或 detector likelihood |
+| \(I_6\) 数值求积收敛（P1-PhaseSpace） | **部分验证（四个固定速度点和阈值邻域）** | 线性 \(W^2\)、线性 \(W\)、threshold-\(u^2\) 对照；四组 benchmark、五个 \(v_{\min}\) 邻域点；角积分阶数扫描；raw-\(d\Phi_3\) 与 Eq. (6) 截面比为 1；九项相空间回归测试、13 项 Eq. (6) kernel 测试及历史 CSV 比较均通过；最新完整记录为 CI run [43581233498](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43581233498) | 未覆盖近传播子极点窄峰、不同宽度处方系统比较、完整连续反冲网格、halo fold 或 detector likelihood |
 | 三体 \(v_{\min}\) 闭式公式 | **已验证** | 从 \(W_{\max}=m_{\chi_1}+m_s\) 独立推导；64 组输入与独立求根最大 \(|\Delta\beta|=3.89\times10^{-13}\) | 仍需对新增质量区间和完整连续谱网格做专门数值检查 |
 | 450 keV pointwise \(L_{00}\) benchmark | **已验证（单点数值范围）** | \(48\times40\times24\) 求积、run manifest、局部验证记录、SHA-256 manifest | 单点 kernel 结果，不代表整条 \(d\sigma/dE_R\)、halo-fold 或 LZ 事件数 |
 | 固定速度 Xe-131 \(d\sigma/dE_R\) 曲线 | **部分验证** | 105 个内部能量点、GCN/JJ55、metadata 与 SHA-256 校验 | 与 450 keV pointwise \(L_{00}\) 不同；端点外推/积分和 halo-fold 不包含在该曲线内 |
@@ -76,3 +76,10 @@
 - **P2 关闭条件：** 每个科学结论都有状态、证据、输入缺口和适用范围；任何 selected-point、fixed-speed 或 rate-level 结果都不被表述为更高层的完整验证。
 
 当前 P0 总索引已建立，P1 已修正公式和 provenance 不一致；Xe-131 原生 Mathematica/Python 2401 点响应验证已完成。P1-PhaseSpace 的代表点和阈值邻域数值收敛及 raw-\(d\Phi_3\) 前因子对照也已通过本地六项测试和 CI 复算。剩余开放项集中在模型定义、近传播子极点积分、完整连续反冲网格、Xe-124/Xe-126 AFH 输入、完整 AFH 连续谱，以及完整 LZ detector likelihood。
+
+
+## 9. 2026-11-14 comparator correction and final CI confirmation
+
+The first archive comparison failed only for the derived residual `relative_to_archived = I_6/I_6^{\\rm archive}-1`. Since this residual is close to zero, applying a relative tolerance to it was ill-conditioned: small upstream differences in `I_6` were magnified in the residual comparison even though the physical integral column satisfied its original tolerance. PR #34 changed only this comparator branch to `rel_tol=0, abs_tol=5e-8`; all other numerical columns retain `rel_tol=5e-8, abs_tol=1e-12`. No physical calculation, historical input, or archived output was changed.
+
+The corrected workflow passed in [run 43581233498](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43581233498): 13/13 Eq. (6) kernel tests, 9/9 phase-space tests, benchmark/threshold/historical-800/off-shell near-pole scans, artifact preservation, and row-by-row comparison with all committed phase-space CSV archives. This validates the tested scan configurations; it does not establish a full continuous-recoil grid or systematic convergence across all near-pole width prescriptions.
