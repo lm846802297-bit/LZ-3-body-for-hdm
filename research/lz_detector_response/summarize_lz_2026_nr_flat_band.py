@@ -42,7 +42,7 @@ def summarize(path):
 if __name__=="__main__":
     result={"study":"LZ 2026 flat-energy NR band pilot",
       "energy_spectrum":"Uniform in true recoil energy from 5.4 to 269.9 keV",
-      "position":"Fixed x=y=0 and central reference drift time 525 us; no fiducial spatial averaging",
+      "position":"Fixed approximate candidate position r=45.9 cm, z=26.4 cm above cathode from LZ Fig. 3; no fiducial spatial averaging",
       "definition":"For each S1c bin, report 10th, 50th, and 90th percentiles of log10(S2c), following the flat-in-energy band construction described for LZ Fig. 2.",
       "observed_candidate":{"S1c_phd":OBS_S1,"S2c_phd":OBS_S2,"log10_S2c":math.log10(OBS_S2)},
       "samples":[summarize(Path(p)) for p in sys.argv[1:]]}
