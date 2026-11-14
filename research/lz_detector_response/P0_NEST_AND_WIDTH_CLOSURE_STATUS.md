@@ -340,3 +340,32 @@ The same pinned NEST source's `LZ_WS2024.hh` detector class was audited. Recompu
 The gain/threshold consistency is strong evidence that the WS2024 class is a useful detector-response candidate. It is still not proof of the exact 2026 setup: the header recommends NEST v2.4.0 while the paper says v2.4.5; its old 12-entry mean-yield vector must be overridden by Table S5; and its 13-element width vector does not contain the 2026 double-skewed-Gaussian ER fluctuation model from Table S4. Thus it is suitable as a **candidate NR-only event-level baseline**, not as a complete ER+NR or likelihood reproduction.
 
 Detailed source calculation and caveats are in `lz_2026_extended_nr/LZ_WS2024_DETECTOR_CROSSCHECK.md`; machine-readable values are in `lz_2026_extended_nr/lz_2026_nr_fluctuation_baselines.json`.
+
+
+## 16. Direct NEST event-level NR response pilot prepared (2026-11-15)
+
+A direct C++ event-response driver and local Windows build/run path are now committed. The driver follows the pinned NEST call chain:
+- **FullCalculation(NR, ...)** with the 15-entry 2026 Table S5 mean-yield vector and one of the two NR width baselines;
+- **GetS1(..., S1CalculationMode::Full, ...)**;
+- **GetS2(..., S2CalculationMode::Full, ...)**.
+
+The driver records the signed corrected-phd observables **GetS1()[5]** (S1c) and **GetS2()[7]** (S2c), preserving NEST's negative-sign flags for S1 coincidence failure and S2 threshold failure. It does not approximate the observables as g1*Nph and g2*Ne.
+
+Two baselines are prepared:
+1. **ws2024**: LZ WS2024 calibration-tuned NRERWidthsParam vector;
+2. **generic**: generic NEST default NRERWidthsParam vector.
+
+Both use the same 2026 Table S5 mean-yield vector, LZ WS2024 detector class, reference-depth event position, nine recoil energies (5.4–269.9 keV including 248 keV), 2,000 events per energy by default, and matched base seed policy. S1 uses the detailed PMT-level Full mode; S2 uses NEST's integrated Full pulse-area mode, not the waveform mode.
+
+New files:
+- research/lz_detector_response/cpp/lz_2026_nr_event_response.cpp
+- research/lz_detector_response/CMakeLists.txt
+- research/lz_detector_response/run_lz_2026_nr_event_response.ps1
+- research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_yield_params_s5.txt
+- research/lz_detector_response/lz_2026_extended_nr/summarize_nr_event_response.py
+- research/lz_detector_response/lz_2026_extended_nr/LZ_2026_NR_EVENT_RESPONSE_PILOT.md
+- research/lz_detector_response/tests/test_lz_2026_nr_event_response_config.py
+
+**Execution status:** code and local runner are prepared, but no event-level simulation has yet been executed. The Windows self-hosted runner was not confirmed registered/online, and the user previously requested not to rely on GitHub-hosted Actions quota. The run is therefore intentionally left for the user's local Windows workstation; no CI success or numerical reproduction is claimed. Raw CSV and summaries are written outside the Git working tree under %LOCALAPPDATA%\LZ-3-body-for-hdm\nr_event_response by default.
+
+Interpretation limits: this is an NR response pilot at one central reference position, with no spatial distribution, position smearing, S2 waveform/diffusion treatment, full analysis cuts, backgrounds, nuisance covariance, or 2D signal likelihood. The WS2024 detector class remains a candidate, not a confirmed exact 2026 response configuration.
