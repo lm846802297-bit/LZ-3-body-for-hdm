@@ -42,8 +42,11 @@ benchmarks = {
 selectedBenchmarks = If[benchmarkArg === "all", benchmarks,
   Select[benchmarks, First[#] === benchmarkArg &]];
 If[selectedBenchmarks === {}, Print["Unknown benchmark: ", benchmarkArg]; Exit[2]];
-erGrid = If[StringLength[erListString] > 0,
+erGridBase = If[StringLength[erListString] > 0,
   ToExpression /@ StringSplit[erListString, ","], N[Range[erStart, erStop, erStep]]];
+(* Match the Python runner: retain the full requested grid and insert its four
+   nonuniform Figure-2/high-order anchor energies explicitly. *)
+erGrid = Sort[DeleteDuplicates[Join[erGridBase, N[{101., 200., 267., 542.}]]]];
 
 (* AFH response table: columns 1, 4, 7 are q, raw package response, physical response. *)
 rawCSV = Import[responsePath, "CSV"];
