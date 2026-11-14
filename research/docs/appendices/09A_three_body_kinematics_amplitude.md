@@ -128,6 +128,87 @@ W_{\max}^2\ge W_{\min}^2.
 
 唯一确定。数值构造还检查 \(|\cos\theta_q|\le1\)，以排除不物理点。
 
+
+### A.2.1 固定入射速度下的最大标量质量与最优反冲能量
+
+前面的相空间开放条件给出
+\[
+m_s\le W_{\max}(E_R)-m_{\chi_1}.
+\]
+若固定入射速度，寻找该速度下允许的最大 \(m_s\)，等价于对 \(W_{\max}^2(E_R)\) 关于 \(E_R\) 最大化。这里
+\[
+Q(E_R)=\sqrt{2m_AE_R+E_R^2},
+\qquad
+W_{\max}^2=m_{\chi_1}^2+2p_{\chi_1}Q-2(E_\chi+m_A)E_R.
+\]
+因为 \(W_{\max}>0\)，最大化 \(W_{\max}\) 与最大化 \(W_{\max}^2\) 等价。求导得
+\[
+\frac{dW_{\max}^2}{dE_R}
+=2p_{\chi_1}\frac{m_A+E_R}{Q}
+-2(E_\chi+m_A).
+\]
+令导数为零，并定义
+\[
+B=E_\chi+m_A,\qquad x=m_A+E_R,
+\]
+则
+\[
+p_{\chi_1}x=BQ,\qquad Q^2=x^2-m_A^2.
+\]
+平方后
+\[
+p_{\chi_1}^2x^2=B^2(x^2-m_A^2),
+\]
+所以
+\[
+(B^2-p_{\chi_1}^2)x^2=B^2m_A^2.
+\]
+靶核静止系中
+\[
+B^2-p_{\chi_1}^2
+=(E_\chi+m_A)^2-p_{\chi_1}^2
+=m_{\chi_1}^2+m_A^2+2m_AE_\chi
+=s_{\rm tot}.
+\]
+取物理正根，
+\[
+x=\frac{Bm_A}{\sqrt{s_{\rm tot}}},
+\]
+从而
+\[
+\boxed{
+E_R^*=m_A\left(\frac{E_\chi+m_A}{\sqrt{s_{\rm tot}}}-1\right),
+\qquad
+Q^*=\frac{m_Ap_{\chi_1}}{\sqrt{s_{\rm tot}}}.
+}
+\]
+将其代回 \(W_{\max}^2\)，得到
+\[
+W_{\max}^2(E_R^*)=(\sqrt{s_{\rm tot}}-m_A)^2.
+\]
+因此
+\[
+\boxed{
+m_{s,\max}(v)
+=\sqrt{s_{\rm tot}}-m_A-m_{\chi_1},
+\quad
+s_{\rm tot}=m_{\chi_1}^2+m_A^2+2m_AE_\chi.
+}
+\]
+在 \(\beta\ll1\) 时，令
+\[
+\mu_A=\frac{m_{\chi_1}m_A}{m_{\chi_1}+m_A},
+\]
+可展开为
+\[
+m_{s,\max}\simeq\frac12\mu_A\beta^2,
+\qquad
+E_R^*\simeq
+\frac{m_A}{2}
+\left(\frac{m_{\chi_1}}{m_{\chi_1}+m_A}\right)^2\beta^2.
+\]
+这两个近似式展示了暗物质入射动能如何在核反冲与末态标量质量门槛之间分配。\(E_R^*\) 只最大化运动学质量上限；真实谱还乘有核响应、传播子和三体矩阵元，故该点一般不是事件率峰值。
+
 ## A.3 在 \(K\) 静止系构造三体末态
 
 给定 \(W^2\) 后，子过程
@@ -530,6 +611,286 @@ I_6
 
 这个推导采用的条件是：靶核矢量电荷流保留 leading non-relativistic 时间分量 \(2m_A\)，核结构和核自旋平均已经包含在物理响应 \(R_A\) 中，且 \(\phi_*\) 使用平均而非未归一化积分。若改变这些定义，不能继续原样沿用 \(256\pi^3\) 前因子。
 
+### A.4.2 独立审计：从单粒子不变测度逐项重建 \(256\pi^3\)
+
+本节不把 A.4.1 的中间结果作为输入，而从单粒子 Lorentz-invariant 测度重新计算两体相空间、两个角变量的处理方式、通量因子及核电荷流归一化。所有 \(2\pi\) 因子均显式保留。
+
+#### (i) 从单粒子测度得到两体相空间
+
+采用
+\[
+d\Pi_i=\frac{d^3\mathbf p_i}{(2\pi)^3\,2E_i},
+\qquad
+d\Phi_2(Q;a,b)
+=(2\pi)^4\delta^{(4)}(Q-p_a-p_b)d\Pi_a d\Pi_b .
+\]
+在 \(Q\) 静止系，令 \(M=\sqrt{Q^2}\)。积分掉三维动量 delta 函数后，
+\[
+d\Phi_2
+=\frac{p^2dp\,d\Omega}{16\pi^2 E_aE_b}
+\delta(M-E_a-E_b).
+\]
+又有
+\[
+\frac{d(E_a+E_b)}{dp}
+=p\left(\frac1{E_a}+\frac1{E_b}\right)
+=\frac{pM}{E_aE_b}.
+\]
+完成径向动量积分得到
+\[
+\boxed{
+d\Phi_2(Q;a,b)
+=\frac{p_*}{16\pi^2M}d\Omega
+=\frac{\sqrt{\lambda_K(M^2,m_a^2,m_b^2)}}{32\pi^2M^2}d\Omega .
+}
+\]
+因此全立体角积分为
+\[
+\int d\Phi_2
+=\frac{\sqrt{\lambda_K(M^2,m_a^2,m_b^2)}}{8\pi M^2},
+\]
+与标准两体不变相空间归一化一致。
+
+#### (ii) 第一段两体过程：显式计算 \(t\) 的 Jacobian
+
+令
+\[
+s_{\rm tot}=(p+P)^2,\qquad
+\Lambda_{\rm in}
+=\sqrt{\lambda_K(s_{\rm tot},m_{\chi_1}^2,m_A^2)}.
+\]
+在初态质心系中，
+\[
+p_i^*=\frac{\Lambda_{\rm in}}{2\sqrt{s_{\rm tot}}},
+\qquad
+p_f^*=\frac{\sqrt{\lambda_K(s_{\rm tot},m_A^2,W^2)}}{2\sqrt{s_{\rm tot}}}.
+\]
+对 \(p+P\to P'+K\)，两体相空间为
+\[
+d\Phi_2
+=\frac{p_f^*}{16\pi^2\sqrt{s_{\rm tot}}}
+\,d\cos\theta\,d\phi_q.
+\]
+这里 \(\theta\) 是初态轴与末态核动量之间的质心系散射角。由
+\[
+t=(P'-P)^2,\qquad
+\left|\frac{dt}{d\cos\theta}\right|=2p_i^*p_f^*
+\]
+可得
+\[
+\frac{d\Phi_2}{dt\,d\phi_q}
+=\frac{1}{32\pi^2\sqrt{s_{\rm tot}}p_i^*}
+=\frac{1}{16\pi^2\Lambda_{\rm in}}.
+\]
+对 \(\phi_q\) 积分给出
+\[
+\boxed{
+\frac{d\Phi_2}{dt}
+=\frac{1}{8\pi\Lambda_{\rm in}}.
+}
+\]
+这一步已经消耗了第一段两体过程的 \(2\pi\) 方位角因子。它只在未极化靶核、相干且仅保留 \(J_A^0\) 的旋转对称近似下成立；若保留靶极化或横向核流，必须保留 \(\phi_q\)，不能直接使用这一已积分表达式。
+
+核质量壳条件 \(P'^2=P^2=m_A^2\) 给出
+\[
+t=q^2=-2m_AE_R,\qquad
+\left|\frac{dt}{dE_R}\right|=2m_A.
+\]
+靶核静止系还满足
+\[
+\Lambda_{\rm in}=2m_Ap_{\chi_1}.
+\]
+所以
+\[
+\boxed{
+\frac{d\Phi_2(p+P;P',K)}{dE_R}
+=\frac{2m_A}{8\pi\Lambda_{\rm in}}
+=\frac{1}{8\pi p_{\chi_1}}.
+}
+\]
+
+#### (iii) 第二段两体过程：\((z,\phi_*)\) 的 Jacobian
+
+在 \(K\) 静止系，令 \(W=\sqrt{W^2}\)，则
+\[
+|\mathbf k_*|
+=\frac{\sqrt{\lambda_K(W^2,m_{\chi_1}^2,m_s^2)}}{2W}.
+\]
+取
+\[
+z=\cos\theta_*,\qquad d\Omega_*=dz\,d\phi_*,
+\]
+并定义
+\[
+\lambda_{\rm dim}(W^2,m_{\chi_1}^2,m_s^2)
+=\frac{\lambda_K(W^2,m_{\chi_1}^2,m_s^2)}{W^4}.
+\]
+正文 main.tex 与 Python 的 lambda_dimensionless 使用的函数正是
+\[
+\lambda_{\rm paper}(W^2,m_{\chi_1}^2,m_s^2)
+=
+\left[1-\frac{(m_{\chi_1}+m_s)^2}{W^2}\right]
+\left[1-\frac{(m_{\chi_1}-m_s)^2}{W^2}\right]
+=\lambda_{\rm dim}.
+\]
+因此正文的 \(\sqrt{\lambda}\)、附录中的 \(\sqrt{\lambda_{\rm dim}}\) 与程序的 \texttt{lambda_dimensionless} 是同一个无量纲量；这里没有遗漏 \(W^{-2}\) 或额外的 \(W^2\) 因子。
+由 (i) 得
+\[
+\boxed{
+d\Phi_2(K;p',k)
+=\frac{\sqrt{\lambda_{\rm dim}}}{32\pi^2}
+\,dz\,d\phi_*.
+}
+\]
+这里没有额外的 \(\sin\theta_*\)：它已通过 \(z=\cos\theta_*\) 的变量变换吸收，因为 \(d\cos\theta_*=-\sin\theta_*d\theta_*\)。
+
+#### (iv) 合并三体相空间：保留未积分的 \(\phi_*\)
+
+插入中间态不变质量的标准分解
+\[
+d\Phi_3
+=\frac{dW^2}{2\pi}
+d\Phi_2(p+P;P',K)d\Phi_2(K;p',k).
+\]
+这里的积分变量就是 \(W^2\)，所以分解式不产生额外的 \(2W\)；只有将积分变量另行改成 \(W\) 时，才需要使用 \(dW^2=2W\,dW\)。末态 \(p'\) 与 \(k\) 是不同粒子，因此没有相同末态的 \(1/2!\) 对称因子。
+结合 (ii)、(iii)，得到
+\[
+\boxed{
+\frac{d\Phi_3}
+{dE_R\,dW^2\,dz\,d\phi_*}
+=
+\frac{1}{2\pi}
+\frac{1}{8\pi p_{\chi_1}}
+\frac{\sqrt{\lambda_{\rm dim}}}{32\pi^2}
+=
+\frac{\sqrt{\lambda_{\rm dim}}}
+{512\pi^4p_{\chi_1}}.
+}
+\]
+至此，所有未积分的相空间因子已经确定；尚未对 \(\phi_*\) 作任何平均。
+
+#### (v) 将 \(\phi_*\) 积分改写为平均
+
+论文定义
+\[
+\left\langle\mathcal L_{00}\right\rangle_{\phi_*}
+=\frac{1}{2\pi}\int_0^{2\pi}d\phi_*\,
+\mathcal L_{00}.
+\]
+故
+\[
+\int_0^{2\pi}d\phi_*\,\mathcal L_{00}
+=2\pi\left\langle\mathcal L_{00}\right\rangle_{\phi_*}.
+\]
+将其乘到 (iv) 的相空间测度上：
+\[
+\boxed{
+\frac{\sqrt{\lambda_{\rm dim}}}{512\pi^4p_{\chi_1}}
+\int_0^{2\pi}d\phi_*\,\mathcal L_{00}
+=
+\frac{\sqrt{\lambda_{\rm dim}}}{256\pi^3p_{\chi_1}}
+\left\langle\mathcal L_{00}\right\rangle_{\phi_*}.
+}
+\]
+因此，从 \(512\pi^4\) 到 \(256\pi^3\) 的唯一变化，是把未归一化的方位角积分替换成 \(1/(2\pi)\) 平均；不能再额外乘 \(2\pi\)。
+
+#### (vi) 通量因子与核电荷流
+
+不变通量为
+\[
+F=4\sqrt{(p\cdot P)^2-m_{\chi_1}^2m_A^2}
+=4m_Ap_{\chi_1}.
+\]
+所以
+\[
+d\sigma=\frac{|\mathcal M|^2}{4m_Ap_{\chi_1}}d\Phi_3.
+\]
+在本文的 leading non-relativistic 核电荷近似下，
+\[
+J_A^0\simeq 2m_A,
+\]
+而 \(\mathcal L_{00}\) 已按
+\[
+\mathcal L_{00}
+=\frac12\sum_{s_i,s_f}
+|\bar u(p')\Gamma^0u(p)|^2
+\]
+对初态暗物质自旋平均、对末态自旋求和。核初态自旋平均及求和包含在 \(R_A\) 中。因此振幅平方写为
+\[
+|\mathcal M|^2
+=
+\frac{4m_A^2(g_1g_2g_{VN})^2R_A(E_R)}
+{(m_V^2-t)^2}\mathcal L_{00},
+\qquad
+m_V^2-t=m_V^2+2m_AE_R.
+\]
+结合 (v) 与通量因子，整体质量和动量因子为
+\[
+\frac{4m_A^2}{4m_Ap_{\chi_1}}
+\frac{1}{256\pi^3p_{\chi_1}}
+=
+\boxed{\frac{m_A}{256\pi^3p_{\chi_1}^2}}.
+\]
+故
+\[
+\boxed{
+\frac{d\sigma_A}{dE_R}
+=
+\frac{m_A(g_1g_2g_{VN})^2R_A(E_R)}
+{256\pi^3p_{\chi_1}^2(m_V^2+2m_AE_R)^2}
+I_6,
+}
+\]
+其中
+\[
+I_6=
+\int_{W_{\min}^2}^{W_{\max}^2}dW^2
+\sqrt{\lambda_{\rm dim}}
+\int_{-1}^{1}dz\,
+\left\langle\mathcal L_{00}\right\rangle_{\phi_*}.
+\]
+
+#### (vii) 与正文及 Python 实现逐项对应
+
+| 理论量 | 解析表达式 | 程序对应 |
+|---|---|---|
+| 中间态质量测度 | \(dW^2/(2\pi)\) | \texttt{wvals}, \texttt{wweights} |
+| 第一段反冲相空间 | \(1/(8\pi p_{\chi_1})\) | 已进入 Eq. (6) 外部系数 |
+| 第二段极角测度 | \(dz\) | \texttt{xz}, \texttt{wz} |
+| 第二段方位角平均 | \((2\pi)^{-1}\int d\phi_*\) | \texttt{phis}, \texttt{phiweights=0.5*wp} |
+| 两体末态动量 | \(\sqrt{\lambda_{\rm dim}}\) | \texttt{lambda_dimensionless} |
+| 自旋平均 | \(\frac12\sum_{\rm spins}\) | \texttt{spin_trace} 中的 \texttt{/2.} |
+| 相空间积分 | \(I_6\) | \texttt{reduced_kernel} |
+
+特别地，Gauss–Legendre 变量变换
+\[
+\phi_i=\pi(x_i+1),\qquad d\phi=\pi dx
+\]
+给出
+\[
+\frac{1}{2\pi}\int_0^{2\pi}f(\phi)d\phi
+=\frac12\int_{-1}^{1}f(\pi(x+1))dx
+\simeq\sum_i\frac{w_i}{2}f(\phi_i).
+\]
+因此程序中的 \texttt{phiweights=0.5*wp} 正是方位角平均权重，且其权重和为 1；\texttt{z} 方向仍使用未平均的积分权重，其权重和为 2。
+
+#### (viii) 维度与适用条件
+
+\[
+[d\Phi_3]=\mathrm{GeV}^2,\qquad
+\left[
+\frac{d\Phi_3}{dE_R\,dW^2\,dz\,d\phi_*}
+\right]=\mathrm{GeV}^{-1},
+\]
+与 (iv) 的 \(1/p_{\chi_1}\) 一致。又有
+\[
+[I_6]=\mathrm{GeV}^2,\qquad
+\left[\frac{d\sigma}{dE_R}\right]=\mathrm{GeV}^{-3}.
+\]
+
+**独立推导结论：** 在未极化靶核、相干且仅保留 \(J_A^0\) 的近似、初态暗物质自旋平均已经包含于 \(\mathcal L_{00}\)、核自旋处理已经包含于 \(R_A\)，以及 \(\phi_*\) 采用平均定义的条件下，整体系数确为 \(256\pi^3\)。这一系数来自 Lorentz-invariant 三体相空间、反冲能量 Jacobian、通量和核电荷流；它与 AFH 响应的因子 4 是完全不同的归一化来源。
+
+
 ## A.5 两张辐射图、振幅与干涉项
 
 正文矢量流的两个图分别对应标量在矢量交换前、后从暗物质费米子线上辐射：
@@ -661,6 +1022,72 @@ I_6
 
 当前实现明确采用 Dirac 外部自旋子。原始模型文本尚未把 \(\chi_{1,2}\) 的 Dirac/Majorana 性质和完整 CP/手征约定全部固定，因此 Majorana 版本不在当前结果的自动适用范围内。
 
+
+### A.6.1 从 Dirac 标量 Yukawa 振幅推导条件性二体宽度
+
+明确采用
+\[
+\mathcal L_{\chi\chi s}
+=-g_2s\,\bar\chi_1\chi_2
+-g_2^*s\,\bar\chi_2\chi_1
+\]
+的纯标量、非对角 Yukawa 相互作用，并考虑
+\[
+\chi_2(P)\longrightarrow\chi_1(p)+s(k),
+\qquad
+P^2=m_{\chi_2}^2,\quad
+p^2=m_{\chi_1}^2,\quad
+k^2=m_s^2.
+\]
+树级振幅为
+\[
+\mathcal M=g_2\,\bar u_1(p)u_2(P).
+\]
+对初态 \(\chi_2\) 自旋平均、末态 \(\chi_1\) 自旋求和，使用
+\[
+\sum_su_s(p)\bar u_s(p)=\slashed p+m
+\]
+得到
+\[
+\begin{aligned}
+\overline{|\mathcal M|^2}
+&=\frac{|g_2|^2}{2}
+\operatorname{Tr}\!\left[
+(\slashed p+m_{\chi_1})(\slashed P+m_{\chi_2})
+\right]\\
+&=2|g_2|^2(p\cdot P+m_{\chi_1}m_{\chi_2})\\
+&=|g_2|^2
+\left[(m_{\chi_2}+m_{\chi_1})^2-m_s^2\right],
+\end{aligned}
+\]
+其中最后一步使用
+\[
+2p\cdot P=m_{\chi_2}^2+m_{\chi_1}^2-m_s^2.
+\]
+在 \(\chi_2\) 静止系，二体末态动量大小为
+\[
+|\mathbf p_*|
+=\frac{\sqrt{\lambda_K(m_{\chi_2}^2,m_{\chi_1}^2,m_s^2)}}
+{2m_{\chi_2}},
+\]
+且角积分后的二体衰变宽度为
+\[
+\Gamma=\frac{|\mathbf p_*|}{8\pi m_{\chi_2}^2}
+\overline{|\mathcal M|^2}.
+\]
+代入即得
+\[
+\boxed{
+\Gamma_{\chi_2\to\chi_1s}
+=\frac{|g_2|^2}{16\pi m_{\chi_2}^3}
+\sqrt{\lambda_K(m_{\chi_2}^2,m_{\chi_1}^2,m_s^2)}
+\left[(m_{\chi_2}+m_{\chi_1})^2-m_s^2\right].
+}
+\]
+该式仅在 \(m_{\chi_2}\ge m_{\chi_1}+m_s\) 时对应开放衰变道。末态 \(\chi_1\) 与 \(s\) 是不同粒子，不存在额外的 \(1/2!\) 因子；若有其他开放衰变道，总宽度应将它们的部分宽度相加。
+
+这不是任意 Dirac/Majorana、标量/赝标量或完整 UV 模型的通用宽度。本文当前 pole prescription 采用 Dirac 外部态、实标量、纯标量耦合和单一开放衰变道。该宽度只进入可能接近极点的 after 传播子；它不改变 \(W_{\min}\) 或三体相空间边界，也不能替代完整的 Dyson 自能计算。对应代码入口为 \(\texttt{chi2\_width\_dirac\_scalar}\)，详见索引 F12。
+
 ## A.7 求积、数值检查与复现入口
 
 程序使用 Gauss–Legendre 求积：
@@ -687,3 +1114,67 @@ python -m unittest discover -s research/figure2_full_reproduction/tests -v
 
 上述检查验证的是当前 Dirac 基准实现和被测试点，不自动证明所有参数点、所有传播子方案或未定义的 Majorana 模型都已验证。
 
+
+
+## A.8 从 reduced kernel 到完整微分截面：核响应归一化和因子 4
+
+本节明确 \(I_6\) 与核响应在 Eq. (6) 中的分工。前面定义的
+\[
+I_6(v,E_R)=
+\int dW^2\,\sqrt{\lambda_{\rm dim}}
+\int_{-1}^{1}dz\,\frac{1}{2\pi}\int_0^{2\pi}d\phi_*
+\,\mathcal L_{00}
+\]
+只包含三体末态相空间和暗费米子振幅。它不包含 AFH 核响应、矢量传播子或整体耦合。由于 \(\mathcal L_{00}\) 无量纲，
+\[
+[I_6]={\rm GeV}^2.
+\]
+
+对 AFH v6.0 的原生 package 输出，定义
+\[
+R_A^{\rm package}(q)=\frac{4\pi}{2J_A+1}W_{M,\rm AFH}^{00}(q).
+\]
+AFH package 的 isoscalar 系数 convention 对应 \(R_A^{\rm package}(0)\simeq A^2/4\)。有限精度密度矩阵造成的零动量小偏差通过
+\[
+C_0=\frac{A^2}{4R_A^{\rm package}(0)}
+\]
+单独修正。物理等质子、等中子耦合响应因此是
+\[
+\boxed{R_A^{\rm phys}(q)=4C_0R_A^{\rm package}(q)},
+\qquad R_A^{\rm phys}(0)=A^2.
+\]
+这里的因子 4 来自 package 的 isoscalar 接口约定；\(C_0\) 是有限小数精度修正，不能把两者合并成一个经验因子。
+
+当截面 prefactor 使用每核子物理耦合 \(g_{VN}\) 时，
+\[
+\boxed{
+\frac{d\sigma_A}{dE_R}
+=
+\frac{m_A(g_1g_2g_{VN})^2}
+{256\pi^3p_{\chi_1}^2}
+\frac{R_A^{\rm phys}(E_R)}
+{(m_V^2+2m_AE_R)^2}
+I_6(v,E_R)
+}.
+\]
+因子 4 已包含在 \(R_A^{\rm phys}\) 中，不能再在耦合平方或截面结果上乘一次。代码额外计算 \(R_A^{\rm phys}/4\) 的 no-factor-four 控制，要求每个开相空间点满足
+\[
+(d\sigma/dE_R)_{\rm phys}/(d\sigma/dE_R)_{\rm no4}=4.
+\]
+这是防止漏乘或重复乘因子 4 的代数回归检查。
+
+量纲闭合为
+\[
+[m_A/p_{\chi_1}^2]={\rm GeV}^{-1},\quad
+[(m_V^2+2m_AE_R)^{-2}]={\rm GeV}^{-4},\quad
+[I_6]={\rm GeV}^{2},
+\]
+故 \([d\sigma_A/dE_R]={\rm GeV}^{-3}\)。转成 \({\rm cm}^2/{\rm keV}\) 使用 \(0.3893793721\times10^{-33}\)。
+
+数值比较中，AFH 响应的插值自变量必须是精确空间动量
+\[
+q=\sqrt{2m_AE_R+E_R^2},
+\]
+传播子则使用 \(t=-2m_AE_R\)。Mathematica 端读取已归档的 native AFH 2401 点表，不重跑核响应；它独立计算 \(I_6\) 和完整截面。Python 端重新调用 eq6_kernel.py，并用 SciPy PCHIP 独立插值同一 AFH 响应表。两端在同一 benchmark、反冲能量、宽度处方和求积阶数下逐点比较 \(I_6\)、\(R_A\) 和 \(d\sigma_A/dE_R\)。
+
+本节对应的原生程序为 research/afh_default_density_xe131/run_afh_eq6_full_dsigma.wls，Python 比较器为 research/afh_default_density_xe131/compare_full_dsigma_mathematica.py。**程序已加入整合分支，但 Wolfram 原生完整积分尚未运行；因此完整截面逐点对照目前仍为未完成。** AFH 核响应层已经通过的 Mathematica/Python 对照不能替代这一项验收。

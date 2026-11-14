@@ -1,5 +1,7 @@
 # Local validation — supplied L00 benchmark, Δm = 450 keV
 
+> **Status note (2026-11-14):** The numerical values in this 2026-11-13 local archive were generated with the pre-fix expanded quartic Källén expression in the conditional scalar width. The current kernel uses a cancellation-safe threshold-factorized expression with compensated excess subtraction. For the 450-keV benchmark, the conditional width changes from \(53.38560839\) keV to \(53.38215472\) keV (\(-6.4693\times10^{-5}\) relative). The original files and their checksums are retained as historical execution provenance; do not treat their old width-dependent L00/\(I_6\) values as regenerated current-source results. The current regression tests use the corrected width.
+
 Date: 2026-11-13  
 Repository: lm846802297-bit/LZ-3-body-for-hdm  
 PR: https://github.com/lm846802297-bit/LZ-3-body-for-hdm/pull/5  
@@ -75,3 +77,8 @@ The separate fixed-speed Xe-131 curve helper and its workflow are excluded from 
 - SHA256SUMS — checksums of the five native files above (excluding the checksum file itself).
 
 No ZIP/TAR bundle is used as the research-result submission.
+
+
+## 7. Main-branch archival status
+
+The native pointwise benchmark output and this local validation record are now archived on the canonical main branch through PR #10, merged as commit 724d9e7877fb76f4cc477fbb9e24e1e706bf37a6. This later archival note does not change the original local execution provenance above: the numerical acceptance used the stated main-kernel blob, Python 3.13.5 and NumPy 2.3.5, and did not use GitHub Actions. The separate PR #5/source-branch history is retained as provenance; it is not the basis for claiming that CI ran or that a full detector-level calculation was completed.
