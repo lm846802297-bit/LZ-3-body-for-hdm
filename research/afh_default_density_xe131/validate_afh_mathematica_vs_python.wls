@@ -14,12 +14,14 @@ A = 131; Z = 54; JA = 3/2; mA = A*0.93149410242; fmToGeVInv = 5.0677;
 bFM = Sqrt[41.467/(45.0 A^(-1.0/3.0) - 25.0 A^(-2.0/3.0))];
 bGeVInv = bFM*fmToGeVInv;
 SetIsotope[Z, A, "default", "default"];
+(* Build the native AFH symbolic response once; evaluate it at every y node. *)
+wmExpr = ResponseNuclear[y, 1, 0, 0];
 qGrid = N[Range[0, 2400]/4000, 16];
 If[Length[qGrid] =!= 2401, Print["ERROR: q grid length mismatch"]; Exit[4]];
 nativeRows = Table[
  Module[{q = qGrid[[i]], yy, wm, rPackage, er},
   yy = (q*bGeVInv/2.0)^2;
-  wm = N[ResponseNuclear[yy, 1, 0, 0], 16];
+  wm = N[wmExpr /. y -> yy, 16];
   If[!NumericQ[wm], Print["ERROR: nonnumeric AFH response at q=", q]; Exit[5]];
   rPackage = 4.0 Pi/(2.0 JA + 1.0)*wm;
   er = (Sqrt[mA^2 + q^2] - mA)*10^6;
