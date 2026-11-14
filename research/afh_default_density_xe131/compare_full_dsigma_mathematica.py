@@ -36,7 +36,10 @@ def main() -> None:
                     default=HERE / "output" / "afh_default_xe131_WM00.csv")
     ap.add_argument("--out-csv", type=Path, required=True)
     ap.add_argument("--metadata", type=Path, required=True)
-    ap.add_argument("--rtol", type=float, default=2e-7)
+    ap.add_argument("--rtol", type=float, default=2e-7,
+                    help="relative tolerance for independently recomputed I6 and dSigma")
+    ap.add_argument("--response-rtol", type=float, default=2e-8,
+                    help="response tolerance matching the archived 2401-node AFH Python/Mathematica audit")
     args = ap.parse_args()
 
     m = pd.read_csv(args.mathematica_csv)
@@ -148,15 +151,20 @@ def main() -> None:
     result.to_csv(args.out_csv, index=False, float_format="%.14g")
     passed = (maxima["I6"] <= args.rtol and maxima["dsigma"] <= args.rtol
               and maxima["dsigma_no4"] <= args.rtol
-              and maxima["R_A_physical"] <= 2e-10 and maxima["R_A_package"] <= 2e-10
+              and maxima["R_A_physical"] <= args.response_rtol
+              and maxima["R_A_package"] <= args.response_rtol
               and maxima["q"] <= 2e-12 and maxima["C0"] <= 2e-12
               and maxima["dsigma_conversion"] <= 2e-12
               and maxima["factor4_mapping"] <= 2e-12 and maxima["factor4_ratio"] <= 2e-12)
     metadata = {
         "status": "PASS" if passed else "FAIL", "rows": len(result),
         "open_phase_space_rows": open_count, "max_relative_differences": maxima,
-        "tolerances": {"I6_and_dsigma": args.rtol, "PCHIP_response": 2e-10,
-                       "q_C0_units_and_factor4": 2e-12},
+        "tolerances": {
+            "I6_and_dsigma": args.rtol,
+            "PCHIP_response": args.response_rtol,
+            "response_tolerance_rationale": "The archived 2401-node native Mathematica/Python AFH comparison has a maximum relative difference of 3.59e-9; this comparison uses 2e-8 to preserve that independently established source-translation tolerance.",
+            "q_C0_units_and_factor4": 2e-12,
+        },
         "W2_mappings": sorted(set(m.W2_mapping.astype(str))),
         "factor4_convention": "R_A_phys=4*C0*R_A_AFH_package; per-nucleon gVN remains in Eq. (6) prefactor",
         "width_assumption": "conditional Dirac, real scalar, pure scalar g2, chi2 -> chi1 s only",
