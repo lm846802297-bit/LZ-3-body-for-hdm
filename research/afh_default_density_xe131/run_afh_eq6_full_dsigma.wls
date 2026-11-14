@@ -158,9 +158,14 @@ spinTrace[point_List, mchi_, mchi2_, width_] := Module[
   Re[Tr[(slash4[pPrime] + mchi*id4) . vertex . (slash4[p] + mchi*id4) . vertexBar]/2.]
 ];
 
-chi2Width[mchi_, ms_, deltaM_, g2_] := Module[{m2 = mchi + deltaM, lam},
-  lam = (m2^2 - (mchi + ms)^2)*(m2^2 - (mchi - ms)^2);
-  If[lam <= 0., 0., g2^2/(16.*Pi*m2^3)*Sqrt[lam]*((m2 + mchi)^2 - ms^2)]
+chi2Width[mchi_, ms_, deltaM_, g2_] := Module[
+  {m2 = mchi + deltaM, excess, lam},
+  excess = m2 - mchi - ms;
+  If[excess <= 0., Return[0.]];
+  (* Factorized threshold form avoids subtracting nearly equal squared masses. *)
+  lam = excess*(excess + 2.*ms)*(2.*mchi + excess)*
+    (2.*mchi + excess + 2.*ms);
+  g2^2/(16.*Pi*m2^3)*Sqrt[lam]*((m2 + mchi)^2 - ms^2)
 ];
 
 reducedKernel[mchi_, ms_, deltaM_, mA_, ER_, speed_, width_, nW_, nZ_, nPhi_, mapping_] := Module[
