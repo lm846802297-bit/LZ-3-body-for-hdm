@@ -388,7 +388,7 @@ def run_prefactor_check(output_dir: Path):
 
 
 def run_historical_800_anchor(output_dir: Path):
-    """Separate the historical A*u mass convention from W2 quadrature error."""
+    """Separate coarse, rounded-A*u and NIST mass conventions from W2 quadrature error."""
     mchi, ms, dm = 1000.0, 300e-6, 1e-3
     ER, speed = 200e-6, 800.0
     archived_i6 = 1433678.0722867665
@@ -461,7 +461,7 @@ def run_historical_800_anchor(output_dir: Path):
     print("historical 800-km/s anchor:", json.dumps({
         "archived_I6_GeV2": archived_i6,
         "mass_scheme_comparison": summaries,
-        "interpretation": "A*u versus NIST nuclear-mass input and linear-W2 versus threshold-u2 quadrature are reported separately.",
+        "interpretation": "coarse mA=122 GeV, rounded A*0.9315 GeV and NIST nuclear-mass inputs are separated from linear-W2 versus threshold-u2 quadrature."
     }))
     return rows
 
@@ -501,10 +501,11 @@ def run_near_pole_scan(output_dir: Path):
                     0.0 if width_scheme == "zero"
                     else eq6.chi2_width_dirac_scalar_at_mass(wmax, mchi, ms, g2)
                 )
+                g2_for_integral = 1.0 if width_scheme == "zero" else g2
                 reference = integrate_i6(
                     mchi, ms, delta_m, mA, ER, speed,
                     nW=256, nz=8, nphi=8, mapping="sine2",
-                    width_scheme=width_scheme, g2=max(g2, 1.0),
+                    width_scheme=width_scheme, g2=g2_for_integral,
                 )
                 for mapping, orders in mappings:
                     for nW in orders:
@@ -513,7 +514,7 @@ def run_near_pole_scan(output_dir: Path):
                             else integrate_i6(
                                 mchi, ms, delta_m, mA, ER, speed,
                                 nW=nW, nz=8, nphi=8, mapping=mapping,
-                                width_scheme=width_scheme, g2=max(g2, 1.0),
+                                width_scheme=width_scheme, g2=g2_for_integral,
                             )
                         )
                         rows.append({
@@ -564,7 +565,7 @@ def run_near_pole_scan(output_dir: Path):
 
 def run_scan(
     output_dir: Path, nref: int = 48,
-    modes: Iterable[str] = ("mapping", "angular", "threshold", "prefactor"),
+    modes: Iterable[str] = ("mapping", "angular", "threshold", "prefactor", "historical_800", "near_pole"),
 ):
     results = {}
     for mode in modes:
@@ -610,6 +611,15 @@ def run_scan(
             "mapping": "W2 = Wmin2 + (Wmax2-Wmin2)*u^2",
             "orders": {"u": nref, "z": 24, "phi": 16},
             "azimuth": "normalized average for I6; raw dphi for the direct LI prefactor check",
+        },
+        "near_pole_scan": {
+            "ER_keV": 267.0, "speed_km_s": 776.0,
+            "Delta_m_keV": [362.0, 365.0, 370.0, 400.0],
+            "width_schemes": ["zero", "pole", "running"],
+            "g2_values_for_finite_width": [0.1, 1.0],
+            "pole_is_outside_phase_space": True,
+            "reference_quadrature": {"mapping": "sine2", "nW": 256, "nz": 8, "nphi": 8},
+            "running_width_note": "diagnostic Breit-Wigner prescription; not a full self-energy",
         },
         "stable_threshold_kinematics": "delta = W2-Wmin2 is carried explicitly; lambda_dim = delta*(4*mchi*ms+delta)/W2^2",
         "cross_section_prefactor_test": {
