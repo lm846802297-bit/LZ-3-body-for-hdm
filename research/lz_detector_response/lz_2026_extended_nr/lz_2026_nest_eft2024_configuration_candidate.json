@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "status": "public_LZ_specific_candidate_not_officially_confirmed_as_the_exact_LZ_2026_production_build",
+  "source": {
+    "repository": "https://github.com/NESTCollaboration/nest",
+    "file": "include/Detectors/LZ_WS2024.hh",
+    "configuration_method": "LZ_Detector_2024::SetEFT2024Configuration",
+    "configuration_added_commit": "307fb27d4c2f9b48dba27529bb57bc243e0ce2dc",
+    "configuration_added_utc": "2026-08-27T23:08:51Z",
+    "audited_commit": "541b6430dae6ea289cf110c99f174a9187f7fdee",
+    "audited_commit_utc": "2026-09-09T14:09:37Z",
+    "release_status": "The audited commit is not contained in a tagged NEST release.",
+    "independent_reproduction_reference": "arXiv:2610.27105, lines 53-59 and reference [100]",
+    "provenance_caveat": "The independent authors describe the link to the LZ 2026 Letter as circumstantial and explicitly state that they have not established this is the exact build run by the collaboration."
+  },
+  "detector_overrides_from_SetEFT2024Configuration": {
+    "name": "LZ EFT2024",
+    "g1_phd_per_photon": 0.1104,
+    "g1_gas_phd_per_s2_photon": 0.07753555,
+    "s2_threshold_phe": 120.0,
+    "electron_lifetime_us": 15000.0
+  },
+  "nr_mean_yield": {
+    "parameter_name": "NRYieldsParam",
+    "source_code_vector": [11.21, 1.113, 0.0522, -0.0533, 10.8, 0.53, 1.41, 0.31, 2.5, 0.5, 1.39, 1.74, 0.023, 0.0289, 74.7],
+    "table_s5_printed_vector": [11.2, 1.1, 0.052, -0.0533, 10.8, 0.53, 1.4, 0.31, 2.5, 0.50, 1.39, 1.74, 0.0230, 0.0289, 74.7],
+    "note": "The code vector is the higher-precision EFT2024 header vector. Table S5 is the rounded published presentation. The final three entries are the high-energy p(E) extension parameters a, b, E0."
+  },
+  "er_mean_yield": {
+    "parameter_name": "ERYieldsParam",
+    "source_code_vector": [12.31, 84.91, 0.5707, 2.804, 34.04, -1.0, 82.57, 4.557, 0.2207, 0.1272],
+    "table_s3_printed_vector": [12.31, 84.91, 0.5707, 2.804, 34.04, 0.0, 82.57, 4.557, 0.2207, 0.1272],
+    "note": "Index 5 is a sentinel in GetYieldBetaGR, not an ordinary fitted coefficient. A negative value activates the density/W-value correction branch; the public EFT2024 executable vector uses -1 while Table S3 prints 0. This difference must be retained and tested, not silently reconciled."
+  },
+  "nr_er_fluctuation": {
+    "parameter_name": "NRERWidthsParam",
+    "source_code_vector": [1.076, 1.061, -0.707, 0.5, 0.19, 2.25, -0.000905, 0.03174, 2.588, 0.3627, -0.3583, 0.0, 0.02377, 0.06211, 5.2, 1.359, -2.599],
+    "length": 17,
+    "nr_relevant_zero_based_indices": {
+      "0": "F_i intercept",
+      "1": "F_ex intercept",
+      "2": "negative recombination suppression parameter; GetQuanta sets lambdaChen=1+p[2]=0.293 for NR and RecombOmegaNR clips the negative omega to zero",
+      "3": "NR RecombOmegaNR centroid",
+      "4": "NR RecombOmegaNR width",
+      "5": "NR recombination skewness",
+      "11": "F_i slope versus mean ion number",
+      "12": "F_ex slope versus mean exciton number"
+    },
+    "er_relevant_zero_based_indices": {
+      "6": "ER Fano-like fluctuation coefficient; negative branch adds |p[6]| sqrt(Nq_mean) sqrt(Efield) to the base Fano factor",
+      "7": "first skew-Gaussian amplitude input for RecombOmegaER",
+      "8": "first component center",
+      "9": "first component width",
+      "10": "first component skew parameter",
+      "13": "second skew-Gaussian amplitude",
+      "14": "second component center",
+      "15": "second component width",
+      "16": "second component skew parameter"
+    },
+    "table_s4_mapping": {
+      "A1": 0.03174,
+      "mu1": 2.588,
+      "sigma1": 0.3627,
+      "alpha1": -0.3583,
+      "A2": 0.06211,
+      "mu2": 5.2,
+      "sigma2": 1.359,
+      "alpha2": -2.599
+    },
+    "implementation_note": "Use NEST RecombOmegaER at the pinned commit. Its implementation normalizes each skew-Gaussian component; do not substitute the printed Supplemental Eq. (4) literally without checking the normalization convention."
+  },
+  "comparison_baselines": {
+    "ws2024_detector_configuration": {
+      "source_vector_nr_mean": [10.19, 1.11, 0.0498, -0.0533, 12.46, 0.2942, 1.899, 0.3197, 2.066, 0.509, 0.996, 0.999],
+      "source_vector_er_mean": [12.4886, 85.0, 0.6050, 2.14687, 25.721, -1.0, 59.651, 3.6869, 0.2872, 0.1121],
+      "source_vector_nr_er_widths": [0.404, 0.393, 0.0383, 0.497, 0.1906, 2.220, 0.3, 0.04311, 0.46894, 0.15505, -0.26564, 0.0, 0.0],
+      "note": "The default LZ_Detector_2024 initialization in the audited header selects these WS2024 vectors."
+    },
+    "generic_nest_defaults_at_541b643": {
+      "source_vector_nr_mean": [11.0, 1.1, 0.0480, -0.0533, 12.6, 0.3, 2.0, 0.3, 2.0, 0.5, 1.0, 1.0],
+      "source_vector_er_mean": [-1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0],
+      "source_vector_nr_er_widths": [0.4, 0.4, 0.04, 0.5, 0.19, 2.25, -0.001, 0.046452, 0.45, 0.205, -0.2, 0.0, 0.0],
+      "note": "These are generic upstream defaults, not LZ-fitted values. In controlled comparisons they are applied to the same LZ EFT2024 detector-response overrides so the yield/fluctuation model difference is isolated."
+    }
+  },
+  "hepdata_status": {
+    "doi": "10.17182/hepdata.182472.v1",
+    "supplied_v1_archive": "HEPData-ins3199115-v1.zip",
+    "archive_sha256": "ab02f6eacd1008a260f0eb8f441beb206069e18f10c6b7b2f44fcfd70463f1f1",
+    "archive_contents": "submission.yaml plus 46 table YAML files",
+    "submission_yaml_has_additional_resources": false,
+    "separate_nest_config_in_archive": false,
+    "caveat": "The HEPData record JSON endpoint returned HTTP 403 in the retrieval workflow. The archive and its submission.yaml were inspected directly. The public NEST EFT2024 header is a separate source and must not be described as a file contained in the HEPData ZIP."
+  }
+}
