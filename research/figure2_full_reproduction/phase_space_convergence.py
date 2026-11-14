@@ -502,7 +502,11 @@ def run_near_pole_scan(output_dir: Path):
                     else eq6.chi2_width_dirac_scalar_at_mass(wmax, mchi, ms, g2)
                 )
                 g2_for_integral = 1.0 if width_scheme == "zero" else g2
-                reference_order = 4096 if (width_scheme == "running" and g2 >= 1.0) else 256
+                reference_order = (
+                    8192 if (width_scheme == "running" and g2 >= 1.0 and delta_m_keV == 362.0)
+                    else 4096 if (width_scheme == "running" and g2 >= 1.0)
+                    else 256
+                )
                 reference = integrate_i6(
                     mchi, ms, delta_m, mA, ER, speed,
                     nW=reference_order, nz=8, nphi=8, mapping="sine2",
@@ -510,8 +514,10 @@ def run_near_pole_scan(output_dir: Path):
                 )
                 for mapping, base_orders in mappings:
                     orders = base_orders
-                    if mapping == "sine2" and reference_order == 4096:
+                    if mapping == "sine2" and reference_order >= 4096:
                         orders = (*base_orders, 512, 1024, 2048, 4096)
+                        if reference_order >= 8192:
+                            orders = (*orders, 8192)
                     for nW in orders:
                         value = (
                             reference if mapping == "sine2" and nW == reference_order
@@ -627,6 +633,7 @@ def run_scan(
             "reference_quadrature": {
                 "mapping": "sine2", "nW": 256, "nz": 8, "nphi": 8,
                 "running_g2_1_nW": 4096,
+                "running_g2_1_closest_gap_nW": 8192,
             },
             "running_width_note": "diagnostic Breit-Wigner prescription; not a full self-energy",
         },
