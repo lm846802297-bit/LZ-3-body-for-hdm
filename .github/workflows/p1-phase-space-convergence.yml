@@ -31,7 +31,7 @@ jobs:
           python -m unittest discover \
             -s research/figure2_full_reproduction/tests \
             -p 'test_phase_space_convergence.py' -v
-      - name: Reproduce the four benchmark and threshold scans
+      - name: Reproduce benchmark, threshold and historical 800 km/s anchor scans
         run: |
           python research/figure2_full_reproduction/phase_space_convergence.py \
             --output-dir /tmp/p1_phase_space_reproduction \
@@ -50,6 +50,7 @@ jobs:
               "phase_space_angular_convergence.csv",
               "phase_space_threshold_convergence.csv",
               "phase_space_li_prefactor_crosscheck.csv",
+              "phase_space_historical_800_anchor.csv",
           )
           failures = []
           for name in names:
