@@ -42,11 +42,25 @@ def boost(v, beta):
     return np.r_[gamma*(v[0]+b*par),
                  v[1:]+((gamma-1)*par+gamma*b*v[0])*bh]
 
+def delta_w2_max(mchi, ms, mA, ER, speed_kms):
+    """Return Wmax^2-Wmin^2 without subtracting two mchi^2-scale numbers."""
+    beta = speed_kms / C_KM_S
+    gamma = 1.0 / math.sqrt(1.0 - beta * beta)
+    energy = mchi * gamma
+    momentum = mchi * gamma * beta
+    q = math.sqrt(2.0 * mA * ER + ER * ER)
+    return (
+        2.0 * momentum * q
+        - 2.0 * (energy + mA) * ER
+        - 2.0 * mchi * ms
+        - ms * ms
+    )
+
+
 def limits(mchi, ms, mA, ER, speed_kms):
-    beta=speed_kms/C_KM_S; gamma=1/math.sqrt(1-beta*beta)
-    E=mchi*gamma; p=mchi*gamma*beta
-    q=math.sqrt(2*mA*ER+ER*ER)
-    return (mchi+ms)**2, mchi*mchi+2*p*q-2*(E+mA)*ER
+    wmin2 = (mchi + ms) ** 2
+    delta = delta_w2_max(mchi, ms, mA, ER, speed_kms)
+    return wmin2, wmin2 + delta
 
 def build_point(mchi, ms, mA, ER, speed_kms, W2, z, phi):
     beta=speed_kms/C_KM_S; gamma=1/math.sqrt(1-beta*beta)
@@ -153,11 +167,13 @@ def reduced_kernel(mchi,ms,delta_m,mA,ER,speed_kms,width=0.,nw=16,nz=16,nphi=8,
         raise ValueError("unknown width_scheme")
     if width_scheme in ("pole","running") and g2 is None:
         raise ValueError("g2 is required for pole/running width schemes")
-    wmin,wmax=limits(mchi,ms,mA,ER,speed_kms)
-    if wmax<=wmin: return 0.
+    wmin = (mchi + ms) ** 2
+    delta_max = delta_w2_max(mchi, ms, mA, ER, speed_kms)
+    if delta_max <= 0.0:
+        return 0.0
     xw,ww=_cached_leggauss(nw); xz,wz=_cached_leggauss(nz); xp,wp=_cached_leggauss(nphi)
-    wvals=.5*(wmax+wmin)+.5*(wmax-wmin)*xw
-    wweights=.5*(wmax-wmin)*ww
+    wvals = wmin + 0.5 * delta_max * (xw + 1.0)
+    wweights = 0.5 * delta_max * ww
     phis=math.pi*(xp+1.); phiweights=.5*wp
     total=0.; mchi2=mchi+delta_m
     pole_width=chi2_width_dirac_scalar(mchi,ms,delta_m,g2) if width_scheme=="pole" else None
