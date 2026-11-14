@@ -40,6 +40,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--executable", type=Path, required=True)
     args = parser.parse_args()
+    args.executable = args.executable.resolve()
     if not args.executable.is_file():
         raise FileNotFoundError(args.executable)
 
