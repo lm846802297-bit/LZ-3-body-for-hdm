@@ -258,3 +258,40 @@ until that recomputation is complete.
 ## Canonical four-benchmark cross-section files
 
 See [output/CROSS_SECTION_FILE_INDEX.md](output/CROSS_SECTION_FILE_INDEX.md) for the single canonical file-name mapping. The current long-form result is `output/figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv`; the matching wide audit is `output/figure2_four_benchmarks_AFH_GCN_JJ55_wide_audit.csv`. The historical `output/figure2_four_benchmarks_dsigma_AFH_GCN_JJ55.csv` is retained only for provenance and is superseded because its AFH response column was copied from GCN. It must not be used in downstream plots or calculations.
+
+
+## Native Mathematica comparison against the Python full grid
+
+The repository now includes
+`validate_afh_mathematica_vs_python.wls`. Unlike the older
+`run_afh_default_xe131.wls`, this harness explicitly compares the native
+Wolfram-kernel result against the archived Python CSV at all 2,401 momentum
+nodes.
+
+From the repository root on a machine with Mathematica / Wolfram Engine and
+`wolframscript` installed:
+
+```powershell
+wolframscript -file research/afh_default_density_xe131/validate_afh_mathematica_vs_python.wls
+```
+
+The default paths load `v6/dmformfactor-V6.m` and compare against
+`output/afh_default_xe131_WM00.csv`. Optional environment variables
+`DMFormFactorPath`, `AFHPythonReferenceCSV`, and `AFHMathematicaOutDir`
+override the package, reference CSV, and output directory.
+
+The script calls the official `SetIsotope[54,131,"default","default"]` and
+`ResponseNuclear[y,1,0,0]` functions in the Wolfram kernel, then writes a
+2,401-row pointwise comparison CSV and a JSON metadata summary. It checks the
+AFH package's (A^2/4) zero-momentum convention, the physical equal-(p,n)
+(R_A(0)=A^2) normalization, the q grid, the finite-precision factor (C_A),
+and the maximum full-grid response difference.
+
+**Execution status:** the harness is committed, but it has not yet been
+executed in a native Wolfram kernel. The Python/60-digit mpmath validation is
+not a substitute for this native Mathematica run. Do not mark the native
+comparison PASS until the generated CSV and metadata JSON are inspected and
+archived.
+
+See also the Phase II report:
+[09H — high-energy tail nuclear-model sensitivity](../docs/appendices/09H_high_energy_tail_nuclear_model_sensitivity.md).

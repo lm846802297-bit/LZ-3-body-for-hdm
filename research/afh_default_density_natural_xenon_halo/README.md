@@ -97,3 +97,19 @@ The selected-point AME2020 direct exact-q calculation is archived as native sour
 - Full calculation report: `AME2020_DIRECT_EXACT_Q_RECALCULATION_2026-11-12.md`
 
 The calculation and numerical acceptance were performed locally; this runner is not a self-hosted GitHub Actions runner. The selected-point results are not a continuous recoil spectrum or a detector-level LZ prediction.
+
+
+## Phase II: high-energy candidate-window nuclear-model sensitivity
+
+The candidate-window tail (E_R=225\text{--}269.9\,\mathrm{keV}) has been integrated against the LZ 2026 one-dimensional final-ROI efficiency, using the 2.84 tonne-year exposure. The product of the piecewise-linear rate and efficiency is integrated analytically on the union of their knots.
+
+- Runner: `audit_high_energy_tail_model_sensitivity.py`
+- Tests: `test_high_energy_tail_model_sensitivity.py`
+- Output: `results/high_energy_tail_model_sensitivity_2026-11-14.csv`
+- Full interpretation and model-scope boundaries:
+  [09H — high-energy tail nuclear-model sensitivity](../docs/appendices/09H_high_energy_tail_nuclear_model_sensitivity.md)
+- CI: `.github/workflows/high-energy-tail-model-audit.yml`
+
+The comparison keeps AFH-7, Hybrid-9, Helm-9, GCN and JJ55 distinct. In particular, Helm-9 is a full nine-isotope phenomenological model; Hybrid-9 uses Helm only for Xe-124/Xe-126 and retains AFH for the other seven isotopes. The AFH response has deep high-q diffraction minima, so relative response ratios near these minima are more informative than an absolute difference divided by (A^2) alone.
+
+All yields remain one-dimensional efficiency-weighted rate-level expectations. They are not energy-resolution-smeared event predictions or an LZ likelihood.
