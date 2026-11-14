@@ -1,0 +1,63 @@
+name: LZ 2026 NR full calibration-band candidate comparison
+
+on:
+  push:
+    branches:
+      - research/figure2-p0-4-mainline
+    paths:
+      - research/lz_detector_response/cpp/lz_2026_nr_full_calibration_band.cc
+      - research/lz_detector_response/summarize_lz_2026_nr_full_band.py
+      - .github/workflows/lz-2026-nr-full-calibration-band.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  full-band:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+      - name: Check out audited NEST EFT2024 source
+        uses: actions/checkout@v4
+        with:
+          repository: NESTCollaboration/nest
+          ref: 541b6430dae6ea289cf110c99f174a9187f7fdee
+          path: nest
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Configure and build pinned NEST core
+        run: |
+          cmake -S nest -B nest/build \
+            -DBUILD_EXAMPLES=OFF -DBUILD_GARFIELD=OFF -DBUILD_ROOT=OFF -DG4=OFF
+          cmake --build nest/build --target NESTCore --parallel 2
+      - name: Compile full-volume NR band driver
+        run: |
+          g++ -std=c++17 -O2 \
+            -Inest/include -Inest/include/Detectors \
+            -Inest/build/_deps/gcem-src/include \
+            research/lz_detector_response/cpp/lz_2026_nr_full_calibration_band.cc \
+            nest/build/libNESTCore.a -o lz_2026_nr_full_calibration_band
+      - name: Generate full-volume NR band samples
+        run: |
+          mkdir -p full-band-output
+          ./lz_2026_nr_full_calibration_band eft2024 200000 20261118 330 > full-band-output/eft2024.csv
+          ./lz_2026_nr_full_calibration_band tableS5 200000 20261118 330 > full-band-output/tableS5.csv
+          ./lz_2026_nr_full_calibration_band ws2024 200000 20261118 330 > full-band-output/ws2024.csv
+          ./lz_2026_nr_full_calibration_band generic 200000 20261118 330 > full-band-output/generic.csv
+          python research/lz_detector_response/summarize_lz_2026_nr_full_band.py \
+            full-band-output/eft2024.csv full-band-output/tableS5.csv \
+            full-band-output/ws2024.csv full-band-output/generic.csv \
+            > full-band-output/full-band-summary.json
+          cat full-band-output/full-band-summary.json
+      - name: Upload full-volume NR band outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-nr-full-calibration-band-candidates
+          path: full-band-output/
+          if-no-files-found: error
+          retention-days: 30
