@@ -92,8 +92,7 @@ The three dips in the Figure 2 range are therefore reproduced in location by the
 
 ## 7. Scope and manuscript normalization
 
-The manuscript source `paper-source/main.tex` has now been updated to define the physical equal-proton/equal-neutron response for the raw AFH v6.0 package output as
-`R_A = 16 pi W_M^{00}_AFH/(2J_A+1)`, so that `R_A(0)=A^2` while the cross-section prefactor retains the per-nucleon coupling `g_VN`. The factor four is included exactly once.
+The manuscript source `paper-source/main.tex` defines the physical equal-proton/equal-neutron response for the raw AFH v6.0 package output as `R_A^{phys}=4 C_0 R_A^{00,AFH}=16 pi C_0 W_M^{00}_AFH/(2J_A+1)`, while the cross-section prefactor retains the per-nucleon coupling `g_VN`. The factor four is the isoscalar-to-equal-p/n coupling conversion and is included exactly once. The separate `C_0=A^2/[4 R_A^{00,AFH}(0)]` is a q-independent finite-decimal shape normalization; it is not a second physical factor. For the supplied Xe-131 table, `C_0=1.0000825298069378`; in the exact unrounded-density-matrix limit it is one.
 
 This factor is not a property of the nuclear density matrix. It comes from the isospin-coefficient convention in the distributed AFH v6.0 Mathematica code. An independent discussion appears in Oliver C. Gorton's 2024 UC Irvine dissertation, Sec. 2.2, pp. 29--30: the standard isospin conversion is written with factors of one half, while the distributed `dmformfactor-prc.m` and `dmformfactor-V6.m` scripts use (c_i^{0,1}=c_i^p\pm c_i^n); the same section gives (W_M^{00}(0)=(A/2)^2/(4\pi)). See https://www.escholarship.org/content/qt3ns8f1r8/qt3ns8f1r8.pdf.
 
