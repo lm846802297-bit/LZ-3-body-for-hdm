@@ -33,25 +33,50 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--mathematica-csv", type=Path, required=True)
     ap.add_argument("--afh-response-csv", type=Path,
-                    default=HERE / "afh_default_xe131_WM00_mathematica.csv")
+                    default=HERE / "output" / "afh_default_xe131_WM00.csv")
     ap.add_argument("--out-csv", type=Path, required=True)
     ap.add_argument("--metadata", type=Path, required=True)
-    ap.add_argument("--rtol", type=float, default=2e-7)
+    ap.add_argument("--rtol", type=float, default=2e-7,
+                    help="relative tolerance for independently recomputed I6 and dSigma")
+    ap.add_argument("--response-rtol", type=float, default=2e-8,
+                    help="response tolerance matching the archived 2401-node AFH Python/Mathematica audit")
+    ap.add_argument("--require-full-grid", action="store_true",
+                    help="require all four benchmarks and the complete 5--800 keV grid plus explicit anchors")
     args = ap.parse_args()
 
     m = pd.read_csv(args.mathematica_csv)
     response = pd.read_csv(args.afh_response_csv)
     required = {"benchmark", "ER_keV", "q_GeV", "R_A_AFH_package", "R_A_physical_normalized",
                 "C0", "I6_GeV2", "width_scheme", "W2_mapping", "g2", "phase_space_open",
-                "nW", "nz", "nphi", "dsigma_dER_GeVminus3",
-                "dsigma_without_factor4_GeVminus3", "dsigma_cm2_per_keV"}
+                "nW", "nz", "nphi", "pchi_GeV", "mediator_denominator_GeV4",
+                "dsigma_dER_GeVminus3", "dsigma_without_factor4_GeVminus3",
+                "dsigma_cm2_per_keV"}
     if required - set(m.columns):
         raise ValueError(f"Missing Mathematica columns: {sorted(required-set(m.columns))}")
     if len(response) != 2401:
         raise ValueError("AFH response table must contain 2401 q nodes")
+    if m.duplicated(["benchmark", "ER_keV"]).any():
+        raise ValueError("Mathematica output contains duplicate benchmark/recoil rows")
+    if args.require_full_grid:
+        expected_energies = set(float(x) for x in range(5, 801, 5))
+        expected_energies.update({101.0, 200.0, 267.0, 542.0})
+        expected_keys = {
+            (name, energy) for name in BENCHMARKS for energy in expected_energies
+        }
+        actual_keys = {
+            (str(row.benchmark), float(row.ER_keV))
+            for row in m.itertuples(index=False)
+        }
+        if actual_keys != expected_keys:
+            missing = sorted(expected_keys - actual_keys)[:8]
+            extra = sorted(actual_keys - expected_keys)[:8]
+            raise ValueError(
+                f"Mathematica output is not the complete 4x163 grid; "
+                f"rows={len(m)}, missing={missing}, extra={extra}"
+            )
 
     q = response.q_GeV.to_numpy(float)
-    r_package = response.R_AFH_4Pi_over_2Jplus1.to_numpy(float)
+    r_package = response.R_AFH_package_4pi_over_2Jplus1.to_numpy(float)
     r_physical = response.R_equal_pn_normalized.to_numpy(float)
     if not np.all(np.isfinite(q)) or not np.all(np.diff(q) > 0):
         raise ValueError("AFH q grid must be finite and strictly increasing")
@@ -64,7 +89,8 @@ def main() -> None:
     maxima = {"I6": 0.0, "dsigma": 0.0, "dsigma_no4": 0.0,
               "dsigma_conversion": 0.0, "R_A_physical": 0.0,
               "R_A_package": 0.0, "factor4_mapping": 0.0,
-              "factor4_ratio": 0.0, "C0": 0.0, "q": 0.0}
+              "factor4_ratio": 0.0, "C0": 0.0, "q": 0.0,
+              "pchi": 0.0, "mediator_denominator": 0.0}
     open_count = 0
 
     for r in m.itertuples(index=False):
@@ -95,6 +121,8 @@ def main() -> None:
         beta = SPEED/C_KM_S
         pchi = M_CHI*beta/math.sqrt(1-beta**2)
         den = (M_V**2 + 2*M_A*ER)**2
+        pchi_m = float(r.pchi_GeV)
+        den_m = float(r.mediator_denominator_GeV4)
         pref = M_A*G_PRODUCT_SQ/(256*math.pi**3*pchi**2*den)
         ds_py = pref*rf_py*i6py if opened else 0.0
         ds_no4_py = ds_py/4.0
@@ -115,6 +143,8 @@ def main() -> None:
             "R_A_package": rel(rpm, rp_py),
             "factor4_mapping": rel(ram, 4*c0*rpm),
             "factor4_ratio": rel(factor4_ratio, 4.0) if opened else 0.0,
+            "pchi": rel(pchi_m, pchi),
+            "mediator_denominator": rel(den_m, den),
         }
         for key, value in values.items():
             maxima[key] = max(maxima[key], value)
@@ -123,6 +153,11 @@ def main() -> None:
             "benchmark": name, "ER_keV": float(r.ER_keV), "phase_space_open": int(opened),
             "q_Mathematica_GeV": q_m, "q_expected_GeV": qx,
             "q_relative_difference": values["q"],
+            "pchi_Mathematica_GeV": pchi_m, "pchi_Python_GeV": pchi,
+            "pchi_relative_difference": values["pchi"],
+            "mediator_denominator_Mathematica_GeV4": den_m,
+            "mediator_denominator_Python_GeV4": den,
+            "mediator_denominator_relative_difference": values["mediator_denominator"],
             "I6_Mathematica_GeV2": i6m, "I6_Python_GeV2": i6py,
             "I6_relative_difference": values["I6"],
             "R_A_Mathematica": ram, "R_A_Python_PCHIP": rf_py,
@@ -148,15 +183,22 @@ def main() -> None:
     result.to_csv(args.out_csv, index=False, float_format="%.14g")
     passed = (maxima["I6"] <= args.rtol and maxima["dsigma"] <= args.rtol
               and maxima["dsigma_no4"] <= args.rtol
-              and maxima["R_A_physical"] <= 2e-10 and maxima["R_A_package"] <= 2e-10
+              and maxima["R_A_physical"] <= args.response_rtol
+              and maxima["R_A_package"] <= args.response_rtol
               and maxima["q"] <= 2e-12 and maxima["C0"] <= 2e-12
               and maxima["dsigma_conversion"] <= 2e-12
-              and maxima["factor4_mapping"] <= 2e-12 and maxima["factor4_ratio"] <= 2e-12)
+              and maxima["factor4_mapping"] <= 2e-12 and maxima["factor4_ratio"] <= 2e-12
+              and maxima["pchi"] <= 2e-12 and maxima["mediator_denominator"] <= 2e-12)
     metadata = {
         "status": "PASS" if passed else "FAIL", "rows": len(result),
         "open_phase_space_rows": open_count, "max_relative_differences": maxima,
-        "tolerances": {"I6_and_dsigma": args.rtol, "PCHIP_response": 2e-10,
-                       "q_C0_units_and_factor4": 2e-12},
+        "tolerances": {
+            "I6_and_dsigma": args.rtol,
+            "PCHIP_response": args.response_rtol,
+            "response_tolerance_rationale": "The archived 2401-node native Mathematica/Python AFH comparison has a maximum relative difference of 3.59e-9; this comparison uses 2e-8 to preserve that independently established source-translation tolerance.",
+            "q_C0_units_factor4_pchi_and_mediator_denominator": 2e-12,
+        },
+        "full_grid_required": args.require_full_grid,
         "W2_mappings": sorted(set(m.W2_mapping.astype(str))),
         "factor4_convention": "R_A_phys=4*C0*R_A_AFH_package; per-nucleon gVN remains in Eq. (6) prefactor",
         "width_assumption": "conditional Dirac, real scalar, pure scalar g2, chi2 -> chi1 s only",

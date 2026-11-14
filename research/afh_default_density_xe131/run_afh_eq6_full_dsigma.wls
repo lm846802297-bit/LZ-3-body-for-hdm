@@ -20,7 +20,7 @@ If[!(And @@ (IntegerQ /@ {nw, nz, nphi})) || Min[nw, nz, nphi] < 1, Exit[2]];
 If[!MemberQ[{"pole", "zero"}, widthScheme] || !MemberQ[{"threshold_u2", "linear_w2"}, w2Mapping] || erStep <= 0 || erStop < erStart, Exit[2]];
 
 here = DirectoryName[$InputFileName];
-responsePath = FileNameJoin[{here, "afh_default_xe131_WM00_mathematica.csv"}];
+responsePath = FileNameJoin[{here, "output", "native_exports", "afh_default_xe131_WM00_mathematica.csv"}];
 outDir = FileNameJoin[{here, "output", "full_dsigma_mathematica"}];
 outPath = getArg["--out-csv", FileNameJoin[{outDir, "mathematica_full_dsigma_xe131.csv"}]];
 metaPath = getArg["--metadata", FileNameJoin[{outDir, "mathematica_full_dsigma_xe131_metadata.json"}]];
@@ -42,8 +42,11 @@ benchmarks = {
 selectedBenchmarks = If[benchmarkArg === "all", benchmarks,
   Select[benchmarks, First[#] === benchmarkArg &]];
 If[selectedBenchmarks === {}, Print["Unknown benchmark: ", benchmarkArg]; Exit[2]];
-erGrid = If[StringLength[erListString] > 0,
+erGridBase = If[StringLength[erListString] > 0,
   ToExpression /@ StringSplit[erListString, ","], N[Range[erStart, erStop, erStep]]];
+(* Match the Python runner: retain the full requested grid and insert its four
+   nonuniform Figure-2/high-order anchor energies explicitly. *)
+erGrid = Sort[DeleteDuplicates[Join[erGridBase, N[{101., 200., 267., 542.}]]]];
 
 (* AFH response table: columns 1, 4, 7 are q, raw package response, physical response. *)
 rawCSV = Import[responsePath, "CSV"];

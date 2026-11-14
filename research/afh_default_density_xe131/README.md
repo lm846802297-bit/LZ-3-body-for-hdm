@@ -344,3 +344,77 @@ scientific boundaries are documented in
 are prepared; the full native Wolfram run and pointwise comparator have not
 been executed. They remain deliberately deferred until the other
 non-Mathematica research work is complete.
+
+
+## Python-first full differential-cross-section stage (2026-11-14)
+
+The full Xe-131 Python calculation is now separated from the final native
+Mathematica comparison. Run:
+
+~~~bash
+python research/afh_default_density_xe131/run_python_full_dsigma_xe131.py \
+  --outdir research/afh_default_density_xe131/output/python_full_dsigma \
+  --nw 16 --nz 16 --nphi 8 --anchor-order 48 40 24
+~~~
+
+This evaluates the complete fixed-speed \(d\sigma_A/dE_R\) over the 5--800 keV
+grid for all four Figure-2 benchmarks, with high-order anchors. It uses the
+existing 2401-node Python AFH response table, so it does not recalculate the
+nuclear response or invoke Mathematica. The physical response is
+\(R_A^{\rm phys}=4C_0R_A^{\rm package}\); the cross-section prefactor retains
+the per-nucleon coupling and does not apply another factor four. A
+no-factor-four control must give exactly one quarter of the physical cross
+section.
+
+The machine-readable normalization and numerical boundaries are documented
+in audit/PYTHON_FULL_DSIGMA_FACTOR4_AUDIT.md. GitHub Actions runs the
+Python-only full-grid calculation and uploads its CSV/metadata/anchor archive.
+The final native Mathematica full-\(d\sigma_A/dE_R\) calculation remains
+deferred until the Python calculation and the other non-Mathematica research
+work are complete.
+
+The native Wolfram runner now reads the already archived AFH-native response
+from output/native_exports/afh_default_xe131_WM00_mathematica.csv; the
+Python comparator defaults to the independent source-translated response
+table at output/afh_default_xe131_WM00.csv.
+
+
+## Native Mathematica vs Python full-cross-section comparison
+
+The Python-only full-grid job has completed and archived its CSV, metadata and
+high-order anchors. The remaining independent check is to execute the native
+Wolfram Language integrator and compare its output point by point with the
+Python implementation.
+
+On Windows, from a PowerShell session at the repository root, run:
+
+~~~powershell
+python -m pip install -r research/afh_default_density_xe131/requirements.txt
+powershell -ExecutionPolicy Bypass -File research/afh_default_density_xe131/run_native_full_dsigma_windows.ps1
+~~~
+
+This requires Mathematica or Wolfram Engine with wolframscript available on
+PATH. The script checks both archived native and Python AFH response tables,
+runs the Wolfram I6 integration, and then calls
+compare_full_dsigma_mathematica.py for the independent Python recomputation.
+The comparison requires the complete 652-row grid and independently checks
+the incoming dark-matter momentum and mediator denominator in addition to
+I6, the nuclear response, the physical/no-factor-four rates, and units.
+The default output is written under the system temporary directory, not into
+the source tree.
+
+The Wolfram and Python default recoil grids now both contain the regular
+5--800 keV grid plus the explicit 101, 200, 267 and 542 keV anchors. The
+comparison uses a 2e-7 tolerance for I6 and d sigma/dER. For the independently
+translated AFH response table, it uses 2e-8, consistent with the already
+archived 2401-node Mathematica/Python AFH response comparison (maximum
+relative difference 3.59e-9). The factor-four mapping, q, C0, and unit
+conversion checks retain their tighter 2e-12 tolerance.
+
+A successful run writes:
+- mathematica_full_dsigma_xe131.csv and its metadata;
+- mathematica_python_full_dsigma_comparison.csv;
+- mathematica_python_full_dsigma_comparison.json.
+
+Do not mark the full Mathematica/Python cross-section comparison complete
+until this run reports PASS and the comparison metadata has been reviewed.
