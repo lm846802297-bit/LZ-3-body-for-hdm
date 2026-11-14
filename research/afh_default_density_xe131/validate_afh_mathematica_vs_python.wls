@@ -36,7 +36,7 @@ If[Length[pythonData] =!= 2402, Print["ERROR: Python reference must have 2401 da
 pythonRows = Rest[pythonData];
 If[Length[First[pythonRows]] < 13, Print["ERROR: unexpected Python CSV columns"]; Exit[7]];
 requiredColumns = {"q_GeV", "W_M00_AFH_package", "R_AFH_package_4pi_over_2Jplus1", "R_equal_pn_normalized", "A0_normalization_factor"};
-If[Not[And @@ (MemberQ[First[pythonData], #] & /@ requiredColumns), Print["ERROR: Python CSV header does not match the expected AFH schema"]; Exit[9]];
+If[Not[And @@ (MemberQ[First[pythonData], #] & /@ requiredColumns)], Print["ERROR: Python CSV header does not match the expected AFH schema"]; Exit[9]];
 asNumber[x_] := If[NumberQ[x], N[x], ToExpression[StringTrim[ToString[x]]]];
 pythonQ = asNumber /@ pythonRows[[All, 1]];
 pythonW = asNumber /@ pythonRows[[All, 4]];
