@@ -121,6 +121,59 @@ The paper quotes −1.5 sigma relative to its calibrated NR band. EFT2024 is the
 
 The separate three-body ROI study also shows that the rounded Table S5 exponent can give a substantially different high-energy S1c acceptance from the full-precision EFT2024 vector. This is a genuine model/provenance dependence, not MC statistical noise.
 
+
+### 6.1 Quantitative effect of the printed Table S5 rounding
+
+The rounded Table S5 vector and the full-precision EFT2024 source vector must
+not be treated as numerically interchangeable. A direct dual-vector
+cross-check was added against NESTcalc::GetYieldNR at the pinned 541b643
+source commit.
+
+- 528 scalar comparisons cover both vectors, Xe-128/131/136, both
+  OldW13eV settings, and 11 recoil energies from 5.4 to 330 keV.
+- The independent Python mean-yield implementation agrees with the direct
+  NEST C++ result at worst scaled absolute differences of
+  \(3.33\times10^{-16}\) (Table S5) and \(2.16\times10^{-16}\) (EFT2024).
+- The high-energy exponent \(p(E)\) is exactly the same for the two vectors:
+  the entries controlling \(p_0,a,b,E_0\) are unchanged.
+- The differences instead enter through the rounded NR normalization/slope
+  and charge-yield parameters. At the upper end of the 3-body ROI:
+
+| \(E_R\) | Table S5 \(\Delta N_\gamma\) vs EFT2024 | Table S5 \(\Delta N_e\) vs EFT2024 | Table S5 \(\Delta(N_\gamma+N_e)\) vs EFT2024 |
+|---:|---:|---:|---:|
+| 5.4 keV | −4.3328% | +0.3525% | −2.2557% |
+| 74.7 keV | −6.5406% | +0.3842% | −5.5375% |
+| 100 keV | −6.7192% | +0.3844% | −5.8951% |
+| 200 keV | −7.2620% | +0.3845% | −6.7392% |
+| 248 keV | −7.4528% | +0.3846% | −6.9997% |
+| 269.9 keV | −7.5301% | +0.3846% | −7.1019% |
+
+The light-yield change is much larger than the charge-yield change because
+\(N_\gamma\) is obtained from the total-quanta model after subtracting the
+charge yield. The small printed changes in \(\alpha,\beta,\gamma,\eta\) are
+therefore amplified in the high-energy photon yield, which directly controls
+S1 and the upper S1c ROI acceptance.
+
+This is not a Monte Carlo fluctuation. The existing coarse-binned 2D fold
+also finds \(D_{\rm TV}=0.162\text{--}0.249\) between the Table-S5-mean /
+EFT2024-width hybrid and the full EFT2024 response across the four
+benchmarks and GCN/JJ55. That TV range belongs to the earlier 10-keV,
+200,000-event/family fold; it is a model-family difference, not the newer
+1/5/10-keV grid-discretization error.
+
+The cross-check is [run 43696267500](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43696267500),
+artifact 14154536453, ZIP SHA-256
+20b399d199c2ce5392250bc2dfb9e8ddc4e3ab3f0711e5d89e0432db596ce5af.
+
+**Interpretation:** retain full-precision EFT2024 as the primary *public
+LZ-specific executable candidate* because it is the complete source vector
+present in the public NEST configuration. Retain rounded Table S5 as a
+separate published-table alternative. Do not call the difference harmless
+rounding, do not use the two families interchangeably, and do not promote
+either to the exact collaboration production configuration without
+independent confirmation.
+
+
 ## 7. Required interpretation and policy
 
 1. Pin 541b6430dae6ea289cf110c99f174a9187f7fdee for the current reproducible **public EFT2024 candidate** because it contains the full implementation and exposes the exact vectors. The physics implementation is already present at 307fb27.
