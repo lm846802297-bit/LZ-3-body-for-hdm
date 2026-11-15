@@ -412,3 +412,47 @@ flags are not identical to the official DAQ trigger/S1-threshold stages, and
 the simulated spatial prior is not the official calibration/FV prior. The
 Table S5 alignment is interesting, but it does not establish the exact LZ
 2026 production configuration. See the detailed response-selection audit.
+
+
+### Paired Parametric/Full S1 two-dimensional response (2026-11-15)
+
+A paired NEST EFT2024 response was generated over the full three-body signal
+support, 35--269.9 keV, using 2,000 events per 1-keV stratum (470,000 events
+total). Both S1 modes use the same intrinsic NR quanta and true position, with
+one common NEST Full S2 draw per event. The response is folded separately for
+the red, green, black, and blue benchmarks and GCN/JJ55 nuclear spectra.
+
+The 10-phd by 0.02-dex 2D map comparison gives pooled Parametric-versus-Full
+TV distances of 1.64--3.85%, while the corresponding integrated WS-ROI rate
+differences are only 0.0067--0.2822%. The largest shape difference is the black
+\(m_s=360\) keV benchmark. The exact event-weighted split-half audit reproduces
+the fold's pooled TV values with zero numerical difference; however, the
+observed mode TV is only 64--75% of the within-mode split-half TV benchmark.
+The two halves share one seed and are not independent-seed uncertainty
+estimates or a significance test.
+
+The NEST-stage S1 coincidence and S2-threshold acceptances are 100% in the
+generated signal-support sample. The S2 marginal TV is consistent with zero
+at this stage because the same S2 event is shared by both S1 modes. The
+non-zero joint 2D TV therefore reflects changes in the S1c--S2c conditional
+shape, not a different S2 marginal. WS-ROI selection introduces small
+S2-marginal changes through the S1-dependent cuts and correlations.
+
+The 2D TV is histogram-binning dependent: exact rebinning from 10-phd/0.02-dex
+to 20-phd/0.04-dex and 40-phd/0.08-dex reduces the TV substantially. This is
+a binning diagnostic, not a new Monte Carlo sample or a universal 1% gate.
+The full interpretation and tables are in
+[LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md](lz_2026_extended_nr/LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md).
+
+Implementation:
+- cpp/lz_2026_nr_paired_s1_mode_2d_response.cc — paired Parametric/Full S1 and common Full S2 generation.
+- fold_lz_2026_paired_s1_mode_2d_response.py — exact event-weighted 2D signal maps.
+- audit_lz_2026_paired_s1_2d_sampling_noise.py — pooled-TV closure, marginal TV, and within-stream split-half stability.
+- tests/test_lz_2026_paired_s1_mode_2d_response.py and tests/test_lz_2026_paired_s1_2d_sampling_noise.py — fold and diagnostic tests.
+- .github/workflows/lz-2026-paired-s1-mode-2d-response.yml — pinned-NEST build, response production, fold, validation, and artifact upload.
+
+The calculation passed in [run 43717240547](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43717240547), artifact 14162588482, ZIP SHA-256
+6002e6ea4c345c13aa8c3e056647bb317bb41e3d6ff670dabf23c0bb343bee9b.
+This is an EFT2024 NEST response only; GCN/JJ55 label the nuclear-response
+spectra, not alternative NEST NR-yield configurations. It is still not the
+official LZ waveform-level S1 reconstruction or final selected PDF.

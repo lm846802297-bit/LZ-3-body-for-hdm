@@ -735,3 +735,127 @@ The artifact was downloaded and the two response-family bridge JSON files
 were independently inspected.
 
 
+
+
+### 15.7 Paired Parametric/Full S1 two-dimensional response and finite-sample stability (2026-11-15)
+
+A paired event-level comparison was run with the pinned NEST commit
+541b6430dae6ea289cf110c99f174a9187f7fdee and
+LZ_Detector_2024::SetEFT2024Configuration().
+
+Production definition:
+
+- True recoil support: 35--269.9 keV, 235 one-keV strata.
+- 2,000 events per stratum, 1,000 in each of two disjoint within-stream halves;
+  470,000 events total.
+- Both S1 modes receive the same intrinsic NR quanta and true position.
+  Parametric and Full S1 use separate response random streams, while a single
+  common NEST Full S2 response is shared by the pair.
+- Four three-body benchmarks: red \(m_s=200\) keV, green \(m_s=300\) keV,
+  black \(m_s=360\) keV, and blue \(m_s=300\) keV with
+  \(\Delta m=10\) MeV.
+- GCN and JJ55 spectra are folded separately. The NEST detector/yield
+  configuration in this production is EFT2024 only; this is not a Table S5
+  NEST-yield production.
+- Two stages are retained: NEST coincidence plus S2-threshold acceptance
+  (nest), and the same response plus the WS S1c/raw-S2/S2c ROI (ws_roi).
+
+The artifact contains 1,880 per-energy-bin rows (8 benchmark/nuclear pairs
+times 235 bins), 16 stage summaries, and 20,244 2D map cells. The pooled
+event-weighted TV values from the independent audit reproduce the fold
+summary exactly: the maximum absolute difference across all 16 rows is zero.
+
+#### 15.7.1 Integrated rate versus 2D shape
+
+The generated sample has 100% NEST S1-coincidence and NEST S2-threshold
+acceptance in every 1-keV signal-support bin for both S1 modes. The difference
+between modes is therefore not an observed NEST threshold-acceptance loss in
+this support; it is principally a redistribution of the corrected S1
+observable in the 2D response.
+
+Averaging GCN and JJ55 results, the WS-ROI totals are:
+
+| Benchmark | Parametric WS-ROI acceptance | Full WS-ROI acceptance | Full/Parametric rate change |
+|---|---:|---:|---:|
+| Red, 200 keV | 99.8157% | 99.8090% | -0.0067% |
+| Green, 300 keV | 99.2705% | 99.2446% | -0.0261% |
+| Black, 360 keV | 74.2696% | 74.0600% | -0.2822% |
+| Blue, 300 keV, \(\Delta m=10\) MeV | 99.2746% | 99.2489% | -0.0259% |
+
+The 2D TV, one-dimensional marginal TVs, and within-mode split-half
+comparisons are:
+
+| Benchmark | Stage | Parametric/Full 2D TV | S1c marginal TV | \(\log_{10}S2_c\) marginal TV | Mean within-mode split-half TV | 2D TV / split-half TV |
+|---|---|---:|---:|---:|---:|---:|
+| Red | NEST | 1.652% | 0.647% | 0.000% | 2.574% | 0.642 |
+| Red | WS ROI | 1.644% | 0.643% | 0.004% | 2.565% | 0.641 |
+| Green | NEST | 1.750% | 0.761% | 0.000% | 2.635% | 0.664 |
+| Green | WS ROI | 1.721% | 0.745% | 0.013% | 2.600% | 0.662 |
+| Black | NEST | 3.851% | 1.409% | 0.000% | 5.176% | 0.744 |
+| Black | WS ROI | 3.233% | 1.252% | 0.211% | 4.291% | 0.754 |
+| Blue | NEST | 1.750% | 0.761% | 0.000% | 2.634% | 0.664 |
+| Blue | WS ROI | 1.721% | 0.745% | 0.013% | 2.600% | 0.662 |
+
+The marginal TV values are averaged over GCN and JJ55. At the NEST stage,
+the S2 marginal is identical to floating-point precision because the same
+S2 draw is shared by the two S1 modes and every event in this signal support
+passes the NEST thresholds. The non-zero joint TV is therefore a change in
+the conditional S1c--S2c structure, not a shift in the S2 marginal. After
+WS-ROI selection, the S1-dependent cuts induce small changes in the S2
+marginal, largest for the black benchmark.
+
+The observed pooled Parametric/Full TV is below the mean within-mode
+replica-0-versus-replica-1 TV in every row: the ratio ranges from 0.641 to
+0.754. This is a descriptive within-production stability comparison only.
+The two replicas are disjoint halves of one seeded event design, not
+independent-seed productions. It is not a confidence interval or a
+significance test. The result does not establish that the two S1 modes are
+statistically equivalent; it shows that the current single-seed sample does
+not resolve the mode difference cleanly against its own split-half map
+fluctuations.
+
+#### 15.7.2 Histogram-binning sensitivity
+
+The 2D TV is sensitive to the map binning. Rebinning the same native
+10-phd by 0.02-dex maps (without generating new events) gives:
+
+| Benchmark | Stage | 10 phd / 0.02 dex | 20 phd / 0.04 dex | 40 phd / 0.08 dex |
+|---|---|---:|---:|---:|
+| Red | NEST | 1.652% | 0.878% | 0.476% |
+| Red | WS ROI | 1.644% | 0.875% | 0.474% |
+| Green | NEST | 1.750% | 1.051% | 0.504% |
+| Green | WS ROI | 1.721% | 1.041% | 0.499% |
+| Black | NEST | 3.851% | 2.041% | 0.790% |
+| Black | WS ROI | 3.233% | 1.604% | 0.734% |
+| Blue | NEST | 1.750% | 1.050% | 0.504% |
+| Blue | WS ROI | 1.721% | 1.041% | 0.500% |
+
+This is exact cell aggregation of the existing map, not an independent response
+calculation. It demonstrates that TV cannot be quoted without specifying
+histogram resolution. A final likelihood must choose binning based on the
+analysis observable resolution and demonstrate its own binning stability;
+the 1% energy-grid convergence gate is not automatically a gate on S1/S2
+histogram resolution.
+
+#### 15.7.3 Status and next requirement
+
+The paired NEST 2D calculation and its exact weighted closure passed. It
+remains a diagnostic EFT2024 NEST response, not the official LZ selected PDF:
+Full S1 is not the collaboration waveform-level reconstruction; S2 is NEST
+integrated Full mode rather than hardware DAQ; SS reconstruction, data-analysis
+cuts, official 4.71-tonne FV, Skin/OD veto samples, and live-time migration
+remain absent.
+
+The current Parametric-versus-Full S1 comparison is not accepted as a final
+equivalence test. The next numerical requirement is an independent-seed
+ensemble (at least three disjoint seeds) with the same event-weighted 2D
+folding and the same map binning, followed by a separate binning-stability
+check. The EFT2024 result must also not be presented as a comparison against
+the Table S5 NR-yield alternative. No final profile likelihood is authorized
+by this intermediate result.
+
+The production is [run 43717240547](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43717240547),
+artifact 14162588482, ZIP SHA-256
+6002e6ea4c345c13aa8c3e056647bb317bb41e3d6ff670dabf23c0bb343bee9b.
+The downloaded archive and all response/summary files were independently
+inspected.
