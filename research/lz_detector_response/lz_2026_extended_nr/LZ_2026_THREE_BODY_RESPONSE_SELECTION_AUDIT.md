@@ -304,3 +304,41 @@ The previous blanket label "pre-selection" should now be made more precise:
 - Neither new intensity includes the complete LZ trigger, waveform-level S1 timing, SS reconstruction, data-analysis cuts, official FV, veto sample assignment, or live-time treatment.
 
 Accordingly, describe the current result as a **NEST-level / WS-ROI intermediate three-body signal prediction**, not as the final LZ post-selection signal PDF. Keep the 1-keV response as the reference; regard 5-keV as a promising sub-percent approximation pending a pre-registered tolerance and MC covariance treatment. Do not start the final profile likelihood.
+
+
+## 10. Paired NEST Parametric-versus-Full S1 coincidence cross-check
+
+Because the stratified three-body response uses \`S1CalculationMode::Parametric\`, a separate paired test was added against NEST \`S1CalculationMode::Full\`, which explicitly uses the configured PMT-level timing and coincidence logic.
+
+Run and artifact:
+- [GitHub Actions run 43657795165](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43657795165), conclusion: success.
+- Artifact ID: \`14138039978\`.
+- Artifact SHA-256: \`2522b9505ce4313a4effd2a5f8945b6a93d731f0def1408db5c839813971cb73\`.
+- Pinned NEST: \`541b6430dae6ea289cf110c99f174a9187f7fdee\`.
+- EFT2024 detector/yield candidate; 10,000 paired events in each of ten energy bins.
+
+For each event, \`FullCalculation(NR)\` is run once. The same intrinsic quanta, recoil energy, and true position are then passed to Parametric and Full S1 modes, with separate deterministic S1 random streams. This isolates the S1 detector-response implementation from differences in the underlying NR quanta and event geometry.
+
+| Energy bin (keV) | Parametric S1 pass | Full S1 pass | Full − Parametric | Paired 95% interval for difference |
+|---|---:|---:|---:|---:|
+| 5.4–6.4 | 86.27% | 86.02% | −0.25 percentage points | [−1.153, +0.653] pp |
+| 10.4–11.4 | 99.77% | 99.70% | −0.07 percentage points | [−0.210, +0.070] pp |
+| 15.4–16.4 | 99.99% | 99.99% | 0.00 percentage points | [−0.0277, +0.0277] pp |
+| 20.4–21.4 | 100.00% | 100.00% | 0.00 percentage points | [0, 0] in this finite sample |
+| 30.4–31.4 | 100.00% | 100.00% | 0.00 percentage points | [0, 0] in this finite sample |
+| 35.0–36.0 | 100.00% | 100.00% | 0.00 percentage points | [0, 0] in this finite sample |
+| 101.0–102.0 | 100.00% | 100.00% | 0.00 percentage points | [0, 0] in this finite sample |
+| 210.0–211.0 | 100.00% | 100.00% | 0.00 percentage points | [0, 0] in this finite sample |
+| 247.4–248.4 | 100.00% | 100.00% | 0.00 percentage points | [0, 0] in this finite sample |
+| 269.4–269.9 | 100.00% | 100.00% | 0.00 percentage points | [0, 0] in this finite sample |
+
+The largest absolute efficiency difference is 0.25 percentage points; the largest absolute paired \(z\)-score is 0.98. At the signal-support energies of the four benchmarks (first nonzero recoil points 35, 101, 210, and 101 keV), both modes pass all 10,000 sampled events in the corresponding bins.
+
+The S1c shapes are also close at the high-energy anchors:
+- 247.4–248.4 keV: mean \(S1_c=538.27\) phd (Parametric) versus 539.60 phd (Full);
+- 269.4–269.9 keV: mean \(S1_c=592.77\) phd (Parametric) versus 593.73 phd (Full).
+
+This supports using the faster Parametric mode for the present benchmark spectra: the omission of explicit 150-ns timing in Parametric mode does not produce a statistically resolved S1-coincidence acceptance bias in the tested signal-support region. The low-energy differences are also consistent with the paired Monte Carlo uncertainty.
+
+This is a **mode-to-mode NEST validation**, not a complete LZ waveform or analysis-selection validation. The Full S1 mode is not a complete detector waveform reconstruction, and the comparison does not add trigger, SS reconstruction, data-quality, official FV, Skin/OD veto, or live-time selections. No equivalence tolerance was pre-registered; this remains a diagnostic rather than a formal PASS.
+
