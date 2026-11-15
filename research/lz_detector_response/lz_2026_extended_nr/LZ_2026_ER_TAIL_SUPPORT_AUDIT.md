@@ -76,7 +76,13 @@ These intervals quantify finite-MC uncertainty in the percentile offset only. Th
 - Previous artifact ID: 14132651289.
 - Previous artifact SHA-256: f1a903a68c75f9c787549a64bb69c0d8b661ef0d777ffa2a769b19aee9666c69.
 - The updated ER driver calculates drift velocity event by event from the local field and stores drift distance/time/speed. The summarizer enforces relative kinematic closure below 1e−9.
-- The bootstrap-enabled rerun is in progress; its run ID and artifact checksum will be added after completion.
+- Corrected event-local drift and bootstrap run: [43662363556](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43662363556), successful.
+- Corrected artifact ID: 14140966494.
+- Corrected artifact SHA-256: a2a138d262245e811c94b8bc41d76f4af16c53196d1a12adea044bf66a9f7bc1.
+- The artifact contains six event CSVs, the conditional 2D PDFs, the band summary, and the 2,000-replica bootstrap/tail-support JSON.
+- All 200,000/100,000 event samples pass the local drift kinematic closure. The maximum relative residual is 1.0581e−11; the field is constant at 96.5 V/cm and the drift speed at 1.33036177945 mm/us.
+- All common physical event columns in the six corrected CSVs are bitwise identical to the earlier pilot artifact. The new files additionally store local drift distance/time/speed.
+- The corrected bootstrap reproduces the values and 95% intervals in Section 3.
 
 The full ER response study is in
 [LZ_2026_NR_ER_FULL_RESPONSE_CANDIDATE_REPORT.md](LZ_2026_NR_ER_FULL_RESPONSE_CANDIDATE_REPORT.md).
