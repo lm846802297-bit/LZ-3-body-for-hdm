@@ -583,6 +583,7 @@ checks must not be turned into an unmotivated multiplicative NR acceptance.
 The remaining blockers are now explicit:
 
 - [ ] Official production NEST build/configuration and calibration closure, including high-energy NR response.
+- [ ] Official BACCARAT/GEANT4-based 2D signal-response construction, or an independently validated equivalent including event geometry, position correction, reconstruction smearing, and selection correlations.
 - [ ] Calibration-source energy spectra and spatial deployment distributions for the NR band/response calibration.
 - [ ] Position reconstruction and position-correction maps, including finite \((x,y,z)\) resolution and field-dependent effects.
 - [ ] S2 trigger efficiency and its uncertainty/correlation with S1/SS reconstruction.
