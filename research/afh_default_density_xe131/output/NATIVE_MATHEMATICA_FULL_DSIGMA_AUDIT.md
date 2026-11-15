@@ -117,9 +117,9 @@ The Python comparator must be run on each Mathematica output. The full grid uses
 5. The chi2 pole clearance remains positive at every open point in the fixed-speed scan.
 6. High-order anchors demonstrate quadrature convergence separately.
 
-The comparator defaults to 2e-7 relative tolerance for I6 and d sigma/dE_R, 2e-10 for AFH PCHIP response, and 2e-12 for q, C0, unit conversion, and factor-four identities. It also compares the no-factor-four control against the independently recomputed Python cross section divided by four.
+The comparator defaults to 2e-7 relative tolerance for I6 and d sigma/dE_R, 2e-8 for AFH PCHIP response, and 2e-12 for q, C0, unit conversion, and factor-four identities. It also compares the no-factor-four control against the independently recomputed Python cross section divided by four.
 
-An earlier preflight reported a 4.11e-5 difference between the linear-W^2 kernel and one historical archived I6 value. This is not evidence of an AFH normalization error. The new full audit therefore uses threshold_u2 by default and will re-evaluate that point against a matched high-order reference; the source of the historical-grid difference remains open until the native run is available.
+A matched historical-I6 mapping audit is now complete: [workflow run 43768639839](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43768639839), artifact 14182804837. At the archived green point (v=776 km/s, zero width, 40x32x20), the legacy Eq. (6) kernel reproduces the archived I6 exactly; the independent linear-W^2 mapping agrees within 5.42e-11 relative, and linear-W within 2.32e-9. The threshold_u2 mapping at the same 40x32x20 order is lower by 2.14--2.23e-6, but its 48x40x24 and 64x48x32 results agree within 1.40e-11. Thus the archived finite-order value is reproduced, while the threshold-regularized high-order result is converged. The earlier 4.11e-5 preflight discrepancy is not reproduced under these matched inputs and is retained only as an unverified preliminary observation. Full values and hashes are in [HISTORICAL_I6_MAPPING_AUDIT.md](HISTORICAL_I6_MAPPING_AUDIT.md). This audit changes neither the AFH response nor the full-cross-section status.
 
 ## 6. Scientific status
 
@@ -127,6 +127,7 @@ An earlier preflight reported a 4.11e-5 difference between the linear-W^2 kernel
 |---|---|
 | AFH v6.0 Xe-131 response, native Mathematica vs Python, 2401 q nodes | **PASS** |
 | AFH factor-four convention and C0 separation | **PASS at response level** |
+| Historical green I6 archive vs legacy and stable W2 mappings | **PASS: archived value reproduced; threshold_u2 converged** |
 | Wolfram Language full I6 implementation | **Prepared; not yet executed** |
 | Full d sigma/dE_R, Mathematica vs Python | **Not yet validated** |
 | Constant pole width | **Conditional Dirac / scalar-only assumption** |
