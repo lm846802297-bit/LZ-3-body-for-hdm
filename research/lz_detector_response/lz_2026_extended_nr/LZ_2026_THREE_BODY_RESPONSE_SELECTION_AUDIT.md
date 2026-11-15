@@ -338,11 +338,11 @@ For the black benchmark, the response-family choice itself changes the NEST-plus
 
 Because the \(m_s=360\) keV benchmark is concentrated near the upper recoil-energy boundary and its WS-ROI acceptance changes rapidly there, a dedicated 0.5-keV response sample was generated over the interval 225.4–269.9 keV. The lower edge is aligned to the existing 1-keV strata. The run uses 4,000 events in each 0.5-keV stratum (two disjoint 2,000-event halves) for each of EFT2024, rounded Table S5, WS2024, and generic NEST.
 
-Run and artifact:
-- [GitHub Actions run 43675776534](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43675776534), conclusion: success.
-- Artifact ID: 14146681605.
-- ZIP SHA-256: de195140fc2d4b3e3205a7543ea822a9ed2b325373db60078ec79cae78ab78b5.
-- The artifact includes the full 1-keV response samples, the 0.5-keV high-energy samples, the 1/5/10-keV fold, and the high-energy comparison outputs.
+The high-energy refinement is also included in the latest combined response-grid and event-weighted artifact:
+- [GitHub Actions run 43676553810](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43676553810), conclusion: success.
+- Artifact ID: 14146333000.
+- ZIP SHA-256: 3af588a74576db65462545ff305d453b63febaa701d3cf42762e8edb91e7b7d7.
+- The 437,589,152-byte artifact contains the full 1-keV response samples, the 0.5-keV high-energy samples, the 1/5/10-keV fold, the event-weighted fold, and the high-energy comparison outputs.
 
 Across 64 matched comparisons (four benchmarks, two nuclear responses, four response families, and two acceptance modes), the 0.5-keV versus 1-keV differences are:
 - Maximum relative accepted-rate difference: 0.46895%.
@@ -474,3 +474,38 @@ the collaboration's D-D/AmBe calibration spectrum or source geometry. Do not
 select an NR fluctuation vector by matching the candidate event; that would
 be circular. The study is not a likelihood input and does not establish the
 exact LZ 2026 production NEST configuration.
+
+
+## 13. Event-level differential-rate weighted response fold
+
+The event-level weighting method and complete result are documented in
+[LZ_2026_THREE_BODY_EVENT_WEIGHTED_FOLD_AUDIT.md](LZ_2026_THREE_BODY_EVENT_WEIGHTED_FOLD_AUDIT.md).
+The latest combined artifact is [run 43676553810](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43676553810),
+artifact 14146333000, SHA-256
+3af588a74576db65462545ff305d453b63febaa701d3cf42762e8edb91e7b7d7.
+
+For each 1-keV response stratum, events are sampled uniformly in true recoil
+energy and weighted by the benchmark-specific piecewise-linear \(dR/dE_R\).
+The event weights in each stratum and replica are normalized to the exact
+piecewise-linear rate integral of that stratum. Across 64 matched combinations,
+the maximum raw-rate closure residual is \(1.11\times10^{-15}\), the largest
+event-weighted versus 1-keV binned accepted-rate difference is 0.02821%, and
+the largest 2D total-variation distance is 0.07920%. These differences are
+below the observed disjoint-replica MC variations (maximum 0.4381% in rate
+and 3.9654% in 2D TV).
+
+This validates the event-level rate weighting and the numerical consistency
+of the 1-keV binned fold for the generated samples. It does not establish a
+formal response-grid PASS: the grid summary still records
+`formal_pass: null` because no scientific tolerance was
+pre-registered.
+
+The event-weighted NEST/WS-ROI count divided by the separate rate-level
+Fig. S2 final-efficiency count ranges from 0.6024 to 1.3050 across the
+64 response/benchmark rows. This ratio is a selection/provenance diagnostic,
+not an additional efficiency factor. Its strong response-family dependence,
+especially for the high-energy black benchmark, means the public response
+families cannot be treated as interchangeable and the exact production
+configuration/calibration closure remains unresolved. Do not multiply the
+Fig. S2 scalar efficiency into the existing 2D map.
+
