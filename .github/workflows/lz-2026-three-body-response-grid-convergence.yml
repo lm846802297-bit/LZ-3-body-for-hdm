@@ -7,6 +7,8 @@ on:
     paths:
       - research/lz_detector_response/cpp/lz_2026_nr_stratified_energy_response.cc
       - research/lz_detector_response/converge_lz_2026_three_body_energy_grid.py
+      - research/lz_detector_response/compare_lz_2026_nr_high_energy_half_kev.py
+      - research/lz_detector_response/tests/test_lz_2026_nr_high_energy_half_kev.py
       - research/lz_detector_response/extract_lz_2026_nr_selection_efficiency_components.py
       - research/lz_detector_response/tests/test_lz_2026_three_body_energy_grid_convergence.py
       - research/lz_detector_response/lz_2026_extended_nr/LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md
@@ -65,6 +67,7 @@ jobs:
       - name: Test grid construction, ROI mask and integration
         run: |
           python -m unittest research/lz_detector_response/tests/test_lz_2026_three_body_energy_grid_convergence.py -v
+          python -m unittest research/lz_detector_response/tests/test_lz_2026_nr_high_energy_half_kev.py -v
       - name: Configure and build pinned NEST core
         run: |
           cmake -S nest -B nest/build \
@@ -86,6 +89,15 @@ jobs:
               > response-output/${config}.csv
           done
           du -h response-output/*
+      - name: Generate 0.5-keV high-energy NR response samples
+        run: |
+          mkdir -p response-tail-output
+          for config in eft2024 tableS5 ws2024 generic; do
+            ./lz_2026_nr_stratified_energy_response \
+              ${config} 4000 20261120 225.4 269.9 0.5 \
+              > response-tail-output/${config}.csv
+          done
+          du -h response-tail-output/*
       - name: Fold three-body spectra and compare 1/5/10-keV grids
         run: |
           python research/lz_detector_response/converge_lz_2026_three_body_energy_grid.py \
@@ -136,12 +148,21 @@ jobs:
           cp selection-audit-output/lz_2026_nr_selection_efficiency_components.csv convergence-output/
           cp selection-audit-output/lz_2026_nr_selection_efficiency_components_metadata.json convergence-output/
           cat convergence-output/grid_convergence_summary.json
+      - name: Compare 0.5-keV and 1-keV high-energy response folds
+        run: |
+          python research/lz_detector_response/compare_lz_2026_nr_high_energy_half_kev.py \
+            --coarse-response-dir response-output \
+            --fine-response-dir response-tail-output \
+            --spectrum-dir research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum \
+            --out-dir convergence-output/high_energy_half_kev
+          cat convergence-output/high_energy_half_kev/high_energy_half_kev_summary.json
       - name: Upload raw response, efficiency decomposition and convergence outputs
         uses: actions/upload-artifact@v4
         with:
           name: lz-2026-three-body-response-grid-convergence
           path: |
             response-output/
+            response-tail-output/
             selection-audit-output/
             convergence-output/
           if-no-files-found: error
