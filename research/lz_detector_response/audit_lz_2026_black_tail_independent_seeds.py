@@ -64,6 +64,33 @@ def pairwise_tv_distances(intensities: list[dict]) -> list[float]:
     ]
 
 
+def evaluate_local_tail_gate(comparisons: list[dict]) -> dict:
+    """Apply the 1%/1% point-estimate gate to the independent-seed mean maps."""
+    if not comparisons:
+        raise ValueError("no independent-seed comparisons to evaluate")
+    max_rate = max(
+        row["relative_rate_difference_fine_vs_coarse"] for row in comparisons
+    )
+    max_tv = max(
+        row["tv_distance_between_mean_2d_maps"] for row in comparisons
+    )
+    return {
+        "scope": (
+            "EFT2024 black-benchmark 225.4--269.9 keV tail; mean rates and "
+            "mean 2D maps from three independent full productions per grid"
+        ),
+        "accepted_rate_threshold": 0.01,
+        "2d_tv_threshold": 0.01,
+        "max_relative_rate_difference": max_rate,
+        "max_tv_distance_between_mean_maps": max_tv,
+        "point_estimate_pass": max_rate <= 0.01 and max_tv <= 0.01,
+        "covariance_note": (
+            "This is a local-tail mean-map check, not a full-range test or a "
+            "cell-by-cell high-dimensional covariance estimate."
+        ),
+    }
+
+
 def load_seed_fold(
     response_dir: Path,
     seed: int,
@@ -147,7 +174,7 @@ def summarize_comparison(
         "fine_seed_sem_events_kg_day": fine_se,
         "relative_rate_difference_fine_vs_coarse": rate_difference,
         "combined_seed_sem_events_kg_day": combined_se,
-        "rate_difference_z_score": z_score,
+        "rate_difference_over_combined_seed_sem": z_score,
         "coarse_max_pairwise_seed_rate_difference": max_pairwise_rate_difference(coarse_rates),
         "fine_max_pairwise_seed_rate_difference": max_pairwise_rate_difference(fine_rates),
         "coarse_max_pairwise_seed_tv_distance": max(coarse_pair_tv),
@@ -257,7 +284,14 @@ def run_audit(args: argparse.Namespace) -> dict:
             "and reports pairwise 2D-shape stability. Three seeds do not provide a "
             "complete high-dimensional cell-by-cell detector covariance matrix."
         ),
+        "rate_uncertainty_interpretation": (
+            "rate_difference_over_combined_seed_sem is the absolute difference of "
+            "the two grid means divided by their combined standard error. With "
+            "three seeds per grid it is a descriptive stability statistic, not a "
+            "calibrated hypothesis-test z-score or p-value."
+        ),
         "comparisons": comparisons,
+        "local_tail_refinement_gate": evaluate_local_tail_gate(comparisons),
         "per_seed": seed_details,
     }
 
