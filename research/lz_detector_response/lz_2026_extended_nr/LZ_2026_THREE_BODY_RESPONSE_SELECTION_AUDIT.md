@@ -1101,5 +1101,5 @@ interval, final profile likelihood, or 90% CL exclusion is provided.
 Full methods, tables, source hashes, and output descriptions are in the
 [archived upper-tail report](paired_s1_independent_seeds_2026-11-15/upper-tail-audit/REPORT.md).
 The successful audit is
-[run 43762406779](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43759124017),
+[run 43762406779](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43762406779),
 artifact 14181285817.

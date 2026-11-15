@@ -2,11 +2,11 @@
 
 **Status:** completed ten-independent-seed diagnostic; not an official LZ detector response or likelihood input.
 
-**Benchmark:** black, \(m_s=360\ \mathrm{keV}\), \(\Delta m=1\ \mathrm{MeV}\) production label  
+**Benchmark:** black, production label black_ms360_dm1, \(m_s=360\ \mathrm{keV}\)  
 **Response:** EFT2024, pinned NEST commit 541b6430dae6ea289cf110c99f174a9187f7fdee  
 **Selection support:** \(E_R\in[205,269.9]\ \mathrm{keV}\)  
-**Audit run:** [GitHub Actions run 43762406779](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43759124017)  
-**Audit artifact:** [artifact 14181285817](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43759124017/artifacts/14179542527)  
+**Audit run:** [GitHub Actions run 43762406779](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43762406779)  
+**Audit artifact:** [artifact 14181285817](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43762406779/artifacts/14181285817)  
 **Audit artifact ZIP SHA-256:** fb1b06d77d9d4c58dd837ab9e657edbcc9e593856fbad6f30c70b1b4866bbe0d  
 **Source production:** [run 43750948249](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43750948249), artifact 14176882910  
 **Source production ZIP SHA-256:** 606397d9eac594008630a18b97f1e72fbbfa1d157e34779de7ce5fd0fe5b8cb5
