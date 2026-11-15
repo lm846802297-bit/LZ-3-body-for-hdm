@@ -612,4 +612,48 @@ the digitized final curve while EFT2024 falls below it in some bins must not
 be used as a strict nested-efficiency proof or as a stand-alone rule for
 selecting the production model.
 
+### 15.5 Conditional Fig. S2 bridge is model-dependent (2026-11-15)
+
+The updated event-weighted 2D fold was joined to the four vector-extracted
+Fig. S2 cumulative stages separately for EFT2024 and the Table S5-mean /
+EFT2024-width hybrid. Each family has eight matched rows (four benchmarks ×
+GCN/JJ55). The maximum absolute rate-level factorisation mismatch is 7.6250%
+for EFT2024 and 13.0272% for Table S5.
+
+For the black \(m_s=360\) keV, GCN point:
+
+| Quantity | EFT2024 | Table S5 hybrid |
+|---|---:|---:|
+| NEST-only acceptance | 100.00% | 100.00% |
+| WS ROI conditional acceptance | 74.0612% | 90.6191% |
+| Fig. S2 SS+DA conditional efficiency | 95.5790% | 95.5790% |
+| Fig. S2 ROI conditional efficiency | 80.1746% | 80.1746% |
+| Fig. S2 final cumulative efficiency | 76.6301% | 76.6301% |
+| NEST ROI × residual SS+DA factor | 70.7870% | 86.6128% |
+| Factorised / Fig. S2 final − 1 | −7.6250% | +13.0272% |
+
+JJ55 gives −7.5937% (EFT2024) and +12.7022% (Table S5). The red/green/blue
+benchmarks close to within about 0.63% or better. The opposite-sign mismatch
+for the black point is therefore not a universal residual-efficiency
+normalization issue; it is tied to the high-energy ROI response and the
+choice of NR mean-yield family.
+
+The factorisation used here is
+\[
+\epsilon_{\rm NEST}\,
+\epsilon_{\rm WS\,ROI\mid NEST}\,
+\epsilon_{\rm SS+DA\mid preROI},
+\]
+compared with the Fig. S2 final cumulative efficiency. The WS ROI is already
+present in the 2D response, so the Fig. S2 ROI conditional factor is not
+multiplied again. This is only a rate-level bookkeeping test. It does not
+supply the conditional 2D SS/DA migration kernel and cannot be used as a
+global scalar correction to the \((S1_c,\log_{10}S2_c)\) intensity.
+
+The calculation is [run 43697104437](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43697104437),
+artifact 14155360851, ZIP SHA-256
+682e2ba71063d6ef835b37a6d328a84ab7c609f404856aa83d56e4b875794bab.
+The artifact was downloaded and the two response-family bridge JSON files
+were independently inspected.
+
 
