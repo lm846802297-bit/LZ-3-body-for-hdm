@@ -7,6 +7,8 @@ on:
     paths:
       - research/lz_detector_response/audit_lz_2026_energy_resolved_selection_bridge.py
       - research/lz_detector_response/tests/test_lz_2026_energy_resolved_selection_bridge.py
+      - research/lz_detector_response/audit_lz_2026_energy_resolved_mc_uncertainty.py
+      - research/lz_detector_response/tests/test_lz_2026_energy_resolved_mc_uncertainty.py
       - .github/workflows/lz-2026-energy-resolved-selection-bridge.yml
   workflow_dispatch:
 
@@ -90,7 +92,7 @@ jobs:
       - name: Estimate weighted event-level MC uncertainty by recoil-energy bin
         run: |
           python research/lz_detector_response/audit_lz_2026_energy_resolved_mc_uncertainty.py \
-            --response-dir archived-inputs/response-output \
+            --response-dir extracted/response-output \
             --bridge-bin-csv energy-bridge-output/energy_resolved_selection_bridge_by_energy_bin.csv \
             --response-families eft2024 tableS5 \
             --benchmarks red_ms200_dm1 green_ms300_dm1 black_ms360_dm1 blue_ms300_dm10 \
