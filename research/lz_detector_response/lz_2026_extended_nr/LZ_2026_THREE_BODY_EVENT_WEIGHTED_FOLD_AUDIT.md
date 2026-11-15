@@ -135,7 +135,7 @@ No scalar cumulative efficiency should be multiplied into the existing 2D intens
 
 ## 9. Reproduction references
 
-- [LZ 2026 three-body response-grid workflow](../../../../.github/workflows/lz-2026-three-body-response-grid-convergence.yml)
+- [LZ 2026 three-body response-grid workflow](../../../.github/workflows/lz-2026-three-body-response-grid-convergence.yml)
 - [Event-weighted fold implementation](../fold_lz_2026_three_body_event_weighted_response.py)
 - [Event-weighted fold tests](../tests/test_lz_2026_three_body_event_weighted_fold.py)
 - [1/5/10-keV convergence implementation](../converge_lz_2026_three_body_energy_grid.py)
