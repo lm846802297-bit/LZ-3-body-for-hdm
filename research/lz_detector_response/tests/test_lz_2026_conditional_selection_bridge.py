@@ -63,7 +63,9 @@ class ConditionalSelectionBridgeTests(unittest.TestCase):
         }
 
     def test_factorised_residual_efficiency_is_computed_without_full_curve(self):
-        rows = MOD.build_bridge_rows(self.event_summary, self.selection_summary)
+        rows = MOD.build_bridge_rows(
+            self.event_summary, self.selection_summary, response_family="eft2024"
+        )
         self.assertEqual(len(rows), 1)
         row = rows[0]
         self.assertAlmostEqual(row["epsilon_nest"], 1.0)
