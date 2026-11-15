@@ -174,6 +174,91 @@ def read_bridge_bins(path: Path) -> dict:
     return output
 
 
+BLACK_HIGH_ENERGY_BANDS_KEV = (
+    ("200.4-230.4", 200.4, 230.4),
+    ("230.4-245.4", 230.4, 245.4),
+    ("245.4-260.4", 245.4, 260.4),
+    ("260.4-269.9", 260.4, 269.9),
+)
+
+
+def summarize_black_high_energy_bands(bridge_rows: dict) -> list[dict]:
+    """Aggregate black-benchmark bridge rates over edge-aligned high-energy bands."""
+    output = []
+    rate_fields = (
+        "exact_raw_rate_events_kg_day",
+        "nest_accepted_rate_events_kg_day",
+        "ws_roi_accepted_rate_events_kg_day",
+        "figs2_trigger_plus_s1_rate_events_kg_day",
+        "figs2_trigger_plus_s1_ss_da_rate_events_kg_day",
+        "figs2_final_plus_roi_rate_events_kg_day",
+        "energy_resolved_factorized_rate_events_kg_day",
+    )
+    for family in RESPONSE_FAMILIES:
+        for nuclear in NUCLEAR_MODELS:
+            all_rows = [
+                row for (fam, benchmark, nuc, _), row in bridge_rows.items()
+                if fam == family and benchmark == "black_ms360_dm1" and nuc == nuclear
+            ]
+            if not all_rows:
+                raise ValueError(f"missing black benchmark bridge rows for {family}/{nuclear}")
+            all_rows.sort(key=lambda row: float(row["energy_low_keV"]))
+            total = {
+                field: math.fsum(float(row[field]) for row in all_rows)
+                for field in rate_fields
+            }
+            for label, band_low, band_high in BLACK_HIGH_ENERGY_BANDS_KEV:
+                selected = [
+                    row for row in all_rows
+                    if float(row["energy_low_keV"]) >= band_low - 1e-9
+                    and float(row["energy_high_keV"]) <= band_high + 1e-9
+                ]
+                if not selected:
+                    raise ValueError(f"empty black high-energy band {label} for {family}/{nuclear}")
+                low = min(float(row["energy_low_keV"]) for row in selected)
+                high = max(float(row["energy_high_keV"]) for row in selected)
+                if abs(low - band_low) > 1e-9 or abs(high - band_high) > 1e-9:
+                    raise ValueError(
+                        f"band {label} is not exactly covered by response bins: [{low}, {high}]"
+                    )
+                sums = {
+                    field: math.fsum(float(row[field]) for row in selected)
+                    for field in rate_fields
+                }
+                raw = sums["exact_raw_rate_events_kg_day"]
+                nest = sums["nest_accepted_rate_events_kg_day"]
+                ws = sums["ws_roi_accepted_rate_events_kg_day"]
+                orange = sums["figs2_trigger_plus_s1_rate_events_kg_day"]
+                green = sums["figs2_trigger_plus_s1_ss_da_rate_events_kg_day"]
+                final = sums["figs2_final_plus_roi_rate_events_kg_day"]
+                factorized = sums["energy_resolved_factorized_rate_events_kg_day"]
+                output.append({
+                    "benchmark": "black_ms360_dm1",
+                    "nuclear_model": nuclear,
+                    "response_family": family,
+                    "energy_band": label,
+                    "energy_low_keV": band_low,
+                    "energy_high_keV": band_high,
+                    "n_energy_bins": len(selected),
+                    **sums,
+                    "ws_roi_given_nest": ws / nest if nest > 0.0 else None,
+                    "figs2_ss_da_given_trigger_plus_s1": green / orange if orange > 0.0 else None,
+                    "figs2_roi_given_ss_da": final / green if green > 0.0 else None,
+                    "factorized_vs_figs2_final_relative_difference": (
+                        factorized / final - 1.0 if final > 0.0 else None
+                    ),
+                    "figs2_final_fraction_of_black_total": (
+                        final / total["figs2_final_plus_roi_rate_events_kg_day"]
+                        if total["figs2_final_plus_roi_rate_events_kg_day"] > 0.0 else None
+                    ),
+                    "factorized_fraction_of_black_total": (
+                        factorized / total["energy_resolved_factorized_rate_events_kg_day"]
+                        if total["energy_resolved_factorized_rate_events_kg_day"] > 0.0 else None
+                    ),
+                })
+    return output
+
+
 def build_diagnostics(
     family: str,
     spectra: dict,
@@ -339,6 +424,7 @@ def main() -> None:
         for nuclear in args.nuclear_models:
             spectra[(benchmark, nuclear)] = grid.read_spectrum(path, nuclear)
     bridge_rows = read_bridge_bins(args.bridge_bin_csv)
+    black_band_summaries = summarize_black_high_energy_bands(bridge_rows)
 
     all_bins = []
     all_summaries = []
@@ -362,6 +448,12 @@ def main() -> None:
             writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
             writer.writeheader()
             writer.writerows(rows)
+    band_path = args.out_dir / "black_ms360_high_energy_band_summary.csv"
+    with band_path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=list(black_band_summaries[0]))
+        writer.writeheader()
+        writer.writerows(black_band_summaries)
+
     summary = {
         "study": "within-production MC uncertainty of energy-resolved WS-ROI selection bridge",
         "status": "WITHIN_STREAM_MC_DIAGNOSTIC_ONLY",
@@ -394,13 +486,19 @@ def main() -> None:
             "between-seed and between-production variance",
         ],
         "per_key_summaries": all_summaries,
+        "black_high_energy_bands_keV": [
+            {"label": label, "low": low, "high": high}
+            for label, low, high in BLACK_HIGH_ENERGY_BANDS_KEV
+        ],
+        "black_high_energy_band_summaries": black_band_summaries,
     }
     json_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({
         "status": summary["status"],
         "n_summary_rows": len(all_summaries),
         "n_energy_bin_rows": len(all_bins),
-        "outputs": [str(summary_path), str(bins_path), str(json_path)],
+        "n_black_high_energy_band_rows": len(black_band_summaries),
+        "outputs": [str(summary_path), str(bins_path), str(band_path), str(json_path)],
     }, indent=2))
 
 
