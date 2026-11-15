@@ -365,7 +365,27 @@ def evaluate_engineering_grid_gate(comparison_rows: list[dict]) -> dict:
             "1-keV response strata. This is not an independent-seed MC covariance "
             "estimate or a complete detector-response validation."
         ),
-        "production_adoption": "pending-independent-seed-high-stat-validation",
+        "production_adoption": (
+            "5-keV-approved-coarse-grid-for-intermediate-NEST-plus-WS-ROI-response;"
+            "1-keV-reference-retained"
+        ),
+        "independent_seed_tail_validation": {
+            "status": "PASS_LOCAL_TAIL_MEAN_MAP_GATE",
+            "run_id": 43691733080,
+            "artifact_id": 14151869654,
+            "artifact_sha256": "837a0385cac4c784abef38a5d4efc4273fc92ba01ddfcfab9123c90baecf2543",
+            "response_family": "eft2024",
+            "benchmark": "black_ms360_dm1",
+            "true_recoil_interval_keV": [225.4, 269.9],
+            "independent_seeds_per_grid": 3,
+            "events_per_stratum_per_seed": 10000,
+            "max_relative_rate_difference": 0.00018619289461319077,
+            "max_tv_distance_between_mean_maps": 0.008488988170409285,
+            "scope_limit": (
+                "Local high-energy tail only; does not provide a full-range or "
+                "cell-by-cell high-dimensional covariance matrix."
+            ),
+        },
     }
 
 
@@ -519,7 +539,7 @@ def main() -> None:
     summary["convergence_diagnostics"] = {
         "formal_pass": None,
         "status": (
-            "5KEV_ENGINEERING_GATE_PASS_INDEPENDENT_MC_VALIDATION_PENDING"
+            "5KEV_ENGINEERING_GATE_PASS_TAIL_INDEPENDENT_SEEDS_PASS_1KEV_REFERENCE_RETAINED"
             if gate_5["point_estimate_pass"] and not gate_10["point_estimate_pass"]
             else "ENGINEERING_GATE_REQUIRES_REVIEW"
         ),
@@ -536,9 +556,11 @@ def main() -> None:
         ),
         "note": (
             "The approved 1.0%/1.0% engineering gate accepts the 5-keV "
-            "point-estimate reaggregation and rejects 10 keV. The 1-keV grid "
-            "remains the reference until independent-seed high-stat validation; "
-            "this gate does not certify the full LZ response or likelihood."
+            "point-estimate reaggregation and rejects 10 keV. The independent-seed "
+            "EFT2024 black-tail mean-map check also passes locally. Use 5 keV as "
+            "the coarse production grid for the intermediate NEST+WS-ROI response "
+            "and retain 1 keV as the reference. This does not certify the full "
+            "LZ response or likelihood."
         ),
     }
     (args.out_dir / "grid_convergence_summary.json").write_text(
