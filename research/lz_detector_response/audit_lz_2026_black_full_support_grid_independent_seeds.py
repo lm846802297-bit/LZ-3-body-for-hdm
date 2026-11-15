@@ -70,6 +70,17 @@ def run_audit(args: argparse.Namespace) -> dict:
         f"{args.roi_min_keV:g}--{args.roi_max_keV:g} keV; "
         "GCN/JJ55; NEST and NEST+WS-ROI modes"
     )
+    summary["limitations"] = [
+        item for item in summary["limitations"]
+        if "partial terminal bins" not in item
+    ]
+    summary["limitations"].append(
+        f"Equal event density of {args.events_per_keV:,} events/keV is enforced in every stratum, "
+        f"including the final {one_edges[-1] - one_edges[-2]:g}-keV and "
+        f"{five_edges[-1] - five_edges[-2]:g}-keV bins "
+        f"({summary['expected_events_per_terminal_1keV_bin']:,} and "
+        f"{summary['expected_events_per_terminal_5keV_bin']:,} events)."
+    )
     summary["limitations"].extend([
         "The interval begins at the first nonzero recoil-rate grid point of the black benchmark.",
         "This targeted high-statistics study does not replace the independent full-range checks of red/green/blue.",
