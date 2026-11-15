@@ -214,6 +214,25 @@ The event driver uses \`GetS1(S1CalculationMode::Parametric)\`. In the pinned NE
 
 The event driver also passes the same \(x,y,z\) as both the true and smeared positions to NEST. Thus the position correction uses perfect reconstructed position in this run. The uniform active-cylinder spatial prior is not the 4.71-tonne FV map, and position-reconstruction smearing is not represented.
 
+The energy-resolved event cutflow makes the low-energy S1 effect and high-energy ROI effect explicit:
+
+| True-energy bin | Response family | S1 coincidence pass | NEST S2-threshold pass | Joint NEST pass | NEST + WS ROI pass |
+|---|---|---:|---:|---:|---:|
+| 5.4–6.4 keV | EFT2024 | 85.45% | 100.00% | 85.45% | 71.88% |
+|  | Table S5 | 83.80% | 100.00% | 83.80% | 69.45% |
+|  | WS2024 | 81.17% | 93.47% | 75.82% | 64.15% |
+|  | Generic | 82.63% | 100.00% | 82.63% | 69.20% |
+| 10.4–11.4 keV | EFT2024 | 99.72% | 100.00% | 99.72% | 99.40% |
+|  | Table S5 | 99.65% | 100.00% | 99.65% | 99.10% |
+|  | WS2024 | 99.62% | 100.00% | 99.62% | 99.08% |
+|  | Generic | 99.65% | 100.00% | 99.65% | 99.28% |
+| 247.4–248.4 keV | EFT2024 | 100.00% | 100.00% | 100.00% | 84.95% |
+|  | Table S5 | 100.00% | 100.00% | 100.00% | 97.65% |
+|  | WS2024 | 100.00% | 100.00% | 100.00% | 92.55% |
+|  | Generic | 100.00% | 100.00% | 100.00% | 52.18% |
+
+For all four three-body benchmarks, the archived recoil-rate spectra have no support in the low-energy region where the NEST S1 coincidence acceptance is below unity. Consequently, the rate-weighted \`nest\` acceptance is 1.0 for these particular spectra, even though the detector response itself has substantial low-energy S1 losses. This is a property of the chosen signal spectra, not a general claim of unit S1 efficiency.
+
 The NEST S2 threshold is response-family dependent: \`SetEFT2024Configuration()\` sets \(s2_{\rm thr}=120\) phe for the EFT2024, rounded-Table-S5, and generic-yield runs, while the unmodified WS2024 detector constructor sets \(s2_{\rm thr}=783\) phe. The published raw-S2 ROI condition is \(S2>645\) phd. With \(P_{\rm dphe}=0.214\), 645 phd corresponds to about \(645(1+0.214)=783.03\) phe, so the WS2024 detector threshold is effectively aligned with the raw-S2 ROI boundary; the EFT2024 120-phe threshold is looser. In the archived 4.24-million-event sample, no event with raw \(S2>645\) phd failed its configured NEST S2 threshold. Thus the NEST S2 threshold is redundant after the raw-S2 ROI cut for this sample; it must not be counted as a second independent efficiency loss.
 
 ### 8.4 The 2D ROI response does not yet reproduce the published cumulative efficiency
