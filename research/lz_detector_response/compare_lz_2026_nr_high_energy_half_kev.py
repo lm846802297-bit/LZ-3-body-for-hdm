@@ -255,7 +255,7 @@ def write_outputs(args: argparse.Namespace) -> dict:
                                     "acceptance_mode": mode,
                                     "response_grid_keV": width,
                                     "replica_rate_events_kg_day": rep_fold[mode]["accepted_rate_events_kg_day"],
-                                    "replica_tv_distance": grid.total_variation(
+                                    "replica_vs_pooled_tv_distance": grid.total_variation(
                                         rep_fold["intensity"][mode],
                                         folded[(width, None)]["intensity"][mode],
                                     ),
