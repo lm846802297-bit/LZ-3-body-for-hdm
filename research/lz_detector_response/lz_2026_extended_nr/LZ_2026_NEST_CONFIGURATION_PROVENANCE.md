@@ -152,3 +152,46 @@ Then generate event-level ((S1_c,log_{10}S2_c)) samples and construct normalized
 - Bandyopadhyay, Ramasamy, and TP, arXiv:2610.27105, especially its discussion of the 541b643 configuration, tagged-release status, and caveat that the exact collaboration build has not been established.
 
 **No exact official LZ 2026 detector likelihood or calibration sample reproduction is claimed by this audit.**
+
+
+## 8. NEST release-lineage audit and detector-gain closure
+
+The source-level comparison is documented in
+[LZ_2026_NEST_RELEASE_LINEAGE_AUDIT.md](LZ_2026_NEST_RELEASE_LINEAGE_AUDIT.md).
+The key result is that the public v2.4.5beta tag (commit 19bc9bc, 2025-12-08)
+predates the final LZ model features described in the 2026 Supplemental
+Material. The double-skew-Gaussian ER model, its additional fit parameters,
+the high-energy NR p(E) extension, and the LZ EFT2024 detector configuration
+were added later in the public development history.
+
+The LZ-specific EFT2024 configuration first appears in commit 307fb27
+(2026-08-27), before the LZ paper's 2026-09-02 arXiv submission. The audited
+commit 541b643 (2026-09-09) differs from 307fb27 only by static getters and
+inline-static storage in LZ_WS2024.hh; the diff contains no src/NEST.cpp
+change and no change to the physical parameter values. Thus 541b643 is a
+reproducible public candidate, but not proof of the exact collaboration build.
+
+An additional detector-gain closure was calculated using the pinned NEST
+CalculateG2 implementation and the EFT2024 overrides:
+- g1 = 0.1104 phd/photon, compared with the paper's 0.110 ± 0.002;
+- gas electroluminescence yield = 613.1904 photons per extracted electron;
+- extraction efficiency = 0.726195;
+- single-electron size = 47.5441 phd/electron;
+- g2 = 34.5263 phd/electron, compared with the paper's 34.5 ± 1.1.
+
+The gain differences are only 0.20 sigma for g1 and 0.024 sigma for g2. This
+is a useful internal consistency check. It is not a unique fingerprint of the
+production build because the EFT2024 method overrides only selected fields
+and inherits the remaining detector settings from the WS2024 initialization.
+
+The EFT2024 NEST S2 threshold is 120 phe, or about 98.85 phd after division
+by the double-photoelectron factor 1 + 0.214. This is far below the published
+raw-S2 WS ROI cut of 645 phd. The WS ROI therefore dominates the configured
+NEST S2 threshold; the two must not be counted as independent efficiency
+losses.
+
+**Updated provenance policy:** retain 541b643 as the pinned public EFT2024
+candidate; retain rounded Table S5, literal Table S3 m6=0, and WS2024/generic
+models as explicit alternatives. Do not label any of them as the exact LZ
+2026 production build without a collaboration-provided commit/configuration
+or an equivalent independent calibration closure.
