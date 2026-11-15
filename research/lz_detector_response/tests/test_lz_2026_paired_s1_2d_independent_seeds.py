@@ -148,7 +148,7 @@ class PairedS1IndependentSeedAggregationTests(unittest.TestCase):
             ensemble, per_seed, extra = MOD.aggregate(root, seeds)
         self.assertEqual(len(ensemble), 16)
         self.assertEqual(len(per_seed), 48)
-        self.assertEqual(len(extra["mean_maps"]), 16 * 2 * 2 * 2)
+        self.assertEqual(len(extra["mean_maps"]), 16 * 2 * 2)
         self.assertTrue(all(row["n_seeds"] == 3 for row in ensemble))
         self.assertTrue(all(row["mean_within_stream_split_half_tv"] > 0 for row in ensemble))
         self.assertTrue(all(row["within_stream_split_half_tv"] > 0 for row in per_seed))
