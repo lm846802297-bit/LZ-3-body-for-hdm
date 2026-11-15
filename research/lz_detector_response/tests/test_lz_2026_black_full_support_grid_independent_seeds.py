@@ -12,6 +12,20 @@ SPEC.loader.exec_module(MOD)
 
 
 class BlackFullSupportGridTests(unittest.TestCase):
+    def setUp(self):
+        self.original = (
+            MOD.base.ROI_MIN_KEV,
+            MOD.base.ROI_MAX_KEV,
+            MOD.base.BENCHMARKS,
+        )
+
+    def tearDown(self):
+        (
+            MOD.base.ROI_MIN_KEV,
+            MOD.base.ROI_MAX_KEV,
+            MOD.base.BENCHMARKS,
+        ) = self.original
+
     def test_support_interval_has_60_one_kev_and_12_five_kev_bins(self):
         MOD.configure_base()
         one = MOD.base.grid.make_edges(
