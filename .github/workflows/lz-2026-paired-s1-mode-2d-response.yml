@@ -85,8 +85,12 @@ jobs:
           bins=list(csv.DictReader((root/'paired_s1_mode_2d_response_by_energy_bin.csv').open()))
           summaries=list(csv.DictReader((root/'paired_s1_mode_2d_response_summary.csv').open()))
           maps=list(csv.DictReader((root/'paired_s1_mode_2d_signal_intensity.csv').open()))
+          event_rows=sum(1 for _ in csv.DictReader(Path('paired-s1-2d-output/paired_s1_mode_2d_events.csv').open()))
           assert meta['status']=='PAIRED_2D_RESPONSE_DIAGNOSTIC_ONLY'
-          assert meta['n_events']==470000 and meta['n_energy_bins']==235
+          assert event_rows==470000, event_rows
+          assert meta['n_events']==event_rows, (meta['n_events'], event_rows)
+          assert meta['n_energy_bins']==235, meta['n_energy_bins']
+          assert meta['n_events']==meta['events_per_energy_bin']*meta['n_energy_bins']
           assert len(bins)==8*235, len(bins)
           assert len(summaries)==16, len(summaries)
           assert len(maps)>0
