@@ -1,0 +1,85 @@
+name: LZ 2026 paired S1 independent-seed binning stability
+
+on:
+  push:
+    branches:
+      - integration/lz-2026-nest-nr-fullband-20261115
+    paths:
+      - research/lz_detector_response/audit_lz_2026_paired_s1_2d_binning_stability.py
+      - research/lz_detector_response/tests/test_lz_2026_paired_s1_2d_binning_stability.py
+      - .github/workflows/lz-2026-paired-s1-binning-stability.yml
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  binning-stability:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Download verified independent-seed response artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: lz-2026-paired-s1-independent-seeds
+          repository: lm846802297-bit/LZ-3-body-for-hdm
+          run-id: 43721276233
+          github-token: ${{ github.token }}
+          path: paired-s1-independent-seeds-input
+
+      - name: Test exact rebinning and TV contraction
+        run: |
+          python -m unittest             research.lz_detector_response.tests.test_lz_2026_paired_s1_2d_binning_stability -v
+
+      - name: Audit independent-seed binning stability
+        run: |
+          python research/lz_detector_response/audit_lz_2026_paired_s1_2d_binning_stability.py             --seed-root paired-s1-independent-seeds-input             --seeds 20261117 40261117 60261117             --out-dir paired-s1-binning-stability-output
+          cat paired-s1-binning-stability-output/paired_s1_independent_seed_binning_stability_summary.csv
+
+      - name: Validate binned outputs and nested-TV contraction
+        run: |
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+          root=Path("paired-s1-binning-stability-output")
+          summary=list(csv.DictReader((root/"paired_s1_independent_seed_binning_stability_summary.csv").open()))
+          per_seed=list(csv.DictReader((root/"paired_s1_independent_seed_binning_stability_per_seed.csv").open()))
+          meta=json.loads((root/"paired_s1_independent_seed_binning_stability_metadata.json").read_text())
+          assert meta["status"]=="INDEPENDENT_SEED_2D_BINNING_STABILITY_DIAGNOSTIC_ONLY"
+          assert meta["seeds"]==[20261117,40261117,60261117]
+          assert len(summary)==48, len(summary)
+          assert len(per_seed)==144, len(per_seed)
+          for row in summary:
+              assert float(row["ensemble_mean_map_2d_tv"]) >= 0
+              assert float(row["mean_within_mode_seed_pairwise_2d_tv"]) > 0
+          for key in {(r["benchmark"],r["nuclear_model"],r["stage"]) for r in summary}:
+              rows=sorted(
+                  [r for r in summary if (r["benchmark"],r["nuclear_model"],r["stage"])==key],
+                  key=lambda r:int(r["rebin_factor"])
+              )
+              values=[float(r["ensemble_mean_map_2d_tv"]) for r in rows]
+              assert values[0]+1e-12 >= values[1] >= values[2]-1e-12, (key,values)
+          print(f"Validated {len(summary)} ensemble and {len(per_seed)} per-seed binning rows.")
+          PY
+
+      - name: Hash binning audit outputs
+        run: |
+          find paired-s1-binning-stability-output -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum             > paired-s1-binning-stability-output/SHA256SUMS
+          cat paired-s1-binning-stability-output/SHA256SUMS
+
+      - name: Upload binning stability audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-paired-s1-binning-stability
+          path: paired-s1-binning-stability-output/
+          if-no-files-found: error
+          retention-days: 60
