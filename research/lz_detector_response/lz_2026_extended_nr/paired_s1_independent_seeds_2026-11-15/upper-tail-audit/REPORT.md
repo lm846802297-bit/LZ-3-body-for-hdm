@@ -5,9 +5,9 @@
 **Benchmark:** black, \(m_s=360\ \mathrm{keV}\), \(\Delta m=1\ \mathrm{MeV}\) production label  
 **Response:** EFT2024, pinned NEST commit 541b6430dae6ea289cf110c99f174a9187f7fdee  
 **Selection support:** \(E_R\in[205,269.9]\ \mathrm{keV}\)  
-**Audit run:** [GitHub Actions run 43759124017](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43759124017)  
-**Audit artifact:** [artifact 14179542527](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43759124017/artifacts/14179542527)  
-**Audit artifact ZIP SHA-256:** e9c7bdaf18d89be29371a5e7fe5dfceb7b4da93392c1c1acda0cdf9115787f1a  
+**Audit run:** [GitHub Actions run 43762406779](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43759124017)  
+**Audit artifact:** [artifact 14181285817](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43759124017/artifacts/14179542527)  
+**Audit artifact ZIP SHA-256:** fb1b06d77d9d4c58dd837ab9e657edbcc9e593856fbad6f30c70b1b4866bbe0d  
 **Source production:** [run 43750948249](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43750948249), artifact 14176882910  
 **Source production ZIP SHA-256:** 606397d9eac594008630a18b97f1e72fbbfa1d157e34779de7ce5fd0fe5b8cb5
 
@@ -40,7 +40,7 @@ The maximum relative closure residual over all ten seeds, both nuclear models, a
 
 against a required tolerance of \(5\times10^{-12}\). The prior unnormalized version of this audit had an approximately 2,000-fold normalization error; it is superseded and must not be used.
 
-The corrected workflow passes the unit tests, source-artifact manifest verification, exact per-stratum weight closure, ten-seed row-count validation, black-support selection closure, CSV JSON validation, and output checksum generation.
+The corrected workflow passes all nine unit tests, source-artifact manifest verification, exact per-stratum weight closure, ten-seed row-count validation, black-support selection closure, CSV JSON validation, and both relocatable output/archive checksum manifests.
 
 ## 2. Selection definitions
 
@@ -78,7 +78,7 @@ The corresponding absolute efficiency changes are \(-0.4429\) percentage points 
 | \(q_{95}\) [phd] | 673.8 | 675.4 | 673.2 | 674.7 |
 | \(q_{99}\) [phd] | 723.1 | 724.5 | 722.6 | 724.1 |
 
-The Full mode shifts the upper S1 quantiles upward by roughly 1--2 phd. At the 600-phd boundary, this changes the fraction above the cut by \(+0.4429\) percentage points (GCN) and \(+0.4375\) percentage points (JJ55). The sign is therefore consistent with the reduction in the S1 ROI efficiency.
+The listed quantiles are the arithmetic means of the ten seed-level weighted quantiles, not quantiles of a pooled event sample. The Full mode shifts the upper S1 quantiles upward by roughly 1--2 phd. At the 600-phd boundary, this changes the fraction above the cut by \(+0.4429\) percentage points (GCN) and \(+0.4375\) percentage points (JJ55). The sign is therefore consistent with the reduction in the S1 ROI efficiency.
 
 The paired boundary migration is larger than the net acceptance change because events cross in both directions:
 
@@ -89,7 +89,37 @@ The paired boundary migration is larger than the net acceptance change because e
 
 These migration fractions are normalized to the total raw event weight in the black support. They are not conditional percentages within the accepted ROI.
 
-### 3.2 Distributional differences
+### 3.2 Threshold scan around the S1 upper boundary
+
+The following table reports the Full-minus-Parametric change in the fraction
+above each S1 threshold, conditional on the S1 coincidence pass. Values are
+percentage points; intervals are 95% Student-\(t\) intervals over the ten
+paired production seeds. Since both S1 coincidence flags pass for every
+event in this support, these conditional differences also equal the
+raw-event-weight differences.
+
+| S1 threshold [phd] | GCN tail-fraction difference | JJ55 tail-fraction difference |
+|---:|---:|---:|
+| 500 | +0.3395 [0.2203, 0.4588] | +0.3436 [0.2249, 0.4623] |
+| 550 | +0.4719 [0.3242, 0.6195] | +0.4709 [0.3245, 0.6173] |
+| 575 | +0.4757 [0.2951, 0.6563] | +0.4708 [0.2933, 0.6484] |
+| 590 | +0.4686 [0.3144, 0.6228] | +0.4637 [0.3124, 0.6149] |
+| 600 | +0.4429 [0.2896, 0.5962] | +0.4375 [0.2866, 0.5884] |
+| 610 | +0.4543 [0.2912, 0.6175] | +0.4477 [0.2875, 0.6079] |
+| 625 | +0.4503 [0.3355, 0.5650] | +0.4432 [0.3307, 0.5556] |
+| 650 | +0.2548 [0.1313, 0.3784] | +0.2506 [0.1291, 0.3721] |
+| 700 | +0.1048 [0.0402, 0.1694] | +0.1028 [0.0396, 0.1661] |
+| 800 | +0.0026 [-0.0071, 0.0122] | +0.0025 [-0.0070, 0.0120] |
+
+The excess Full-mode upper-tail fraction is broad across 550--625 phd,
+roughly 0.44--0.48 percentage points, rather than being an isolated
+single-bin fluctuation at exactly 600 phd. It decreases above 650 phd and
+is consistent with zero by 800 phd. At the actual 600-phd ROI boundary,
+the positive tail-fraction difference has the opposite sign to the
+accepted-rate difference: more events lie above the cut in Full mode, so
+the accepted \(S1_c\leq600\) fraction is smaller.
+
+### 3.3 Distributional differences
 
 All TVs below use the native 10-phd S1 binning; the two-dimensional maps use 10-phd by 0.02-dex cells.
 

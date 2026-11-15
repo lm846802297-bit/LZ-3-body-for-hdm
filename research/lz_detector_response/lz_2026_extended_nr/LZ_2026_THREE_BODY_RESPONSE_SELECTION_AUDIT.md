@@ -1063,7 +1063,10 @@ The migration grows toward the highest recoil-energy band. At native
 0.5832% and 0.5763%. The NEST-stage 2D TV remains above 1% (1.1679% and
 1.1538%), while the WS-ROI 2D TV is 0.9425% and 0.9318%. These point
 estimates do not establish Parametric/Full equivalence; mean per-seed S1
-histogram TV is about 1.44--1.46%.
+histogram TV is about 1.44--1.46%. The Full-minus-Parametric fraction above
+S1 thresholds 550--625 phd is consistently about +0.44--0.48 percentage
+points in both nuclear models, confirming a broad upper-tail migration
+rather than a fluctuation isolated at the 600-phd cut.
 
 ### 15.9.3 S2 selection is inactive in this support
 
@@ -1098,5 +1101,5 @@ interval, final profile likelihood, or 90% CL exclusion is provided.
 Full methods, tables, source hashes, and output descriptions are in the
 [archived upper-tail report](paired_s1_independent_seeds_2026-11-15/upper-tail-audit/REPORT.md).
 The successful audit is
-[run 43759124017](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43759124017),
-artifact 14179542527.
+[run 43762406779](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43759124017),
+artifact 14181285817.

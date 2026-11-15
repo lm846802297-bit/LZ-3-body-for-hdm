@@ -2,7 +2,7 @@
 
 **Status:** completed ten-independent-seed diagnostic; not an official LZ detector response or likelihood input.
 
-The detailed methodology, numerical results, energy-resolved migration, independent S2-window closure, and limitations are in [REPORT.md](./REPORT.md).
+The detailed methodology, numerical results, ten-threshold S1 tail scan, energy-resolved migration, independent S2-window closure, and limitations are in [REPORT.md](./REPORT.md).
 
 ## Main result
 
@@ -13,8 +13,8 @@ All 1.3 million raw events in this black support pass the S1 coincidence and S2 
 ## Provenance
 
 - Source production: [run 43750948249](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43750948249), artifact 14176882910.
-- Audit: [run 43759124017](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43759124017), artifact 14179542527.
-- Audit ZIP SHA-256: e9c7bdaf18d89be29371a5e7fe5dfceb7b4da93392c1c1acda0cdf9115787f1a.
+- Audit: [run 43762406779](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43759124017), artifact 14181285817.
+- Audit ZIP SHA-256: fb1b06d77d9d4c58dd837ab9e657edbcc9e593856fbad6f30c70b1b4866bbe0d.
 - Source production ZIP SHA-256: 606397d9eac594008630a18b97f1e72fbbfa1d157e34779de7ce5fd0fe5b8cb5.
 
 The audit reuses the immutable ten-seed paired Parametric/Full S1 event production. It does not regenerate NEST events or change the detector configuration. Event weights close to the original exact per-bin integrated rates with a maximum relative residual of \(6.33\times10^{-15}\).
