@@ -23,10 +23,12 @@ const std::vector<double> kTableS5 = {
 }
 
 int main(int argc, char** argv) {
-  if (argc != 7) {
+  if (argc != 7 && argc != 8) {
     std::cerr << "Usage: lz_2026_nr_stratified_energy_response "
-                 "model events_per_1keV_bin seed energy_min_keV "
-                 "energy_max_keV energy_bin_width_keV\n"
+                 "model events_per_bin seed energy_min_keV "
+                 "energy_max_keV energy_bin_width_keV [events_per_keV]\n"
+                 "Optional events_per_keV scales each bin's event count to its "
+                 "actual width, including a partial terminal bin.\n"
                  "model: eft2024|tableS5|ws2024|generic\n";
     return 2;
   }
@@ -37,14 +39,17 @@ int main(int argc, char** argv) {
     const double e_min = std::stod(argv[4]);
     const double e_max = std::stod(argv[5]);
     const double bin_width = std::stod(argv[6]);
+    const double events_per_keV = (argc == 8) ? std::stod(argv[7]) : 0.0;
 
     if (model != "eft2024" && model != "tableS5" &&
         model != "ws2024" && model != "generic")
       throw std::invalid_argument("unknown response model");
     if (events_per_bin < 2 || events_per_bin % 2 != 0 ||
-        !(e_max > e_min) || !(bin_width > 0.))
+        !(e_max > e_min) || !(bin_width > 0.) ||
+        (argc == 8 && !(events_per_keV > 0.)))
       throw std::invalid_argument(
-          "require even events_per_bin >= 2, e_max > e_min, bin_width > 0");
+          "require even events_per_bin >= 2, e_max > e_min, bin_width > 0, "
+          "and positive optional events_per_keV");
 
     LZ_Detector_2024 detector;
     std::vector<double> nr_yields, nr_widths;
@@ -92,7 +97,6 @@ int main(int argc, char** argv) {
     std::cout << std::setprecision(12);
 
     int64_t event_index = 0;
-    const int half = events_per_bin / 2;
     const int n_bins = static_cast<int>(
         std::ceil((e_max - e_min) / bin_width - 1.e-12));
 
@@ -101,7 +105,19 @@ int main(int argc, char** argv) {
       const double ehi = std::min(e_max, elo + bin_width);
       if (!(ehi > elo)) continue;
 
-      for (int ievt = 0; ievt < events_per_bin; ++ievt) {
+      int events_this_bin = events_per_bin;
+      if (argc == 8) {
+        const double requested = events_per_keV * (ehi - elo);
+        const long long rounded = std::llround(requested);
+        if (std::abs(requested - static_cast<double>(rounded)) > 1.e-9 ||
+            rounded < 2 || rounded % 2 != 0) {
+          throw std::invalid_argument(
+              "events_per_keV times each bin width must be an even integer >= 2");
+        }
+        events_this_bin = static_cast<int>(rounded);
+      }
+      const int half = events_this_bin / 2;
+      for (int ievt = 0; ievt < events_this_bin; ++ievt) {
         const int replica = (ievt < half) ? 0 : 1;
         const double energy = elo + (ehi - elo) * u(design_rng);
 
