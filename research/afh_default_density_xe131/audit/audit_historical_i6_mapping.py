@@ -31,6 +31,15 @@ def rel(value, reference):
     return abs(value - reference) / max(abs(reference), 1.0e-300)
 
 
+def parse_bool(value):
+    normalized = str(value).strip().lower()
+    if normalized in {"true", "1"}:
+        return True
+    if normalized in {"false", "0"}:
+        return False
+    raise ValueError(f"invalid archived boolean value: {value!r}")
+
+
 def read_archive(path):
     with path.open(newline="", encoding="utf-8") as handle:
         rows = list(csv.DictReader(handle))
@@ -57,7 +66,7 @@ def run(archive_path):
     for energy in ENERGIES_KEV:
         source = archived[energy]
         archived_i6 = float(source["I6_GeV2"])
-        archived_open = bool(int(source["phase_space_open"]))
+        archived_open = parse_bool(source["phase_space_open"])
         wmin, wmax = eq6.limits(MCHI, MS, M_A, energy * 1.0e-6, SPEED)
         open_now = wmax > wmin
         if open_now != archived_open:
