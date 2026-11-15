@@ -488,3 +488,58 @@ The calculation passed in [run 43717240547](https://github.com/lm846802297-bit/L
 This is an EFT2024 NEST response only; GCN/JJ55 label the nuclear-response
 spectra, not alternative NEST NR-yield configurations. It is still not the
 official LZ waveform-level S1 reconstruction or final selected PDF.
+
+
+### Four-benchmark paired S1 upper-tail and ROI-migration audit (2026-11-15)
+
+The ten-seed paired S1 upper-tail audit extends the black-only study to all
+four Fig. 2 three-body benchmarks. It reuses the immutable paired EFT2024
+NEST event production; no NEST events were regenerated. The same detector
+events are reweighted independently with each benchmark's GCN and JJ55
+continuous recoil spectrum.
+
+- Source production: [run 43750948249](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43750948249), artifact 14176882910.
+- Four-benchmark audit: [run 43764753139](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43764753139), artifact 14181863680.
+- 10 independent seeds; 4.7 million unique paired events; 18,800 exact
+  benchmark/seed/nuclear-model/1-keV weight-closure checks.
+- Maximum relative closure residual: (7.2002\times10^{-15}), below the
+  (5\times10^{-12}) tolerance. Six unit tests and all production-manifest,
+  support, event-count, output-row, and checksum validations passed.
+- On common (E_R=205)--(269.9) keV support, the Full/Parametric S1 ROI
+  changes are red −0.0676/−0.0684%, green −0.0795/−0.0805%,
+  black −0.5983/−0.5881%, and blue −0.0794/−0.0804% (GCN/JJ55).
+- The energy dependence is shared by all benchmarks: the 255--269.9 keV
+  band gives about −0.95% to −1.03% in every case. Black is more strongly
+  affected after integration because about 59--60% of its common-support
+  recoil rate lies in this highest-energy band, versus about 1--2% for the
+  other three benchmarks.
+- Every raw event in each benchmark's full non-zero recoil support passes
+  both S1 coincidence flags, the NEST S2 threshold, raw-S2 (>645) phd,
+  and the corrected-S2 window. Thus WS-ROI and S1-ROI changes coincide
+  for these supports; this is not a general statement about lower-energy NR.
+
+The audit archives 48 summary rows, 480 per-seed rows, 4,800 threshold
+rows, canonical metadata, and checksums under
+[the four-benchmark audit archive](lz_2026_extended_nr/paired_s1_independent_seeds_2026-11-15/multi-benchmark-upper-tail-audit/).
+See the [full report](lz_2026_extended_nr/paired_s1_independent_seeds_2026-11-15/multi-benchmark-upper-tail-audit/REPORT.md)
+and Section 15.10 of the
+[response-selection audit](lz_2026_extended_nr/LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md).
+
+The audit artifact ZIP is 445,869 bytes with SHA-256
+`4490b4e8a0631569617a5e6fb1e7037a1e5a70290fd5dd3f3e3c12d4518faa04`.
+This remains an EFT2024 NEST proxy diagnostic, not the official LZ
+waveform-level selected-event PDF. DAQ trigger, waveform-level S1 timing,
+SS reconstruction/data-analysis cuts, official FV, Skin/OD veto,
+live-time migration, and their joint covariance remain outside scope.
+No detector-systematic covariance, final likelihood, or 90% CL exclusion
+is claimed.
+
+Implementation:
+- `audit_lz_2026_paired_s1_upper_tail_all_benchmarks.py` — exact
+  per-stratum reweighting, paired S1/S2 selection audit, seed-level
+  summaries, bootstrap TV diagnostics, and threshold scan.
+- `tests/test_lz_2026_paired_s1_upper_tail_all_benchmarks.py` — support,
+  boundary, and model-support regression tests.
+- `.github/workflows/lz-2026-paired-s1-upper-tail-all-benchmarks.yml` —
+  immutable artifact download, manifest verification, tests, audit,
+  archive/checksum update, and output artifact upload.
