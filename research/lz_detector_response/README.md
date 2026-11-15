@@ -249,6 +249,12 @@ The same audit also passed from the clean PR integration branch in
 [run 43682717319](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43682717319),
 artifact 14149346224, ZIP SHA-256
 `5fdacaed77cde4a65db56801997f75e8171b6a4bb3d7ba0218be7d708cfbba0e`. The eight-row closure is unchanged.
+The expanded integration-branch workflow [43682860360](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43682860360)
+also runs the 0.5-keV refinement, event-weighted-fold, and selection-rate unit
+tests before re-extracting Fig. S2 and closing all eight rows. It passed; artifact
+14149540926, SHA-256
+`0167a2c74e179215584b573097dce28dc8ea12672ecebd826d7d98362634af27`.
+
 
 It closes all eight rows with maximum final-yield relative difference
 \(7.02\times10^{-10}\) against a \(10^{-8}\) tolerance. The calculation is reproducible through
