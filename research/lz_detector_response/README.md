@@ -225,6 +225,11 @@ is not a measured ER tail probability, and the sparse ER PDF cannot be used
 directly as a likelihood density at the candidate. See
 [LZ_2026_ER_TAIL_SUPPORT_AUDIT.md](lz_2026_extended_nr/LZ_2026_ER_TAIL_SUPPORT_AUDIT.md).
 
+The corrected ER run is [43662363556](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43662363556),
+artifact 14140966494, SHA-256
+a2a138d262245e811c94b8bc41d76f4af16c53196d1a12adea044bf66a9f7bc1.
+It includes local-drift closure and deterministic bootstrap output.
+
 ### Parametric-versus-Full S1 coincidence validation
 
 Because the three-body stratified driver uses NEST Parametric S1 mode, a paired
