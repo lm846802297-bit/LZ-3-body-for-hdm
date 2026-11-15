@@ -20,6 +20,9 @@ constexpr double kPi = 3.1415926535897932384626433832795;
 constexpr double kCandidateXmm = 459.0;
 constexpr double kCandidateYmm = 0.0;
 constexpr double kCandidateZmm = 264.0;
+const std::vector<double> kTableS5 = {
+    11.2, 1.1, 0.052, -0.0533, 10.8, 0.53, 1.4,
+    0.31, 2.5, 0.50, 1.39, 1.74, 0.0230, 0.0289, 74.7};
 
 double uniform01(std::mt19937_64& engine) {
   return std::generate_canonical<double, 53>(engine);
@@ -43,9 +46,9 @@ int main(int argc, char** argv) {
 
     if (!(e_min > 0. && e_max > e_min) || n_events <= 0)
       throw std::invalid_argument("invalid energy range or event count");
-    if (config != "eft2024" && config != "ws2024" && config != "generic" &&
+    if (config != "eft2024" && config != "tableS5" && config != "ws2024" && config != "generic" &&
         config != "eftmean_wswidth" && config != "eftmean_genericwidth")
-      throw std::invalid_argument("config must be eft2024, ws2024, generic, eftmean_wswidth, or eftmean_genericwidth");
+      throw std::invalid_argument("config must be eft2024, tableS5, ws2024, generic, eftmean_wswidth, or eftmean_genericwidth");
     if (position_mode != "candidate" && position_mode != "uniform_tpc")
       throw std::invalid_argument("position must be candidate or uniform_tpc");
 
@@ -57,13 +60,18 @@ int main(int argc, char** argv) {
     std::vector<double> nr_yields = detector.get_nr_yield_params();
     std::vector<double> er_yields = detector.get_er_yield_params();
     std::vector<double> nr_er_widths = detector.get_nr_er_width_params();
-    if (config == "generic") {
+    if (config == "tableS5") {
+      // Rounded printed Table S5 mean-yield vector; retain EFT2024 widths,
+      // ER yields, and detector overrides to isolate the mean-yield rounding.
+      nr_yields = kTableS5;
+    } else if (config == "generic") {
       nr_yields = default_NRYieldsParam;
       er_yields = default_ERYieldsParam;
       nr_er_widths = default_NRERWidthsParam;
     } else if (config == "eftmean_wswidth") {
-      // Isolate NR fluctuation effect: retain EFT2024/Table-S5 mean yields and
-      // EFT2024 detector settings, but replace only the NR-relevant width entries.
+      // Isolate NR quanta-fluctuation effects: retain EFT2024 mean yields and
+      // detector settings, but replace the NR-relevant entries of the shared
+      // NRERWidthsParam vector with the WS2024 vector.
       nr_er_widths = LZ_Detector_2024::get_ws_nr_er_width_params();
     } else if (config == "eftmean_genericwidth") {
       nr_er_widths = default_NRERWidthsParam;
@@ -75,11 +83,6 @@ int main(int argc, char** argv) {
 
     const double density = calc.SetDensity(detector.get_T_Kelvin(),
                                            detector.get_p_bar());
-    const double g2_field = detector.FitEF(0., 0., detector.get_TopDrift()/2.);
-    const double drift_speed = calc.SetDriftVelocity(
-        detector.get_T_Kelvin(), density, g2_field, detector.get_p_bar());
-    if (!(drift_speed > 0.))
-      throw std::runtime_error("NEST returned non-positive drift speed");
     const auto g2_params = calc.CalculateG2(0);
 
     std::vector<int64_t> s1_wf_time, s2_wf_time;
@@ -97,12 +100,12 @@ int main(int argc, char** argv) {
               << " electron_lifetime_us=" << detector.get_eLife_us()
               << " g2_phd_per_electron=" << g2_params.at(3)
               << " el_yield_photons_per_e=" << g2_params.at(0)
-              << " extraction_efficiency=" << g2_params.at(1)
-              << " drift_speed_mm_us=" << drift_speed << "\n";
+              << " extraction_efficiency=" << g2_params.at(1) << "\n";
 
     std::cout
       << "event,config,position_mode,energy_keV,x_mm,y_mm,z_mm,r_mm,"
-         "drift_time_us,field_V_cm,density_g_cm3,n_photons,n_electrons,"
+         "drift_distance_mm,drift_time_us,drift_speed_mm_us,field_V_cm,"
+         "density_g_cm3,n_photons,n_electrons,"
          "s1r_phd,s1c_phd,s2r_phd,s2c_phd,log10_s2c_phd,s1_pass,s2_pass,analysis_roi_pass\n";
     std::cout << std::setprecision(12);
 
@@ -118,8 +121,12 @@ int main(int argc, char** argv) {
       }
       const double r_mm = std::hypot(x_mm, y_mm);
       const double field = detector.FitEF(x_mm, y_mm, z_mm);
-      const double drift_time =
-          (detector.get_TopDrift() - z_mm) / drift_speed;
+      const double drift_speed = calc.SetDriftVelocity(
+          detector.get_T_Kelvin(), density, field, detector.get_p_bar());
+      if (!(drift_speed > 0.))
+        throw std::runtime_error("NEST returned non-positive local drift speed");
+      const double drift_distance = detector.get_TopDrift() - z_mm;
+      const double drift_time = drift_distance / drift_speed;
 
       const auto result = calc.FullCalculation(
           NEST::NR, energy, density, field, detector.get_molarMass(), 54.,
@@ -148,7 +155,8 @@ int main(int argc, char** argv) {
       const double log_s2c = s2c > 0. ? std::log10(s2c) : -999.;
       std::cout << i << ',' << config << ',' << position_mode << ','
                 << energy << ',' << x_mm << ',' << y_mm << ',' << z_mm << ','
-                << r_mm << ',' << drift_time << ',' << field << ',' << density
+                << r_mm << ',' << drift_distance << ',' << drift_time << ','
+                << drift_speed << ',' << field << ',' << density
                 << ',' << result.quanta.photons << ','
                 << result.quanta.electrons << ',' << s1r << ',' << s1c << ','
                 << s2r << ',' << s2c << ',' << log_s2c << ','
