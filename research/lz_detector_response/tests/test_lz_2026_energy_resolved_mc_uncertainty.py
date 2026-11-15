@@ -55,6 +55,34 @@ class EnergyResolvedMCUncertaintyTests(unittest.TestCase):
         self.assertAlmostEqual(row["factorized_vs_figs2_final_relative_difference"], 7.2 / 7.0 - 1.0)
         self.assertAlmostEqual(row["figs2_final_fraction_of_black_total"], 0.25)
 
+    def test_ws_roi_raw_s2_cut_must_nest_nest_s2_threshold(self):
+        fields = [
+            "replica", "energy_bin_index", "energy_bin_low_keV",
+            "energy_bin_high_keV", "energy_keV", "s1c_abs_phd",
+            "s2c_abs_phd", "s2r_abs_phd", "s1_coincidence_pass",
+            "s2_threshold_pass",
+        ]
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "response.csv"
+            with path.open("w", newline="", encoding="utf-8") as handle:
+                writer = csv.DictWriter(handle, fieldnames=fields)
+                writer.writeheader()
+                writer.writerow({
+                    "replica": 0, "energy_bin_index": 0,
+                    "energy_bin_low_keV": 5.4, "energy_bin_high_keV": 6.4,
+                    "energy_keV": 5.9, "s1c_abs_phd": 100.0,
+                    "s2c_abs_phd": 1000.0, "s2r_abs_phd": 1000.0,
+                    "s1_coincidence_pass": 1, "s2_threshold_pass": 0,
+                })
+            spectra = {("red_ms200_dm1", "GCN"): ([5.4, 6.4], [1.0, 1.0])}
+            with (
+                patch.object(MOD.grid, "ROI_MIN_KEV", 5.4),
+                patch.object(MOD.grid, "ROI_MAX_KEV", 6.4),
+                patch.object(MOD, "EXPECTED_EVENTS_PER_REPLICA", 1),
+            ):
+                with self.assertRaisesRegex(ValueError, "raw-S2 cut passed but NEST S2 pulse threshold failed"):
+                    MOD.accumulate_response(path, spectra)
+
     def test_weighted_efficiency_rejects_invalid_subset(self):
         with self.assertRaisesRegex(ValueError, "accepted weight exceeds"):
             MOD.weighted_efficiency(1.0, 1.0, 1.1, 1.0)
