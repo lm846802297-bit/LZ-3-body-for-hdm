@@ -75,24 +75,28 @@ This is not a rounding difference. In the pinned `GetYieldBetaGR` implementation
 ### 2.3 NR and ER fluctuation parameters: Table S4 and executable vector
 
 EFT2024 source vector (17 elements):
-`{1.076, 1.061, -0.707, 0.5, 0.19, 2.25, -0.000905, 0.03174, 2.588, 0.3627, -0.3583, 0.0, 0.02377, 0.06211, 5.2, 1.359, -2.599}`
+\[
+(1.076,\ 1.061,\ -0.707,\ 0.5,\ 0.19,\ 2.25,\ -0.000905,\ 
+0.03174,\ 2.588,\ 0.3627,\ -0.3583,\ 0.0,\ 0.02377,\ 
+0.06211,\ 5.2,\ 1.359,\ -2.599).
+\]
 
-The vector serves both NR and ER branches of `GetQuanta`.
+The vector serves both NR and ER branches of NEST GetQuanta, but the branches use different entries.
 
 For NR, the relevant zero-based entries are 0, 1, 2, 3, 4, 5, 11, and 12:
-- (F_i=1.076+0.0,N_i) in the implemented linear parameterization;
-- (F_{ex}=1.061+0.02377,N_{ex});
-- the negative entry (p_2=-0.707) sets (lambda_{m Chen}=1+p_2=0.293) in the NR binomial recombination term, while the negative (omega_{m NR}) is clipped to zero by `RecombOmegaNR`;
-- (p_5=2.25) is the NR recombination skewness.
+- \(F_i=p_0+p_{11}\overline N_i=1.076+0.0\,\overline N_i\);
+- \(F_{\rm ex}=p_1+p_{12}\overline N_{\rm ex}=1.061+0.02377\,\overline N_{\rm ex}\);
+- the negative entry \(p_2=-0.707\) sets \(\lambda_{\rm Chen}=1+p_2=0.293\) in the NR binomial recombination term, while the resulting negative \(\omega_{\rm NR}\) is clipped to zero by NEST RecombOmegaNR;
+- \(p_5=2.25\) is the NR recombination skewness.
 
 For ER, the relevant entries include:
-- (p_6=-0.000905), which activates the energy/field-dependent Fano correction;
-- (p_7ldots p_{10}=(0.03174,2.588,0.3627,-0.3583)), first (sigma_p) component;
-- (p_{13}ldots p_{16}=(0.06211,5.2,1.359,-2.599)), second (sigma_p) component.
+- \(p_6=-0.000905\), which activates the energy/field-dependent Fano correction;
+- \(p_7,\ldots,p_{10}=(0.03174,2.588,0.3627,-0.3583)\), the first skew-Gaussian component;
+- \(p_{13},\ldots,p_{16}=(0.06211,5.2,1.359,-2.599)\), the second skew-Gaussian component.
 
-These eight component values reproduce the Table S4 entries. The NEST implementation applies normalization factors to the skew-Gaussian components. Do not replace `RecombOmegaER` by a literal transcription of the printed Supplemental Eq. (4) without checking the normalization convention.
+These eight component values reproduce the Table S4 entries. The NEST implementation applies normalization factors to the skew-Gaussian components. Do not replace RecombOmegaER by a literal transcription of the printed Supplemental Eq. (4) without checking the normalization convention.
 
-The ER charge-sampling skew-normal shape parameter is a separate part of `GetQuanta`; it is not either (alpha_i) from Table S4. With the default `SkewnessER=-999` path, the pinned code evaluates its LUX Run04 energy/field-dependent skewness formula. This distinction is essential for ER tails and the 2D ER PDF.
+The ER charge-sampling skew-normal shape parameter is a separate part of GetQuanta; it is not either \(\alpha_i\) from Table S4. With the default SkewnessER = -999 path, the pinned code evaluates its LUX Run04 energy/field-dependent skewness formula. This distinction is essential for ER tails and the 2D ER PDF.
 
 ## 3. Three distinct parameter families
 
@@ -125,7 +129,7 @@ The old reports remain archived for reproducibility, but their numerical NR-band
 The paper defines the bands as flat-in-energy ER/NR spectra evaluated along fixed-(S1_c) lines, reporting the mean and 10th–90th percentiles in ({S1_c,log_{10}S2_c}). The NR calibration coverage is D-D up to 74 keV and AmBe up to 330 keV.
 
 Two spatial prescriptions will be kept separate:
-1. **Candidate-position diagnostic:** (rsimeq45.9) cm and (z=26.4) cm above cathode. This is only a local check.
+1. **Candidate-position diagnostic:** \(r\simeq45.9\) cm and (z=26.4) cm above cathode. This is only a local check.
 2. **Uniform-active-TPC proxy:** uniform in volume inside the public detector class's cylindrical active geometry. This is a transparent spatial prior, not a claim to reproduce the actual D-D/AmBe calibration source distribution.
 
 The full band will be generated for the EFT2024 candidate, WS2024, and generic NEST defaults with common energy and position seeds. The report must state the prior and detector configuration for every sample. Calibration-source position distributions and event-level calibration data are not present in the HEPData table ZIP, so the uniform-volume proxy cannot be called an exact reproduction of the collaboration's calibration sample.
