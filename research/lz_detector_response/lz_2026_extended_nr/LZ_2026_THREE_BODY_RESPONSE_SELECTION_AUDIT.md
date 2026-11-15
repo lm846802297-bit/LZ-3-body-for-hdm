@@ -509,3 +509,64 @@ families cannot be treated as interchangeable and the exact production
 configuration/calibration closure remains unresolved. Do not multiply the
 Fig. S2 scalar efficiency into the existing 2D map.
 
+
+
+## 14. Official 2026 selection hierarchy and three-sample likelihood closure
+
+This section resolves an important naming ambiguity: the **NEST S2 pulse threshold is not the hardware/DAQ S2 trigger**. The two are different stages and must not be merged or double-counted.
+
+### 14.1 Selection hierarchy inherited from WS2024
+
+The 2026 extended-NR paper explicitly says that the data and analysis selections are unchanged from the WS2024 4.2-tonne-year analysis, except for the WS ROI, fiducial volume, and sideband handling. The public sources are [the 2026 extended-NR paper](https://arxiv.org/abs/2609.02823), especially its Data Analysis section and Supplemental Material, and [the WS2024 analysis](https://arxiv.org/abs/2410.17036), especially the detector/data-selection discussion.
+
+| Stage | Official definition / published information | Current three-body fold |
+|---|---|---|
+| S2 DAQ trigger | Digital filter designed primarily for S2; WS2024 trigger efficiency is 95% for S2 pulses corresponding to 3.5 extracted electrons. The efficiency is energy-dependent and appears as the first cumulative curve in Fig. S2. | Missing. The NEST S2 pulse threshold is **not** this trigger. |
+| S1 pulse classification | An S1 requires coincident photons in at least three PMTs. The SS S1-identification efficiency is above 90% for all S1 sizes and reaches 100% above 35 phd, based on tritium/DD manual-versus-automated classification. | NEST Parametric occupancy approximation is included; NEST Full timing comparison is a separate mode-to-mode check, not official waveform reconstruction. |
+| Single-scatter reconstruction | One S1 preceding one S2. SS identification depends on S1 and S2 classification. Electron diffusion splits S2 pulses with probability below 1% on average for relevant pulses. | Missing. No pulse finding, multi-pulse reconstruction, or S2-splitting model. |
+| S1/S2 data-analysis cuts | Pulse-shape and event-quality selections target accidental S1-S2 pairings. Their rejection power is 99.5% for known accidental events in the WIMP ROI, assessed using unphysical-drift-time sidebands. | Missing. The 99.5% rejection number is not a universal signal efficiency and must not be applied as a flat 0.5% signal factor. |
+| Fiducial volume | 4.71 ± 0.08 tonnes. The radial boundary is a depth- and azimuth-dependent contour; it enforces 8.0 cm true-wall and 6.0 cm reconstructed-wall minimum stand-off. The contour's mean (maximum) distance from the true wall is 10.7 cm (18.2 cm); from the reconstructed wall it is 7.2 cm (10.4 cm). Upper/lower boundaries are 12.8 cm below the gate and 9.0 cm above the cathode. | Missing. Uniform active-TPC cylinder is only a generation prior. |
+| WS ROI | \(3\leq S1_c\leq600\) phd, raw \(S2>645\) phd, and \(10^{2.75}\leq S2_c\leq10^{4.15}\) phd. | Included in the ws_roi mode. |
+| Skin/OD veto | Prompt: Skin \(>2.5\) phd within ±0.25 μs or OD \(>4.5\) phd within ±0.3 μs of TPC S1. Delayed: Skin/OD energy above 300/200 keV within 600 μs of S1, outside prompt window. | Missing; no Skin/OD response or sample assignment. |
+| Live-time exclusions | Hold-offs after large S2s and periods of elevated accidental rates. The WS2024 analysis retains 81.5% of collected live time, giving 220 live days. | Event-dependent hold-offs missing. The current 2.84 tonne-year exposure already corresponds to 4.71 tonnes × 220 live days; do **not** multiply by 81.5% again. |
+
+The WS2024 paper reports a 95% S2 trigger efficiency at 3.5 extracted electrons and an S1 classification efficiency above 90% for all S1 sizes, reaching 100% above 35 phd. These are detector/selection efficiencies, not the same as the NEST s2_thr setting or a generic event-level S1 boolean. For the present high-energy benchmark spectra, the first nonzero recoil energies are 35, 101, 210, and 101 keV. The paired NEST Parametric-versus-Full test passes all sampled events in these signal-support bins, but this does not validate the hardware trigger, the event reconstruction, or the official signal-efficiency curve.
+
+### 14.2 Three veto samples are part of the likelihood, not one extra cut
+
+The 2026 analysis divides selected events into three samples:
+1. **Science:** no qualifying Skin or OD veto signal.
+2. **Prompt-veto:** Skin \(>2.5\) phd within ±0.25 μs of TPC S1, or OD \(>4.5\) phd within ±0.3 μs.
+3. **Delayed-veto:** Skin \(>300\) keV or OD \(>200\) keV within 600 μs of TPC S1, but outside the prompt window.
+
+The paper reports random coincidences with veto-detector activity that tag 0.01% of unrelated TPC signals as prompt-veto and 2.86% as delayed-veto. To a good approximation, signal and background components have the same \((S1_c,\log_{10}S2_c)\) shape in the three samples but different rates. The likelihood is a simultaneous unbinned extended likelihood over the three samples; their expected counts are correlated through tagging-efficiency parameters, not independent free normalizations.
+
+Consequently, the current ws_roi intensity is not yet a complete likelihood signal model. It has no sample label and represents neither the full science-sample signal fraction nor the prompt/delayed signal leakage. A future model must assign sample-specific signal rates and preserve the correlations/constraints on the tagging efficiencies. It must not simply apply one generic veto-survival multiplier to the science-sample 2D map.
+
+### 14.3 Distinguish the four S2/S1-related quantities
+
+The following are separate and must remain separate in code and documentation:
+
+- **S2 DAQ trigger:** hardware/digital-filter probability for an S2 pulse to trigger waveform acquisition.
+- **NEST S2 threshold:** the NEST response-model pulse-size threshold used when generating a response event.
+- **Raw-S2 WS ROI:** the analysis cut \(S2>645\) phd.
+- **Corrected-S2 WS ROI:** the analysis cut \(10^{2.75}\leq S2_c\leq10^{4.15}\) phd.
+
+Likewise, NEST's threefold PMT-occupancy approximation is not the same thing as the complete waveform-level S1 pulse classification and SS reconstruction. The current code's NEST pass flags and WS ROI therefore remain an intermediate response, not a complete event-selection chain.
+
+### 14.4 Profile-likelihood blockers after the response-grid work
+
+The remaining blockers are now explicit:
+
+- [ ] Official production NEST build/configuration and calibration closure, including high-energy NR response.
+- [ ] Calibration-source energy spectra and spatial deployment distributions for the NR band/response calibration.
+- [ ] Position reconstruction and position-correction maps, including finite \((x,y,z)\) resolution and field-dependent effects.
+- [ ] S2 trigger efficiency and its uncertainty/correlation with S1/SS reconstruction.
+- [ ] Full SS reconstruction, pulse-quality/data-analysis cuts, and their energy-dependent NR acceptance/covariance.
+- [ ] Exact 4.71-tonne FV contour or a validated equivalent spatial mask and reconstruction smearing.
+- [ ] Skin/OD response and signal tagging fractions for science, prompt-veto, and delayed-veto samples.
+- [ ] Event-dependent live-time exclusions and consistency with the already-used 220-live-day, 2.84-tonne-year exposure.
+- [ ] Background PDFs, normalization constraints, tagging-efficiency constraints, and nuisance covariance needed for the simultaneous three-sample likelihood.
+
+Until these inputs are resolved, keep the event-weighted two-dimensional map labelled **NEST-level / WS-ROI intermediate three-body signal prediction**. The 1-keV energy response remains the numerical reference; 5-keV and 0.5-keV comparisons remain diagnostics without a pre-registered formal tolerance. Do not start the final profile likelihood.
+
