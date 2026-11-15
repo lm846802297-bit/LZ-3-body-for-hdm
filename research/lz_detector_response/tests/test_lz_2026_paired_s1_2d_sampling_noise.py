@@ -21,12 +21,12 @@ class PairedS1TwoDSamplingNoiseTests(unittest.TestCase):
 
     def test_split_half_stability_is_reported_separately_from_mode_tv(self):
         metrics = MOD.compare_mode_maps(
-            {"a": 15.0, "b": 5.0},
-            {"a": 13.0, "b": 7.0},
-            {"a": 8.0, "b": 2.0},
-            {"a": 7.0, "b": 3.0},
-            {"a": 7.0, "b": 3.0},
-            {"a": 6.0, "b": 4.0},
+            {(0, 0): 15.0, (1, 0): 5.0},
+            {(0, 0): 13.0, (1, 0): 7.0},
+            {(0, 0): 8.0, (1, 0): 2.0},
+            {(0, 0): 7.0, (1, 0): 3.0},
+            {(0, 0): 7.0, (1, 0): 3.0},
+            {(0, 0): 6.0, (1, 0): 4.0},
         )
         self.assertAlmostEqual(metrics["parametric_vs_full_pooled_tv"], 0.1)
         self.assertAlmostEqual(metrics["parametric_replica0_vs_replica1_tv"], 0.1)
@@ -46,12 +46,12 @@ class PairedS1TwoDSamplingNoiseTests(unittest.TestCase):
 
     def test_mode_difference_can_be_smaller_than_split_half_variation(self):
         metrics = MOD.compare_mode_maps(
-            {"a": 0.51, "b": 0.49},
-            {"a": 0.52, "b": 0.48},
-            {"a": 0.60, "b": 0.40},
-            {"a": 0.40, "b": 0.60},
-            {"a": 0.62, "b": 0.38},
-            {"a": 0.42, "b": 0.58},
+            {(0, 0): 0.51, (1, 0): 0.49},
+            {(0, 0): 0.52, (1, 0): 0.48},
+            {(0, 0): 0.60, (1, 0): 0.40},
+            {(0, 0): 0.40, (1, 0): 0.60},
+            {(0, 0): 0.62, (1, 0): 0.38},
+            {(0, 0): 0.42, (1, 0): 0.58},
         )
         self.assertLess(
             metrics["parametric_vs_full_pooled_tv"],
