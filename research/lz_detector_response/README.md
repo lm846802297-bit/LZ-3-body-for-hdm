@@ -213,6 +213,18 @@ Implementation:
 - `bootstrap_lz_2026_nr_full_band_candidate.py` — deterministic finite-MC bootstrap.
 - `.github/workflows/lz-2026-nr-eFT2024-full-band.yml` — pinned NEST build, event generation, closure checks, and artifact upload.
 
+### ER far-tail support audit
+
+The ER full-band pilot gives a central-band offset of about −6.7 sigma-equivalent,
+but the empirical Monte Carlo has no support at the observed candidate point:
+in the 540–545 phd S1c bin, the EFT2024 sample's minimum S2c is 29,595 phd,
+whereas the observed event has S2c = 9,267.53 phd. There are zero events at
+or below the candidate S2c and zero events in the candidate's 10-phd by
+0.02-dex 2D histogram cell. Thus the 6.7-sigma-equivalent band displacement
+is not a measured ER tail probability, and the sparse ER PDF cannot be used
+directly as a likelihood density at the candidate. See
+[LZ_2026_ER_TAIL_SUPPORT_AUDIT.md](lz_2026_extended_nr/LZ_2026_ER_TAIL_SUPPORT_AUDIT.md).
+
 ### Parametric-versus-Full S1 coincidence validation
 
 Because the three-body stratified driver uses NEST Parametric S1 mode, a paired

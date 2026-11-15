@@ -69,11 +69,6 @@ int main(int argc, char** argv) {
 
     const double density = calc.SetDensity(detector.get_T_Kelvin(),
                                            detector.get_p_bar());
-    const double g2_field = detector.FitEF(0., 0., detector.get_TopDrift()/2.);
-    const double drift_speed = calc.SetDriftVelocity(
-        detector.get_T_Kelvin(), density, g2_field, detector.get_p_bar());
-    if (!(drift_speed > 0.))
-      throw std::runtime_error("NEST returned non-positive drift speed");
     const auto g2_params = calc.CalculateG2(0);
 
     std::vector<int64_t> s1_wf_time, s2_wf_time;
@@ -89,12 +84,12 @@ int main(int argc, char** argv) {
               << " g1_gas=" << detector.get_g1_gas()
               << " g2_phd_per_electron=" << g2_params.at(3)
               << " s2_threshold_phe=" << detector.get_s2_thr()
-              << " electron_lifetime_us=" << detector.get_eLife_us()
-              << " drift_speed_mm_us=" << drift_speed << "\n";
+              << " electron_lifetime_us=" << detector.get_eLife_us() << "\n";
 
     std::cout
       << "event,config,position_mode,energy_keV,x_mm,y_mm,z_mm,r_mm,"
-         "drift_time_us,field_V_cm,density_g_cm3,n_photons,n_electrons,"
+         "drift_distance_mm,drift_time_us,drift_speed_mm_us,field_V_cm,"
+         "density_g_cm3,n_photons,n_electrons,"
          "s1r_phd,s1c_phd,s2r_phd,s2c_phd,log10_s2c_phd,"
          "s1_pass,s2_pass,analysis_roi_pass\n";
     std::cout << std::setprecision(12);
@@ -111,8 +106,12 @@ int main(int argc, char** argv) {
       }
       const double r_mm = std::hypot(x_mm, y_mm);
       const double field = detector.FitEF(x_mm, y_mm, z_mm);
-      const double drift_time =
-          (detector.get_TopDrift() - z_mm) / drift_speed;
+      const double drift_speed = calc.SetDriftVelocity(
+          detector.get_T_Kelvin(), density, field, detector.get_p_bar());
+      if (!(drift_speed > 0.))
+        throw std::runtime_error("NEST returned non-positive local drift speed");
+      const double drift_distance = detector.get_TopDrift() - z_mm;
+      const double drift_time = drift_distance / drift_speed;
 
       // FullCalculation(NEST::beta) invokes GetYieldBetaGR and GetQuanta with
       // SkewnessER=-999, i.e. the pinned NEST LUX Run04 ER skewness function.
@@ -143,7 +142,8 @@ int main(int argc, char** argv) {
       const double log_s2c = s2c > 0. ? std::log10(s2c) : -999.;
       std::cout << i << ',' << config << ',' << position_mode << ','
                 << energy << ',' << x_mm << ',' << y_mm << ',' << z_mm << ','
-                << r_mm << ',' << drift_time << ',' << field << ',' << density
+                << r_mm << ',' << drift_distance << ',' << drift_time << ','
+                << drift_speed << ',' << field << ',' << density
                 << ',' << result.quanta.photons << ','
                 << result.quanta.electrons << ',' << s1r << ',' << s1c << ','
                 << s2r << ',' << s2c << ',' << log_s2c << ','

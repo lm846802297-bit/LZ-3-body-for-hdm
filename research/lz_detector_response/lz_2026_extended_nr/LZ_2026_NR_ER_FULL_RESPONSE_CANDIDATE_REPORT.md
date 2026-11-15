@@ -93,7 +93,7 @@ Workflow:
 | Literal Table S3, m6=0 | 677 | 4.788475 | (-6.31\sigma_{eq}) |
 | Generic NEST ER defaults | 700 | 4.840292 | (-9.97\sigma_{eq}) |
 
-The EFT2024 ER pilot's (-6.69\sigma_{eq}) is numerically close to the paper's quoted 6.7-sigma displacement below the ER-band median. This is a strong cross-check of the ER model candidate, but it is not proof of the exact official calibration configuration. The ER energy and spatial priors are explicit proxies, not the calibration source distributions.
+The EFT2024 ER pilot's \((-6.69\sigma_{eq})\) is numerically close to the paper's quoted 6.7-sigma displacement below the ER-band median. This is a cross-check of the central-band location, not a validated far-tail probability. In the 540–545 phd S1c bin, the 200k-event EFT2024 sample has 631 events, minimum S2c = 29,595 phd, and zero events at or below the observed 9,267.53 phd. The 10-phd by 0.02-dex empirical 2D cell containing the candidate is also empty. The sparse ER PDF therefore has no empirical support at the observed point and cannot be used directly as a likelihood density there. See [LZ_2026_ER_TAIL_SUPPORT_AUDIT.md](LZ_2026_ER_TAIL_SUPPORT_AUDIT.md). The ER energy and spatial priors are explicit proxies, not the calibration source distributions.
 
 ### Conditional 2D PDFs
 
@@ -120,7 +120,7 @@ The compact full-volume NR driver exports corrected S1c/S2c but not the separate
 1. The strongest public configuration candidate is the EFT2024 method at NEST commit 541b643, but it is not proven to be the exact LZ 2026 production build.
 2. The earlier Table-S5-plus-WS2024 hybrid result is not the preferred production candidate.
 3. The EFT2024 NR band proxy gives (-1.89\sigma_{eq}), while the EFT2024 ER band proxy gives (-6.69\sigma_{eq}). The ER result matches the paper's quoted 6.7 sigma closely; the NR result remains about 0.4 sigma away from the paper's 1.5 sigma.
-4. The NR and ER 2D PDFs are conditional response objects. They still need correct energy-prior integration, spatial source weighting, calibration constraints, detector nuisance covariance, and selection-efficiency handling.
+4. The NR and ER 2D PDFs are conditional response objects. They still need correct energy-prior integration, spatial source weighting, calibration constraints, detector nuisance covariance, and selection-efficiency handling. The ER empirical PDF has zero support in the candidate's 2D cell; a validated far-tail model or dedicated tail simulation is required before ER likelihood use.
 5. The uniform active-TPC position prior is not the actual D-D/AmBe calibration source distribution. No official calibration event cloud is in the HEPData ZIP.
 6. Do not claim official LZ likelihood reproduction. The science/prompt-veto/delayed-veto event samples are public, but complete BACCARAT signal/background templates and nuisance covariance have not been recovered.
 

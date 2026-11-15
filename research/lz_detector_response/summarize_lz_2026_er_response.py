@@ -67,7 +67,8 @@ def summarize(path, make_2d):
         "n_generated": 0, "n_valid": 0, "n_trigger_pass": 0,
         "all": Counter(), "trigger": Counter()
     })
-    energies, radii, zs = [], [], []
+    energies, radii, zs, fields, drift_speeds, drift_times, drift_distances = [], [], [], [], [], [], []
+    max_drift_kinematic_closure = 0.0
     config = position_mode = None
     n_generated = n_s1_pass = n_s2_pass = n_roi_pass = 0
     with path.open(newline="") as f:
@@ -75,10 +76,22 @@ def summarize(path, make_2d):
             n_generated += 1
             config, position_mode = row["config"], row["position_mode"]
             e, r, z = float(row["energy_keV"]), float(row["r_mm"]), float(row["z_mm"])
+            field = float(row["field_V_cm"])
+            drift_speed = float(row["drift_speed_mm_us"])
+            drift_time = float(row["drift_time_us"])
+            drift_distance = float(row["drift_distance_mm"])
+            if not (field > 0.0 and drift_speed > 0.0 and drift_time >= 0.0 and drift_distance >= 0.0):
+                raise ValueError(f"invalid local field/drift quantity in {path}")
+            closure = abs(drift_time * drift_speed - drift_distance) / max(drift_distance, 1.0)
+            max_drift_kinematic_closure = max(max_drift_kinematic_closure, closure)
+            if closure > 1e-9:
+                raise ValueError(f"local drift kinematic closure failed in {path}: {closure}")
             s1, s2, log_s2 = float(row["s1c_phd"]), float(row["s2c_phd"]), float(row["log10_s2c_phd"])
             s1_pass, s2_pass = int(row["s1_pass"]) == 1, int(row["s2_pass"]) == 1
             roi_pass = int(row["analysis_roi_pass"]) == 1
             energies.append(e); radii.append(r); zs.append(z)
+            fields.append(field); drift_speeds.append(drift_speed)
+            drift_times.append(drift_time); drift_distances.append(drift_distance)
             n_s1_pass += int(s1_pass); n_s2_pass += int(s2_pass); n_roi_pass += int(roi_pass)
             if s2 <= 0 or log_s2 < 0 or s1 < 0:
                 continue
@@ -109,6 +122,10 @@ def summarize(path, make_2d):
         "energy_min_keV": min(energies), "energy_max_keV": max(energies),
         "r_min_mm": min(radii), "r_max_mm": max(radii),
         "z_min_mm": min(zs), "z_max_mm": max(zs),
+        "field_min_V_cm": min(fields), "field_max_V_cm": max(fields),
+        "local_drift_speed_min_mm_us": min(drift_speeds),
+        "local_drift_speed_max_mm_us": max(drift_speeds),
+        "max_relative_drift_kinematic_closure": max_drift_kinematic_closure,
         "candidate_bin_all": candidate_bin(bands_all),
         "candidate_bin_trigger_pass": candidate_bin(bands_trigger),
         "candidate_bin_analysis_roi": candidate_bin(bands_roi),
