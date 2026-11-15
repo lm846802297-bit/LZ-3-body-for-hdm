@@ -1,4 +1,4 @@
-// Stratified true-ER NR response samples for 1/5/10 keV grid convergence.
+// Stratified true-NR response samples for 1/5/10 keV grid convergence.
 // Each 1-keV stratum has equal Monte Carlo statistics; two independent event
 // halves are labelled replica=0,1. This is a uniform-active-TPC volume proxy,
 // not the collaboration's calibration-source geometry or full event selection.
