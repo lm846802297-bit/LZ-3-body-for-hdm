@@ -127,6 +127,31 @@ The compact full-volume NR driver exports corrected S1c/S2c but not the separate
 5. The uniform active-TPC position prior is not the actual D-D/AmBe calibration source distribution. No official calibration event cloud is in the HEPData ZIP.
 6. Do not claim official LZ likelihood reproduction. The science/prompt-veto/delayed-veto event samples are public, but complete BACCARAT signal/background templates and nuisance covariance have not been recovered.
 
-## 7. Next computational step
+## 7. Three-body NR response fold: completed intermediate result
 
-Use the EFT2024 candidate as the primary response family, with Table S3 m6=0 and WS2024/generic retained as systematic alternatives. Build a three-body-signal conditional PDF by folding the model's true (dR/dE_R) with the NR conditional response, then apply the published NR efficiency once. Keep the ER 2D response as a background-separation diagnostic; do not infer an ER-tail probability from the central 10–90% band alone.
+The planned three-body NR fold has now been carried out. The 1-keV stratified response is folded against the exact piecewise-linear GCN/JJ55 recoil spectra for all four benchmark spectra, four NEST response families (EFT2024, rounded Table S5, WS2024, generic), and both NEST-level and NEST-plus-WS-ROI acceptance definitions. The archived 1-keV 2D intensity is therefore a genuine energy-integrated intermediate signal prediction, not just a collection of conditional NR-band histograms.
+
+The full selection and grid audit is in
+[LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md](LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md).
+A dedicated 0.5-keV response sample over 225.4–269.9 keV was also completed:
+- [Run 43675776534](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43675776534), artifact 14146681605.
+- ZIP SHA-256: de195140fc2d4b3e3205a7543ea822a9ed2b325373db60078ec79cae78ab78b5.
+- Maximum 0.5-keV versus 1-keV accepted-rate difference: 0.46895%.
+- Maximum 2D total-variation distance: 2.5446%.
+- Two of 64 rate comparisons exceed both split-sample rate checks after numerical tolerance; no 2D shape comparison does. No formal convergence PASS is claimed.
+
+The published Fig. S2 final cumulative NR efficiency has already been applied once in the separate rate-level expected-yield calculation archived at
+[rate_level_event_yields/lz_2026_rate_level_event_yields.csv](rate_level_event_yields/lz_2026_rate_level_event_yields.csv).
+Do **not** multiply that final efficiency into the existing 2D intensity: the 2D object already includes NEST S1 coincidence, NEST S2 threshold, and the WS observable-space ROI. The remaining trigger, SS reconstruction, data-analysis, official fiducial-volume, veto, and live-time selections are not represented by a validated 2D migration model.
+
+The ER 2D response remains a background-separation diagnostic only. The empirical ER sample has zero support at the observed candidate point, so its central 10–90% band offset must not be interpreted as an ER-tail probability or used as a likelihood density there.
+
+## 8. Remaining work before a likelihood
+
+1. Replace the uniform active-TPC proxy with the official calibration-source spatial distributions and depth/azimuth-dependent fiducial-volume model, or obtain the event-level calibration templates needed to validate those approximations.
+2. Build the missing selection response for trigger, waveform-level S1 timing, single-scatter reconstruction, data-quality cuts, Skin/OD prompt and delayed vetoes, and live-time exclusions. The response must retain correlations with \(S1_c\), \(S2_c\), and true recoil energy.
+3. Validate the energy-weighted 2D fold and finite-MC covariance, especially for the EFT2024 \(m_s=360\) keV high-energy tail where the 0.5-keV refinement still differs from the 1-keV rate by about 0.45%.
+4. Construct ER tail support with a validated parametric/importance-sampling method or dedicated simulation. Do not extrapolate a far-tail likelihood from the current sparse empirical ER histogram.
+5. Recover the collaboration's exact NEST production configuration and calibration nuisance covariance, or explicitly define and justify a public-candidate nuisance model.
+
+Until these gates are resolved, keep the rate-level efficiency-weighted event yields and the NEST-plus-WS-ROI 2D intensities as separate intermediate products. Do not construct a profile likelihood or claim a 90% confidence-level exclusion.
