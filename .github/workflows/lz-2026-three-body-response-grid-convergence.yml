@@ -92,6 +92,47 @@ jobs:
             --response-dir response-output \
             --spectrum-dir research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum \
             --out-dir convergence-output
+      - name: Validate energy-grid audit row provenance and uniqueness
+        run: |
+          python - <<'PY'
+          import csv
+          from collections import Counter
+          path = "convergence-output/acceptance_by_energy_grid.csv"
+          with open(path, newline="") as handle:
+              reader = csv.DictReader(handle)
+              required = {
+                  "benchmark", "nuclear_model", "response_family",
+                  "grid_width_keV", "replica", "energy_low_keV", "energy_high_keV",
+              }
+              missing = required - set(reader.fieldnames or [])
+              if missing:
+                  raise SystemExit(f"missing provenance columns: {sorted(missing)}")
+              rows = list(reader)
+          key_fields = (
+              "benchmark", "nuclear_model", "response_family",
+              "grid_width_keV", "replica", "energy_low_keV", "energy_high_keV",
+          )
+          keys = [tuple(row[k] for k in key_fields) for row in rows]
+          if len(keys) != len(set(keys)):
+              raise SystemExit("duplicate energy-grid audit keys")
+          expected_bins = {"1.0": 265, "5.0": 53, "10.0": 27}
+          counts = Counter(
+              (row["benchmark"], row["nuclear_model"], row["response_family"],
+               row["grid_width_keV"], row["replica"])
+              for row in rows
+          )
+          expected = {
+              (benchmark, nuclear, family, width, replica): n_bins
+              for benchmark in ("red_ms200_dm1", "green_ms300_dm1", "black_ms360_dm1", "blue_ms300_dm10")
+              for nuclear in ("GCN", "JJ55")
+              for family in ("eft2024", "tableS5", "ws2024", "generic")
+              for width, n_bins in expected_bins.items()
+              for replica in ("0", "1", "pooled")
+          }
+          if counts != Counter(expected):
+              raise SystemExit("energy-grid audit row counts do not match the complete benchmark/model/grid/replica matrix")
+          print(f"Validated {len(rows)} uniquely keyed energy-grid audit rows.")
+          PY
           cp selection-audit-output/lz_2026_nr_selection_efficiency_components.csv convergence-output/
           cp selection-audit-output/lz_2026_nr_selection_efficiency_components_metadata.json convergence-output/
           cat convergence-output/grid_convergence_summary.json
