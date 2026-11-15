@@ -115,7 +115,14 @@ class EnergyGridConvergenceTests(unittest.TestCase):
         self.assertFalse(gate["grids"]["10"]["point_estimate_pass"])
         self.assertEqual(gate["thresholds"]["max_accepted_rate_relative_difference"], 0.01)
         self.assertEqual(gate["thresholds"]["max_2d_tv_distance"], 0.01)
-        self.assertIn("independent-seed", gate["production_adoption"])
+        self.assertIn("5-keV-approved-coarse-grid", gate["production_adoption"])
+        self.assertEqual(
+            gate["independent_seed_tail_validation"]["run_id"], 43691733080
+        )
+        self.assertTrue(
+            gate["independent_seed_tail_validation"]["max_tv_distance_between_mean_maps"]
+            <= 0.01
+        )
 
 
 if __name__ == "__main__":
