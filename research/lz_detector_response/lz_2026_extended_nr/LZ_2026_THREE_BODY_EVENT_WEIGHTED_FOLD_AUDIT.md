@@ -46,6 +46,15 @@ Latest workflow:
 - Artifact ID: `14146333000`.
 - Artifact ZIP SHA-256: `3af588a74576db65462545ff305d453b63febaa701d3cf42762e8edb91e7b7d7`.
 - Artifact size: 437,589,152 bytes; 28 files.
+
+A subsequent documentation-triggered rerun on the final selection-audit revision
+also completed successfully:
+- [GitHub Actions run 43680164807](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43680164807).
+- Artifact ID: `14147354124`.
+- ZIP SHA-256: `0f2bf102f440245d98a10462a42fa9625b26e28124e7e2096b3ca8dfa90533b2`.
+- The 64 event-weighted comparisons and all convergence diagnostics are
+  numerically identical to the earlier successful run; the rerun does not
+  constitute an independent response-MC production.
 - The workflow builds the pinned NEST source, generates the full 1-keV response and the dedicated 0.5-keV tail samples, runs the 1/5/10-keV folds, performs the event-weighted fold, checks raw-rate closure, and archives the outputs.
 
 Across all 64 comparisons:
