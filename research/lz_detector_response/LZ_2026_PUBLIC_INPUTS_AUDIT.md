@@ -1,0 +1,203 @@
+# LZ 2026 public-input audit for the three-body xenon recast
+
+Date: 2026-11-14
+Repository branch: research/figure2-p0-4-mainline
+Paper: LZ Collaboration, arXiv:2609.02823v1
+HEPData DOI: 10.17182/hepdata.182472.v1
+
+## Executive result
+
+The LZ 2026 extended-NR paper exposes enough information to build a substantially better detector-response recast than an efficiency-only fold:
+
+- a 303-point digitization of the final WIMP-search NR efficiency is already archived in this repository;
+- the paper says best-fit NEST parameters are in the Data Release, but the supplied HEPData v1 ZIP contains only 46 tables and no separate NEST configuration resource; a separate public NEST EFT2024 configuration candidate has since been found at commit 541b643;
+- the paper publishes the candidate event coordinates and reconstructed recoil energy;
+- the paper documents the simultaneous science, prompt-veto, and delayed-veto sample structure and the extended unbinned likelihood.
+
+However, a faithful reproduction of the collaboration likelihood still requires confirming and obtaining the actual signal/background PDF templates and the complete nuisance-parameter constraint information. Public plots and tabulated best-fit NEST parameters are not by themselves equivalent to the BACCARAT PDF templates used in the official fit.
+
+## 1. Verified experimental facts
+
+From arXiv:2609.02823v1:
+
+- Exposure: 2.84 tonne-year.
+- Live time: 220 days.
+- Fiducial LXe mass: 4.71 +/- 0.08 tonnes.
+- WS ROI: S1c = 3--600 phd, S2 > 645 phd, and S2c = 10^2.75--10^4.15 phd.
+- NR efficiency averages about 96% from 14 to 250 keV.
+- Candidate: S1c = 540.1 phd, S2c = 9268 phd, reconstructed NR energy 248 +/- 23 (stat) +/- 23 (sys) keV.
+- The candidate is 1.5 sigma below the modeled NR-band median and 6.7 sigma below the ER-band median at that S1c.
+- The collaboration's background-only comparison gives 2.6 sigma global significance after look-elsewhere correction, with maximum local significance 3.4 sigma among the tested models.
+
+These values are paper-level inputs and should be versioned alongside the recast.
+
+## 2. Public detector-response information
+
+The paper identifies NEST v2.4.5 as the tuned detector-response model. The supplied HEPData v1 ZIP has 46 tables but no NEST header/configuration or additional_resources entry. A separate public LZ-specific candidate exists in NEST commit 541b643: LZ_Detector_2024::SetEFT2024Configuration(), added in commit 307fb27. An independent study uses this commit but explicitly says the connection to the exact collaboration build is circumstantial; do not call it officially confirmed. See LZ_2026_NEST_CONFIGURATION_PROVENANCE.md.
+
+The repository already contains:
+- lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv
+- lz_2026_extended_nr/lz_2026_nr_efficiency_metadata.json
+- lz_2026_extended_nr/rate_level_event_yields/
+
+The digitization metadata records:
+- 303 sampled points;
+- central final-ROI efficiency and gray uncertainty envelope;
+- epsilon(248 keV) = 0.94569;
+- lower/upper envelope at 248 keV = 0.88355 / 0.98000;
+- gray envelope has no confidence level assigned by LZ and must be treated as a systematic variation, not a confidence interval.
+
+The official paper states that the final NEST response parameters are supplied in the data release. Therefore the next action is to retrieve and version those parameters and check whether the HEPData record contains machine-readable calibration points, efficiency tables, and likelihood-related data.
+
+## 3. What the official detector likelihood actually uses
+
+The LZ analysis does not use only a one-dimensional recoil-energy likelihood.
+
+It constructs signal and background PDFs in:
+{S1c, log10(S2c)}
+
+using BACCARAT/GEANT4 simulations with tuned NEST v2.4.5 detector response, with stated exceptions for selected components.
+
+The collaboration simultaneously fits three event samples:
+1. science;
+2. prompt veto;
+3. delayed veto.
+
+The fit is an unbinned extended maximum likelihood. Background component normalizations are nuisance parameters with auxiliary constraints; neutron components are additionally constrained by prompt/delayed veto efficiencies. MSSI, 127Xe, and detector-material gamma components have additional veto-sideband constraints.
+
+Consequently, a faithful recast needs more than the public NR efficiency curve:
+- signal NR PDF in S1c/log10(S2c) for this three-body recoil spectrum;
+- background PDFs or sufficient public templates/data to reconstruct them;
+- science/prompt-veto/delayed-veto event samples;
+- auxiliary constraint terms and nuisance correlations;
+- exact ROI, FV, and selection definitions.
+
+## 4. Data availability classification
+
+| Input | Current status | Action |
+|---|---|---|
+| NR efficiency central curve and gray band | Already digitized and archived | Keep as rate-level cross-check |
+| NEST 2026 NR/ER means and fluctuations | Table S3–S5 in paper plus public EFT2024 candidate vectors at NEST commit 541b643; no separate config in supplied HEPData ZIP | Compare exact vectors and keep provenance caveat |
+| NR calibration cloud in S1c/log10(S2c) | Published in paper figures | Digitize only for validation, not as substitute for full calibration data |
+| Candidate event coordinate | Published: (540.1, 9268) phd | Include in diagnostic plots |
+| Candidate reconstructed energy | Published with stat/sys uncertainties | Use only with correct response/energy mapping |
+| Background component expected/fitted yields | Published in paper tables | Use as constraints/cross-check |
+| Three sample definitions | Published | Implement exact sample structure if templates available |
+| Signal/background BACCARAT PDFs | Their use is described; public machine-readable availability not yet verified | Investigate HEPData files and supplementary materials |
+| Full nuisance covariance and auxiliary likelihood | Not yet verified in machine-readable release | Do not claim exact official likelihood reproduction until obtained |
+
+## 5. Immediate implementation plan
+
+### P0: Close theory inputs before detector likelihood
+
+The existing width audit shows that the three-body kernel can be sensitive to the independent coupling g2 under the constant pole-width prescription. For example, in the archived diagnostic at ms=300 keV, Delta m=1 MeV, ER=200 keV, v=776 km/s, g2=3 changes I6 by about -45.2% relative to zero width, while the diagnostic running-width ansatz changes it by about -1.83%.
+
+This is not a license to choose running width because it gives a smaller effect. The source manuscript's propagator prescription, Dirac/Majorana nature, allowed decay channels, and independent g2 must be fixed first. The existing running-width result is explicitly diagnostic, not a full fermion self-energy calculation.
+
+### P1: Build a validated NEST response layer
+
+1. Obtain the LZ-tuned NR parameter table from the HEPData release; separately verify whether its NEST snapshot is exactly upstream v2.4.5beta or a collaboration-specific revision.
+2. Pin the exact NEST release/commit and compile/run configuration.
+3. Reproduce mean NR light and charge yields over the analysis recoil-energy range.
+4. Reproduce fluctuations and generate conditional S1c/log10(S2c) PDFs.
+5. Validate against the published NR calibration band and efficiency curve.
+6. Keep detector acceptance separate from the conditional response PDF to prevent double counting.
+
+### P2: Reconstruct or approximate the likelihood transparently
+
+Preferred route: use official machine-readable PDFs/templates and auxiliary likelihood inputs if they are available.
+
+Fallback route: build a clearly labelled approximate recast using the published candidate coordinate, published background yields and uncertainties, published NR efficiency, and reconstructed NEST PDFs. It must not be called the official LZ likelihood or a faithful reproduction.
+
+### P3: Model-specific inference
+
+For the three-body model, generate signal PDFs by folding the predicted true recoil spectrum through the conditional NEST response, then through the analysis selections. Fit the science/prompt-veto/delayed-veto samples where the required information exists. Otherwise report energy-only/rate-level constraints with explicit limitations.
+
+## 6. Candidate event interpretation policy
+
+The 248 keV event is an event of interest / candidate, not a dark-matter discovery. The collaboration reports 2.6 sigma global significance after the look-elsewhere correction. A three-body model should be tested against:
+- the candidate's S1c/S2c location;
+- the full NR spectrum in the 5.4--269.9 keV accepted window;
+- the lower-energy region and higher-energy sidebands;
+- background-only and alternative signal hypotheses.
+
+Do not normalize the model to one event and call that a confidence limit. Do not use the high-S1 background expectation of 0.0106 events as the total background over the full ROI; that value refers to a specific projection bin in the paper.
+
+## 7. Key references
+
+- LZ Collaboration, arXiv:2609.02823v1, especially detector/calibration, data-analysis, likelihood, and supplemental NEST sections.
+- HEPData record: DOI 10.17182/hepdata.182472.v1.
+- NEST v2.4.5 release and LZ tuning details cited by the LZ paper.
+
+## Status
+
+This audit is a public-input availability assessment. It does not claim that the HEPData package has been fully downloaded or that the official likelihood has been reproduced. The existing rate-level event-yield archive remains a useful cross-check, not the final detector-level analysis.
+
+
+## 8. Version pinning and execution gate (updated 2026-11-15)
+
+### NEST version identity
+
+The public upstream NEST release page currently lists v2.4.5beta, dated 2025-12-08, at commit 19bc9bc; it is explicitly marked as a pre-release. The associated Zenodo software archive is DOI 10.5281/zenodo.17851406. Do not silently relabel this as a stable v2.4.5 release.
+
+Before generating detector PDFs:
+1. Retrieve the LZ HEPData NEST parameter table and any linked code/configuration resources.
+2. Compare the LZ paper's version string and parameter names against upstream v2.4.5beta.
+3. If the HEPData package identifies a different commit or modified detector header, pin that exact snapshot instead.
+4. Archive the source commit, detector header, parameter table, compiler/build options, RNG seed policy, and output schema.
+5. Keep a clean upstream build and a separately patched LZ-tuned build; never edit upstream silently.
+
+The public upstream release notes indicate that v2.4.5beta includes NR fluctuation-model changes, energy-dependent NR quanta parameters, and a truncated Maxwell-Boltzmann halo update. These features make exact version pinning important for both detector response and avoiding accidental coupling of the detector simulation to a halo implementation.
+
+### Detector-response implementation contract
+
+For each true recoil energy ER, produce:
+- mean photon and electron yields;
+- event-level distributions of detected S1c and S2c;
+- conditional response samples or normalized 2D PDFs;
+- trigger/reconstruction/selection pass flags and efficiencies, stored separately from the conditional PDF unless the official definition includes them;
+- statistical errors from finite Monte Carlo and parameter variations.
+
+The response must use the LZ-tuned NR parameters and detector configuration, not generic NEST defaults. Validate against:
+- published NR calibration bands in the S1c--log10(S2c) plane;
+- published mean light/charge yield information where available;
+- the archived 303-point final WIMP-search NR efficiency curve;
+- the candidate coordinate (S1c,S2c) = (540.1,9268) phd as a location check, not as a calibration datum.
+
+Avoid double counting: if the conditional PDF is normalized before analysis cuts, apply cuts once; if a generated PDF is already post-selection, do not multiply by the same efficiency again.
+
+### Independent-coupling and width closure gate
+
+The archived width note derives Gamma(chi2 -> chi1 s) only under the conditional assumptions of Dirac fermions, a pure scalar transition coupling g2, and no other open decay channels. These assumptions are not yet established by the source model.
+
+The final detector response must not proceed to physics parameter scans until the model input contract states:
+- Dirac or Majorana nature of chi1 and chi2;
+- exact scalar interaction and chiral/CP structure;
+- all open chi2 decay channels and their branching fractions;
+- whether g2 is independent, fixed by a symmetry, or related to other couplings;
+- whether the propagator uses a pole scheme or a self-energy-derived running form.
+
+The existing pole-width versus running-width comparison is diagnostic only. It does not establish the correct scheme. In particular, the archived benchmark with g2=3 shows an approximately 45--48% change in the reduced kernel under the constant pole-width prescription, while the running-width ansatz gives a much smaller shift. The choice must follow the Lagrangian and a consistent self-energy treatment, not the preferred numerical outcome.
+
+### No-scan rule
+
+Until the NEST response and width/coupling closure gates pass:
+- no large parameter scan;
+- no 90% CL statement from rate-level event counts;
+- no claim to reproduce the official LZ likelihood;
+- rate-level yields remain diagnostics only.
+
+
+## 13. Corrected NEST/HEPData provenance and parameter-family distinction (2026-11-15)
+
+The supplied HEPData v1 ZIP was re-opened and `submission.yaml` was checked directly: it contains no `additional_resources` field and the ZIP contains only the 46 table YAML files. The HEPData record JSON endpoint returned HTTP 403, so the archive conclusion is explicitly scoped to the supplied table export; do not claim that an independent NEST file was downloaded from HEPData.
+
+A separate public LZ-specific executable configuration was located in NEST commit `541b6430dae6ea289cf110c99f174a9187f7fdee`, method `LZ_Detector_2024::SetEFT2024Configuration()`, added in commit `307fb27d4c2f9b48dba27529bb57bc243e0ce2dc`. It contains the higher-precision Table S5 NR vector, Table S3 ER vector (with the executable sentinel (m_6=-1), whereas Table S3 prints 0), and a 17-element NRERWidthsParam vector containing the Table S4 ER fluctuation values. The source commit is not a tagged NEST release and its identity with the exact LZ 2026 production build is not established.
+
+Keep four families separate:
+1. **Printed Tables S3–S5:** rounded mean-yield and ER fluctuation parameters as published; Table S5 alone is NR mean yield, not the full NR fluctuation model.
+2. **EFT2024 public NEST candidate:** full-precision NR/ER mean vectors, 17-element NRERWidthsParam, and detector overrides (g_1=0.1104), (g_{1,gas}=0.07753555), (s2\_thr=120\,\mathrm{phe}), (eLife=15000\,\mu\mathrm{s}).
+3. **WS2024 configuration:** separate 2024 LZ mean-yield and 13-element width vectors, with its own detector gains/threshold/lifetime.
+4. **Generic NEST defaults:** upstream generic defaults; not LZ-tuned.
+
+The earlier NR band pilots used rounded Table S5 means with WS2024 or generic width vectors and default WS2024 detector overrides. They are hybrid API/sensitivity checks, not the EFT2024 candidate response. Their numerical residuals are retained for reproducibility but superseded as the primary response result. The next band run uses NEST commit 541b643 and explicitly compares EFT2024, WS2024, and generic parameter families.
