@@ -245,6 +245,11 @@ This is a one-dimensional rate-level check, not a 2D selected signal PDF. The li
 [run 43681260816](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43681260816),
 artifact 14148377892, SHA-256
 53fa87cc4b2fdb3361e73fd65d847992b2ea2c96996891d7cfd6c10850b136b5.
+The same audit also passed from the clean PR integration branch in
+[run 43682717319](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43682717319),
+artifact 14149346224, ZIP SHA-256
+`5fdacaed77cde4a65db56801997f75e8171b6a4bb3d7ba0218be7d708cfbba0e`. The eight-row closure is unchanged.
+
 It closes all eight rows with maximum final-yield relative difference
 \(7.02\times10^{-10}\) against a \(10^{-8}\) tolerance. The calculation is reproducible through
 summarize_lz_2026_selection_stage_rates.py and its lightweight
