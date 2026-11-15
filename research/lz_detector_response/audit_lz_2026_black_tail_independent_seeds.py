@@ -8,9 +8,13 @@ import itertools
 import json
 import math
 import statistics
+import sys
 from collections import defaultdict
 from pathlib import Path
-from typing import Any
+
+HERE = Path(__file__).resolve().parent
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
 
 import compare_lz_2026_nr_high_energy_half_kev as high
 import converge_lz_2026_three_body_energy_grid as grid
@@ -200,6 +204,15 @@ def run_audit(args: argparse.Namespace) -> dict:
             load_seed_fold(fine_samples[seed], seed, 0.5, xs, ys)
             for seed in args.fine_seeds
         ]
+        for label, samples in (("1-keV", coarse), ("0.5-keV", fine)):
+            for sample in samples:
+                for bin_row in sample["pooled"]["bin_rows"]:
+                    if bin_row["n_generated"] != args.events_per_stratum:
+                        raise ValueError(
+                            f"{label} seed {sample['seed']} has "
+                            f"{bin_row['n_generated']} events in a stratum; "
+                            f"expected {args.events_per_stratum}"
+                        )
         for mode in MODES:
             comparisons.append(summarize_comparison(coarse, fine, nuclear, mode))
         for width, samples in ((1.0, coarse), (0.5, fine)):
