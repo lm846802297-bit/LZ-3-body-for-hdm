@@ -71,6 +71,12 @@ class S1CoincidenceModeComparisonTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 MOD.read_events(path)
 
+    def test_zero_discordance_keeps_nonzero_difference_interval(self):
+        low, high = MOD.paired_difference_wilson_interval(0, 0, 10000)
+        self.assertLess(low, 0.0)
+        self.assertGreater(high, 0.0)
+        self.assertAlmostEqual(high, -low)
+
     def test_wilson_interval_is_bounded(self):
         low, high = MOD.wilson_interval(0, 100)
         self.assertGreaterEqual(low, 0.0)
