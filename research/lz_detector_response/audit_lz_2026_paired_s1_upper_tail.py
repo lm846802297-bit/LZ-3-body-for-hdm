@@ -8,9 +8,13 @@ import json
 import math
 import random
 import statistics
+import sys
 from collections import defaultdict
 from pathlib import Path
 
+HERE = Path(__file__).resolve().parent
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
 import converge_lz_2026_three_body_energy_grid as grid
 
 BENCHMARK = "black_ms360_dm1"
