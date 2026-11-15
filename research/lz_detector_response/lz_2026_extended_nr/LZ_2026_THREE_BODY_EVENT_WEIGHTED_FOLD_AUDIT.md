@@ -205,6 +205,51 @@ cell-by-cell covariance matrix. See [the full grid and selection audit](LZ_2026_
 and [gated run 43691733080](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43691733080), artifact 14151869654 (SHA-256 `837a0385cac4c784abef38a5d4efc4273fc92ba01ddfcfab9123c90baecf2543`). Its local-tail gate passes the 1.0% / 1.0% point-estimate criteria.
 
 
+
+### 6.3 Fig. S2 residual-stage bridge for both NR mean-yield families
+
+The event-weighted 2D fold and the extracted Fig. S2 conditional stages were
+joined for both EFT2024 and the Table S5-mean/EFT2024-width hybrid. Each
+family has eight matched rows (four benchmarks × GCN/JJ55). The largest
+absolute rate-level factorisation mismatch is:
+
+| Response family | Maximum absolute mismatch | Worst benchmark | Worst nuclear response |
+|---|---:|---|---|
+| EFT2024 | 7.6250% | black, \(m_s=360\) keV | GCN |
+| Table S5 hybrid | 13.0272% | black, \(m_s=360\) keV | GCN |
+
+For the black GCN point, the detailed factors are:
+
+| Quantity | EFT2024 | Table S5 hybrid |
+|---|---:|---:|
+| NEST-only acceptance | 100.00% | 100.00% |
+| WS ROI conditional acceptance | 74.0612% | 90.6191% |
+| Fig. S2 SS+DA conditional efficiency | 95.5790% | 95.5790% |
+| Fig. S2 ROI conditional efficiency | 80.1746% | 80.1746% |
+| Fig. S2 final cumulative efficiency | 76.6301% | 76.6301% |
+| NEST ROI × residual SS+DA factor | 70.7870% | 86.6128% |
+| Factorised / Fig. S2 final − 1 | −7.6250% | +13.0272% |
+
+The JJ55 black point gives −7.5937% (EFT2024) and +12.7022% (Table S5
+hybrid). For the red/green/blue benchmarks the factorisation mismatch is
+below about 0.63% in EFT2024 and below 0.03% in the Table S5 hybrid.
+
+This establishes that the black high-energy ROI acceptance is strongly
+response-family dependent. The same Fig. S2 residual SS+DA factor cannot
+close both hypotheses: it underpredicts the final cumulative efficiency
+for EFT2024 and overpredicts it for the Table S5 hybrid. Do not choose a
+single scalar efficiency to reconcile these differences, and do not apply
+the full Fig. S2 cumulative curve to the 2D map. The bridge is a
+rate-level diagnostic only; the missing conditional 2D migration kernel,
+official FV, and Skin/OD selections remain unmodelled.
+
+The paired-family event-weighted fold and bridge are in [run 43697104437](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43697104437),
+artifact 14155360851, ZIP SHA-256
+682e2ba71063d6ef835b37a6d328a84ab7c609f404856aa83d56e4b875794bab.
+The artifact was downloaded and the two bridge JSON summaries were
+independently inspected.
+
+
 ## 7. Acceptance definitions and missing selection stages
 
 - `nest`: NEST Parametric S1 threefold PMT-occupancy acceptance and the configured NEST S2 threshold, with positive S1c/S2c observables.
