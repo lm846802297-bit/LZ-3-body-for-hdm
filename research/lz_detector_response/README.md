@@ -260,6 +260,13 @@ not a complete likelihood signal model. The 2.84 tonne-year exposure already
 uses the 220 live days after the published live-time exclusions; do not apply
 the 81.5% live-time retention a second time.
 
+The collaboration's official two-dimensional signal/background PDFs are
+generated with BACCARAT/GEANT4 and the tuned NEST v2.4.5 response. The
+one-dimensional Fig. S2 efficiency curve does not provide that 2D migration
+kernel. The waveform discussion of the candidate is event-specific and is
+not an extra generic NR signal cut. These are additional reasons to retain
+the present NEST-level/WS-ROI map as an intermediate prediction only.
+
 ### Parametric-versus-Full S1 coincidence validation
 
 Because the three-body stratified driver uses NEST Parametric S1 mode, a paired
