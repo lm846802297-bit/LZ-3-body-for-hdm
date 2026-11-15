@@ -124,6 +124,12 @@ def build_bridge_rows(
 
 
 def summarize(rows: list[dict]) -> dict:
+    if not rows:
+        raise ValueError("cannot summarize an empty conditional-selection bridge")
+    families = {row["response_family"] for row in rows}
+    if len(families) != 1:
+        raise ValueError("one bridge summary must contain exactly one response family")
+    response_family = next(iter(families))
     finite = [
         abs(row["relative_difference_factorized_vs_figs2"])
         for row in rows
@@ -132,6 +138,7 @@ def summarize(rows: list[dict]) -> dict:
     return {
         "study": "conditional residual-selection efficiency bridge",
         "status": "RATE_LEVEL_FACTORISATION_DIAGNOSTIC_ONLY",
+        "response_family": response_family,
         "n_rows": len(rows),
         "max_absolute_relative_difference_vs_figs2": max(finite) if finite else None,
         "interpretation": (
