@@ -550,9 +550,11 @@ difference: the largest pairwise seed TV is about 1.87% for 1 keV and
 validates the grid-averaged tail shape, not a complete cell-by-cell
 covariance matrix.
 
-The workflow and archived raw samples are [run 43691194242](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43691194242),
-artifact 14152587160, SHA-256
-1668469cea1c8282b987f3386fca088a14a71083795d7dd506bc3c2e0fd71549.
+The gated workflow and archived raw samples are [run 43691733080](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43691733080),
+artifact 14151869654, SHA-256
+837a0385cac4c784abef38a5d4efc4273fc92ba01ddfcfab9123c90baecf2543.
+Its machine-readable local-tail gate reports PASS, with maximum mean-rate
+difference 0.01862% and maximum mean-map TV 0.8489%.
 
 **Updated grid decision:** the 5-keV grid is accepted as the coarse
 production grid for the intermediate NEST+WS-ROI 2D response, under the
