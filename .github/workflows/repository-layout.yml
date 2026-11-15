@@ -93,7 +93,7 @@ jobs:
 
       - name: Verify production artifact file manifest
         working-directory: paired-s1-independent-seeds-input
-        run: sha256sum --check SHA256SUMS
+        run: sed 's#paired-s1-independent-seeds-output/##' SHA256SUMS | sha256sum --check -
 
       - name: Test paired S1 upper-tail audit
         run: |
@@ -101,12 +101,7 @@ jobs:
 
       - name: Run exact event-weighted ten-seed black S1 upper-tail audit
         run: |
-          python research/lz_detector_response/audit_lz_2026_paired_s1_upper_tail.py \\
-            --seed-root paired-s1-independent-seeds-input \\
-            --seeds 20261117 40261117 60261117 80261117 100261117 120261117 140261117 160261117 180261117 200261117 \\
-            --spectrum-dir research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum \\
-            --bootstrap-replicates 2000 \\
-            --out-dir black-s1-upper-tail-output
+          python research/lz_detector_response/audit_lz_2026_paired_s1_upper_tail.py --seed-root paired-s1-independent-seeds-input --seeds 20261117 40261117 60261117 80261117 100261117 120261117 140261117 160261117 180261117 200261117 --spectrum-dir research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum --bootstrap-replicates 2000 --out-dir black-s1-upper-tail-output
 
       - name: Validate ten-seed coverage and output closure
         run: |

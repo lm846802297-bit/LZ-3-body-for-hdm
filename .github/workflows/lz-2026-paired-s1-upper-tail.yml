@@ -38,7 +38,7 @@ jobs:
 
       - name: Verify all files in the production artifact manifest
         working-directory: paired-s1-independent-seeds-input
-        run: sha256sum --check SHA256SUMS
+        run: sed 's#paired-s1-independent-seeds-output/##' SHA256SUMS | sha256sum --check -
 
       - name: Test S1 boundary, conditional selection, TV, and seed bootstrap
         run: |

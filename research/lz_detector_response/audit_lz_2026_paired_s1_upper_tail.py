@@ -531,6 +531,10 @@ def run_audit(args: argparse.Namespace) -> tuple[list[dict], list[dict], dict]:
             json_summary[model][band] = summary
             for row in records:
                 clean = {key: value for key, value in row.items() if not key.startswith("_")}
+                clean = {
+                    key: json.dumps(value, sort_keys=True) if isinstance(value, (dict, list)) else value
+                    for key, value in clean.items()
+                }
                 per_seed_rows.append(clean)
                 for threshold in S1_THRESHOLDS_PHD:
                     key = str(threshold)
