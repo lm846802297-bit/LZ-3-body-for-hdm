@@ -75,15 +75,15 @@ def pooled_acceptance(raw_replica: list[float], passed_replica: list[float]) -> 
     passed = [float(value) for value in passed_replica]
     if any(not math.isfinite(value) or value < -1e-12 for value in raw + passed):
         raise ValueError("response weights must be finite and non-negative")
-    for denominator, numerator in zip(raw, passed):
-        if numerator > denominator * (1.0 + 1e-10) + 1e-12:
-            raise ValueError("accepted replica weight exceeds its total response weight")
     denominator = math.fsum(raw)
     numerator = math.fsum(passed)
     if denominator <= 0.0:
         if numerator > 1e-12:
             raise ValueError("positive accepted weight with zero total response weight")
         return 0.0
+    for replica_total, replica_accepted in zip(raw, passed):
+        if replica_accepted > replica_total * (1.0 + 1e-10) + 1e-12:
+            raise ValueError("accepted replica weight exceeds its total response weight")
     if numerator < -1e-12 or numerator > denominator * (1.0 + 1e-10):
         raise ValueError("accepted response weight is outside the total weight")
     return min(1.0, max(0.0, numerator / denominator))
