@@ -101,7 +101,8 @@ jobs:
           archive=research/lz_detector_response/lz_2026_extended_nr/paired_s1_independent_seeds_2026-11-15/upper-tail-audit
           mkdir -p "$archive"
           cp black-s1-upper-tail-output/* "$archive/"
-          cat > "$archive/README.md" <<'EOF'
+          if [ ! -f "$archive/README.md" ]; then
+            cat > "$archive/README.md" <<'EOF'
           # Black 360-keV paired S1 upper-tail audit
 
           This audit reuses the immutable ten-seed paired Parametric/Full S1 event production.
@@ -109,15 +110,20 @@ jobs:
           Event weights are evaluated with the same exact dR/dER interpolation used by the
           original event-weighted 2D fold. See the parent selection audit Section 15.9.
           EOF
+          fi
           find "$archive" -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > "$archive/SHA256SUMS"
+          parent_archive=research/lz_detector_response/lz_2026_extended_nr/paired_s1_independent_seeds_2026-11-15
+          find "$parent_archive" -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > "$parent_archive/SHA256SUMS"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "$archive"
+          git add "$archive" "$parent_archive/SHA256SUMS"
           if git diff --cached --quiet; then
             echo "Upper-tail archive already matches the current audit outputs."
             exit 0
           fi
           git commit -m "Archive ten-seed black S1 upper-tail audit"
+          git fetch origin integration/lz-2026-nest-nr-fullband-20261115
+          git rebase origin/integration/lz-2026-nest-nr-fullband-20261115
           git push origin HEAD:integration/lz-2026-nest-nr-fullband-20261115
 
       - name: Upload black S1 upper-tail audit
