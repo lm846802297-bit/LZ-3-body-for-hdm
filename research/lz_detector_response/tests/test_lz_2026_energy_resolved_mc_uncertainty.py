@@ -26,6 +26,35 @@ class EnergyResolvedMCUncertaintyTests(unittest.TestCase):
         self.assertAlmostEqual(p, 0.5)
         self.assertAlmostEqual(se, math.sqrt(0.125))
 
+    def test_effective_sample_size(self):
+        self.assertAlmostEqual(MOD.effective_sample_size(4.0, 10.0), 1.6)
+        self.assertEqual(MOD.effective_sample_size(0.0, 0.0), 0.0)
+
+    def test_black_high_energy_bands_aggregate_rates_before_efficiencies(self):
+        rows = {}
+        for family in MOD.RESPONSE_FAMILIES:
+            for nuclear in MOD.NUCLEAR_MODELS:
+                for ibin, (_, low, high) in enumerate(MOD.BLACK_HIGH_ENERGY_BANDS_KEV):
+                    rows[(family, "black_ms360_dm1", nuclear, ibin)] = {
+                        "energy_low_keV": str(low),
+                        "energy_high_keV": str(high),
+                        "exact_raw_rate_events_kg_day": "10",
+                        "nest_accepted_rate_events_kg_day": "10",
+                        "ws_roi_accepted_rate_events_kg_day": "9",
+                        "figs2_trigger_plus_s1_rate_events_kg_day": "10",
+                        "figs2_trigger_plus_s1_ss_da_rate_events_kg_day": "8",
+                        "figs2_final_plus_roi_rate_events_kg_day": "7",
+                        "energy_resolved_factorized_rate_events_kg_day": "7.2",
+                    }
+        result = MOD.summarize_black_high_energy_bands(rows)
+        self.assertEqual(len(result), 16)
+        row = result[0]
+        self.assertAlmostEqual(row["ws_roi_given_nest"], 0.9)
+        self.assertAlmostEqual(row["figs2_ss_da_given_trigger_plus_s1"], 0.8)
+        self.assertAlmostEqual(row["figs2_roi_given_ss_da"], 0.875)
+        self.assertAlmostEqual(row["factorized_vs_figs2_final_relative_difference"], 7.2 / 7.0 - 1.0)
+        self.assertAlmostEqual(row["figs2_final_fraction_of_black_total"], 0.25)
+
     def test_weighted_efficiency_rejects_invalid_subset(self):
         with self.assertRaisesRegex(ValueError, "accepted weight exceeds"):
             MOD.weighted_efficiency(1.0, 1.0, 1.1, 1.0)
