@@ -7,7 +7,9 @@ on:
     paths:
       - research/lz_detector_response/cpp/lz_2026_nr_paired_s1_mode_2d_response.cc
       - research/lz_detector_response/fold_lz_2026_paired_s1_mode_2d_response.py
+      - research/lz_detector_response/audit_lz_2026_paired_s1_2d_sampling_noise.py
       - research/lz_detector_response/tests/test_lz_2026_paired_s1_mode_2d_response.py
+      - research/lz_detector_response/tests/test_lz_2026_paired_s1_2d_sampling_noise.py
       - .github/workflows/lz-2026-paired-s1-mode-2d-response.yml
   workflow_dispatch:
 
@@ -53,6 +55,7 @@ jobs:
         run: |
           python -m unittest \
             research.lz_detector_response.tests.test_lz_2026_paired_s1_mode_2d_response \
+            research.lz_detector_response.tests.test_lz_2026_paired_s1_2d_sampling_noise \
             research.lz_detector_response.tests.test_lz_2026_three_body_event_weighted_fold \
             research.lz_detector_response.tests.test_lz_2026_energy_resolved_selection_bridge -v
 
@@ -75,6 +78,16 @@ jobs:
           cat paired-s1-2d-output/fold/paired_s1_mode_2d_response_summary.csv
           cat paired-s1-2d-output/fold/paired_s1_mode_2d_response_metadata.json
 
+      - name: Audit exact event-weighted 2D TV against within-stream split-half stability
+        run: |
+          python research/lz_detector_response/audit_lz_2026_paired_s1_2d_sampling_noise.py \
+            --event-csv paired-s1-2d-output/paired_s1_mode_2d_events.csv \
+            --fold-summary-csv paired-s1-2d-output/fold/paired_s1_mode_2d_response_summary.csv \
+            --events-per-bin 2000 \
+            --out-dir paired-s1-2d-output/fold/sampling-noise
+          cat paired-s1-2d-output/fold/sampling-noise/paired_s1_2d_sampling_noise_summary.csv
+          cat paired-s1-2d-output/fold/sampling-noise/paired_s1_2d_sampling_noise_metadata.json
+
       - name: Validate complete signal-support coverage and 2D outputs
         run: |
           python - <<'PY'
@@ -85,12 +98,20 @@ jobs:
           bins=list(csv.DictReader((root/'paired_s1_mode_2d_response_by_energy_bin.csv').open()))
           summaries=list(csv.DictReader((root/'paired_s1_mode_2d_response_summary.csv').open()))
           maps=list(csv.DictReader((root/'paired_s1_mode_2d_signal_intensity.csv').open()))
+          noise_root=root/'sampling-noise'
+          noise_meta=json.loads((noise_root/'paired_s1_2d_sampling_noise_metadata.json').read_text())
+          noise_rows=list(csv.DictReader((noise_root/'paired_s1_2d_sampling_noise_summary.csv').open()))
           event_rows=sum(1 for _ in csv.DictReader(Path('paired-s1-2d-output/paired_s1_mode_2d_events.csv').open()))
           assert meta['status']=='PAIRED_2D_RESPONSE_DIAGNOSTIC_ONLY'
           assert event_rows==470000, event_rows
           assert meta['n_events']==event_rows, (meta['n_events'], event_rows)
           assert meta['n_energy_bins']==235, meta['n_energy_bins']
           assert meta['n_events']==meta['events_per_energy_bin']*meta['n_energy_bins']
+          assert noise_meta['status']=='WITHIN_STREAM_2D_TV_STABILITY_DIAGNOSTIC_ONLY'
+          assert noise_meta['n_events']==470000 and noise_meta['n_energy_bins']==235
+          assert len(noise_rows)==16, len(noise_rows)
+          assert max(float(r['pooled_tv_reproduction_abs_difference']) for r in noise_rows) <= 1e-10
+          assert all('not an independent-seed uncertainty' in r['interpretation'] for r in noise_rows)
           assert len(bins)==8*235, len(bins)
           assert len(summaries)==16, len(summaries)
           assert len(maps)>0
