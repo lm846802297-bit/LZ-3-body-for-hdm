@@ -31,10 +31,13 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Test energy-resolved selection bridge
+      - name: Test energy-resolved and upstream selection bookkeeping
         run: |
           python -m unittest \
-            research.lz_detector_response.tests.test_lz_2026_energy_resolved_selection_bridge -v
+            research.lz_detector_response.tests.test_lz_2026_energy_resolved_selection_bridge \
+            research.lz_detector_response.tests.test_lz_2026_conditional_selection_bridge \
+            research.lz_detector_response.tests.test_lz_2026_selection_stage_rates \
+            research.lz_detector_response.tests.test_lz_2026_three_body_event_weighted_fold -v
 
       - name: Download archived event-weighted response and Fig S2 inputs
         uses: actions/download-artifact@v4
@@ -59,6 +62,29 @@ jobs:
             --out-dir energy-bridge-output
           cat energy-bridge-output/energy_resolved_selection_bridge_summary.json
           head -n 8 energy-bridge-output/energy_resolved_selection_bridge_summary.csv
+
+      - name: Validate integrated reproduction and energy-bin coverage
+        run: |
+          python - <<'PY'
+          import json
+          from collections import Counter
+          from pathlib import Path
+          root = Path("energy-bridge-output")
+          summary = json.loads((root / "energy_resolved_selection_bridge_summary.json").read_text())
+          assert summary["status"] == "ENERGY_RESOLVED_RATE_LEVEL_DIAGNOSTIC_ONLY"
+          assert summary["source_run_id"] == 43697104437
+          assert summary["source_artifact_id"] == 14155360851
+          assert summary["integrated_bridge_reproduction_max_abs_difference"] <= 1e-8
+          rows = summary["per_key_summaries"]
+          bins = summary["per_energy_bin_rows"]
+          assert len(rows) == 16, len(rows)
+          assert len(bins) == 16 * 265, len(bins)
+          counts = Counter(row["response_family"] for row in rows)
+          assert counts == {"eft2024": 8, "tableS5": 8}, counts
+          assert all(row["n_energy_bins"] == 265 for row in rows)
+          print("Integrated bridge reproduced to <1e-8; 16 benchmark/nuclear/family summaries and 4,240 energy-bin rows validated.")
+          PY
+          sha256sum energy-bridge-output/*
 
       - name: Upload energy-resolved bridge tables
         uses: actions/upload-artifact@v4
