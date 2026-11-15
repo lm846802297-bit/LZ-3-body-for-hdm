@@ -334,7 +334,7 @@ Accordingly, describe the current result as a **NEST-level / WS-ROI intermediate
 
 
 
-## 11. NEST release lineage and EFT2024 candidate status
+## 10. NEST release lineage and EFT2024 candidate status
 
 The source-level audit is in
 [LZ_2026_NEST_RELEASE_LINEAGE_AUDIT.md](LZ_2026_NEST_RELEASE_LINEAGE_AUDIT.md).
@@ -354,7 +354,7 @@ the rounded Table S5, literal Table S3 m6=0, WS2024, and generic NEST
 alternatives explicitly. Do not select a production configuration solely
 from the Fig. S2 monotonicity comparison.
 
-## 10. Paired NEST Parametric-versus-Full S1 coincidence cross-check
+## 11. Paired NEST Parametric-versus-Full S1 coincidence cross-check
 
 Because the stratified three-body response uses `S1CalculationMode::Parametric`, a separate paired test was added against NEST `S1CalculationMode::Full`, which explicitly uses the configured PMT-level timing and coincidence logic.
 
@@ -390,3 +390,35 @@ This supports using the faster Parametric mode for the present benchmark spectra
 
 This is a **mode-to-mode NEST validation**, not a complete LZ waveform or analysis-selection validation. The Full S1 mode is not a complete detector waveform reconstruction, and the comparison does not add trigger, SS reconstruction, data-quality, official FV, Skin/OD veto, or live-time selections. No equivalence tolerance was pre-registered; this remains a diagnostic rather than a formal PASS.
 
+
+
+## 12. Full-range NR band and NR fluctuation-vector audit
+
+A separate full-range NR band proxy is being audited in
+[LZ_2026_NR_FULL_BAND_PARAMETER_SENSITIVITY_AUDIT.md](LZ_2026_NR_FULL_BAND_PARAMETER_SENSITIVITY_AUDIT.md).
+It compares the public full-precision EFT2024 candidate, rounded Table S5
+mean yields, EFT2024 means with alternative NR fluctuation vectors, WS2024,
+and generic NEST.
+
+The source-level audit shows that the shared NEST NRERWidthsParam vector
+contains NR quanta-fluctuation controls as well as ER controls. For NR,
+indices 0–5, 11, and 12 are active. In particular, EFT2024 p2 = −0.707
+implies lambda_Chen = 0.293 and a clamped-to-zero omega_NR, whereas WS2024
+and generic p2 are positive and give lambda_Chen = 1 with nonzero omega_NR.
+The width-isolation comparisons therefore probe a real change in the NR
+recombination-variance model, not merely a small adjustment to a Gaussian
+width.
+
+The first full-band run used a detector-centre drift velocity for all event
+positions. Its candidate-band offsets are explicitly superseded and must
+not be used for physical conclusions. The corrected driver now calculates
+the drift velocity from each event's local electric field, writes local
+drift distance/time/speed, and the summarizer enforces their kinematic
+closure at relative tolerance 1e−9. The corrected workflow also includes
+the rounded Table S5 candidate. Its output must complete before any
+corrected full-band numerical result is quoted.
+
+This remains a flat true-energy prior and a uniform-TPC spatial proxy, not
+the collaboration's D-D/AmBe calibration spectrum or source geometry.
+It is not a likelihood input and does not establish the exact LZ 2026
+production NEST configuration.
