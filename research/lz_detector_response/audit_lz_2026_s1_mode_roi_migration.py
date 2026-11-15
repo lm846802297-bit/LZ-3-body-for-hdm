@@ -6,9 +6,13 @@ but uses separate S1-response random streams. This is a one-dimensional S1
 diagnostic only: no S2 is present, so it cannot establish 2D PDF equivalence.
 """
 from __future__ import annotations
-import argparse, csv, json, math
+import argparse, csv, json, math, sys
 from collections import Counter
 from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
 import summarize_lz_2026_s1_coincidence_mode_comparison as base
 
 S1_MIN, S1_MAX, HIST_WIDTH = 3.0, 600.0, 10.0
