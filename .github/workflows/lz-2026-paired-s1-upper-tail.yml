@@ -92,7 +92,11 @@ jobs:
 
       - name: Hash audit outputs
         run: |
-          find black-s1-upper-tail-output -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > black-s1-upper-tail-output/SHA256SUMS
+          (
+            cd black-s1-upper-tail-output
+            find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+            sha256sum --check SHA256SUMS
+          )
           cat black-s1-upper-tail-output/SHA256SUMS
 
       - name: Archive audited outputs on the PR branch
@@ -111,9 +115,17 @@ jobs:
           original event-weighted 2D fold. See the parent selection audit Section 15.9.
           EOF
           fi
-          find "$archive" -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > "$archive/SHA256SUMS"
+          (
+            cd "$archive"
+            find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+            sha256sum --check SHA256SUMS
+          )
           parent_archive=research/lz_detector_response/lz_2026_extended_nr/paired_s1_independent_seeds_2026-11-15
-          find "$parent_archive" -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > "$parent_archive/SHA256SUMS"
+          (
+            cd "$parent_archive"
+            find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+            sha256sum --check SHA256SUMS
+          )
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add "$archive" "$parent_archive/SHA256SUMS"
