@@ -57,7 +57,8 @@ def summarize(path):
     bins_all = defaultdict(list)
     bins_trigger = defaultdict(list)
     bins_roi = defaultdict(list)
-    energies, radii, zs = [], [], []
+    energies, radii, zs, fields, drift_speeds, drift_times, drift_distances = [], [], [], [], [], [], []
+    max_drift_kinematic_closure = 0.0
     config = position_mode = None
     n_generated = n_s1_pass = n_s2_pass = n_roi_pass = 0
     for_s2 = []
@@ -66,6 +67,16 @@ def summarize(path):
             n_generated += 1
             config, position_mode = row["config"], row["position_mode"]
             e, r, z = float(row["energy_keV"]), float(row["r_mm"]), float(row["z_mm"])
+            field = float(row["field_V_cm"])
+            drift_speed = float(row["drift_speed_mm_us"])
+            drift_time = float(row["drift_time_us"])
+            drift_distance = float(row["drift_distance_mm"])
+            if not (field > 0.0 and drift_speed > 0.0 and drift_time >= 0.0 and drift_distance >= 0.0):
+                raise ValueError(f"invalid local field/drift quantity in {path}")
+            closure = abs(drift_time * drift_speed - drift_distance) / max(drift_distance, 1.0)
+            max_drift_kinematic_closure = max(max_drift_kinematic_closure, closure)
+            if closure > 1e-9:
+                raise ValueError(f"local drift kinematic closure failed in {path}: {closure}")
             s1, s2 = float(row["s1c_phd"]), float(row["s2c_phd"])
             log_s2 = float(row["log10_s2c_phd"])
             s1_pass, s2_pass = int(row["s1_pass"]) == 1, int(row["s2_pass"]) == 1
@@ -73,6 +84,8 @@ def summarize(path):
             if not all(math.isfinite(x) for x in (e, r, z, s1, s2, log_s2)):
                 raise ValueError(f"non-finite value in {path}")
             energies.append(e); radii.append(r); zs.append(z)
+            fields.append(field); drift_speeds.append(drift_speed)
+            drift_times.append(drift_time); drift_distances.append(drift_distance)
             n_s1_pass += int(s1_pass); n_s2_pass += int(s2_pass); n_roi_pass += int(roi_pass)
             if s2 <= 0 or log_s2 < 0 or s1 < 0:
                 continue
@@ -93,6 +106,10 @@ def summarize(path):
         "energy_min_keV": min(energies), "energy_max_keV": max(energies),
         "r_min_mm": min(radii), "r_max_mm": max(radii),
         "z_min_mm": min(zs), "z_max_mm": max(zs),
+        "field_min_V_cm": min(fields), "field_max_V_cm": max(fields),
+        "local_drift_speed_min_mm_us": min(drift_speeds),
+        "local_drift_speed_max_mm_us": max(drift_speeds),
+        "max_relative_drift_kinematic_closure": max_drift_kinematic_closure,
         "bin_width_phd": BIN_WIDTH, "minimum_events_per_bin": MIN_BIN_EVENTS,
         "candidate_bin_all": candidate_summary(bands_all),
         "candidate_bin_trigger_pass": candidate_summary(bands_trigger),
@@ -110,7 +127,7 @@ def compare(samples):
             groups[sample["position_mode"]][sample["config"]] = {
                 b["s1c_low_phd"]: b for b in sample[band_key]
             }
-        configs = ("eft2024", "eftmean_wswidth", "eftmean_genericwidth", "ws2024", "generic")
+        configs = ("eft2024", "tableS5", "eftmean_wswidth", "eftmean_genericwidth", "ws2024", "generic")
         for position_mode, group in groups.items():
             for i, left_name in enumerate(configs):
                 for right_name in configs[i + 1:]:
