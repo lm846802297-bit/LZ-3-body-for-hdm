@@ -199,6 +199,12 @@ uniform in the active TPC (or fixed at the candidate position). These are
 diagnostic proxies, not the official D-D/AmBe calibration priors or a
 collaboration production response. This study is not a likelihood input.
 
+Implementation:
+- `cpp/lz_2026_nr_flat_spectrum_eft2024.cc` — event-level NEST response driver with event-local drift velocity.
+- `summarize_lz_2026_nr_flat_band_eft2024.py` — 5-phd band summaries and model comparisons.
+- `bootstrap_lz_2026_nr_full_band_candidate.py` — deterministic finite-MC bootstrap.
+- `.github/workflows/lz-2026-nr-eFT2024-full-band.yml` — pinned NEST build, event generation, closure checks, and artifact upload.
+
 ### Parametric-versus-Full S1 coincidence validation
 
 Because the three-body stratified driver uses NEST Parametric S1 mode, a paired
