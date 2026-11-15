@@ -311,9 +311,9 @@ Accordingly, describe the current result as a **NEST-level / WS-ROI intermediate
 Because the stratified three-body response uses \`S1CalculationMode::Parametric\`, a separate paired test was added against NEST \`S1CalculationMode::Full\`, which explicitly uses the configured PMT-level timing and coincidence logic.
 
 Run and artifact:
-- [GitHub Actions run 43657795165](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43657795165), conclusion: success.
-- Artifact ID: \`14138039978\`.
-- Artifact SHA-256: \`2522b9505ce4313a4effd2a5f8945b6a93d731f0def1408db5c839813971cb73\`.
+- [GitHub Actions run 43658016814](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43658016814), conclusion: success.
+- Artifact ID: \`14138778454\`.
+- Artifact SHA-256: \`000d8a2852c3f663323e796e261e76d60733468456d1818345a255fccea6f015\`.
 - Pinned NEST: \`541b6430dae6ea289cf110c99f174a9187f7fdee\`.
 - EFT2024 detector/yield candidate; 10,000 paired events in each of ten energy bins.
 
@@ -321,18 +321,18 @@ For each event, \`FullCalculation(NR)\` is run once. The same intrinsic quanta, 
 
 | Energy bin (keV) | Parametric S1 pass | Full S1 pass | Full − Parametric | Paired 95% interval for difference |
 |---|---:|---:|---:|---:|
-| 5.4–6.4 | 86.27% | 86.02% | −0.25 percentage points | [−1.153, +0.653] pp |
-| 10.4–11.4 | 99.77% | 99.70% | −0.07 percentage points | [−0.210, +0.070] pp |
-| 15.4–16.4 | 99.99% | 99.99% | 0.00 percentage points | [−0.0277, +0.0277] pp |
-| 20.4–21.4 | 100.00% | 100.00% | 0.00 percentage points | [0, 0] in this finite sample |
-| 30.4–31.4 | 100.00% | 100.00% | 0.00 percentage points | [0, 0] in this finite sample |
-| 35.0–36.0 | 100.00% | 100.00% | 0.00 percentage points | [0, 0] in this finite sample |
-| 101.0–102.0 | 100.00% | 100.00% | 0.00 percentage points | [0, 0] in this finite sample |
-| 210.0–211.0 | 100.00% | 100.00% | 0.00 percentage points | [0, 0] in this finite sample |
-| 247.4–248.4 | 100.00% | 100.00% | 0.00 percentage points | [0, 0] in this finite sample |
-| 269.4–269.9 | 100.00% | 100.00% | 0.00 percentage points | [0, 0] in this finite sample |
+| 5.4–6.4 | 86.27% | 86.02% | −0.25 percentage points | [−1.196, +0.678] pp |
+| 10.4–11.4 | 99.77% | 99.70% | −0.07 percentage points | [−0.261, +0.090] pp |
+| 15.4–16.4 | 99.99% | 99.99% | 0.00 percentage points | [−0.0591, +0.0591] pp |
+| 20.4–21.4 | 100.00% | 100.00% | 0.00 percentage points | [−0.0384, +0.0384] pp |
+| 30.4–31.4 | 100.00% | 100.00% | 0.00 percentage points | [−0.0384, +0.0384] pp |
+| 35.0–36.0 | 100.00% | 100.00% | 0.00 percentage points | [−0.0384, +0.0384] pp |
+| 101.0–102.0 | 100.00% | 100.00% | 0.00 percentage points | [−0.0384, +0.0384] pp |
+| 210.0–211.0 | 100.00% | 100.00% | 0.00 percentage points | [−0.0384, +0.0384] pp |
+| 247.4–248.4 | 100.00% | 100.00% | 0.00 percentage points | [−0.0384, +0.0384] pp |
+| 269.4–269.9 | 100.00% | 100.00% | 0.00 percentage points | [−0.0384, +0.0384] pp |
 
-The largest absolute efficiency difference is 0.25 percentage points; the largest absolute paired \(z\)-score is 0.98. At the signal-support energies of the four benchmarks (first nonzero recoil points 35, 101, 210, and 101 keV), both modes pass all 10,000 sampled events in the corresponding bins.
+The largest absolute efficiency difference is 0.25 percentage points; the largest absolute paired \(z\)-score is 0.98. The paired-difference intervals use a conservative Wilson construction on the discordance probability and the fraction of discordant events that pass Full mode. This avoids the misleading zero-width interval that a normal approximation would produce when no discordant events are observed. At the signal-support energies of the four benchmarks (first nonzero recoil points 35, 101, 210, and 101 keV), both modes pass all 10,000 sampled events in the corresponding bins.
 
 The S1c shapes are also close at the high-energy anchors:
 - 247.4–248.4 keV: mean \(S1_c=538.27\) phd (Parametric) versus 539.60 phd (Full);
