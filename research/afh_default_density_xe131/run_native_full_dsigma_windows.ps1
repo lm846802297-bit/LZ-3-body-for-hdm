@@ -5,7 +5,10 @@ param(
     [int]$NZ = 16,
     [int]$NPhi = 8,
     [double]$RelativeTolerance = 2e-7,
-    [double]$ResponseTolerance = 2e-8
+    [double]$ResponseTolerance = 2e-8,
+    [string]$Benchmark = "all",
+    [string]$ERListKeV = "",
+    [bool]$RequireFullGrid = $true
 )
 
 $ErrorActionPreference = "Stop"
@@ -50,9 +53,13 @@ $wolframArgs = @(
     "--er-start-kev", "5",
     "--er-stop-kev", "800",
     "--er-step-kev", "5",
+    "--benchmark", $Benchmark,
     "--out-csv", $mathematicaCsv,
     "--metadata", $mathematicaMetadata
 )
+if (-not [string]::IsNullOrWhiteSpace($ERListKeV)) {
+    $wolframArgs += @("--er-list-kev", $ERListKeV)
+}
 & $wolfram.Source @wolframArgs
 if ($LASTEXITCODE -ne 0) {
     throw "Native Wolfram calculation failed with exit code $LASTEXITCODE."
@@ -69,9 +76,11 @@ $compareArgs = @(
     "--out-csv", $comparisonCsv,
     "--metadata", $comparisonMetadata,
     "--rtol", "$RelativeTolerance",
-    "--response-rtol", "$ResponseTolerance",
-    "--require-full-grid"
+    "--response-rtol", "$ResponseTolerance"
 )
+if ($RequireFullGrid) {
+    $compareArgs += "--require-full-grid"
+}
 & $python.Source @compareArgs
 if ($LASTEXITCODE -ne 0) {
     throw "Mathematica/Python pointwise comparison failed with exit code $LASTEXITCODE."

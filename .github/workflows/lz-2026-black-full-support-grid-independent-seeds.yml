@@ -1,0 +1,113 @@
+name: LZ 2026 high-statistics black-support 1-keV versus 5-keV audit
+
+on:
+  push:
+    branches:
+      - integration/lz-2026-nest-nr-fullband-20261115
+    paths:
+      - research/lz_detector_response/audit_lz_2026_black_full_support_grid_independent_seeds.py
+      - research/lz_detector_response/tests/test_lz_2026_black_full_support_grid_independent_seeds.py
+      - .github/workflows/lz-2026-black-full-support-grid-independent-seeds.yml
+  workflow_dispatch:
+
+concurrency:
+  group: lz-2026-black-full-support-grid-independent-seeds-\${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  black-support-independent-grid-seeds:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+
+      - name: Check out pinned NEST source
+        uses: actions/checkout@v4
+        with:
+          repository: NESTCollaboration/nest
+          ref: 541b6430dae6ea289cf110c99f174a9187f7fdee
+          path: nest
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Test black-support grid audit
+        run: |
+          python -m unittest \
+            research.lz_detector_response.tests.test_lz_2026_black_full_support_grid_independent_seeds \
+            research.lz_detector_response.tests.test_lz_2026_full_range_grid_independent_seeds -v
+
+      - name: Build pinned NEST core
+        run: |
+          cmake -S nest -B nest/build \
+            -DBUILD_EXAMPLES=OFF -DBUILD_GARFIELD=OFF -DBUILD_ROOT=OFF -DG4=OFF
+          cmake --build nest/build --target NESTCore --parallel 2
+
+      - name: Compile stratified NR response driver
+        run: |
+          g++ -std=c++17 -O2 \
+            -Inest/include -Inest/include/Detectors \
+            -Inest/build/_deps/gcem-src/include \
+            research/lz_detector_response/cpp/lz_2026_nr_stratified_energy_response.cc \
+            nest/build/libNESTCore.a -o lz_2026_nr_stratified_energy_response
+
+      - name: Generate three independent high-statistics 1-keV black-support productions
+        run: |
+          for family in eft2024 tableS5; do
+            for seed in 20261144 20261146 20261148; do
+              mkdir -p black-full-support-output/1keV/$family/seed_$seed
+              ./lz_2026_nr_stratified_energy_response \
+                $family 16000 $seed 210.0 269.9 1.0 16000 \
+                > black-full-support-output/1keV/$family/seed_$seed/$family.csv
+            done
+          done
+
+      - name: Generate three independent high-statistics 5-keV black-support productions
+        run: |
+          for family in eft2024 tableS5; do
+            for seed in 20261145 20261147 20261149; do
+              mkdir -p black-full-support-output/5keV/$family/seed_$seed
+              ./lz_2026_nr_stratified_energy_response \
+                $family 16000 $seed 210.0 269.9 5.0 16000 \
+                > black-full-support-output/5keV/$family/seed_$seed/$family.csv
+            done
+          done
+
+      - name: Compare independent high-statistics black-support rates and 2D maps
+        run: |
+          for family in eft2024 tableS5; do
+            python research/lz_detector_response/audit_lz_2026_black_full_support_grid_independent_seeds.py \
+              --response-family $family \
+              --one-kev-response-dirs \
+                black-full-support-output/1keV/$family/seed_20261144 \
+                black-full-support-output/1keV/$family/seed_20261146 \
+                black-full-support-output/1keV/$family/seed_20261148 \
+              --five-kev-response-dirs \
+                black-full-support-output/5keV/$family/seed_20261145 \
+                black-full-support-output/5keV/$family/seed_20261147 \
+                black-full-support-output/5keV/$family/seed_20261149 \
+              --one-kev-seeds 20261144 20261146 20261148 \
+              --five-kev-seeds 20261145 20261147 20261149 \
+              --events-per-keV 16000 \
+              --roi-min-keV 210.0 \
+              --roi-max-keV 269.9 \
+              --benchmarks black_ms360_dm1 \
+              --nuclear-models GCN JJ55 \
+              --out-dir black-full-support-output/summary/$family
+            cat black-full-support-output/summary/$family/black_full_support_grid_independent_seed_summary.json
+          done
+
+      - name: Upload high-statistics black-support samples and summaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-black-full-support-grid-independent-seeds-eft2024-tableS5
+          path: black-full-support-output/
+          if-no-files-found: error
+          retention-days: 60

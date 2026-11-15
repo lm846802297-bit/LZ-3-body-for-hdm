@@ -185,10 +185,11 @@ outputs to main.
 - This does not replace the already completed natural-xenon continuous
   spectrum or its high-order halo-fold convergence audit.
 - It does not validate the complete detector-level LZ likelihood.
-- The final Mathematica full \(d\sigma_A/dE_R\) run and pointwise comparison
-  remain deferred until the Python calculation and all non-Mathematica work
-  are complete.
-
+- The Python full-grid calculation and the matched historical-I6 mapping audit
+  are complete. The remaining validation gate is the native Mathematica full-
+  \\(d\\sigma_A/dE_R\\) run and its pointwise comparison against the independent
+  Python calculation; neither the Python-only calculation nor the mapping
+  audit is a substitute for that cross-code check.
 
 ## Completed Python run (2026-11-14)
 

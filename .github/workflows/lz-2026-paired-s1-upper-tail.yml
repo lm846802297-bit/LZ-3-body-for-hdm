@@ -1,0 +1,147 @@
+name: LZ 2026 paired S1 black upper-tail audit
+
+on:
+  push:
+    branches:
+      - integration/lz-2026-nest-nr-fullband-20261115
+    paths:
+      - research/lz_detector_response/audit_lz_2026_paired_s1_upper_tail.py
+      - research/lz_detector_response/tests/test_lz_2026_paired_s1_upper_tail.py
+      - .github/workflows/lz-2026-paired-s1-upper-tail.yml
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  black-s1-upper-tail:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Download immutable ten-seed production artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: lz-2026-paired-s1-independent-seeds
+          repository: lm846802297-bit/LZ-3-body-for-hdm
+          run-id: 43750948249
+          github-token: ${{ github.token }}
+          path: paired-s1-independent-seeds-input
+
+      - name: Verify all files in the production artifact manifest
+        working-directory: paired-s1-independent-seeds-input
+        run: sed 's#paired-s1-independent-seeds-output/##' SHA256SUMS | sha256sum --check -
+
+      - name: Test S1 boundary, conditional selection, TV, and seed bootstrap
+        run: |
+          python -m unittest research.lz_detector_response.tests.test_lz_2026_paired_s1_upper_tail -v
+
+      - name: Audit exact event-weighted black S1 upper-tail migration
+        run: |
+          python research/lz_detector_response/audit_lz_2026_paired_s1_upper_tail.py \
+            --seed-root paired-s1-independent-seeds-input \
+            --seeds 20261117 40261117 60261117 80261117 100261117 120261117 140261117 160261117 180261117 200261117 \
+            --spectrum-dir research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum \
+            --bootstrap-replicates 2000 \
+            --out-dir black-s1-upper-tail-output
+
+      - name: Validate complete ten-seed audit outputs
+        run: |
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+          root=Path("black-s1-upper-tail-output")
+          summary=list(csv.DictReader((root/"black_s1_upper_tail_summary.csv").open()))
+          per_seed=list(csv.DictReader((root/"black_s1_upper_tail_per_seed.csv").open()))
+          thresholds=list(csv.DictReader((root/"black_s1_upper_tail_thresholds.csv").open()))
+          meta=json.loads((root/"black_s1_upper_tail_metadata.json").read_text())
+          assert meta["status"]=="TEN_SEED_BLACK_S1_UPPER_TAIL_DIAGNOSTIC_ONLY"
+          assert meta["seed_count"]==10 and meta["total_events_audited"]==4700000
+          assert meta["seeds"]==[20261117,40261117,60261117,80261117,100261117,120261117,140261117,160261117,180261117,200261117]
+          assert len(summary)==12, len(summary)
+          assert len(per_seed)==120, len(per_seed)
+          assert len(thresholds)==1200, len(thresholds)
+          assert meta["n_summary_rows"]==12 and meta["n_per_seed_rows"]==120 and meta["n_threshold_rows"]==1200
+          assert meta["stratum_weight_closure"]["max_relative_residual_across_all_seeds_models_bins"] < 5e-12
+          selection=meta["black_support_selection_audit"]
+          assert selection["n_events"]==1300000
+          for key in ("parametric_s1_coincidence_pass","full_s1_coincidence_pass","s2_threshold_pass","s2_raw_roi_pass","s2c_roi_pass","combined_s2_roi_pass"):
+              assert selection[key]==1300000, (key,selection[key])
+          assert selection["parametric_s1_roi_events_failing_s2_roi"]==0
+          assert selection["full_s1_roi_events_failing_s2_roi"]==0
+          assert selection["s2_raw_min_phd"]>645.0
+          assert selection["s2c_min_phd"]>10**2.75 and selection["s2c_max_phd"]<10**4.15
+          for row in summary:
+              assert int(row["n_independent_seeds"])==10
+              json.loads(row["s1_roi_relative_rate_change"])
+              json.loads(row["s1_roi_efficiency_difference_full_minus_parametric"])
+              json.loads(row["mean_parametric_fraction_above_threshold_given_coincidence"])
+              json.loads(row["mean_full_fraction_above_threshold_given_coincidence"])
+              assert 0 <= float(row["ensemble_mean_s1_conditional_histogram_tv_10phd"]) <= 1
+              assert 0 <= float(row["ensemble_mean_s1_upper_tail_histogram_tv_10phd_given_s1_gt_500"]) <= 1
+          print("Validated 12 summary, 120 per-seed, and 1,200 threshold rows from 4.7M events.")
+          PY
+
+      - name: Hash audit outputs
+        run: |
+          (
+            cd black-s1-upper-tail-output
+            find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+            sha256sum --check SHA256SUMS
+          )
+          cat black-s1-upper-tail-output/SHA256SUMS
+
+      - name: Archive audited outputs on the PR branch
+        run: |
+          set -euo pipefail
+          archive=research/lz_detector_response/lz_2026_extended_nr/paired_s1_independent_seeds_2026-11-15/upper-tail-audit
+          mkdir -p "$archive"
+          cp black-s1-upper-tail-output/* "$archive/"
+          if [ ! -f "$archive/README.md" ]; then
+            cat > "$archive/README.md" <<'EOF'
+          # Black 360-keV paired S1 upper-tail audit
+
+          This audit reuses the immutable ten-seed paired Parametric/Full S1 event production.
+          It does not regenerate NEST events or change the detector configuration.
+          Event weights are evaluated with the same exact dR/dER interpolation used by the
+          original event-weighted 2D fold. See the parent selection audit Section 15.9.
+          EOF
+          fi
+          (
+            cd "$archive"
+            find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+            sha256sum --check SHA256SUMS
+          )
+          parent_archive=research/lz_detector_response/lz_2026_extended_nr/paired_s1_independent_seeds_2026-11-15
+          (
+            cd "$parent_archive"
+            find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+            sha256sum --check SHA256SUMS
+          )
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$archive" "$parent_archive/SHA256SUMS"
+          if git diff --cached --quiet; then
+            echo "Upper-tail archive already matches the current audit outputs."
+            exit 0
+          fi
+          git commit -m "Archive ten-seed black S1 upper-tail audit"
+          git fetch origin integration/lz-2026-nest-nr-fullband-20261115
+          git rebase origin/integration/lz-2026-nest-nr-fullband-20261115
+          git push origin HEAD:integration/lz-2026-nest-nr-fullband-20261115
+
+      - name: Upload black S1 upper-tail audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-paired-s1-black-upper-tail
+          path: black-s1-upper-tail-output/
+          if-no-files-found: error
+          retention-days: 60

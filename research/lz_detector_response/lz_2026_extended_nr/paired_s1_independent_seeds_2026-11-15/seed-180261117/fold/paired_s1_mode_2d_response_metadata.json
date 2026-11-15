@@ -1,0 +1,40 @@
+{
+  "study": "paired NEST Parametric/Full S1 mode event-weighted 2D response",
+  "status": "PAIRED_2D_RESPONSE_DIAGNOSTIC_ONLY",
+  "nest_commit": "541b6430dae6ea289cf110c99f174a9187f7fdee",
+  "response_model": "EFT2024",
+  "detector_configuration": "LZ_Detector_2024::SetEFT2024Configuration",
+  "energy_interval_keV": [
+    35.0,
+    269.9
+  ],
+  "energy_bin_width_keV": 1.0,
+  "events_per_energy_bin": 2000,
+  "events_per_replica_per_bin": 1000,
+  "n_energy_bins": 235,
+  "n_events": 470000,
+  "pairing": "Same intrinsic NR quanta and true position; independent Parametric/Full S1 response draws; one common Full S2 draw per event.",
+  "fold": "Per true-energy bin, scale sampled event/cell weights by the exact piecewise-linear three-body rate integral; normalize by the pooled raw spectrum weight.",
+  "map_binning": {
+    "s1_width_phd": 10.0,
+    "log10s2_width": 0.02
+  },
+  "selection": "NEST S1 coincidence + NEST S2 threshold for nest stage; additionally 3<=S1c<=600 phd, raw S2>645 phd, and 2.75<=log10(S2c)<=4.15 for WS ROI stage.",
+  "limitations": [
+    "NEST Full S1 PMT/time-window response is not the official LZ waveform-level reconstruction.",
+    "The common S2 is NEST integrated Full mode, not the official DAQ waveform trigger.",
+    "No DAQ trigger, SS reconstruction, data-analysis cuts, official 4.71-t fiducial-volume map, Skin/OD veto, or live-time migration is included.",
+    "Two disjoint halves of one deterministic event design are stability diagnostics, not independent-seed covariance estimates.",
+    "The 2D TV is a point estimate on the stated histogram grid; no bootstrap uncertainty is included.",
+    "The Fig. S2 residual SS/data-analysis efficiency is deliberately not multiplied into these 2D maps."
+  ],
+  "n_summary_rows": 16,
+  "n_energy_bin_rows": 1880,
+  "n_2d_map_rows": 20202,
+  "outputs": {
+    "by_energy_bin": "paired_s1_mode_2d_response_by_energy_bin.csv",
+    "summary": "paired_s1_mode_2d_response_summary.csv",
+    "maps": "paired_s1_mode_2d_signal_intensity.csv",
+    "metadata": "paired_s1_mode_2d_response_metadata.json"
+  }
+}

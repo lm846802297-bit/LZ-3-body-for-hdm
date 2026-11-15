@@ -244,6 +244,26 @@ calculations and are not relabeled or substituted for AFH default.
 
 
 
+
+## Mathematica/Python full differential-cross-section comparison
+
+The code-level crosswalk, matched inputs, phase-space measure, spin trace,
+AFH factor-four placement, acceptance tolerances, and run procedure are
+documented in
+[MATHEMATICA_PYTHON_FULL_DSIGMA_CROSSCHECK_REVIEW.md](output/MATHEMATICA_PYTHON_FULL_DSIGMA_CROSSCHECK_REVIEW.md).
+
+Before committing to the full 652-row native run, a reduced smoke test can
+be performed on Windows:
+
+~~~powershell
+.\run_native_full_dsigma_windows.ps1 -OutputDirectory "$env:TEMP\lz-xe131-smoke" -Benchmark "green_ms300_dm1" -ERListKeV "200" -NW 8 -NZ 8 -NPhi 4 -RequireFullGrid:$false
+~~~
+
+This uses the four explicit anchor energies (101, 200, 267, 542 keV) for the
+selected benchmark. It validates code execution and cross-code agreement at
+the same low quadrature order, not numerical convergence. The normal default
+remains the complete 652-row grid at \(16\times16\times8\).
+
 ## AME2020/CODATA2022 nuclear-mass update
 
 The current mainline-based AME2020 study is documented in
@@ -418,3 +438,20 @@ A successful run writes:
 
 Do not mark the full Mathematica/Python cross-section comparison complete
 until this run reports PASS and the comparison metadata has been reviewed.
+
+
+## Historical Xe-131 I6 mapping and quadrature audit
+
+The archived green benchmark I6 point at \(v=776\) km/s and zero width has
+now been compared against the legacy Eq. (6) kernel and four independent
+W2 mappings. The legacy kernel reproduces the historical archive exactly;
+the independent linear-W2 mapping agrees within \(5.42\times10^{-11}\).
+At the historical \(40\times32\times20\) order, threshold-\(u^2\) is lower
+by \(2.14\)--\(2.23\times10^{-6}\), but its \(48\times40\times24\) and
+\(64\times48\times32\) results agree within \(1.40\times10^{-11}\).
+
+This is an I6-only diagnostic and does not recompute AFH or establish the
+full Mathematica/Python \(d\sigma_A/dE_R\) comparison. See
+[the full mapping audit](output/HISTORICAL_I6_MAPPING_AUDIT.md) and the
+[archived CSV/metadata/checksums](output/historical_i6_mapping_audit/).
+

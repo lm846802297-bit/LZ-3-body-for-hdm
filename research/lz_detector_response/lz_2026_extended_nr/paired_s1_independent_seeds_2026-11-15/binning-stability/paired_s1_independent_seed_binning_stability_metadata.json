@@ -1,0 +1,53 @@
+{
+  "study": "independent-seed paired S1 2D histogram-binning stability",
+  "status": "INDEPENDENT_SEED_2D_BINNING_STABILITY_DIAGNOSTIC_ONLY",
+  "seeds": [
+    20261117,
+    40261117,
+    60261117,
+    80261117,
+    100261117,
+    120261117,
+    140261117,
+    160261117,
+    180261117,
+    200261117
+  ],
+  "n_seeds": 10,
+  "benchmarks": [
+    "red_ms200_dm1",
+    "green_ms300_dm1",
+    "black_ms360_dm1",
+    "blue_ms300_dm10"
+  ],
+  "nuclear_models": [
+    "GCN",
+    "JJ55"
+  ],
+  "response_model": "eft2024",
+  "stages": [
+    "nest",
+    "ws_roi"
+  ],
+  "base_map_binning": {
+    "s1_bin_width_phd": 10.0,
+    "log10s2_bin_width": 0.02
+  },
+  "rebin_factors": [
+    1,
+    2,
+    4
+  ],
+  "rebinning_definition": "Exact aggregation of integer cell indices on both axes; factor 2 maps 10-phd/0.02-dex cells to 20-phd/0.04-dex cells, and factor 4 maps to 40-phd/0.08-dex cells. No interpolation or new event generation.",
+  "seed_spread_definition": "Mean pairwise TV between independent seed maps within each S1 mode, averaged over Parametric and Full modes; descriptive only, not the standard error or confidence interval of ensemble-mean TV.",
+  "ensemble_tv_to_seed_spread_ratio_definition": "Descriptive scale comparison only; not an uncertainty estimate or a model-equivalence test.",
+  "limitations": [
+    "Uses 10 independent pseudorandom seeds; no bootstrap confidence interval is included.",
+    "Binning stability is an exact aggregation of the same events, not a new Monte Carlo.",
+    "TV is binning-dependent and is not a stand-alone model-equivalence or significance test.",
+    "NEST EFT2024 response is not official waveform-level LZ reconstruction.",
+    "DAQ, SS/data-analysis, official FV, Skin/OD, and live-time migration remain absent."
+  ],
+  "n_summary_rows": 48,
+  "n_per_seed_rows": 480
+}

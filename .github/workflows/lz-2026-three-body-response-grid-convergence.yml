@@ -1,0 +1,146 @@
+name: LZ 2026 three-body NR response 1-5-10 keV convergence
+
+on:
+  push:
+    branches:
+      - research/figure2-p0-4-mainline
+      - integration/lz-2026-nest-nr-fullband-20261115
+    paths:
+      - research/lz_detector_response/cpp/lz_2026_nr_stratified_energy_response.cc
+      - research/lz_detector_response/converge_lz_2026_three_body_energy_grid.py
+      - research/lz_detector_response/extract_lz_2026_nr_selection_efficiency_components.py
+      - research/lz_detector_response/tests/test_lz_2026_three_body_energy_grid_convergence.py
+      - research/lz_detector_response/audit_lz_2026_conditional_selection_bridge.py
+      - research/lz_detector_response/tests/test_lz_2026_conditional_selection_bridge.py
+      - research/lz_detector_response/fold_lz_2026_three_body_event_weighted_response.py
+      - research/lz_detector_response/summarize_lz_2026_selection_stage_rates.py
+      - research/lz_detector_response/tests/test_lz_2026_selection_stage_rates.py
+      - research/lz_detector_response/tests/test_lz_2026_three_body_event_weighted_fold.py
+      - research/lz_detector_response/lz_2026_extended_nr/LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md
+      - research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/**
+      - .github/workflows/lz-2026-three-body-response-grid-convergence.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  response-grid-convergence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+      - name: Check out pinned NEST source
+        uses: actions/checkout@v4
+        with:
+          repository: NESTCollaboration/nest
+          ref: 541b6430dae6ea289cf110c99f174a9187f7fdee
+          path: nest
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install PDF vector extraction dependency
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+      - name: Download official LZ 2026 paper PDF
+        run: |
+          curl -L --fail --max-time 120 -A "Mozilla/5.0" \
+            -o lz_2026_extended_nr_search.pdf \
+            https://arxiv.org/pdf/2609.02823
+          sha256sum lz_2026_extended_nr_search.pdf
+      - name: Extract all four cumulative Fig. S2 efficiency curves
+        run: |
+          python research/lz_detector_response/extract_lz_2026_nr_selection_efficiency_components.py \
+            --pdf lz_2026_extended_nr_search.pdf \
+            --out-dir selection-audit-output
+          python - <<'PY'
+          import csv, math
+          p='selection-audit-output/lz_2026_nr_selection_efficiency_components.csv'
+          rows=list(csv.DictReader(open(p)))
+          def at(e):
+              return min(rows,key=lambda r:abs(float(r['ER_keV'])-e))
+          r248=at(248.0); r269=at(269.9); r54=at(5.4)
+          assert abs(float(r248['final_plus_roi_cumulative'])-0.9457)<0.002
+          assert abs(float(r269['final_plus_roi_cumulative'])-0.4988)<0.003
+          assert abs(float(r54['final_plus_roi_cumulative'])-0.5718)<0.01
+          print('Fig. S2 vector extraction anchors validated.')
+          PY
+      - name: Test grid construction, event-weighted fold and conditional selection bridge
+        run: |
+          python -m unittest \
+            research.lz_detector_response.tests.test_lz_2026_three_body_energy_grid_convergence \
+            research.lz_detector_response.tests.test_lz_2026_three_body_event_weighted_fold \
+            research.lz_detector_response.tests.test_lz_2026_selection_stage_rates \
+            research.lz_detector_response.tests.test_lz_2026_conditional_selection_bridge -v
+      - name: Configure and build pinned NEST core
+        run: |
+          cmake -S nest -B nest/build \
+            -DBUILD_EXAMPLES=OFF -DBUILD_GARFIELD=OFF -DBUILD_ROOT=OFF -DG4=OFF
+          cmake --build nest/build --target NESTCore --parallel 2
+      - name: Compile stratified 1-keV NR response driver
+        run: |
+          g++ -std=c++17 -O2 \
+            -Inest/include -Inest/include/Detectors \
+            -Inest/build/_deps/gcem-src/include \
+            research/lz_detector_response/cpp/lz_2026_nr_stratified_energy_response.cc \
+            nest/build/libNESTCore.a -o lz_2026_nr_stratified_energy_response
+      - name: Generate two-replica stratified response samples
+        run: |
+          mkdir -p response-output convergence-output
+          for config in eft2024 tableS5 ws2024 generic; do
+            ./lz_2026_nr_stratified_energy_response \
+              ${config} 4000 20261119 5.4 269.9 1.0 \
+              > response-output/${config}.csv
+          done
+          du -h response-output/*
+      - name: Fold three-body spectra and compare 1/5/10-keV grids
+        run: |
+          python research/lz_detector_response/converge_lz_2026_three_body_energy_grid.py \
+            --response-dir response-output \
+            --spectrum-dir research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum \
+            --out-dir convergence-output
+          cp selection-audit-output/lz_2026_nr_selection_efficiency_components.csv convergence-output/
+          cp selection-audit-output/lz_2026_nr_selection_efficiency_components_metadata.json convergence-output/
+          cat convergence-output/grid_convergence_summary.json
+      - name: Integrate Fig. S2 selection stages and build conditional bridge
+        run: |
+          RATE_LEVEL_COUNTS=research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/lz_2026_rate_level_event_yields.csv
+          SPECTRUM_DIR=research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum
+          python research/lz_detector_response/summarize_lz_2026_selection_stage_rates.py \
+            --spectrum-dir "$SPECTRUM_DIR" \
+            --efficiency-components selection-audit-output/lz_2026_nr_selection_efficiency_components.csv \
+            --rate-level-counts "$RATE_LEVEL_COUNTS" \
+            --output-dir convergence-output/selection-stage \
+            --relative-tolerance 1e-8
+          python research/lz_detector_response/fold_lz_2026_three_body_event_weighted_response.py \
+            --response-dir response-output \
+            --spectrum-dir "$SPECTRUM_DIR" \
+            --binned-intensity convergence-output/signal_2d_intensity_1keV.csv \
+            --grid-summary convergence-output/grid_convergence_summary.json \
+            --rate-level-counts "$RATE_LEVEL_COUNTS" \
+            --out-dir convergence-output/event_weighted
+          for family in eft2024 tableS5; do
+            python research/lz_detector_response/audit_lz_2026_conditional_selection_bridge.py \
+              --event-weighted-summary convergence-output/event_weighted/event_weighted_fold_summary.json \
+              --selection-stage-summary convergence-output/selection-stage/selection_stage_rate_level_summary.json \
+              --response-family $family \
+              --out-dir convergence-output/conditional_selection_bridge/$family
+            cat convergence-output/conditional_selection_bridge/$family/conditional_selection_bridge_summary.json
+          done
+      - name: Upload raw response, efficiency decomposition and convergence outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-three-body-response-grid-convergence
+          path: |
+            response-output/
+            selection-audit-output/
+            convergence-output/
+            convergence-output/selection-stage/
+            convergence-output/event_weighted/
+            convergence-output/conditional_selection_bridge/
+          if-no-files-found: error
+          retention-days: 60

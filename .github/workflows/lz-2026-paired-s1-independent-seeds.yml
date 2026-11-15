@@ -1,0 +1,248 @@
+name: LZ 2026 paired S1 independent-seed ensemble
+
+on:
+  push:
+    branches:
+      - integration/lz-2026-nest-nr-fullband-20261115
+    paths:
+      - research/lz_detector_response/cpp/lz_2026_nr_paired_s1_mode_2d_response.cc
+      - research/lz_detector_response/fold_lz_2026_paired_s1_mode_2d_response.py
+      - research/lz_detector_response/audit_lz_2026_paired_s1_2d_sampling_noise.py
+      - research/lz_detector_response/aggregate_lz_2026_paired_s1_2d_independent_seeds.py
+      - research/lz_detector_response/tests/test_lz_2026_paired_s1_mode_2d_response.py
+      - research/lz_detector_response/tests/test_lz_2026_paired_s1_2d_sampling_noise.py
+      - research/lz_detector_response/tests/test_lz_2026_paired_s1_2d_independent_seeds.py
+      - .github/workflows/lz-2026-paired-s1-independent-seeds.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  independent-seed-ensemble:
+    if: ${{ github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[skip-nest-production]') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      EVENTS_PER_BIN: "2000"
+      ENERGY_MIN_KEV: "35.0"
+      ENERGY_MAX_KEV: "269.9"
+      BIN_WIDTH_KEV: "1.0"
+      NEST_COMMIT: "541b6430dae6ea289cf110c99f174a9187f7fdee"
+      SEEDS: "20261117 40261117 60261117 80261117 100261117 120261117 140261117 160261117 180261117 200261117"
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+
+      - name: Check out pinned NEST source
+        uses: actions/checkout@v4
+        with:
+          repository: NESTCollaboration/nest
+          ref: 541b6430dae6ea289cf110c99f174a9187f7fdee
+          path: nest
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build pinned NEST core
+        run: |
+          cmake -S nest -B nest/build \
+            -DBUILD_EXAMPLES=OFF -DBUILD_GARFIELD=OFF -DBUILD_ROOT=OFF -DG4=OFF
+          cmake --build nest/build --target NESTCore --parallel 2
+
+      - name: Compile paired S1 plus common S2 response driver
+        run: |
+          g++ -std=c++17 -O2 \
+            -Inest/include -Inest/include/Detectors \
+            -Inest/build/_deps/gcem-src/include \
+            research/lz_detector_response/cpp/lz_2026_nr_paired_s1_mode_2d_response.cc \
+            nest/build/libNESTCore.a -o lz_2026_nr_paired_s1_mode_2d_response
+
+      - name: Test paired response, split-half audit, and independent-seed aggregation
+        run: |
+          python -m unittest \
+            research.lz_detector_response.tests.test_lz_2026_paired_s1_mode_2d_response \
+            research.lz_detector_response.tests.test_lz_2026_paired_s1_2d_sampling_noise \
+            research.lz_detector_response.tests.test_lz_2026_paired_s1_2d_independent_seeds \
+            research.lz_detector_response.tests.test_lz_2026_three_body_event_weighted_fold \
+            research.lz_detector_response.tests.test_lz_2026_energy_resolved_selection_bridge -v
+
+      - name: Validate independent NEST random-seed ranges
+        shell: bash
+        run: |
+          set -euo pipefail
+          previous=-1
+          events_per_seed=$((235 * EVENTS_PER_BIN))
+          maximum_per_event_seed_offset=$((4 * events_per_seed))
+          for seed in $SEEDS; do
+            if (( previous >= 0 )); then
+              gap=$((seed - previous))
+              if (( gap <= maximum_per_event_seed_offset )); then
+                echo "Seed ranges overlap: gap=$gap, required > $maximum_per_event_seed_offset"
+                exit 1
+              fi
+            fi
+            previous=$seed
+          done
+          printf 'Seeds: %s\n' "$SEEDS"
+          printf 'Events per seed: %s\n' "$events_per_seed"
+          printf 'Maximum per-event NEST seed offset: %s\n' "$maximum_per_event_seed_offset"
+
+      - name: Generate, fold, and audit ten independent paired S1 productions
+        shell: bash
+        run: |
+          set -euo pipefail
+          output_root=paired-s1-independent-seeds-output
+          mkdir -p "$output_root"
+          for seed in $SEEDS; do
+            seed_root="$output_root/seed-$seed"
+            mkdir -p "$seed_root/fold"
+            echo "=== Generate paired NEST response for seed $seed ==="
+            ./lz_2026_nr_paired_s1_mode_2d_response \
+              "$EVENTS_PER_BIN" "$seed" "$ENERGY_MIN_KEV" "$ENERGY_MAX_KEV" "$BIN_WIDTH_KEV" \
+              > "$seed_root/paired_s1_mode_2d_events.csv"
+            wc -l "$seed_root/paired_s1_mode_2d_events.csv"
+            du -h "$seed_root/paired_s1_mode_2d_events.csv"
+
+            echo "=== Fold exact event-weighted 2D maps for seed $seed ==="
+            python research/lz_detector_response/fold_lz_2026_paired_s1_mode_2d_response.py \
+              --input-csv "$seed_root/paired_s1_mode_2d_events.csv" \
+              --spectrum-dir research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum \
+              --events-per-bin "$EVENTS_PER_BIN" \
+              --out-dir "$seed_root/fold"
+
+            echo "=== Audit split-half stability for seed $seed ==="
+            python research/lz_detector_response/audit_lz_2026_paired_s1_2d_sampling_noise.py \
+              --event-csv "$seed_root/paired_s1_mode_2d_events.csv" \
+              --fold-summary-csv "$seed_root/fold/paired_s1_mode_2d_response_summary.csv" \
+              --events-per-bin "$EVENTS_PER_BIN" \
+              --out-dir "$seed_root/fold/sampling-noise"
+          done
+
+      - name: Aggregate independent-seed ensemble and compare with split-half spread
+        run: |
+          python research/lz_detector_response/aggregate_lz_2026_paired_s1_2d_independent_seeds.py \
+            --seed-root paired-s1-independent-seeds-output \
+            --seeds 20261117 40261117 60261117 80261117 100261117 120261117 140261117 160261117 180261117 200261117 \
+            --out-dir paired-s1-independent-seeds-output/ensemble
+          cat paired-s1-independent-seeds-output/ensemble/paired_s1_independent_seed_ensemble_summary.csv
+          cat paired-s1-independent-seeds-output/ensemble/paired_s1_independent_seed_per_seed_summary.csv
+          cat paired-s1-independent-seeds-output/ensemble/paired_s1_independent_seed_ensemble_metadata.json
+
+      - name: Validate all independent-seed inputs, closures, and outputs
+        run: |
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+
+          root = Path("paired-s1-independent-seeds-output")
+          seeds = [20261117, 40261117, 60261117, 80261117, 100261117, 120261117, 140261117, 160261117, 180261117, 200261117]
+          n_events = 470000
+          n_bins = 235
+          for seed in seeds:
+              seed_root = root / f"seed-{seed}"
+              events = seed_root / "paired_s1_mode_2d_events.csv"
+              with events.open(encoding="utf-8") as handle:
+                  event_rows = sum(1 for _ in handle) - 1
+              assert event_rows == n_events, (seed, event_rows)
+
+              fold = seed_root / "fold"
+              meta = json.loads((fold / "paired_s1_mode_2d_response_metadata.json").read_text())
+              bins = list(csv.DictReader((fold / "paired_s1_mode_2d_response_by_energy_bin.csv").open()))
+              summaries = list(csv.DictReader((fold / "paired_s1_mode_2d_response_summary.csv").open()))
+              maps = list(csv.DictReader((fold / "paired_s1_mode_2d_signal_intensity.csv").open()))
+              noise_root = fold / "sampling-noise"
+              noise_meta = json.loads((noise_root / "paired_s1_2d_sampling_noise_metadata.json").read_text())
+              noise_rows = list(csv.DictReader((noise_root / "paired_s1_2d_sampling_noise_summary.csv").open()))
+              assert meta["status"] == "PAIRED_2D_RESPONSE_DIAGNOSTIC_ONLY"
+              assert meta["n_events"] == n_events and meta["n_energy_bins"] == n_bins
+              assert len(bins) == 8 * n_bins
+              assert len(summaries) == 16 and len(maps) > 0
+              assert noise_meta["status"] == "WITHIN_STREAM_2D_TV_STABILITY_DIAGNOSTIC_ONLY"
+              assert noise_meta["n_events"] == n_events and noise_meta["n_energy_bins"] == n_bins
+              assert len(noise_rows) == 16
+              assert max(float(row["pooled_tv_reproduction_abs_difference"]) for row in noise_rows) <= 1e-10
+
+          ensemble_dir = root / "ensemble"
+          ensemble = list(csv.DictReader((ensemble_dir / "paired_s1_independent_seed_ensemble_summary.csv").open()))
+          per_seed = list(csv.DictReader((ensemble_dir / "paired_s1_independent_seed_per_seed_summary.csv").open()))
+          mean_maps = list(csv.DictReader((ensemble_dir / "paired_s1_independent_seed_mean_maps.csv").open()))
+          ensemble_meta = json.loads((ensemble_dir / "paired_s1_independent_seed_ensemble_metadata.json").read_text())
+          assert ensemble_meta["status"] == "INDEPENDENT_SEED_2D_RESPONSE_DIAGNOSTIC_ONLY"
+          assert ensemble_meta["seeds"] == seeds and ensemble_meta["n_seeds"] == len(seeds)
+          assert f"{len(seeds)} independent pseudorandom seeds" in ensemble_meta["limitations"][0]
+          assert "Only three" not in ensemble_meta["limitations"][0]
+          assert "not the standard error" in ensemble_meta["seed_spread_definition"]
+          assert len(ensemble) == 16
+          assert len(per_seed) == 16 * len(seeds)
+          assert len(mean_maps) > 0
+          assert all(float(row["mean_within_mode_seed_pairwise_tv"]) > 0 for row in ensemble)
+          assert all(float(row["mean_within_stream_split_half_tv"]) > 0 for row in ensemble)
+          print(f"Validated {len(seeds)} independent seeds, {len(ensemble)} ensemble rows, {len(per_seed)} per-seed rows, and {len(mean_maps)} mean-map cells.")
+          PY
+
+      - name: Write reproducibility manifest
+        run: |
+          python - <<'PY'
+          import json, os, platform, sys
+          from pathlib import Path
+
+          seeds = [20261117, 40261117, 60261117, 80261117, 100261117, 120261117, 140261117, 160261117, 180261117, 200261117]
+          events_per_bin = 2000
+          n_bins = 235
+          n_events = events_per_bin * n_bins
+          manifest = {
+              "study": "LZ 2026 paired Parametric/Full S1 independent-seed 2D response",
+              "status": "INDEPENDENT_SEED_2D_RESPONSE_DIAGNOSTIC_ONLY",
+              "source_commit": os.environ["GITHUB_SHA"],
+              "nest_commit": "541b6430dae6ea289cf110c99f174a9187f7fdee",
+              "workflow_run_id": os.environ["GITHUB_RUN_ID"],
+              "workflow_run_attempt": int(os.environ["GITHUB_RUN_ATTEMPT"]),
+              "python_version": sys.version,
+              "platform": platform.platform(),
+              "detector_configuration": "LZ_Detector_2024::SetEFT2024Configuration()",
+              "energy_support_keV": [35.0, 269.9],
+              "energy_bin_width_keV": 1.0,
+              "n_energy_bins": n_bins,
+              "events_per_energy_bin": events_per_bin,
+              "events_per_seed": n_events,
+              "total_events": len(seeds) * n_events,
+              "seeds": seeds,
+              "per_event_nest_seed_rule": "base_seed + 4*event_index + {1,2,3,4}",
+              "minimum_seed_gap": min(b-a for a,b in zip(seeds,seeds[1:])),
+              "maximum_per_event_nest_seed_offset": 4*n_events,
+              "seed_stream_overlap_check": "PASS: base-seed gaps exceed the full per-event NEST seed range",
+              "response": "paired Parametric/Full S1 using identical intrinsic NR quanta and true position; one common NEST Full S2 draw per event",
+              "fold": "exact event-weighted rate maps, per-bin normalization to piecewise-linear natural-xenon spectra",
+              "map_binning": {"s1_phd": 10.0, "log10_s2c": 0.02},
+              "benchmarks": ["red_ms200_dm1", "green_ms300_dm1", "black_ms360_dm1", "blue_ms300_dm10"],
+              "nuclear_response_spectra": ["GCN", "JJ55"],
+              "limitations": [
+                  "Ten independent pseudorandom seeds; no bootstrap confidence interval.",
+                  "The seed ensemble quantifies Monte Carlo variability, not detector-systematic uncertainty.",
+                  "NEST EFT2024 response is not official waveform-level LZ reconstruction.",
+                  "DAQ, SS/data-analysis, official FV, Skin/OD, and live-time migration remain absent.",
+                  "The 2D TV depends on the 10-phd by 0.02-dex histogram binning."
+              ]
+          }
+          Path("paired-s1-independent-seeds-output/run_manifest.json").write_text(
+              json.dumps(manifest, indent=2) + "\n", encoding="utf-8"
+          )
+          PY
+
+      - name: Hash all native outputs and provenance
+        run: |
+          find paired-s1-independent-seeds-output -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum \
+            > paired-s1-independent-seeds-output/SHA256SUMS
+          cat paired-s1-independent-seeds-output/SHA256SUMS
+
+      - name: Upload independent-seed ensemble and raw event samples
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-paired-s1-independent-seeds
+          path: paired-s1-independent-seeds-output/
+          if-no-files-found: error
+          retention-days: 60

@@ -1,0 +1,137 @@
+{
+  "status": "DIAGNOSTIC_COMPLETE",
+  "scope": "Green Xe-131 fixed-speed I6-only mapping audit at 776 km/s and zero width. AFH response and cross-section normalization are not recalculated.",
+  "archive": "/home/runner/work/LZ-3-body-for-hdm/LZ-3-body-for-hdm/research/figure2_full_reproduction/results/joint_xe131/fine/xe131_gcn_joint_single_speed.csv",
+  "inputs": {
+    "m_chi1_GeV": 1000.0,
+    "m_s_GeV": 0.0003,
+    "Delta_m_GeV": 0.001,
+    "m_A_GeV": 122.02572741702,
+    "speed_km_s": 776.0,
+    "width_scheme": "zero",
+    "historical_quadrature": [
+      40,
+      32,
+      20
+    ],
+    "mapping_scan_order": [
+      40,
+      32,
+      20
+    ],
+    "high_order": [
+      48,
+      40,
+      24
+    ],
+    "higher_order": [
+      64,
+      48,
+      32
+    ]
+  },
+  "open_energy_points_keV": [
+    200.0,
+    267.0,
+    542.0
+  ],
+  "max_relative_differences": {
+    "legacy_vs_archive_relative_difference": 0.0,
+    "linear_w2_vs_archive_relative_difference": 5.413399461512302e-11,
+    "threshold_u2_vs_archive_relative_difference": 2.2252452984982456e-06,
+    "linear_w_vs_archive_relative_difference": 2.320057516579266e-09,
+    "sine2_vs_archive_relative_difference": 2.22523455881665e-06,
+    "threshold_u2_48_vs_64_relative_difference": 1.4026160387132862e-11
+  },
+  "rows": [
+    {
+      "ER_keV": 101.0,
+      "archived_phase_space_open": 0,
+      "current_phase_space_open": 0,
+      "archived_I6_GeV2": 0.0,
+      "legacy_eq6_linear_w2_40x32x20_GeV2": 0.0,
+      "psc_linear_w2_40x32x20_GeV2": 0.0,
+      "psc_threshold_u2_40x32x20_GeV2": 0.0,
+      "psc_linear_w_40x32x20_GeV2": 0.0,
+      "psc_sine2_40x32x20_GeV2": 0.0,
+      "psc_linear_w2_48x40x24_GeV2": 0.0,
+      "psc_threshold_u2_48x40x24_GeV2": 0.0,
+      "psc_threshold_u2_64x48x32_GeV2": 0.0,
+      "legacy_vs_archive_relative_difference": 0.0,
+      "linear_w2_vs_archive_relative_difference": 0.0,
+      "threshold_u2_vs_archive_relative_difference": 0.0,
+      "linear_w_vs_archive_relative_difference": 0.0,
+      "sine2_vs_archive_relative_difference": 0.0,
+      "threshold_u2_48_vs_64_relative_difference": 0.0
+    },
+    {
+      "ER_keV": 200.0,
+      "archived_phase_space_open": 1,
+      "current_phase_space_open": 1,
+      "archived_I6_GeV2": 879672.0472972188,
+      "legacy_eq6_linear_w2_40x32x20_GeV2": 879672.0472972188,
+      "psc_linear_w2_40x32x20_GeV2": 879672.0472502336,
+      "psc_threshold_u2_40x32x20_GeV2": 879670.1277325553,
+      "psc_linear_w_40x32x20_GeV2": 879672.0476147876,
+      "psc_sine2_40x32x20_GeV2": 879670.1277208113,
+      "psc_linear_w2_48x40x24_GeV2": 879671.2453126302,
+      "psc_threshold_u2_48x40x24_GeV2": 879670.1277308514,
+      "psc_threshold_u2_64x48x32_GeV2": 879670.127718513,
+      "legacy_vs_archive_relative_difference": 0.0,
+      "linear_w2_vs_archive_relative_difference": 5.341220518909563e-11,
+      "threshold_u2_vs_archive_relative_difference": 2.1821367058857808e-06,
+      "linear_w_vs_archive_relative_difference": 3.6100814537737374e-10,
+      "sine2_vs_archive_relative_difference": 2.182150056290289e-06,
+      "threshold_u2_48_vs_64_relative_difference": 1.4026160387132862e-11
+    },
+    {
+      "ER_keV": 267.0,
+      "archived_phase_space_open": 1,
+      "current_phase_space_open": 1,
+      "archived_I6_GeV2": 1312080.295367597,
+      "legacy_eq6_linear_w2_40x32x20_GeV2": 1312080.295367597,
+      "psc_linear_w2_40x32x20_GeV2": 1312080.2952981088,
+      "psc_threshold_u2_40x32x20_GeV2": 1312077.4870994322,
+      "psc_linear_w_40x32x20_GeV2": 1312080.2952795897,
+      "psc_sine2_40x32x20_GeV2": 1312077.4871050036,
+      "psc_linear_w2_48x40x24_GeV2": 1312079.1221748723,
+      "psc_threshold_u2_48x40x24_GeV2": 1312077.4871147086,
+      "psc_threshold_u2_64x48x32_GeV2": 1312077.48711225,
+      "legacy_vs_archive_relative_difference": 0.0,
+      "linear_w2_vs_archive_relative_difference": 5.2960228892383234e-11,
+      "threshold_u2_vs_archive_relative_difference": 2.1403173073058114e-06,
+      "linear_w_vs_archive_relative_difference": 6.707454539493901e-11,
+      "sine2_vs_archive_relative_difference": 2.1403130610683733e-06,
+      "threshold_u2_48_vs_64_relative_difference": 1.873892068978483e-12
+    },
+    {
+      "ER_keV": 542.0,
+      "archived_phase_space_open": 1,
+      "current_phase_space_open": 1,
+      "archived_I6_GeV2": 506459.60269663256,
+      "legacy_eq6_linear_w2_40x32x20_GeV2": 506459.60269663256,
+      "psc_linear_w2_40x32x20_GeV2": 506459.6026692159,
+      "psc_threshold_u2_40x32x20_GeV2": 506458.4756997828,
+      "psc_linear_w_40x32x20_GeV2": 506459.60152161715,
+      "psc_sine2_40x32x20_GeV2": 506458.475705222,
+      "psc_linear_w2_48x40x24_GeV2": 506459.13180289353,
+      "psc_threshold_u2_48x40x24_GeV2": 506458.47570536425,
+      "psc_threshold_u2_64x48x32_GeV2": 506458.47570441134,
+      "legacy_vs_archive_relative_difference": 0.0,
+      "linear_w2_vs_archive_relative_difference": 5.413399461512302e-11,
+      "threshold_u2_vs_archive_relative_difference": 2.2252452984982456e-06,
+      "linear_w_vs_archive_relative_difference": 2.320057516579266e-09,
+      "sine2_vs_archive_relative_difference": 2.22523455881665e-06,
+      "threshold_u2_48_vs_64_relative_difference": 1.8815315816148653e-12
+    }
+  ],
+  "interpretation_guard": "Agreement at one quadrature order is not a convergence proof. Use the 48x40x24 and 64x48x32 threshold_u2 comparison to assess stable integration.",
+  "outputs": {
+    "csv": "xe131_historical_i6_mapping_comparison.csv",
+    "metadata": "xe131_historical_i6_mapping_metadata.json"
+  },
+  "output_paths": {
+    "csv": "/home/runner/work/_temp/xe131_historical_i6_mapping/xe131_historical_i6_mapping_comparison.csv",
+    "metadata": "/home/runner/work/_temp/xe131_historical_i6_mapping/xe131_historical_i6_mapping_metadata.json"
+  }
+}

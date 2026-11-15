@@ -1,0 +1,93 @@
+name: LZ 2026 S1 mode ROI migration audit
+
+on:
+  push:
+    branches:
+      - integration/lz-2026-nest-nr-fullband-20261115
+    paths:
+      - research/lz_detector_response/audit_lz_2026_s1_mode_roi_migration.py
+      - research/lz_detector_response/tests/test_lz_2026_s1_mode_roi_migration.py
+      - .github/workflows/lz-2026-s1-mode-roi-migration.yml
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  s1-mode-roi-migration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Download archived paired Parametric/Full S1 event sample
+        uses: actions/download-artifact@v4
+        with:
+          name: lz-2026-s1-parametric-full-coincidence-crosscheck
+          run-id: 43658191416
+          repository: lm846802297-bit/LZ-3-body-for-hdm
+          github-token: ${{ github.token }}
+          path: s1-source/
+
+      - name: Verify source artifact and provenance
+        run: |
+          test -s s1-source/s1_parametric_vs_full_events.csv
+          test -s s1-source/s1_parametric_vs_full_summary.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=json.loads(Path('s1-source/s1_parametric_vs_full_summary.json').read_text())
+          assert d['nest_commit'] == '541b6430dae6ea289cf110c99f174a9187f7fdee'
+          assert d['detector_configuration'] == 'LZ_Detector_2024::SetEFT2024Configuration'
+          assert d['formal_pass'] is None
+          print('Pinned NEST source and EFT2024 configuration provenance verified.')
+          PY
+
+      - name: Run S1 ROI migration tests
+        run: |
+          python -m unittest \
+            research.lz_detector_response.tests.test_lz_2026_s1_mode_roi_migration \
+            research.lz_detector_response.tests.test_lz_2026_s1_coincidence_mode_comparison -v
+
+      - name: Audit S1c ROI migration in the paired event sample
+        run: |
+          python research/lz_detector_response/audit_lz_2026_s1_mode_roi_migration.py \
+            --input-csv s1-source/s1_parametric_vs_full_events.csv \
+            --source-run-id 43658191416 \
+            --source-artifact-id 14138858617 \
+            --out-dir s1-roi-output
+          cat s1-roi-output/s1_mode_roi_by_energy_bin.csv
+          cat s1-roi-output/s1_mode_roi_migration_summary.json
+
+      - name: Validate signal-support anchors and diagnostic-only scope
+        run: |
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+          root=Path('s1-roi-output')
+          d=json.loads((root/'s1_mode_roi_migration_summary.json').read_text())
+          bins=list(csv.DictReader((root/'s1_mode_roi_by_energy_bin.csv').open()))
+          assert d['status']=='S1_1D_ROI_MIGRATION_DIAGNOSTIC_ONLY'
+          assert d['n_energy_bins']==10 and d['n_events']==100000
+          assert len(bins)==10
+          for edge in (35.0,101.0,210.0,247.4,269.4):
+              assert any(abs(float(r['energy_low_keV'])-edge)<1e-8 for r in bins), edge
+          assert any('joint 2D' in x for x in d['limitations'])
+          print(f"Validated {len(bins)} S1 energy bins and {d['n_events']} paired events.")
+          PY
+          sha256sum s1-roi-output/*
+
+      - name: Upload S1 ROI migration audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-s1-mode-roi-migration-audit
+          path: s1-roi-output/
+          if-no-files-found: error
+          retention-days: 60

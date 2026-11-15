@@ -1,0 +1,143 @@
+name: LZ 2026 energy-resolved Fig S2 residual-selection bridge
+
+on:
+  push:
+    branches:
+      - integration/lz-2026-nest-nr-fullband-20261115
+    paths:
+      - research/lz_detector_response/audit_lz_2026_energy_resolved_selection_bridge.py
+      - research/lz_detector_response/tests/test_lz_2026_energy_resolved_selection_bridge.py
+      - research/lz_detector_response/audit_lz_2026_energy_resolved_mc_uncertainty.py
+      - research/lz_detector_response/tests/test_lz_2026_energy_resolved_mc_uncertainty.py
+      - .github/workflows/lz-2026-energy-resolved-selection-bridge.yml
+  workflow_dispatch:
+
+concurrency:
+  group: lz-2026-energy-resolved-selection-bridge-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  energy-resolved-bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Test energy-resolved bridge and weighted MC uncertainty
+        run: |
+          python -m unittest \
+            research.lz_detector_response.tests.test_lz_2026_energy_resolved_selection_bridge \
+            research.lz_detector_response.tests.test_lz_2026_energy_resolved_mc_uncertainty \
+            research.lz_detector_response.tests.test_lz_2026_conditional_selection_bridge \
+            research.lz_detector_response.tests.test_lz_2026_selection_stage_rates \
+            research.lz_detector_response.tests.test_lz_2026_three_body_event_weighted_fold -v
+
+      - name: Download archived event-weighted response and Fig S2 inputs
+        uses: actions/download-artifact@v4
+        with:
+          name: lz-2026-three-body-response-grid-convergence
+          run-id: 43697104437
+          repository: lm846802297-bit/LZ-3-body-for-hdm
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: extracted/
+
+      - name: Build energy-resolved residual-stage bridge
+        run: |
+          python research/lz_detector_response/audit_lz_2026_energy_resolved_selection_bridge.py \
+            --response-dir extracted/response-output \
+            --efficiency-csv extracted/selection-audit-output/lz_2026_nr_selection_efficiency_components.csv \
+            --reference-bridge-dir extracted/convergence-output/conditional_selection_bridge \
+            --response-families eft2024 tableS5 \
+            --benchmarks red_ms200_dm1 green_ms300_dm1 black_ms360_dm1 blue_ms300_dm10 \
+            --nuclear-models GCN JJ55 \
+            --source-run-id 43697104437 \
+            --source-artifact-id 14155360851 \
+            --out-dir energy-bridge-output
+          cat energy-bridge-output/energy_resolved_selection_bridge_summary.json
+          head -n 8 energy-bridge-output/energy_resolved_selection_bridge_summary.csv
+
+      - name: Validate integrated reproduction and energy-bin coverage
+        run: |
+          python - <<'PY'
+          import json
+          from collections import Counter
+          from pathlib import Path
+          root = Path("energy-bridge-output")
+          summary = json.loads((root / "energy_resolved_selection_bridge_summary.json").read_text())
+          assert summary["status"] == "ENERGY_RESOLVED_RATE_LEVEL_DIAGNOSTIC_ONLY"
+          assert summary["source_run_id"] == 43697104437
+          assert summary["source_artifact_id"] == 14155360851
+          assert summary["integrated_bridge_reproduction_max_abs_difference"] <= 1e-8
+          rows = summary["per_key_summaries"]
+          bins = summary["per_energy_bin_rows"]
+          assert len(rows) == 16, len(rows)
+          assert len(bins) == 16 * 265, len(bins)
+          counts = Counter(row["response_family"] for row in rows)
+          assert counts == {"eft2024": 8, "tableS5": 8}, counts
+          assert all(row["n_energy_bins"] == 265 for row in rows)
+          print("Integrated bridge reproduced to <1e-8; 16 benchmark/nuclear/family summaries and 4,240 energy-bin rows validated.")
+          PY
+          sha256sum energy-bridge-output/*
+
+      - name: Estimate weighted event-level MC uncertainty by recoil-energy bin
+        run: |
+          python research/lz_detector_response/audit_lz_2026_energy_resolved_mc_uncertainty.py \
+            --response-dir extracted/response-output \
+            --bridge-bin-csv energy-bridge-output/energy_resolved_selection_bridge_by_energy_bin.csv \
+            --response-families eft2024 tableS5 \
+            --benchmarks red_ms200_dm1 green_ms300_dm1 black_ms360_dm1 blue_ms300_dm10 \
+            --nuclear-models GCN JJ55 \
+            --out-dir energy-bridge-output/mc-uncertainty
+          cat energy-bridge-output/mc-uncertainty/energy_resolved_selection_mc_uncertainty_summary.csv
+          cat energy-bridge-output/mc-uncertainty/black_ms360_high_energy_band_summary.csv
+
+      - name: Validate MC uncertainty diagnostics and row coverage
+        run: |
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+          root = Path("energy-bridge-output/mc-uncertainty")
+          summary = json.loads((root / "energy_resolved_selection_mc_uncertainty_summary.json").read_text())
+          assert summary["status"] == "WITHIN_STREAM_MC_DIAGNOSTIC_ONLY"
+          assert len(summary["per_key_summaries"]) == 16
+          rows = list(csv.DictReader((root / "energy_resolved_selection_mc_uncertainty_by_bin.csv").open()))
+          bands = list(csv.DictReader((root / "black_ms360_high_energy_band_summary.csv").open()))
+          assert len(rows) == 16 * 265, len(rows)
+          assert all(int(row["events_per_replica"]) == 2000 for row in rows)
+          assert "not independent-seed productions" in summary["replica_interpretation"]
+          assert "NOT a statistical pull or significance" in summary["mismatch_ratio_interpretation"]
+          assert len(bands) == 16, len(bands)
+          assert all(int(row["n_energy_bins"]) in (10, 15, 30) for row in bands)
+          keys = set(summary["per_key_summaries"][0])
+          assert "integrated_mismatch_over_response_mc_se_diagnostic" in keys
+          assert "max_abs_energy_bin_mismatch_over_response_mc_se_diagnostic" in keys
+          assert "min_raw_effective_sample_size_per_bin" in keys
+          for family in ("eft2024", "tableS5"):
+              for nuclear in ("GCN", "JJ55"):
+                  selected = [row for row in bands if row["response_family"] == family and row["nuclear_model"] == nuclear]
+                  reference = next(row for row in summary["per_key_summaries"] if row["benchmark"] == "black_ms360_dm1" and row["response_family"] == family and row["nuclear_model"] == nuclear)
+                  assert len(selected) == 4
+                  band_total = sum(float(row["figs2_final_plus_roi_rate_events_kg_day"]) for row in selected)
+                  reference_total = float(reference["figs2_final_rate_events_kg_day"])
+                  assert abs(band_total - reference_total) <= 1e-8 * reference_total
+          print("Weighted MC uncertainty validated: 16 summaries, 4,240 per-bin rows, and 16 rate-closing black high-energy band rows.")
+          PY
+          sha256sum energy-bridge-output/mc-uncertainty/*
+
+      - name: Upload energy-resolved bridge tables and MC uncertainty diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-energy-resolved-selection-bridge
+          path: energy-bridge-output/
+          if-no-files-found: error
+          retention-days: 60

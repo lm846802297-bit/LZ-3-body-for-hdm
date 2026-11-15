@@ -1,0 +1,113 @@
+name: LZ 2026 full-range independent-seed 1-keV versus 5-keV response audit
+
+on:
+  push:
+    branches:
+      - integration/lz-2026-nest-nr-fullband-20261115
+    paths:
+      - research/lz_detector_response/cpp/lz_2026_nr_stratified_energy_response.cc
+      - research/lz_detector_response/audit_lz_2026_full_range_grid_independent_seeds.py
+      - research/lz_detector_response/tests/test_lz_2026_full_range_grid_independent_seeds.py
+      - .github/workflows/lz-2026-full-range-grid-independent-seeds.yml
+      - research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/**
+  workflow_dispatch:
+
+concurrency:
+  group: lz-2026-full-range-grid-independent-seeds-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  full-range-independent-grid-seeds:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+
+      - name: Check out pinned NEST source
+        uses: actions/checkout@v4
+        with:
+          repository: NESTCollaboration/nest
+          ref: 541b6430dae6ea289cf110c99f174a9187f7fdee
+          path: nest
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Test full-range independent-seed audit
+        run: |
+          python -m unittest \
+            research.lz_detector_response.tests.test_lz_2026_full_range_grid_independent_seeds \
+            research.lz_detector_response.tests.test_lz_2026_three_body_energy_grid_convergence \
+            research.lz_detector_response.tests.test_lz_2026_three_body_event_weighted_fold -v
+
+      - name: Build pinned NEST core
+        run: |
+          cmake -S nest -B nest/build \
+            -DBUILD_EXAMPLES=OFF -DBUILD_GARFIELD=OFF -DBUILD_ROOT=OFF -DG4=OFF
+          cmake --build nest/build --target NESTCore --parallel 2
+
+      - name: Compile stratified NR response driver
+        run: |
+          g++ -std=c++17 -O2 \
+            -Inest/include -Inest/include/Detectors \
+            -Inest/build/_deps/gcem-src/include \
+            research/lz_detector_response/cpp/lz_2026_nr_stratified_energy_response.cc \
+            nest/build/libNESTCore.a -o lz_2026_nr_stratified_energy_response
+
+      - name: Generate three independent full-range 1-keV productions per family
+        run: |
+          for family in eft2024 tableS5; do
+            for seed in 20261132 20261134 20261136; do
+              mkdir -p full-range-output/1keV/$family/seed_$seed
+              ./lz_2026_nr_stratified_energy_response \
+                $family 4000 $seed 5.4 269.9 1.0 4000 \
+                > full-range-output/1keV/$family/seed_$seed/$family.csv
+            done
+          done
+
+      - name: Generate three independent full-range 5-keV productions per family
+        run: |
+          for family in eft2024 tableS5; do
+            for seed in 20261133 20261135 20261137; do
+              mkdir -p full-range-output/5keV/$family/seed_$seed
+              ./lz_2026_nr_stratified_energy_response \
+                $family 4000 $seed 5.4 269.9 5.0 4000 \
+                > full-range-output/5keV/$family/seed_$seed/$family.csv
+            done
+          done
+
+      - name: Compare independent full-range rates and 2D maps
+        run: |
+          for family in eft2024 tableS5; do
+            python research/lz_detector_response/audit_lz_2026_full_range_grid_independent_seeds.py \
+              --response-family $family \
+              --one-kev-response-dirs \
+                full-range-output/1keV/$family/seed_20261132 \
+                full-range-output/1keV/$family/seed_20261134 \
+                full-range-output/1keV/$family/seed_20261136 \
+              --five-kev-response-dirs \
+                full-range-output/5keV/$family/seed_20261133 \
+                full-range-output/5keV/$family/seed_20261135 \
+                full-range-output/5keV/$family/seed_20261137 \
+              --one-kev-seeds 20261132 20261134 20261136 \
+              --five-kev-seeds 20261133 20261135 20261137 \
+              --events-per-keV 4000 \
+              --nuclear-models GCN JJ55 \
+              --out-dir full-range-output/summary/$family
+            cat full-range-output/summary/$family/full_range_grid_independent_seed_summary.json
+          done
+
+      - name: Upload independent full-range samples and comparison summaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-full-range-grid-independent-seeds-eft2024-tableS5
+          path: full-range-output/
+          if-no-files-found: error
+          retention-days: 60

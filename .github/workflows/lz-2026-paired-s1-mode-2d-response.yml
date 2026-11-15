@@ -1,0 +1,136 @@
+name: LZ 2026 paired S1 mode 2D response
+
+on:
+  push:
+    branches:
+      - integration/lz-2026-nest-nr-fullband-20261115
+    paths:
+      - research/lz_detector_response/cpp/lz_2026_nr_paired_s1_mode_2d_response.cc
+      - research/lz_detector_response/fold_lz_2026_paired_s1_mode_2d_response.py
+      - research/lz_detector_response/audit_lz_2026_paired_s1_2d_sampling_noise.py
+      - research/lz_detector_response/tests/test_lz_2026_paired_s1_mode_2d_response.py
+      - research/lz_detector_response/tests/test_lz_2026_paired_s1_2d_sampling_noise.py
+      - .github/workflows/lz-2026-paired-s1-mode-2d-response.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  paired-s1-mode-2d-response:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+
+      - name: Check out pinned NEST source
+        uses: actions/checkout@v4
+        with:
+          repository: NESTCollaboration/nest
+          ref: 541b6430dae6ea289cf110c99f174a9187f7fdee
+          path: nest
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build pinned NEST core
+        run: |
+          cmake -S nest -B nest/build \
+            -DBUILD_EXAMPLES=OFF -DBUILD_GARFIELD=OFF -DBUILD_ROOT=OFF -DG4=OFF
+          cmake --build nest/build --target NESTCore --parallel 2
+
+      - name: Compile paired S1 plus common S2 response driver
+        run: |
+          g++ -std=c++17 -O2 \
+            -Inest/include -Inest/include/Detectors \
+            -Inest/build/_deps/gcem-src/include \
+            research/lz_detector_response/cpp/lz_2026_nr_paired_s1_mode_2d_response.cc \
+            nest/build/libNESTCore.a -o lz_2026_nr_paired_s1_mode_2d_response
+
+      - name: Test paired 2D fold and selection invariants
+        run: |
+          python -m unittest \
+            research.lz_detector_response.tests.test_lz_2026_paired_s1_mode_2d_response \
+            research.lz_detector_response.tests.test_lz_2026_paired_s1_2d_sampling_noise \
+            research.lz_detector_response.tests.test_lz_2026_three_body_event_weighted_fold \
+            research.lz_detector_response.tests.test_lz_2026_energy_resolved_selection_bridge -v
+
+      - name: Generate paired Parametric/Full S1 and common Full S2 sample
+        run: |
+          mkdir -p paired-s1-2d-output
+          ./lz_2026_nr_paired_s1_mode_2d_response \
+            2000 20261116 35.0 269.9 1.0 \
+            > paired-s1-2d-output/paired_s1_mode_2d_events.csv
+          wc -l paired-s1-2d-output/paired_s1_mode_2d_events.csv
+          du -h paired-s1-2d-output/paired_s1_mode_2d_events.csv
+
+      - name: Fold event-weighted 2D maps for all signal benchmarks and nuclear responses
+        run: |
+          python research/lz_detector_response/fold_lz_2026_paired_s1_mode_2d_response.py \
+            --input-csv paired-s1-2d-output/paired_s1_mode_2d_events.csv \
+            --spectrum-dir research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum \
+            --events-per-bin 2000 \
+            --out-dir paired-s1-2d-output/fold
+          cat paired-s1-2d-output/fold/paired_s1_mode_2d_response_summary.csv
+          cat paired-s1-2d-output/fold/paired_s1_mode_2d_response_metadata.json
+
+      - name: Audit exact event-weighted 2D TV against within-stream split-half stability
+        run: |
+          python research/lz_detector_response/audit_lz_2026_paired_s1_2d_sampling_noise.py \
+            --event-csv paired-s1-2d-output/paired_s1_mode_2d_events.csv \
+            --fold-summary-csv paired-s1-2d-output/fold/paired_s1_mode_2d_response_summary.csv \
+            --events-per-bin 2000 \
+            --out-dir paired-s1-2d-output/fold/sampling-noise
+          cat paired-s1-2d-output/fold/sampling-noise/paired_s1_2d_sampling_noise_summary.csv
+          cat paired-s1-2d-output/fold/sampling-noise/paired_s1_2d_sampling_noise_metadata.json
+
+      - name: Validate complete signal-support coverage and 2D outputs
+        run: |
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+          root=Path('paired-s1-2d-output/fold')
+          meta=json.loads((root/'paired_s1_mode_2d_response_metadata.json').read_text())
+          bins=list(csv.DictReader((root/'paired_s1_mode_2d_response_by_energy_bin.csv').open()))
+          summaries=list(csv.DictReader((root/'paired_s1_mode_2d_response_summary.csv').open()))
+          maps=list(csv.DictReader((root/'paired_s1_mode_2d_signal_intensity.csv').open()))
+          noise_root=root/'sampling-noise'
+          noise_meta=json.loads((noise_root/'paired_s1_2d_sampling_noise_metadata.json').read_text())
+          noise_rows=list(csv.DictReader((noise_root/'paired_s1_2d_sampling_noise_summary.csv').open()))
+          event_rows=sum(1 for _ in csv.DictReader(Path('paired-s1-2d-output/paired_s1_mode_2d_events.csv').open()))
+          assert meta['status']=='PAIRED_2D_RESPONSE_DIAGNOSTIC_ONLY'
+          assert event_rows==470000, event_rows
+          assert meta['n_events']==event_rows, (meta['n_events'], event_rows)
+          assert meta['n_energy_bins']==235, meta['n_energy_bins']
+          assert meta['n_events']==meta['events_per_energy_bin']*meta['n_energy_bins']
+          assert noise_meta['status']=='WITHIN_STREAM_2D_TV_STABILITY_DIAGNOSTIC_ONLY'
+          assert noise_meta['n_events']==470000 and noise_meta['n_energy_bins']==235
+          assert len(noise_rows)==16, len(noise_rows)
+          assert max(float(r['pooled_tv_reproduction_abs_difference']) for r in noise_rows) <= 1e-10
+          assert all('parametric_vs_full_s1_marginal_tv' in r for r in noise_rows)
+          assert all('parametric_vs_full_log10s2_marginal_tv' in r for r in noise_rows)
+          assert all('not an independent-seed uncertainty' in r['interpretation'] for r in noise_rows)
+          assert len(bins)==8*235, len(bins)
+          assert len(summaries)==16, len(summaries)
+          assert len(maps)>0
+          assert {r['stage'] for r in summaries}=={'nest','ws_roi'}
+          assert {r['benchmark'] for r in summaries}=={'red_ms200_dm1','green_ms300_dm1','black_ms360_dm1','blue_ms300_dm10'}
+          assert {r['nuclear_model'] for r in summaries}=={'GCN','JJ55'}
+          ws=[r for r in summaries if r['stage']=='ws_roi']
+          assert all(r['full_vs_parametric_2d_total_variation'] not in ('', 'None') for r in ws)
+          assert 'Fig. S2 residual SS/data-analysis efficiency is deliberately not multiplied' in ' '.join(meta['limitations'])
+          print(f"Validated {len(bins)} per-bin rows, {len(summaries)} summaries and {len(maps)} 2D map cells.")
+          PY
+          find paired-s1-2d-output -type f -print0 | sort -z | xargs -0 sha256sum
+
+      - name: Upload paired S1 mode 2D response and folded signal maps
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-paired-s1-mode-2d-response
+          path: paired-s1-2d-output/
+          if-no-files-found: error
+          retention-days: 60
