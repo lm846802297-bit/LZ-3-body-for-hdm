@@ -127,3 +127,14 @@ re-extracts the four vector curves from the paper PDF, runs the tests, and
 checks raw-rate and final expected-count closure for all eight
 benchmark/nuclear-response combinations. It does not rebuild NEST or rerun
 the expensive event-level response Monte Carlo.
+
+The stored digitized final-efficiency curve reproduces the archived rate-level
+expected yields with maximum relative difference \(2.22\times10^{-16}\).
+The lightweight CI independently re-extracts the vector curves from the
+current arXiv PDF; that fresh extraction differs from the stored curve at the
+last digits and gives a maximum final-yield relative difference
+\(5.64\times10^{-10}\), for the very small black-GCN expected count. The
+workflow therefore uses a documented \(10^{-8}\) closure tolerance. This is
+a PDF vector-extraction/rounding reproducibility difference, not a response
+or physics-model discrepancy; the raw-rate closure remains at floating-point
+precision.
