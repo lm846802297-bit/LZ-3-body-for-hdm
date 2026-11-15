@@ -275,7 +275,7 @@ def fold_grid(
             "energy_high_keV": hi,
             "rate_integral_events_kg_day": rate_bin,
             "n_generated": merged["n_generated"],
-            "n_s1_coincidence_pass": merged["n_s1"],
+            "n_s1_coincidence_pass": merged["n_s1_coin"],
             "n_s2_threshold_pass": merged["n_s2_threshold"],
             "n_nest_joint_pass": merged["n_nest"],
             "n_ws_roi_pass": merged["n_ws_roi"],
