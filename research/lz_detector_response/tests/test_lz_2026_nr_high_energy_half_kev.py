@@ -57,6 +57,11 @@ class HighEnergyHalfKeVTests(unittest.TestCase):
             0.0,
         )
 
+    def test_roundoff_is_not_counted_as_a_grid_difference(self):
+        self.assertFalse(MOD.exceeds_with_tolerance(2.22e-16, 0.0))
+        self.assertFalse(MOD.exceeds_with_tolerance(0.001, 0.001 + 5e-13))
+        self.assertTrue(MOD.exceeds_with_tolerance(0.0047, 0.0037))
+
     def test_interval_fold_requires_complete_response_coverage(self):
         stats = {
             (0, 0): {
