@@ -184,4 +184,32 @@ A deterministic event bootstrap is implemented in
 [bootstrap_lz_2026_nr_full_band_candidate.py](../bootstrap_lz_2026_nr_full_band_candidate.py).
 It resamples events within the 540–545 phd S1c bin, uses 2,000 replicas and seed 20261115, and recomputes q10, median, q90, sigma80, and z_eq. Its confidence intervals quantify finite-MC uncertainty only; they do not include uncertainty in the energy prior, spatial prior, NEST configuration, calibration model, or detector response.
 
-The workflow archives the bootstrap JSON alongside the event CSVs and band summary. The exact run/artifact checksum should be appended after the bootstrap-enabled run completes.
+The bootstrap-enabled workflow completed successfully:
+- [GitHub Actions run 43661274708](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43661274708), commit 0705ffe47c03ef6051973294d3bbe01b6acbbfd0.
+- Artifact ID: 14139997390.
+- ZIP SHA-256: 1f053db6e3d49863c8b36b6a753d4e4eed0410a8530e73d98eb62d771f4bd967.
+- The artifact contains 12 event CSVs, the 90-comparison band summary, and the deterministic bootstrap JSON.
+
+The 95% percentile intervals for the uniform-TPC sample are:
+
+| Configuration | z_eq | Bootstrap 95% interval |
+|---|---:|---:|
+| EFT2024 full precision | −1.9545 | [−2.0707, −1.8348] |
+| Rounded Table S5 means | −2.3617 | [−2.5151, −2.2118] |
+| EFT2024 means + WS2024 NR fluctuations | −1.6278 | [−1.7665, −1.5166] |
+| EFT2024 means + generic NR fluctuations | −1.6506 | [−1.7668, −1.5685] |
+| WS2024 | −4.9987 | [−5.2817, −4.8043] |
+| Generic NEST | −6.4110 | [−6.7298, −6.0910] |
+
+For the fixed candidate-position sample:
+
+| Configuration | z_eq | Bootstrap 95% interval |
+|---|---:|---:|
+| EFT2024 full precision | −2.0276 | [−2.2904, −1.8570] |
+| Rounded Table S5 means | −2.3816 | [−2.5514, −2.1658] |
+| EFT2024 means + WS2024 NR fluctuations | −1.5740 | [−1.6833, −1.4340] |
+| EFT2024 means + generic NR fluctuations | −1.6815 | [−1.8347, −1.5261] |
+| WS2024 | −5.2900 | [−5.6130, −4.9140] |
+| Generic NEST | −7.0197 | [−7.4520, −6.4819] |
+
+The bootstrap intervals are finite-MC intervals for the percentile offset conditional on this simulated sample design. They do not include model, calibration, source-spectrum, spatial-prior, or detector-systematic uncertainty. The fixed-position EFT2024+WS-width interval includes −1.5, but this is not a justification to choose that fluctuation vector: it is a diagnostic alternative, not a validated production configuration.
