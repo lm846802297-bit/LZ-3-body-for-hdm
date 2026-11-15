@@ -47,24 +47,41 @@ def read_csv(path: Path) -> list[dict[str, str]]:
 
 def read_efficiency_curves(path: Path) -> tuple[list[float], dict[str, list[float]]]:
     rows = read_csv(path)
+    if len(rows) < 2:
+        raise ValueError("Fig. S2 efficiency file must contain at least two energy knots")
     validate_cumulative_curves(rows)
     x = [float(row["ER_keV"]) for row in rows]
+    if any(not math.isfinite(value) for value in x):
+        raise ValueError("Fig. S2 recoil-energy knots must be finite")
     if any(b <= a for a, b in zip(x, x[1:])):
         raise ValueError("Fig. S2 recoil-energy knots must be strictly increasing")
     curves = {
         name: [float(row[name]) for row in rows]
         for name in CURVE_COLUMNS
     }
+    if any(
+        not math.isfinite(value)
+        for values in curves.values()
+        for value in values
+    ):
+        raise ValueError("Fig. S2 cumulative efficiencies must be finite")
     return x, curves
 
 
 def pooled_acceptance(raw_replica: list[float], passed_replica: list[float]) -> float:
     if len(raw_replica) != 2 or len(passed_replica) != 2:
         raise ValueError("exactly two event replicas are required")
-    denominator = math.fsum(raw_replica)
-    numerator = math.fsum(passed_replica)
+    raw = [float(value) for value in raw_replica]
+    passed = [float(value) for value in passed_replica]
+    if any(not math.isfinite(value) or value < -1e-12 for value in raw + passed):
+        raise ValueError("response weights must be finite and non-negative")
+    for denominator, numerator in zip(raw, passed):
+        if numerator > denominator * (1.0 + 1e-10) + 1e-12:
+            raise ValueError("accepted replica weight exceeds its total response weight")
+    denominator = math.fsum(raw)
+    numerator = math.fsum(passed)
     if denominator <= 0.0:
-        if numerator > 0.0:
+        if numerator > 1e-12:
             raise ValueError("positive accepted weight with zero total response weight")
         return 0.0
     if numerator < -1e-12 or numerator > denominator * (1.0 + 1e-10):
@@ -73,10 +90,19 @@ def pooled_acceptance(raw_replica: list[float], passed_replica: list[float]) -> 
 
 
 def conditional_efficiency(numerator_rate: float, denominator_rate: float) -> float:
+    if not (
+        math.isfinite(numerator_rate)
+        and math.isfinite(denominator_rate)
+        and numerator_rate >= -1e-12
+        and denominator_rate >= -1e-12
+    ):
+        raise ValueError("conditional-efficiency rates must be finite and non-negative")
     if denominator_rate <= 0.0:
+        if numerator_rate > 1e-12:
+            raise ValueError("positive numerator rate with zero denominator rate")
         return 0.0
     value = numerator_rate / denominator_rate
-    if not math.isfinite(value) or value < -1e-9 or value > 1.0 + 1e-8:
+    if value < -1e-9 or value > 1.0 + 1e-8:
         raise ValueError("conditional efficiency is outside [0,1]")
     return min(1.0, max(0.0, value))
 
@@ -97,6 +123,8 @@ def accumulate_weighted_response(
     spectra: dict[tuple[str, str], tuple[list[float], list[float]]],
 ) -> tuple[dict, dict, dict]:
     """Stream one NEST response family and accumulate per-bin rate-density sums."""
+    if not spectra:
+        raise ValueError("at least one benchmark/nuclear spectrum is required")
     sums = defaultdict(lambda: {
         "raw": [0.0, 0.0],
         "nest": [0.0, 0.0],
@@ -121,19 +149,31 @@ def accumulate_weighted_response(
             replica = int(row["replica"])
             if replica not in (0, 1):
                 raise ValueError(f"invalid replica label {replica}")
+            if ibin < 0:
+                raise ValueError(f"invalid negative energy-bin index {ibin}")
             lo = float(row["energy_bin_low_keV"])
             hi = float(row["energy_bin_high_keV"])
-            edge = edges.setdefault(ibin, (lo, hi))
-            if abs(edge[0] - lo) > 1e-10 or abs(edge[1] - hi) > 1e-10:
-                raise ValueError(f"inconsistent energy edges in bin {ibin}")
-
             energy = float(row["energy_keV"])
             s1c = float(row["s1c_abs_phd"])
             s2c = float(row["s2c_abs_phd"])
             s2r = float(row["s2r_abs_phd"])
+            if not all(math.isfinite(value) for value in (lo, hi, energy, s1c, s2c, s2r)):
+                raise ValueError(f"non-finite event observable in bin {ibin}, replica {replica}")
+            if not hi > lo or energy < lo - 1e-9 or energy > hi + 1e-9:
+                raise ValueError(
+                    f"event energy {energy} is outside its declared bin [{lo}, {hi}]"
+                )
+            s1_flag = int(row["s1_coincidence_pass"])
+            s2_flag = int(row["s2_threshold_pass"])
+            if s1_flag not in (0, 1) or s2_flag not in (0, 1):
+                raise ValueError(f"invalid binary NEST selection flag in bin {ibin}")
+            edge = edges.setdefault(ibin, (lo, hi))
+            if abs(edge[0] - lo) > 1e-10 or abs(edge[1] - hi) > 1e-10:
+                raise ValueError(f"inconsistent energy edges in bin {ibin}")
+
             nest_pass = (
-                int(row["s1_coincidence_pass"]) == 1
-                and int(row["s2_threshold_pass"]) == 1
+                s1_flag == 1
+                and s2_flag == 1
                 and s1c > 0.0
                 and s2c > 0.0
             )
@@ -171,10 +211,15 @@ def read_reference_bridge(path: Path | None) -> dict:
     if path is None:
         return {}
     rows = read_csv(path)
-    return {
-        (row["benchmark"], row["nuclear_model"], row["response_family"]): row
-        for row in rows
-    }
+    output = {}
+    for row in rows:
+        key = (row["benchmark"], row["nuclear_model"], row["response_family"])
+        if key in output:
+            raise ValueError(f"duplicate reference-bridge row: {key}")
+        if not math.isfinite(float(row["relative_difference_factorized_vs_figs2"])):
+            raise ValueError(f"non-finite reference-bridge difference for {key}")
+        output[key] = row
+    return output
 
 
 def build_energy_resolved_rows(
@@ -193,10 +238,17 @@ def build_energy_resolved_rows(
         for ibin, (lo, hi) in enumerate(zip(energy_edges, energy_edges[1:])):
             bucket = sums[(key, ibin)]
             exact_raw = grid.integrate_linear(spectrum_x, spectrum_y, lo, hi)
+            sampled_raw = math.fsum(bucket["raw"])
+            if exact_raw > 0.0 and sampled_raw <= 0.0:
+                raise ValueError(
+                    f"{key}/{ibin}: positive exact spectrum rate but zero sampled response weight"
+                )
             nest_acceptance = pooled_acceptance(bucket["raw"], bucket["nest"])
             ws_roi_acceptance = pooled_acceptance(bucket["raw"], bucket["ws_roi"])
             nest_rate = exact_raw * nest_acceptance
             ws_roi_rate = exact_raw * ws_roi_acceptance
+            if ws_roi_rate > nest_rate * (1.0 + 1e-9) + 1e-12:
+                raise ValueError(f"{key}/{ibin}: WS-ROI rate exceeds NEST-only rate")
 
             orange_rate = integrate_piecewise_linear_product(
                 spectrum_x, spectrum_y, efficiency_x,
@@ -210,7 +262,12 @@ def build_energy_resolved_rows(
                 spectrum_x, spectrum_y, efficiency_x,
                 efficiency_curves[FINAL], lo, hi,
             )
+            if green_rate > orange_rate * (1.0 + 1e-8) + 1e-12:
+                raise ValueError(f"{key}/{ibin}: Fig. S2 green cumulative rate exceeds orange")
+            if final_rate > green_rate * (1.0 + 1e-8) + 1e-12:
+                raise ValueError(f"{key}/{ibin}: Fig. S2 final cumulative rate exceeds green")
             ss_da_conditional = conditional_efficiency(green_rate, orange_rate)
+            roi_conditional = conditional_efficiency(final_rate, green_rate)
             energy_factorized_rate = ws_roi_rate * ss_da_conditional
             bin_ratio = (
                 energy_factorized_rate / final_rate - 1.0
@@ -251,6 +308,7 @@ def build_energy_resolved_rows(
                 "figs2_trigger_plus_s1_ss_da_rate_events_kg_day": green_rate,
                 "figs2_final_plus_roi_rate_events_kg_day": final_rate,
                 "figs2_ss_da_given_trigger_plus_s1": ss_da_conditional,
+                "figs2_roi_given_ss_da": roi_conditional,
                 "energy_resolved_factorized_rate_events_kg_day": energy_factorized_rate,
                 "energy_resolved_factorized_vs_figs2_final_relative_difference": bin_ratio,
             })
@@ -300,6 +358,7 @@ def build_energy_resolved_rows(
             "figs2_trigger_plus_s1_ss_da_rate_events_kg_day": green_total,
             "figs2_final_plus_roi_rate_events_kg_day": final_total,
             "figs2_ss_da_given_trigger_plus_s1_global": global_ss_da,
+            "figs2_roi_given_ss_da_global": conditional_efficiency(final_total, green_total),
             "global_factorized_rate_events_kg_day": global_factorized,
             "global_factorized_vs_figs2_final_relative_difference": global_ratio,
             "energy_resolved_factorized_rate_events_kg_day": energy_factorized_total,
