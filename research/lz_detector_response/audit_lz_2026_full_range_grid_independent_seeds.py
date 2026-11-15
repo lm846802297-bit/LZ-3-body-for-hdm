@@ -62,11 +62,18 @@ def mean_intensity(intensities: list[dict]) -> dict:
     return dict(output)
 
 
+def symmetric_relative_difference(a: float, b: float) -> float:
+    scale = max(abs(a), abs(b))
+    if scale == 0.0:
+        return 0.0
+    return abs(a - b) / scale
+
+
 def max_pairwise_rate_difference(values: list[float]) -> float:
     if len(values) < 2:
         raise ValueError("at least two independent seeds are required")
     return max(
-        grid.relative_difference(a, b)
+        symmetric_relative_difference(a, b)
         for a, b in itertools.combinations(values, 2)
     )
 
@@ -312,6 +319,26 @@ def run_audit(args: argparse.Namespace) -> dict:
         for mode in MODES
     ]
     gate = evaluate_full_range_grid_gate(comparisons)
+    per_seed = []
+    for grid_label, samples in (("1keV", one_kev), ("5keV", five_kev)):
+        for sample in samples:
+            for (benchmark, nuclear), result in sample["folds"].items():
+                for mode in MODES:
+                    pooled = result["pooled"]
+                    per_seed.append({
+                        "response_family": args.response_family,
+                        "grid": grid_label,
+                        "grid_width_keV": sample["width_keV"],
+                        "seed": sample["seed"],
+                        "benchmark": benchmark,
+                        "nuclear_model": nuclear,
+                        "acceptance_mode": mode,
+                        "raw_rate_events_kg_day": pooled["raw_rate"],
+                        "accepted_rate_events_kg_day": pooled[mode]["accepted_rate_events_kg_day"],
+                        "acceptance_fraction_of_raw_rate": pooled[mode]["acceptance_fraction_of_raw_rate"],
+                        "within_seed_split_rate_difference": result["split_rate_difference"][mode],
+                        "within_seed_split_tv_distance": result["split_tv_distance"][mode],
+                    })
     return {
         "study": f"independent-seed full-range 1-keV versus 5-keV {args.response_family} NR response-grid audit",
         "response_family": args.response_family,
@@ -334,6 +361,7 @@ def run_audit(args: argparse.Namespace) -> dict:
         },
         "gate": gate,
         "comparisons": comparisons,
+        "per_seed": per_seed,
         "limitations": [
             "The 1-keV and 5-keV response samples are independently generated with disjoint seeds.",
             "Equal event density per keV is used: 4,000 events per 1-keV bin and 20,000 events per 5-keV bin by default.",
@@ -348,6 +376,7 @@ def write_outputs(summary: dict, out_dir: Path) -> dict:
     out_dir.mkdir(parents=True, exist_ok=True)
     json_path = out_dir / "full_range_grid_independent_seed_summary.json"
     csv_path = out_dir / "full_range_grid_independent_seed_comparison.csv"
+    seed_path = out_dir / "full_range_grid_independent_seed_details.csv"
     json_path.write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
     rows = summary["comparisons"]
     with csv_path.open("w", newline="", encoding="utf-8") as handle:
@@ -355,7 +384,17 @@ def write_outputs(summary: dict, out_dir: Path) -> dict:
             writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
             writer.writeheader()
             writer.writerows(rows)
-    return {"summary_json": str(json_path), "comparison_csv": str(csv_path)}
+    seed_rows = summary["per_seed"]
+    with seed_path.open("w", newline="", encoding="utf-8") as handle:
+        if seed_rows:
+            writer = csv.DictWriter(handle, fieldnames=list(seed_rows[0]))
+            writer.writeheader()
+            writer.writerows(seed_rows)
+    return {
+        "summary_json": str(json_path),
+        "comparison_csv": str(csv_path),
+        "seed_details_csv": str(seed_path),
+    }
 
 
 def main() -> None:
