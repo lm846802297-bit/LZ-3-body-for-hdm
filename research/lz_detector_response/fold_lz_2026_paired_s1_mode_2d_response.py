@@ -324,6 +324,15 @@ def fold(spectra: dict, stats: dict, maps: dict):
             })
     return bin_rows, summary_rows, map_rows
 
+def response_sample_counts(energy_bin_index: dict, events_per_bin: int) -> tuple[int, int]:
+    """Return energy-bin and event counts from the indexed per-bin response map."""
+    if events_per_bin < 1:
+        raise ValueError("events_per_bin must be positive")
+    if not energy_bin_index:
+        raise ValueError("energy-bin index cannot be empty")
+    return len(energy_bin_index), len(energy_bin_index) * events_per_bin
+
+
 def write_union_schema_csv(path: Path, rows: list[dict]) -> None:
     """Write heterogeneous diagnostic rows using the union of their keys."""
     if not rows:
@@ -358,6 +367,7 @@ def main():
     }
     for key, rows in (("by_energy_bin", bin_rows), ("summary", summary_rows), ("maps", map_rows)):
         write_union_schema_csv(outputs[key], rows)
+    n_energy_bins, n_events = response_sample_counts(edges, args.events_per_bin)
     metadata = {
         "study": "paired NEST Parametric/Full S1 mode event-weighted 2D response",
         "status": "PAIRED_2D_RESPONSE_DIAGNOSTIC_ONLY",
@@ -368,8 +378,8 @@ def main():
         "energy_bin_width_keV": ENERGY_BIN_WIDTH_KEV,
         "events_per_energy_bin": args.events_per_bin,
         "events_per_replica_per_bin": args.events_per_bin//2,
-        "n_energy_bins": len(edges)-1,
-        "n_events": args.events_per_bin*(len(edges)-1),
+        "n_energy_bins": n_energy_bins,
+        "n_events": n_events,
         "pairing": "Same intrinsic NR quanta and true position; independent Parametric/Full S1 response draws; one common Full S2 draw per event.",
         "fold": "Per true-energy bin, scale sampled event/cell weights by the exact piecewise-linear three-body rate integral; normalize by the pooled raw spectrum weight.",
         "map_binning": {"s1_width_phd": grid.S1_BIN_WIDTH_PHD, "log10s2_width": grid.LOG10_S2_BIN_WIDTH},
