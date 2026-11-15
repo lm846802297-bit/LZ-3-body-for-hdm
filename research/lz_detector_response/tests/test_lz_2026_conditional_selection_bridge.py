@@ -1,5 +1,4 @@
 import importlib.util
-import math
 import unittest
 from pathlib import Path
 
@@ -58,14 +57,11 @@ class ConditionalSelectionBridgeTests(unittest.TestCase):
         self.assertAlmostEqual(row["epsilon_figs2_final"], 0.855)
         self.assertAlmostEqual(row["factorized_to_figs2_final_ratio"], 0.76 / 0.855)
 
-    def test_response_family_filter_is_applied(self):
-        rows = MOD.build_bridge_rows(
-            self.event_summary, self.selection_summary, response_family="tableS5"
-        ) if any(
-            row["response_family"] == "tableS5"
-            for row in self.event_summary["comparisons"]
-        ) else None
-        self.assertIsNone(rows)
+    def test_response_family_filter_rejects_absent_family(self):
+        with self.assertRaises(ValueError):
+            MOD.build_bridge_rows(
+                self.event_summary, self.selection_summary, response_family="tableS5"
+            )
 
     def test_missing_nest_partner_is_rejected(self):
         event = {"comparisons": [self.event_summary["comparisons"][1]]}
