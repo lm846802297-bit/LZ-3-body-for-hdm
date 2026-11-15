@@ -75,6 +75,30 @@
     3.0,
     600.0
   ],
+  "black_support_selection_audit": {
+    "n_events": 1300000,
+    "parametric_s1_coincidence_pass": 1300000,
+    "full_s1_coincidence_pass": 1300000,
+    "s2_threshold_pass": 1300000,
+    "s2_raw_roi_pass": 1300000,
+    "s2c_roi_pass": 1300000,
+    "combined_s2_roi_pass": 1300000,
+    "parametric_s1_roi_events_failing_s2_roi": 0,
+    "full_s1_roi_events_failing_s2_roi": 0,
+    "s2_raw_min_phd": 4855.60371957,
+    "s2c_min_phd": 7418.07144531,
+    "s2c_max_phd": 13690.3339799,
+    "energy_range_keV": [
+      205.0,
+      269.9
+    ],
+    "s2_raw_strict_lower_bound_phd": 645.0,
+    "s2c_bounds_phd": [
+      562.341325190349,
+      14125.375446227554
+    ],
+    "interpretation": "Every event in the ten-seed black support passes both S1 coincidence flags, the NEST S2 threshold, the strict raw-S2 lower cut, and the corrected-S2 window. Thus the WS-ROI acceptance in this support is identical to the S1 [3,600] phd acceptance; the Parametric/Full rate difference is driven by S1 migration, not S2 selection."
+  },
   "ws_roi": {
     "s1c_phd": [
       3.0,
