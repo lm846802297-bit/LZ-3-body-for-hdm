@@ -118,8 +118,16 @@ jobs:
           assert "NOT a statistical pull or significance" in summary["mismatch_ratio_interpretation"]
           assert len(bands) == 16, len(bands)
           assert all(int(row["n_energy_bins"]) in (10, 15, 30) for row in bands)
-          assert all("mismatch_over_response_mc_se_diagnostic" in key for key in summary["per_key_summaries"][0] if "mismatch_over_response_mc_se_diagnostic" in key)
-          print("Weighted MC uncertainty validated: 16 summaries, 4,240 per-bin rows, and 16 black high-energy band rows.")
+          keys = set(summary["per_key_summaries"][0])
+          assert "integrated_mismatch_over_response_mc_se_diagnostic" in keys
+          assert "max_abs_energy_bin_mismatch_over_response_mc_se_diagnostic" in keys
+          assert "min_raw_effective_sample_size_per_bin" in keys
+          for family in ("eft2024", "tableS5"):
+              for nuclear in ("GCN", "JJ55"):
+                  selected = [row for row in bands if row["response_family"] == family and row["nuclear_model"] == nuclear]
+                  assert len(selected) == 4
+                  assert abs(sum(float(row["figs2_final_plus_roi_rate_events_kg_day"]) for row in selected) - float(next(row for row in summary["per_key_summaries"] if row["benchmark"] == "black_ms360_dm1" and row["response_family"] == family and row["nuclear_model"] == nuclear)["figs2_final_rate_events_kg_day"])) <= 1e-8 * float(next(row for row in summary["per_key_summaries"] if row["benchmark"] == "black_ms360_dm1" and row["response_family"] == family and row["nuclear_model"] == nuclear)["figs2_final_rate_events_kg_day"])
+          print("Weighted MC uncertainty validated: 16 summaries, 4,240 per-bin rows, and 16 rate-closing black high-energy band rows.")
           PY
           sha256sum energy-bridge-output/mc-uncertainty/*
 
