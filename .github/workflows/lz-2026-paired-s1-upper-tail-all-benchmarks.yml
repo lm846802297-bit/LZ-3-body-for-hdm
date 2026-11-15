@@ -33,7 +33,7 @@ jobs:
           name: lz-2026-paired-s1-independent-seeds
           repository: lm846802297-bit/LZ-3-body-for-hdm
           run-id: 43750948249
-          github-token: \${{ github.token }}
+          github-token: ${{ github.token }}
           path: paired-s1-independent-seeds-input
 
       - name: Verify all files in the production artifact manifest

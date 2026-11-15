@@ -15,12 +15,12 @@ class MultiBenchmarkPairedS1UpperTailTests(unittest.TestCase):
             "JJ55": {index: (index + 2) * 1e-12 if index >= first_bin else 0.0 for index in range(235)},
         }
 
-    def test_red_support_and_lower_energy_bands(self):
+    def test_red_support_and_common_high_energy_bands(self):
         support, bands = MOD.build_benchmark_energy_bands(self.rates(0))
         self.assertEqual(support, list(range(235)))
         self.assertEqual(bands["full_support"], (35.0, 269.9))
-        self.assertIn("band_35_100", bands)
-        self.assertIn("band_100_150", bands)
+        self.assertNotIn("band_35_100", bands)
+        self.assertEqual(len(bands), 6)
         self.assertIn("common_support_205_269p9", bands)
 
     def test_green_and_blue_support_starts_at_100_kev(self):
@@ -28,7 +28,8 @@ class MultiBenchmarkPairedS1UpperTailTests(unittest.TestCase):
         self.assertEqual(support, list(range(65, 235)))
         self.assertEqual(bands["full_support"], (100.0, 269.9))
         self.assertNotIn("band_35_100", bands)
-        self.assertIn("band_100_150", bands)
+        self.assertNotIn("band_100_150", bands)
+        self.assertEqual(len(bands), 6)
 
     def test_black_support_starts_at_205_kev(self):
         support, bands = MOD.build_benchmark_energy_bands(self.rates(170))
@@ -36,6 +37,7 @@ class MultiBenchmarkPairedS1UpperTailTests(unittest.TestCase):
         self.assertEqual(bands["full_support"], (205.0, 269.9))
         self.assertEqual(bands["common_support_205_269p9"], (205.0, 269.9))
         self.assertNotIn("band_150_200", bands)
+        self.assertEqual(len(bands), 6)
 
     def test_model_support_mismatch_is_rejected(self):
         rates = self.rates(0)
