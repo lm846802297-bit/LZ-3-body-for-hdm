@@ -152,16 +152,27 @@ if __name__ == "__main__":
         "study": "LZ NR flat-energy event-level band, NEST commit 541b643",
         "interpretation": (
             "EFT2024 is a public LZ-specific configuration candidate, not a confirmed "
-            "copy of the exact LZ 2026 production build. WS2024 is the earlier LZ "
-            "configuration. Generic uses upstream NEST mean-yield/width defaults on "
-            "the same EFT2024 detector-response overrides. uniform_tpc is a uniform "
-            "active-cylinder proxy, not the measured D-D/AmBe calibration position "
-            "distribution. candidate is a fixed-position local diagnostic. "
-            "bands_all are before NEST S1/S2 threshold flags; bands_trigger_pass "
-            "require both NEST flags; bands_analysis_roi additionally apply the "
-            "published S1c/S2/S2c ROI cuts as a diagnostic."
+            "copy of the exact LZ 2026 production build. tableS5 uses the rounded "
+            "printed Table S5 NR mean-yield vector with EFT2024 detector, ER-yield, "
+            "and NR-fluctuation settings. eftmean_wswidth and eftmean_genericwidth "
+            "retain EFT2024 mean yields and detector settings while replacing the "
+            "shared NRERWidthsParam vector with WS2024 or generic NEST values; for "
+            "NR events, the active fluctuation inputs are indices 0-5, 11, and 12. "
+            "WS2024 is the earlier LZ configuration. Generic uses upstream NEST "
+            "mean-yield/width defaults on the same EFT2024 detector overrides. "
+            "uniform_tpc is a uniform active-cylinder proxy, not the measured "
+            "D-D/AmBe calibration position distribution. candidate is a fixed-position "
+            "local diagnostic. Each event uses its local field to calculate its own "
+            "drift velocity and drift time; the summarizer checks their kinematic "
+            "closure. bands_all are before NEST S1/S2 threshold flags; "
+            "bands_trigger_pass require both NEST flags; bands_analysis_roi "
+            "additionally apply the published S1c/S2/S2c ROI cuts as a diagnostic."
         ),
-        "energy_prior": "Uniform in true NR recoil energy over each CSV's recorded range.",
+        "energy_prior": (
+            "Uniform in true NR recoil energy over each CSV's recorded range; "
+            "a flat-energy diagnostic prior, not the actual D-D/AmBe calibration "
+            "neutron spectrum."
+        ),
         "observed_candidate": {"S1c_phd": OBS_S1, "S2c_phd": OBS_S2, "log10_S2c": OBS_LOG_S2},
         "samples": samples,
         "full_band_comparisons": compare(samples)
