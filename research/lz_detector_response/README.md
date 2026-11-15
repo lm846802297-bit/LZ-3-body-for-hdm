@@ -153,13 +153,13 @@ The response uses a uniform active-TPC volume proxy, not the actual calibration-
 The stratified event-level response and grid-comparison implementation is:
 
 - `cpp/lz_2026_nr_stratified_energy_response.cc`: generates 4,000 events in each 1-keV true-NR-energy stratum, with two 2,000-event halves, and saves signed S1/S2 flags, corrected and raw observables, and true position.
-- `converge_lz_2026_three_body_energy_grid.py`: folds the same 1-keV response strata into 1-, 5-, and 10-keV response grids. The approved 1.0% accepted-rate / 1.0% 2D-TV gate passes the 5-keV point-estimate reaggregation and rejects 10 keV; 1 keV remains the reference pending independent-seed validation.
-- `audit_lz_2026_conditional_selection_bridge.py`: compares the event-weighted NEST/WS-ROI rate with the Fig. S2 residual SS/data-analysis stage without multiplying the full cumulative efficiency into the 2D map.
-- `audit_lz_2026_black_tail_independent_seeds.py` and `.github/workflows/lz-2026-black-tail-independent-seeds.yml`: generate and summarize three independent full productions per grid for the EFT2024 black high-energy benchmark.
+- `converge_lz_2026_three_body_energy_grid.py`: folds the same 1-keV response strata into 1-, 5-, and 10-keV response grids. The approved 1.0% accepted-rate / 1.0% 2D-TV gate accepts 5 keV as the coarse grid for the intermediate NEST+WS-ROI response and rejects 10 keV; 1 keV remains the reference cross-check.
+- `audit_lz_2026_conditional_selection_bridge.py`: compares the event-weighted NEST/WS-ROI rate with the Fig. S2 residual SS/data-analysis stage separately for EFT2024 and Table S5, without multiplying the full cumulative efficiency into the 2D map.
+- `audit_lz_2026_black_tail_independent_seeds.py` and `.github/workflows/lz-2026-black-tail-independent-seeds.yml`: generate and summarize three independent full productions per grid for both EFT2024 and Table S5 black high-energy benchmarks.
 - `lz_2026_extended_nr/LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md`: records the exact acceptance definitions, approved grid gate, S1 Parametric limitation, Fig. S2 overlap, and remaining selection gaps.
 - `lz_2026_extended_nr/LZ_2026_THREE_BODY_EVENT_WEIGHTED_FOLD_AUDIT.md`: records the event-weighted fold, residual-efficiency factorization diagnostic, and why the black high-energy benchmark is not yet closed.
 
-The initial 2026-11-14 workflow is [run 43648916347](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43648916347). The cutflow-instrumented run is [43656826463](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43656826463), artifact ID `14137998811`, SHA-256 `e5005d73b57b86c05a5af9e999782df765fa6db870333320030863897a1ecdea`. The combined grid/event-weighted run is [43680164807](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43680164807), artifact ID `14147354124`, SHA-256 `0f2bf102f440245d98a10462a42fa9625b26e28124e7e2096b3ca8dfa90533b2`. The selection-stage closure is [43681260816](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43681260816), and the expanded rerun is [43682860360](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43682860360), artifact ID `14149540926`, SHA-256 `0167a2c74e179215584b573097dce28dc8ea12672ecebd826d7d98362634af27`. The 5-keV grid passes the approved 1.0% accepted-rate / 1.0% 2D-TV point-estimate gate; 10 keV fails. The 5-keV result is a deterministic reaggregation of 1-keV strata, not an independent 5-keV Monte Carlo. The independent-seed EFT2024 black-tail run [43691733080](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43691733080), artifact 14151869654, SHA-256 `837a0385cac4c784abef38a5d4efc4273fc92ba01ddfcfab9123c90baecf2543`, finds 0.0176%/0.0186% mean-rate differences and 0.6865%/0.6803% WS-ROI mean-map TV for GCN/JJ55. The maximum TV across both modes is 0.8489%, and the explicit local-tail gate passes the same 1.0%/1.0% thresholds. The 5-keV grid is accepted as the coarse production grid for the intermediate NEST+WS-ROI response; retain 1 keV as the reference.
+The initial 2026-11-14 workflow is [run 43648916347](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43648916347). The cutflow-instrumented run is [43656826463](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43656826463), artifact ID `14137998811`, SHA-256 `e5005d73b57b86c05a5af9e999782df765fa6db870333320030863897a1ecdea`. The combined grid/event-weighted run is [43680164807](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43680164807), artifact ID `14147354124`, SHA-256 `0f2bf102f440245d98a10462a42fa9625b26e28124e7e2096b3ca8dfa90533b2`. The selection-stage closure is [43681260816](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43681260816), and the expanded rerun is [43682860360](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43682860360), artifact ID `14149540926`, SHA-256 `0167a2c74e179215584b573097dce28dc8ea12672ecebd826d7d98362634af27`. The 5-keV grid passes the approved 1.0% accepted-rate / 1.0% 2D-TV point-estimate gate; 10 keV fails. The 5-keV result is a deterministic reaggregation of 1-keV strata, not an independent 5-keV Monte Carlo. The paired-family independent-seed black-tail run [43696897503](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43696897503), artifact 14154932543, contains three independent full productions per grid and per family (EFT2024 and Table S5), 10,000 events per energy stratum, 8.04 million events total. The maximum 0.5/1-keV mean-rate differences are 0.01862% (EFT2024) and 0.01347% (Table S5); maximum mean-map TV values are 0.8489% and 0.8038%, respectively. Both local-tail mean-map checks pass 1.0%/1.0%; this does not provide a full-range or cell-by-cell covariance matrix. The 5-keV grid is accepted as the coarse production grid for the intermediate NEST+WS-ROI response; retain 1 keV as the reference.
 
 The new `nest` and `ws_roi` modes must be distinguished:
 - `nest`: NEST Parametric S1 coincidence and NEST S2-threshold pass;
@@ -375,12 +375,7 @@ accepted-rate difference is 0.02821%, and the maximum 2D total-variation
 distance is 0.07920%. These are below the observed split-replica variations.
 See [LZ_2026_THREE_BODY_EVENT_WEIGHTED_FOLD_AUDIT.md](lz_2026_extended_nr/LZ_2026_THREE_BODY_EVENT_WEIGHTED_FOLD_AUDIT.md).
 
-The event-weighted NEST/WS-ROI count divided by the separate rate-level
-Fig. S2 final-efficiency count varies from 0.602 to 1.305 across the tested
-response families and benchmarks. This is a model/provenance diagnostic,
-not an extra efficiency factor. The strong family dependence, particularly
-for the high-energy black benchmark, is a reason to resolve the exact
-production NEST/calibration response before building a final selected PDF.
+The latest event-weighted fold and conditional bridge are [run 43697104437](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43697104437), artifact 14155360851, SHA-256 `682e2ba71063d6ef835b37a6d328a84ab7c609f404856aa83d56e4b875794bab` (327,668,756 bytes). I downloaded and inspected the actual artifact, including both bridge JSON files. For the black (m_s=360) keV benchmark, the rate-level factorisation is 7.625% low for EFT2024 and 13.027% high for the Table S5 hybrid; the other red/green/blue benchmarks close to within about 0.63% or better. The model-dependent opposite-sign mismatch shows that no universal scalar residual efficiency can close the black 2D response. This is a diagnostic, not an extra efficiency factor or a 2D correction. The exact production NEST/calibration response and the missing 2D SS/DA, FV, and Skin/OD migrations must be resolved before a final selected PDF.
 
 Implementation:
 - `cpp/lz_2026_nr_stratified_energy_response.cc` — stratified event-level NEST NR response.
@@ -391,9 +386,11 @@ Implementation:
 
 A 265-bin comparison of NEST+WS-ROI acceptance with the published final
 Fig. S2 curve finds Table S5 never below the curve, while EFT2024, WS2024,
-and generic are below it in 33, 19, and 74 bins, respectively. Treat this
-only as a plausibility diagnostic, not a strict nested-efficiency proof or a
-stand-alone model-selection rule: NEST S1 coincidence/S2 pulse-threshold
+and generic are below it in 33, 19, and 74 bins, respectively. The new
+rate-level bridge reinforces the model sensitivity: Table S5 overshoots the
+final black benchmark by 13.0%, whereas EFT2024 undershoots it by 7.6%.
+Treat the 265-bin comparison only as a plausibility diagnostic, not a strict
+nested-efficiency proof or a stand-alone model-selection rule: NEST S1 coincidence/S2 pulse-threshold
 flags are not identical to the official DAQ trigger/S1-threshold stages, and
 the simulated spatial prior is not the official calibration/FV prior. The
 Table S5 alignment is interesting, but it does not establish the exact LZ
