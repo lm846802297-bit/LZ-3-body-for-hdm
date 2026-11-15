@@ -8,6 +8,8 @@ on:
       - research/lz_detector_response/cpp/lz_2026_nr_stratified_energy_response.cc
       - research/lz_detector_response/converge_lz_2026_three_body_energy_grid.py
       - research/lz_detector_response/compare_lz_2026_nr_high_energy_half_kev.py
+      - research/lz_detector_response/fold_lz_2026_three_body_event_weighted_response.py
+      - research/lz_detector_response/tests/test_lz_2026_three_body_event_weighted_fold.py
       - research/lz_detector_response/tests/test_lz_2026_nr_high_energy_half_kev.py
       - research/lz_detector_response/extract_lz_2026_nr_selection_efficiency_components.py
       - research/lz_detector_response/tests/test_lz_2026_three_body_energy_grid_convergence.py
@@ -68,6 +70,7 @@ jobs:
         run: |
           python -m unittest research/lz_detector_response/tests/test_lz_2026_three_body_energy_grid_convergence.py -v
           python -m unittest research/lz_detector_response/tests/test_lz_2026_nr_high_energy_half_kev.py -v
+          python -m unittest research/lz_detector_response/tests/test_lz_2026_three_body_event_weighted_fold.py -v
       - name: Configure and build pinned NEST core
         run: |
           cmake -S nest -B nest/build \
@@ -148,6 +151,27 @@ jobs:
           cp selection-audit-output/lz_2026_nr_selection_efficiency_components.csv convergence-output/
           cp selection-audit-output/lz_2026_nr_selection_efficiency_components_metadata.json convergence-output/
           cat convergence-output/grid_convergence_summary.json
+      - name: Fold event-level three-body response with differential-rate weights
+        run: |
+          python research/lz_detector_response/fold_lz_2026_three_body_event_weighted_response.py \
+            --response-dir response-output \
+            --spectrum-dir research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum \
+            --binned-intensity convergence-output/signal_2d_intensity_1keV.csv \
+            --grid-summary convergence-output/grid_convergence_summary.json \
+            --rate-level-counts research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/lz_2026_rate_level_event_yields.csv \
+            --out-dir convergence-output/event_weighted
+          cat convergence-output/event_weighted/event_weighted_fold_summary.json
+      - name: Validate event-weighted raw-rate closure
+        run: |
+          python - <<'PY'
+          import json
+          p = "convergence-output/event_weighted/event_weighted_fold_summary.json"
+          summary = json.load(open(p))
+          d = summary["diagnostics"]
+          assert d["n_comparisons"] == 64, d
+          assert d["max_raw_rate_closure_relative_difference"] < 1e-10, d
+          print("Event-weighted fold has 64 comparisons and closes the raw spectrum integral.")
+          PY
       - name: Compare 0.5-keV and 1-keV high-energy response folds
         run: |
           python research/lz_detector_response/compare_lz_2026_nr_high_energy_half_kev.py \
