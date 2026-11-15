@@ -271,7 +271,7 @@ No scalar cumulative efficiency should be multiplied into the existing 2D intens
 ## 8. Required status and next work
 
 1. Keep the 1-keV full-range response as the numerical reference.
-2. Apply the approved 1.0% accepted-rate / 1.0% 2D-TV engineering gate: 5 keV passes the coarse-grid reaggregation point-estimate gate and 10 keV fails. The independent-seed EFT2024 black-tail mean-map check also passes locally; use 5 keV as the coarse production grid for the intermediate 2D response and retain 1 keV as the reference.
+2. Apply the approved 1.0% accepted-rate / 1.0% 2D-TV engineering gate. The deterministic 5-keV reaggregation passes its point-estimate gate and 10 keV fails, but the independent full-range 1/5-keV productions fail the 2D-TV gate for both EFT2024 (1.4812%) and Table S5 (1.4681%), despite passing the accepted-rate gate. Keep 1 keV as the numerical reference; do not promote 5 keV as the production grid. The independent 0.5/1-keV black-tail mean-map check passes locally, but it is a separate high-energy refinement and does not validate the full-range 5-keV grid.
 3. Keep 0.5 keV as a targeted high-energy refinement only; the independent-seed mean comparison passes the local 1.0% / 1.0% gate, but it is not a full-range 0.5-keV production.
 4. Resolve the response-family / Fig. S2 rate-level closure using the official calibration-source spectrum and geometry, production NEST configuration, and position-correction model.
 5. Implement or obtain the missing trigger, SS, data-quality, FV, veto, and live-time response/selection information.
