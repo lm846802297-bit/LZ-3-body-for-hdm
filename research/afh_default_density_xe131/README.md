@@ -244,6 +244,26 @@ calculations and are not relabeled or substituted for AFH default.
 
 
 
+
+## Mathematica/Python full differential-cross-section comparison
+
+The code-level crosswalk, matched inputs, phase-space measure, spin trace,
+AFH factor-four placement, acceptance tolerances, and run procedure are
+documented in
+[MATHEMATICA_PYTHON_FULL_DSIGMA_CROSSCHECK_REVIEW.md](output/MATHEMATICA_PYTHON_FULL_DSIGMA_CROSSCHECK_REVIEW.md).
+
+Before committing to the full 652-row native run, a reduced smoke test can
+be performed on Windows:
+
+~~~powershell
+.\run_native_full_dsigma_windows.ps1 -OutputDirectory "$env:TEMP\lz-xe131-smoke" -Benchmark "green_ms300_dm1" -ERListKeV "200" -NW 8 -NZ 8 -NPhi 4 -RequireFullGrid:$false
+~~~
+
+This uses the four explicit anchor energies (101, 200, 267, 542 keV) for the
+selected benchmark. It validates code execution and cross-code agreement at
+the same low quadrature order, not numerical convergence. The normal default
+remains the complete 652-row grid at \(16\times16\times8\).
+
 ## AME2020/CODATA2022 nuclear-mass update
 
 The current mainline-based AME2020 study is documented in
