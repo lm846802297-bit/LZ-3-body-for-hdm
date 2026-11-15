@@ -49,6 +49,16 @@ Primary source files:
 | Live-time hold-offs | Exposure is applied separately; event-dependent live-time exclusions are not simulated | Missing |
 | Background PDFs and nuisance covariance | Not available in the response fold | Missing; no profile likelihood |
 
+**S2 threshold nesting:** in pinned NEST, `GetS2()` returns raw (S2_r) in phd as
+(mathrm{pulseArea}/(1+P_{mathrm{DPE}})). The EFT2024 NEST threshold is
+120 phe, while the explicit WS ROI requires (S2_r>645) phd. Therefore any
+event passing the raw-S2 ROI necessarily passes the lower NEST pulse threshold.
+The NEST S2 flag is present in the signed response, but it does not create a
+second independent acceptance loss after the raw-S2 ROI. The bridge now asserts
+this nesting against the archived events. By contrast, the NEST Parametric S1
+coincidence is not implied by (S1_c\geq3) phd and remains an approximate
+additional preselection; it is not the official waveform-level timing cut.
+
 The LZ 2026 paper defines the WS ROI as \(3\leq S1_c\leq600\) phd, raw \(S2>645\) phd, and \(10^{2.75}\leq S2_c\leq10^{4.15}\) phd. It requires single scatters, all data/analysis selections, and the fiducial volume. The main-analysis fiducial mass is \(4.71\pm0.08\) tonnes. The current uniform active-volume prior is not a substitute for that depth- and azimuth-dependent FV.
 
 The paper's veto partition is also separate from the NR response: prompt veto uses Skin \(>2.5\) phd within \(\pm0.25\,\mu s\) or OD \(>4.5\) phd within \(\pm0.3\,\mu s\) of TPC S1; delayed veto uses Skin/OD signals above 300/200 keV within 600 \(\mu s\), outside the prompt window. The likelihood fits science, prompt-veto, and delayed-veto samples simultaneously.
