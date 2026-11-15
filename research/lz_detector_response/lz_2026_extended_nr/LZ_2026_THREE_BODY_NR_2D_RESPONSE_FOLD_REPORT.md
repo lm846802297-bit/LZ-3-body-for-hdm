@@ -118,6 +118,19 @@ Across the four benchmarks and both nuclear response models, relative to EFT2024
 
 These are distances between coarse-binned, pre-selection response shapes, not statistical significances or nuisance-parameter constraints. They show why the four parameter families must remain separate rather than being treated as interchangeable.
 
+The Table S5/EFT2024 difference is not negligible MC noise or a change in
+the high-energy exponent: both vectors have identical \(p(E)\), but the
+rounded Table S5 vector changes the mean photon yield by −7.4528% at 248 keV
+and −7.5301% at 269.9 keV, while changing the electron yield by only +0.3846%.
+The corresponding total-quanta changes are −6.9997% and −7.1019%.
+A direct dual-vector NEST C++ comparison passed 528 Python/C++ checks
+([run 43696267500](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43696267500)).
+This explains why a small-looking parameter rounding can materially move
+events in S1 and alter the high-energy ROI acceptance. The Table S5 branch
+in this fold is specifically the rounded NR mean vector with EFT2024 widths
+and EFT2024 detector overrides, not a separately confirmed complete official
+NEST configuration.
+
 A visualization for the red benchmark with GCN nuclear response and EFT2024 detector response is stored as `lz_three_body_eft2024_nr_2d_signal_red_gcn.png` in the conversation output.
 
 ## 7. Files and reproducibility
