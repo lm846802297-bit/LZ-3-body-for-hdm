@@ -23,6 +23,11 @@ The requested recoil grid is \(5,10,\ldots,800\) keV plus the explicit anchors
 101, 200, 267 and 542 keV. Since 200 keV is already on the regular grid,
 there are 163 distinct recoil energies and 652 benchmark-energy rows.
 
+For the green smoke point at 800 km/s with \(m_s=300\) keV, 101 keV is
+kinematically open: \(W_{\max}^2-W_{\min}^2=0.0112695\) GeV\(^2\).
+Do not carry over the 101-keV closed status from the separate historical
+mapping audit, which used 776 km/s and zero width.
+
 The calculation is Xe-131 at one fixed incident speed. It is not a halo fold,
 natural-xenon isotope sum, detector prediction, or LZ likelihood.
 
