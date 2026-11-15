@@ -99,6 +99,7 @@ jobs:
             --nuclear-models GCN JJ55 \
             --out-dir energy-bridge-output/mc-uncertainty
           cat energy-bridge-output/mc-uncertainty/energy_resolved_selection_mc_uncertainty_summary.csv
+          cat energy-bridge-output/mc-uncertainty/black_ms360_high_energy_band_summary.csv
 
       - name: Validate MC uncertainty diagnostics and row coverage
         run: |
@@ -110,10 +111,15 @@ jobs:
           assert summary["status"] == "WITHIN_STREAM_MC_DIAGNOSTIC_ONLY"
           assert len(summary["per_key_summaries"]) == 16
           rows = list(csv.DictReader((root / "energy_resolved_selection_mc_uncertainty_by_bin.csv").open()))
+          bands = list(csv.DictReader((root / "black_ms360_high_energy_band_summary.csv").open()))
           assert len(rows) == 16 * 265, len(rows)
           assert all(int(row["events_per_replica"]) == 2000 for row in rows)
           assert "not independent-seed productions" in summary["replica_interpretation"]
-          print("Weighted MC uncertainty validated: 16 summaries and 4,240 per-bin rows.")
+          assert "NOT a statistical pull or significance" in summary["mismatch_ratio_interpretation"]
+          assert len(bands) == 16, len(bands)
+          assert all(int(row["n_energy_bins"]) in (10, 15, 30) for row in bands)
+          assert all("mismatch_over_response_mc_se_diagnostic" in key for key in summary["per_key_summaries"][0] if "mismatch_over_response_mc_se_diagnostic" in key)
+          print("Weighted MC uncertainty validated: 16 summaries, 4,240 per-bin rows, and 16 black high-energy band rows.")
           PY
           sha256sum energy-bridge-output/mc-uncertainty/*
 
