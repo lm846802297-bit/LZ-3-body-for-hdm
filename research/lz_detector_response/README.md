@@ -144,20 +144,24 @@ The response uses a uniform active-TPC volume proxy, not the actual calibration-
 
 The stratified event-level response and grid-comparison implementation is:
 
-- \`cpp/lz_2026_nr_stratified_energy_response.cc\`: generates 4,000 events in each 1-keV true-NR-energy stratum, with two 2,000-event halves, and saves signed S1/S2 flags, corrected and raw observables, and true position.
-- \`converge_lz_2026_three_body_energy_grid.py\`: folds the same 1-keV response strata into 1-, 5-, and 10-keV response grids using the archived natural-xenon three-body spectra. Coarse-grid response probabilities are width-averages of the 1-keV strata; they are not independent coarse-grid MC productions.
-- \`lz_2026_extended_nr/LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md\`: records the exact acceptance definitions, numerical grid differences, S1 Parametric limitation, Fig. S2 cross-check, and remaining selection gaps.
+- `cpp/lz_2026_nr_stratified_energy_response.cc`: generates 4,000 events in each 1-keV true-NR-energy stratum, with two 2,000-event halves, and saves signed S1/S2 flags, corrected and raw observables, and true position.
+- `converge_lz_2026_three_body_energy_grid.py`: folds the same 1-keV response strata into 1-, 5-, and 10-keV response grids using the archived natural-xenon three-body spectra. Coarse-grid response probabilities are width-averages of the 1-keV strata; they are not independent coarse-grid MC productions.
+- `lz_2026_extended_nr/LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md`: records the exact acceptance definitions, numerical grid differences, S1 Parametric limitation, Fig. S2 cross-check, and remaining selection gaps.
 
-The initial 2026-11-14 workflow is [run 43648916347](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43648916347). The cutflow-instrumented rerun is [run 43656826463](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43656826463), artifact ID \`14137998811\`, SHA-256 \`e5005d73b57b86c05a5af9e999782df765fa6db870333320030863897a1ecdea\`. The updated artifact contains four 1.06-million-event response samples, the 1-keV 2D intensity, per-energy S1/S2 cutflow counts and acceptance, replica diagnostics, and the vector-extracted Fig. S2 cumulative efficiency curves. The 5-keV grid differs from the 1-keV reference by at most 0.5131% in accepted rate and 0.8896% in 2D total variation across all response families; the corresponding 10-keV maxima are 1.2146% and 2.4649%. These are descriptive comparisons, not a formal PASS: the workflow does not impose pre-registered scientific tolerances.
+The initial 2026-11-14 workflow is [run 43648916347](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43648916347). The cutflow-instrumented run is [43656826463](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43656826463), artifact ID `14137998811`, SHA-256 `e5005d73b57b86c05a5af9e999782df765fa6db870333320030863897a1ecdea`. A later audit rerun is [43658526640](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43658526640), artifact ID `14138704927`, SHA-256 `bf8bc09f0b648eaf4dfccbe6b8fc6aad6536667e02264cf2fbd22f3c189071cd`; it confirms the corrected maximum 5-keV TV distance of 0.8896%. The artifact contains four 1.06-million-event response samples, the 1-keV 2D intensity, per-energy S1/S2 cutflow counts and acceptance, replica diagnostics, and the vector-extracted Fig. S2 cumulative efficiency curves. The 5-keV grid differs from the 1-keV reference by at most 0.5131% in accepted rate and 0.8896% in 2D total variation across all response families; the corresponding 10-keV maxima are 1.2146% and 2.4649%. These are descriptive comparisons, not a formal PASS: the workflow does not impose pre-registered scientific tolerances.
 
-The new \`nest\` and \`ws_roi\` modes must be distinguished:
-- \`nest\`: NEST Parametric S1 coincidence and NEST S2-threshold pass;
-- \`ws_roi\`: \`nest\` plus \(3\leq S1_c\leq600\) phd, raw \(S2>645\) phd, and \(2.75\leq\log_{10}S2_c\leq4.15\).
+The new `nest` and `ws_roi` modes must be distinguished:
+- `nest`: NEST Parametric S1 coincidence and NEST S2-threshold pass;
+- `ws_roi`: `nest` plus \(3\leq S1_c\leq600\) phd, raw \(S2>645\) phd, and \(2.75\leq\log_{10}S2_c\leq4.15\).
 
 The Parametric S1 mode uses a PMT-occupancy probability with threefold level and 481 PMTs, but does not explicitly apply the configured 150-ns coincidence window. The response also uses a uniform active-TPC cylinder prior and passes true positions as the position-correction coordinates. Trigger, waveform-level S1 timing, SS reconstruction, data-analysis cuts, the official 4.71-tonne fiducial volume, Skin/OD veto partition, and live-time treatment remain absent.
 
 The \(ws\_roi\) output is therefore a **NEST-level plus WS-ROI intermediate three-body signal prediction**, not the final LZ selected signal PDF. See the quantitative audit before using these outputs. Do not multiply the full Fig. S2 cumulative efficiency into this 2D intensity; the selections overlap, and the 2D migration information is not supplied by the scalar efficiency curve.
 
+
+### NEST 2.4.5 release lineage and EFT2024 configuration provenance
+
+The source-level comparison between the public v2.4.5beta tag and the later LZ-specific development branch is documented in [LZ_2026_NEST_RELEASE_LINEAGE_AUDIT.md](lz_2026_extended_nr/LZ_2026_NEST_RELEASE_LINEAGE_AUDIT.md). The 2026 LZ paper's double-skew-Gaussian ER model and high-energy NR p(E) extension are absent from the public v2.4.5beta tag at commit `19bc9bc`; the physics features and EFT2024 configuration were added later, with the LZ configuration first appearing at `307fb27` before the paper's arXiv submission. The audited `541b643` commit adds getters/storage only relative to `307fb27`. This makes it a strong public candidate, not proof of the exact collaboration build. The candidate's derived g1=0.1104 and g2=34.5263 agree with the paper's quoted gains within 0.20σ and 0.024σ, respectively. See the [machine-readable candidate record](lz_2026_extended_nr/lz_2026_nest_eft2024_configuration_candidate.json).
 
 ### Parametric-versus-Full S1 coincidence validation
 
@@ -175,10 +179,10 @@ benchmark spectra, but does not replace a full LZ waveform, trigger, SS, FV,
 veto, or data-quality selection model.
 
 Implementation:
-- \`cpp/lz_2026_nr_s1_coincidence_mode_comparison.cc\`
-- \`summarize_lz_2026_s1_coincidence_mode_comparison.py\`
-- \`tests/test_lz_2026_s1_coincidence_mode_comparison.py\`
-- \`.github/workflows/lz-2026-s1-coincidence-mode-crosscheck.yml\`
+- `cpp/lz_2026_nr_s1_coincidence_mode_comparison.cc`
+- `summarize_lz_2026_s1_coincidence_mode_comparison.py`
+- `tests/test_lz_2026_s1_coincidence_mode_comparison.py`
+- `.github/workflows/lz-2026-s1-coincidence-mode-crosscheck.yml`
 
 
 A further 265-bin monotonicity diagnostic against the published final cumulative
