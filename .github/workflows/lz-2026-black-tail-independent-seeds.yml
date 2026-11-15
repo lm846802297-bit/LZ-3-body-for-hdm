@@ -1,4 +1,4 @@
-name: LZ 2026 EFT2024 black-tail independent-seed response audit
+name: LZ 2026 EFT2024 and Table S5 black-tail independent-seed response audit
 
 on:
   push:
@@ -57,48 +57,53 @@ jobs:
             research/lz_detector_response/cpp/lz_2026_nr_stratified_energy_response.cc \
             nest/build/libNESTCore.a -o lz_2026_nr_stratified_energy_response
 
-      - name: Generate three independent 1-keV EFT2024 productions
+      - name: Generate three independent 1-keV productions per response family
         run: |
-          mkdir -p independent-seed-output/coarse
-          for seed in 20261120 20261122 20261124; do
-            mkdir -p independent-seed-output/coarse/seed_$seed
-            ./lz_2026_nr_stratified_energy_response \
-              eft2024 10000 $seed 225.4 269.9 1.0 \
-              > independent-seed-output/coarse/seed_$seed/eft2024.csv
+          for family in eft2024 tableS5; do
+            for seed in 20261120 20261122 20261124; do
+              mkdir -p independent-seed-output/coarse/$family/seed_$seed
+              ./lz_2026_nr_stratified_energy_response \
+                $family 10000 $seed 225.4 269.9 1.0 \
+                > independent-seed-output/coarse/$family/seed_$seed/$family.csv
+            done
           done
 
-      - name: Generate three independent 0.5-keV EFT2024 productions
+      - name: Generate three independent 0.5-keV productions per response family
         run: |
-          mkdir -p independent-seed-output/fine
-          for seed in 20261121 20261123 20261125; do
-            mkdir -p independent-seed-output/fine/seed_$seed
-            ./lz_2026_nr_stratified_energy_response \
-              eft2024 10000 $seed 225.4 269.9 0.5 \
-              > independent-seed-output/fine/seed_$seed/eft2024.csv
+          for family in eft2024 tableS5; do
+            for seed in 20261121 20261123 20261125; do
+              mkdir -p independent-seed-output/fine/$family/seed_$seed
+              ./lz_2026_nr_stratified_energy_response \
+                $family 10000 $seed 225.4 269.9 0.5 \
+                > independent-seed-output/fine/$family/seed_$seed/$family.csv
+            done
           done
 
-      - name: Compare independent-seed rates and 2D shapes
+      - name: Compare independent-seed rates and 2D shapes for both families
         run: |
-          python research/lz_detector_response/audit_lz_2026_black_tail_independent_seeds.py \
-            --coarse-response-dirs \
-              independent-seed-output/coarse/seed_20261120 \
-              independent-seed-output/coarse/seed_20261122 \
-              independent-seed-output/coarse/seed_20261124 \
-            --fine-response-dirs \
-              independent-seed-output/fine/seed_20261121 \
-              independent-seed-output/fine/seed_20261123 \
-              independent-seed-output/fine/seed_20261125 \
-            --coarse-seeds 20261120 20261122 20261124 \
-            --fine-seeds 20261121 20261123 20261125 \
-            --events-per-stratum 10000 \
-            --nuclear-models GCN JJ55 \
-            --out-dir independent-seed-output/summary
-          cat independent-seed-output/summary/black_tail_independent_seed_summary.json
+          for family in eft2024 tableS5; do
+            python research/lz_detector_response/audit_lz_2026_black_tail_independent_seeds.py \
+              --response-family $family \
+              --coarse-response-dirs \
+                independent-seed-output/coarse/$family/seed_20261120 \
+                independent-seed-output/coarse/$family/seed_20261122 \
+                independent-seed-output/coarse/$family/seed_20261124 \
+              --fine-response-dirs \
+                independent-seed-output/fine/$family/seed_20261121 \
+                independent-seed-output/fine/$family/seed_20261123 \
+                independent-seed-output/fine/$family/seed_20261125 \
+              --coarse-seeds 20261120 20261122 20261124 \
+              --fine-seeds 20261121 20261123 20261125 \
+              --events-per-stratum 10000 \
+              --nuclear-models GCN JJ55 \
+              --out-dir independent-seed-output/summary/$family
+            cat independent-seed-output/summary/$family/black_tail_independent_seed_summary.json
+          done
 
-      - name: Upload independent-seed response samples and audit
+      - name: Upload paired-family independent-seed response samples and audits
         uses: actions/upload-artifact@v4
         with:
-          name: lz-2026-eft2024-black-tail-independent-seeds
+          name: lz-2026-black-tail-independent-seeds-eft2024-tableS5
           path: independent-seed-output/
           if-no-files-found: error
           retention-days: 60
