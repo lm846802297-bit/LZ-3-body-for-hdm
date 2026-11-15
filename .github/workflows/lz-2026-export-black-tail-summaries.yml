@@ -1,0 +1,55 @@
+name: Export LZ 2026 independent-seed black-tail summaries
+
+on:
+  push:
+    branches:
+      - integration/lz-2026-nest-nr-fullband-20261115
+    paths:
+      - .github/workflows/lz-2026-export-black-tail-summaries.yml
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  export-summary:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download completed paired-family response artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: lz-2026-black-tail-independent-seeds-eft2024-tableS5
+          run-id: 43696897503
+          repository: lm846802297-bit/LZ-3-body-for-hdm
+          github-token: \${{ secrets.GITHUB_TOKEN }}
+          path: extracted/
+
+      - name: Validate and print summary-only outputs
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path("extracted/summary")
+          for family in ("eft2024", "tableS5"):
+              path = root / family / "black_tail_independent_seed_summary.json"
+              data = json.loads(path.read_text())
+              gate = data["local_tail_refinement_gate"]
+              print(json.dumps({
+                  "family": family,
+                  "comparisons": len(data["comparisons"]),
+                  "max_relative_rate_difference": gate["max_relative_rate_difference"],
+                  "max_tv_distance_between_mean_maps": gate["max_tv_distance_between_mean_maps"],
+                  "point_estimate_pass": gate["point_estimate_pass"],
+              }, indent=2))
+          PY
+          find extracted/summary -maxdepth 3 -type f -print
+          sha256sum extracted/summary/*/*
+
+      - name: Upload summary-only artifact for direct inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-black-tail-independent-seed-summary-only
+          path: extracted/summary/
+          if-no-files-found: error
+          retention-days: 60
