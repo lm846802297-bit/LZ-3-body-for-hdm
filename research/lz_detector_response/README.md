@@ -161,7 +161,9 @@ The \(ws\_roi\) output is therefore a **NEST-level plus WS-ROI intermediate thre
 
 Because the three-body stratified driver uses NEST Parametric S1 mode, a paired
 comparison against NEST Full S1 mode was added. [Run 43658016814](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43658016814)
-completed successfully with 10,000 paired events in each of ten energy bins.
+completed successfully; artifact ID `14138778454`, SHA-256
+`000d8a2852c3f663323e796e261e76d60733468456d1818345a255fccea6f015`.
+It contains 10,000 paired events in each of ten energy bins.
 The same NR quanta and true event positions were passed to both modes, with
 separate deterministic S1 random streams. The maximum absolute coincidence
 acceptance difference was 0.25 percentage points (paired interval from a conservative Wilson construction); both modes passed all
