@@ -55,10 +55,40 @@ class EnergyGridConvergenceTests(unittest.TestCase):
             }
         merged = MOD.merge_bin_stats(stats, [0], None)
         self.assertAlmostEqual(merged["width"], 1.0)
+        self.assertAlmostEqual(merged["acceptance"]["s1_coin"], 0.8)
+        self.assertAlmostEqual(merged["acceptance"]["s2_threshold"], 0.9)
         self.assertAlmostEqual(merged["acceptance"]["nest"], 0.6)
         self.assertAlmostEqual(merged["acceptance"]["ws_roi"], 0.3)
+        self.assertAlmostEqual(
+            merged["acceptance"]["nest"] / merged["acceptance"]["s1_coin"], 0.75
+        )
+        self.assertAlmostEqual(
+            merged["acceptance"]["ws_roi"] / merged["acceptance"]["nest"], 0.5
+        )
         self.assertAlmostEqual(sum(merged["cell_probability"]["nest"].values()), 0.6)
         self.assertAlmostEqual(sum(merged["cell_probability"]["ws_roi"].values()), 0.3)
+
+    def test_partial_terminal_bin_acceptance_is_width_weighted(self):
+        stats = {
+            (0, 0): {
+                "lo": 5.4, "hi": 6.4, "n": 100,
+                "n_s1_coin": 100, "n_s2_threshold": 100,
+                "n_nest": 100, "n_ws_roi": 100,
+                "nest_cells": {(0, 0): 100}, "roi_cells": {(0, 0): 100},
+            },
+            (1, 0): {
+                "lo": 6.4, "hi": 6.9, "n": 100,
+                "n_s1_coin": 0, "n_s2_threshold": 50,
+                "n_nest": 0, "n_ws_roi": 0,
+                "nest_cells": {}, "roi_cells": {},
+            },
+        }
+        merged = MOD.merge_bin_stats(stats, [0, 1], 0)
+        self.assertAlmostEqual(merged["width"], 1.5)
+        self.assertAlmostEqual(merged["acceptance"]["s1_coin"], 2.0 / 3.0)
+        self.assertAlmostEqual(merged["acceptance"]["s2_threshold"], 5.0 / 6.0)
+        self.assertAlmostEqual(merged["acceptance"]["nest"], 2.0 / 3.0)
+        self.assertAlmostEqual(merged["acceptance"]["ws_roi"], 2.0 / 3.0)
 
     def test_total_variation(self):
         self.assertAlmostEqual(MOD.total_variation({(0, 0): 1.0}, {(0, 0): 2.0}), 0.0)
