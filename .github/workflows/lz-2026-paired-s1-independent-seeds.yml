@@ -20,6 +20,7 @@ permissions:
 
 jobs:
   independent-seed-ensemble:
+    if: ${{ github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[skip-nest-production]') }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
@@ -172,6 +173,9 @@ jobs:
           ensemble_meta = json.loads((ensemble_dir / "paired_s1_independent_seed_ensemble_metadata.json").read_text())
           assert ensemble_meta["status"] == "INDEPENDENT_SEED_2D_RESPONSE_DIAGNOSTIC_ONLY"
           assert ensemble_meta["seeds"] == seeds and ensemble_meta["n_seeds"] == len(seeds)
+          assert f"{len(seeds)} independent pseudorandom seeds" in ensemble_meta["limitations"][0]
+          assert "Only three" not in ensemble_meta["limitations"][0]
+          assert "not the standard error" in ensemble_meta["seed_spread_definition"]
           assert len(ensemble) == 16
           assert len(per_seed) == 16 * len(seeds)
           assert len(mean_maps) > 0

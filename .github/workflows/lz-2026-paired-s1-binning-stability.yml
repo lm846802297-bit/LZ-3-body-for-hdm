@@ -5,6 +5,8 @@ on:
     branches:
       - integration/lz-2026-nest-nr-fullband-20261115
     paths:
+      - research/lz_detector_response/aggregate_lz_2026_paired_s1_2d_independent_seeds.py
+      - research/lz_detector_response/tests/test_lz_2026_paired_s1_2d_independent_seeds.py
       - research/lz_detector_response/audit_lz_2026_paired_s1_2d_binning_stability.py
       - research/lz_detector_response/tests/test_lz_2026_paired_s1_2d_binning_stability.py
       - .github/workflows/lz-2026-paired-s1-binning-stability.yml
@@ -32,17 +34,26 @@ jobs:
         with:
           name: lz-2026-paired-s1-independent-seeds
           repository: lm846802297-bit/LZ-3-body-for-hdm
-          run-id: 43721276233
+          run-id: 43750948249
           github-token: ${{ github.token }}
           path: paired-s1-independent-seeds-input
 
-      - name: Test exact rebinning and TV contraction
+      - name: Rebuild ten-seed ensemble with the current metadata implementation
         run: |
-          python -m unittest research.lz_detector_response.tests.test_lz_2026_paired_s1_2d_binning_stability -v
+          python research/lz_detector_response/aggregate_lz_2026_paired_s1_2d_independent_seeds.py \
+            --seed-root paired-s1-independent-seeds-input \
+            --seeds 20261117 40261117 60261117 80261117 100261117 120261117 140261117 160261117 180261117 200261117 \
+            --out-dir paired-s1-independent-seeds-input/ensemble
+
+      - name: Test exact rebinning, aggregation metadata, and TV contraction
+        run: |
+          python -m unittest \
+            research.lz_detector_response.tests.test_lz_2026_paired_s1_2d_independent_seeds \
+            research.lz_detector_response.tests.test_lz_2026_paired_s1_2d_binning_stability -v
 
       - name: Audit independent-seed binning stability
         run: |
-          python research/lz_detector_response/audit_lz_2026_paired_s1_2d_binning_stability.py --seed-root paired-s1-independent-seeds-input --seeds 20261117 40261117 60261117 --out-dir paired-s1-binning-stability-output
+          python research/lz_detector_response/audit_lz_2026_paired_s1_2d_binning_stability.py --seed-root paired-s1-independent-seeds-input --seeds 20261117 40261117 60261117 80261117 100261117 120261117 140261117 160261117 180261117 200261117 --out-dir paired-s1-binning-stability-output
           cat paired-s1-binning-stability-output/paired_s1_independent_seed_binning_stability_summary.csv
 
       - name: Validate binned outputs and nested-TV contraction
@@ -51,13 +62,17 @@ jobs:
           import csv, json
           from pathlib import Path
           root=Path("paired-s1-binning-stability-output")
+          seeds=[20261117,40261117,60261117,80261117,100261117,120261117,140261117,160261117,180261117,200261117]
           summary=list(csv.DictReader((root/"paired_s1_independent_seed_binning_stability_summary.csv").open()))
           per_seed=list(csv.DictReader((root/"paired_s1_independent_seed_binning_stability_per_seed.csv").open()))
           meta=json.loads((root/"paired_s1_independent_seed_binning_stability_metadata.json").read_text())
           assert meta["status"]=="INDEPENDENT_SEED_2D_BINNING_STABILITY_DIAGNOSTIC_ONLY"
-          assert meta["seeds"]==[20261117,40261117,60261117]
+          assert meta["seeds"]==seeds and meta["n_seeds"]==len(seeds)
+          assert "10 independent pseudorandom seeds" in meta["limitations"][0]
+          assert not any("Three independent pseudorandom seeds only" in item for item in meta["limitations"])
           assert len(summary)==48, len(summary)
-          assert len(per_seed)==144, len(per_seed)
+          assert len(per_seed)==480, len(per_seed)
+          assert meta["n_summary_rows"]==48 and meta["n_per_seed_rows"]==480
           for row in summary:
               assert float(row["ensemble_mean_map_2d_tv"]) >= 0
               assert float(row["mean_within_mode_seed_pairwise_2d_tv"]) > 0
@@ -82,7 +97,7 @@ jobs:
           source_root=paired-s1-independent-seeds-input
           archive=research/lz_detector_response/lz_2026_extended_nr/paired_s1_independent_seeds_2026-11-15
           mkdir -p "$archive"
-          for seed in 20261117 40261117 60261117; do
+          for seed in 20261117 40261117 60261117 80261117 100261117 120261117 140261117 160261117 180261117 200261117; do
             mkdir -p "$archive/seed-$seed/fold/sampling-noise"
             cp "$source_root/seed-$seed/fold/"*.csv "$archive/seed-$seed/fold/"
             cp "$source_root/seed-$seed/fold/"*.json "$archive/seed-$seed/fold/"
@@ -99,21 +114,27 @@ jobs:
           cat > "$archive/ARCHIVE_README.md" <<'EOF'
           # Paired S1 independent-seed 2D response archive
 
-          - Production run: https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43721276233
-          - Production artifact: 14164652993
-          - Production artifact ZIP SHA-256: 26964920be1e89470075848e55c4ba488494f9ddc4e0421add4d07421227c62c
-          - Binning audit run: https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43722459713
-          - Binning audit artifact: 14165305118
-          - Binning audit artifact ZIP SHA-256: 3b4a6ff0155422796d7045e068148f9fc334913cbbfbf06e7c97d36d384237a7
-          - Source commit for the NEST production: f1b4bf615e2c59192f31bd355b98595c4502b3b1
+          - Production run: https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43750948249
+          - Production artifact: 14176882910
+          - Production artifact ZIP SHA-256: 606397d9eac594008630a18b97f1e72fbbfa1d157e34779de7ce5fd0fe5b8cb5
+          - Binning audit run: https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/${GITHUB_RUN_ID}
+          - Binning audit artifact name: lz-2026-paired-s1-binning-stability
+          - Source commit for the NEST production: a87d95276aafc5043f943aacc42a5d5a941ce27b
           - Pinned NEST commit: 541b6430dae6ea289cf110c99f174a9187f7fdee
-          - Seeds: 20261117, 40261117, 60261117; 470,000 events per seed.
+          - Seeds: 20261117, 40261117, 60261117, 80261117, 100261117, 120261117, 140261117, 160261117, 180261117, 200261117.
+          - Events: 470,000 per seed; 4,700,000 total across 235 one-keV strata.
 
-          The archive commits all per-seed fold maps, rate summaries, split-half summaries,
-          ensemble maps, metadata, and exact binning-stability summaries. The three raw
-          event CSVs (about 367 MB uncompressed total) remain in the production artifact;
-          raw_event_artifact_SHA256SUMS.txt preserves their individual checksums.
-          The original ZIP digest above verifies the downloaded artifact as a whole.
+          The archive commits all ten per-seed fold maps, rate summaries, split-half summaries,
+          the ten-seed ensemble maps and metadata, and the 48-row/480-row binning-stability
+          summaries. The ten raw event CSVs remain in the immutable production artifact.
+          raw_event_artifact_SHA256SUMS.txt preserves the complete 75-file SHA-256 manifest,
+          including the raw event samples.
+
+          The ensemble summaries are regenerated from the archived ten per-seed fold products
+          using the current aggregation implementation. This corrects a stale three-seed
+          limitation string in the original production artifact metadata; it does not rerun
+          NEST, alter event samples, or change the numerical ensemble inputs. The production
+          ZIP digest above continues to identify the original immutable Actions artifact.
           EOF
           find "$archive" -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > "$archive/SHA256SUMS"
           git config user.name "github-actions[bot]"

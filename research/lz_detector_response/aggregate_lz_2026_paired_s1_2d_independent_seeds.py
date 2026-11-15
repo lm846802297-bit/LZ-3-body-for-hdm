@@ -418,10 +418,11 @@ def aggregate(seed_root: Path, seeds: list[int]) -> tuple[list[dict], list[dict]
         "response_model": "eft2024",
         "stages": list(STAGES),
         "mean_map_definition": "Equal-weight arithmetic mean of the event-weighted per-seed rate maps.",
-        "seed_spread_definition": "Pairwise TV between independent seed maps within each S1 mode; reported descriptively, not as a detector systematic.",
+        "seed_spread_definition": "Pairwise TV between independent seed maps within each S1 mode; descriptive only, not the standard error or confidence interval of the ensemble-mean TV.",
+        "mean_map_tv_over_pairwise_spread_definition": "Descriptive scale comparison only; it does not estimate uncertainty on ensemble-mean TV and is not an equivalence test.",
         "limitations": [
-            "Only three independent pseudorandom seeds are used.",
-            "No bootstrap or detector-systematic uncertainty is included.",
+            f"Uses {len(seeds)} independent pseudorandom seeds; no bootstrap confidence interval is included.",
+            "No detector-systematic uncertainty is included.",
             "NEST EFT2024 response is not official waveform-level LZ reconstruction.",
             "DAQ, SS/data-analysis, official FV, Skin/OD, and live-time migration remain absent.",
             "The map TV depends on the 10-phd by 0.02-dex histogram binning."

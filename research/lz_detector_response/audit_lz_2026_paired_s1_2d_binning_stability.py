@@ -275,10 +275,15 @@ def audit(seed_root: Path, seeds: list[int]) -> tuple[list[dict], list[dict], di
         ),
         "seed_spread_definition": (
             "Mean pairwise TV between independent seed maps within each S1 mode, "
-            "averaged over Parametric and Full modes; descriptive only."
+            "averaged over Parametric and Full modes; descriptive only, not the "
+            "standard error or confidence interval of ensemble-mean TV."
+        ),
+        "ensemble_tv_to_seed_spread_ratio_definition": (
+            "Descriptive scale comparison only; not an uncertainty estimate or "
+            "a model-equivalence test."
         ),
         "limitations": [
-            "Three independent pseudorandom seeds only; no bootstrap confidence interval.",
+            f"Uses {len(seeds)} independent pseudorandom seeds; no bootstrap confidence interval is included.",
             "Binning stability is an exact aggregation of the same events, not a new Monte Carlo.",
             "TV is binning-dependent and is not a stand-alone model-equivalence or significance test.",
             "NEST EFT2024 response is not official waveform-level LZ reconstruction.",

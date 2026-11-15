@@ -152,6 +152,9 @@ class PairedS1IndependentSeedAggregationTests(unittest.TestCase):
         self.assertTrue(all(row["n_seeds"] == 3 for row in ensemble))
         self.assertTrue(all(row["mean_within_stream_split_half_tv"] > 0 for row in ensemble))
         self.assertTrue(all(row["within_stream_split_half_tv"] > 0 for row in per_seed))
+        self.assertIn("3 independent pseudorandom seeds", extra["metadata"]["limitations"][0])
+        self.assertNotIn("Only three", extra["metadata"]["limitations"][0])
+        self.assertIn("not the standard error", extra["metadata"]["seed_spread_definition"])
 
     def test_aggregate_rejects_map_rate_nonclosure(self):
         seeds = [20261117, 40261117, 60261117]
