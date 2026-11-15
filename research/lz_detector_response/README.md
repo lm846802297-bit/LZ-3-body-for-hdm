@@ -177,3 +177,13 @@ Implementation:
 - \`summarize_lz_2026_s1_coincidence_mode_comparison.py\`
 - \`tests/test_lz_2026_s1_coincidence_mode_comparison.py\`
 - \`.github/workflows/lz-2026-s1-coincidence-mode-crosscheck.yml\`
+
+
+A further 265-bin monotonicity diagnostic against the published final cumulative
+Fig. S2 efficiency finds that Table S5 NEST+WS-ROI acceptance is never below
+the published curve, while the EFT2024, WS2024, and generic candidates are
+below it in 33, 19, and 74 bins, respectively. This makes Table S5 more
+internally consistent in this comparison, but does not prove it is the exact
+LZ 2026 production configuration; the spatial prior and position correction
+are still not the official calibration/FV model. See the detailed audit before
+selecting a response family.
