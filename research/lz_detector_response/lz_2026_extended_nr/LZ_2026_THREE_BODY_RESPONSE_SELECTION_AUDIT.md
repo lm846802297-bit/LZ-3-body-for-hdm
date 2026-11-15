@@ -145,3 +145,136 @@ Until then, report rate-level and 2D response predictions with their exact accep
 - [LZ 2026 extended-NR paper, arXiv:2609.02823](https://arxiv.org/abs/2609.02823): SS/data-analysis/FV requirement and exact WS ROI; 4.71-t FV; prompt/delayed veto definitions; three-sample likelihood; Supplemental Fig. S2 cumulative efficiency.
 - [LZ WS2024 4.2 tonne-year analysis, arXiv:2410.17036](https://arxiv.org/abs/2410.17036): S2 trigger efficiency, three-PMT S1 classification, SS reconstruction efficiency, S2 splitting, accidental pulse-shape cuts, FV geometry, veto and live-time exclusions.
 - [LZ 4.2 tonne-year WS2024 analysis, arXiv:2410.17036](https://arxiv.org/abs/2410.17036): the 2026 paper identifies this as the starting analysis whose selections remain unchanged apart from ROI, FV, and sideband handling. The separate covariant EFT first-science-run paper is arXiv:2404.17666 and is not Ref. [5] in the 2026 paper.
+
+
+## 8. Artifact-level numerical audit — 2026-11-14 response-grid run
+
+The 1/5/10-keV workflow completed on commit
+\`5c0e3c254dbcf81f55a5af49be8e1e1f409ef294\`:
+
+- [GitHub Actions run 43648916347](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43648916347), conclusion: success.
+- Artifact: \`lz-2026-three-body-response-grid-convergence\`, artifact ID \`14135491602\`.
+- Downloaded archive SHA-256:
+  \`7ba7e268026f5607f0a4cfecbc1e910ec3c1ec808f727e8d42308b8fa00a96b6\`.
+- The archived \`grid_convergence_summary.json\` contains 192 grid comparisons and 64 1-keV replica comparisons.
+
+### 8.1 What the run actually sampled
+
+Each of the four response families (\`eft2024\`, \`tableS5\`, \`ws2024\`, \`generic\`) contains 1,060,000 events:
+- 265 true-energy strata covering 5.4–269.9 keV;
+- 4,000 generated events in every 1-keV stratum;
+- two disjoint 2,000-event halves labelled replica 0 and 1;
+- common true-energy and position design points across response families.
+
+The 5-keV and 10-keV response probabilities are **not independent new MC runs**. They are reconstructed by width-averaging the same 1-keV stratum probabilities, then folding them against the exact piecewise-linear three-body rate integral in each coarse bin. This isolates the effect of response-energy binning while holding the underlying response MC fixed.
+
+The two replica labels are disjoint halves of one seeded NEST random stream, not two separately seeded production runs. Their comparison is a useful split-sample stability diagnostic, not a full independent-seed covariance estimate.
+
+### 8.2 Grid differences
+
+The largest differences over all four response families, four particle benchmarks, two nuclear responses, and both acceptance modes are:
+
+| Response grid | Maximum relative accepted-rate difference vs 1 keV | Maximum 2D total-variation distance vs 1 keV |
+|---|---:|---:|
+| 5 keV | 0.5131% | 0.8499% |
+| 10 keV | 1.2146% | 2.4649% |
+
+For the primary public EFT2024 candidate, the maxima across both acceptance modes are:
+- 5 keV: 0.3249% in accepted rate and 0.4579% in 2D total variation;
+- 10 keV: 0.8947% in accepted rate and 0.9535% in 2D total variation.
+
+The largest 5-keV shape difference is smaller than the corresponding 1-keV split-sample TV difference for every matched benchmark/model/family/mode combination. The largest 1-keV split-sample TV difference is 3.9611% in the NEST-level mode and 3.3643% in the NEST-plus-WS-ROI mode. The maximum split-sample accepted-rate difference in the WS-ROI mode is 0.4469%.
+
+Interpretation:
+- 5 keV is numerically close to the 1-keV reference at the sub-percent level for this particular response MC and these benchmark spectra.
+- 10 keV shows visibly larger shape differences, reaching about 2.5% TV.
+- The current workflow has no pre-registered scientific tolerance and does not fail when these metrics exceed a chosen threshold. Its green Actions status means the build, unit tests, numerical run, and artifact upload completed; it is **not** by itself a formal grid-convergence PASS.
+- A formal acceptance criterion must be agreed before promoting 5 keV as the production grid. Keep 1 keV as the reference until that decision is recorded.
+
+### 8.3 Event-level S1 and S2 acceptance is present in the new artifact
+
+This is a correction to the earlier compact-JSON audit in Sections 1 and 2. The older
+\`lz_nr_conditional_2d_pdf.json\` pilot did not retain event-level coincidence and
+threshold flags. The newer stratified CSVs do retain:
+
+- true \(E_{\rm NR}\), true \(x,y,z\), field, and drift time;
+- signed and absolute corrected \(S1_c\) and \(S2_c\);
+- uncorrected S1 and S2 in phd;
+- the NEST S1 spike-count field \`s1.at(8)\`;
+- explicit sign-derived \`s1_coincidence_pass\` and \`s2_threshold_pass\` flags;
+- photons and extracted electrons.
+
+The new \`signal_2d_intensity_1keV.csv\` contains 62,224 observable-cell intensity rows, with two distinct modes:
+- \`nest\`: NEST S1 Parametric coincidence pass AND NEST S2 threshold pass;
+- \`ws_roi\`: the above plus \(3\leq S1_c\leq600\) phd, raw \(S2>645\) phd, and \(2.75\leq\log_{10}S2_c\leq4.15\).
+
+The probabilities use \(N_{\rm cell}/N_{\rm generated}\); failed NEST-level events remain in the denominator. The \`ws_roi\` intensity is therefore an intermediate NEST-plus-WS-ROI signal prediction, not the full LZ selected signal PDF.
+
+The event driver uses \`GetS1(S1CalculationMode::Parametric)\`. In the pinned NEST source, this mode samples a PMT-occupancy coincidence probability from the spike count, \`coinLevel=3\`, and \`numPMTs=481\`. Although the LZ detector header sets \`coinWind=150 ns\`, the Parametric branch does **not** explicitly apply that timing window. It is not a waveform-level reconstruction of three distinct PMTs within 150 ns. The saved \`s1_spike_count\` is the NEST spike-count input to this occupancy approximation, not a measured distinct-PMT multiplicity.
+
+The event driver also passes the same \(x,y,z\) as both the true and smeared positions to NEST. Thus the position correction uses perfect reconstructed position in this run. The uniform active-cylinder spatial prior is not the 4.71-tonne FV map, and position-reconstruction smearing is not represented.
+
+The 120-phe NEST S2 threshold and the published raw-S2 \(>645\) phd ROI condition are separate code-level cuts. In the archived 4.24-million-event sample, no event with raw \(S2>645\) phd failed the NEST S2 threshold. The NEST S2 threshold is therefore redundant after the raw-S2 ROI cut for this sample; it must not be counted as a second independent efficiency loss.
+
+### 8.4 The 2D ROI response does not yet reproduce the published cumulative efficiency
+
+The vector-extracted black curve in Supplemental Fig. S2 is the published cumulative
+\[
+\text{trigger}+\text{S1 threshold}+\text{SS/data-analysis cuts}+\text{WS ROI}
+\]
+efficiency. The new \`ws_roi\` acceptance contains NEST Parametric S1 coincidence, the NEST S2 threshold, and the explicit S1c/raw-S2/S2c ROI. It does not contain trigger, SS reconstruction, data-analysis cuts, FV, or veto selections.
+
+Representative comparisons are:
+
+| True-energy location | Published Fig. S2 final cumulative efficiency | EFT2024 NEST+WS-ROI | Table S5 NEST+WS-ROI | WS2024 NEST+WS-ROI | Generic NEST+WS-ROI |
+|---|---:|---:|---:|---:|---:|
+| 5.4 keV (first 1-keV bin: 5.4–6.4) | 0.5718 | 0.7188 | 0.6945 | 0.6415 | 0.6920 |
+| 248 keV (bin: 247.4–248.4) | 0.9457 | 0.8495 | 0.9765 | 0.9255 | 0.5218 |
+| 269.9 keV (last bin: 269.4–269.9) | 0.4988 | 0.5555 | 0.8120 | 0.8135 | 0.2710 |
+
+These are not identical selections or priors, so they are not a direct efficiency calibration. Nevertheless, the EFT2024 and generic NEST-plus-ROI acceptances falling **below** the published full cumulative efficiency near 248 keV is a non-closure diagnostic: a strict subset of the published selection should not have a lower acceptance if both were generated with the same response and nested definitions. The discrepancy cannot be repaired by multiplying a residual efficiency onto the current 2D map. It requires investigation of the exact LZ production NEST configuration, the spatial prior and position correction, and the response/ROI comparison.
+
+Do not treat the four NEST families as a statistical nuisance envelope. They are different response-model choices with distinct provenance.
+
+### 8.5 High-energy sensitivity to the rounded Table S5 exponent
+
+The EFT2024 and Table S5 response families use the same EFT2024 fluctuation vector and detector overrides; their principal difference is the mean-yield vector. In the pinned NEST code,
+\[
+N_q=NRYieldsParam[0]\,E_{\rm NR}^{NRYieldsParam[1]}+M_{\rm c}.
+\]
+The public EFT2024 header uses \(11.21\,E_{\rm NR}^{1.113}\), whereas the printed Table S5 values rounded to one decimal use \(11.2\,E_{\rm NR}^{1.1}\). At 248 keV,
+\[
+\frac{11.21\,248^{1.113}}{11.2\,248^{1.1}}
+\simeq 1.075.
+\]
+This small-looking exponent rounding therefore changes the dominant quanta term by about 7.5% at the high-energy end.
+
+The event sample confirms the effect in the corrected S1 distribution at 247.4–248.4 keV:
+- EFT2024: mean \(S1_c=537.5\) phd, standard deviation 60.4 phd, WS-ROI acceptance 0.8495;
+- rounded Table S5: mean \(S1_c=499.2\) phd, standard deviation 52.9 phd, WS-ROI acceptance 0.9765.
+
+For these two families at that energy, raw S2 and the S2c interval pass all sampled events; the difference in total ROI acceptance is the upper \(S1_c\leq600\) phd boundary. This is a physical consequence of the high-energy yield parameterization, not MC noise. The rounded Table S5 vector must not be treated as numerically equivalent to the full-precision EFT2024 candidate at high recoil energy. Conversely, the public EFT2024 header remains a candidate configuration, not proven to be the exact LZ 2026 production build.
+
+### 8.6 Intermediate expected counts
+
+For the EFT2024 candidate and the 2.84 tonne-year exposure, the NEST-plus-WS-ROI intermediate counts are:
+
+| Benchmark | GCN | JJ55 |
+|---|---:|---:|
+| red (\(m_s=200\) keV, \(\Delta m=1\) MeV) | 0.353059 | 0.361550 |
+| green (\(m_s=300\) keV, \(\Delta m=1\) MeV) | \(1.5853\times10^{-3}\) | \(1.6420\times10^{-3}\) |
+| black (\(m_s=360\) keV, \(\Delta m=1\) MeV) | \(2.7578\times10^{-9}\) | \(2.7846\times10^{-9}\) |
+| blue (\(m_s=300\) keV, \(\Delta m=10\) MeV) | \(1.2978\times10^{-5}\) | \(1.3442\times10^{-5}\) |
+
+These are before trigger, SS/data-analysis cuts, the official fiducial-volume mask, Skin/OD veto partition, live-time treatment, backgrounds, and likelihood. The black benchmark loses about 26% relative to its NEST-level rate after the explicit WS ROI, because its signal is concentrated near the high-energy S1c boundary. These counts are intermediate diagnostics only.
+
+## 9. Correct release status
+
+The previous blanket label "pre-selection" should now be made more precise:
+
+- The original 10-keV compact 2D pilot is a positive-observable conditional response-shape artifact.
+- The newer 1-keV \`nest\` intensity includes NEST Parametric S1 coincidence and NEST S2-threshold acceptance.
+- The newer 1-keV \`ws_roi\` intensity additionally applies the published S1c/raw-S2/S2c ROI.
+- Neither new intensity includes the complete LZ trigger, waveform-level S1 timing, SS reconstruction, data-analysis cuts, official FV, veto sample assignment, or live-time treatment.
+
+Accordingly, describe the current result as a **NEST-level / WS-ROI intermediate three-body signal prediction**, not as the final LZ post-selection signal PDF. Keep the 1-keV response as the reference; regard 5-keV as a promising sub-percent approximation pending a pre-registered tolerance and MC covariance treatment. Do not start the final profile likelihood.
