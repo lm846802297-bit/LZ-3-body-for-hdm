@@ -286,6 +286,15 @@ kernel. The waveform discussion of the candidate is event-specific and is
 not an extra generic NR signal cut. These are additional reasons to retain
 the present NEST-level/WS-ROI map as an intermediate prediction only.
 
+The selection audit now includes an explicit no-double-counting matrix:
+NEST S1 occupancy is only an approximation to official S1 classification;
+the NEST S2 pulse threshold is distinct from the hardware S2 trigger; the
+WS ROI is already present in the current 2D map; and the full Fig. S2
+cumulative efficiency must remain a separate rate-level calculation.
+It also records a proposed 1% accepted-rate / 1% 2D-TV grid tolerance.
+That tolerance is not yet approved, so the 1-keV response remains the
+reference and no formal grid PASS is claimed.
+
 ### Parametric-versus-Full S1 coincidence validation
 
 Because the three-body stratified driver uses NEST Parametric S1 mode, a paired
