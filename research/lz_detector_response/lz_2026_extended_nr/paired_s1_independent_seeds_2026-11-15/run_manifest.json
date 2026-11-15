@@ -1,9 +1,9 @@
 {
   "study": "LZ 2026 paired Parametric/Full S1 independent-seed 2D response",
   "status": "INDEPENDENT_SEED_2D_RESPONSE_DIAGNOSTIC_ONLY",
-  "source_commit": "f1b4bf615e2c59192f31bd355b98595c4502b3b1",
+  "source_commit": "a87d95276aafc5043f943aacc42a5d5a941ce27b",
   "nest_commit": "541b6430dae6ea289cf110c99f174a9187f7fdee",
-  "workflow_run_id": "43721276233",
+  "workflow_run_id": "43750948249",
   "workflow_run_attempt": 1,
   "python_version": "3.12.16 (main, Oct 26 2026, 02:50:49) [GCC 13.3.0]",
   "platform": "Linux-7.0.0-1017-azure-x86_64-with-glibc2.39",
@@ -16,11 +16,18 @@
   "n_energy_bins": 235,
   "events_per_energy_bin": 2000,
   "events_per_seed": 470000,
-  "total_events": 1410000,
+  "total_events": 4700000,
   "seeds": [
     20261117,
     40261117,
-    60261117
+    60261117,
+    80261117,
+    100261117,
+    120261117,
+    140261117,
+    160261117,
+    180261117,
+    200261117
   ],
   "per_event_nest_seed_rule": "base_seed + 4*event_index + {1,2,3,4}",
   "minimum_seed_gap": 20000000,
@@ -43,7 +50,7 @@
     "JJ55"
   ],
   "limitations": [
-    "Three independent pseudorandom seeds only; no bootstrap confidence interval.",
+    "Ten independent pseudorandom seeds; no bootstrap confidence interval.",
     "The seed ensemble quantifies Monte Carlo variability, not detector-systematic uncertainty.",
     "NEST EFT2024 response is not official waveform-level LZ reconstruction.",
     "DAQ, SS/data-analysis, official FV, Skin/OD, and live-time migration remain absent.",
