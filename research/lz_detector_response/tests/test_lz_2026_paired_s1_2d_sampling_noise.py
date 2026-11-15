@@ -34,6 +34,16 @@ class PairedS1TwoDSamplingNoiseTests(unittest.TestCase):
         self.assertAlmostEqual(metrics["mean_within_mode_split_half_tv"], 0.1)
         self.assertAlmostEqual(metrics["mode_tv_over_mean_split_half_tv"], 1.0)
 
+    def test_joint_tv_can_exceed_both_marginal_tvs(self):
+        parametric = {(0, 0): 0.5, (1, 1): 0.5}
+        full = {(0, 1): 0.5, (1, 0): 0.5}
+        metrics = MOD.compare_mode_maps(
+            parametric, full, parametric, parametric, full, full
+        )
+        self.assertAlmostEqual(metrics["parametric_vs_full_pooled_tv"], 1.0)
+        self.assertAlmostEqual(metrics["parametric_vs_full_s1_marginal_tv"], 0.0)
+        self.assertAlmostEqual(metrics["parametric_vs_full_log10s2_marginal_tv"], 0.0)
+
     def test_mode_difference_can_be_smaller_than_split_half_variation(self):
         metrics = MOD.compare_mode_maps(
             {"a": 0.51, "b": 0.49},

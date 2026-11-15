@@ -60,6 +60,16 @@ def total_variation(map_a: dict, map_b: dict) -> float | None:
     )
 
 
+def marginalize_map(cells: dict, axis: int) -> dict:
+    """Project (S1-bin, log10-S2-bin) cells onto one observable."""
+    if axis not in (0, 1):
+        raise ValueError("axis must be 0 (S1c) or 1 (log10 S2c)")
+    output = defaultdict(float)
+    for cell, value in cells.items():
+        output[cell[axis]] += value
+    return dict(output)
+
+
 def compare_mode_maps(
     parametric_pooled: dict,
     full_pooled: dict,
@@ -76,6 +86,14 @@ def compare_mode_maps(
     split_reference = math.fsum(split_values) / len(split_values) if split_values else None
     return {
         "parametric_vs_full_pooled_tv": mode_tv,
+        "parametric_vs_full_s1_marginal_tv": total_variation(
+            marginalize_map(parametric_pooled, 0),
+            marginalize_map(full_pooled, 0),
+        ),
+        "parametric_vs_full_log10s2_marginal_tv": total_variation(
+            marginalize_map(parametric_pooled, 1),
+            marginalize_map(full_pooled, 1),
+        ),
         "parametric_replica0_vs_replica1_tv": p_split,
         "full_replica0_vs_replica1_tv": f_split,
         "parametric_vs_full_replica0_tv": total_variation(

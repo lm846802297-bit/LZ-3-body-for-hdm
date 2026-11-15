@@ -111,6 +111,8 @@ jobs:
           assert noise_meta['n_events']==470000 and noise_meta['n_energy_bins']==235
           assert len(noise_rows)==16, len(noise_rows)
           assert max(float(r['pooled_tv_reproduction_abs_difference']) for r in noise_rows) <= 1e-10
+          assert all('parametric_vs_full_s1_marginal_tv' in r for r in noise_rows)
+          assert all('parametric_vs_full_log10s2_marginal_tv' in r for r in noise_rows)
           assert all('not an independent-seed uncertainty' in r['interpretation'] for r in noise_rows)
           assert len(bins)==8*235, len(bins)
           assert len(summaries)==16, len(summaries)
@@ -123,7 +125,7 @@ jobs:
           assert 'Fig. S2 residual SS/data-analysis efficiency is deliberately not multiplied' in ' '.join(meta['limitations'])
           print(f"Validated {len(bins)} per-bin rows, {len(summaries)} summaries and {len(maps)} 2D map cells.")
           PY
-          sha256sum paired-s1-2d-output/paired_s1_mode_2d_events.csv paired-s1-2d-output/fold/*
+          find paired-s1-2d-output -type f -print0 | sort -z | xargs -0 sha256sum
 
       - name: Upload paired S1 mode 2D response and folded signal maps
         uses: actions/upload-artifact@v4
