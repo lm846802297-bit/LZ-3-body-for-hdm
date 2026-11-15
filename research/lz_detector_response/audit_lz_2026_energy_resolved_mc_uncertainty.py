@@ -207,6 +207,7 @@ def summarize_black_high_energy_bands(bridge_rows: dict) -> list[dict]:
                 field: math.fsum(float(row[field]) for row in all_rows)
                 for field in rate_fields
             }
+            family_band_rows = []
             for label, band_low, band_high in BLACK_HIGH_ENERGY_BANDS_KEV:
                 selected = [
                     row for row in all_rows
@@ -232,7 +233,7 @@ def summarize_black_high_energy_bands(bridge_rows: dict) -> list[dict]:
                 green = sums["figs2_trigger_plus_s1_ss_da_rate_events_kg_day"]
                 final = sums["figs2_final_plus_roi_rate_events_kg_day"]
                 factorized = sums["energy_resolved_factorized_rate_events_kg_day"]
-                output.append({
+                band_row = {
                     "benchmark": "black_ms360_dm1",
                     "nuclear_model": nuclear,
                     "response_family": family,
@@ -255,7 +256,18 @@ def summarize_black_high_energy_bands(bridge_rows: dict) -> list[dict]:
                         factorized / total["energy_resolved_factorized_rate_events_kg_day"]
                         if total["energy_resolved_factorized_rate_events_kg_day"] > 0.0 else None
                     ),
-                })
+                }
+                output.append(band_row)
+                family_band_rows.append(band_row)
+            for field in rate_fields:
+                band_total = math.fsum(float(row[field]) for row in family_band_rows)
+                full_total = total[field]
+                tolerance = max(1e-30, abs(full_total) * 1e-8)
+                if abs(band_total - full_total) > tolerance:
+                    raise ValueError(
+                        f"black high-energy bands do not cover {field} for {family}/{nuclear}: "
+                        f"bands={band_total}, full={full_total}"
+                    )
     return output
 
 
