@@ -45,8 +45,8 @@ class PairedS1UpperTailTests(unittest.TestCase):
         self.assertLessEqual(ci1[0], ci1[1])
 
     def test_band_edges_do_not_double_count_adjacent_intervals(self):
-        self.assertTrue(MOD.in_band(225.0, 205.0, 225.0))
-        self.assertFalse(MOD.in_band(225.0, 205.0, 225.0) and MOD.in_band(225.0, 225.0, 240.0))
+        self.assertFalse(MOD.in_band(225.0, 205.0, 225.0))
+        self.assertTrue(MOD.in_band(224.999, 205.0, 225.0))
         self.assertTrue(MOD.in_band(225.0, 225.0, 240.0))
         self.assertTrue(MOD.in_band(269.9, 255.0, 269.9))
 
