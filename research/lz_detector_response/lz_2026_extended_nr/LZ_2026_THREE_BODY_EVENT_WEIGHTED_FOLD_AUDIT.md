@@ -176,6 +176,35 @@ NEST+WS-ROI result as an intermediate 2D response. A calibrated conditional
 response or official event-level selection model is still required.
 
 
+
+### 6.2 Independent-seed EFT2024 black-tail check
+
+The original single-stream 0.5-keV/1-keV black-tail comparison gave a
+0.45--0.47% rate difference and about 1.9% 2D TV. Three independent full
+productions per grid were subsequently generated, with 10,000 events per
+energy stratum per seed over 225.4--269.9 keV. The 1-keV seeds were
+20261120/20261122/20261124; the 0.5-keV seeds were
+20261121/20261123/20261125.
+
+| Nuclear response | Relative WS-ROI rate difference of seed means | Difference / combined seed SEM | TV between mean 2D maps |
+|---|---:|---:|---:|
+| GCN | 0.01758% | 0.171 | 0.6865% |
+| JJ55 | 0.01862% | 0.186 | 0.6803% |
+
+Including the NEST-only mode, the maximum rate difference is 0.01862% and
+the maximum TV between mean maps is 0.8489%. Thus the independent-seed
+mean-map comparison passes the 1.0% / 1.0% local-tail gate. The earlier
+0.45--0.47% rate difference is not reproduced and is consistent with
+finite-MC fluctuations in the original sample.
+
+This comparison uses three independent seeds per grid. The ratio to the
+combined seed SEM is a descriptive stability statistic, not a calibrated
+hypothesis-test significance. Individual seed-pair TV fluctuations remain
+above 1% in some comparisons; this does not provide a complete
+cell-by-cell covariance matrix. See [the full grid and selection audit](LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md#153-independent-seed-high-energy-tail-validation-2026-11-15)
+and [run 43691194242](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43691194242).
+
+
 ## 7. Acceptance definitions and missing selection stages
 
 - `nest`: NEST Parametric S1 threefold PMT-occupancy acceptance and the configured NEST S2 threshold, with positive S1c/S2c observables.
@@ -197,8 +226,8 @@ No scalar cumulative efficiency should be multiplied into the existing 2D intens
 ## 8. Required status and next work
 
 1. Keep the 1-keV full-range response as the numerical reference.
-2. Apply the approved 1.0% accepted-rate / 1.0% 2D-TV engineering gate: 5 keV passes the coarse-grid reaggregation point-estimate gate and 10 keV fails. Keep 1 keV as the reference pending independent-seed high-statistics validation.
-3. Keep the 0.5-keV tail sample as a targeted high-energy refinement; resolve the two EFT2024 black-benchmark rate comparisons with an independent higher-statistics production if the 0.5-keV rate is to be used.
+2. Apply the approved 1.0% accepted-rate / 1.0% 2D-TV engineering gate: 5 keV passes the coarse-grid reaggregation point-estimate gate and 10 keV fails. The independent-seed EFT2024 black-tail mean-map check also passes locally; use 5 keV as the coarse production grid for the intermediate 2D response and retain 1 keV as the reference.
+3. Keep 0.5 keV as a targeted high-energy refinement only; the independent-seed mean comparison passes the local 1.0% / 1.0% gate, but it is not a full-range 0.5-keV production.
 4. Resolve the response-family / Fig. S2 rate-level closure using the official calibration-source spectrum and geometry, production NEST configuration, and position-correction model.
 5. Implement or obtain the missing trigger, SS, data-quality, FV, veto, and live-time response/selection information.
 6. Do not start the final profile likelihood until the response provenance and complete selection model are resolved.
@@ -210,5 +239,7 @@ No scalar cumulative efficiency should be multiplied into the existing 2D intens
 - [Event-weighted fold tests](../tests/test_lz_2026_three_body_event_weighted_fold.py)
 - [1/5/10-keV convergence implementation](../converge_lz_2026_three_body_energy_grid.py)
 - [0.5/1-keV high-energy comparison](../compare_lz_2026_nr_high_energy_half_kev.py)
+- [Independent-seed black-tail audit](../audit_lz_2026_black_tail_independent_seeds.py)
+- [Independent-seed workflow](../../../.github/workflows/lz-2026-black-tail-independent-seeds.yml)
 - [Full response and selection audit](LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md)
 - [Rate-level Fig. S2 event-yield table](rate_level_event_yields/lz_2026_rate_level_event_yields.csv)
