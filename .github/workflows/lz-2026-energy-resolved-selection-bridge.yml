@@ -31,10 +31,11 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Test energy-resolved and upstream selection bookkeeping
+      - name: Test energy-resolved bridge and weighted MC uncertainty
         run: |
           python -m unittest \
             research.lz_detector_response.tests.test_lz_2026_energy_resolved_selection_bridge \
+            research.lz_detector_response.tests.test_lz_2026_energy_resolved_mc_uncertainty \
             research.lz_detector_response.tests.test_lz_2026_conditional_selection_bridge \
             research.lz_detector_response.tests.test_lz_2026_selection_stage_rates \
             research.lz_detector_response.tests.test_lz_2026_three_body_event_weighted_fold -v
@@ -86,7 +87,35 @@ jobs:
           PY
           sha256sum energy-bridge-output/*
 
-      - name: Upload energy-resolved bridge tables
+      - name: Estimate weighted event-level MC uncertainty by recoil-energy bin
+        run: |
+          python research/lz_detector_response/audit_lz_2026_energy_resolved_mc_uncertainty.py \
+            --response-dir archived-inputs/response-output \
+            --bridge-bin-csv energy-bridge-output/energy_resolved_selection_bridge_by_energy_bin.csv \
+            --response-families eft2024 tableS5 \
+            --benchmarks red_ms200_dm1 green_ms300_dm1 black_ms360_dm1 blue_ms300_dm10 \
+            --nuclear-models GCN JJ55 \
+            --out-dir energy-bridge-output/mc-uncertainty
+          cat energy-bridge-output/mc-uncertainty/energy_resolved_selection_mc_uncertainty_summary.csv
+
+      - name: Validate MC uncertainty diagnostics and row coverage
+        run: |
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+          root = Path("energy-bridge-output/mc-uncertainty")
+          summary = json.loads((root / "energy_resolved_selection_mc_uncertainty_summary.json").read_text())
+          assert summary["status"] == "WITHIN_STREAM_MC_DIAGNOSTIC_ONLY"
+          assert len(summary["per_key_summaries"]) == 16
+          rows = list(csv.DictReader((root / "energy_resolved_selection_mc_uncertainty_by_bin.csv").open()))
+          assert len(rows) == 16 * 265, len(rows)
+          assert all(int(row["events_per_replica"]) == 2000 for row in rows)
+          assert "not independent-seed productions" in summary["replica_interpretation"]
+          print("Weighted MC uncertainty validated: 16 summaries and 4,240 per-bin rows.")
+          PY
+          sha256sum energy-bridge-output/mc-uncertainty/*
+
+      - name: Upload energy-resolved bridge tables and MC uncertainty diagnostics
         uses: actions/upload-artifact@v4
         with:
           name: lz-2026-energy-resolved-selection-bridge
