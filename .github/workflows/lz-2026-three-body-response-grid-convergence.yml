@@ -4,11 +4,18 @@ on:
   push:
     branches:
       - research/figure2-p0-4-mainline
+      - integration/lz-2026-nest-nr-fullband-20261115
     paths:
       - research/lz_detector_response/cpp/lz_2026_nr_stratified_energy_response.cc
       - research/lz_detector_response/converge_lz_2026_three_body_energy_grid.py
       - research/lz_detector_response/extract_lz_2026_nr_selection_efficiency_components.py
       - research/lz_detector_response/tests/test_lz_2026_three_body_energy_grid_convergence.py
+      - research/lz_detector_response/audit_lz_2026_conditional_selection_bridge.py
+      - research/lz_detector_response/tests/test_lz_2026_conditional_selection_bridge.py
+      - research/lz_detector_response/fold_lz_2026_three_body_event_weighted_response.py
+      - research/lz_detector_response/summarize_lz_2026_selection_stage_rates.py
+      - research/lz_detector_response/tests/test_lz_2026_selection_stage_rates.py
+      - research/lz_detector_response/tests/test_lz_2026_three_body_event_weighted_fold.py
       - research/lz_detector_response/lz_2026_extended_nr/LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md
       - research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/**
       - .github/workflows/lz-2026-three-body-response-grid-convergence.yml
@@ -62,9 +69,13 @@ jobs:
           assert abs(float(r54['final_plus_roi_cumulative'])-0.5718)<0.01
           print('Fig. S2 vector extraction anchors validated.')
           PY
-      - name: Test grid construction, ROI mask and integration
+      - name: Test grid construction, event-weighted fold and conditional selection bridge
         run: |
-          python -m unittest research/lz_detector_response/tests/test_lz_2026_three_body_energy_grid_convergence.py -v
+          python -m unittest \
+            research.lz_detector_response.tests.test_lz_2026_three_body_energy_grid_convergence \
+            research.lz_detector_response.tests.test_lz_2026_three_body_event_weighted_fold \
+            research.lz_detector_response.tests.test_lz_2026_selection_stage_rates \
+            research.lz_detector_response.tests.test_lz_2026_conditional_selection_bridge -v
       - name: Configure and build pinned NEST core
         run: |
           cmake -S nest -B nest/build \
@@ -95,6 +106,29 @@ jobs:
           cp selection-audit-output/lz_2026_nr_selection_efficiency_components.csv convergence-output/
           cp selection-audit-output/lz_2026_nr_selection_efficiency_components_metadata.json convergence-output/
           cat convergence-output/grid_convergence_summary.json
+      - name: Integrate Fig. S2 selection stages and build conditional bridge
+        run: |
+          RATE_LEVEL_COUNTS=research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/lz_2026_rate_level_event_yields.csv
+          SPECTRUM_DIR=research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum
+          python research/lz_detector_response/summarize_lz_2026_selection_stage_rates.py \
+            --spectrum-dir "$SPECTRUM_DIR" \
+            --efficiency-components selection-audit-output/lz_2026_nr_selection_efficiency_components.csv \
+            --rate-level-counts "$RATE_LEVEL_COUNTS" \
+            --output-dir convergence-output/selection-stage \
+            --relative-tolerance 1e-8
+          python research/lz_detector_response/fold_lz_2026_three_body_event_weighted_response.py \
+            --response-dir response-output \
+            --spectrum-dir "$SPECTRUM_DIR" \
+            --binned-intensity convergence-output/signal_2d_intensity_1keV.csv \
+            --grid-summary convergence-output/grid_convergence_summary.json \
+            --rate-level-counts "$RATE_LEVEL_COUNTS" \
+            --out-dir convergence-output/event_weighted
+          python research/lz_detector_response/audit_lz_2026_conditional_selection_bridge.py \
+            --event-weighted-summary convergence-output/event_weighted/event_weighted_fold_summary.json \
+            --selection-stage-summary convergence-output/selection-stage/selection_stage_rate_level_summary.json \
+            --response-family eft2024 \
+            --out-dir convergence-output/conditional_selection_bridge
+          cat convergence-output/conditional_selection_bridge/conditional_selection_bridge_summary.json
       - name: Upload raw response, efficiency decomposition and convergence outputs
         uses: actions/upload-artifact@v4
         with:
@@ -103,5 +137,8 @@ jobs:
             response-output/
             selection-audit-output/
             convergence-output/
+            convergence-output/selection-stage/
+            convergence-output/event_weighted/
+            convergence-output/conditional_selection_bridge/
           if-no-files-found: error
           retention-days: 60
