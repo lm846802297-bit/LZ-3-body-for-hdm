@@ -1,7 +1,7 @@
 import unittest
 import numpy as np
 
-from paired_s1_ensemble_tv_bootstrap import (
+from research.lz_detector_response.paired_s1_ensemble_tv_bootstrap import (
     exact_paired_permutation,
     holm_adjust,
     total_variation,
