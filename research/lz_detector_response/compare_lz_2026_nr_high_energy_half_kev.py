@@ -159,7 +159,7 @@ def write_outputs(args: argparse.Namespace) -> dict:
         wr = csv.DictWriter(f_rep, fieldnames=[
             "benchmark", "nuclear_model", "response_family", "acceptance_mode",
             "response_grid_keV", "replica_rate_events_kg_day",
-            "replica_tv_distance",
+            "replica_vs_pooled_tv_distance",
         ])
         wr.writeheader()
         wb = csv.DictWriter(f_bin, fieldnames=[
@@ -222,6 +222,7 @@ def write_outputs(args: argparse.Namespace) -> dict:
                         )
                         max_rep_rate = max(rate_rep1, rate_rep05)
                         max_rep_tv = max(tv_rep1, tv_rep05)
+                        rate_diff = grid.relative_difference(r1, r05)
                         row = {
                             "benchmark": benchmark,
                             "nuclear_model": nuclear,
@@ -230,7 +231,7 @@ def write_outputs(args: argparse.Namespace) -> dict:
                             "raw_rate_tail_events_kg_day": ref["raw_rate"],
                             "rate_1keV_events_kg_day": r1,
                             "rate_0p5keV_events_kg_day": r05,
-                            "relative_rate_difference_0p5_vs_1keV": grid.relative_difference(r1, r05),
+                            "relative_rate_difference_0p5_vs_1keV": rate_diff,
                             "rate_1keV_events_2p84_tonne_year": r1 * EXPOSURE_KG_DAY,
                             "rate_0p5keV_events_2p84_tonne_year": r05 * EXPOSURE_KG_DAY,
                             "tv_distance_0p5_vs_1keV": tv,
@@ -240,8 +241,8 @@ def write_outputs(args: argparse.Namespace) -> dict:
                             "replica_tv_distance_0p5keV": tv_rep05,
                             "tv_vs_1keV_over_max_replica_tv": tv / max_rep_tv if max_rep_tv > 0 else None,
                             "rate_difference_over_max_replica_rate_difference": (
-                                row_rate := grid.relative_difference(r1, r05)
-                            ) / max_rep_rate if max_rep_rate > 0 else None,
+                                rate_diff / max_rep_rate if max_rep_rate > 0 else None
+                            ),
                         }
                         summary["comparisons"].append(row)
                         wc.writerow(row)
