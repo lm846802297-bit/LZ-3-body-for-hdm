@@ -176,6 +176,20 @@ Here z_eq = (log10(S2c_observed) − median)/sigma80 and sigma80 = (q90 − q10)
 
 The rounded Table S5 mean vector moves the candidate from −1.95 to −2.36 sigma-equivalent relative to the full-precision EFT2024 vector. This confirms that rounding the published mean-yield parameters is not harmless for this band comparison. The full-precision public vector should be retained for the executable EFT2024 candidate; the rounded Table S5 vector remains a separate reproducibility alternative.
 
+A separate direct NEST C++ mean-yield cross-check confirms the mechanism. Across
+528 comparisons (both vectors, three Xe isotopes, both OldW13eV settings, and
+11 energies), the Python port agrees with NEST to better than
+\(3.4\times10^{-16}\) scaled absolute difference. At 248 keV, the rounded
+Table S5 vector gives 7.4528% fewer photons, 0.3846% more electrons, and
+6.9997% fewer total quanta than EFT2024. At 269.9 keV the changes are
+−7.5301%, +0.3846%, and −7.1019%, respectively. The high-energy \(p(E)\)
+extension is identical; the change comes from the rounded NR normalization,
+slope, and charge-yield parameters. See the
+[dual-vector NEST cross-check, run 43696267500](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43696267500),
+artifact 14154536453. This is a mean-yield validation only; the separate
+event-level 2D response remains the relevant test of how these differences
+propagate through S1/S2 and the ROI.
+
 The two width-isolation variants move the offset closer to the paper's approximate −1.5-sigma statement. This is not evidence that either alternative is the production model. The candidate event must not be used to tune the NR fluctuation vector; doing so would be circular. The public EFT2024 vector remains the primary public candidate until the exact collaboration production configuration or calibration closure is established.
 
 ## 10. Finite-MC uncertainty
