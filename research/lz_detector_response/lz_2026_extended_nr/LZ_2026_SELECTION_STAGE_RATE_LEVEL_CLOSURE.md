@@ -138,3 +138,39 @@ workflow therefore uses a documented \(10^{-8}\) closure tolerance. This is
 a PDF vector-extraction/rounding reproducibility difference, not a response
 or physics-model discrepancy; the raw-rate closure remains at floating-point
 precision.
+
+
+## 7. Latest reproducible CI result and spectrum-weighted stage factors
+
+The lightweight audit completed successfully:
+- [GitHub Actions run 43681260816](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43681260816).
+- Artifact ID: `14148377892`.
+- ZIP SHA-256: `53fa87cc4b2fdb3361e73fd65d847992b2ea2c96996891d7cfd6c10850b136b5`.
+- Five output files; 123,090 bytes.
+- Eight benchmark/nuclear-response rows.
+- Maximum raw-rate relative closure: 0.
+- Maximum final expected-count relative closure against the archived rate-level table: \(7.0113\times10^{-10}\), passing the documented \(10^{-8}\) tolerance.
+
+The CI output gives the spectrum-weighted conditional stage factors:
+
+| Benchmark | Nuclear response | SS + data-analysis given S1 | WS ROI given SS + data-analysis | Total final efficiency |
+|---|---|---:|---:|---:|
+| red, \(m_s=200\) keV | GCN | 95.5780% | 99.9767% | 95.5557% |
+| red, \(m_s=200\) keV | JJ55 | 95.5780% | 99.9760% | 95.5550% |
+| green, \(m_s=300\) keV | GCN | 95.5783% | 99.8896% | 95.4728% |
+| green, \(m_s=300\) keV | JJ55 | 95.5783% | 99.8883% | 95.4716% |
+| black, \(m_s=360\) keV | GCN | 95.5790% | 80.1746% | 76.6301% |
+| black, \(m_s=360\) keV | JJ55 | 95.5790% | 80.5474% | 76.9864% |
+| blue, \(m_s=300\) keV, \(\Delta m=10\) MeV | GCN | 95.5783% | 99.8904% | 95.4736% |
+| blue, \(m_s=300\) keV, \(\Delta m=10\) MeV | JJ55 | 95.5783% | 99.8892% | 95.4723% |
+
+The trigger and S1-threshold conditional factors are exactly 100% for all
+eight benchmark/nuclear-response rows. The black benchmark's additional
+upper-ROI loss is about 19.5–19.8% of the events that survive the
+SS/data-analysis stage; the other three benchmarks lose only about
+0.02–0.11% at that stage.
+
+The artifact contains the re-extracted Fig. S2 curves and the full JSON/CSV
+stage-yield table. The stored-curve calculation in Section 3 remains the
+archived rate-level reference; the fresh extraction is independently
+reproducible within the stated \(10^{-8}\) tolerance.
