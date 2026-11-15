@@ -178,12 +178,21 @@ whereas WS2024/generic p2 > 0 gives lambda_Chen = 1 and nonzero omega_NR.
 Thus the NR fluctuation-vector swap changes the physical recombination
 variance model, not merely a width.
 
-**Important correction:** the first full-band driver used a detector-centre
-drift velocity for every event. Those candidate-band offsets are superseded.
-The corrected driver calculates drift velocity from each event's local field,
-writes drift distance/time/speed, and the summarizer checks kinematic closure.
-The corrected run also includes the rounded Table S5 candidate. Do not quote
-the pre-fix offsets as final results.
+**Drift audit:** the first full-band driver used a detector-centre drift
+velocity for every event. The pinned LZ detector class actually returns a
+constant 96.5 V/cm at every position, so the old and corrected outputs are
+bitwise identical for the present configuration. The corrected driver now
+calculates the velocity event by event, writes drift distance/time/speed, and
+the summarizer checks kinematic closure. This makes the code safe to extend
+to a future nonuniform field map. The corrected run includes rounded Table S5.
+
+The corrected run is [43660830473](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43660830473),
+artifact 14139657582, with 12 samples and 90 band comparisons. The
+bootstrap-enabled run is [43661274708](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43661274708),
+artifact 14139997390, ZIP SHA-256
+1f053db6e3d49863c8b36b6a753d4e4eed0410a8530e73d98eb62d771f4bd967.
+It archives 2,000-replica finite-MC bootstrap intervals for all 12 samples.
+The full tables and interpretation are in the linked audit report.
 
 The energy prior remains uniform in true NR energy and the spatial prior is
 uniform in the active TPC (or fixed at the candidate position). These are
