@@ -27,7 +27,7 @@ jobs:
           name: lz-2026-full-range-grid-independent-seeds-eft2024-tableS5
           run-id: 43699011757
           repository: lm846802297-bit/LZ-3-body-for-hdm
-          github-token: \${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           path: extracted/
 
       - name: Validate and print the independent-seed grid gates
