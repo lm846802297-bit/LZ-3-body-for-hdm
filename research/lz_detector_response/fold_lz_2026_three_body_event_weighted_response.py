@@ -235,6 +235,7 @@ def read_rate_level_counts(path: Path) -> dict:
             key = (row["benchmark"], row["model"])
             out[key] = {
                 "final_efficiency_count": float(row["expected_events_in_high_efficiency_window"]),
+                "raw_rate_integral": float(row["raw_roi_integral_events_kg_day"]),
                 "exposure_kg_day": float(row["exposure_kg_day"]),
             }
     return out
@@ -294,8 +295,8 @@ def main() -> None:
         ])
         wc = csv.DictWriter(f_cmp, fieldnames=[
             "benchmark", "nuclear_model", "response_family", "acceptance_mode",
-            "exact_raw_rate_events_kg_day", "event_weighted_rate_events_kg_day",
-            "event_weighted_expected_events_2p84_tonne_year",
+            "exact_raw_rate_events_kg_day", "raw_rate_closure_relative_difference",
+            "event_weighted_rate_events_kg_day", "event_weighted_expected_events_2p84_tonne_year",
             "final_efficiency_rate_level_expected_events",
             "event_weighted_to_final_efficiency_count_ratio",
             "binned_1keV_rate_events_kg_day",
@@ -354,17 +355,27 @@ def main() -> None:
                             folded[None]["intensity"][mode], binned_map
                         )
                         final_count = rate_info["final_efficiency_count"]
+                        raw_rate_closure = grid.relative_difference(
+                            rate_info["raw_rate_integral"], folded[None]["raw_rate"]
+                        )
+                        if raw_rate_closure > 1e-10:
+                            raise ValueError(
+                                f"raw spectrum integral does not close for {benchmark}/{nuclear}: "
+                                f"{raw_rate_closure}"
+                            )
+                        exposure_kg_day = rate_info["exposure_kg_day"]
                         row = {
                             "benchmark": benchmark,
                             "nuclear_model": nuclear,
                             "response_family": family,
                             "acceptance_mode": mode,
                             "exact_raw_rate_events_kg_day": folded[None]["raw_rate"],
+                            "raw_rate_closure_relative_difference": raw_rate_closure,
                             "event_weighted_rate_events_kg_day": pooled_rate,
-                            "event_weighted_expected_events_2p84_tonne_year": pooled_rate * EXPOSURE_KG_DAY,
+                            "event_weighted_expected_events_2p84_tonne_year": pooled_rate * exposure_kg_day,
                             "final_efficiency_rate_level_expected_events": final_count,
                             "event_weighted_to_final_efficiency_count_ratio": (
-                                pooled_rate * EXPOSURE_KG_DAY / final_count if final_count > 0.0 else None
+                                pooled_rate * exposure_kg_day / final_count if final_count > 0.0 else None
                             ),
                             "binned_1keV_rate_events_kg_day": binned_rate,
                             "relative_rate_difference_vs_binned_1keV": grid.relative_difference(
@@ -400,6 +411,9 @@ def main() -> None:
 
     summary["diagnostics"] = {
         "n_comparisons": len(comparisons),
+        "max_raw_rate_closure_relative_difference": max(
+            x["raw_rate_closure_relative_difference"] for x in comparisons
+        ),
         "max_relative_rate_difference_vs_binned_1keV": max(
             x["relative_rate_difference_vs_binned_1keV"] for x in comparisons
         ),
