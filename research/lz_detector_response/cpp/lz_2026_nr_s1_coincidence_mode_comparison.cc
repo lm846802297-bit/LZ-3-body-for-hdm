@@ -67,6 +67,8 @@ int main(int argc, char** argv) {
 
     const double density =
         calc_quanta.SetDensity(detector.get_T_Kelvin(), detector.get_p_bar());
+    calc_parametric.SetDensity(detector.get_T_Kelvin(), detector.get_p_bar());
+    calc_full.SetDensity(detector.get_T_Kelvin(), detector.get_p_bar());
     const double radius = detector.get_radmax();
     const double zmax = detector.get_TopDrift();
     const double A = detector.get_molarMass();
