@@ -564,3 +564,52 @@ part of this decision, but it is not a full-range 0.5-keV production.
 Neither grid decision closes the missing SS/data-analysis, official FV,
 Skin/OD sample migration, or complete LZ selection response.
 
+### 15.4 Table S5 rounding is a material NR-response alternative (2026-11-15)
+
+The printed Table S5 vector and the public full-precision EFT2024 vector share
+the same high-energy \(p(E)\) extension, but they do not give equivalent
+NR mean light/charge yields. A direct C++ comparison against the pinned NEST
+541b643 GetYieldNR implementation was run for both vectors:
+
+- 528 scalar Python/C++ comparisons passed across Xe-128/131/136, both
+  OldW13eV settings, and 11 energies from 5.4 to 330 keV.
+- Worst scaled absolute Python/C++ differences were
+  \(3.33\times10^{-16}\) for Table S5 and \(2.16\times10^{-16}\) for EFT2024.
+- At 248 keV, Table S5 relative to EFT2024 gives
+  \(\Delta N_\gamma=-7.4528\%\),
+  \(\Delta N_e=+0.3846\%\), and
+  \(\Delta(N_\gamma+N_e)=-6.9997\%\).
+- At 269.9 keV, the corresponding changes are
+  \(-7.5301\%\), \(+0.3846\%\), and \(-7.1019\%\).
+
+The exponent \(p(E)\) is identical in both parameter vectors. The dominant
+difference comes from the rounded NR total-quanta normalization and slope;
+the light yield is then obtained after subtracting the nearly unchanged
+charge yield. Consequently, a small-looking parameter rounding changes S1
+appreciably near the upper recoil-energy boundary.
+
+The existing coarse-binned 2D fold reports \(D_{\rm TV}=0.162\text{--}0.249\)
+between the Table-S5-mean/EFT2024-width hybrid and full EFT2024 across the
+four benchmarks and GCN/JJ55. This is a response-family difference, not a
+grid-discretization error. The result belongs to the earlier 10-keV,
+200,000-event-per-family fold and should not be relabelled as a 1-keV
+independent-seed comparison.
+
+The direct mean-yield cross-check is [run 43696267500](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43696267500),
+artifact 14154536453, SHA-256
+20b399d199c2ce5392250bc2dfb9e8ddc4e3ab3f0711e5d89e0432db596ce5af.
+
+**Interpretation:** keep EFT2024 as the primary public executable candidate
+and Table S5 as a distinct rounded-table alternative. The exact 2026
+collaboration production configuration remains unconfirmed.
+
+The 265-bin monotonicity comparison against the final Fig. S2 curve is only
+a plausibility diagnostic. The simulated NEST S1 coincidence and NEST S2
+pulse threshold are not identical to the collaboration's DAQ trigger and
+S1-threshold stages; the uniform active-TPC spatial prior is also not the
+official calibration/FV prior. Therefore, the fact that Table S5 stays above
+the digitized final curve while EFT2024 falls below it in some bins must not
+be used as a strict nested-efficiency proof or as a stand-alone rule for
+selecting the production model.
+
+
