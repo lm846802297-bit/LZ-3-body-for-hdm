@@ -255,6 +255,34 @@ class EnergyResolvedSelectionBridgeTests(unittest.TestCase):
                         path, {("red_ms200_dm1", "GCN"): ([5.0, 7.0], [1.0, 1.0])}
                     )
 
+    def test_ws_roi_raw_s2_cut_must_nest_nest_s2_threshold(self):
+        fields = [
+            "replica", "energy_bin_index", "energy_bin_low_keV",
+            "energy_bin_high_keV", "energy_keV", "s1c_abs_phd",
+            "s2c_abs_phd", "s2r_abs_phd", "s1_coincidence_pass",
+            "s2_threshold_pass",
+        ]
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "response.csv"
+            with path.open("w", newline="", encoding="utf-8") as handle:
+                writer = csv.DictWriter(handle, fieldnames=fields)
+                writer.writeheader()
+                writer.writerow({
+                    "replica": 0, "energy_bin_index": 0,
+                    "energy_bin_low_keV": 5.4, "energy_bin_high_keV": 6.4,
+                    "energy_keV": 5.9, "s1c_abs_phd": 100.0,
+                    "s2c_abs_phd": 1000.0, "s2r_abs_phd": 1000.0,
+                    "s1_coincidence_pass": 1, "s2_threshold_pass": 0,
+                })
+            with (
+                patch.object(MOD.grid, "ROI_MIN_KEV", 5.4),
+                patch.object(MOD.grid, "ROI_MAX_KEV", 6.4),
+            ):
+                with self.assertRaisesRegex(ValueError, "raw-S2 cut passed but NEST S2 pulse threshold failed"):
+                    MOD.accumulate_weighted_response(
+                        path, {("red_ms200_dm1", "GCN"): ([5.0, 7.0], [1.0, 1.0])}
+                    )
+
     def test_summary_labels_rate_level_diagnostic_only(self):
         self.assertIn("rate-level diagnostic", MOD.__doc__)
 
