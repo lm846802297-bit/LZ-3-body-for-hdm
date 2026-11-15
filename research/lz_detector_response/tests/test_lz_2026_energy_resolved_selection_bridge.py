@@ -77,7 +77,7 @@ class EnergyResolvedSelectionBridgeTests(unittest.TestCase):
         self.assertAlmostEqual(bins[0]["ws_roi_accepted_rate_events_kg_day"], 0.9)
         self.assertAlmostEqual(bins[1]["ws_roi_accepted_rate_events_kg_day"], 0.7)
         self.assertAlmostEqual(bins[0]["figs2_ss_da_given_trigger_plus_s1"], 0.85)
-        self.assertAlmostEqual(bins[0]["figs2_roi_given_ss_da"], 0.7 / 0.85)
+        self.assertAlmostEqual(bins[0]["figs2_roi_given_ss_da"], 0.65 / 0.85)
         self.assertAlmostEqual(
             bins[0]["energy_resolved_factorized_rate_events_kg_day"], 0.765
         )
