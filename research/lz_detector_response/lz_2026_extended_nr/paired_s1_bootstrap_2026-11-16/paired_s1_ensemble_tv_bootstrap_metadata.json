@@ -1,0 +1,70 @@
+{
+  "study": "Paired-seed cluster bootstrap and exact paired randomization for LZ 2026 Parametric/Full S1 2D maps",
+  "status": "BOOTSTRAP_AND_RANDOMIZATION_DIAGNOSTIC_ONLY",
+  "source_production_run_id": 43750948249,
+  "source_production_commit": "a87d95276aafc5043f943aacc42a5d5a941ce27b",
+  "pinned_nest_commit": "541b6430dae6ea289cf110c99f174a9187f7fdee",
+  "detector_configuration": "LZ_Detector_2024::SetEFT2024Configuration()",
+  "energy_support_keV": [
+    35.0,
+    269.9
+  ],
+  "native_map_binning": {
+    "s1_phd": 10.0,
+    "log10_s2c": 0.02
+  },
+  "total_events": 4700000,
+  "source_artifact_id": 14176882910,
+  "source_artifact_sha256": "606397d9eac594008630a18b97f1e72fbbfa1d157e34779de7ce5fd0fe5b8cb5",
+  "source_seed_archive": "lz_s1_bootstrap_input",
+  "input_manifest": {
+    "manifest_entries": 75,
+    "required_files_verified": 14
+  },
+  "seeds": [
+    20261117,
+    40261117,
+    60261117,
+    80261117,
+    100261117,
+    120261117,
+    140261117,
+    160261117,
+    180261117,
+    200261117
+  ],
+  "n_seeds": 10,
+  "n_bootstrap_replicates": 100000,
+  "bootstrap_rng": "NumPy default_rng",
+  "bootstrap_rng_seed": 2026111601,
+  "bootstrap_resampling_unit": "independent NEST production seed; Parametric and Full maps from each selected seed are resampled together",
+  "bootstrap_statistic": "TV between separately normalized equal-weight arithmetic means of the resampled per-seed event-weighted rate maps",
+  "tv_definition": "0.5 * sum_cells(abs(P_cell/sum(P) - F_cell/sum(F)))",
+  "bootstrap_intervals": {
+    "percentile": "2.5th and 97.5th empirical percentiles of the paired seed-cluster bootstrap distribution",
+    "basic": "reflected interval [2*theta_hat - q97.5, 2*theta_hat - q2.5], lower-clipped at zero",
+    "interpretation": "The TV functional is non-smooth and non-negative; percentile and basic intervals are reported as sensitivity diagnostics, not a formal equivalence interval. BCa was not used because the bias-correction tail was degenerate/extreme for several combinations with only ten clusters."
+  },
+  "exact_randomization": {
+    "method": "enumerate all 2^10 within-seed Parametric/Full label swaps",
+    "null": "exchangeability of the paired mode labels at the independent-seed cluster level",
+    "p_value": "inclusive fraction of permutations with TV >= observed TV",
+    "holm_families": [
+      "all 16 benchmark/nuclear/stage combinations",
+      "eight WS-ROI combinations"
+    ]
+  },
+  "support": "native 10-phd by 0.02-dex histogram; four benchmarks, GCN/JJ55, NEST and WS-ROI stages",
+  "limitations": [
+    "Ten independent seed clusters are a small sample; bootstrap intervals are method-sensitive for the non-smooth TV statistic.",
+    "Failure to reject the paired randomization null is not evidence of Parametric/Full equivalence.",
+    "No official waveform-level LZ reconstruction or detector-systematic covariance is included.",
+    "DAQ, SS/data-analysis, official FV, Skin/OD, and live-time migration remain absent.",
+    "No final profile likelihood or 90% CL exclusion is provided."
+  ],
+  "closure": {
+    "max_abs_per_seed_tv_difference_vs_archived": 2.7755575615628914e-17,
+    "max_abs_ensemble_tv_difference_vs_archived": 1.5612511283791264e-17,
+    "max_abs_mean_map_cell_difference_vs_archived": 8.271806125530277e-25
+  }
+}
