@@ -81,6 +81,9 @@ Workflow:
 - [ER run 43642038888](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43642038888), successful.
 - Artifact ID: `14132651289`.
 - SHA-256: `f1a903a68c75f9c787549a64bb69c0d8b661ef0d777ffa2a769b19aee9666c69`.
+- Corrected local-drift/bootstrap rerun: [run 43662363556](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43662363556), successful.
+- Corrected artifact ID: 14140966494; ZIP SHA-256: a2a138d262245e811c94b8bc41d76f4af16c53196d1a12adea044bf66a9f7bc1.
+- The corrected artifact stores event-local drift distance/time/speed and the 2,000-replica ER band bootstrap. Maximum relative drift closure residual is 1.0581e−11. Since the pinned LZ detector field is constant at 96.5 V/cm, all common physical event columns are bitwise identical to the previous pilot.
 - 200,000 uniform-active-TPC events for each ER family; 100,000 candidate-position events.
 - Uniform true ER energy 0.1–300 keV.
 - Conditional PDFs binned in 10-keV true-energy bins, 10-phd S1c bins, and 0.02-dex log10(S2c) bins.
