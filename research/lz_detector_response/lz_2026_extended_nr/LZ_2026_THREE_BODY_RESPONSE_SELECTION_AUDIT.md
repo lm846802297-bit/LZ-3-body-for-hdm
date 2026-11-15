@@ -433,3 +433,64 @@ the collaboration's D-D/AmBe calibration spectrum or source geometry. Do not
 select an NR fluctuation vector by matching the candidate event; that would
 be circular. The study is not a likelihood input and does not establish the
 exact LZ 2026 production NEST configuration.
+
+
+## 15. Explicit no-double-counting matrix and proposed grid gate
+
+### 15.1 Selection overlap matrix
+
+| Quantity / stage | In the current 2D response? | In Fig. S2 cumulative curve? | Correct treatment |
+|---|---|---|---|
+| NEST Parametric S1 threefold occupancy | Yes, as an approximate PMT-occupancy acceptance | The official S1 identification/reconstruction contribution is part of the later SS/data-analysis stage; the exact overlap is not separately digitized | Do not multiply a second generic threefold factor. Keep the NEST-vs-Full comparison as a mode check, not as proof of official reconstruction equivalence. |
+| Official S1 amplitude threshold | The explicit \(3\leq S1_c\) lower WS ROI boundary is applied in the ws_roi mode; the full pulse-finding/threshold chain is not | Yes, in the orange cumulative curve | The orange curve is a rate-level audit target; do not apply it again to the WS-ROI map. |
+| NEST S2 pulse-size threshold | Yes; EFT2024 uses 120 phe | Not the same quantity as the hardware S2 trigger | Retain as part of NEST response; do not call it the DAQ trigger. |
+| S2 DAQ trigger | No | Yes, blue cumulative curve | Missing from the 2D map. It is unity over the present benchmark recoil support in the extracted Fig. S2 curve, but this does not validate the low-energy trigger model generally. |
+| Raw-S2 and corrected-S2 WS ROI | Yes, in the WS-ROI mode | Yes, in the black cumulative curve | Direct overlap. Never multiply the full black curve into the existing WS-ROI map. |
+| SS reconstruction and data-analysis cuts | No | Yes, in the green cumulative curve | Use only in a separate 1D rate-level count until a validated 2D conditional response is available. |
+| Fiducial-volume spatial acceptance | No; the map uses a uniform active-TPC proxy | Not recoverable as a 2D map from Fig. S2 alone | Use the official 4.71-t FV geometry and reconstruction smearing; the exposure mass does not by itself impose the correct event-position acceptance. |
+| Skin/OD science, prompt-veto, delayed-veto partition | No | The efficiency curve is not a three-sample migration model | Build correlated sample-specific signal rates; do not apply one generic veto-survival scalar. |
+| Live-time hold-offs | No event-by-event model | Reflected in the published live exposure | The 2.84 tonne-year exposure is \(4.71\ {\rm t}\times220\) live days. Do not multiply by the 81.5% live-time retention again. |
+
+The one-dimensional Fig. S2 final cumulative curve is appropriate for the
+independent energy-integrated expected-count calculation. It is not a
+per-event weight for the current 2D map. The current WS-ROI map already
+contains NEST coincidence, the NEST pulse threshold, and the explicit WS
+ROI. The missing SS/data-analysis, FV, and veto effects are correlated with
+event reconstruction and/or sample assignment; Fig. S2 does not provide
+their two-dimensional conditional kernels.
+
+### 15.2 Proposed, not yet approved, response-grid tolerance
+
+The current artifact-level comparisons give:
+
+| Grid relative to 1 keV | Maximum accepted-rate difference | Maximum 2D total-variation distance |
+|---|---:|---:|
+| 5 keV, all tested families/benchmarks/models/modes | 0.5131% | 0.8896% |
+| 5 keV, primary EFT2024 family | 0.3249% | 0.4579% |
+| 10 keV, all tested families/benchmarks/models/modes | 1.2146% | 2.4649% |
+
+A simple engineering gate of **1.0% maximum accepted-rate difference and
+1.0% maximum 2D total-variation distance** would accept the 5-keV comparison
+and reject the 10-keV comparison. This is a proposed numerical tolerance,
+not a scientific criterion already approved by the analysis owner.
+
+There are two qualifications:
+1. The 5-keV rate difference exceeds the corresponding 1-keV split-sample
+   rate difference in 17/64 comparisons. The two halves are disjoint portions
+   of one seeded stream, not independent-seed productions; the comparison is
+   a diagnostic, not a complete MC covariance estimate.
+2. The dedicated 0.5-keV high-energy-tail refinement differs from the
+   1-keV response by at most 0.46895% in accepted rate and 2.5446% in 2D TV.
+   No shape difference exceeds its split-sample diagnostic, while two rate
+   comparisons do. This tail comparison should remain a separate refinement
+   check for the black benchmark.
+
+The event-weighted fold provides an additional algorithmic cross-check:
+its maximum difference from the 1-keV binned fold is 0.02821% in accepted
+rate and 0.07920% in 2D TV, with raw-rate closure \(1.11\times10^{-15}\).
+
+**Current release decision:** keep 1 keV as the reference. Do not set
+formal_pass=true or promote 5 keV to the production grid until the 1.0%
+(or another explicitly chosen) tolerance is approved and the MC covariance
+treatment is stated. This grid decision is separate from the remaining
+full-LZ selection and likelihood blockers in Section 14.5.
