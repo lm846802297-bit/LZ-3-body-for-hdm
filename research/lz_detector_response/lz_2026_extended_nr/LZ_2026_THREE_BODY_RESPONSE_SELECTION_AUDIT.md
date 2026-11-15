@@ -307,6 +307,10 @@ For the EFT2024 candidate and the 2.84 tonne-year exposure, the NEST-plus-WS-ROI
 
 These are before trigger, SS/data-analysis cuts, the official fiducial-volume mask, Skin/OD veto partition, live-time treatment, backgrounds, and likelihood. The black benchmark loses about 26% relative to its NEST-level rate after the explicit WS ROI, because its signal is concentrated near the high-energy S1c boundary. These counts are intermediate diagnostics only.
 
+For the black benchmark, the response-family choice itself changes the NEST-plus-WS-ROI count substantially: GCN gives \(2.758\times10^{-9}\) events for EFT2024, \(3.374\times10^{-9}\) for Table S5 (+22.35%), \(3.280\times10^{-9}\) for WS2024 (+18.92%), and \(1.719\times10^{-9}\) for generic NEST (−37.67%). This is a response-model/provenance dependence, not MC statistical error. The other three benchmarks are much less sensitive to the response-family choice because their rate support lies away from the high-energy S1c/ROI boundary.
+
+
+
 ## 9. Correct release status
 
 The previous blanket label "pre-selection" should now be made more precise:
