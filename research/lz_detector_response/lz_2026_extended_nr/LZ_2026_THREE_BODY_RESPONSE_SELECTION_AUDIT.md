@@ -158,6 +158,13 @@ The 1/5/10-keV workflow completed on commit
   \`7ba7e268026f5607f0a4cfecbc1e910ec3c1ec808f727e8d42308b8fa00a96b6\`.
 - The archived \`grid_convergence_summary.json\` contains 192 grid comparisons and 64 1-keV replica comparisons.
 
+A follow-up run after adding the explicit per-bin S1/S2 cutflow completed successfully:
+- [GitHub Actions run 43656826463](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43656826463), head \`fb6e40ec34bfc200aa212b3d731d9b60b8d9433e\`.
+- Updated artifact ID: \`14137998811\`.
+- Artifact SHA-256: \`e5005d73b57b86c05a5af9e999782df765fa6db870333320030863897a1ecdea\`.
+
+The updated \`acceptance_by_energy_grid.csv\` now stores the generated and passed counts separately for S1 coincidence, NEST S2 threshold, their joint pass, and the WS ROI. It also stores width-weighted per-bin acceptance factors and conditional ratios. The JSON now explicitly reports \`formal_pass: null\` and \`DIAGNOSTIC_ONLY_NO_PREDECLARED_TOLERANCE\`, so a green workflow cannot be mistaken for a scientific convergence certification.
+
 ### 8.1 What the run actually sampled
 
 Each of the four response families (\`eft2024\`, \`tableS5\`, \`ws2024\`, \`generic\`) contains 1,060,000 events:
