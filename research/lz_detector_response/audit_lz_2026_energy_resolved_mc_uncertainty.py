@@ -124,7 +124,13 @@ def accumulate_response(
             if s1_flag not in (0, 1) or s2_flag not in (0, 1):
                 raise ValueError(f"invalid NEST selection flag in bin {ibin}")
             nest_pass = s1_flag == 1 and s2_flag == 1 and s1c > 0.0 and s2c > 0.0
-            ws_pass = nest_pass and grid.ws_roi_pass(s1c, s2r, s2c)
+            roi_mask_pass = grid.ws_roi_pass(s1c, s2r, s2c)
+            if roi_mask_pass and s2_flag != 1:
+                raise ValueError(
+                    "WS ROI raw-S2 cut passed but NEST S2 pulse threshold failed; "
+                    "check S2r units and threshold nesting"
+                )
+            ws_pass = roi_mask_pass and s1_flag == 1
 
             for key, (xs, ys) in spectra.items():
                 weight = grid.interpolate(energy, xs, ys)
