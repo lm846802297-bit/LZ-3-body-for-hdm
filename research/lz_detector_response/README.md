@@ -163,6 +163,33 @@ The \(ws\_roi\) output is therefore a **NEST-level plus WS-ROI intermediate thre
 
 The source-level comparison between the public v2.4.5beta tag and the later LZ-specific development branch is documented in [LZ_2026_NEST_RELEASE_LINEAGE_AUDIT.md](lz_2026_extended_nr/LZ_2026_NEST_RELEASE_LINEAGE_AUDIT.md). The 2026 LZ paper's double-skew-Gaussian ER model and high-energy NR p(E) extension are absent from the public v2.4.5beta tag at commit `19bc9bc`; the physics features and EFT2024 configuration were added later, with the LZ configuration first appearing at `307fb27` before the paper's arXiv submission. The audited `541b643` commit adds getters/storage only relative to `307fb27`. This makes it a strong public candidate, not proof of the exact collaboration build. The candidate's derived g1=0.1104 and g2=34.5263 agree with the paper's quoted gains within 0.20σ and 0.024σ, respectively. See the [machine-readable candidate record](lz_2026_extended_nr/lz_2026_nest_eft2024_configuration_candidate.json).
 
+### Full-range NR band and NR fluctuation-vector audit
+
+The separate full-range flat-energy NR band study is documented in
+[LZ_2026_NR_FULL_BAND_PARAMETER_SENSITIVITY_AUDIT.md](lz_2026_extended_nr/LZ_2026_NR_FULL_BAND_PARAMETER_SENSITIVITY_AUDIT.md).
+It compares the public EFT2024 candidate, rounded Table S5 mean yields,
+EFT2024 means with WS2024/generic NR fluctuation vectors, WS2024, and
+generic NEST.
+
+A source-level check of NEST GetQuanta shows that NRERWidthsParam indices
+0–5, 11, and 12 control NR quanta fluctuations. In particular, EFT2024
+p2 = −0.707 gives lambda_Chen = 0.293 and omega_NR = 0 after clamping,
+whereas WS2024/generic p2 > 0 gives lambda_Chen = 1 and nonzero omega_NR.
+Thus the NR fluctuation-vector swap changes the physical recombination
+variance model, not merely a width.
+
+**Important correction:** the first full-band driver used a detector-centre
+drift velocity for every event. Those candidate-band offsets are superseded.
+The corrected driver calculates drift velocity from each event's local field,
+writes drift distance/time/speed, and the summarizer checks kinematic closure.
+The corrected run also includes the rounded Table S5 candidate. Do not quote
+the pre-fix offsets as final results.
+
+The energy prior remains uniform in true NR energy and the spatial prior is
+uniform in the active TPC (or fixed at the candidate position). These are
+diagnostic proxies, not the official D-D/AmBe calibration priors or a
+collaboration production response. This study is not a likelihood input.
+
 ### Parametric-versus-Full S1 coincidence validation
 
 Because the three-body stratified driver uses NEST Parametric S1 mode, a paired
