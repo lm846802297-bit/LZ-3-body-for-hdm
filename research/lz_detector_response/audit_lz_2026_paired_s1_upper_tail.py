@@ -150,6 +150,16 @@ def scalar_stats(values: list[float]) -> dict:
     }
 
 
+def normalized_stratum_event_weight(exact_bin_rate: float, differential_rate: float, sum_differential_rate: float) -> float:
+    if exact_bin_rate < 0.0 or differential_rate < 0.0 or sum_differential_rate < 0.0:
+        raise ValueError("event-rate weights must be non-negative")
+    if exact_bin_rate == 0.0:
+        return 0.0
+    if sum_differential_rate <= 0.0:
+        raise ValueError("positive exact bin rate has zero sampled differential-rate sum")
+    return exact_bin_rate * differential_rate / sum_differential_rate
+
+
 def s1_roi_pass(pass_flag: bool, s1c: float) -> bool:
     return bool(pass_flag) and grid.S1_MIN_PHD <= s1c <= grid.S1_MAX_PHD
 
@@ -447,6 +457,7 @@ def run_audit(args: argparse.Namespace) -> tuple[list[dict], list[dict], dict]:
 
     seed_records = []
     total_events = 0
+    max_weight_closure_relative_residual = 0.0
     for seed in args.seeds:
         event_path = args.seed_root / f"seed-{seed}" / "paired_s1_mode_2d_events.csv"
         if not event_path.is_file():
@@ -455,14 +466,53 @@ def run_audit(args: argparse.Namespace) -> tuple[list[dict], list[dict], dict]:
             (model, band): new_bucket()
             for model in NUCLEAR_MODELS for band in ENERGY_BANDS_KEV
         }
-        bin_counts = defaultdict(int)
-        replica_counts = defaultdict(int)
-        n_events = 0
+
+        # Reuse the exact per-bin integrated rates produced by the original fold.
+        fold_path = args.seed_root / f"seed-{seed}" / "fold" / "paired_s1_mode_2d_response_by_energy_bin.csv"
+        if not fold_path.is_file():
+            raise FileNotFoundError(fold_path)
+        exact_bin_rates = {model: {} for model in NUCLEAR_MODELS}
+        with fold_path.open(newline="", encoding="utf-8") as handle:
+            for row in csv.DictReader(handle):
+                if row["benchmark"] != BENCHMARK or row["nuclear_model"] not in NUCLEAR_MODELS:
+                    continue
+                model = row["nuclear_model"]
+                ibin = int(row["energy_bin_index"])
+                if ibin in exact_bin_rates[model]:
+                    raise ValueError(f"{fold_path}: duplicate exact-rate row for {model}/{ibin}")
+                if int(row["n_events"]) != EVENTS_PER_BIN:
+                    raise ValueError(f"{fold_path}: wrong event count for {model}/{ibin}")
+                exact_bin_rates[model][ibin] = float(row["exact_raw_rate_events_kg_day"])
+        for model in NUCLEAR_MODELS:
+            if len(exact_bin_rates[model]) != expected_bins:
+                raise ValueError(f"{fold_path}: expected {expected_bins} exact-rate bins for {model}")
+
+        # First pass: sum dR/dER(E_i) over all 2,000 events in each stratum.
+        # This is the same denominator used by the original paired 2D fold.
+        sum_differential = {model: defaultdict(float) for model in NUCLEAR_MODELS}
         with event_path.open(newline="", encoding="utf-8") as handle:
             reader = csv.DictReader(handle)
             missing = REQUIRED_COLUMNS - set(reader.fieldnames or [])
             if missing:
                 raise ValueError(f"{event_path} missing columns: {sorted(missing)}")
+            for row in reader:
+                ibin = int(row["energy_bin_index"])
+                energy = float(row["energy_keV"])
+                for model in NUCLEAR_MODELS:
+                    differential = grid.interpolate(energy, spectra[model][0], spectra[model][1])
+                    if not math.isfinite(differential) or differential < 0.0:
+                        raise ValueError(f"{event_path}: invalid dR/dER for {model}/{ibin}")
+                    sum_differential[model][ibin] += differential
+
+        # Second pass: normalize each event's interpolated spectrum weight to the
+        # exact integral of its 1-keV stratum. This reproduces the original fold:
+        # w_i = R_bin_exact * f(E_i) / sum_j f(E_j).
+        bin_counts = defaultdict(int)
+        replica_counts = defaultdict(int)
+        bin_weight_sums = {model: defaultdict(float) for model in NUCLEAR_MODELS}
+        n_events = 0
+        with event_path.open(newline="", encoding="utf-8") as handle:
+            reader = csv.DictReader(handle)
             for row in reader:
                 event = int(row["event"])
                 if event != n_events:
@@ -494,18 +544,21 @@ def run_audit(args: argparse.Namespace) -> tuple[list[dict], list[dict], dict]:
                 if energy < min(low, high) or energy > max(low, high):
                     raise ValueError(f"{event_path}: event energy outside its stratum at event {event}")
 
+                weights = {}
+                for model in NUCLEAR_MODELS:
+                    differential = grid.interpolate(energy, spectra[model][0], spectra[model][1])
+                    weight = normalized_stratum_event_weight(
+                        exact_bin_rates[model][ibin],
+                        differential,
+                        sum_differential[model][ibin],
+                    )
+                    weights[model] = weight
+                    bin_weight_sums[model][ibin] += weight
+
                 active_bands = [
                     band for band, (band_low, band_high) in ENERGY_BANDS_KEV.items()
                     if in_band(energy, band_low, band_high)
                 ]
-                if not active_bands:
-                    continue
-                weights = {
-                    model: grid.interpolate(energy, spectra[model][0], spectra[model][1])
-                    for model in NUCLEAR_MODELS
-                }
-                if any(not math.isfinite(weight) or weight < 0.0 for weight in weights.values()):
-                    raise ValueError(f"{event_path}: invalid physical event weight at event {event}")
                 for model, weight in weights.items():
                     for band in active_bands:
                         update_bucket(buckets[(model, band)], row, weight)
@@ -517,6 +570,21 @@ def run_audit(args: argparse.Namespace) -> tuple[list[dict], list[dict], dict]:
         if any(replica_counts[(i, replica)] != REPLICAS_PER_BIN
                for i in range(expected_bins) for replica in (0, 1)):
             raise ValueError(f"{event_path}: replica split is not {REPLICAS_PER_BIN}/{REPLICAS_PER_BIN} in every energy bin")
+        for model in NUCLEAR_MODELS:
+            for ibin in range(expected_bins):
+                exact_rate = exact_bin_rates[model][ibin]
+                observed_rate = bin_weight_sums[model][ibin]
+                tolerance = 5e-12 * max(abs(exact_rate), 1e-300)
+                if abs(observed_rate - exact_rate) > tolerance:
+                    raise ValueError(
+                        f"{seed}/{model}/{ibin}: stratum weight closure failed; "
+                        f"observed={observed_rate:.17g}, exact={exact_rate:.17g}"
+                    )
+                max_weight_closure_relative_residual = max(
+                    max_weight_closure_relative_residual,
+                    abs(observed_rate - exact_rate) / max(abs(exact_rate), 1e-300)
+                    if exact_rate > 0.0 else abs(observed_rate),
+                )
         total_events += n_events
         for model in NUCLEAR_MODELS:
             for band in ENERGY_BANDS_KEV:
@@ -569,10 +637,17 @@ def run_audit(args: argparse.Namespace) -> tuple[list[dict], list[dict], dict]:
         "nest_commit": grid.NEST_COMMIT,
         "detector_configuration": "LZ_Detector_2024::SetEFT2024Configuration",
         "event_weighting": (
-            "Exact event-level interpolation of dR/dER(E) from the archived continuous "
-            "natural-xenon spectrum, using the same grid.interpolate implementation as "
-            "the original paired S1 2D fold; GCN and JJ55 are folded separately."
+            "Within each seed, nuclear model, and 1-keV true-energy stratum, event i receives "
+            "w_i = R_bin_exact * f(E_i) / sum_j f(E_j), where f(E)=grid.interpolate(E,xs,ys) "
+            "and R_bin_exact is read from that seed's original fold response-by-energy-bin CSV. "
+            "This exactly reproduces the original fold's event-weight normalization; GCN and "
+            "JJ55 are folded separately."
         ),
+        "stratum_weight_closure": {
+            "max_relative_residual_across_all_seeds_models_bins": max_weight_closure_relative_residual,
+            "tolerance": "5e-12 relative to exact per-bin integrated rate",
+            "required_identity": "sum_i w_i = R_bin_exact for every seed, nuclear model, and 1-keV stratum"
+        },
         "pairing": (
             "Each event shares the same NR quanta, true recoil energy, true position, and "
             "S2 draw between Parametric and Full S1; the two S1 response modes use separate "

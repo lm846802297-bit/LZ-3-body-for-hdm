@@ -9,6 +9,18 @@ SPEC.loader.exec_module(MOD)
 
 
 class PairedS1UpperTailTests(unittest.TestCase):
+    def test_exact_stratum_normalization_closes_to_integrated_rate(self):
+        differential = [1.0, 2.0, 3.0, 4.0]
+        denominator = sum(differential)
+        weights = [
+            MOD.normalized_stratum_event_weight(12.0, value, denominator)
+            for value in differential
+        ]
+        self.assertAlmostEqual(sum(weights), 12.0, places=14)
+        self.assertEqual(MOD.normalized_stratum_event_weight(0.0, 4.0, 0.0), 0.0)
+        with self.assertRaises(ValueError):
+            MOD.normalized_stratum_event_weight(1.0, 0.0, 0.0)
+
     def test_s1_roi_boundaries_are_inclusive(self):
         self.assertTrue(MOD.s1_roi_pass(True, 3.0))
         self.assertTrue(MOD.s1_roi_pass(True, 600.0))
