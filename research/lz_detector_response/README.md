@@ -241,7 +241,10 @@ The high-energy black benchmark is further reduced by the upper S1c ROI,
 giving a total rate-level efficiency of 76.63–76.99%, compared with about
 95.47–95.56% for the other three benchmarks. See
 [LZ_2026_SELECTION_STAGE_RATE_LEVEL_CLOSURE.md](lz_2026_extended_nr/LZ_2026_SELECTION_STAGE_RATE_LEVEL_CLOSURE.md).
-This is a one-dimensional rate-level check, not a 2D selected signal PDF.
+This is a one-dimensional rate-level check, not a 2D selected signal PDF. The calculation is reproducible through
+summarize_lz_2026_selection_stage_rates.py and its lightweight
+lz-2026-selection-stage-rate-audit.yml workflow; this workflow re-extracts
+Fig. S2 and validates all eight rate-level rows without rebuilding NEST.
 
 ### Complete LZ 2026 selection and three-sample likelihood audit
 
