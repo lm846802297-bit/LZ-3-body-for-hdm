@@ -39,6 +39,45 @@ Consequently,
        {C_{\mathrm{black}}(i)/C_{\mathrm{green}}(i)}.
 \]
 
+### 2.1 NEST S2 threshold is nested inside the explicit raw-S2 ROI
+
+At the pinned NEST commit, `GetS2()` stores the uncorrected pulse area in phe
+and the raw S2 in phd as
+[
+S2_r=\frac{\mathrm{pulseArea}}{1+P_{\mathrm{DPE}}}.
+]
+The NEST EFT2024 detector configuration sets the S2 pulse threshold to
+120 phe. The explicit WS ROI used in the fold requires (S2_r>645) phd.
+Because (P_{\mathrm{DPE}}\geq0), an event satisfying this raw-S2 ROI cut
+has (mathrm{pulseArea}=S2_r(1+P_{\mathrm{DPE}})>645) phe, and therefore
+necessarily exceeds the 120-phe NEST threshold.
+
+Consequences:
+
+- For an event that passes the explicit raw-S2 WS ROI cut, the NEST S2 pulse
+  threshold is logically redundant; it must not be applied as a second
+  independent efficiency factor.
+- The code now asserts that no event can pass the raw-S2 ROI mask while failing
+  the NEST S2 pulse-threshold flag. A violation is treated as an S2-unit or
+  selection-nesting regression.
+- The NEST S1 coincidence flag is different: (S1_c\geq3) phd does not
+  mathematically imply three-PMT coincidence. The NEST Parametric coincidence
+  approximation remains an additional preselection in this proxy, but it is
+  not equivalent to the official waveform-level three-PMT-in-time requirement.
+- The DAQ trigger remains absent. NEST's S2 pulse threshold is not a substitute
+  for the hardware trigger.
+
+### 2.2 No-double-counting interpretation
+
+| Item | Present treatment | Double-counting rule |
+|---|---|---|
+| NEST Parametric S1 coincidence | Already in the signed NEST S1 flag | Do not multiply a second standalone NEST/PMT coincidence factor |
+| NEST S2 pulse threshold (120 phe) | Already in the signed NEST S2 flag; nested under (S2_r>645) phd for WS-ROI-passing events | Do not add a second S2-threshold efficiency |
+| WS ROI (S1_c,S2_r,S2_c) | Explicit mask in the NEST response fold | Do not multiply the Fig. S2 black cumulative curve on top |
+| Fig. S2 green/orange | Used only as a residual SS/DA rate-level factor in the diagnostic | Its conditional factorization after NEST remains an assumption, not a validated 2D kernel |
+| DAQ trigger | Not simulated | Must be modelled separately or through a correctly conditioned official response |
+| FV, Skin/OD, sample assignment | Not simulated | Must not be silently absorbed into the NEST or Fig. S2 scalar factor |
+
 This is a **substitution-closure diagnostic**, not a proof that the numerator and denominator are the same conditional probability. In particular:
 
 - NEST Parametric S1 coincidence is a PMT-occupancy approximation, not waveform-level three-PMT-in-time reconstruction.
