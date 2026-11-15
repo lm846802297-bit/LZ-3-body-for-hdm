@@ -33,12 +33,13 @@ def wilson_interval(passed: int, total: int, z: float = 1.959963984540054) -> li
 def paired_difference_wilson_interval(
     n_full_only: int, n_parametric_only: int, total: int
 ) -> list[float]:
-    """Conservative interval from Wilson bounds on discordance and its direction."""
+    """Bonferroni 95% joint interval from two 97.5% Wilson intervals."""
     discordant = n_full_only + n_parametric_only
-    q_low, q_high = wilson_interval(discordant, total)
+    z_bonferroni = 2.241402727604947
+    q_low, q_high = wilson_interval(discordant, total, z=z_bonferroni)
     if discordant == 0:
         return [-q_high, q_high]
-    theta_low, theta_high = wilson_interval(n_full_only, discordant)
+    theta_low, theta_high = wilson_interval(n_full_only, discordant, z=z_bonferroni)
     candidates = [
         q * (2.0 * theta - 1.0)
         for q in (q_low, q_high)
@@ -136,9 +137,9 @@ def summarize_bin(ibin: int, rows: list[dict[str, float]]) -> dict[str, Any]:
         "paired_difference_standard_error": paired_se,
         "paired_difference_95pct_interval": ci,
         "paired_difference_interval_method": (
-            "Conservative 95% Wilson rectangle for discordance probability "
-            "and full-only fraction; nonzero bounds are retained when no "
-            "discordant events are observed."
+            "Bonferroni 95% joint Wilson rectangle from 97.5% marginal "
+            "intervals for discordance probability and full-only fraction; "
+            "nonzero bounds are retained when no discordant events are observed."
         ),
         "paired_difference_z_score": z_score,
         "n_both_pass": n_both,
