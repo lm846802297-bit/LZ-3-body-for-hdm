@@ -155,3 +155,23 @@ The new \`nest\` and \`ws_roi\` modes must be distinguished:
 The Parametric S1 mode uses a PMT-occupancy probability with threefold level and 481 PMTs, but does not explicitly apply the configured 150-ns coincidence window. The response also uses a uniform active-TPC cylinder prior and passes true positions as the position-correction coordinates. Trigger, waveform-level S1 timing, SS reconstruction, data-analysis cuts, the official 4.71-tonne fiducial volume, Skin/OD veto partition, and live-time treatment remain absent.
 
 The \(ws\_roi\) output is therefore a **NEST-level plus WS-ROI intermediate three-body signal prediction**, not the final LZ selected signal PDF. See the quantitative audit before using these outputs. Do not multiply the full Fig. S2 cumulative efficiency into this 2D intensity; the selections overlap, and the 2D migration information is not supplied by the scalar efficiency curve.
+
+
+### Parametric-versus-Full S1 coincidence validation
+
+Because the three-body stratified driver uses NEST Parametric S1 mode, a paired
+comparison against NEST Full S1 mode was added. [Run 43657795165](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43657795165)
+completed successfully with 10,000 paired events in each of ten energy bins.
+The same NR quanta and true event positions were passed to both modes, with
+separate deterministic S1 random streams. The maximum absolute coincidence
+acceptance difference was 0.25 percentage points; both modes passed all
+10,000 events in every tested signal-support bin (35, 101, 210, 248, and
+269.4–269.9 keV). This supports the Parametric approximation for the present
+benchmark spectra, but does not replace a full LZ waveform, trigger, SS, FV,
+veto, or data-quality selection model.
+
+Implementation:
+- \`cpp/lz_2026_nr_s1_coincidence_mode_comparison.cc\`
+- \`summarize_lz_2026_s1_coincidence_mode_comparison.py\`
+- \`tests/test_lz_2026_s1_coincidence_mode_comparison.py\`
+- \`.github/workflows/lz-2026-s1-coincidence-mode-crosscheck.yml\`
