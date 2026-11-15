@@ -12,7 +12,7 @@ on:
 
 permissions:
   actions: read
-  contents: read
+  contents: write
 
 jobs:
   binning-stability:
@@ -75,6 +75,56 @@ jobs:
         run: |
           find paired-s1-binning-stability-output -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > paired-s1-binning-stability-output/SHA256SUMS
           cat paired-s1-binning-stability-output/SHA256SUMS
+
+      - name: Archive native summaries, maps, metadata, and checksum manifests
+        run: |
+          set -euo pipefail
+          source_root=paired-s1-independent-seeds-input
+          archive=research/lz_detector_response/lz_2026_extended_nr/paired_s1_independent_seeds_2026-11-15
+          mkdir -p "$archive"
+          for seed in 20261117 40261117 60261117; do
+            mkdir -p "$archive/seed-$seed/fold/sampling-noise"
+            cp "$source_root/seed-$seed/fold/"*.csv "$archive/seed-$seed/fold/"
+            cp "$source_root/seed-$seed/fold/"*.json "$archive/seed-$seed/fold/"
+            cp "$source_root/seed-$seed/fold/sampling-noise/"*.csv "$archive/seed-$seed/fold/sampling-noise/"
+            cp "$source_root/seed-$seed/fold/sampling-noise/"*.json "$archive/seed-$seed/fold/sampling-noise/"
+          done
+          mkdir -p "$archive/ensemble" "$archive/binning-stability"
+          cp "$source_root/ensemble/"* "$archive/ensemble/"
+          cp "$source_root/run_manifest.json" "$archive/"
+          cp "$source_root/SHA256SUMS" "$archive/raw_event_artifact_SHA256SUMS.txt"
+          cp paired-s1-binning-stability-output/*.csv "$archive/binning-stability/"
+          cp paired-s1-binning-stability-output/*.json "$archive/binning-stability/"
+          cp paired-s1-binning-stability-output/SHA256SUMS "$archive/binning-stability_artifact_SHA256SUMS.txt"
+          cat > "$archive/ARCHIVE_README.md" <<'EOF'
+          # Paired S1 independent-seed 2D response archive
+
+          - Production run: https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43721276233
+          - Production artifact: 14164652993
+          - Production artifact ZIP SHA-256: 26964920be1e89470075848e55c4ba488494f9ddc4e0421add4d07421227c62c
+          - Binning audit run: https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43722459713
+          - Binning audit artifact: 14165305118
+          - Binning audit artifact ZIP SHA-256: 3b4a6ff0155422796d7045e068148f9fc334913cbbfbf06e7c97d36d384237a7
+          - Source commit for the NEST production: f1b4bf615e2c59192f31bd355b98595c4502b3b1
+          - Pinned NEST commit: 541b6430dae6ea289cf110c99f174a9187f7fdee
+          - Seeds: 20261117, 40261117, 60261117; 470,000 events per seed.
+
+          The archive commits all per-seed fold maps, rate summaries, split-half summaries,
+          ensemble maps, metadata, and exact binning-stability summaries. The three raw
+          event CSVs (about 367 MB uncompressed total) remain in the production artifact;
+          raw_event_artifact_SHA256SUMS.txt preserves their individual checksums.
+          The original ZIP digest above verifies the downloaded artifact as a whole.
+          EOF
+          find "$archive" -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > "$archive/SHA256SUMS"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$archive"
+          if git diff --cached --quiet; then
+            echo "Archive already matches the current artifacts; no commit needed."
+            exit 0
+          fi
+          git commit -m "Archive paired S1 independent-seed response and binning audit"
+          git push origin HEAD:integration/lz-2026-nest-nr-fullband-20261115
 
       - name: Upload binning stability audit
         uses: actions/upload-artifact@v4
