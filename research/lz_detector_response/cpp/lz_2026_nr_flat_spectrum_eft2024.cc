@@ -32,7 +32,8 @@ double uniform01(std::mt19937_64& engine) {
 int main(int argc, char** argv) {
   if (argc != 7) {
     std::cerr << "Usage: lz_2026_nr_flat_spectrum_eft2024 "
-                 "E_min_keV E_max_keV n_events seed config(eft2024|ws2024|generic) "
+                 "E_min_keV E_max_keV n_events seed "
+                 "config(eft2024|tableS5|eftmean_wswidth|eftmean_genericwidth|ws2024|generic) "
                  "position(candidate|uniform_tpc)\n";
     return 2;
   }
