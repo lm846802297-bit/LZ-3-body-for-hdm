@@ -351,7 +351,7 @@ def analyze(seed_root: Path, out_dir: Path, n_bootstrap: int, rng_seed: int) -> 
                     "bootstrap_percentile_97p5": float(q975),
                     "bootstrap_basic_2p5": basic_low,
                     "bootstrap_basic_97p5": basic_high,
-                    "bootstrap_fraction_below_point": float(np.mean(boots < point)),
+                    "bootstrap_fraction_below_point": float(np.mean(boots < point - 1e-12)),
                     "bootstrap_fraction_below_1pct": float(np.mean(boots < 0.01)),
                     "mean_per_seed_tv": seed_mean,
                     "sd_per_seed_tv": seed_sd,
