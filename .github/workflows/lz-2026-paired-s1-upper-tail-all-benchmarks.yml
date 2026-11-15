@@ -1,0 +1,156 @@
+name: LZ 2026 paired S1 upper-tail audit across four benchmarks
+
+on:
+  push:
+    branches:
+      - integration/lz-2026-nest-nr-fullband-20261115
+    paths:
+      - research/lz_detector_response/audit_lz_2026_paired_s1_upper_tail_all_benchmarks.py
+      - research/lz_detector_response/tests/test_lz_2026_paired_s1_upper_tail_all_benchmarks.py
+      - .github/workflows/lz-2026-paired-s1-upper-tail-all-benchmarks.yml
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  multi-benchmark-s1-upper-tail:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Download immutable ten-seed production artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: lz-2026-paired-s1-independent-seeds
+          repository: lm846802297-bit/LZ-3-body-for-hdm
+          run-id: 43750948249
+          github-token: \${{ github.token }}
+          path: paired-s1-independent-seeds-input
+
+      - name: Verify all files in the production artifact manifest
+        working-directory: paired-s1-independent-seeds-input
+        run: sed 's#paired-s1-independent-seeds-output/##' SHA256SUMS | sha256sum --check -
+
+      - name: Test multi-benchmark support, boundaries, and shared event weighting
+        run: |
+          python -m unittest research.lz_detector_response.tests.test_lz_2026_paired_s1_upper_tail_all_benchmarks -v
+
+      - name: Audit all four benchmark upper tails using the same paired NEST events
+        run: |
+          python research/lz_detector_response/audit_lz_2026_paired_s1_upper_tail_all_benchmarks.py \
+            --seed-root paired-s1-independent-seeds-input \
+            --seeds 20261117 40261117 60261117 80261117 100261117 120261117 140261117 160261117 180261117 200261117 \
+            --benchmarks red_ms200_dm1 green_ms300_dm1 black_ms360_dm1 blue_ms300_dm10 \
+            --spectrum-dir research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum \
+            --bootstrap-replicates 2000 \
+            --out-dir multi-benchmark-s1-upper-tail-output
+
+      - name: Validate all benchmark supports, event counts, and output rows
+        run: |
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+          root=Path("multi-benchmark-s1-upper-tail-output")
+          summary=list(csv.DictReader((root/"multi_benchmark_s1_upper_tail_summary.csv").open()))
+          per_seed=list(csv.DictReader((root/"multi_benchmark_s1_upper_tail_per_seed.csv").open()))
+          thresholds=list(csv.DictReader((root/"multi_benchmark_s1_upper_tail_thresholds.csv").open()))
+          meta=json.loads((root/"multi_benchmark_s1_upper_tail_metadata.json").read_text())
+          expected=["red_ms200_dm1","green_ms300_dm1","black_ms360_dm1","blue_ms300_dm10"]
+          seeds=[20261117,40261117,60261117,80261117,100261117,120261117,140261117,160261117,180261117,200261117]
+          assert meta["status"]=="TEN_SEED_MULTI_BENCHMARK_S1_UPPER_TAIL_DIAGNOSTIC_ONLY"
+          assert meta["benchmarks"]==expected
+          assert meta["seed_count"]==10 and meta["total_events_audited"]==4700000
+          assert meta["benchmark_weighted_event_instances"]==18800000
+          assert meta["seeds"]==seeds
+          assert meta["stratum_weight_closure"]["checks"]==18800
+          assert meta["stratum_weight_closure"]["max_relative_residual_across_all_benchmarks_seeds_models_bins"]<5e-12
+          expected_summary=sum(len(v) for v in meta["energy_bands_keV"].values())*2
+          assert len(summary)==expected_summary, (len(summary),expected_summary)
+          assert len(per_seed)==expected_summary*10, (len(per_seed),expected_summary*10)
+          assert len(thresholds)==expected_summary*10*10, (len(thresholds),expected_summary*100)
+          assert meta["n_summary_rows"]==len(summary)
+          assert meta["n_per_seed_rows"]==len(per_seed)
+          assert meta["n_threshold_rows"]==len(thresholds)
+          expected_support_bins={"red_ms200_dm1":235,"green_ms300_dm1":170,"black_ms360_dm1":65,"blue_ms300_dm10":170}
+          for benchmark in expected:
+              support=meta["benchmark_supports"][benchmark]
+              audit=meta["support_selection_audit"][benchmark]
+              assert support["n_support_bins"]==expected_support_bins[benchmark]
+              assert audit["n_events"]==expected_support_bins[benchmark]*2000*10
+              assert audit["n_events"]==audit["expected_support_events"]
+              assert "common_support_205_269p9" in meta["energy_bands_keV"][benchmark]
+              for model in ("GCN","JJ55"):
+                  rows=[r for r in summary if r["benchmark"]==benchmark and r["nuclear_model"]==model]
+                  assert len(rows)==len(meta["energy_bands_keV"][benchmark])
+                  for row in rows:
+                      assert int(row["n_independent_seeds"])==10
+                      json.loads(row["s1_roi_relative_rate_change"])
+                      json.loads(row["s1_roi_efficiency_difference_full_minus_parametric"])
+                      json.loads(row["mean_parametric_fraction_above_threshold_given_coincidence"])
+                      json.loads(row["mean_full_fraction_above_threshold_given_coincidence"])
+                      assert 0<=float(row["ensemble_mean_s1_conditional_histogram_tv_10phd"])<=1
+                      assert 0<=float(row["ensemble_mean_s1_upper_tail_histogram_tv_10phd_given_s1_gt_500"])<=1
+          print(f"Validated {len(summary)} summary, {len(per_seed)} per-seed, and {len(thresholds)} threshold rows; 4.7M unique events reweighted for four benchmarks.")
+          PY
+
+      - name: Hash multi-benchmark audit outputs
+        run: |
+          (
+            cd multi-benchmark-s1-upper-tail-output
+            find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+            sha256sum --check SHA256SUMS
+          )
+          cat multi-benchmark-s1-upper-tail-output/SHA256SUMS
+
+      - name: Archive multi-benchmark outputs on the PR branch
+        run: |
+          set -euo pipefail
+          parent_archive=research/lz_detector_response/lz_2026_extended_nr/paired_s1_independent_seeds_2026-11-15
+          archive="$parent_archive/multi-benchmark-upper-tail-audit"
+          mkdir -p "$archive"
+          cp multi-benchmark-s1-upper-tail-output/* "$archive/"
+          if [ ! -f "$archive/README.md" ]; then
+            cat > "$archive/README.md" <<'EOF'
+          # Four-benchmark paired S1 upper-tail audit
+
+          This audit reweights the immutable ten-seed EFT2024 NEST Parametric/Full S1 event sample for red, green, black, and blue three-body recoil spectra. It does not regenerate NEST events or change the detector configuration. See REPORT.md for the numerical results and limitations.
+          EOF
+          fi
+          (
+            cd "$archive"
+            find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+            sha256sum --check SHA256SUMS
+          )
+          (
+            cd "$parent_archive"
+            find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+            sha256sum --check SHA256SUMS
+          )
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$parent_archive"
+          if git diff --cached --quiet; then
+            echo "Multi-benchmark upper-tail archive already matches current outputs."
+            exit 0
+          fi
+          git commit -m "Archive ten-seed four-benchmark S1 upper-tail audit"
+          git fetch origin integration/lz-2026-nest-nr-fullband-20261115
+          git rebase origin/integration/lz-2026-nest-nr-fullband-20261115
+          git push origin HEAD:integration/lz-2026-nest-nr-fullband-20261115
+
+      - name: Upload four-benchmark S1 upper-tail audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-paired-s1-four-benchmark-upper-tail
+          path: multi-benchmark-s1-upper-tail-output/
+          if-no-files-found: error
+          retention-days: 60
