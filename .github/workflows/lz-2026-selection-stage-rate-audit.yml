@@ -7,7 +7,12 @@ on:
       - integration/lz-2026-nest-nr-fullband-20261115
     paths:
       - research/lz_detector_response/summarize_lz_2026_selection_stage_rates.py
+      - research/lz_detector_response/converge_lz_2026_three_body_energy_grid.py
+      - research/lz_detector_response/compare_lz_2026_nr_high_energy_half_kev.py
+      - research/lz_detector_response/fold_lz_2026_three_body_event_weighted_response.py
       - research/lz_detector_response/tests/test_lz_2026_selection_stage_rates.py
+      - research/lz_detector_response/tests/test_lz_2026_nr_high_energy_half_kev.py
+      - research/lz_detector_response/tests/test_lz_2026_three_body_event_weighted_fold.py
       - research/lz_detector_response/extract_lz_2026_nr_selection_efficiency_components.py
       - research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/**
       - research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/lz_2026_rate_level_event_yields.csv
@@ -48,9 +53,12 @@ jobs:
             --pdf lz_2026_extended_nr_search.pdf \
             --out-dir selection-stage-output
 
-      - name: Test exact piecewise-linear product integration
+      - name: Test response-grid, event-weighted fold, and exact selection-rate integration
         run: |
-          python -m unittest research/lz_detector_response/tests/test_lz_2026_selection_stage_rates.py -v
+          python -m unittest \
+            research.lz_detector_response.tests.test_lz_2026_nr_high_energy_half_kev \
+            research.lz_detector_response.tests.test_lz_2026_three_body_event_weighted_fold \
+            research.lz_detector_response.tests.test_lz_2026_selection_stage_rates -v
 
       - name: Integrate all benchmark selection stages and close rate-level yields
         run: |
