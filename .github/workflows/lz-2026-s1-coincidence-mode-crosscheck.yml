@@ -1,0 +1,78 @@
+name: LZ 2026 NEST Parametric versus Full S1 coincidence cross-check
+
+on:
+  push:
+    branches:
+      - research/figure2-p0-4-mainline
+    paths:
+      - research/lz_detector_response/cpp/lz_2026_nr_s1_coincidence_mode_comparison.cc
+      - research/lz_detector_response/summarize_lz_2026_s1_coincidence_mode_comparison.py
+      - research/lz_detector_response/tests/test_lz_2026_s1_coincidence_mode_comparison.py
+      - .github/workflows/lz-2026-s1-coincidence-mode-crosscheck.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  paired-s1-mode-crosscheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+
+      - name: Check out pinned NEST source
+        uses: actions/checkout@v4
+        with:
+          repository: NESTCollaboration/nest
+          ref: 541b6430dae6ea289cf110c99f174a9187f7fdee
+          path: nest
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Build pinned NEST core
+        run: |
+          cmake -S nest -B nest/build \
+            -DBUILD_EXAMPLES=OFF -DBUILD_GARFIELD=OFF -DBUILD_ROOT=OFF -DG4=OFF
+          cmake --build nest/build --target NESTCore --parallel 2
+
+      - name: Compile paired Parametric/Full S1 driver
+        run: |
+          g++ -std=c++17 -O2 \
+            -Inest/include -Inest/include/Detectors \
+            -Inest/build/_deps/gcem-src/include \
+            research/lz_detector_response/cpp/lz_2026_nr_s1_coincidence_mode_comparison.cc \
+            nest/build/libNESTCore.a -o lz_2026_nr_s1_coincidence_mode_comparison
+
+      - name: Test paired S1 comparison statistics
+        run: |
+          python -m unittest \
+            research/lz_detector_response/tests/test_lz_2026_s1_coincidence_mode_comparison.py -v
+
+      - name: Generate paired NEST S1 mode sample
+        run: |
+          mkdir -p s1-mode-output
+          ./lz_2026_nr_s1_coincidence_mode_comparison \
+            10000 20261115 1000000000 1200000000 1400000000 \
+            > s1-mode-output/s1_parametric_vs_full_events.csv
+          du -h s1-mode-output/s1_parametric_vs_full_events.csv
+
+      - name: Summarize S1 acceptance and paired differences
+        run: |
+          python research/lz_detector_response/summarize_lz_2026_s1_coincidence_mode_comparison.py \
+            --input-csv s1-mode-output/s1_parametric_vs_full_events.csv \
+            --out-dir s1-mode-output
+          cat s1-mode-output/s1_parametric_vs_full_summary.json
+
+      - name: Upload paired S1 response artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-s1-parametric-full-coincidence-crosscheck
+          path: s1-mode-output/
+          if-no-files-found: error
+          retention-days: 60
