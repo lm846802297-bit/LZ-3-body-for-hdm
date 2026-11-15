@@ -864,126 +864,151 @@ inspected.
 
 ### Production design and provenance
 
-The single-stream split-half comparison was followed by three independent
-paired Parametric/Full S1 productions. Each production covers the complete
+The initial three-seed study has been extended to ten independent paired
+Parametric/Full S1 productions. Each production covers the complete
 35--269.9 keV signal support in 235 one-keV strata, with 2,000 events per
-stratum (470,000 events per seed; 1,410,000 events total). The base seeds are
-20261117, 40261117, and 60261117. For event index (i), the driver uses the
-four NEST streams (s+4i+{1,2,3,4}). The minimum base-seed gap is
-20,000,000, larger than the maximum per-event offset of 1,880,000; the
-workflow's non-overlap check passed.
+stratum (470,000 events per seed; 4,700,000 events total). The ten base seeds
+are 20261117, 40261117, 60261117, 80261117, 100261117, 120261117,
+140261117, 160261117, 180261117, and 200261117. For event index i, the
+driver uses four NEST streams base_seed + 4i + {1,2,3,4}. The minimum
+base-seed gap is 20,000,000, larger than the maximum per-event offset of
+1,880,000; the random-stream non-overlap check passed.
 
 Within each seed, both S1 modes use the same intrinsic NR quanta and true
-position, but separate S1 response draws; each paired event shares one NEST
-Full S2 draw. The event-level samples are folded with exact piecewise-linear
-(dR/dE_R) weights, normalized independently in each true-energy stratum.
-The detector-response configuration is NEST EFT2024 at pinned commit
-`541b6430dae6ea289cf110c99f174a9187f7fdee`. GCN/JJ55 refer to the nuclear
-recoil spectra, not two different NEST detector configurations.
+position, but independent S1 response draws; each paired event shares one
+NEST Full S2 draw. The event samples are folded with exact piecewise-linear
+natural-xenon three-body rate weights, normalized independently in each
+true-energy stratum. The detector-response configuration is
+LZ_Detector_2024::SetEFT2024Configuration() at pinned NEST commit
+541b6430dae6ea289cf110c99f174a9187f7fdee. GCN/JJ55 label the nuclear-recoil
+spectra, not alternative NEST detector configurations.
 
 Production:
-[run 43721276233](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43721276233),
-artifact 14164652993, ZIP SHA-256
-`26964920be1e89470075848e55c4ba488494f9ddc4e0421add4d07421227c62c`.
-The archive contains 26 checksum-covered files plus the checksum manifest.
-All 26 file checksums were independently verified after download. It contains
-the three per-seed response/fold products and the ensemble summaries; the raw
-event CSVs remain in the Actions artifact and are individually covered by
-`raw_event_artifact_SHA256SUMS.txt`.
+[run 43750948249](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43750948249),
+artifact 14176882910, ZIP SHA-256
+606397d9eac594008630a18b97f1e72fbbfa1d157e34779de7ce5fd0fe5b8cb5.
+The downloaded ZIP is 489,714,347 bytes. All 75 entries in its internal
+SHA256SUMS manifest were independently verified. Each of the ten raw event
+CSV files contains exactly 470,000 sequential event rows (event indices
+0--469,999), with exactly 2,000 events in each of the 235 energy bins.
+The seed ranges are disjoint under the event-level NEST seed rule.
+
+The archived ten-seed fold products contain all ten per-seed response maps,
+rate summaries, and split-half diagnostics, plus the ensemble maps and
+metadata. The ten raw event CSVs remain in the immutable Actions artifact;
+raw_event_artifact_SHA256SUMS.txt preserves the complete 75-file manifest.
+The original production artifact remains unchanged.
 
 ### Independent-seed ensemble results
 
-The ensemble mean is the equal-weight arithmetic mean of the three
-event-weighted rate maps. For the WS-ROI stage, averaging the GCN and JJ55
-results gives:
+The ensemble map is the equal-weight arithmetic mean of the ten
+event-weighted per-seed rate maps. The table below averages the GCN and JJ55
+results for the WS-ROI stage:
 
 | Benchmark | Ensemble-mean Parametric/Full 2D TV | Mean per-seed mode TV | Within-mode seed-pair TV | Full/Parametric WS-ROI rate change |
 |---|---:|---:|---:|---:|
-| Red, 200 keV | 1.069% | 1.781% | 1.839% | -0.0039% |
-| Green, 300 keV | 1.072% | 1.883% | 1.867% | -0.0153% |
-| Black, 360 keV | 1.912% | 2.876% | 3.079% | -0.4952% |
-| Blue, 300 keV, (Delta m=10) MeV | 1.072% | 1.883% | 1.866% | -0.0152% |
+| Red, 200 keV | 0.649% | 1.753% | 1.884% | -0.0054% |
+| Green, 300 keV | 0.648% | 1.816% | 1.898% | -0.0210% |
+| Black, 360 keV | 0.938% | 2.900% | 3.003% | -0.594% |
+| Blue, 300 keV, Δm=10 MeV | 0.648% | 1.815% | 1.898% | -0.0209% |
 
-For all four benchmarks, the ensemble-mean Parametric/Full TV is below the
-mean within-mode seed-to-seed pairwise TV. The ratio is 0.574--0.621 for the
-WS-ROI maps. This is a more relevant Monte Carlo stability comparison than
-the original single-stream split-half result, but it is still descriptive:
-three seeds do not provide a reliable bootstrap interval or a precision
-equivalence test.
+The ensemble-mean TV, mean per-seed TV, and within-mode pairwise seed TV
+are different statistics. The ratio of the ensemble-mean TV to the
+within-mode pairwise TV is descriptive only; it is not the standard error
+or confidence interval of the ensemble-mean TV and is not an equivalence
+test. The ensemble metadata has been corrected to state the actual ten-seed
+count and this limitation. The archived ensemble summaries were regenerated
+from the same ten per-seed fold products; no NEST events were regenerated
+and no numerical inputs were changed. The original production artifact
+remains immutable.
 
-The black benchmark remains the sensitive case. Its mean WS-ROI rate change
-is about -0.50%, while the sample standard deviation of the three
-seed-specific rate differences is about 0.45 percentage points (GCN and JJ55
-give consistent values). The three GCN seed-specific rate changes are
--0.294%, -0.188%, and -1.014%; JJ55 gives -0.289%, -0.183%, and -0.994%.
-The direction is consistent in these three seeds, but the spread is too
-large to promote -0.50% to a precision detector correction. For the red,
-green, and blue benchmarks the rate changes are at or below 0.016%.
+The black benchmark remains the sensitive case. At the native
+10-phd by 0.02-dex binning, its WS-ROI ensemble-mean TV is 0.943% (GCN)
+and 0.932% (JJ55), while its mean per-seed mode TV is 2.916% and 2.883%.
+The within-mode pairwise seed TV is 3.021% and 2.986%, respectively.
 
-Both NEST S1-coincidence and NEST S2-threshold acceptances are 100% in the
-generated signal-support samples. Thus the observed differences in this
-study are primarily changes in the reconstructed S1-dependent 2D response
-and in the S1-dependent WS-ROI migration, not a loss at the NEST threshold
-stage. Since S2 is shared event by event, the NEST-stage S2 marginal remains
-identical between the two S1 modes; the small nonzero WS-ROI S2-marginal
-difference arises from the S1-dependent selection.
+A seed-subset check shows why the combined point estimate must not be
+promoted to a precision equivalence claim. Averaging GCN/JJ55, the black
+WS-ROI mean-map TV is 1.912% for the original three seeds, 1.124% for the
+seven newly added seeds alone, and 0.938% for all ten seeds together.
+Thus the ten-seed combined point estimate is below the 1% engineering
+threshold, but the independent seven-seed subset remains above it. The
+point-estimate gate is not yet robust to the seed subset.
+
+The black integrated WS-ROI rate shift is more stable. Across all ten
+seeds, Full relative to Parametric changes the rate by -0.598% (GCN) and
+-0.588% (JJ55); the seed-to-seed standard deviations are 0.288 and
+0.282 percentage points. Student-t intervals over the ten seed-level
+differences are approximately [-0.805%, -0.392%] for GCN and
+[-0.790%, -0.386%] for JJ55. The seven newly added seeds alone give
+-0.641% (GCN) and -0.631% (JJ55), with all seven seed-level changes
+negative in both nuclear-response cases. These are seed-level Monte Carlo
+diagnostics for the current NEST proxy, not official detector-systematic
+intervals or a detector correction factor.
+
+At the NEST threshold stage, the black 2D mean-map TV remains 1.168%
+(GCN) and 1.154% (JJ55), above the 1% point-estimate threshold. The
+WS-ROI result must not be generalized to every selection stage.
+
+Both NEST S1-coincidence and NEST S2-threshold acceptances are 100% in
+the generated signal-support samples. Thus the observed rate changes
+arise primarily from S1-dependent WS-ROI migration, not a loss at the
+NEST threshold stage. Since S2 is shared event by event, the NEST-stage
+S2 marginal remains identical between the two S1 modes; the small
+nonzero WS-ROI S2-marginal difference arises from S1-dependent selection.
 
 ### Observable histogram-binning dependence
 
-A separate audit exactly aggregates the same ensemble maps from the native
-10-phd by 0.02-dex cells to 20-phd by 0.04-dex and 40-phd by 0.08-dex cells.
-No new events are generated and no interpolation is used. The WS-ROI
-ensemble-mean TV, averaged over GCN/JJ55, is:
+The ten-seed binning audit exactly aggregates the same native maps from
+10-phd by 0.02-dex cells to 20-phd by 0.04-dex and 40-phd by 0.08-dex
+cells. No new events are generated and no interpolation is used. It
+contains 48 ensemble rows (16 benchmark/nuclear/stage combinations times
+three rebin factors) and 480 per-seed rows.
 
-| Benchmark | 10 phd / 0.02 dex | 20 phd / 0.04 dex | 40 phd / 0.08 dex |
+Binning audit:
+[run 43754946092](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43754946092),
+artifact 14177248273, ZIP SHA-256
+ceca6a9d05cd0342da2d6e994a206111d6a2eadf4863526a7bb540bdbabd7b01.
+All three native output-file checksums were independently verified.
+
+The maximum ensemble-mean TV across all benchmark/nuclear combinations
+at each stage is:
+
+| Stage | 10 phd / 0.02 dex | 20 phd / 0.04 dex | 40 phd / 0.08 dex |
 |---|---:|---:|---:|
-| Red, 200 keV | 1.069% | 0.572% | 0.318% |
-| Green, 300 keV | 1.072% | 0.564% | 0.394% |
-| Black, 360 keV | 1.912% | 0.950% | 0.447% |
-| Blue, 300 keV, (Delta m=10) MeV | 1.072% | 0.564% | 0.393% |
+| NEST | 1.168% | 0.750% | 0.571% |
+| WS ROI | 0.943% | 0.496% | 0.358% |
 
-The maximum WS-ROI TV across all benchmark/nuclear combinations is 1.924%
-at the native binning, 0.954% at the first coarsening, and 0.449% at the
-second coarsening. The S1 marginal is the dominant contribution: its
-benchmark-averaged TV ranges from 0.432% to 0.761% at native binning. The
-S2 marginal is much smaller, reaching about 0.13% only for the black
-benchmark.
+For the black WS-ROI map specifically, the GCN/JJ55 TV values are
+0.943%/0.932% at native binning, 0.496%/0.493% after the first
+coarsening, and 0.358%/0.358% after the second. The S1 marginal
+contributes 0.411%/0.410% at native binning, while the S2 marginal
+contributes 0.099%/0.096%; the S1 marginal is dominant.
 
 The monotonic decrease under coarsening is expected: deterministic
 aggregation of cells cannot increase total-variation distance. It is not
-evidence that the physical mode difference disappears, and the apparent
-sub-1% value at coarser binning must not be used to claim a pass by choosing
-larger bins. The 2D TV is a property of both the distributions and the
-chosen observable partition. Final likelihood binning must be selected from
-the experiment's observable resolution and background/statistical model,
-then independently checked for stability. This observable-binning audit is
-distinct from the 1/5/10-keV true-recoil response-grid study.
-
-Binning audit:
-[run 43722824029](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43722824029),
-artifact 14165550612, ZIP SHA-256
-`93f0b14355590c9aba8daec602cf21c44a8a818875e9a50257217b0587375bde`.
-Its three native output files have matching SHA-256 values to the earlier
-archived audit run 43722459713; only the ZIP packaging digest differs.
-All three file-level checksums in the downloaded audit artifact were
-independently verified.
+evidence that the physical mode difference disappears, and coarse bins
+must not be selected merely to force a numerical TV threshold. The native
+10-phd by 0.02-dex partition remains the reference until likelihood
+binning is chosen from detector resolution and the background/statistical
+model, then independently checked for stability. This observable-binning
+audit is distinct from the 1/5/10-keV true-recoil response-grid study.
 
 ### Interpretation and next requirement
 
-The three-seed ensemble supports the following limited statement: within the
-current EFT2024 NEST proxy, the integrated WS-ROI rate is insensitive to the
-S1 mode at the sub-percent level for red/green/blue and changes by about
-0.5% for black, while the 2D map differences are smaller than the observed
-between-seed map variability. It does not establish Parametric/Full
-equivalence, nor does it validate the collaboration's waveform-level S1
-reconstruction.
+The ten-seed production and 48/480-row binning audit close the numerical
+production, map aggregation, and exact-rebinning bookkeeping. They do not
+establish Parametric/Full equivalence. In particular, the black 360-keV
+WS-ROI mean-map TV is below 1% only in the combined ten-seed point estimate;
+the independent seven-seed subset is above 1%. No bootstrap confidence
+interval for the ensemble-map TV is included. The black WS-ROI integrated
+rate shift is consistently about -0.6%, but it remains a NEST-proxy
+mode-dependence diagnostic rather than a detector correction.
 
-For a precision mode-equivalence statement, increase the independent-seed
-ensemble beyond three and report uncertainty on the ensemble-map TV and the
-black WS-ROI rate difference. In parallel, the detector-model gaps remain:
-official waveform-level S1 classification, hardware DAQ trigger, SS
-reconstruction/data-analysis cuts, the 4.71-tonne fiducial-volume migration,
-and the science/prompt-veto/delayed-veto Skin/OD samples. No residual Fig. S2
-efficiency is to be multiplied into this existing WS-ROI 2D map. No final
-profile likelihood is authorized.
-
+The next physics task is the dedicated black 360-keV S1 upper-tail and
+selection-migration audit. After that, the complete conditional response
+matrix must still include the shared-observable correlations across DAQ,
+SS reconstruction/data-analysis, official FV, Skin/OD veto partitions,
+and live-time treatment. The Fig. S2 residual efficiency must not be
+multiplied into the existing 2D map as an independent scalar. No final
+profile likelihood or 90% CL exclusion is authorized.

@@ -444,28 +444,42 @@ a binning diagnostic, not a new Monte Carlo sample or a universal 1% gate.
 The full interpretation and tables are in
 [LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md](lz_2026_extended_nr/LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md).
 
-The follow-up three-independent-seed EFT2024 ensemble generated 1.41 million
-paired events (three disjoint 470,000-event productions) and independently
-closed all 16 benchmark/nuclear/stage summaries. For the WS-ROI maps, the
-ensemble-mean Parametric/Full TV is 1.069--1.912%, below the within-mode
-seed-pair TV of 1.839--3.079%; the black benchmark's mean WS-ROI rate change
-is -0.495% with a 0.445-percentage-point seed-to-seed standard deviation.
-These three seeds are diagnostic, not a precision equivalence test or
-bootstrap interval. The separate exact observable-binning audit reduces the
-maximum WS-ROI TV from 1.924% at 10-phd/0.02-dex to 0.954% at 20-phd/0.04-dex
-and 0.449% at 40-phd/0.08-dex; this is expected TV contraction under
-coarsening, not evidence that the underlying distributions become equivalent.
+The ten-independent-seed EFT2024 paired S1 ensemble generated 4.7 million
+paired events (ten disjoint 470,000-event productions) and closed all 16
+benchmark/nuclear/stage ensemble summaries plus 160 per-seed summaries.
+For the WS-ROI maps, the ten-seed ensemble-mean Parametric/Full TV is
+0.648--0.938%, while the mean per-seed mode TV is 1.753--2.900% and the
+within-mode pairwise seed TV is 1.884--3.003%. These quantities are
+descriptive and are not confidence intervals or an equivalence test.
+
+The black 360-keV benchmark remains sensitive: its combined ten-seed
+WS-ROI mean-map TV is 0.938%, but the seven newly added seeds alone give
+1.124%, so the combined point estimate does not establish a robust
+sub-1% equivalence result. The black WS-ROI integrated rate changes by
+about -0.59% between Full and Parametric modes.
+
+The ten-seed observable-binning audit contains 48 ensemble rows and 480
+per-seed rows. It exactly aggregates the same maps without interpolation
+or new event generation. The maximum WS-ROI TV is 0.943% at native
+10-phd/0.02-dex binning, 0.496% at 20-phd/0.04-dex, and 0.358% at
+40-phd/0.08-dex. The maximum NEST-stage TV at native binning is 1.168%.
+The reduction under coarsening is mathematical TV contraction, not evidence
+that the underlying distributions become equivalent. Do not choose coarse
+bins merely to force a numerical threshold.
+
 See Section 15.8 of the linked selection audit and the
 [independent-seed archive](lz_2026_extended_nr/paired_s1_independent_seeds_2026-11-15/ARCHIVE_README.md).
 
-- Independent-seed production: [run 43721276233](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43721276233), artifact 14164652993.
-- Observable-binning audit: [run 43722824029](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43722824029), artifact 14165550612.
-- The native-map TV depends on the chosen S1/S2 histogram binning. Do not use coarser bins merely to force a numerical TV threshold; select likelihood binning from detector resolution and independently demonstrate stability.
+- Independent-seed production: [run 43750948249](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43750948249), artifact 14176882910.
+- Observable-binning audit: [run 43754946092](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43754946092), artifact 14177248273.
+- No bootstrap confidence interval for the ensemble-map TV is included; these results do not establish mode equivalence or validate the official waveform-level LZ reconstruction.
 
 Implementation:
 - cpp/lz_2026_nr_paired_s1_mode_2d_response.cc — paired Parametric/Full S1 and common Full S2 generation.
 - fold_lz_2026_paired_s1_mode_2d_response.py — exact event-weighted 2D signal maps.
 - audit_lz_2026_paired_s1_2d_sampling_noise.py — pooled-TV closure, marginal TV, and within-stream split-half stability.
+- aggregate_lz_2026_paired_s1_2d_independent_seeds.py — ten-seed ensemble maps, per-seed summaries, rate closure, and seed-spread diagnostics.
+- audit_lz_2026_paired_s1_2d_binning_stability.py and .github/workflows/lz-2026-paired-s1-binning-stability.yml — 10-seed exact 10/20/40-phd by 0.02/0.04/0.08-dex rebin audit (48 ensemble and 480 per-seed rows).
 - tests/test_lz_2026_paired_s1_mode_2d_response.py and tests/test_lz_2026_paired_s1_2d_sampling_noise.py — fold and diagnostic tests.
 - .github/workflows/lz-2026-paired-s1-mode-2d-response.yml — pinned-NEST build, response production, fold, validation, and artifact upload.
 
