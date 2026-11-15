@@ -172,7 +172,13 @@ A subsequent audit rerun after correcting the maximum 5-keV TV value completed s
 - The archive contains 14 files, including four 1.06-million-event response CSVs, the 1/5/10-keV summary, the energy-resolved cutflow, and the 1-keV 2D intensity.
 - Directly reading the archived JSON gives 192 grid comparisons and 64 split-sample comparisons. The maximum 5-keV TV distance is 0.8895571%; the maximum 5-keV relative accepted-rate difference is 0.5130969%. The corresponding 10-keV maxima are 2.464879% and 1.214624%.
 
-This rerun regenerated the same calculation with the corrected audit record; it did not introduce a new response model or an independent coarse-grid Monte Carlo production. The summary still records `formal_pass: null` and `DIAGNOSTIC_ONLY_NO_PREDECLARED_TOLERANCE`.
+The energy-resolved cutflow CSV initially omitted benchmark and nuclear-model identifiers even though its rate-integral columns varied with both. This was an output-provenance defect, not a response-calculation defect. It has been fixed and the workflow now validates the full key matrix and uniqueness. The corrected archive is:
+- [GitHub Actions run 43674775899](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43674775899), successful.
+- Artifact ID: `14145826957`.
+- ZIP SHA-256: `68d2e837bbcaef82e03df49545c54735cac79c97413c860a52110e2b74f2a661`.
+- The corrected `acceptance_by_energy_grid.csv` contains 33,120 rows and 21 columns, including benchmark and nuclear model; the seven-field provenance key has zero duplicates.
+
+This rerun regenerated the same physical calculation with corrected audit metadata; it did not introduce a new response model or an independent coarse-grid Monte Carlo production. The summary still records `formal_pass: null` and `DIAGNOSTIC_ONLY_NO_PREDECLARED_TOLERANCE`.
 
 ### 8.1 What the run actually sampled
 
@@ -199,13 +205,19 @@ For the primary public EFT2024 candidate, the maxima across both acceptance mode
 - 5 keV: 0.3249% in accepted rate and 0.4579% in 2D total variation;
 - 10 keV: 0.8947% in accepted rate and 0.9535% in 2D total variation.
 
-The largest 5-keV shape difference is smaller than the corresponding 1-keV split-sample TV difference for every matched benchmark/model/family/mode combination. The largest 1-keV split-sample TV difference is 3.9611% in the NEST-level mode and 3.3643% in the NEST-plus-WS-ROI mode. The maximum split-sample accepted-rate difference in the WS-ROI mode is 0.4469%.
+For every matched benchmark/nuclear-response/family/acceptance combination, both the 5-keV and 10-keV 2D TV differences are smaller than the corresponding 1-keV split-sample TV difference. The largest 1-keV split-sample TV difference is 3.9611% in the NEST-level mode and 3.3643% in the NEST-plus-WS-ROI mode. Thus the observed coarse-grid shape differences are not resolved above the within-grid split-sample shape fluctuation in this diagnostic.
+
+The accepted-rate comparison is more restrictive. Comparing each coarse-grid relative rate difference with the corresponding 1-keV split-sample relative rate difference:
+- 5-keV rate differences exceed the split-sample rate difference in 17 of 64 matched comparisons.
+- 10-keV rate differences exceed it in 37 of 64 matched comparisons.
+- The maximum split-sample accepted-rate difference in the WS-ROI mode is 0.4469%, while the largest coarse-grid rate differences are 0.5131% (5 keV) and 1.2146% (10 keV).
 
 Interpretation:
-- 5 keV is numerically close to the 1-keV reference at the sub-percent level for this particular response MC and these benchmark spectra.
-- 10 keV shows visibly larger shape differences, reaching about 2.5% TV.
+- The 2D shape comparison alone would make 5- and 10-keV grids look adequate relative to the present split-sample noise, but it does not establish rate convergence.
+- 5 keV has sub-percent maximum rate differences, yet 17/64 comparisons exceed the corresponding split-sample rate variation. It is not accepted as a production rate grid.
+- 10 keV shows larger rate differences, with 37/64 comparisons exceeding split-sample variation; it is not accepted as a production rate grid.
+- Keep 1 keV as the reference for both rate and 2D shape until a finer high-energy comparison and a pre-registered scientific tolerance are completed.
 - The current workflow has no pre-registered scientific tolerance and does not fail when these metrics exceed a chosen threshold. Its green Actions status means the build, unit tests, numerical run, and artifact upload completed; it is **not** by itself a formal grid-convergence PASS.
-- A formal acceptance criterion must be agreed before promoting 5 keV as the production grid. Keep 1 keV as the reference until that decision is recorded.
 
 ### 8.3 Event-level S1 and S2 acceptance is present in the new artifact
 
