@@ -332,6 +332,35 @@ For the black benchmark, the response-family choice itself changes the NEST-plus
 
 
 
+
+
+### 8.7 Half-keV high-energy response refinement
+
+Because the \(m_s=360\) keV benchmark is concentrated near the upper recoil-energy boundary and its WS-ROI acceptance changes rapidly there, a dedicated 0.5-keV response sample was generated over the interval 225.4–269.9 keV. The lower edge is aligned to the existing 1-keV strata. The run uses 4,000 events in each 0.5-keV stratum (two disjoint 2,000-event halves) for each of EFT2024, rounded Table S5, WS2024, and generic NEST.
+
+Run and artifact:
+- [GitHub Actions run 43675776534](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43675776534), conclusion: success.
+- Artifact ID: 14146681605.
+- ZIP SHA-256: de195140fc2d4b3e3205a7543ea822a9ed2b325373db60078ec79cae78ab78b5.
+- The artifact includes the full 1-keV response samples, the 0.5-keV high-energy samples, the 1/5/10-keV fold, and the high-energy comparison outputs.
+
+Across 64 matched comparisons (four benchmarks, two nuclear responses, four response families, and two acceptance modes), the 0.5-keV versus 1-keV differences are:
+- Maximum relative accepted-rate difference: 0.46895%.
+- Maximum 2D total-variation distance: 2.5446%.
+- 0/64 2D shape differences exceed both corresponding split-sample TV checks.
+- 2/64 accepted-rate differences exceed both corresponding split-sample rate checks, after applying a \(10^{-12}\) absolute numerical tolerance to avoid counting floating-point roundoff.
+
+The two rate comparisons above the split-sample checks are the EFT2024 black benchmark:
+| Nuclear response | Acceptance mode | 0.5-keV vs 1-keV rate difference | Difference / largest split-sample rate variation |
+|---|---|---:|---:|
+| GCN | NEST + WS ROI | 0.46895% | 1.255 |
+| JJ55 | NEST + WS ROI | 0.45331% | 1.247 |
+
+The 0.5-keV sample has twice as many generated events per unit recoil energy as the 1-keV sample. The comparison is therefore a refinement check with unequal MC statistics, not a paired equal-statistics grid test. The 2D shape difference remains within the observed split-sample variation, while the two EFT2024 black-benchmark rate differences are only moderately above it.
+
+**Conclusion:** the 0.5-keV tail sample improves the high-energy resolution check, but does not establish a formal convergence PASS. Keep the 1-keV full-range result as the reference, retain the 0.5-keV high-energy result as an independent refinement diagnostic, and do not promote either grid to a final likelihood until a rate tolerance and MC covariance treatment are pre-registered. A further independent high-statistics EFT2024 black-tail run would be the cleanest way to resolve the remaining ~0.45% rate difference.
+
+
 ## 9. Correct release status
 
 The previous blanket label "pre-selection" should now be made more precise:
@@ -341,7 +370,7 @@ The previous blanket label "pre-selection" should now be made more precise:
 - The newer 1-keV `ws_roi` intensity additionally applies the published S1c/raw-S2/S2c ROI.
 - Neither new intensity includes the complete LZ trigger, waveform-level S1 timing, SS reconstruction, data-analysis cuts, official FV, veto sample assignment, or live-time treatment.
 
-Accordingly, describe the current result as a **NEST-level / WS-ROI intermediate three-body signal prediction**, not as the final LZ post-selection signal PDF. Keep the 1-keV response as the reference; regard 5-keV as a promising sub-percent approximation pending a pre-registered tolerance and MC covariance treatment. Do not start the final profile likelihood.
+Accordingly, describe the current result as a **NEST-level / WS-ROI intermediate three-body signal prediction**, not as the final LZ post-selection signal PDF. Keep the 1-keV full-range response as the reference; the 0.5-keV high-energy tail sample is a refinement diagnostic, while 5-keV and 10-keV remain unaccepted as production rate grids. No grid has a formal convergence PASS because no tolerance was pre-registered. Do not start the final profile likelihood.
 
 
 
