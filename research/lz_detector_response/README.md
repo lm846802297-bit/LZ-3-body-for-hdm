@@ -160,13 +160,13 @@ The \(ws\_roi\) output is therefore a **NEST-level plus WS-ROI intermediate thre
 ### Parametric-versus-Full S1 coincidence validation
 
 Because the three-body stratified driver uses NEST Parametric S1 mode, a paired
-comparison against NEST Full S1 mode was added. [Run 43658016814](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43658016814)
-completed successfully; artifact ID `14138778454`, SHA-256
-`000d8a2852c3f663323e796e261e76d60733468456d1818345a255fccea6f015`.
+comparison against NEST Full S1 mode was added. [Run 43658191416](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43658191416)
+completed successfully; artifact ID `14138858617`, SHA-256
+`4475a152732eae45c76b8dbf4e8c4c52a476c402e3870b3f16b2fc7cfd5bd408`.
 It contains 10,000 paired events in each of ten energy bins.
 The same NR quanta and true event positions were passed to both modes, with
 separate deterministic S1 random streams. The maximum absolute coincidence
-acceptance difference was 0.25 percentage points (paired interval from a conservative Wilson construction); both modes passed all
+acceptance difference was 0.25 percentage points (paired interval from a Bonferroni 95% joint Wilson construction); both modes passed all
 10,000 events in every tested signal-support bin (35, 101, 210, 248, and
 269.4–269.9 keV). This supports the Parametric approximation for the present
 benchmark spectra, but does not replace a full LZ waveform, trigger, SS, FV,
