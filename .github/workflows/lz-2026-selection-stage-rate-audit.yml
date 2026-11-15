@@ -1,0 +1,87 @@
+name: LZ 2026 selection-stage rate-level closure
+
+on:
+  push:
+    branches:
+      - research/figure2-p0-4-mainline
+      - integration/lz-2026-nest-nr-fullband-20261115
+    paths:
+      - research/lz_detector_response/summarize_lz_2026_selection_stage_rates.py
+      - research/lz_detector_response/tests/test_lz_2026_selection_stage_rates.py
+      - research/lz_detector_response/extract_lz_2026_nr_selection_efficiency_components.py
+      - research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/**
+      - research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/lz_2026_rate_level_event_yields.csv
+      - .github/workflows/lz-2026-selection-stage-rate-audit.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  selection-stage-rate-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PDF vector extraction dependency
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+
+      - name: Download official LZ 2026 paper PDF
+        run: |
+          curl -L --fail --max-time 120 -A "Mozilla/5.0" \
+            -o lz_2026_extended_nr_search.pdf \
+            https://arxiv.org/pdf/2609.02823
+          sha256sum lz_2026_extended_nr_search.pdf
+
+      - name: Extract cumulative Fig. S2 efficiency curves
+        run: |
+          python research/lz_detector_response/extract_lz_2026_nr_selection_efficiency_components.py \
+            --pdf lz_2026_extended_nr_search.pdf \
+            --out-dir selection-stage-output
+
+      - name: Test exact piecewise-linear product integration
+        run: |
+          python -m unittest research/lz_detector_response/tests/test_lz_2026_selection_stage_rates.py -v
+
+      - name: Integrate all benchmark selection stages and close rate-level yields
+        run: |
+          python research/lz_detector_response/summarize_lz_2026_selection_stage_rates.py \
+            --spectrum-dir research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum \
+            --efficiency-components selection-stage-output/lz_2026_nr_selection_efficiency_components.csv \
+            --rate-level-counts research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/lz_2026_rate_level_event_yields.csv \
+            --output-dir selection-stage-output \
+            --relative-tolerance 1e-8
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('selection-stage-output/selection_stage_rate_level_summary.json')
+          d=json.loads(p.read_text())
+          assert d['n_results'] == 8, d['n_results']
+          assert d['max_raw_rate_relative_closure'] < 1e-8
+          assert d['max_final_expected_events_relative_closure'] < 1e-8
+          print('Eight benchmark/nuclear-response rows close to the archived rate-level yields.')
+          print('Maximum raw-rate closure:', d['max_raw_rate_relative_closure'])
+          print('Maximum final-yield closure:', d['max_final_expected_events_relative_closure'])
+          PY
+
+      - name: Upload selection-stage rate-level audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-selection-stage-rate-level-closure
+          path: |
+            selection-stage-output/lz_2026_figS2_efficiency_components.svg
+            selection-stage-output/lz_2026_nr_selection_efficiency_components.csv
+            selection-stage-output/lz_2026_nr_selection_efficiency_components_metadata.json
+            selection-stage-output/selection_stage_rate_level_summary.csv
+            selection-stage-output/selection_stage_rate_level_summary.json
+          if-no-files-found: error
+          retention-days: 30
