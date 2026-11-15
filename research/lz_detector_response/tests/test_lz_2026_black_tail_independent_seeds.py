@@ -65,6 +65,64 @@ class BlackTailIndependentSeedTests(unittest.TestCase):
             MOD.mean_sd_se([1.0])
 
 
+    def test_table_s5_family_label_is_preserved_in_tail_audit(self):
+        row = {
+            "relative_rate_difference_fine_vs_coarse": 0.001,
+            "tv_distance_between_mean_2d_maps": 0.009,
+        }
+        gate = MOD.evaluate_local_tail_gate([row], "tableS5")
+        self.assertTrue(gate["point_estimate_pass"])
+        self.assertIn("tableS5 black-benchmark", gate["scope"])
+        self.assertEqual(
+            MOD.summarize_comparison(
+                [
+                    {
+                        "seed": 1,
+                        "pooled": {
+                            "ws_roi": {"accepted_rate_events_kg_day": 1.0},
+                            "intensity": {"ws_roi": {(0, 0): 1.0}},
+                        },
+                        "split_rate_difference": {"ws_roi": 0.0},
+                        "split_tv_distance": {"ws_roi": 0.0},
+                    },
+                    {
+                        "seed": 2,
+                        "pooled": {
+                            "ws_roi": {"accepted_rate_events_kg_day": 1.0},
+                            "intensity": {"ws_roi": {(0, 0): 1.0}},
+                        },
+                        "split_rate_difference": {"ws_roi": 0.0},
+                        "split_tv_distance": {"ws_roi": 0.0},
+                    },
+                ],
+                [
+                    {
+                        "seed": 3,
+                        "pooled": {
+                            "ws_roi": {"accepted_rate_events_kg_day": 1.0},
+                            "intensity": {"ws_roi": {(0, 0): 1.0}},
+                        },
+                        "split_rate_difference": {"ws_roi": 0.0},
+                        "split_tv_distance": {"ws_roi": 0.0},
+                    },
+                    {
+                        "seed": 4,
+                        "pooled": {
+                            "ws_roi": {"accepted_rate_events_kg_day": 1.0},
+                            "intensity": {"ws_roi": {(0, 0): 1.0}},
+                        },
+                        "split_rate_difference": {"ws_roi": 0.0},
+                        "split_tv_distance": {"ws_roi": 0.0},
+                    },
+                ],
+                "GCN",
+                "ws_roi",
+                "tableS5",
+            )["response_family"],
+            "tableS5",
+        )
+
+
     def test_local_tail_gate_uses_mean_rate_and_mean_map_metrics(self):
         gate = MOD.evaluate_local_tail_gate([
             {
