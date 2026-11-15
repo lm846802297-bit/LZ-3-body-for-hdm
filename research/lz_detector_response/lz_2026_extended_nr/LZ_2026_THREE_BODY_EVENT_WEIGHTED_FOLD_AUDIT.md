@@ -202,7 +202,7 @@ combined seed SEM is a descriptive stability statistic, not a calibrated
 hypothesis-test significance. Individual seed-pair TV fluctuations remain
 above 1% in some comparisons; this does not provide a complete
 cell-by-cell covariance matrix. See [the full grid and selection audit](LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md#153-independent-seed-high-energy-tail-validation-2026-11-15)
-and [run 43691194242](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43691194242).
+and [gated run 43691733080](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43691733080), artifact 14151869654 (SHA-256 `837a0385cac4c784abef38a5d4efc4273fc92ba01ddfcfab9123c90baecf2543`). Its local-tail gate passes the 1.0% / 1.0% point-estimate criteria.
 
 
 ## 7. Acceptance definitions and missing selection stages
