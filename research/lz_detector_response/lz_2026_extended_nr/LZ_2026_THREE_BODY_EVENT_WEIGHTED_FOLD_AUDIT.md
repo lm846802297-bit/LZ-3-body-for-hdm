@@ -108,6 +108,74 @@ The independent one-dimensional integration of each cumulative Fig. S2 stage aga
 
 This ratio is a **model/provenance and selection-closure diagnostic only**. It is not an extra efficiency factor, not a correction to the 2D PDF, and not proof that one response family is the collaboration's production model. The response families use different public parameterizations; the event-level spatial prior is a uniform active-TPC cylinder rather than the official calibration-source/FV distribution; and the exact production configuration and position-correction model remain unconfirmed. The strong family dependence, especially for the high-energy black benchmark, is a reason to resolve the calibration/provenance mismatch before constructing a final selected PDF.
 
+
+### 6.1 Conditional residual-selection factorization diagnostic
+
+To make the no-double-counting logic quantitative, define the rate-integrated
+factors
+
+\[
+\epsilon_{\rm NEST} =
+\frac{R_{\rm NEST}}{R_{\rm raw}},
+\qquad
+\epsilon_{\rm ROI|NEST} =
+\frac{R_{\rm NEST+WS\,ROI}}{R_{\rm NEST}},
+\]
+
+and extract the remaining one-dimensional SS/data-analysis factor from the
+nested Fig. S2 cumulative curves,
+
+\[
+\epsilon_{\rm SS+DA|preROI}^{\rm Fig.S2}
+=
+\frac{R_{\rm green}}{R_{\rm orange}}.
+\]
+
+A deliberately factorized rate-level diagnostic is then
+
+\[
+\epsilon_{\rm factored}
+=
+\epsilon_{\rm NEST}\,
+\epsilon_{\rm ROI|NEST}\,
+\epsilon_{\rm SS+DA|preROI}^{\rm Fig.S2}.
+\]
+
+It is compared with the independently integrated Fig. S2 final cumulative
+efficiency. The table below uses EFT2024 and GCN; the factors are computed
+from the event-weighted response fold and the eight-row Fig. S2 stage closure.
+
+| Benchmark | NEST acceptance | WS ROI given NEST | Fig. S2 SS+DA given pre-ROI | Factorized efficiency | Fig. S2 final efficiency | Factorized / Fig. S2 |
+|---|---:|---:|---:|---:|---:|---:|
+| Red, \(m_s=200\) keV | 100.0000% | 99.8196% | 95.5780% | 95.4055% | 95.5557% | 0.99843 |
+| Green, \(m_s=300\) keV | 100.0000% | 99.2794% | 95.5783% | 94.8896% | 95.4728% | 0.99389 |
+| Black, \(m_s=360\) keV | 100.0000% | 74.0612% | 95.5790% | 70.7870% | 76.6301% | 0.92375 |
+| Blue, \(m_s=300\) keV, \(\Delta m=10\) MeV | 100.0000% | 99.2835% | 95.5783% | 94.8935% | 95.4736% | 0.99392 |
+
+For red, green, and blue, this factorized rate-level diagnostic is within
+about 0.2--0.6% relative to Fig. S2. For the black high-energy benchmark it
+is about 7.6% low. In that benchmark, the NEST-derived WS-ROI conditional
+acceptance is 74.06%, whereas the Fig. S2 ROI conditional factor is about
+80.17%. The mismatch is concentrated in the upper-S1c/high-energy region.
+
+This is **not** a validated correction and must not be applied as a global
+scale factor to the 2D PDF. Fig. S2 supplies only an energy-dependent
+cumulative efficiency, not
+\(P({\rm SS+DA}\mid E_R,S1_c,\log_{10}S2_c,x,y,z)\). The factorized
+calculation tests whether a simple residual efficiency would close the
+integrated rate; it does not establish the required 2D conditional kernel.
+The black-benchmark discrepancy also depends strongly on the public NEST
+response family, so it cannot be assigned uniquely to SS/data-analysis
+correlations with the current inputs.
+
+**Consequence:** do not multiply the Fig. S2 black cumulative curve into
+the current WS-ROI map, and do not yet multiply the 95.58% residual factor
+into that map as though it were an exact 2D selection model. Retain the
+Fig. S2 result as the independent 1D selected-count benchmark and the
+NEST+WS-ROI result as an intermediate 2D response. A calibrated conditional
+response or official event-level selection model is still required.
+
+
 ## 7. Acceptance definitions and missing selection stages
 
 - `nest`: NEST Parametric S1 threefold PMT-occupancy acceptance and the configured NEST S2 threshold, with positive S1c/S2c observables.
@@ -129,7 +197,7 @@ No scalar cumulative efficiency should be multiplied into the existing 2D intens
 ## 8. Required status and next work
 
 1. Keep the 1-keV full-range response as the numerical reference.
-2. Keep 5-keV as a sub-percent diagnostic and 10-keV as a coarser diagnostic; neither has a formal PASS because no scientific tolerance was pre-registered.
+2. Apply the approved 1.0% accepted-rate / 1.0% 2D-TV engineering gate: 5 keV passes the coarse-grid reaggregation point-estimate gate and 10 keV fails. Keep 1 keV as the reference pending independent-seed high-statistics validation.
 3. Keep the 0.5-keV tail sample as a targeted high-energy refinement; resolve the two EFT2024 black-benchmark rate comparisons with an independent higher-statistics production if the 0.5-keV rate is to be used.
 4. Resolve the response-family / Fig. S2 rate-level closure using the official calibration-source spectrum and geometry, production NEST configuration, and position-correction model.
 5. Implement or obtain the missing trigger, SS, data-quality, FV, veto, and live-time response/selection information.
