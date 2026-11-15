@@ -141,6 +141,11 @@ def summarize_bin(ibin: int, rows: list[dict[str, float]]) -> dict[str, Any]:
 def summarize(path: Path) -> dict[str, Any]:
     groups = read_events(path)
     bins = [summarize_bin(index, rows) for index, rows in sorted(groups.items())]
+    finite_z_scores = [
+        abs(row["paired_difference_z_score"])
+        for row in bins
+        if math.isfinite(row["paired_difference_z_score"])
+    ]
     return {
         "study": "Paired NEST Parametric versus Full S1 coincidence comparison",
         "status": "DIAGNOSTIC_ONLY_NO_EQUIVALENCE_TOLERANCE",
@@ -160,10 +165,7 @@ def summarize(path: Path) -> dict[str, Any]:
         "maximum_absolute_efficiency_difference": max(
             abs(row["full_minus_parametric_efficiency"]) for row in bins
         ),
-        "maximum_absolute_paired_z_score": max(
-            abs(row["paired_difference_z_score"])
-            for row in bins if math.isfinite(row["paired_difference_z_score"])
-        ),
+        "maximum_absolute_paired_z_score": max(finite_z_scores) if finite_z_scores else None,
         "energy_bins": bins,
     }
 
