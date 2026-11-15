@@ -30,6 +30,23 @@ def wilson_interval(passed: int, total: int, z: float = 1.959963984540054) -> li
     return [max(0.0, center - half), min(1.0, center + half)]
 
 
+def paired_difference_wilson_interval(
+    n_full_only: int, n_parametric_only: int, total: int
+) -> list[float]:
+    """Conservative interval from Wilson bounds on discordance and its direction."""
+    discordant = n_full_only + n_parametric_only
+    q_low, q_high = wilson_interval(discordant, total)
+    if discordant == 0:
+        return [-q_high, q_high]
+    theta_low, theta_high = wilson_interval(n_full_only, discordant)
+    candidates = [
+        q * (2.0 * theta - 1.0)
+        for q in (q_low, q_high)
+        for theta in (theta_low, theta_high)
+    ]
+    return [min(candidates), max(candidates)]
+
+
 def quantile(values: list[float], probability: float) -> float | None:
     if not values:
         return None
@@ -98,11 +115,8 @@ def summarize_bin(ibin: int, rows: list[dict[str, float]]) -> dict[str, Any]:
     discordant_fraction = (n_param_only + n_full_only) / total
     paired_variance = max(0.0, discordant_fraction - difference * difference)
     paired_se = math.sqrt(paired_variance / total)
-    ci = [
-        max(-1.0, difference - 1.959963984540054 * paired_se),
-        min(1.0, difference + 1.959963984540054 * paired_se),
-    ]
-    z_score = difference / paired_se if paired_se > 0.0 else (0.0 if difference == 0.0 else math.inf)
+    ci = paired_difference_wilson_interval(n_full_only, n_param_only, total)
+    z_score = difference / paired_se if paired_se > 0.0 else None
 
     param_s1 = [r["s1_param_abs_phd"] for r in rows if r["s1_param_pass"]]
     full_s1 = [r["s1_full_abs_phd"] for r in rows if r["s1_full_pass"]]
@@ -121,6 +135,11 @@ def summarize_bin(ibin: int, rows: list[dict[str, float]]) -> dict[str, Any]:
         "full_minus_parametric_efficiency": difference,
         "paired_difference_standard_error": paired_se,
         "paired_difference_95pct_interval": ci,
+        "paired_difference_interval_method": (
+            "Conservative 95% Wilson rectangle for discordance probability "
+            "and full-only fraction; nonzero bounds are retained when no "
+            "discordant events are observed."
+        ),
         "paired_difference_z_score": z_score,
         "n_both_pass": n_both,
         "n_parametric_only_pass": n_param_only,
@@ -144,7 +163,8 @@ def summarize(path: Path) -> dict[str, Any]:
     finite_z_scores = [
         abs(row["paired_difference_z_score"])
         for row in bins
-        if math.isfinite(row["paired_difference_z_score"])
+        if row["paired_difference_z_score"] is not None
+        and math.isfinite(row["paired_difference_z_score"])
     ]
     return {
         "study": "Paired NEST Parametric versus Full S1 coincidence comparison",
