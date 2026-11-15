@@ -125,8 +125,11 @@ jobs:
           for family in ("eft2024", "tableS5"):
               for nuclear in ("GCN", "JJ55"):
                   selected = [row for row in bands if row["response_family"] == family and row["nuclear_model"] == nuclear]
+                  reference = next(row for row in summary["per_key_summaries"] if row["benchmark"] == "black_ms360_dm1" and row["response_family"] == family and row["nuclear_model"] == nuclear)
                   assert len(selected) == 4
-                  assert abs(sum(float(row["figs2_final_plus_roi_rate_events_kg_day"]) for row in selected) - float(next(row for row in summary["per_key_summaries"] if row["benchmark"] == "black_ms360_dm1" and row["response_family"] == family and row["nuclear_model"] == nuclear)["figs2_final_rate_events_kg_day"])) <= 1e-8 * float(next(row for row in summary["per_key_summaries"] if row["benchmark"] == "black_ms360_dm1" and row["response_family"] == family and row["nuclear_model"] == nuclear)["figs2_final_rate_events_kg_day"])
+                  band_total = sum(float(row["figs2_final_plus_roi_rate_events_kg_day"]) for row in selected)
+                  reference_total = float(reference["figs2_final_rate_events_kg_day"])
+                  assert abs(band_total - reference_total) <= 1e-8 * reference_total
           print("Weighted MC uncertainty validated: 16 summaries, 4,240 per-bin rows, and 16 rate-closing black high-energy band rows.")
           PY
           sha256sum energy-bridge-output/mc-uncertainty/*
