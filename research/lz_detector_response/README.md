@@ -292,9 +292,13 @@ response using the exact piecewise-linear GCN/JJ55 recoil spectra. The
 diagnostics only. The 0.5-keV refinement covers 225.4–269.9 keV, where the
 \(m_s=360\) keV benchmark approaches the upper S1c boundary.
 
-The combined full-range and high-energy refinement is [run 43676553810](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43676553810),
-artifact 14146333000, SHA-256
-3af588a74576db65462545ff305d453b63febaa701d3cf42762e8edb91e7b7d7.
+The combined full-range and high-energy refinement is confirmed by the
+latest successful rerun [43680164807](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43680164807),
+artifact 14147354124, SHA-256
+0f2bf102f440245d98a10462a42fa9625b26e28124e7e2096b3ca8dfa90533b2
+(437,589,152 bytes; 28 files). The earlier event-weighted fold run is
+[43676553810](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43676553810),
+artifact 14146333000; the latest rerun has identical numerical diagnostics.
 Across 64 high-energy comparisons, the maximum 0.5-keV versus 1-keV
 accepted-rate difference is 0.46895% and the maximum 2D total-variation
 distance is 2.5446%. After a \(10^{-12}\) numerical tolerance, two rate
