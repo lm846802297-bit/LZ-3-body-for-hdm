@@ -347,8 +347,15 @@ def main():
     }
     for key, rows in (("by_energy_bin", bin_rows), ("summary", summary_rows), ("maps", map_rows)):
         with outputs[key].open("w", newline="", encoding="utf-8") as handle:
-            writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
-            writer.writeheader(); writer.writerows(rows)
+            # Some integrated diagnostics are appended only to the WS-ROI
+            # summary row. Build the CSV schema from the union so DictWriter
+            # does not fail on those legitimate optional columns.
+            fieldnames = list(dict.fromkeys(
+                field for row in rows for field in row
+            ))
+            writer = csv.DictWriter(handle, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
     metadata = {
         "study": "paired NEST Parametric/Full S1 mode event-weighted 2D response",
         "status": "PAIRED_2D_RESPONSE_DIAGNOSTIC_ONLY",
