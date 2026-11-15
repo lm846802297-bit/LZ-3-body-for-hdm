@@ -17,6 +17,10 @@ on:
       - .github/workflows/p1-phase-space-convergence.yml
   workflow_dispatch:
 
+concurrency:
+  group: p1-phase-space-convergence-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
