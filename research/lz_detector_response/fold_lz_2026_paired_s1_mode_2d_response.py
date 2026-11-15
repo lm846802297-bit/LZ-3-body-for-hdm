@@ -324,6 +324,17 @@ def fold(spectra: dict, stats: dict, maps: dict):
             })
     return bin_rows, summary_rows, map_rows
 
+def write_union_schema_csv(path: Path, rows: list[dict]) -> None:
+    """Write heterogeneous diagnostic rows using the union of their keys."""
+    if not rows:
+        raise ValueError(f"cannot write empty diagnostic table: {path}")
+    fieldnames = list(dict.fromkeys(field for row in rows for field in row))
+    with path.open("w", newline="", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--input-csv", type=Path, required=True)
@@ -346,16 +357,7 @@ def main():
         "metadata": args.out_dir/"paired_s1_mode_2d_response_metadata.json",
     }
     for key, rows in (("by_energy_bin", bin_rows), ("summary", summary_rows), ("maps", map_rows)):
-        with outputs[key].open("w", newline="", encoding="utf-8") as handle:
-            # Some integrated diagnostics are appended only to the WS-ROI
-            # summary row. Build the CSV schema from the union so DictWriter
-            # does not fail on those legitimate optional columns.
-            fieldnames = list(dict.fromkeys(
-                field for row in rows for field in row
-            ))
-            writer = csv.DictWriter(handle, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerows(rows)
+        write_union_schema_csv(outputs[key], rows)
     metadata = {
         "study": "paired NEST Parametric/Full S1 mode event-weighted 2D response",
         "status": "PAIRED_2D_RESPONSE_DIAGNOSTIC_ONLY",
