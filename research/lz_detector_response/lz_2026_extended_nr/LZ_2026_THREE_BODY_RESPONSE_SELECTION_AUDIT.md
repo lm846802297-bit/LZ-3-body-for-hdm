@@ -260,6 +260,19 @@ Representative comparisons are:
 
 These are not identical selections or priors, so they are not a direct efficiency calibration. Nevertheless, the EFT2024 and generic NEST-plus-ROI acceptances falling **below** the published full cumulative efficiency near 248 keV is a non-closure diagnostic: a strict subset of the published selection should not have a lower acceptance if both were generated with the same response and nested definitions. The discrepancy cannot be repaired by multiplying a residual efficiency onto the current 2D map. It requires investigation of the exact LZ production NEST configuration, the spatial prior and position correction, and the response/ROI comparison.
 
+
+
+A bin-by-bin monotonicity diagnostic was also made over the 265 unique 1-keV bins, comparing each model's \`ws_roi\` acceptance with the interpolated published black Fig. S2 cumulative efficiency at the bin centre:
+
+| Response family | Bins where NEST+WS-ROI acceptance is below the published full cumulative efficiency | Worst deficit |
+|---|---:|---:|
+| EFT2024 | 33 / 265 | −13.93 percentage points at 252.9 keV |
+| Table S5 | 0 / 265 | none; smallest positive margin +1.73 percentage points at 249.9 keV |
+| WS2024 | 19 / 265 | −2.78 percentage points at 252.9 keV |
+| Generic | 74 / 265 | −47.18 percentage points at 252.9 keV |
+
+Under identical event definitions and spatial priors, a response that applies a subset of the final cuts should not have lower acceptance than the final cumulative curve. Table S5 is the only tested family that satisfies this necessary monotonicity condition in every bin. This makes the rounded Table-S5 response a more internally consistent candidate for the published selection curve than the public EFT2024 header in this particular comparison. It does **not** prove Table S5 is the exact production configuration: the published curve and this proxy still differ in spatial prior, position reconstruction, and unmodelled analysis cuts. The result is a strong provenance/calibration diagnostic, not permission to select a model solely by curve matching.
+
 Do not treat the four NEST families as a statistical nuisance envelope. They are different response-model choices with distinct provenance.
 
 ### 8.5 High-energy sensitivity to the rounded Table S5 exponent
