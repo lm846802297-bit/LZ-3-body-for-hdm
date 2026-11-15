@@ -230,6 +230,19 @@ artifact 14140966494, SHA-256
 a2a138d262245e811c94b8bc41d76f4af16c53196d1a12adea044bf66a9f7bc1.
 It includes local-drift closure and deterministic bootstrap output.
 
+### Rate-level selection-stage closure
+
+An independent exact integration of the four vector-extracted Fig. S2
+cumulative curves against all eight benchmark/nuclear-response spectra
+reproduces the stored rate-level expected counts to floating-point
+precision. Over the signal support (35–269.9 keV), the trigger and S1
+threshold curves are unity; the SS/data-analysis stage is 95.50–95.58%.
+The high-energy black benchmark is further reduced by the upper S1c ROI,
+giving a total rate-level efficiency of 76.63–76.99%, compared with about
+95.47–95.56% for the other three benchmarks. See
+[LZ_2026_SELECTION_STAGE_RATE_LEVEL_CLOSURE.md](lz_2026_extended_nr/LZ_2026_SELECTION_STAGE_RATE_LEVEL_CLOSURE.md).
+This is a one-dimensional rate-level check, not a 2D selected signal PDF.
+
 ### Complete LZ 2026 selection and three-sample likelihood audit
 
 The updated selection audit now distinguishes the hardware S2 DAQ trigger from
