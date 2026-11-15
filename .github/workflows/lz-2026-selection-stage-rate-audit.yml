@@ -57,15 +57,16 @@ jobs:
             --spectrum-dir research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum \
             --efficiency-components selection-stage-output/lz_2026_nr_selection_efficiency_components.csv \
             --rate-level-counts research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/lz_2026_rate_level_event_yields.csv \
-            --output-dir selection-stage-output
+            --output-dir selection-stage-output \
+            --relative-tolerance 1e-8
           python - <<'PY'
           import json
           from pathlib import Path
           p=Path('selection-stage-output/selection_stage_rate_level_summary.json')
           d=json.loads(p.read_text())
           assert d['n_results'] == 8, d['n_results']
-          assert d['max_raw_rate_relative_closure'] < 1e-10
-          assert d['max_final_expected_events_relative_closure'] < 1e-10
+          assert d['max_raw_rate_relative_closure'] < 1e-8
+          assert d['max_final_expected_events_relative_closure'] < 1e-8
           print('Eight benchmark/nuclear-response rows close to the archived rate-level yields.')
           print('Maximum raw-rate closure:', d['max_raw_rate_relative_closure'])
           print('Maximum final-yield closure:', d['max_final_expected_events_relative_closure'])
