@@ -503,12 +503,13 @@ There are three qualifications:
    0.07920% in 2D TV, with raw-rate closure \(1.11\times10^{-15}\).
    This validates the folding implementation, not the detector model.
 
-**Production-grid status:** use 5 keV as the approved coarse-grid candidate
-for subsequent development, retain 1 keV as the numerical reference, and
-complete an independent-seed high-statistics check of the EFT2024 black
-high-energy tail before replacing the 1-keV reference in production
-predictions. This grid decision is separate from the remaining full-LZ
-selection and likelihood blockers in Section 14.5.
+**Provisional status at this stage:** the 5-keV deterministic
+reaggregation passed the point-estimate grid gate, but this was not an
+independent 5-keV Monte Carlo. The later full-range independent-seed result
+in Section 15.6 supersedes this provisional production-grid recommendation.
+Until that check is passed, retain 1 keV as the numerical reference. This
+grid decision is separate from the remaining full-LZ selection and
+likelihood blockers in Section 14.5.
 
 ### 15.3 Independent-seed high-energy-tail validation (2026-11-15)
 
@@ -556,13 +557,13 @@ artifact 14151869654, SHA-256
 Its machine-readable local-tail gate reports PASS, with maximum mean-rate
 difference 0.01862% and maximum mean-map TV 0.8489%.
 
-**Updated grid decision:** the 5-keV grid is accepted as the coarse
-production grid for the intermediate NEST+WS-ROI 2D response, under the
-approved 1.0% accepted-rate / 1.0% TV gate. Keep 1 keV as the reference
-cross-check. The independent 0.5-keV tail result supports the high-energy
-part of this decision, but it is not a full-range 0.5-keV production.
-Neither grid decision closes the missing SS/data-analysis, official FV,
-Skin/OD sample migration, or complete LZ selection response.
+**Local-tail update only:** the independent 0.5-keV/1-keV black-tail
+mean-map comparison passes its local 1.0% / 1.0% point-estimate gate. It
+does not test the full-range 5-keV grid and must not be used to promote
+5 keV. The full-range independent 1-keV/5-keV result is recorded in
+Section 15.6 and supersedes the earlier coarse-grid production
+recommendation. Neither grid study closes the missing SS/data-analysis,
+official FV, Skin/OD sample migration, or complete LZ selection response.
 
 ### 15.4 Table S5 rounding is a material NR-response alternative (2026-11-15)
 
@@ -611,6 +612,73 @@ official calibration/FV prior. Therefore, the fact that Table S5 stays above
 the digitized final curve while EFT2024 falls below it in some bins must not
 be used as a strict nested-efficiency proof or as a stand-alone rule for
 selecting the production model.
+
+
+### 15.6 Full-range independent-seed 1-keV versus 5-keV validation (2026-11-15)
+
+The deterministic 5-keV reaggregation was followed by genuinely independent
+full-range Monte Carlo productions. Both NR mean-yield families were tested
+with disjoint seed sets:
+
+- 1-keV seeds: 20261132, 20261134, 20261136.
+- 5-keV seeds: 20261133, 20261135, 20261137.
+- True recoil interval: 5.4--269.9 keV.
+- Event density: 4,000 events/keV, scaled to the exact width of every stratum,
+  including 2,000 events in the final 0.5-keV bin and 18,000 in the final
+  4.5-keV bin.
+- Each seed/grid/family sample contains 1,058,000 events; the paired-family
+  study contains 12,696,000 events.
+- Each response family has 16 comparisons: four benchmarks × GCN/JJ55 ×
+  NEST-only/NEST+WS-ROI.
+
+The independent-seed mean-map gate gives:
+
+| Response family | Maximum accepted-rate difference | Maximum 2D TV between mean maps | 1% / 1% gate |
+|---|---:|---:|---|
+| EFT2024 | 0.645014% | 1.481245% | FAIL |
+| Table S5 | 0.201630% | 1.468098% | FAIL |
+
+The accepted-rate differences pass the 1% requirement for both families.
+The 2D TV requirement does not. The limiting rows are the black
+\(m_s=360\) keV benchmark:
+
+| Black benchmark comparison | EFT2024 | Table S5 |
+|---|---:|---:|
+| GCN, NEST-only 2D TV | 1.4812% | 1.4681% |
+| JJ55, NEST-only 2D TV | 1.4664% | 1.4504% |
+| GCN, NEST+WS-ROI 2D TV | 1.0716% | 1.2706% |
+| JJ55, NEST+WS-ROI 2D TV | 1.0635% | 1.2561% |
+
+The red/green/blue benchmark mean-map TV values remain approximately
+0.745--0.782%. Thus the full-range failure is localized to the black
+high-energy benchmark, not a global normalization difference.
+
+The observed black cross-grid mean-map TV (about 1.06--1.48%) is smaller
+than the largest pairwise seed-to-seed TV within either grid (about
+2.1--2.9%); within-seed split-half TV reaches about 3.9%. This indicates
+that the present three-seed MC spread is comparable to or larger than the
+observed grid difference. It does **not** establish a statistically
+significant systematic 5-keV bias. Nevertheless, the pre-agreed
+point-estimate engineering gate is not passed, and it must not be relaxed
+after seeing the result.
+
+The raw independent-production artifact is [run 43699011757](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43699011757),
+artifact 14155573365 (981,003,582 bytes). The summary-only export is
+[run 43699599124](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43699599124),
+artifact 14155488034, ZIP SHA-256
+9439cb84533beb4aed9104fa529ab9d132af573b9feac19db255b1f81d08b1bf.
+Both family summaries and the per-seed CSVs were downloaded and inspected.
+
+**Updated full-range grid decision:** retain 1 keV as the numerical reference
+for both EFT2024 and Table S5. Do not promote 5 keV as the production grid
+under the approved 1% / 1% gate. The earlier deterministic reaggregation
+PASS remains a valid statement about that fixed response sample, but it is
+not an independent-MC validation. If reducing the full-range production
+cost is necessary, the next justified step is a targeted higher-statistics
+black-benchmark comparison or additional independent seeds, not relaxing
+the gate. This remains an intermediate NEST/WS-ROI result and does not
+supply the missing full LZ selected-event response.
+
 
 ### 15.5 Conditional Fig. S2 bridge is model-dependent (2026-11-15)
 
