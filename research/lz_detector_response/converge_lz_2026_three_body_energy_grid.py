@@ -172,7 +172,9 @@ def merge_bin_stats(stats: dict, fine_ids: list[int], replica: int | None) -> di
     """Merge fine-bin probabilities, pooling replicas without double-counting energy width."""
     n_generated = 0
     n_s1 = n_s2 = n_nest = n_roi = 0
-    weighted_accept = {"nest": 0.0, "ws_roi": 0.0}
+    weighted_accept = {
+        "s1_coin": 0.0, "s2_threshold": 0.0, "nest": 0.0, "ws_roi": 0.0
+    }
     weighted_cells = {"nest": defaultdict(float), "ws_roi": defaultdict(float)}
     width_sum = 0.0
     for ibin in fine_ids:
@@ -208,8 +210,13 @@ def merge_bin_stats(stats: dict, fine_ids: list[int], replica: int | None) -> di
                     combined[cell] += count
             for cell, count in combined.items():
                 weighted_cells[mode][cell] += width * count / n
-        weighted_accept["nest"] += width * sum(rec["n_nest"] for rec in records) / n
-        weighted_accept["ws_roi"] += width * sum(rec["n_ws_roi"] for rec in records) / n
+        for name, count_key in (
+            ("s1_coin", "n_s1_coin"),
+            ("s2_threshold", "n_s2_threshold"),
+            ("nest", "n_nest"),
+            ("ws_roi", "n_ws_roi"),
+        ):
+            weighted_accept[name] += width * sum(rec[count_key] for rec in records) / n
 
     if width_sum <= 0.0:
         raise ValueError("zero merged energy width")
@@ -268,7 +275,21 @@ def fold_grid(
             "energy_high_keV": hi,
             "rate_integral_events_kg_day": rate_bin,
             "n_generated": merged["n_generated"],
+            "n_s1_coincidence_pass": merged["n_s1"],
+            "n_s2_threshold_pass": merged["n_s2_threshold"],
+            "n_nest_joint_pass": merged["n_nest"],
+            "n_ws_roi_pass": merged["n_ws_roi"],
+            "s1_coin_acceptance_uniform_energy": merged["acceptance"]["s1_coin"],
+            "s2_threshold_acceptance_uniform_energy": merged["acceptance"]["s2_threshold"],
             "nest_acceptance_uniform_energy": merged["acceptance"]["nest"],
+            "s2_threshold_given_s1_acceptance": (
+                merged["acceptance"]["nest"] / merged["acceptance"]["s1_coin"]
+                if merged["acceptance"]["s1_coin"] > 0.0 else 0.0
+            ),
+            "ws_roi_given_nest_acceptance": (
+                merged["acceptance"]["ws_roi"] / merged["acceptance"]["nest"]
+                if merged["acceptance"]["nest"] > 0.0 else 0.0
+            ),
             "ws_roi_acceptance_uniform_energy": merged["acceptance"]["ws_roi"],
             "nest_rate_events_kg_day": rate_bin * merged["acceptance"]["nest"],
             "ws_roi_rate_events_kg_day": rate_bin * merged["acceptance"]["ws_roi"],
@@ -348,9 +369,13 @@ def main() -> None:
         wb = csv.writer(f_bin)
         wb.writerow([
             "response_family", "grid_width_keV", "replica", "energy_low_keV",
-            "energy_high_keV", "raw_rate_integral_events_kg_day",
-            "nest_acceptance_uniform_energy", "ws_roi_acceptance_uniform_energy",
-            "nest_rate_events_kg_day", "ws_roi_rate_events_kg_day",
+            "energy_high_keV", "raw_rate_integral_events_kg_day", "n_generated",
+            "n_s1_coincidence_pass", "n_s2_threshold_pass", "n_nest_joint_pass",
+            "n_ws_roi_pass", "s1_coin_acceptance_uniform_energy",
+            "s2_threshold_acceptance_uniform_energy", "nest_acceptance_uniform_energy",
+            "s2_threshold_given_s1_acceptance", "ws_roi_given_nest_acceptance",
+            "ws_roi_acceptance_uniform_energy", "nest_rate_events_kg_day",
+            "ws_roi_rate_events_kg_day",
         ])
 
         for family in RESPONSE_FAMILIES:
@@ -371,7 +396,13 @@ def main() -> None:
                                 wb.writerow([
                                     family, width, rep_label, br["energy_low_keV"],
                                     br["energy_high_keV"], br["rate_integral_events_kg_day"],
+                                    br["n_generated"], br["n_s1_coincidence_pass"],
+                                    br["n_s2_threshold_pass"], br["n_nest_joint_pass"],
+                                    br["n_ws_roi_pass"], br["s1_coin_acceptance_uniform_energy"],
+                                    br["s2_threshold_acceptance_uniform_energy"],
                                     br["nest_acceptance_uniform_energy"],
+                                    br["s2_threshold_given_s1_acceptance"],
+                                    br["ws_roi_given_nest_acceptance"],
                                     br["ws_roi_acceptance_uniform_energy"],
                                     br["nest_rate_events_kg_day"], br["ws_roi_rate_events_kg_day"],
                                 ])
@@ -428,6 +459,43 @@ def main() -> None:
         x["acceptance_mode"], x["grid_width_keV"],
     ))
     summary["replica_stability"] = stability_rows
+    finite_grid_rows = [
+        r for r in comparison_rows
+        if r["grid_width_keV"] in (5.0, 10.0)
+        and math.isfinite(r["tv_distance_vs_1keV"])
+        and math.isfinite(r["relative_rate_difference_vs_1keV"])
+    ]
+    summary["convergence_diagnostics"] = {
+        "formal_pass": None,
+        "status": "DIAGNOSTIC_ONLY_NO_PREDECLARED_TOLERANCE",
+        "max_5keV_relative_rate_difference_vs_1keV": max(
+            r["relative_rate_difference_vs_1keV"] for r in finite_grid_rows
+            if r["grid_width_keV"] == 5.0
+        ),
+        "max_5keV_tv_distance_vs_1keV": max(
+            r["tv_distance_vs_1keV"] for r in finite_grid_rows
+            if r["grid_width_keV"] == 5.0
+        ),
+        "max_10keV_relative_rate_difference_vs_1keV": max(
+            r["relative_rate_difference_vs_1keV"] for r in finite_grid_rows
+            if r["grid_width_keV"] == 10.0
+        ),
+        "max_10keV_tv_distance_vs_1keV": max(
+            r["tv_distance_vs_1keV"] for r in finite_grid_rows
+            if r["grid_width_keV"] == 10.0
+        ),
+        "max_1keV_replica_relative_rate_difference": max(
+            r["replica_relative_rate_difference"] for r in stability_rows
+        ),
+        "max_1keV_replica_tv_distance": max(
+            r["replica_tv_distance"] for r in stability_rows
+        ),
+        "note": (
+            "The workflow success status means the calculation and regression "
+            "tests completed. It is not a scientific convergence PASS; numerical "
+            "acceptance tolerances must be agreed and applied separately."
+        ),
+    }
     (args.out_dir / "grid_convergence_summary.json").write_text(
         json.dumps(summary, indent=2) + "\n", encoding="utf-8"
     )
