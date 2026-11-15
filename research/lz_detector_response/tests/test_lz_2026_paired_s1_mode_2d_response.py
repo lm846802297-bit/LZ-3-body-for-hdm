@@ -39,6 +39,14 @@ class PairedS1Mode2DResponseTests(unittest.TestCase):
         self.assertAlmostEqual(p, 2.0/3.0)
         self.assertAlmostEqual(d, -1.0/6.0)
 
+    def test_response_sample_counts_use_indexed_bin_count_not_edge_count(self):
+        indexed_bins = {i: (35.0 + i, 36.0 + i) for i in range(235)}
+        n_bins, n_events = MOD.response_sample_counts(indexed_bins, 2000)
+        self.assertEqual(n_bins, 235)
+        self.assertEqual(n_events, 470000)
+        with self.assertRaisesRegex(ValueError, "cannot be empty"):
+            MOD.response_sample_counts({}, 2000)
+
     def test_union_schema_csv_accepts_optional_ws_only_diagnostics(self):
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "summary.csv"
