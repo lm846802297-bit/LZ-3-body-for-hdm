@@ -63,6 +63,12 @@ class FullRangeIndependentSeedTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "expected 2000"):
             MOD.validate_response_sample(stats, 1.0, 4000, "bad-count")
 
+    def test_pairwise_seed_spread_is_symmetric(self):
+        forward = MOD.symmetric_relative_difference(1.0, 1.1)
+        reverse = MOD.symmetric_relative_difference(1.1, 1.0)
+        self.assertAlmostEqual(forward, reverse)
+        self.assertAlmostEqual(forward, 1.0 / 11.0)
+
     def test_equal_events_per_kev_is_the_required_sampling_design(self):
         self.assertEqual(4000 / 1.0, 20000 / 5.0)
         self.assertNotEqual(4000, 20000)
