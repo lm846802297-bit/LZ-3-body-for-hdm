@@ -97,5 +97,26 @@ class EnergyGridConvergenceTests(unittest.TestCase):
         )
 
 
+    def test_approved_engineering_gate_accepts_5keV_and_rejects_10keV(self):
+        rows = [
+            {
+                "grid_width_keV": 5.0,
+                "relative_rate_difference_vs_1keV": 0.005131,
+                "tv_distance_vs_1keV": 0.008896,
+            },
+            {
+                "grid_width_keV": 10.0,
+                "relative_rate_difference_vs_1keV": 0.012146,
+                "tv_distance_vs_1keV": 0.024649,
+            },
+        ]
+        gate = MOD.evaluate_engineering_grid_gate(rows)
+        self.assertTrue(gate["grids"]["5"]["point_estimate_pass"])
+        self.assertFalse(gate["grids"]["10"]["point_estimate_pass"])
+        self.assertEqual(gate["thresholds"]["max_accepted_rate_relative_difference"], 0.01)
+        self.assertEqual(gate["thresholds"]["max_2d_tv_distance"], 0.01)
+        self.assertIn("independent-seed", gate["production_adoption"])
+
+
 if __name__ == "__main__":
     unittest.main()
