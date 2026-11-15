@@ -113,3 +113,17 @@ two-dimensional selection closure is established.
 - [Rate-level event-yield table](rate_level_event_yields/lz_2026_rate_level_event_yields.csv).
 - [Digitized final efficiency curve](lz_2026_nr_efficiency_digitized.csv).
 - [Event-weighted 2D response-fold audit](LZ_2026_THREE_BODY_EVENT_WEIGHTED_FOLD_AUDIT.md).
+
+
+## 6. Reproducible implementation
+
+The exact integration is implemented in
+[sumarize_lz_2026_selection_stage_rates.py](../summarize_lz_2026_selection_stage_rates.py)
+and covered by
+[unit tests](../tests/test_lz_2026_selection_stage_rates.py). The lightweight
+workflow
+[lz-2026-selection-stage-rate-audit.yml](../../../.github/workflows/lz-2026-selection-stage-rate-audit.yml)
+re-extracts the four vector curves from the paper PDF, runs the tests, and
+checks raw-rate and final expected-count closure for all eight
+benchmark/nuclear-response combinations. It does not rebuild NEST or rerun
+the expensive event-level response Monte Carlo.
