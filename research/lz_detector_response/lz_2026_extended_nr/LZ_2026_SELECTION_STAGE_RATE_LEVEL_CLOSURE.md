@@ -174,3 +174,14 @@ The artifact contains the re-extracted Fig. S2 curves and the full JSON/CSV
 stage-yield table. The stored-curve calculation in Section 3 remains the
 archived rate-level reference; the fresh extraction is independently
 reproducible within the stated \(10^{-8}\) tolerance.
+
+
+### Integration-PR reproduction
+
+The same lightweight workflow was run from the clean integration branch used by PR #41:
+- [GitHub Actions run 43682717319](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43682717319), successful.
+- Artifact ID: 14149346224.
+- ZIP SHA-256: `5fdacaed77cde4a65db56801997f75e8171b6a4bb3d7ba0218be7d708cfbba0e`.
+- Eight rows reproduced; maximum raw-rate closure 0 and maximum final-yield relative closure \(7.0113\times10^{-10}\), unchanged from the mainline run.
+
+This confirms the audit scripts, spectrum inputs, and reference yield table are present and reproducible in the integration snapshot, not only on the research branch.
