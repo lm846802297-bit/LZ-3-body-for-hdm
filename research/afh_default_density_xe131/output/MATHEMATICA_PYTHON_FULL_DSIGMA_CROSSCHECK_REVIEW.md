@@ -156,7 +156,41 @@ generation, the independent Python comparison, and the factor-four ledger;
 it is not a quadrature-convergence result. The full run uses the default
 652-row grid and \(16\times16\times8\) order.
 
-## 7. Scientific status
+## 7. Independent kinematic preflight for the full grid
+
+Before launching Mathematica, the complete 163-energy grid was checked
+independently from
+\[
+W_{\min}^2=(m_{\chi_1}+m_s)^2,\qquad
+W_{\max}^2=m_{\chi_1}^2+2p_{\chi_1}q
+-2(E_{\chi_1}+m_A)E_R.
+\]
+At \(v_\chi=800\) km/s, the number of open points is:
+
+| Benchmark | Open points | Closed points | First open \(E_R\) | Last open \(E_R\) |
+|---|---:|---:|---:|---:|
+| red, \(m_s=200\) keV, \(\Delta m=1\) MeV | 157 | 6 | 35 keV | 800 keV |
+| green, \(m_s=300\) keV, \(\Delta m=1\) MeV | 134 | 29 | 100 keV | 750 keV |
+| black, \(m_s=360\) keV, \(\Delta m=1\) MeV | 75 | 88 | 190 keV | 550 keV |
+| blue, \(m_s=300\) keV, \(\Delta m=10\) MeV | 134 | 29 | 100 keV | 750 keV |
+| **Total** | **500** | **152** | | |
+
+No grid point reaches the on-shell \(\chi_2\) pole:
+\[
+W_{\max}^2 < m_{\chi_2}^2
+\quad\text{for every benchmark and recoil energy.}
+\]
+The smallest pole clearance \(m_{\chi_2}-\sqrt{W_{\max}^2}\) among open
+points is 0.6128 MeV for the three \(\Delta m=1\) MeV benchmarks and
+9.6128 MeV for the \(\Delta m=10\) MeV benchmark. Thus the Wolfram runner's
+on-shell guard should not terminate this specified grid. This is a
+kinematics-only preflight, not an evaluation of \(I_6\).
+
+For the green smoke point, all four anchor energies 101, 200, 267 and
+542 keV are open; their \(W_{\max}^2-W_{\min}^2\) values are respectively
+0.0112695, 0.1303047, 0.1632136 and 0.1247922 GeV\(^2\).
+
+## 8. Scientific status
 
 - AFH factor-four normalization: already validated at the 2401-node response
   level by the archived native Mathematica/Python audit.
