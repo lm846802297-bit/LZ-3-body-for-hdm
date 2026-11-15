@@ -1202,3 +1202,16 @@ Full methodology, tables, per-seed outputs, and checksums are in the
 The successful audit is
 [run 43764753139](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43764753139),
 artifact 14181863680.
+
+
+## 15.11 Paired S1 ensemble bootstrap and exact paired randomization
+
+A paired seed-cluster bootstrap and exact seed-level randomization audit has been completed using the immutable ten-seed production from run [43750948249](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43750948249). The production ZIP SHA-256 was verified, all 75 internal artifact entries passed their checksum manifest, and the 14 required archived inputs were rechecked by the analysis script.
+
+The analysis uses 100,000 paired bootstrap replicates (resampling independent seeds, never individual events) and enumerates all 1,024 within-seed Parametric/Full label swaps. Recomputed per-seed TV, ensemble TV, and mean-map cells close to the archived values at maximum absolute differences of \(2.78\times10^{-17}\), \(1.56\times10^{-17}\), and \(8.27\times10^{-25}\), respectively.
+
+For the black 360-keV WS-ROI benchmark, the ensemble point TV is 0.943% (GCN) and 0.932% (JJ55), but the 95% bootstrap percentile upper endpoints are 1.598% and 1.579%; leave-one-seed-out ranges are 0.955--1.011% and 0.942--0.998%. Exact paired-randomization p-values are 0.369 and 0.373 (Holm-adjusted across the eight WS-ROI tests: 0.738). The point estimate below 1% therefore does not establish a robust 1% equivalence claim.
+
+The red 200-keV WS-ROI rows have exact p = 0.00195 and Holm-adjusted p = 0.03125 across all 16 benchmark/nuclear/stage combinations, indicating a statistically detectable but small mode-shape difference. Green and blue do not pass the all-16 Holm threshold. Bootstrap percentile and basic intervals are method-sensitive for this non-smooth TV statistic with only ten independent clusters; neither is treated as a formal equivalence interval. No equivalence claim or final likelihood is authorized.
+
+Full methods, all benchmark results, interval diagnostics, and limitations are in [the paired S1 bootstrap audit](LZ_2026_PAIRED_S1_ENSEMBLE_BOOTSTRAP_AUDIT_2026-11-16.md). Native outputs and checksums are archived in [paired_s1_bootstrap_2026-11-16](paired_s1_bootstrap_2026-11-16/). The reproducible implementation is [paired_s1_ensemble_tv_bootstrap.py](../paired_s1_ensemble_tv_bootstrap.py), with tests and a dedicated GitHub Actions workflow.
