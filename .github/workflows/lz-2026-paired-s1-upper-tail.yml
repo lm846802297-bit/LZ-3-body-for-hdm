@@ -70,6 +70,7 @@ jobs:
           assert len(per_seed)==120, len(per_seed)
           assert len(thresholds)==1200, len(thresholds)
           assert meta["n_summary_rows"]==12 and meta["n_per_seed_rows"]==120 and meta["n_threshold_rows"]==1200
+          assert meta["stratum_weight_closure"]["max_relative_residual_across_all_seeds_models_bins"] < 5e-12
           for row in summary:
               assert int(row["n_independent_seeds"])==10
               assert 0 <= float(row["ensemble_mean_s1_conditional_histogram_tv_10phd"]) <= 1
