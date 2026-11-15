@@ -177,7 +177,17 @@ def accumulate_weighted_response(
                 and s1c > 0.0
                 and s2c > 0.0
             )
-            roi_pass = nest_pass and grid.ws_roi_pass(s1c, s2r, s2c)
+            roi_mask_pass = grid.ws_roi_pass(s1c, s2r, s2c)
+            # The explicit raw-S2 WS ROI cut is >645 phd, whereas the pinned
+            # NEST S2 pulse threshold is 120 phe. Since S2r is phd, an event
+            # passing the raw-S2 ROI must also pass the much lower NEST pulse
+            # threshold. Treat a violation as a units/nesting regression.
+            if roi_mask_pass and s2_flag != 1:
+                raise ValueError(
+                    "WS ROI raw-S2 cut passed but NEST S2 pulse threshold failed; "
+                    "check S2r units and threshold nesting"
+                )
+            roi_pass = roi_mask_pass and s1_flag == 1
 
             for key, (xs, ys) in spectra.items():
                 weight = grid.interpolate(energy, xs, ys)
