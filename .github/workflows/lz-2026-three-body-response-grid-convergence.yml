@@ -123,12 +123,14 @@ jobs:
             --grid-summary convergence-output/grid_convergence_summary.json \
             --rate-level-counts "$RATE_LEVEL_COUNTS" \
             --out-dir convergence-output/event_weighted
-          python research/lz_detector_response/audit_lz_2026_conditional_selection_bridge.py \
-            --event-weighted-summary convergence-output/event_weighted/event_weighted_fold_summary.json \
-            --selection-stage-summary convergence-output/selection-stage/selection_stage_rate_level_summary.json \
-            --response-family eft2024 \
-            --out-dir convergence-output/conditional_selection_bridge
-          cat convergence-output/conditional_selection_bridge/conditional_selection_bridge_summary.json
+          for family in eft2024 tableS5; do
+            python research/lz_detector_response/audit_lz_2026_conditional_selection_bridge.py \
+              --event-weighted-summary convergence-output/event_weighted/event_weighted_fold_summary.json \
+              --selection-stage-summary convergence-output/selection-stage/selection_stage_rate_level_summary.json \
+              --response-family $family \
+              --out-dir convergence-output/conditional_selection_bridge/$family
+            cat convergence-output/conditional_selection_bridge/$family/conditional_selection_bridge_summary.json
+          done
       - name: Upload raw response, efficiency decomposition and convergence outputs
         uses: actions/upload-artifact@v4
         with:
