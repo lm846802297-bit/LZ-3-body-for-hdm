@@ -104,6 +104,8 @@ For bookkeeping, the workflow reports the ratio
 
 Across the 64 rows this ratio ranges from 0.6024 to 1.3050. For the EFT2024 family it is about 1.04 for the red, green, and blue benchmarks, but about 0.966 for the black benchmark. For the black benchmark it is about 1.183 for rounded Table S5, 1.150 for WS2024, and 0.602 for generic NEST.
 
+The independent one-dimensional integration of each cumulative Fig. S2 stage against all eight benchmark spectra is documented in [LZ_2026_SELECTION_STAGE_RATE_LEVEL_CLOSURE.md](LZ_2026_SELECTION_STAGE_RATE_LEVEL_CLOSURE.md); it reproduces the archived rate-level yields to floating-point precision and quantifies the energy-weighted SS/data-analysis and ROI factors.
+
 This ratio is a **model/provenance and selection-closure diagnostic only**. It is not an extra efficiency factor, not a correction to the 2D PDF, and not proof that one response family is the collaboration's production model. The response families use different public parameterizations; the event-level spatial prior is a uniform active-TPC cylinder rather than the official calibration-source/FV distribution; and the exact production configuration and position-correction model remain unconfirmed. The strong family dependence, especially for the high-energy black benchmark, is a reason to resolve the calibration/provenance mismatch before constructing a final selected PDF.
 
 ## 7. Acceptance definitions and missing selection stages
