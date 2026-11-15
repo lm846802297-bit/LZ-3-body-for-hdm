@@ -1005,9 +1005,9 @@ interval for the ensemble-map TV is included. The black WS-ROI integrated
 rate shift is consistently about -0.6%, but it remains a NEST-proxy
 mode-dependence diagnostic rather than a detector correction.
 
-The dedicated black 360-keV S1 upper-tail and selection-migration audit
-has now been completed; see Section 15.9 and the archived
-[upper-tail report](paired_s1_independent_seeds_2026-11-15/upper-tail-audit/REPORT.md).
+The dedicated S1 upper-tail and selection-migration audit has now
+been completed for all four benchmark spectra; see Sections 15.9--15.10
+and the archived [four-benchmark report](paired_s1_independent_seeds_2026-11-15/multi-benchmark-upper-tail-audit/REPORT.md).
 The complete conditional response matrix must still include the
 shared-observable correlations across DAQ, SS reconstruction/data-analysis,
 official FV, Skin/OD veto partitions, and live-time treatment. The Fig. S2
@@ -1103,3 +1103,102 @@ Full methods, tables, source hashes, and output descriptions are in the
 The successful audit is
 [run 43762406779](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43762406779),
 artifact 14181285817.
+
+
+## 15.10 Four-benchmark paired S1 upper-tail and ROI-migration audit
+
+The ten-seed S1 upper-tail audit has been extended from black to red, green,
+black, and blue using the same immutable paired EFT2024 NEST event production.
+No NEST events were regenerated. The four benchmark spectra are separately
+reweighted over the same 4.7-million-event raw sample, with GCN and JJ55
+folds kept distinct.
+
+| Benchmark | \(m_s\) | \(\Delta m\) | Non-zero recoil support |
+|---|---:|---:|---:|
+| red | 200 keV | 1 MeV | 35--269.9 keV |
+| green | 300 keV | 1 MeV | 100--269.9 keV |
+| black | 360 keV | 1 MeV | 205--269.9 keV |
+| blue | 300 keV | 10 MeV | 100--269.9 keV |
+
+All four are also compared on the common \(205\)--\(269.9\) keV interval.
+The event weights are normalized within every one-keV stratum to the exact
+integrated rate from the original per-seed fold. The audit performs 18,800
+benchmark/seed/nuclear-model/stratum closure checks, with maximum relative
+residual \(7.20\times10^{-15}\), below the \(5\times10^{-12}\) tolerance.
+The workflow passes six unit tests, artifact-manifest verification,
+support/event-count checks, output-row checks, and checksum validation.
+
+### 15.10.1 Integrated rate shifts
+
+The relative change is the mean of ten seed-level Full/Parametric S1 ROI
+rate ratios; intervals are 95% Student-\(t\) intervals over the ten
+independent production seeds. Since all audited events pass S1 coincidence
+and the S2 selections, the S1 ROI and WS-ROI changes are identical.
+
+| Benchmark | Support | GCN Full/Parametric change | JJ55 Full/Parametric change |
+|---|---|---:|---:|
+| red | full | -0.00535% [-0.00692, -0.00377] | -0.00551% [-0.00712, -0.00390] |
+| red | common 205--269.9 | -0.06759% [-0.08570, -0.04947] | -0.06837% [-0.08661, -0.05014] |
+| green | full | -0.02078% [-0.02649, -0.01507] | -0.02123% [-0.02703, -0.01543] |
+| green | common 205--269.9 | -0.07949% [-0.10033, -0.05865] | -0.08047% [-0.10150, -0.05944] |
+| black | full = common | -0.59833% [-0.80463, -0.39203] | -0.58808% [-0.79014, -0.38601] |
+| blue | full | -0.02067% [-0.02635, -0.01499] | -0.02112% [-0.02689, -0.01535] |
+| blue | common 205--269.9 | -0.07939% [-0.10020, -0.05857] | -0.08036% [-0.10137, -0.05936] |
+
+### 15.10.2 The benchmark spectrum explains the black enhancement
+
+The fraction of each benchmark's total rate lying in the common
+205--269.9 keV interval is approximately 8% for red, 26.5% for green,
+100% for black, and 26.5% for blue. Within the common interval, the
+255--269.9 keV band contains about 1.2% of the red rate, 1.6% of green
+and blue, but 58.7--60.0% of black.
+
+The energy-resolved relative S1 ROI rate shifts (GCN; JJ55 agrees to
+better than 0.001 percentage point) are:
+
+| True recoil band [keV] | red | green | black | blue |
+|---|---:|---:|---:|---:|
+| 205--225 | -0.0182% | -0.0200% | -0.0603% | -0.0200% |
+| 225--240 | -0.1347% | -0.1370% | -0.1614% | -0.1370% |
+| 240--255 | -0.3255% | -0.3275% | -0.2977% | -0.3275% |
+| 255--269.9 | -0.9545% | -0.9614% | -1.0337% | -0.9613% |
+
+Thus the mode dependence is present in every benchmark and grows toward
+high recoil energy. The black integrated shift is much larger because its
+spectrum strongly weights the highest-energy band; it is not evidence for
+a different detector response configuration.
+
+### 15.10.3 S1/S2 selection closure
+
+Across the full non-zero support of each benchmark, every generated event
+passes both Parametric and Full S1 coincidence flags, the NEST S2 threshold,
+the strict raw-S2 \(>645\) phd cut, and the corrected-S2 window
+\(2.75\leq\log_{10}S2_c\leq4.15\). The raw event counts are 4.7 million
+(red), 3.4 million (green), 1.3 million (black), and 3.4 million (blue).
+No event inside either S1 ROI fails the S2 part of the WS ROI.
+
+The minimum raw S2 values are 1,940.29, 3,723.33, 4,855.60, and
+3,723.33 phd for red, green, black, and blue, respectively; all exceed
+645 phd. Therefore, for these benchmark supports, the WS-ROI acceptance
+equals the S1 \([3,600]\)-phd acceptance. This is a benchmark-support
+statement, not a general claim about all NR energies.
+
+### 15.10.4 Shape diagnostics and limitations
+
+On common support, ensemble-mean S1 histogram TVs are 0.54--0.60%;
+S1 upper-tail TVs for \(S1_c>500\) are 0.44--0.58%; NEST-stage 2D TVs
+are 0.98--1.17%; and WS-ROI 2D TVs are 0.93--1.00%. These point
+estimates do not establish Parametric/Full equivalence. The ten-seed
+intervals quantify production-level Monte Carlo variation only.
+
+This remains an EFT2024 NEST response diagnostic, not the official LZ
+waveform-level selected-event PDF. DAQ trigger, SS reconstruction and
+data-analysis cuts, official FV, Skin/OD veto partitions, live-time
+migration, and their joint covariance are not included. No detector-systematic
+covariance, final profile likelihood, or 90% CL exclusion is provided.
+
+Full methodology, tables, per-seed outputs, and checksums are in the
+[archived four-benchmark report](paired_s1_independent_seeds_2026-11-15/multi-benchmark-upper-tail-audit/REPORT.md).
+The successful audit is
+[run 43764753139](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43764753139),
+artifact 14181863680.

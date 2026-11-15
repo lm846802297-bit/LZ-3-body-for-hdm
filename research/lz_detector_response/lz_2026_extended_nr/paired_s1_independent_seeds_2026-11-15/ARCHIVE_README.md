@@ -22,3 +22,20 @@ using the current aggregation implementation. This corrects a stale three-seed
 limitation string in the original production artifact metadata; it does not rerun
 NEST, alter event samples, or change the numerical ensemble inputs. The production
 ZIP digest above continues to identify the original immutable Actions artifact.
+
+
+## Four-benchmark paired S1 upper-tail audit
+
+- Audit run: https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43764753139
+- Audit artifact: 14181863680
+- Audit artifact ZIP SHA-256: 4490b4e8a0631569617a5e6fb1e7037a1e5a70290fd5dd3f3e3c12d4518faa04
+- New archive: multi-benchmark-upper-tail-audit/REPORT.md and its four machine-readable output files.
+- Same immutable ten-seed production; 4,700,000 unique events reweighted for four benchmarks.
+- 18,800 exact per-stratum closure checks; maximum relative residual 7.2003e-15.
+- Supports: red 35--269.9 keV; green 100--269.9 keV; black 205--269.9 keV; blue 100--269.9 keV.
+
+The four-benchmark report shows that the response-mode migration grows toward
+high recoil energy. Black has the largest integrated shift because about
+59--60% of its common-support rate lies in 255--269.9 keV, compared with
+about 1--2% for the other three benchmarks. The full audit and its scope
+limitations are documented in the linked report.
