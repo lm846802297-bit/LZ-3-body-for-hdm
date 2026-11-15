@@ -459,38 +459,53 @@ ROI. The missing SS/data-analysis, FV, and veto effects are correlated with
 event reconstruction and/or sample assignment; Fig. S2 does not provide
 their two-dimensional conditional kernels.
 
-### 15.2 Proposed, not yet approved, response-grid tolerance
+### 15.2 Approved response-grid engineering gate (2026-11-15)
 
+The analysis owner approved the following point-estimate engineering gate:
+
+\[
+\boxed{
+\delta_{\rm acc}^{\max}\leq 1.0\%,
+\qquad
+D_{\rm TV}^{\max}\leq 1.0\%.
+}
+\]
+
+Both maxima are evaluated over all tested benchmarks, nuclear responses,
+NEST response families, and acceptance modes, relative to the 1-keV reference.
 The current artifact-level comparisons give:
 
-| Grid relative to 1 keV | Maximum accepted-rate difference | Maximum 2D total-variation distance |
-|---|---:|---:|
-| 5 keV, all tested families/benchmarks/models/modes | 0.5131% | 0.8896% |
-| 5 keV, primary EFT2024 family | 0.3249% | 0.4579% |
-| 10 keV, all tested families/benchmarks/models/modes | 1.2146% | 2.4649% |
+| Grid relative to 1 keV | Maximum accepted-rate difference | Maximum 2D total-variation distance | Gate |
+|---|---:|---:|---|
+| 5 keV, all tested families/benchmarks/models/modes | 0.5131% | 0.8896% | PASS |
+| 5 keV, primary EFT2024 family | 0.3249% | 0.4579% | PASS |
+| 10 keV, all tested families/benchmarks/models/modes | 1.2146% | 2.4649% | FAIL |
 
-A simple engineering gate of **1.0% maximum accepted-rate difference and
-1.0% maximum 2D total-variation distance** would accept the 5-keV comparison
-and reject the 10-keV comparison. This is a proposed numerical tolerance,
-not a scientific criterion already approved by the analysis owner.
+**Decision:** 5 keV passes the approved numerical grid gate; 10 keV fails.
+This is a formal acceptance of the *coarse-grid reaggregation point
+estimates*, not yet an unconditional production-Monte-Carlo acceptance.
+The 5-keV values are reconstructed by width-averaging the existing 1-keV
+response strata; they are not an independently generated 5-keV Monte Carlo.
 
-There are two qualifications:
+There are three qualifications:
 1. The 5-keV rate difference exceeds the corresponding 1-keV split-sample
    rate difference in 17/64 comparisons. The two halves are disjoint portions
-   of one seeded stream, not independent-seed productions; the comparison is
-   a diagnostic, not a complete MC covariance estimate.
+   of one seeded stream, not independent-seed productions; they do not provide
+   a complete MC covariance estimate.
 2. The dedicated 0.5-keV high-energy-tail refinement differs from the
    1-keV response by at most 0.46895% in accepted rate and 2.5446% in 2D TV.
-   No shape difference exceeds its split-sample diagnostic, while two rate
-   comparisons do. This tail comparison should remain a separate refinement
-   check for the black benchmark.
+   Its 2D TV is above the 1.0% grid threshold, so it is not a passing
+   production grid. It remains a local refinement diagnostic for the black
+   benchmark; two EFT2024 black-benchmark rate comparisons also exceed the
+   current split-sample rate checks.
+3. The event-weighted fold provides an algorithmic cross-check: its maximum
+   difference from the 1-keV binned fold is 0.02821% in accepted rate and
+   0.07920% in 2D TV, with raw-rate closure \(1.11\times10^{-15}\).
+   This validates the folding implementation, not the detector model.
 
-The event-weighted fold provides an additional algorithmic cross-check:
-its maximum difference from the 1-keV binned fold is 0.02821% in accepted
-rate and 0.07920% in 2D TV, with raw-rate closure \(1.11\times10^{-15}\).
-
-**Current release decision:** keep 1 keV as the reference. Do not set
-formal_pass=true or promote 5 keV to the production grid until the 1.0%
-(or another explicitly chosen) tolerance is approved and the MC covariance
-treatment is stated. This grid decision is separate from the remaining
-full-LZ selection and likelihood blockers in Section 14.5.
+**Production-grid status:** use 5 keV as the approved coarse-grid candidate
+for subsequent development, retain 1 keV as the numerical reference, and
+complete an independent-seed high-statistics check of the EFT2024 black
+high-energy tail before replacing the 1-keV reference in production
+predictions. This grid decision is separate from the remaining full-LZ
+selection and likelihood blockers in Section 14.5.
