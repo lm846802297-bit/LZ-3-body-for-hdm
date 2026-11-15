@@ -63,7 +63,7 @@ jobs:
             for seed in 20261132 20261134 20261136; do
               mkdir -p full-range-output/1keV/$family/seed_$seed
               ./lz_2026_nr_stratified_energy_response \
-                $family 4000 $seed 5.4 269.9 1.0 \
+                $family 4000 $seed 5.4 269.9 1.0 4000 \
                 > full-range-output/1keV/$family/seed_$seed/$family.csv
             done
           done
@@ -74,7 +74,7 @@ jobs:
             for seed in 20261133 20261135 20261137; do
               mkdir -p full-range-output/5keV/$family/seed_$seed
               ./lz_2026_nr_stratified_energy_response \
-                $family 20000 $seed 5.4 269.9 5.0 \
+                $family 4000 $seed 5.4 269.9 5.0 4000 \
                 > full-range-output/5keV/$family/seed_$seed/$family.csv
             done
           done
@@ -94,8 +94,7 @@ jobs:
                 full-range-output/5keV/$family/seed_20261137 \
               --one-kev-seeds 20261132 20261134 20261136 \
               --five-kev-seeds 20261133 20261135 20261137 \
-              --one-kev-events-per-bin 4000 \
-              --five-kev-events-per-bin 20000 \
+              --events-per-keV 4000 \
               --nuclear-models GCN JJ55 \
               --out-dir full-range-output/summary/$family
             cat full-range-output/summary/$family/full_range_grid_independent_seed_summary.json
