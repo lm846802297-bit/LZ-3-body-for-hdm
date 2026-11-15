@@ -502,10 +502,10 @@ continuous recoil spectrum.
 - Four-benchmark audit: [run 43764753139](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43764753139), artifact 14181863680.
 - 10 independent seeds; 4.7 million unique paired events; 18,800 exact
   benchmark/seed/nuclear-model/1-keV weight-closure checks.
-- Maximum relative closure residual: (7.2002\times10^{-15}), below the
-  (5\times10^{-12}) tolerance. Six unit tests and all production-manifest,
+- Maximum relative closure residual: \(7.2002\times10^{-15}\), below the
+  \(5\times10^{-12}\) tolerance. Six unit tests and all production-manifest,
   support, event-count, output-row, and checksum validations passed.
-- On common (E_R=205)--(269.9) keV support, the Full/Parametric S1 ROI
+- On common \(E_R=205\)--\(269.9\) keV support, the Full/Parametric S1 ROI
   changes are red −0.0676/−0.0684%, green −0.0795/−0.0805%,
   black −0.5983/−0.5881%, and blue −0.0794/−0.0804% (GCN/JJ55).
 - The energy dependence is shared by all benchmarks: the 255--269.9 keV
@@ -514,7 +514,7 @@ continuous recoil spectrum.
   recoil rate lies in this highest-energy band, versus about 1--2% for the
   other three benchmarks.
 - Every raw event in each benchmark's full non-zero recoil support passes
-  both S1 coincidence flags, the NEST S2 threshold, raw-S2 (>645) phd,
+  both S1 coincidence flags, the NEST S2 threshold, raw-S2 \(>645\) phd,
   and the corrected-S2 window. Thus WS-ROI and S1-ROI changes coincide
   for these supports; this is not a general statement about lower-energy NR.
 
