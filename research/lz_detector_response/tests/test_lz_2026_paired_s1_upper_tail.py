@@ -1,4 +1,5 @@
 import importlib.util
+import json
 import unittest
 from pathlib import Path
 
@@ -9,6 +10,14 @@ SPEC.loader.exec_module(MOD)
 
 
 class PairedS1UpperTailTests(unittest.TestCase):
+    def test_csv_nested_values_are_valid_json(self):
+        row = MOD.csv_safe_row({
+            "nested": {"mean": 0.25, "ci": [0.1, 0.4]},
+            "plain": "black",
+        })
+        self.assertEqual(json.loads(row["nested"]), {"mean": 0.25, "ci": [0.1, 0.4]})
+        self.assertEqual(row["plain"], "black")
+
     def test_exact_stratum_normalization_closes_to_integrated_rate(self):
         differential = [1.0, 2.0, 3.0, 4.0]
         denominator = sum(differential)

@@ -71,8 +71,20 @@ jobs:
           assert len(thresholds)==1200, len(thresholds)
           assert meta["n_summary_rows"]==12 and meta["n_per_seed_rows"]==120 and meta["n_threshold_rows"]==1200
           assert meta["stratum_weight_closure"]["max_relative_residual_across_all_seeds_models_bins"] < 5e-12
+          selection=meta["black_support_selection_audit"]
+          assert selection["n_events"]==1300000
+          for key in ("parametric_s1_coincidence_pass","full_s1_coincidence_pass","s2_threshold_pass","s2_raw_roi_pass","s2c_roi_pass","combined_s2_roi_pass"):
+              assert selection[key]==1300000, (key,selection[key])
+          assert selection["parametric_s1_roi_events_failing_s2_roi"]==0
+          assert selection["full_s1_roi_events_failing_s2_roi"]==0
+          assert selection["s2_raw_min_phd"]>645.0
+          assert selection["s2c_min_phd"]>10**2.75 and selection["s2c_max_phd"]<10**4.15
           for row in summary:
               assert int(row["n_independent_seeds"])==10
+              json.loads(row["s1_roi_relative_rate_change"])
+              json.loads(row["s1_roi_efficiency_difference_full_minus_parametric"])
+              json.loads(row["mean_parametric_fraction_above_threshold_given_coincidence"])
+              json.loads(row["mean_full_fraction_above_threshold_given_coincidence"])
               assert 0 <= float(row["ensemble_mean_s1_conditional_histogram_tv_10phd"]) <= 1
               assert 0 <= float(row["ensemble_mean_s1_upper_tail_histogram_tv_10phd_given_s1_gt_500"]) <= 1
           print("Validated 12 summary, 120 per-seed, and 1,200 threshold rows from 4.7M events.")

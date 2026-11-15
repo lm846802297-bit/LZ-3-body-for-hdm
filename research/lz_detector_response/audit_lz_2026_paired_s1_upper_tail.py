@@ -458,6 +458,20 @@ def run_audit(args: argparse.Namespace) -> tuple[list[dict], list[dict], dict]:
     seed_records = []
     total_events = 0
     max_weight_closure_relative_residual = 0.0
+    black_selection_audit = {
+        "n_events": 0,
+        "parametric_s1_coincidence_pass": 0,
+        "full_s1_coincidence_pass": 0,
+        "s2_threshold_pass": 0,
+        "s2_raw_roi_pass": 0,
+        "s2c_roi_pass": 0,
+        "combined_s2_roi_pass": 0,
+        "parametric_s1_roi_events_failing_s2_roi": 0,
+        "full_s1_roi_events_failing_s2_roi": 0,
+        "s2_raw_min_phd": math.inf,
+        "s2c_min_phd": math.inf,
+        "s2c_max_phd": -math.inf,
+    }
     for seed in args.seeds:
         event_path = args.seed_root / f"seed-{seed}" / "paired_s1_mode_2d_events.csv"
         if not event_path.is_file():
@@ -531,7 +545,11 @@ def run_audit(args: argparse.Namespace) -> tuple[list[dict], list[dict], dict]:
                     raise ValueError(f"{event_path}: invalid energy coordinate at event {event}")
                 p_signed = float(row["s1_param_signed_phd"])
                 f_signed = float(row["s1_full_signed_phd"])
+                p_abs = float(row["s1_param_abs_phd"])
+                f_abs = float(row["s1_full_abs_phd"])
                 s2_signed = float(row["s2_signed_phd"])
+                s2c = float(row["s2_abs_phd"])
+                s2r = float(row["s2_raw_phd"])
                 p_pass = int(row["s1_param_pass"])
                 f_pass = int(row["s1_full_pass"])
                 s2_pass = int(row["s2_threshold_pass"])
@@ -541,8 +559,38 @@ def run_audit(args: argparse.Namespace) -> tuple[list[dict], list[dict], dict]:
                     raise ValueError(f"{event_path}: S1 sign/pass mismatch at event {event}")
                 if (s2_signed > 0.0) != bool(s2_pass):
                     raise ValueError(f"{event_path}: S2 sign/pass mismatch at event {event}")
+                if not all(math.isfinite(value) for value in (p_abs, f_abs, s2c, s2r)):
+                    raise ValueError(f"{event_path}: non-finite absolute response at event {event}")
                 if energy < min(low, high) or energy > max(low, high):
                     raise ValueError(f"{event_path}: event energy outside its stratum at event {event}")
+
+                if in_band(energy, *ENERGY_BANDS_KEV["black_support_205_269p9"]):
+                    black_selection_audit["n_events"] += 1
+                    black_selection_audit["parametric_s1_coincidence_pass"] += p_pass
+                    black_selection_audit["full_s1_coincidence_pass"] += f_pass
+                    black_selection_audit["s2_threshold_pass"] += s2_pass
+                    s2_raw_pass = s2r > grid.S2_RAW_MIN_PHD
+                    s2c_pass = (
+                        s2c > 0.0
+                        and grid.LOG10_S2C_MIN <= math.log10(s2c) <= grid.LOG10_S2C_MAX
+                    )
+                    s2_roi = bool(s2_pass) and grid.ws_roi_pass(100.0, s2r, s2c)
+                    black_selection_audit["s2_raw_roi_pass"] += int(s2_raw_pass)
+                    black_selection_audit["s2c_roi_pass"] += int(s2c_pass)
+                    black_selection_audit["combined_s2_roi_pass"] += int(s2_roi)
+                    p_roi = s1_roi_pass(bool(p_pass), p_abs)
+                    f_roi = s1_roi_pass(bool(f_pass), f_abs)
+                    black_selection_audit["parametric_s1_roi_events_failing_s2_roi"] += int(p_roi and not s2_roi)
+                    black_selection_audit["full_s1_roi_events_failing_s2_roi"] += int(f_roi and not s2_roi)
+                    black_selection_audit["s2_raw_min_phd"] = min(
+                        black_selection_audit["s2_raw_min_phd"], s2r
+                    )
+                    black_selection_audit["s2c_min_phd"] = min(
+                        black_selection_audit["s2c_min_phd"], s2c
+                    )
+                    black_selection_audit["s2c_max_phd"] = max(
+                        black_selection_audit["s2c_max_phd"], s2c
+                    )
 
                 weights = {}
                 for model in NUCLEAR_MODELS:
@@ -594,6 +642,22 @@ def run_audit(args: argparse.Namespace) -> tuple[list[dict], list[dict], dict]:
     threshold_rows = []
     summary_rows = []
     json_summary = {}
+    expected_black_support_events = 65 * EVENTS_PER_BIN * len(args.seeds)
+    if black_selection_audit["n_events"] != expected_black_support_events:
+        raise ValueError(
+            "black support event-count closure failed: "
+            f"{black_selection_audit['n_events']} != {expected_black_support_events}"
+        )
+    if any(
+        black_selection_audit[key] != black_selection_audit["n_events"]
+        for key in (
+            "parametric_s1_coincidence_pass", "full_s1_coincidence_pass",
+            "s2_threshold_pass", "s2_raw_roi_pass", "s2c_roi_pass",
+            "combined_s2_roi_pass",
+        )
+    ):
+        raise ValueError("black support S1/S2 selection audit found an unexpected failed event")
+
     for model in NUCLEAR_MODELS:
         json_summary[model] = {}
         for band in ENERGY_BANDS_KEV:
@@ -658,6 +722,21 @@ def run_audit(args: argparse.Namespace) -> tuple[list[dict], list[dict], dict]:
         },
         "s1_coincidence": "Pinned NEST GetS1 sign/pass flag; no substitute threshold is imposed.",
         "s1_roi_phd": [grid.S1_MIN_PHD, grid.S1_MAX_PHD],
+        "black_support_selection_audit": {
+            **black_selection_audit,
+            "energy_range_keV": [205.0, 269.9],
+            "s2_raw_strict_lower_bound_phd": grid.S2_RAW_MIN_PHD,
+            "s2c_bounds_phd": [
+                10 ** grid.LOG10_S2C_MIN, 10 ** grid.LOG10_S2C_MAX
+            ],
+            "interpretation": (
+                "Every event in the ten-seed black support passes both S1 coincidence "
+                "flags, the NEST S2 threshold, the strict raw-S2 lower cut, and the "
+                "corrected-S2 window. Thus the WS-ROI acceptance in this support is "
+                "identical to the S1 [3,600] phd acceptance; the Parametric/Full rate "
+                "difference is driven by S1 migration, not S2 selection."
+            )
+        },
         "ws_roi": {
             "s1c_phd": [grid.S1_MIN_PHD, grid.S1_MAX_PHD],
             "s2_raw_min_phd_strict": grid.S2_RAW_MIN_PHD,
@@ -703,6 +782,15 @@ def run_audit(args: argparse.Namespace) -> tuple[list[dict], list[dict], dict]:
     return summary_rows, per_seed_rows, threshold_rows, metadata
 
 
+def csv_safe_row(row: dict) -> dict:
+    """Serialize nested values as standards-compliant JSON inside CSV cells."""
+    return {
+        key: json.dumps(value, sort_keys=True, separators=(",", ":"))
+        if isinstance(value, (dict, list)) else value
+        for key, value in row.items()
+    }
+
+
 def write_outputs(
     summary_rows: list[dict], per_seed_rows: list[dict],
     threshold_rows: list[dict], metadata: dict, out_dir: Path
@@ -719,7 +807,7 @@ def write_outputs(
         with (out_dir / filename).open("w", newline="", encoding="utf-8") as handle:
             writer = csv.DictWriter(handle, fieldnames=list(rows[0]))
             writer.writeheader()
-            writer.writerows(rows)
+            writer.writerows(csv_safe_row(row) for row in rows)
     (out_dir / "black_s1_upper_tail_metadata.json").write_text(
         json.dumps(metadata, indent=2) + "\n", encoding="utf-8"
     )
