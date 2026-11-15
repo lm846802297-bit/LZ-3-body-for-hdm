@@ -262,15 +262,15 @@ response using the exact piecewise-linear GCN/JJ55 recoil spectra. The
 diagnostics only. The 0.5-keV refinement covers 225.4–269.9 keV, where the
 \(m_s=360\) keV benchmark approaches the upper S1c boundary.
 
-The successful high-energy refinement is [run 43675776534](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43675776534),
-artifact 14146681605, SHA-256
-de195140fc2d4b3e3205a7543ea822a9ed2b325373db60078ec79cae78ab78b5.
-Across 64 comparisons, the maximum 0.5-keV versus 1-keV accepted-rate
-difference is 0.46895% and the maximum 2D total-variation distance is 2.5446%.
-After a \(10^{-12}\) numerical tolerance, two rate comparisons (EFT2024
-black benchmark, GCN/JJ55) exceed both split-sample rate checks; no 2D shape
-comparison does. This is a refinement diagnostic, not a formal convergence
-PASS. The full interpretation is in
+The combined full-range and high-energy refinement is [run 43676553810](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43676553810),
+artifact 14146333000, SHA-256
+3af588a74576db65462545ff305d453b63febaa701d3cf42762e8edb91e7b7d7.
+Across 64 high-energy comparisons, the maximum 0.5-keV versus 1-keV
+accepted-rate difference is 0.46895% and the maximum 2D total-variation
+distance is 2.5446%. After a \(10^{-12}\) numerical tolerance, two rate
+comparisons (EFT2024 black benchmark, GCN/JJ55) exceed both split-sample rate
+checks; no 2D shape comparison does. This is a refinement diagnostic, not a
+formal convergence PASS. The full interpretation is in
 [LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md](lz_2026_extended_nr/LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md).
 
 The 1-keV 2D intensity contains NEST Parametric S1 coincidence, NEST S2
@@ -283,11 +283,27 @@ Do not multiply that final efficiency into the existing 2D map: the WS ROI
 and some NEST acceptance are already represented, and the missing selections
 do not have a validated 2D migration model.
 
+The latest combined artifact also performs a direct event-level
+\(dR/dE_R\)-weighted fold of each stratified NEST event. Within every 1-keV
+true-energy stratum, the event weights are normalized to the exact
+piecewise-linear three-body rate integral. Across 64 matched comparisons,
+raw-rate closure is \(1.11\times10^{-15}\), the maximum weighted-versus-binned
+accepted-rate difference is 0.02821%, and the maximum 2D total-variation
+distance is 0.07920%. These are below the observed split-replica variations.
+See [LZ_2026_THREE_BODY_EVENT_WEIGHTED_FOLD_AUDIT.md](lz_2026_extended_nr/LZ_2026_THREE_BODY_EVENT_WEIGHTED_FOLD_AUDIT.md).
+
+The event-weighted NEST/WS-ROI count divided by the separate rate-level
+Fig. S2 final-efficiency count varies from 0.602 to 1.305 across the tested
+response families and benchmarks. This is a model/provenance diagnostic,
+not an extra efficiency factor. The strong family dependence, particularly
+for the high-energy black benchmark, is a reason to resolve the exact
+production NEST/calibration response before building a final selected PDF.
+
 Implementation:
-- \`cpp/lz_2026_nr_stratified_energy_response.cc\` — stratified event-level NEST NR response.
-- \`converge_lz_2026_three_body_energy_grid.py\` — 1/5/10-keV response fold and provenance checks.
-- \`compare_lz_2026_nr_high_energy_half_kev.py\` — 0.5/1-keV high-energy response comparison.
-- \`.github/workflows/lz-2026-three-body-response-grid-convergence.yml\` — pinned NEST build, samples, folds, checks, and artifact upload.
+- `cpp/lz_2026_nr_stratified_energy_response.cc` — stratified event-level NEST NR response.
+- `converge_lz_2026_three_body_energy_grid.py` — 1/5/10-keV response fold and provenance checks.
+- `compare_lz_2026_nr_high_energy_half_kev.py` — 0.5/1-keV high-energy response comparison.
+- `.github/workflows/lz-2026-three-body-response-grid-convergence.yml` — pinned NEST build, samples, folds, checks, and artifact upload.
 
 
 A further 265-bin monotonicity diagnostic against the published final cumulative
