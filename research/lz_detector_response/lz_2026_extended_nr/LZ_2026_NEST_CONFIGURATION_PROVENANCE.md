@@ -195,3 +195,22 @@ candidate; retain rounded Table S5, literal Table S3 m6=0, and WS2024/generic
 models as explicit alternatives. Do not label any of them as the exact LZ
 2026 production build without a collaboration-provided commit/configuration
 or an equivalent independent calibration closure.
+
+
+## 9. NR fluctuation-vector semantics from the pinned implementation
+
+The follow-up full-band sensitivity study exposed an important distinction in the shared NEST parameter name NRERWidthsParam. For NR events, GetQuanta uses indices 0, 1, 2, 3, 4, 5, 11, and 12:
+- p0 and p11 determine the ion Fano term;
+- p1 and p12 determine the exciton Fano term;
+- p2, p3, and p4 determine the non-binomial NR recombination fluctuation omega_NR;
+- p2 also selects the Chen suppression factor lambda_Chen = 1 + p2 when p2 is negative;
+- p5 sets the NR skew-Gaussian parameter.
+
+The EFT2024 vector has p2 = -0.707, so lambda_Chen = 0.293 and the negative omega_NR is clamped to zero. The WS2024 and generic default vectors have p2 = +0.0383 and +0.0400, respectively; they use lambda_Chen = 1 and nonzero omega_NR. Thus replacing the vector changes the NR recombination variance model, not merely a width parameter.
+
+The ER-only controls at indices 6–10 and 13–16 are not active in the NR branch. The names eftmean_wswidth and eftmean_genericwidth in the driver are retained for reproducibility, but should be interpreted as EFT2024 mean yields with alternative NR quanta-fluctuation vectors.
+
+The full source-level index mapping and variance formula are recorded in
+[LZ_2026_NR_FULL_BAND_PARAMETER_SENSITIVITY_AUDIT.md](LZ_2026_NR_FULL_BAND_PARAMETER_SENSITIVITY_AUDIT.md).
+
+The first full-band artifact used one detector-centre drift velocity for all event positions. That was not sufficiently local for a position-dependent electric field and its candidate-band numbers are superseded. The corrected driver computes v_d(E(x,y,z)) event by event, stores drift distance/time/speed, and the summarizer checks their kinematic closure. The corrected workflow also adds a separate rounded-Table-S5 mean-yield candidate.
