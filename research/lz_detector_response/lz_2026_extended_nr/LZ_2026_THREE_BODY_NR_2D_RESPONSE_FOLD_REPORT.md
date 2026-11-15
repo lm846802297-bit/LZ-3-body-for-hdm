@@ -157,14 +157,14 @@ The original 200,000-event/family, 10-keV-bin fold above remains the historical
 first end-to-end response fold. The later stratified event-level calculation
 uses 4,000 events per 1-keV true-energy stratum and explicitly retains the
 NEST S1 Parametric coincidence and NEST S2-threshold flags. It also adds a
-separate \`ws_roi\` mode with the S1c, raw-S2, and S2c analysis ROI applied.
+separate `ws_roi` mode with the S1c, raw-S2, and S2c analysis ROI applied.
 
 See:
-- \`LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md\` for the quantitative
+- `LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md` for the quantitative
   1/5/10-keV comparison and the complete selection caveats;
-- \`../cpp/lz_2026_nr_stratified_energy_response.cc\` for the stratified
+- `../cpp/lz_2026_nr_stratified_energy_response.cc` for the stratified
   event-level response driver;
-- \`../converge_lz_2026_three_body_energy_grid.py\` for the response-grid
+- `../converge_lz_2026_three_body_energy_grid.py` for the response-grid
   folding and comparison.
 
 The 1-keV stratified response is now the reference for energy-dependent
