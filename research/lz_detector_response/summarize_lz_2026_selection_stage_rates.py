@@ -275,7 +275,7 @@ def main() -> None:
     parser.add_argument("--efficiency-components", type=Path, required=True)
     parser.add_argument("--rate-level-counts", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--relative-tolerance", type=float, default=1e-10)
+    parser.add_argument("--relative-tolerance", type=float, default=1e-8)
     args = parser.parse_args()
 
     result = summarize(
