@@ -65,5 +65,33 @@ class BlackTailIndependentSeedTests(unittest.TestCase):
             MOD.mean_sd_se([1.0])
 
 
+    def test_local_tail_gate_uses_mean_rate_and_mean_map_metrics(self):
+        gate = MOD.evaluate_local_tail_gate([
+            {
+                "relative_rate_difference_fine_vs_coarse": 0.0001758,
+                "tv_distance_between_mean_2d_maps": 0.0068647,
+            },
+            {
+                "relative_rate_difference_fine_vs_coarse": 0.0001862,
+                "tv_distance_between_mean_2d_maps": 0.0068033,
+            },
+            {
+                "relative_rate_difference_fine_vs_coarse": 0.0,
+                "tv_distance_between_mean_2d_maps": 0.0084890,
+            },
+        ])
+        self.assertTrue(gate["point_estimate_pass"])
+        self.assertLessEqual(gate["max_relative_rate_difference"], 0.01)
+        self.assertLessEqual(gate["max_tv_distance_between_mean_maps"], 0.01)
+        self.assertIn("cell-by-cell", gate["covariance_note"])
+
+    def test_local_tail_gate_rejects_tv_above_threshold(self):
+        gate = MOD.evaluate_local_tail_gate([{
+            "relative_rate_difference_fine_vs_coarse": 0.001,
+            "tv_distance_between_mean_2d_maps": 0.011,
+        }])
+        self.assertFalse(gate["point_estimate_pass"])
+
+
 if __name__ == "__main__":
     unittest.main()
