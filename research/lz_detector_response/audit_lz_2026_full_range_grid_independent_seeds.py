@@ -88,9 +88,11 @@ def pairwise_tv_distances(intensities: list[dict]) -> list[float]:
 
 
 def validate_response_sample(
-    stats: dict, width_keV: float, events_per_bin: int, sample_label: str
+    stats: dict, width_keV: float, events_per_keV: int, sample_label: str
 ) -> None:
-    """Check exact ROI coverage, energy edges, two replicas, and per-bin counts."""
+    """Check exact ROI coverage and event density in both replicas of each bin."""
+    if events_per_keV < 2 or events_per_keV % 2 != 0:
+        raise ValueError("events per keV must be a positive even integer")
     edges = grid.make_edges(ROI_MIN_KEV, ROI_MAX_KEV, width_keV)
     expected_bins = len(edges) - 1
     bins = sorted({ibin for ibin, _ in stats})
@@ -99,10 +101,14 @@ def validate_response_sample(
             f"{sample_label}: expected energy-bin indices 0..{expected_bins - 1}, "
             f"got {bins[:3]}...{bins[-3:] if bins else []}"
         )
-    if events_per_bin < 2 or events_per_bin % 2:
-        raise ValueError("events per energy bin must be a positive even integer")
-    expected_per_replica = events_per_bin // 2
     for ibin, (lo, hi) in enumerate(zip(edges, edges[1:])):
+        expected_total = round(events_per_keV * (hi - lo))
+        if expected_total < 2 or expected_total % 2:
+            raise ValueError(
+                f"{sample_label}: expected event count for bin {ibin} "
+                "must be an even integer >= 2"
+            )
+        expected_per_replica = expected_total // 2
         for replica in (0, 1):
             rec = stats.get((ibin, replica))
             if rec is None:
@@ -124,14 +130,14 @@ def load_seed_fold(
     response_dir: Path,
     seed: int,
     width_keV: float,
-    events_per_bin: int,
+    events_per_keV: int,
     response_family: str,
     spectra: dict[tuple[str, str], tuple[list[float], list[float]]],
 ) -> dict:
     path = response_dir / f"{response_family}.csv"
     stats = grid.read_response(path)
     validate_response_sample(
-        stats, width_keV, events_per_bin, f"{response_family}/seed-{seed}/{width_keV:g}keV"
+        stats, width_keV, events_per_keV, f"{response_family}/seed-{seed}/{width_keV:g}keV"
     )
     folded = {}
     for (benchmark, nuclear), (xs, ys) in spectra.items():
@@ -277,17 +283,8 @@ def run_audit(args: argparse.Namespace) -> dict:
         raise ValueError("1-keV and 5-keV productions must use disjoint seeds")
     if args.response_family not in FAMILIES:
         raise ValueError(f"response-family must be one of {FAMILIES}")
-    if args.one_kev_events_per_bin < 2 or args.one_kev_events_per_bin % 2:
-        raise ValueError("1-keV events per bin must be positive and even")
-    if args.five_kev_events_per_bin < 2 or args.five_kev_events_per_bin % 2:
-        raise ValueError("5-keV events per bin must be positive and even")
-    if not math.isclose(
-        args.one_kev_events_per_bin / REFERENCE_GRID_KEV,
-        args.five_kev_events_per_bin / CANDIDATE_GRID_KEV,
-        rel_tol=0.0,
-        abs_tol=1e-12,
-    ):
-        raise ValueError("the two grids must have equal generated events per keV")
+    if args.events_per_keV < 2 or args.events_per_keV % 2:
+        raise ValueError("events per keV must be a positive even integer")
 
     spectra = {}
     for benchmark in BENCHMARKS:
@@ -300,14 +297,14 @@ def run_audit(args: argparse.Namespace) -> dict:
     one_kev = [
         load_seed_fold(
             directory, seed, REFERENCE_GRID_KEV,
-            args.one_kev_events_per_bin, args.response_family, spectra,
+            args.events_per_keV, args.response_family, spectra,
         )
         for seed, directory in zip(args.one_kev_seeds, args.one_kev_response_dirs)
     ]
     five_kev = [
         load_seed_fold(
             directory, seed, CANDIDATE_GRID_KEV,
-            args.five_kev_events_per_bin, args.response_family, spectra,
+            args.events_per_keV, args.response_family, spectra,
         )
         for seed, directory in zip(args.five_kev_seeds, args.five_kev_response_dirs)
     ]
@@ -345,9 +342,11 @@ def run_audit(args: argparse.Namespace) -> dict:
         "true_recoil_interval_keV": [ROI_MIN_KEV, ROI_MAX_KEV],
         "reference_grid_keV": REFERENCE_GRID_KEV,
         "candidate_grid_keV": CANDIDATE_GRID_KEV,
-        "one_kev_events_per_energy_bin_per_seed": args.one_kev_events_per_bin,
-        "five_kev_events_per_energy_bin_per_seed": args.five_kev_events_per_bin,
-        "events_per_keV_per_seed": args.one_kev_events_per_bin / REFERENCE_GRID_KEV,
+        "events_per_keV_per_seed": args.events_per_keV,
+        "expected_events_per_full_1keV_bin": args.events_per_keV,
+        "expected_events_per_full_5keV_bin": args.events_per_keV * 5,
+        "expected_events_in_terminal_0p5keV_bin": args.events_per_keV // 2,
+        "expected_events_in_terminal_4p5keV_bin": args.events_per_keV * 4 + args.events_per_keV // 2,
         "one_kev_independent_seeds": args.one_kev_seeds,
         "five_kev_independent_seeds": args.five_kev_seeds,
         "independent_seed_count_per_grid": 3,
@@ -364,7 +363,7 @@ def run_audit(args: argparse.Namespace) -> dict:
         "per_seed": per_seed,
         "limitations": [
             "The 1-keV and 5-keV response samples are independently generated with disjoint seeds.",
-            "Equal event density per keV is used: 4,000 events per 1-keV bin and 20,000 events per 5-keV bin by default.",
+            "Equal event density per keV is enforced in every stratum, including the partial terminal bins: 4,000 per full keV; the final 0.5-keV and 4.5-keV bins contain 2,000 and 18,000 events, respectively.",
             "Three seeds support a descriptive between-seed stability estimate, not a complete cell-by-cell covariance matrix.",
             "This remains an intermediate NEST-level / WS-ROI response, not the official LZ selected signal PDF.",
             "No waveform-level trigger, SS reconstruction, data-analysis cuts, official FV, Skin/OD veto, or live-time model is included.",
@@ -404,8 +403,7 @@ def main() -> None:
     parser.add_argument("--five-kev-response-dirs", type=Path, nargs=3, required=True)
     parser.add_argument("--one-kev-seeds", type=int, nargs=3, required=True)
     parser.add_argument("--five-kev-seeds", type=int, nargs=3, required=True)
-    parser.add_argument("--one-kev-events-per-bin", type=int, default=4000)
-    parser.add_argument("--five-kev-events-per-bin", type=int, default=20000)
+    parser.add_argument("--events-per-keV", type=int, default=4000)
     parser.add_argument("--spectrum-dir", type=Path, default=Path(
         "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum"
     ))
