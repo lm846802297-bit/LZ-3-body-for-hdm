@@ -53,9 +53,13 @@ jobs:
           done
           python research/lz_detector_response/summarize_lz_2026_nr_flat_band_eft2024.py \
             nr-band-output/eft2024_uniform_tpc.csv \
+            nr-band-output/eftmean_wswidth_uniform_tpc.csv \
+            nr-band-output/eftmean_genericwidth_uniform_tpc.csv \
             nr-band-output/ws2024_uniform_tpc.csv \
             nr-band-output/generic_uniform_tpc.csv \
             nr-band-output/eft2024_candidate.csv \
+            nr-band-output/eftmean_wswidth_candidate.csv \
+            nr-band-output/eftmean_genericwidth_candidate.csv \
             nr-band-output/ws2024_candidate.csv \
             nr-band-output/generic_candidate.csv \
             > nr-band-output/nr-band-summary.json
