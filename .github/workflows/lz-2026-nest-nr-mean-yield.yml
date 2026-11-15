@@ -4,12 +4,16 @@ on:
   push:
     branches:
       - research/figure2-p0-4-mainline
+      - integration/lz-2026-nest-nr-fullband-20261115
     paths:
       - research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_mean_yield.py
       - research/lz_detector_response/lz_2026_extended_nr/lz_2026_nest_nr_mean_yield_parameters.json
+      - research/lz_detector_response/lz_2026_extended_nr/lz_2026_nest_eft2024_configuration_candidate.json
+      - research/lz_detector_response/lz_2026_extended_nr/LZ_2026_NEST_RELEASE_LINEAGE_AUDIT.md
       - research/lz_detector_response/tests/test_lz_2026_nr_mean_yield.py
       - research/lz_detector_response/cpp/nest_mean_yield_crosscheck.cc
       - research/lz_detector_response/compare_lz_2026_nr_mean_yield_cpp.py
+      - research/lz_detector_response/tests/test_lz_2026_nr_mean_yield.py
       - .github/workflows/lz-2026-nest-nr-mean-yield.yml
   workflow_dispatch:
 
@@ -26,7 +30,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: NESTCollaboration/nest
-          ref: 423b9745a5bfbb0402514f1d7955e67445de0810
+          ref: 541b6430dae6ea289cf110c99f174a9187f7fdee
           path: nest
           fetch-depth: 0
       - name: Set up Python
@@ -50,5 +54,14 @@ jobs:
             nest/build/libNESTCore.a -o nest_mean_yield_crosscheck
       - name: Compare Python port against NEST C++
         run: |
+          mkdir -p mean-yield-output
           python research/lz_detector_response/compare_lz_2026_nr_mean_yield_cpp.py \
-            --executable ./nest_mean_yield_crosscheck
+            --executable ./nest_mean_yield_crosscheck \
+            --output-json mean-yield-output/tableS5_eft2024_cpp_crosscheck.json
+      - name: Upload cross-language yield comparison
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-tableS5-eft2024-mean-yield-crosscheck
+          path: mean-yield-output/
+          if-no-files-found: error
+          retention-days: 60
