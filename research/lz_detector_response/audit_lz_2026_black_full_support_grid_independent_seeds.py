@@ -40,8 +40,26 @@ def configure_base(
 
 
 def run_audit(args: argparse.Namespace) -> dict:
-    configure_base(args.roi_min_keV, args.roi_max_keV, tuple(args.benchmarks))
-    summary = base.run_audit(args)
+    original = (base.ROI_MIN_KEV, base.ROI_MAX_KEV, base.BENCHMARKS)
+    try:
+        configure_base(args.roi_min_keV, args.roi_max_keV, tuple(args.benchmarks))
+        summary = base.run_audit(args)
+    finally:
+        base.ROI_MIN_KEV, base.ROI_MAX_KEV, base.BENCHMARKS = original
+    one_edges = base.grid.make_edges(args.roi_min_keV, args.roi_max_keV, 1.0)
+    five_edges = base.grid.make_edges(args.roi_min_keV, args.roi_max_keV, 5.0)
+    summary["expected_events_per_terminal_1keV_bin"] = round(
+        args.events_per_keV * (one_edges[-1] - one_edges[-2])
+    )
+    summary["expected_events_per_terminal_5keV_bin"] = round(
+        args.events_per_keV * (five_edges[-1] - five_edges[-2])
+    )
+    summary["events_per_seed_per_grid"] = sum(
+        round(args.events_per_keV * (hi - lo))
+        for lo, hi in zip(one_edges, one_edges[1:])
+    )
+    summary.pop("expected_events_in_terminal_0p5keV_bin", None)
+    summary.pop("expected_events_in_terminal_4p5keV_bin", None)
     summary["study"] = (
         f"high-statistics independent-seed 1-keV versus 5-keV "
         f"{args.response_family} black-support NR response audit"
