@@ -82,6 +82,20 @@ class ConditionalSelectionBridgeTests(unittest.TestCase):
         self.assertAlmostEqual(rows[0]["epsilon_nest"], 0.98)
         self.assertAlmostEqual(rows[0]["nest_plus_ws_roi_rate_events_kg_day"], 7.5)
 
+    def test_summary_records_single_response_family(self):
+        rows = MOD.build_bridge_rows(
+            self.event_summary, self.selection_summary, response_family="tableS5"
+        )
+        summary = MOD.summarize(rows)
+        self.assertEqual(summary["response_family"], "tableS5")
+        self.assertEqual(summary["n_rows"], 1)
+
+    def test_summary_rejects_mixed_response_families(self):
+        rows = MOD.build_bridge_rows(self.event_summary, self.selection_summary)
+        mixed = rows + [{**rows[0], "response_family": "tableS5"}]
+        with self.assertRaises(ValueError):
+            MOD.summarize(mixed)
+
     def test_missing_nest_partner_is_rejected(self):
         event = {"comparisons": [self.event_summary["comparisons"][1]]}
         with self.assertRaises(ValueError):
