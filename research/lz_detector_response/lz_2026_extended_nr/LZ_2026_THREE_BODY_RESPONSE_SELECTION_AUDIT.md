@@ -1005,10 +1005,98 @@ interval for the ensemble-map TV is included. The black WS-ROI integrated
 rate shift is consistently about -0.6%, but it remains a NEST-proxy
 mode-dependence diagnostic rather than a detector correction.
 
-The next physics task is the dedicated black 360-keV S1 upper-tail and
-selection-migration audit. After that, the complete conditional response
-matrix must still include the shared-observable correlations across DAQ,
-SS reconstruction/data-analysis, official FV, Skin/OD veto partitions,
-and live-time treatment. The Fig. S2 residual efficiency must not be
-multiplied into the existing 2D map as an independent scalar. No final
-profile likelihood or 90% CL exclusion is authorized.
+The dedicated black 360-keV S1 upper-tail and selection-migration audit
+has now been completed; see Section 15.9 and the archived
+[upper-tail report](paired_s1_independent_seeds_2026-11-15/upper-tail-audit/REPORT.md).
+The complete conditional response matrix must still include the
+shared-observable correlations across DAQ, SS reconstruction/data-analysis,
+official FV, Skin/OD veto partitions, and live-time treatment. The Fig. S2
+residual efficiency must not be multiplied into the existing 2D map as an
+independent scalar. No final profile likelihood or 90% CL exclusion is
+authorized.
+
+
+## 15.9 Black 360-keV S1 upper-tail and ROI-migration audit
+
+The dedicated ten-independent-seed upper-tail audit is complete. It reuses
+the immutable paired Parametric/Full EFT2024 NEST production from run
+43750948249 and does not regenerate events. The black signal support is
+\(E_R\in[205,269.9]\ \mathrm{keV}\), containing 1,300,000 paired events
+across the ten seeds.
+
+The event-level weights are normalized within each one-keV stratum to the
+exact integrated recoil rate from the original per-seed fold. The maximum
+relative closure residual over all seeds, GCN/JJ55 models, and strata is
+\(6.33\times10^{-15}\), below the \(5\times10^{-12}\) requirement. The
+corrected audit passes its unit tests and all production-manifest,
+row-count, stratum-closure, selection-closure, and output validations.
+
+### 15.9.1 Main rate and S1 upper-tail result
+
+| Nuclear response | Parametric S1 ROI | Full S1 ROI | Full/Parametric change | 95% seed-level interval |
+|---|---:|---:|---:|---:|
+| GCN | 73.9501% | 73.5072% | -0.5983% | [-0.8046%, -0.3920%] |
+| JJ55 | 74.3246% | 73.8871% | -0.5881% | [-0.7901%, -0.3860%] |
+
+The S1 quantiles shift upward by approximately 1--2 phd in Full mode. For
+GCN, the conditional fraction above 600 phd increases from 26.0499% to
+26.4928%; for JJ55 it increases from 25.6754% to 26.1129%. The paired
+crossing weights show the mechanism directly: 6.4630% (GCN) and 6.3960%
+(JJ55) of the raw signal weight moves from Parametric \(S1_c\leq600\) to
+Full \(S1_c>600\), while 6.0201% and 5.9585%, respectively, cross in the
+opposite direction. The net accepted-weight loss is about 0.44 percentage
+points.
+
+### 15.9.2 Energy dependence and shape
+
+| True recoil band [keV] | GCN change | JJ55 change |
+|---|---:|---:|
+| 205--225 | -0.0603% | -0.0603% |
+| 225--240 | -0.1614% | -0.1617% |
+| 240--255 | -0.2977% | -0.2983% |
+| 255--269.9 | -1.0337% | -1.0335% |
+| Legacy tail, 225.4--269.9 | -0.6479% | -0.6372% |
+
+The migration grows toward the highest recoil-energy band. At native
+10-phd S1 binning, the ensemble-mean conditional S1 histogram TV is
+0.5957% (GCN) and 0.5896% (JJ55); the \(S1_c>500\) upper-tail TV is
+0.5832% and 0.5763%. The NEST-stage 2D TV remains above 1% (1.1679% and
+1.1538%), while the WS-ROI 2D TV is 0.9425% and 0.9318%. These point
+estimates do not establish Parametric/Full equivalence; mean per-seed S1
+histogram TV is about 1.44--1.46%.
+
+### 15.9.3 S2 selection is inactive in this support
+
+The raw-event selection audit shows that all 1,300,000 events pass both S1
+coincidence flags, the NEST S2 threshold, the strict
+\(S2_{\rm raw}>645\ \mathrm{phd}\) cut, and the
+\(2.75\leq\log_{10}S2_c\leq4.15\) window. The observed \(S2_{\rm raw}\)
+minimum is 4,855.60 phd; \(S2_c\) spans 7,418.07--13,690.33 phd, within
+the allowed 562.34--14,125.38 phd range. No event inside either S1 ROI
+fails the S2 part of the WS ROI.
+
+Thus, for this black support, the WS-ROI acceptance equals the S1
+\([3,600]\)-phd acceptance. The approximately \(-0.59\%\) relative rate
+change is caused by the S1 upper-boundary migration, not S2 selection.
+This conclusion is specific to this benchmark and energy support.
+
+### 15.9.4 Interpretation and limits
+
+The audit resolves the mechanism behind the black benchmark's integrated
+mode dependence: Full S1 is slightly higher in its upper tail, so more
+events cross the 600-phd upper boundary than return below it. The effect
+reaches about a 1.03% relative loss in the 255--269.9 keV band. GCN and
+JJ55 give nearly identical migration trends.
+
+This remains an EFT2024 NEST response diagnostic, not the official LZ
+waveform-level selected-event PDF. DAQ trigger, SS reconstruction and
+data-analysis cuts, official fiducial volume, Skin/OD veto, live-time
+migration, and their joint covariance are absent. The seed-level intervals
+quantify production-level Monte Carlo variation only. No detector-systematic
+interval, final profile likelihood, or 90% CL exclusion is provided.
+
+Full methods, tables, source hashes, and output descriptions are in the
+[archived upper-tail report](paired_s1_independent_seeds_2026-11-15/upper-tail-audit/REPORT.md).
+The successful audit is
+[run 43759124017](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43759124017),
+artifact 14179542527.
