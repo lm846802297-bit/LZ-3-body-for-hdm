@@ -4,6 +4,10 @@
 Each seed directory must contain:
   fold/paired_s1_mode_2d_signal_intensity.csv
   fold/paired_s1_mode_2d_response_summary.csv
+  fold/sampling-noise/paired_s1_2d_sampling_noise_summary.csv
+
+Before aggregation, map integrals are checked against the corresponding
+per-seed rate summaries and the split-half audit must close to the pooled map.
 
 The script forms equal-weight ensemble-mean maps, computes Parametric/Full TV
 for each seed and for the ensemble-mean maps, and measures within-mode
@@ -131,12 +135,13 @@ def summarize_seed_maps(seed_maps: dict[str, dict[str, dict]]) -> dict:
 
 
 def _read_maps(path: Path) -> dict:
-    output = defaultdict(float)
+    output = {}
     with path.open(newline="", encoding="utf-8") as handle:
         reader = csv.DictReader(handle)
         required = {
             "benchmark", "nuclear_model", "response_model", "s1_mode",
-            "stage", "s1_bin_index", "log10s2_bin_index", "rate_events_kg_day",
+            "stage", "s1_bin_index", "s1_bin_low_phd",
+            "log10s2_bin_index", "log10s2_bin_low", "rate_events_kg_day",
         }
         missing = required - set(reader.fieldnames or [])
         if missing:
@@ -146,29 +151,93 @@ def _read_maps(path: Path) -> dict:
                 row["benchmark"], row["nuclear_model"], row["response_model"],
                 row["s1_mode"], row["stage"],
             )
-            cell = (int(row["s1_bin_index"]), int(row["log10s2_bin_index"]))
+            s1_bin = int(row["s1_bin_index"])
+            s2_bin = int(row["log10s2_bin_index"])
+            cell = (s1_bin, s2_bin)
             value = float(row["rate_events_kg_day"])
+            s1_low = float(row["s1_bin_low_phd"])
+            s2_low = float(row["log10s2_bin_low"])
             if not math.isfinite(value) or value < 0.0:
                 raise ValueError(f"invalid map weight in {path}: {row}")
-            output[(key, cell)] += value
+            if abs(s1_low - s1_bin * 10.0) > 1e-9:
+                raise ValueError(f"inconsistent S1 bin coordinate in {path}: {row}")
+            if abs(s2_low - s2_bin * 0.02) > 1e-9:
+                raise ValueError(f"inconsistent log10(S2c) bin coordinate in {path}: {row}")
+            map_key = (key, cell)
+            if map_key in output:
+                raise ValueError(f"duplicate 2D cell in {path}: {map_key}")
+            output[map_key] = value
     return output
 
 
 def _read_rates(path: Path) -> dict:
     output = {}
     with path.open(newline="", encoding="utf-8") as handle:
-        for row in csv.DictReader(handle):
+        reader = csv.DictReader(handle)
+        required = {
+            "benchmark", "nuclear_model", "response_model", "stage",
+            "parametric_rate_events_kg_day", "full_rate_events_kg_day",
+            "full_vs_parametric_relative_rate_difference",
+        }
+        missing = required - set(reader.fieldnames or [])
+        if missing:
+            raise ValueError(f"{path} missing columns: {sorted(missing)}")
+        for row in reader:
+            if row["response_model"] != "eft2024":
+                raise ValueError(f"unexpected response model in {path}: {row['response_model']}")
             key = (row["benchmark"], row["nuclear_model"], row["stage"])
             if key in output:
                 raise ValueError(f"duplicate summary row in {path}: {key}")
-            output[key] = {
+            values = {
                 "parametric_rate_events_kg_day": float(row["parametric_rate_events_kg_day"]),
                 "full_rate_events_kg_day": float(row["full_rate_events_kg_day"]),
                 "full_vs_parametric_relative_rate_difference": float(
                     row["full_vs_parametric_relative_rate_difference"]
                 ),
             }
+            if any(not math.isfinite(value) or value < 0.0 for name, value in values.items()
+                   if name != "full_vs_parametric_relative_rate_difference"):
+                raise ValueError(f"invalid rate in {path}: {row}")
+            output[key] = values
     return output
+
+
+def _read_split_half(path: Path) -> dict:
+    output = {}
+    with path.open(newline="", encoding="utf-8") as handle:
+        reader = csv.DictReader(handle)
+        required = {
+            "benchmark", "nuclear_model", "stage",
+            "mean_within_mode_split_half_tv",
+            "pooled_tv_reproduction_abs_difference",
+        }
+        missing = required - set(reader.fieldnames or [])
+        if missing:
+            raise ValueError(f"{path} missing columns: {sorted(missing)}")
+        for row in reader:
+            key = (row["benchmark"], row["nuclear_model"], row["stage"])
+            if key in output:
+                raise ValueError(f"duplicate split-half row in {path}: {key}")
+            tv = float(row["mean_within_mode_split_half_tv"])
+            closure = float(row["pooled_tv_reproduction_abs_difference"])
+            if not math.isfinite(tv) or tv < 0.0:
+                raise ValueError(f"invalid split-half TV in {path}: {row}")
+            if not math.isfinite(closure) or closure > 1e-10:
+                raise ValueError(f"split-half audit does not close in {path}: {row}")
+            output[key] = {
+                "mean_within_mode_split_half_tv": tv,
+                "pooled_tv_reproduction_abs_difference": closure,
+            }
+    return output
+
+
+def _expected_summary_keys() -> set[tuple[str, str, str]]:
+    return {
+        (benchmark, nuclear, stage)
+        for benchmark in BENCHMARKS
+        for nuclear in NUCLEAR_MODELS
+        for stage in STAGES
+    }
 
 
 def aggregate(seed_root: Path, seeds: list[int]) -> tuple[list[dict], list[dict], dict]:
@@ -176,6 +245,15 @@ def aggregate(seed_root: Path, seeds: list[int]) -> tuple[list[dict], list[dict]
         raise ValueError("provide at least three distinct seed labels")
     maps_by_seed = {}
     rates_by_seed = {}
+    split_half_by_seed = {}
+    expected_rate_keys = _expected_summary_keys()
+    expected_map_keys = {
+        (benchmark, nuclear, "eft2024", mode, stage)
+        for benchmark in BENCHMARKS
+        for nuclear in NUCLEAR_MODELS
+        for mode in MODES
+        for stage in STAGES
+    }
     for seed in seeds:
         seed_dir = seed_root / f"seed-{seed}" / "fold"
         maps_by_seed[seed] = _read_maps(
@@ -184,6 +262,37 @@ def aggregate(seed_root: Path, seeds: list[int]) -> tuple[list[dict], list[dict]
         rates_by_seed[seed] = _read_rates(
             seed_dir / "paired_s1_mode_2d_response_summary.csv"
         )
+        split_half_by_seed[seed] = _read_split_half(
+            seed_dir / "sampling-noise/paired_s1_2d_sampling_noise_summary.csv"
+        )
+        if set(rates_by_seed[seed]) != expected_rate_keys:
+            raise ValueError(f"seed {seed} does not contain the complete 16-row rate summary")
+        if set(split_half_by_seed[seed]) != expected_rate_keys:
+            raise ValueError(f"seed {seed} does not contain the complete 16-row split-half audit")
+        observed_map_keys = {key for key, _cell in maps_by_seed[seed]}
+        if observed_map_keys != expected_map_keys:
+            raise ValueError(f"seed {seed} does not contain the complete 32 mode/stage maps")
+
+        # A map is an event-weighted rate density. Its cell integral must close
+        # to the corresponding per-seed integrated rate before seed averaging.
+        map_totals = defaultdict(float)
+        for (map_key, _cell), value in maps_by_seed[seed].items():
+            map_totals[map_key] += value
+        for benchmark, nuclear, stage in sorted(expected_rate_keys):
+            summary = rates_by_seed[seed][(benchmark, nuclear, stage)]
+            for mode, rate_name in (
+                ("parametric", "parametric_rate_events_kg_day"),
+                ("full", "full_rate_events_kg_day"),
+            ):
+                map_key = (benchmark, nuclear, "eft2024", mode, stage)
+                map_rate = map_totals[map_key]
+                summary_rate = summary[rate_name]
+                relative_closure = abs(map_rate - summary_rate) / max(abs(summary_rate), 1e-300)
+                if relative_closure > 1e-10:
+                    raise ValueError(
+                        f"seed {seed} map/rate closure failed for {map_key}: "
+                        f"map={map_rate}, summary={summary_rate}, rel={relative_closure}"
+                    )
 
     per_seed_rows = []
     ensemble_rows = []
@@ -215,6 +324,13 @@ def aggregate(seed_root: Path, seeds: list[int]) -> tuple[list[dict], list[dict]
                     rates_by_seed[seed][(benchmark, nuclear, stage)]
                     for seed in seeds
                 ]
+                split_half_records = [
+                    split_half_by_seed[seed][(benchmark, nuclear, stage)]
+                    for seed in seeds
+                ]
+                mean_within_stream_split_half_tv = statistics.fmean(
+                    row["mean_within_mode_split_half_tv"] for row in split_half_records
+                )
                 mean_p_rate = statistics.fmean(
                     row["parametric_rate_events_kg_day"] for row in rate_records
                 )
@@ -241,6 +357,11 @@ def aggregate(seed_root: Path, seeds: list[int]) -> tuple[list[dict], list[dict]
                     "mean_full_seed_pairwise_tv": result["mean_full_seed_pairwise_tv"],
                     "mean_within_mode_seed_pairwise_tv": result["mean_within_mode_seed_pairwise_tv"],
                     "mean_map_tv_over_within_mode_seed_pairwise_tv": result["mean_map_tv_over_within_mode_seed_pairwise_tv"],
+                    "mean_within_stream_split_half_tv": mean_within_stream_split_half_tv,
+                    "mean_map_tv_over_within_stream_split_half_tv": (
+                        result["mean_map_parametric_vs_full_tv"] / mean_within_stream_split_half_tv
+                        if mean_within_stream_split_half_tv > 0.0 else None
+                    ),
                     "mean_parametric_rate_events_kg_day": mean_p_rate,
                     "mean_full_rate_events_kg_day": mean_f_rate,
                     "full_over_parametric_mean_rate_relative_difference": rate_relative,
@@ -255,6 +376,18 @@ def aggregate(seed_root: Path, seeds: list[int]) -> tuple[list[dict], list[dict]
                         "nuclear_model": nuclear,
                         "stage": stage,
                         "parametric_vs_full_2d_tv": result["per_seed_parametric_vs_full_tv"][str(seed)],
+                        "within_stream_split_half_tv": split_half_by_seed[seed][
+                            (benchmark, nuclear, stage)
+                        ]["mean_within_mode_split_half_tv"],
+                        "mode_tv_over_within_stream_split_half_tv": (
+                            result["per_seed_parametric_vs_full_tv"][str(seed)]
+                            / split_half_by_seed[seed][(benchmark, nuclear, stage)][
+                                "mean_within_mode_split_half_tv"
+                            ]
+                            if split_half_by_seed[seed][(benchmark, nuclear, stage)][
+                                "mean_within_mode_split_half_tv"
+                            ] > 0.0 else None
+                        ),
                         **rate,
                     })
                 for mode, mean_map in (
