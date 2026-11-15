@@ -1,0 +1,66 @@
+name: Export LZ 2026 full-range independent-grid summaries
+
+on:
+  push:
+    branches:
+      - integration/lz-2026-nest-nr-fullband-20261115
+    paths:
+      - .github/workflows/lz-2026-export-full-range-grid-summary.yml
+  workflow_dispatch:
+
+concurrency:
+  group: lz-2026-export-full-range-grid-summary
+  cancel-in-progress: true
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  export-summary:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Download completed full-range response artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: lz-2026-full-range-grid-independent-seeds-eft2024-tableS5
+          run-id: 43699011757
+          repository: lm846802297-bit/LZ-3-body-for-hdm
+          github-token: \${{ secrets.GITHUB_TOKEN }}
+          path: extracted/
+
+      - name: Validate and print the independent-seed grid gates
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path("extracted/full-range-output/summary")
+          for family in ("eft2024", "tableS5"):
+              path = root / family / "full_range_grid_independent_seed_summary.json"
+              data = json.loads(path.read_text())
+              gate = data["gate"]
+              print(json.dumps({
+                  "family": family,
+                  "response_family": data["response_family"],
+                  "events_per_keV_per_seed": data["events_per_keV_per_seed"],
+                  "one_kev_seeds": data["one_kev_independent_seeds"],
+                  "five_kev_seeds": data["five_kev_independent_seeds"],
+                  "n_comparisons": gate["n_comparisons"],
+                  "max_rate_difference": gate["max_accepted_rate_relative_difference"],
+                  "max_2d_tv": gate["max_2d_tv_distance_between_mean_maps"],
+                  "rate_threshold": gate["accepted_rate_threshold"],
+                  "tv_threshold": gate["2d_tv_threshold"],
+                  "point_estimate_pass": gate["point_estimate_pass"],
+              }, indent=2))
+          PY
+          find extracted/full-range-output/summary -maxdepth 3 -type f -print
+          sha256sum extracted/full-range-output/summary/*/*
+
+      - name: Upload summary-only tables for direct inspection
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-full-range-grid-independent-seed-summary-only
+          path: extracted/full-range-output/summary/
+          if-no-files-found: error
+          retention-days: 60
