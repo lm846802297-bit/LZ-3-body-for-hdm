@@ -185,3 +185,13 @@ The same lightweight workflow was run from the clean integration branch used by 
 - Eight rows reproduced; maximum raw-rate closure 0 and maximum final-yield relative closure \(7.0113\times10^{-10}\), unchanged from the mainline run.
 
 This confirms the audit scripts, spectrum inputs, and reference yield table are present and reproducible in the integration snapshot, not only on the research branch.
+
+
+The integration-branch CI was then extended to run the high-energy 0.5-keV,
+event-weighted-fold, and selection-rate unit tests together. The expanded
+audit passed:
+- [GitHub Actions run 43682860360](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43682860360).
+- Artifact ID: 14149540926.
+- ZIP SHA-256: `0167a2c74e179215584b573097dce28dc8ea12672ecebd826d7d98362634af27`.
+- The three targeted test modules, fresh Fig. S2 vector extraction, and all
+  eight rate-level closures passed in the same workflow.
