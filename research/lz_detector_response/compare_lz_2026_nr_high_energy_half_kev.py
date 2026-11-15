@@ -29,6 +29,13 @@ FAMILIES = ("eft2024", "tableS5", "ws2024", "generic")
 BENCHMARKS = ("red_ms200_dm1", "green_ms300_dm1", "black_ms360_dm1", "blue_ms300_dm10")
 NUCLEAR_MODELS = ("GCN", "JJ55")
 MODES = ("nest", "ws_roi")
+DIAGNOSTIC_ABS_TOL = 1e-12
+
+
+def exceeds_with_tolerance(value: float, reference: float,
+                           atol: float = DIAGNOSTIC_ABS_TOL) -> bool:
+    """Avoid classifying floating-point roundoff as a resolved grid difference."""
+    return value > reference + atol
 
 
 def interval_edges(lo: float, hi: float, width: float) -> list[float]:
@@ -281,14 +288,17 @@ def write_outputs(args: argparse.Namespace) -> dict:
         "max_tv_distance_0p5_vs_1keV": max(
             x["tv_distance_0p5_vs_1keV"] for x in summary["comparisons"]
         ),
+        "diagnostic_absolute_tolerance": DIAGNOSTIC_ABS_TOL,
         "comparisons_where_grid_tv_exceeds_both_replica_tv_checks": sum(
-            x["tv_distance_0p5_vs_1keV"] > max(
-                x["replica_tv_distance_1keV"], x["replica_tv_distance_0p5keV"]
+            exceeds_with_tolerance(
+                x["tv_distance_0p5_vs_1keV"],
+                max(x["replica_tv_distance_1keV"], x["replica_tv_distance_0p5keV"]),
             ) for x in summary["comparisons"]
         ),
         "comparisons_where_grid_rate_difference_exceeds_both_replica_rate_checks": sum(
-            x["relative_rate_difference_0p5_vs_1keV"] > max(
-                x["replica_rate_difference_1keV"], x["replica_rate_difference_0p5keV"]
+            exceeds_with_tolerance(
+                x["relative_rate_difference_0p5_vs_1keV"],
+                max(x["replica_rate_difference_1keV"], x["replica_rate_difference_0p5keV"]),
             ) for x in summary["comparisons"]
         ),
         "formal_pass": None,
