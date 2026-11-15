@@ -136,3 +136,22 @@ The first end-to-end pre-selection fold is documented in
 The workflow passed as [run 43645345194](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43645345194). Its artifact contains four 200k-event response samples, the 2D cell-intensity CSV, and closure summaries. The 2D output is a pre-selection observable intensity. The energy-only final-ROI efficiency is deliberately kept separate because it does not specify the selected two-dimensional response and must not be double counted.
 
 The response uses a uniform active-TPC volume proxy, not the actual calibration-source spatial distribution. It is not the official production NEST configuration, full selected-event PDF, background likelihood, or confidence interval.
+
+
+## Three-body 1/5/10-keV response grid and selection audit (2026-11-15)
+
+The stratified event-level response and grid-comparison implementation is:
+
+- \`cpp/lz_2026_nr_stratified_energy_response.cc\`: generates 4,000 events in each 1-keV true-NR-energy stratum, with two 2,000-event halves, and saves signed S1/S2 flags, corrected and raw observables, and true position.
+- \`converge_lz_2026_three_body_energy_grid.py\`: folds the same 1-keV response strata into 1-, 5-, and 10-keV response grids using the archived natural-xenon three-body spectra. Coarse-grid response probabilities are width-averages of the 1-keV strata; they are not independent coarse-grid MC productions.
+- \`lz_2026_extended_nr/LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md\`: records the exact acceptance definitions, numerical grid differences, S1 Parametric limitation, Fig. S2 cross-check, and remaining selection gaps.
+
+The 2026-11-14 workflow is [run 43648916347](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43648916347). Its artifact contains four 1.06-million-event response samples, the 1-keV 2D intensity, per-energy acceptance, replica diagnostics, and the vector-extracted Fig. S2 cumulative efficiency curves. The 5-keV grid differs from the 1-keV reference by at most 0.5131% in accepted rate and 0.8499% in 2D total variation across all response families; the corresponding 10-keV maxima are 1.2146% and 2.4649%. These are descriptive comparisons, not a formal PASS: the workflow does not impose pre-registered scientific tolerances.
+
+The new \`nest\` and \`ws_roi\` modes must be distinguished:
+- \`nest\`: NEST Parametric S1 coincidence and NEST S2-threshold pass;
+- \`ws_roi\`: \`nest\` plus \(3\leq S1_c\leq600\) phd, raw \(S2>645\) phd, and \(2.75\leq\log_{10}S2_c\leq4.15\).
+
+The Parametric S1 mode uses a PMT-occupancy probability with threefold level and 481 PMTs, but does not explicitly apply the configured 150-ns coincidence window. The response also uses a uniform active-TPC cylinder prior and passes true positions as the position-correction coordinates. Trigger, waveform-level S1 timing, SS reconstruction, data-analysis cuts, the official 4.71-tonne fiducial volume, Skin/OD veto partition, and live-time treatment remain absent.
+
+The \(ws\_roi\) output is therefore a **NEST-level plus WS-ROI intermediate three-body signal prediction**, not the final LZ selected signal PDF. See the quantitative audit before using these outputs. Do not multiply the full Fig. S2 cumulative efficiency into this 2D intensity; the selections overlap, and the 2D migration information is not supplied by the scalar efficiency curve.
