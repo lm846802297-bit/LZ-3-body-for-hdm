@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
-"""Estimate within-production Monte Carlo uncertainty of the energy-resolved WS-ROI bridge.
+"""Estimate within-production MC uncertainty for the energy-resolved WS-ROI response.
 
 The archived NEST CSV contains one seeded production split into two disjoint
 within-stream halves. This script estimates weighted Bernoulli sampling errors
-from the event-level response, and reports the half-to-half stability. The two
-halves are NOT independent-seed productions; the result is an MC diagnostic,
-not a confidence interval for detector systematics or a final selected PDF.
+from the event-level response and reports half-to-half stability. It also
+reports the factorized-rate mismatch divided by the NEST-response MC standard
+error as a scale diagnostic only. That ratio is NOT a statistical pull or
+significance: the Fig. S2 curve has no propagated uncertainty here, and the
+SS/DA conditional factorization is not established at event level.
 """
 from __future__ import annotations
 
@@ -58,6 +60,13 @@ def weighted_efficiency(
     fail_w2 = max(0.0, total_weight2 - pass_w2)
     variance_numerator = p * p * fail_w2 + (1.0 - p) ** 2 * pass_w2
     return p, math.sqrt(max(0.0, variance_numerator)) / total_weight
+
+
+def effective_sample_size(total_weight: float, total_weight2: float) -> float:
+    """Kish effective sample size for the event weights in one stratum."""
+    if total_weight <= 0.0 or total_weight2 <= 0.0:
+        return 0.0
+    return total_weight * total_weight / total_weight2
 
 
 def _empty_replica() -> dict:
@@ -213,7 +222,9 @@ def build_diagnostics(
             ws_acceptance, ws_se = pooled["ws"]
             mc_rate_se = raw_rate * ss_da * ws_se
             delta_rate = factorized_rate - final_rate
-            pull = delta_rate / mc_rate_se if mc_rate_se > 0.0 else None
+            mismatch_over_response_mc_se = (
+                delta_rate / mc_rate_se if mc_rate_se > 0.0 else None
+            )
             split_delta = abs(estimates[0]["ws"][0] - estimates[1]["ws"][0])
             split_se = math.hypot(estimates[0]["ws"][1], estimates[1]["ws"][1])
             split_pull = split_delta / split_se if split_se > 0.0 else None
@@ -225,6 +236,16 @@ def build_diagnostics(
                 "energy_low_keV": float(bridge["energy_low_keV"]),
                 "energy_high_keV": float(bridge["energy_high_keV"]),
                 "events_per_replica": EXPECTED_EVENTS_PER_REPLICA,
+                "raw_effective_sample_size_replica0": effective_sample_size(
+                    replica_stats[0]["sum_w"], replica_stats[0]["sum_w2"]
+                ),
+                "raw_effective_sample_size_replica1": effective_sample_size(
+                    replica_stats[1]["sum_w"], replica_stats[1]["sum_w2"]
+                ),
+                "raw_effective_sample_size_pooled": effective_sample_size(
+                    math.fsum(b["sum_w"] for b in replica_stats),
+                    math.fsum(b["sum_w2"] for b in replica_stats),
+                ),
                 "nest_acceptance_replica0": estimates[0]["nest"][0],
                 "nest_acceptance_replica1": estimates[1]["nest"][0],
                 "nest_acceptance_pooled": pooled["nest"][0],
@@ -240,7 +261,9 @@ def build_diagnostics(
                 "factorized_rate_mc_se_events_kg_day": mc_rate_se,
                 "figs2_final_rate_events_kg_day": final_rate,
                 "factorized_minus_figs2_final_events_kg_day": delta_rate,
-                "factorized_vs_figs2_final_mc_only_pull": pull,
+                "factorized_minus_figs2_final_over_response_mc_se_diagnostic": (
+                    mismatch_over_response_mc_se
+                ),
             }
             bins.append(row)
             selected.append(row)
@@ -251,8 +274,11 @@ def build_diagnostics(
             r["factorized_rate_mc_se_events_kg_day"] ** 2 for r in selected
         ))
         total_delta = factorized_total - final_total
-        pulls = [r["factorized_vs_figs2_final_mc_only_pull"] for r in selected
-                 if r["factorized_vs_figs2_final_mc_only_pull"] is not None]
+        mismatch_ratios = [
+            r["factorized_minus_figs2_final_over_response_mc_se_diagnostic"]
+            for r in selected
+            if r["factorized_minus_figs2_final_over_response_mc_se_diagnostic"] is not None
+        ]
         split_pulls = [r["ws_roi_split_half_tension"] for r in selected
                        if r["ws_roi_split_half_tension"] is not None]
         summaries.append({
@@ -266,10 +292,26 @@ def build_diagnostics(
                 total_delta / final_total if final_total > 0.0 else None
             ),
             "factorized_rate_mc_se_events_kg_day": total_mc_se,
-            "integrated_closure_mc_only_pull": total_delta / total_mc_se if total_mc_se > 0.0 else None,
-            "max_abs_energy_bin_mc_only_pull": max((abs(v) for v in pulls), default=None),
-            "n_energy_bins_abs_pull_gt_3": sum(abs(v) > 3.0 for v in pulls),
-            "n_energy_bins_abs_pull_gt_5": sum(abs(v) > 5.0 for v in pulls),
+            "integrated_mismatch_over_response_mc_se_diagnostic": (
+                total_delta / total_mc_se if total_mc_se > 0.0 else None
+            ),
+            "max_abs_energy_bin_mismatch_over_response_mc_se_diagnostic": (
+                max((abs(v) for v in mismatch_ratios), default=None)
+            ),
+            "n_energy_bins_abs_mismatch_over_response_mc_se_gt_3": (
+                sum(abs(v) > 3.0 for v in mismatch_ratios)
+            ),
+            "n_energy_bins_abs_mismatch_over_response_mc_se_gt_5": (
+                sum(abs(v) > 5.0 for v in mismatch_ratios)
+            ),
+            "min_raw_effective_sample_size_per_bin": min(
+                (r["raw_effective_sample_size_pooled"] for r in selected),
+                default=None,
+            ),
+            "max_raw_effective_sample_size_per_bin": max(
+                (r["raw_effective_sample_size_pooled"] for r in selected),
+                default=None,
+            ),
             "max_ws_roi_split_half_tension": max(split_pulls, default=None),
             "n_energy_bins_split_half_tension_gt_3": sum(v > 3.0 for v in split_pulls),
         })
@@ -336,7 +378,13 @@ def main() -> None:
         ),
         "replica_interpretation": (
             "The two labels are disjoint halves of one seeded NEST event stream, "
-            "not independent-seed productions. Split-half tensions are diagnostics only."
+            "not independent-seed productions. Split-half differences are diagnostics only."
+        ),
+        "mismatch_ratio_interpretation": (
+            "The factorized-minus-Fig-S2 rate difference divided by the NEST/WS-ROI "
+            "response MC standard error is a scale diagnostic only, NOT a statistical "
+            "pull or significance. Fig. S2 extraction uncertainty and the unproven "
+            "event-level SS/DA conditional factorization are not included."
         ),
         "uncertainties_not_included": [
             "Fig. S2 vector extraction and digitization uncertainty",
