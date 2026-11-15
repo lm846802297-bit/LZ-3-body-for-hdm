@@ -28,6 +28,22 @@ class ConditionalSelectionBridgeTests(unittest.TestCase):
                     "exact_raw_rate_events_kg_day": 10.0,
                     "event_weighted_rate_events_kg_day": 8.0,
                 },
+                {
+                    "benchmark": "black_ms360_dm1",
+                    "nuclear_model": "GCN",
+                    "response_family": "tableS5",
+                    "acceptance_mode": "nest",
+                    "exact_raw_rate_events_kg_day": 10.0,
+                    "event_weighted_rate_events_kg_day": 9.8,
+                },
+                {
+                    "benchmark": "black_ms360_dm1",
+                    "nuclear_model": "GCN",
+                    "response_family": "tableS5",
+                    "acceptance_mode": "ws_roi",
+                    "exact_raw_rate_events_kg_day": 10.0,
+                    "event_weighted_rate_events_kg_day": 7.5,
+                },
             ]
         }
         self.selection_summary = {
@@ -57,11 +73,14 @@ class ConditionalSelectionBridgeTests(unittest.TestCase):
         self.assertAlmostEqual(row["epsilon_figs2_final"], 0.855)
         self.assertAlmostEqual(row["factorized_to_figs2_final_ratio"], 0.76 / 0.855)
 
-    def test_response_family_filter_rejects_absent_family(self):
-        with self.assertRaises(ValueError):
-            MOD.build_bridge_rows(
-                self.event_summary, self.selection_summary, response_family="tableS5"
-            )
+    def test_response_family_filter_selects_tableS5_rows(self):
+        rows = MOD.build_bridge_rows(
+            self.event_summary, self.selection_summary, response_family="tableS5"
+        )
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]["response_family"], "tableS5")
+        self.assertAlmostEqual(rows[0]["epsilon_nest"], 0.98)
+        self.assertAlmostEqual(rows[0]["nest_plus_ws_roi_rate_events_kg_day"], 7.5)
 
     def test_missing_nest_partner_is_rejected(self):
         event = {"comparisons": [self.event_summary["comparisons"][1]]}
