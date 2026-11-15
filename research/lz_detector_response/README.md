@@ -50,7 +50,7 @@ See the main study report and
 calculation and limitations.
 
 
-## NR event-level response pilot (new)
+## Historical NR event-level response pilot
 
 The next stage after the Table S5 mean-yield validation is a direct event-level
 NEST comparison. The driver calls the pinned NEST implementation in this order:
@@ -125,9 +125,9 @@ The code and assumptions are documented in
 The HEPData v1 ZIP is a 46-table export and contains no separate NEST configuration resource. A separate public LZ-specific EFT2024 configuration candidate is available in NEST commit `541b643`; it is not in a tagged NEST release and its identity with the exact LZ 2026 production build is not proven. Use the provenance report and machine-readable JSON before selecting parameters. Earlier Table-S5-plus-WS2024-width pilot results are historical hybrid checks, not the primary EFT2024 response.
 
 
-## Three-body signal folded through the NR 2D response (new)
+## Historical first 10-keV three-body NR 2D response fold
 
-The first end-to-end pre-selection fold is documented in
+This section records the original 200,000-event/family, 10-keV-bin pilot; it is superseded for current grid work by the stratified 1/5/10-keV response in the next section. The first end-to-end pre-selection fold is documented in
 `lz_2026_extended_nr/LZ_2026_THREE_BODY_NR_2D_RESPONSE_FOLD_REPORT.md`.
 
 - `cpp/lz_2026_nr_full_calibration_band.cc`: event-level NEST response sampler; now accepts explicit recoil-energy minimum and maximum.
