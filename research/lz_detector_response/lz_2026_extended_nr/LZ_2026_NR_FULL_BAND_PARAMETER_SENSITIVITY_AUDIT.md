@@ -82,11 +82,13 @@ The key sign difference is:
 
 Thus changing the NR fluctuation vector changes more than a Gaussian width. It changes the binomial recombination suppression and the additional non-binomial recombination variance, as well as the ion/exciton Fano terms and skewness. This is a physically significant nuisance-model choice.
 
-## 4. Pre-fix result: historical only, not valid for final interpretation
+## 4. Initial result and bitwise comparison with the corrected driver
 
-The initial full-band run [43660321058](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43660321058) completed with 200,000 uniform-TPC events per family. It used one drift velocity evaluated at the detector centre for every event, despite evaluating a position-dependent electric field for each event.
+The initial full-band run [43660321058](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43660321058) completed with 200,000 uniform-TPC events per family. Its driver evaluated the drift velocity once at the detector centre and reused it for every event.
 
-Its diagnostic values at 540–545 phd were:
+A source check of the pinned LZ detector header shows that FitEF(x,y,z) returns exactly 96.5 V/cm for every position. The corrected event-local driver therefore evaluates the same drift velocity, 1.33036177945 mm/us, for every event in this detector configuration. A row-by-row comparison of all 10 shared samples between the initial artifact and the corrected local-drift artifact found every common physical output field to be bitwise identical. The old implementation was insufficiently general for a future nonuniform field map, but it did **not** bias the present uniform-field results.
+
+The diagnostic values at 540–545 phd, now independently reproduced by the corrected driver, are:
 
 | Configuration | Uniform-TPC candidate offset |
 |---|---:|
@@ -96,7 +98,7 @@ Its diagnostic values at 540–545 phd were:
 | WS2024 | −5.00 sigma-equivalent |
 | Generic NEST | −6.41 sigma-equivalent |
 
-**These values are superseded.** They are retained here only to document why the local-drift correction was made. They must not be used as the final candidate-band comparison.
+**These values are numerically unchanged by the local-drift correction for the current constant-field detector.** They are still diagnostic-only because the flat true-energy prior and uniform-TPC spatial prior are not the collaboration's calibration priors.
 
 ## 5. Local drift-velocity correction
 
@@ -104,7 +106,7 @@ The old implementation calculated
 \[
 v_d=v_d(E_{\rm centre})
 \]
-once outside the event loop, then used it for every event's drift time and S1/S2 calls. This is inconsistent with the local field map \(E_i=E(x_i,y_i,z_i)\).
+once outside the event loop, then used it for every event's drift time and S1/S2 calls. The pinned LZ detector class currently returns a constant 96.5 V/cm, so this was numerically equivalent to a local evaluation for the present model. The code was nevertheless refactored to calculate from each event's field, so a future nonuniform field map cannot silently reuse a central drift velocity.
 
 The corrected implementation calculates inside the event loop:
 \[
@@ -133,11 +135,11 @@ The code correction was committed at 9224ba865c51209e96eb968eecc1bfa67d0f6308; t
 
 ## 7. Required acceptance before using the result
 
-- Corrected local-drift workflow completes and the per-event kinematic closure passes.
-- The rounded Table S5 mean-yield candidate is included in the same corrected run.
-- The EFT2024 and NR-fluctuation-isolation samples are compared with bootstrap or independent-seed uncertainty.
-- The energy and spatial prior are either replaced with documented calibration priors or explicitly retained as diagnostic-only.
-- The result is not promoted to a likelihood until the official calibration/selection provenance is resolved.
+- [x] Corrected local-drift workflow completes and the per-event kinematic closure passes.
+- [x] The rounded Table S5 mean-yield candidate is included in the same corrected run.
+- [x] EFT2024 and NR-fluctuation-isolation samples are compared with a deterministic finite-MC bootstrap (the bootstrap output is archived by the follow-up workflow).
+- [ ] Replace the flat-energy and uniform-TPC priors with documented D-D/AmBe calibration priors, or retain the present result explicitly as diagnostic-only.
+- [ ] Resolve the exact collaboration production NEST/configuration and full analysis-selection provenance before any likelihood use.
 
 ## 8. Reproduction references
 
@@ -147,3 +149,39 @@ The code correction was committed at 9224ba865c51209e96eb968eecc1bfa67d0f6308; t
 - [Full-band summarizer](../summarize_lz_2026_nr_flat_band_eft2024.py)
 - [Workflow](../../../.github/workflows/lz-2026-nr-eFT2024-full-band.yml)
 - [NEST release-lineage audit](LZ_2026_NEST_RELEASE_LINEAGE_AUDIT.md)
+
+
+## 9. Corrected full-band results including rounded Table S5
+
+The corrected local-drift and Table S5 run completed successfully:
+- [GitHub Actions run 43660830473](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43660830473), commit e6e52637b55eb45e41848a3c295dbeaf6ab92d72.
+- Artifact ID: 14139657582.
+- ZIP SHA-256: c31eed600f9673641b001d4321cb712b98312d81b592300a71bb0767bfd6ecaf.
+- 12 CSV samples: six model families, each with uniform-TPC (200,000 events) and fixed-candidate-position (100,000 events) samples.
+- The summary has 90 pairwise band comparisons.
+- All rows pass the local drift kinematic closure. The maximum relative closure residual is 1.08e−11. FitEF is exactly 96.5 V/cm for all sampled positions, and the corresponding drift speed is 1.33036177945 mm/us.
+
+The candidate offset in the 540–545 phd bin is:
+
+| Configuration | Uniform-TPC z_eq | Fixed-position z_eq |
+|---|---:|---:|
+| EFT2024 full precision | −1.9545 | −2.0276 |
+| Rounded Table S5 means + EFT2024 fluctuations | −2.3617 | −2.3816 |
+| EFT2024 means + WS2024 NR fluctuation vector | −1.6278 | −1.5740 |
+| EFT2024 means + generic NR fluctuation vector | −1.6506 | −1.6815 |
+| WS2024 | −4.9987 | −5.2900 |
+| Generic NEST | −6.4110 | −7.0197 |
+
+Here z_eq = (log10(S2c_observed) − median)/sigma80 and sigma80 = (q90 − q10)/2.5631031311. It is a percentile-width diagnostic, not a likelihood significance.
+
+The rounded Table S5 mean vector moves the candidate from −1.95 to −2.36 sigma-equivalent relative to the full-precision EFT2024 vector. This confirms that rounding the published mean-yield parameters is not harmless for this band comparison. The full-precision public vector should be retained for the executable EFT2024 candidate; the rounded Table S5 vector remains a separate reproducibility alternative.
+
+The two width-isolation variants move the offset closer to the paper's approximate −1.5-sigma statement. This is not evidence that either alternative is the production model. The candidate event must not be used to tune the NR fluctuation vector; doing so would be circular. The public EFT2024 vector remains the primary public candidate until the exact collaboration production configuration or calibration closure is established.
+
+## 10. Finite-MC uncertainty
+
+A deterministic event bootstrap is implemented in
+[bootstrap_lz_2026_nr_full_band_candidate.py](../bootstrap_lz_2026_nr_full_band_candidate.py).
+It resamples events within the 540–545 phd S1c bin, uses 2,000 replicas and seed 20261115, and recomputes q10, median, q90, sigma80, and z_eq. Its confidence intervals quantify finite-MC uncertainty only; they do not include uncertainty in the energy prior, spatial prior, NEST configuration, calibration model, or detector response.
+
+The workflow archives the bootstrap JSON alongside the event CSVs and band summary. The exact run/artifact checksum should be appended after the bootstrap-enabled run completes.
