@@ -13,7 +13,6 @@ on:
       - research/lz_detector_response/tests/test_lz_2026_nr_mean_yield.py
       - research/lz_detector_response/cpp/nest_mean_yield_crosscheck.cc
       - research/lz_detector_response/compare_lz_2026_nr_mean_yield_cpp.py
-      - research/lz_detector_response/tests/test_lz_2026_nr_mean_yield.py
       - .github/workflows/lz-2026-nest-nr-mean-yield.yml
   workflow_dispatch:
 
