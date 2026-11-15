@@ -444,6 +444,24 @@ a binning diagnostic, not a new Monte Carlo sample or a universal 1% gate.
 The full interpretation and tables are in
 [LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md](lz_2026_extended_nr/LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md).
 
+The follow-up three-independent-seed EFT2024 ensemble generated 1.41 million
+paired events (three disjoint 470,000-event productions) and independently
+closed all 16 benchmark/nuclear/stage summaries. For the WS-ROI maps, the
+ensemble-mean Parametric/Full TV is 1.069--1.912%, below the within-mode
+seed-pair TV of 1.839--3.079%; the black benchmark's mean WS-ROI rate change
+is -0.495% with a 0.445-percentage-point seed-to-seed standard deviation.
+These three seeds are diagnostic, not a precision equivalence test or
+bootstrap interval. The separate exact observable-binning audit reduces the
+maximum WS-ROI TV from 1.924% at 10-phd/0.02-dex to 0.954% at 20-phd/0.04-dex
+and 0.449% at 40-phd/0.08-dex; this is expected TV contraction under
+coarsening, not evidence that the underlying distributions become equivalent.
+See Section 15.8 of the linked selection audit and the
+[independent-seed archive](lz_2026_extended_nr/paired_s1_independent_seeds_2026-11-15/ARCHIVE_README.md).
+
+- Independent-seed production: [run 43721276233](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43721276233), artifact 14164652993.
+- Observable-binning audit: [run 43722824029](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43722824029), artifact 14165550612.
+- The native-map TV depends on the chosen S1/S2 histogram binning. Do not use coarser bins merely to force a numerical TV threshold; select likelihood binning from detector resolution and independently demonstrate stability.
+
 Implementation:
 - cpp/lz_2026_nr_paired_s1_mode_2d_response.cc — paired Parametric/Full S1 and common Full S2 generation.
 - fold_lz_2026_paired_s1_mode_2d_response.py — exact event-weighted 2D signal maps.
