@@ -149,10 +149,15 @@ buildPoint[mchi_, ms_, mA_, ER_, speed_, w2_, deltaW2_, z_, phi_] := Module[
   {p, pPrime, k}
 ];
 
-spinTrace[point_List, mchi_, mchi2_, width_] := Module[
-  {p = point[[1]], pPrime = point[[2]], k = point[[3]], d1, d2, before, after, vertex, vertexBar},
+spinTrace[point_List, mchi_, mchi2_, width_, W2_] := Module[
+  {p = point[[1]], pPrime = point[[2]], k = point[[3]], d1, d2, d2Kinematic,
+   before, after, vertex, vertexBar},
   d1 = minkowskiDot[p - k, p - k] - mchi2^2;
-  d2 = minkowskiDot[pPrime + k, pPrime + k] - mchi2^2 + I*mchi2*width;
+  d2Kinematic = minkowskiDot[pPrime + k, pPrime + k];
+  If[Abs[d2Kinematic - W2] > 2.*10^-7*Max[1., W2], Abort[]];
+  (* Use the integration invariant W^2 directly in the propagator denominator.
+     This is algebraically (p'+k)^2 but avoids subtractive cancellation at m_chi ~ 1 TeV. *)
+  d2 = W2 - mchi2^2 + I*mchi2*width;
   If[Abs[d1] < 1.*10^-30 || Abs[d2] < 1.*10^-30, Abort[]];
   before = gamma0 . (slash4[p - k] + mchi2*id4)/d1;
   after = (slash4[pPrime + k] + mchi2*id4) . gamma0/d2;
@@ -202,7 +207,7 @@ reducedKernel[mchi_, ms_, deltaM_, mA_, ER_, speed_, width_, nW_, nZ_, nPhi_, ma
       Do[
         phi = phiPair[[1]]; weightPhi = phiPair[[2]];
         point = buildPoint[mchi, ms, mA, ER, speed, w2, deltaW2, z, phi];
-        azimuth += (weightPhi/(2.*Pi))*spinTrace[point, mchi, mchi + deltaM, width],
+        azimuth += (weightPhi/(2.*Pi))*spinTrace[point, mchi, mchi + deltaM, width, w2],
         {phiPair, phiRule}];
       angular += weightZ*azimuth,
       {zPair, zRule}];
