@@ -174,6 +174,17 @@ The \(ws\_roi\) output is therefore a **NEST-level plus WS-ROI intermediate thre
 
 The source-level comparison between the public v2.4.5beta tag and the later LZ-specific development branch is documented in [LZ_2026_NEST_RELEASE_LINEAGE_AUDIT.md](lz_2026_extended_nr/LZ_2026_NEST_RELEASE_LINEAGE_AUDIT.md). The 2026 LZ paper's double-skew-Gaussian ER model and high-energy NR p(E) extension are absent from the public v2.4.5beta tag at commit `19bc9bc`; the physics features and EFT2024 configuration were added later, with the LZ configuration first appearing at `307fb27` before the paper's arXiv submission. The audited `541b643` commit adds getters/storage only relative to `307fb27`. This makes it a strong public candidate, not proof of the exact collaboration build. The candidate's derived g1=0.1104 and g2=34.5263 agree with the paper's quoted gains within 0.20σ and 0.024σ, respectively. See the [machine-readable candidate record](lz_2026_extended_nr/lz_2026_nest_eft2024_configuration_candidate.json).
 
+The rounded Table S5 vector and the public full-precision EFT2024 vector
+are separate NR response hypotheses, not interchangeable precision variants.
+The direct NEST C++ cross-check [run 43696267500](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43696267500)
+passed 528 Python/C++ scalar comparisons for both vectors (worst scaled
+absolute difference below \(3.4\times10^{-16}\)). At 269.9 keV, Table S5
+relative to EFT2024 changes the mean photon yield by −7.5301%, electron yield
+by +0.3846%, and total quanta by −7.1019%; the high-energy \(p(E)\) extension
+is identical. Thus the rounded mean-yield table can materially alter S1 and
+the high-energy ROI acceptance. Keep both families separate. See the
+[quantitative source audit](lz_2026_extended_nr/LZ_2026_NEST_RELEASE_LINEAGE_AUDIT.md#61-quantitative-effect-of-the-printed-table-s5-rounding).
+
 ### Full-range NR band and NR fluctuation-vector audit
 
 The separate full-range flat-energy NR band study is documented in
@@ -378,11 +389,12 @@ Implementation:
 - `.github/workflows/lz-2026-three-body-response-grid-convergence.yml` — pinned NEST build, samples, folds, checks, and artifact upload.
 
 
-A further 265-bin monotonicity diagnostic against the published final cumulative
-Fig. S2 efficiency finds that Table S5 NEST+WS-ROI acceptance is never below
-the published curve, while the EFT2024, WS2024, and generic candidates are
-below it in 33, 19, and 74 bins, respectively. This makes Table S5 more
-internally consistent in this comparison, but does not prove it is the exact
-LZ 2026 production configuration; the spatial prior and position correction
-are still not the official calibration/FV model. See the detailed audit before
-selecting a response family.
+A 265-bin comparison of NEST+WS-ROI acceptance with the published final
+Fig. S2 curve finds Table S5 never below the curve, while EFT2024, WS2024,
+and generic are below it in 33, 19, and 74 bins, respectively. Treat this
+only as a plausibility diagnostic, not a strict nested-efficiency proof or a
+stand-alone model-selection rule: NEST S1 coincidence/S2 pulse-threshold
+flags are not identical to the official DAQ trigger/S1-threshold stages, and
+the simulated spatial prior is not the official calibration/FV prior. The
+Table S5 alignment is interesting, but it does not establish the exact LZ
+2026 production configuration. See the detailed response-selection audit.
