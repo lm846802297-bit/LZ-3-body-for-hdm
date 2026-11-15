@@ -394,11 +394,11 @@ This is a **mode-to-mode NEST validation**, not a complete LZ waveform or analys
 
 ## 12. Full-range NR band and NR fluctuation-vector audit
 
-A separate full-range NR band proxy is being audited in
+The full-range NR band proxy and source-level parameter audit are documented in
 [LZ_2026_NR_FULL_BAND_PARAMETER_SENSITIVITY_AUDIT.md](LZ_2026_NR_FULL_BAND_PARAMETER_SENSITIVITY_AUDIT.md).
-It compares the public full-precision EFT2024 candidate, rounded Table S5
-mean yields, EFT2024 means with alternative NR fluctuation vectors, WS2024,
-and generic NEST.
+The study compares the public full-precision EFT2024 candidate, rounded
+Table S5 mean yields, EFT2024 means with alternative NR fluctuation vectors,
+WS2024, and generic NEST.
 
 The source-level audit shows that the shared NEST NRERWidthsParam vector
 contains NR quanta-fluctuation controls as well as ER controls. For NR,
@@ -409,16 +409,27 @@ The width-isolation comparisons therefore probe a real change in the NR
 recombination-variance model, not merely a small adjustment to a Gaussian
 width.
 
-The first full-band run used a detector-centre drift velocity for all event
-positions. Its candidate-band offsets are explicitly superseded and must
-not be used for physical conclusions. The corrected driver now calculates
-the drift velocity from each event's local electric field, writes local
-drift distance/time/speed, and the summarizer enforces their kinematic
-closure at relative tolerance 1e−9. The corrected workflow also includes
-the rounded Table S5 candidate. Its output must complete before any
-corrected full-band numerical result is quoted.
+The corrected event-local drift calculation and rounded Table S5 candidate
+completed successfully. The pinned LZ detector header returns a constant
+96.5 V/cm at every position, corresponding to 1.33036177945 mm/us. Thus the
+initial detector-centre drift speed and the corrected local speed produce
+bitwise-identical common event outputs for the current detector model. The
+corrected CSVs nevertheless store per-event drift distance/time/speed, and
+the summarizer verifies kinematic closure; the maximum relative residual is
+1.08e−11.
+
+The bootstrap-enabled result is [run 43661274708](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43661274708),
+artifact 14139997390, SHA-256
+1f053db6e3d49863c8b36b6a753d4e4eed0410a8530e73d98eb62d771f4bd967.
+It contains 12 event CSVs, 90 pairwise band comparisons, and 2,000-replica
+finite-MC bootstrap intervals. In the uniform-TPC sample, the candidate
+offsets are −1.9545 sigma-equivalent (EFT2024), −2.3617 (rounded Table S5),
+−1.6278 (EFT2024 means plus WS2024 NR fluctuations), −1.6506 (EFT2024 means
+plus generic NR fluctuations), −4.9987 (WS2024), and −6.4110 (generic NEST).
+These are percentile-width diagnostics, not likelihood significances.
 
 This remains a flat true-energy prior and a uniform-TPC spatial proxy, not
-the collaboration's D-D/AmBe calibration spectrum or source geometry.
-It is not a likelihood input and does not establish the exact LZ 2026
-production NEST configuration.
+the collaboration's D-D/AmBe calibration spectrum or source geometry. Do not
+select an NR fluctuation vector by matching the candidate event; that would
+be circular. The study is not a likelihood input and does not establish the
+exact LZ 2026 production NEST configuration.
