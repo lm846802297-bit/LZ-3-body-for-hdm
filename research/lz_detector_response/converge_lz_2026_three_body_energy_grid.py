@@ -368,8 +368,9 @@ def main() -> None:
         ])
         wb = csv.writer(f_bin)
         wb.writerow([
-            "response_family", "grid_width_keV", "replica", "energy_low_keV",
-            "energy_high_keV", "raw_rate_integral_events_kg_day", "n_generated",
+            "benchmark", "nuclear_model", "response_family", "grid_width_keV",
+            "replica", "energy_low_keV", "energy_high_keV",
+            "raw_rate_integral_events_kg_day", "n_generated",
             "n_s1_coincidence_pass", "n_s2_threshold_pass", "n_nest_joint_pass",
             "n_ws_roi_pass", "s1_coin_acceptance_uniform_energy",
             "s2_threshold_acceptance_uniform_energy", "nest_acceptance_uniform_energy",
@@ -394,9 +395,10 @@ def main() -> None:
                             rep_label = "pooled" if rep is None else str(rep)
                             for br in folded[(width, rep)]["bin_rows"]:
                                 wb.writerow([
-                                    family, width, rep_label, br["energy_low_keV"],
-                                    br["energy_high_keV"], br["rate_integral_events_kg_day"],
-                                    br["n_generated"], br["n_s1_coincidence_pass"],
+                                    benchmark, nuclear_model, family, width, rep_label,
+                                    br["energy_low_keV"], br["energy_high_keV"],
+                                    br["rate_integral_events_kg_day"], br["n_generated"],
+                                    br["n_s1_coincidence_pass"],
                                     br["n_s2_threshold_pass"], br["n_nest_joint_pass"],
                                     br["n_ws_roi_pass"], br["s1_coin_acceptance_uniform_energy"],
                                     br["s2_threshold_acceptance_uniform_energy"],
