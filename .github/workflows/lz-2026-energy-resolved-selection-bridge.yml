@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: lz-2026-energy-resolved-selection-bridge-\${{ github.ref }}
+  group: lz-2026-energy-resolved-selection-bridge-${{ github.ref }}
   cancel-in-progress: true
 
 permissions:
@@ -42,7 +42,7 @@ jobs:
           name: lz-2026-three-body-response-grid-convergence
           run-id: 43697104437
           repository: lm846802297-bit/LZ-3-body-for-hdm
-          github-token: \${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           path: extracted/
 
       - name: Build energy-resolved residual-stage bridge
