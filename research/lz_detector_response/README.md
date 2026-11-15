@@ -230,6 +230,51 @@ artifact 14140966494, SHA-256
 a2a138d262245e811c94b8bc41d76f4af16c53196d1a12adea044bf66a9f7bc1.
 It includes local-drift closure and deterministic bootstrap output.
 
+### Rate-level selection-stage closure
+
+An independent exact integration of the four vector-extracted Fig. S2
+cumulative curves against all eight benchmark/nuclear-response spectra
+reproduces the stored rate-level expected counts to floating-point
+precision. Over the signal support (35–269.9 keV), the trigger and S1
+threshold curves are unity; the SS/data-analysis stage is 95.50–95.58%.
+The high-energy black benchmark is further reduced by the upper S1c ROI,
+giving a total rate-level efficiency of 76.63–76.99%, compared with about
+95.47–95.56% for the other three benchmarks. See
+[LZ_2026_SELECTION_STAGE_RATE_LEVEL_CLOSURE.md](lz_2026_extended_nr/LZ_2026_SELECTION_STAGE_RATE_LEVEL_CLOSURE.md).
+This is a one-dimensional rate-level check, not a 2D selected signal PDF. The lightweight CI passed in
+[run 43681260816](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43681260816),
+artifact 14148377892, SHA-256
+53fa87cc4b2fdb3361e73fd65d847992b2ea2c96996891d7cfd6c10850b136b5.
+It closes all eight rows with maximum final-yield relative difference
+\(7.02\times10^{-10}\) against a \(10^{-8}\) tolerance. The calculation is reproducible through
+summarize_lz_2026_selection_stage_rates.py and its lightweight
+lz-2026-selection-stage-rate-audit.yml workflow; this workflow re-extracts
+Fig. S2 and validates all eight rate-level rows without rebuilding NEST.
+
+### Complete LZ 2026 selection and three-sample likelihood audit
+
+The updated selection audit now distinguishes the hardware S2 DAQ trigger from
+the NEST S2 pulse threshold, and separates NEST's threefold PMT-occupancy
+approximation from the official S1 pulse classification and single-scatter
+reconstruction. It records the inherited WS2024 selection chain, the exact
+2026 4.71-tonne fiducial-volume requirements, the WS ROI, prompt/delayed
+Skin/OD veto definitions, and the three correlated likelihood samples:
+[LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md](lz_2026_extended_nr/LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md).
+
+The 2026 likelihood uses science, prompt-veto, and delayed-veto samples
+simultaneously, with expected counts correlated through tagging-efficiency
+parameters. The present 2D response has no veto-sample label and is therefore
+not a complete likelihood signal model. The 2.84 tonne-year exposure already
+uses the 220 live days after the published live-time exclusions; do not apply
+the 81.5% live-time retention a second time.
+
+The collaboration's official two-dimensional signal/background PDFs are
+generated with BACCARAT/GEANT4 and the tuned NEST v2.4.5 response. The
+one-dimensional Fig. S2 efficiency curve does not provide that 2D migration
+kernel. The waveform discussion of the candidate is event-specific and is
+not an extra generic NR signal cut. These are additional reasons to retain
+the present NEST-level/WS-ROI map as an intermediate prediction only.
+
 ### Parametric-versus-Full S1 coincidence validation
 
 Because the three-body stratified driver uses NEST Parametric S1 mode, a paired
@@ -250,6 +295,64 @@ Implementation:
 - `summarize_lz_2026_s1_coincidence_mode_comparison.py`
 - `tests/test_lz_2026_s1_coincidence_mode_comparison.py`
 - `.github/workflows/lz-2026-s1-coincidence-mode-crosscheck.yml`
+
+
+
+
+### Three-body NR response fold: 1-keV reference and 0.5-keV high-energy check
+
+The full-range three-body signal has been folded through the event-level NEST
+response using the exact piecewise-linear GCN/JJ55 recoil spectra. The
+1-keV response is the full-range reference; the 5/10-keV comparisons are
+diagnostics only. The 0.5-keV refinement covers 225.4–269.9 keV, where the
+\(m_s=360\) keV benchmark approaches the upper S1c boundary.
+
+The combined full-range and high-energy refinement is confirmed by the
+latest successful rerun [43680164807](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43680164807),
+artifact 14147354124, SHA-256
+0f2bf102f440245d98a10462a42fa9625b26e28124e7e2096b3ca8dfa90533b2
+(437,589,152 bytes; 28 files). The earlier event-weighted fold run is
+[43676553810](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43676553810),
+artifact 14146333000; the latest rerun has identical numerical diagnostics.
+Across 64 high-energy comparisons, the maximum 0.5-keV versus 1-keV
+accepted-rate difference is 0.46895% and the maximum 2D total-variation
+distance is 2.5446%. After a \(10^{-12}\) numerical tolerance, two rate
+comparisons (EFT2024 black benchmark, GCN/JJ55) exceed both split-sample rate
+checks; no 2D shape comparison does. This is a refinement diagnostic, not a
+formal convergence PASS. The full interpretation is in
+[LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md](lz_2026_extended_nr/LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md).
+
+The 1-keV 2D intensity contains NEST Parametric S1 coincidence, NEST S2
+threshold, and the WS S1c/raw-S2/S2c ROI. It is an intermediate
+NEST-level/WS-ROI prediction, not the final LZ selected signal PDF. The
+published final cumulative Fig. S2 efficiency is already folded separately
+at rate level in
+[lz_2026_rate_level_event_yields.csv](lz_2026_extended_nr/rate_level_event_yields/lz_2026_rate_level_event_yields.csv).
+Do not multiply that final efficiency into the existing 2D map: the WS ROI
+and some NEST acceptance are already represented, and the missing selections
+do not have a validated 2D migration model.
+
+The latest combined artifact also performs a direct event-level
+\(dR/dE_R\)-weighted fold of each stratified NEST event. Within every 1-keV
+true-energy stratum, the event weights are normalized to the exact
+piecewise-linear three-body rate integral. Across 64 matched comparisons,
+raw-rate closure is \(1.11\times10^{-15}\), the maximum weighted-versus-binned
+accepted-rate difference is 0.02821%, and the maximum 2D total-variation
+distance is 0.07920%. These are below the observed split-replica variations.
+See [LZ_2026_THREE_BODY_EVENT_WEIGHTED_FOLD_AUDIT.md](lz_2026_extended_nr/LZ_2026_THREE_BODY_EVENT_WEIGHTED_FOLD_AUDIT.md).
+
+The event-weighted NEST/WS-ROI count divided by the separate rate-level
+Fig. S2 final-efficiency count varies from 0.602 to 1.305 across the tested
+response families and benchmarks. This is a model/provenance diagnostic,
+not an extra efficiency factor. The strong family dependence, particularly
+for the high-energy black benchmark, is a reason to resolve the exact
+production NEST/calibration response before building a final selected PDF.
+
+Implementation:
+- `cpp/lz_2026_nr_stratified_energy_response.cc` — stratified event-level NEST NR response.
+- `converge_lz_2026_three_body_energy_grid.py` — 1/5/10-keV response fold and provenance checks.
+- `compare_lz_2026_nr_high_energy_half_kev.py` — 0.5/1-keV high-energy response comparison.
+- `.github/workflows/lz-2026-three-body-response-grid-convergence.yml` — pinned NEST build, samples, folds, checks, and artifact upload.
 
 
 A further 265-bin monotonicity diagnostic against the published final cumulative
