@@ -13,7 +13,10 @@ import sys
 HERE = Path(__file__).resolve().parent
 EXT = HERE / "lz_2026_extended_nr"
 sys.path.insert(0, str(HERE))
-from lz_2026_extended_nr.lz_2026_nr_mean_yield import nr_mean_yield
+from lz_2026_extended_nr.lz_2026_nr_mean_yield import (
+    LZ2026_NR_YIELD_PARAMETERS,
+    nr_mean_yield,
+)
 
 ENERGIES_KEV = (5.4, 10.0, 50.0, 74.7, 75.0, 100.0, 150.0, 200.0, 248.0, 269.9, 330.0)
 ISOTOPES = (128, 131, 136)
@@ -30,12 +33,7 @@ def load_parameter_families() -> dict[str, tuple[float, ...]]:
     candidate_path = EXT / "lz_2026_nest_eft2024_configuration_candidate.json"
     candidate = json.loads(candidate_path.read_text(encoding="utf-8"))
     return {
-        "tableS5": tuple(
-            __import__(
-                "lz_2026_extended_nr.lz_2026_nr_mean_yield",
-                fromlist=["LZ2026_NR_YIELD_PARAMETERS"],
-            ).LZ2026_NR_YIELD_PARAMETERS
-        ),
+        "tableS5": tuple(LZ2026_NR_YIELD_PARAMETERS),
         "eft2024": tuple(candidate["nr_mean_yield"]["source_code_vector"]),
     }
 
