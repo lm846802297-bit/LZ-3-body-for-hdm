@@ -2,6 +2,7 @@ name: P1 phase-space convergence
 
 on:
   pull_request:
+    types: [opened, reopened]
     branches:
       - main
     paths:
@@ -14,7 +15,19 @@ on:
       - research/figure2_full_reproduction/results/phase_space_threshold_convergence.csv
       - research/figure2_full_reproduction/results/phase_space_li_prefactor_crosscheck.csv
       - research/figure2_full_reproduction/results/phase_space_historical_800_anchor.csv
-      - .github/workflows/p1-phase-space-convergence.yml
+  push:
+    branches:
+      - integration/lz-2026-nest-nr-fullband-20261115
+    paths:
+      - research/figure2_full_reproduction/phase_space_convergence.py
+      - research/figure2_full_reproduction/eq6_kernel.py
+      - research/figure2_full_reproduction/tests/test_phase_space_convergence.py
+      - research/figure2_full_reproduction/tests/test_eq6_kernel.py
+      - research/figure2_full_reproduction/results/phase_space_mapping_convergence.csv
+      - research/figure2_full_reproduction/results/phase_space_angular_convergence.csv
+      - research/figure2_full_reproduction/results/phase_space_threshold_convergence.csv
+      - research/figure2_full_reproduction/results/phase_space_li_prefactor_crosscheck.csv
+      - research/figure2_full_reproduction/results/phase_space_historical_800_anchor.csv
   workflow_dispatch:
 
 concurrency:
