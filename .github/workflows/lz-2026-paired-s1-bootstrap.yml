@@ -1,0 +1,74 @@
+name: LZ 2026 paired S1 ensemble bootstrap
+
+on:
+  push:
+    branches:
+      - integration/lz-2026-nest-nr-fullband-20261115
+    paths:
+      - research/lz_detector_response/paired_s1_ensemble_tv_bootstrap.py
+      - research/lz_detector_response/tests/test_paired_s1_ensemble_tv_bootstrap.py
+      - research/lz_detector_response/lz_2026_extended_nr/paired_s1_independent_seeds_2026-11-15/**
+      - .github/workflows/lz-2026-paired-s1-bootstrap.yml
+
+permissions:
+  contents: read
+
+jobs:
+  paired-s1-bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pinned numerical dependency
+        run: python -m pip install numpy==2.3.5
+
+      - name: Test TV, paired randomization, and multiplicity correction
+        run: |
+          python -m unittest research.lz_detector_response.tests.test_paired_s1_ensemble_tv_bootstrap -v
+
+      - name: Run 100,000 paired seed-cluster bootstrap replicates and exact permutations
+        run: |
+          python research/lz_detector_response/paired_s1_ensemble_tv_bootstrap.py \
+            --seed-root research/lz_detector_response/lz_2026_extended_nr/paired_s1_independent_seeds_2026-11-15 \
+            --out-dir paired-s1-bootstrap-output \
+            --n-bootstrap 100000 \
+            --rng-seed 2026111601
+
+      - name: Validate result row counts and reproduction closure
+        run: |
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+          root = Path("paired-s1-bootstrap-output")
+          summary = list(csv.DictReader((root / "paired_s1_ensemble_tv_bootstrap_summary.csv").open()))
+          loo = list(csv.DictReader((root / "paired_s1_ensemble_tv_leave_one_seed_out.csv").open()))
+          closure = list(csv.DictReader((root / "paired_s1_ensemble_tv_reproduction_closure.csv").open()))
+          permutation = list(csv.DictReader((root / "paired_s1_ensemble_tv_exact_paired_permutation.csv").open()))
+          meta = json.loads((root / "paired_s1_ensemble_tv_bootstrap_metadata.json").read_text())
+          assert len(summary) == 16
+          assert len(loo) == 160
+          assert len(closure) == 160
+          assert len(permutation) == 16
+          assert meta["n_bootstrap_replicates"] == 100000
+          assert meta["n_seeds"] == 10
+          assert meta["closure"]["max_abs_per_seed_tv_difference_vs_archived"] < 1e-12
+          assert meta["closure"]["max_abs_ensemble_tv_difference_vs_archived"] < 1e-12
+          assert meta["closure"]["max_abs_mean_map_cell_difference_vs_archived"] < 1e-12
+          assert all(int(row["n_permutations"]) == 1024 for row in permutation)
+          print("Validated 16 bootstrap rows, 160 leave-one-out rows, 160 closure rows, and 16 exact permutation rows.")
+          PY
+
+      - name: Upload bootstrap and randomization audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-paired-s1-bootstrap
+          path: paired-s1-bootstrap-output/
+          if-no-files-found: error
+          retention-days: 60
