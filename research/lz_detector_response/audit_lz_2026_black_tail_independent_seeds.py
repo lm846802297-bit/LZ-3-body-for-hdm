@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compare independent-seed 1-keV and 0.5-keV EFT2024 black-benchmark tail MC."""
+"""Compare independent-seed 1-keV and 0.5-keV black-benchmark tail MC."""
 from __future__ import annotations
 
 import argparse
@@ -19,7 +19,6 @@ if str(HERE) not in sys.path:
 import compare_lz_2026_nr_high_energy_half_kev as high
 import converge_lz_2026_three_body_energy_grid as grid
 
-FAMILY = "eft2024"
 BENCHMARK = "black_ms360_dm1"
 TAIL_MIN_KEV = 225.4
 TAIL_MAX_KEV = 269.9
@@ -64,7 +63,9 @@ def pairwise_tv_distances(intensities: list[dict]) -> list[float]:
     ]
 
 
-def evaluate_local_tail_gate(comparisons: list[dict]) -> dict:
+def evaluate_local_tail_gate(
+    comparisons: list[dict], response_family: str = "eft2024"
+) -> dict:
     """Apply the 1%/1% point-estimate gate to the independent-seed mean maps."""
     if not comparisons:
         raise ValueError("no independent-seed comparisons to evaluate")
@@ -76,7 +77,7 @@ def evaluate_local_tail_gate(comparisons: list[dict]) -> dict:
     )
     return {
         "scope": (
-            "EFT2024 black-benchmark 225.4--269.9 keV tail; mean rates and "
+            f"{response_family} black-benchmark 225.4--269.9 keV tail; mean rates and "
             "mean 2D maps from three independent full productions per grid"
         ),
         "accepted_rate_threshold": 0.01,
@@ -97,8 +98,9 @@ def load_seed_fold(
     width: float,
     xs: list[float],
     ys: list[float],
+    response_family: str = "eft2024",
 ) -> dict:
-    path = response_dir / f"{FAMILY}.csv"
+    path = response_dir / f"{response_family}.csv"
     stats = grid.read_response(path)
     pooled = high.fold_interval(
         stats, xs, ys, TAIL_MIN_KEV, TAIL_MAX_KEV, width, None
@@ -134,6 +136,7 @@ def summarize_comparison(
     fine: list[dict],
     nuclear_model: str,
     mode: str,
+    response_family: str = "eft2024",
 ) -> dict:
     coarse_rates = [
         item["pooled"][mode]["accepted_rate_events_kg_day"] for item in coarse
@@ -161,7 +164,7 @@ def summarize_comparison(
     return {
         "benchmark": BENCHMARK,
         "nuclear_model": nuclear_model,
-        "response_family": FAMILY,
+        "response_family": response_family,
         "acceptance_mode": mode,
         "n_independent_seeds_per_grid": len(coarse),
         "coarse_grid_keV": 1.0,
@@ -208,6 +211,8 @@ def run_audit(args: argparse.Namespace) -> dict:
         raise ValueError("coarse- and fine-grid productions must use disjoint seeds")
     if args.events_per_stratum < 2 or args.events_per_stratum % 2:
         raise ValueError("events-per-stratum must be a positive even integer")
+    if args.response_family not in ("eft2024", "tableS5"):
+        raise ValueError("response-family must be eft2024 or tableS5")
 
     spectrum_path = (
         args.spectrum_dir / BENCHMARK / "natural_xenon_continuous_spectrum.csv"
@@ -224,11 +229,15 @@ def run_audit(args: argparse.Namespace) -> dict:
     for nuclear in args.nuclear_models:
         xs, ys = grid.read_spectrum(spectrum_path, nuclear)
         coarse = [
-            load_seed_fold(coarse_samples[seed], seed, 1.0, xs, ys)
+            load_seed_fold(
+                coarse_samples[seed], seed, 1.0, xs, ys, args.response_family
+            )
             for seed in args.coarse_seeds
         ]
         fine = [
-            load_seed_fold(fine_samples[seed], seed, 0.5, xs, ys)
+            load_seed_fold(
+                fine_samples[seed], seed, 0.5, xs, ys, args.response_family
+            )
             for seed in args.fine_seeds
         ]
         for label, samples in (("1-keV", coarse), ("0.5-keV", fine)):
@@ -241,7 +250,11 @@ def run_audit(args: argparse.Namespace) -> dict:
                             f"expected {args.events_per_stratum}"
                         )
         for mode in MODES:
-            comparisons.append(summarize_comparison(coarse, fine, nuclear, mode))
+            comparisons.append(
+                summarize_comparison(
+                    coarse, fine, nuclear, mode, args.response_family
+                )
+            )
         for width, samples in ((1.0, coarse), (0.5, fine)):
             for item in samples:
                 for mode in MODES:
@@ -258,10 +271,13 @@ def run_audit(args: argparse.Namespace) -> dict:
                     })
 
     return {
-        "study": "independent-seed EFT2024 black-benchmark high-energy response audit",
+        "study": (
+            f"independent-seed {args.response_family} black-benchmark "
+            "high-energy response audit"
+        ),
         "status": "INDEPENDENT_SEED_RATE_AND_SHAPE_DIAGNOSTIC",
         "benchmark": BENCHMARK,
-        "response_family": FAMILY,
+        "response_family": args.response_family,
         "true_recoil_interval_keV": [TAIL_MIN_KEV, TAIL_MAX_KEV],
         "events_per_stratum_per_seed": args.events_per_stratum,
         "independent_seed_count_per_grid": 3,
@@ -291,7 +307,9 @@ def run_audit(args: argparse.Namespace) -> dict:
             "calibrated hypothesis-test z-score or p-value."
         ),
         "comparisons": comparisons,
-        "local_tail_refinement_gate": evaluate_local_tail_gate(comparisons),
+        "local_tail_refinement_gate": evaluate_local_tail_gate(
+            comparisons, args.response_family
+        ),
         "per_seed": seed_details,
     }
 
@@ -326,6 +344,9 @@ def main() -> None:
     parser.add_argument("--coarse-seeds", type=int, nargs=3, required=True)
     parser.add_argument("--fine-seeds", type=int, nargs=3, required=True)
     parser.add_argument("--events-per-stratum", type=int, default=10000)
+    parser.add_argument(
+        "--response-family", choices=("eft2024", "tableS5"), default="eft2024"
+    )
     parser.add_argument("--nuclear-models", nargs="+", default=["GCN", "JJ55"])
     parser.add_argument("--spectrum-dir", type=Path, default=Path(
         "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum"
