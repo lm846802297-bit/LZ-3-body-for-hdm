@@ -38,11 +38,11 @@ jobs:
 
       - name: Test exact rebinning and TV contraction
         run: |
-          python -m unittest             research.lz_detector_response.tests.test_lz_2026_paired_s1_2d_binning_stability -v
+          python -m unittest research.lz_detector_response.tests.test_lz_2026_paired_s1_2d_binning_stability -v
 
       - name: Audit independent-seed binning stability
         run: |
-          python research/lz_detector_response/audit_lz_2026_paired_s1_2d_binning_stability.py             --seed-root paired-s1-independent-seeds-input             --seeds 20261117 40261117 60261117             --out-dir paired-s1-binning-stability-output
+          python research/lz_detector_response/audit_lz_2026_paired_s1_2d_binning_stability.py --seed-root paired-s1-independent-seeds-input --seeds 20261117 40261117 60261117 --out-dir paired-s1-binning-stability-output
           cat paired-s1-binning-stability-output/paired_s1_independent_seed_binning_stability_summary.csv
 
       - name: Validate binned outputs and nested-TV contraction
@@ -73,7 +73,7 @@ jobs:
 
       - name: Hash binning audit outputs
         run: |
-          find paired-s1-binning-stability-output -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum             > paired-s1-binning-stability-output/SHA256SUMS
+          find paired-s1-binning-stability-output -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > paired-s1-binning-stability-output/SHA256SUMS
           cat paired-s1-binning-stability-output/SHA256SUMS
 
       - name: Upload binning stability audit
