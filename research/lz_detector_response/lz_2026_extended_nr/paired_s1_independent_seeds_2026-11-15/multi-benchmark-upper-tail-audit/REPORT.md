@@ -153,7 +153,7 @@ The common-support tail-fraction differences are:
 
 The ten-seed intervals for these differences exclude zero in all four common-support benchmarks. In full-support weighting, the corresponding changes are much smaller for red (+0.0053 pp), green (+0.0206 pp), and blue (+0.0205 pp), while black is unchanged because its full support is already the common interval.
 
-The weighted S1 quantiles also move upward in Full mode. Across the four full-support benchmarks, the mean \(q_{95}\) shift is about 0.6--1.6 phd and the \(q_{99}\) shift is about 0.7--1.4 phd. This small upward displacement is sufficient to produce a resolved loss at the 600-phd upper boundary when the recoil spectrum has substantial weight near and above that boundary.
+The weighted S1 quantiles also move upward in Full mode. Across the four full-support benchmarks, the mean \(q_{95}\) shift is about 0.6--1.6 phd and the \(q_{99}\) shift is about 0.7--1.5 phd. This small upward displacement is sufficient to produce a resolved loss at the 600-phd upper boundary when the recoil spectrum has substantial weight near and above that boundary.
 
 ## 7. Energy-resolved migration
 
