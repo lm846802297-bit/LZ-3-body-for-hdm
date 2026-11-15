@@ -118,7 +118,7 @@ two-dimensional selection closure is established.
 ## 6. Reproducible implementation
 
 The exact integration is implemented in
-[sumarize_lz_2026_selection_stage_rates.py](../summarize_lz_2026_selection_stage_rates.py)
+[summarize_lz_2026_selection_stage_rates.py](../summarize_lz_2026_selection_stage_rates.py)
 and covered by
 [unit tests](../tests/test_lz_2026_selection_stage_rates.py). The lightweight
 workflow
