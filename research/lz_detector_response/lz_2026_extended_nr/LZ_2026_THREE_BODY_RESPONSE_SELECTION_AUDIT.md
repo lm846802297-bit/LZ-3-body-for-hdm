@@ -214,7 +214,7 @@ The event driver uses \`GetS1(S1CalculationMode::Parametric)\`. In the pinned NE
 
 The event driver also passes the same \(x,y,z\) as both the true and smeared positions to NEST. Thus the position correction uses perfect reconstructed position in this run. The uniform active-cylinder spatial prior is not the 4.71-tonne FV map, and position-reconstruction smearing is not represented.
 
-The 120-phe NEST S2 threshold and the published raw-S2 \(>645\) phd ROI condition are separate code-level cuts. In the archived 4.24-million-event sample, no event with raw \(S2>645\) phd failed the NEST S2 threshold. The NEST S2 threshold is therefore redundant after the raw-S2 ROI cut for this sample; it must not be counted as a second independent efficiency loss.
+The NEST S2 threshold is response-family dependent: \`SetEFT2024Configuration()\` sets \(s2_{\rm thr}=120\) phe for the EFT2024, rounded-Table-S5, and generic-yield runs, while the unmodified WS2024 detector constructor sets \(s2_{\rm thr}=783\) phe. The published raw-S2 ROI condition is \(S2>645\) phd. With \(P_{\rm dphe}=0.214\), 645 phd corresponds to about \(645(1+0.214)=783.03\) phe, so the WS2024 detector threshold is effectively aligned with the raw-S2 ROI boundary; the EFT2024 120-phe threshold is looser. In the archived 4.24-million-event sample, no event with raw \(S2>645\) phd failed its configured NEST S2 threshold. Thus the NEST S2 threshold is redundant after the raw-S2 ROI cut for this sample; it must not be counted as a second independent efficiency loss.
 
 ### 8.4 The 2D ROI response does not yet reproduce the published cumulative efficiency
 
