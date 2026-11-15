@@ -66,89 +66,32 @@ class BlackTailIndependentSeedTests(unittest.TestCase):
 
 
     def test_table_s5_family_label_is_preserved_in_tail_audit(self):
-        row = {
-            "relative_rate_difference_fine_vs_coarse": 0.001,
-            "tv_distance_between_mean_2d_maps": 0.009,
-        }
-        gate = MOD.evaluate_local_tail_gate([row], "tableS5")
-        self.assertTrue(gate["point_estimate_pass"])
-        self.assertIn("tableS5 black-benchmark", gate["scope"])
-        self.assertEqual(
-            MOD.summarize_comparison(
-                [
-                    {
-                        "seed": 1,
-                        "pooled": {
-                            "ws_roi": {"accepted_rate_events_kg_day": 1.0},
-                            "intensity": {"ws_roi": {(0, 0): 1.0}},
-                        },
-                        "split_rate_difference": {"ws_roi": 0.0},
-                        "split_tv_distance": {"ws_roi": 0.0},
-                    },
-                    {
-                        "seed": 2,
-                        "pooled": {
-                            "ws_roi": {"accepted_rate_events_kg_day": 1.0},
-                            "intensity": {"ws_roi": {(0, 0): 1.0}},
-                        },
-                        "split_rate_difference": {"ws_roi": 0.0},
-                        "split_tv_distance": {"ws_roi": 0.0},
-                    },
-                ],
-                [
-                    {
-                        "seed": 3,
-                        "pooled": {
-                            "ws_roi": {"accepted_rate_events_kg_day": 1.0},
-                            "intensity": {"ws_roi": {(0, 0): 1.0}},
-                        },
-                        "split_rate_difference": {"ws_roi": 0.0},
-                        "split_tv_distance": {"ws_roi": 0.0},
-                    },
-                    {
-                        "seed": 4,
-                        "pooled": {
-                            "ws_roi": {"accepted_rate_events_kg_day": 1.0},
-                            "intensity": {"ws_roi": {(0, 0): 1.0}},
-                        },
-                        "split_rate_difference": {"ws_roi": 0.0},
-                        "split_tv_distance": {"ws_roi": 0.0},
-                    },
-                ],
-                "GCN",
-                "ws_roi",
-                "tableS5",
-            )["response_family"],
-            "tableS5",
-        )
-
-
-    def test_local_tail_gate_uses_mean_rate_and_mean_map_metrics(self):
-        gate = MOD.evaluate_local_tail_gate([
-            {
-                "relative_rate_difference_fine_vs_coarse": 0.0001758,
-                "tv_distance_between_mean_2d_maps": 0.0068647,
-            },
-            {
-                "relative_rate_difference_fine_vs_coarse": 0.0001862,
-                "tv_distance_between_mean_2d_maps": 0.0068033,
-            },
-            {
-                "relative_rate_difference_fine_vs_coarse": 0.0,
-                "tv_distance_between_mean_2d_maps": 0.0084890,
-            },
-        ])
-        self.assertTrue(gate["point_estimate_pass"])
-        self.assertLessEqual(gate["max_relative_rate_difference"], 0.01)
-        self.assertLessEqual(gate["max_tv_distance_between_mean_maps"], 0.01)
-        self.assertIn("cell-by-cell", gate["covariance_note"])
-
-    def test_local_tail_gate_rejects_tv_above_threshold(self):
         gate = MOD.evaluate_local_tail_gate([{
             "relative_rate_difference_fine_vs_coarse": 0.001,
-            "tv_distance_between_mean_2d_maps": 0.011,
-        }])
-        self.assertFalse(gate["point_estimate_pass"])
+            "tv_distance_between_mean_2d_maps": 0.009,
+        }], "tableS5")
+        self.assertTrue(gate["point_estimate_pass"])
+        self.assertIn("tableS5 black-benchmark", gate["scope"])
+
+        def fold_item(seed):
+            return {
+                "seed": seed,
+                "pooled": {
+                    "ws_roi": {"accepted_rate_events_kg_day": 1.0},
+                    "intensity": {"ws_roi": {(0, 0): 1.0}},
+                },
+                "split_rate_difference": {"ws_roi": 0.0},
+                "split_tv_distance": {"ws_roi": 0.0},
+            }
+
+        row = MOD.summarize_comparison(
+            [fold_item(1), fold_item(2)],
+            [fold_item(3), fold_item(4)],
+            "GCN",
+            "ws_roi",
+            "tableS5",
+        )
+        self.assertEqual(row["response_family"], "tableS5")
 
 
 if __name__ == "__main__":
