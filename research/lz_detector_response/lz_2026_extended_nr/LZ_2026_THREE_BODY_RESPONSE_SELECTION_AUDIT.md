@@ -539,6 +539,8 @@ The 2026 analysis divides selected events into three samples:
 2. **Prompt-veto:** Skin \(>2.5\) phd within ±0.25 μs of TPC S1, or OD \(>4.5\) phd within ±0.3 μs.
 3. **Delayed-veto:** Skin \(>300\) keV or OD \(>200\) keV within 600 μs of TPC S1, but outside the prompt window.
 
+The paper reports that the NR signal efficiency averages 96% between 14 and 250 keV; this is a spectrum- and energy-dependent summary of the cumulative efficiency curve, not a universal scalar factor. The 50% upper-energy point is 269.9 keV. The four benchmark spectra begin at 35, 101, 210, and 101 keV, so the high-energy black benchmark is particularly sensitive to the falling upper-ROI acceptance.
+
 The paper reports random coincidences with veto-detector activity that tag 0.01% of unrelated TPC signals as prompt-veto and 2.86% as delayed-veto. To a good approximation, signal and background components have the same \((S1_c,\log_{10}S2_c)\) shape in the three samples but different rates. The likelihood is a simultaneous unbinned extended likelihood over the three samples; their expected counts are correlated through tagging-efficiency parameters, not independent free normalizations.
 
 Consequently, the current ws_roi intensity is not yet a complete likelihood signal model. It has no sample label and represents neither the full science-sample signal fraction nor the prompt/delayed signal leakage. A future model must assign sample-specific signal rates and preserve the correlations/constraints on the tagging efficiencies. It must not simply apply one generic veto-survival multiplier to the science-sample 2D map.
@@ -554,7 +556,29 @@ The following are separate and must remain separate in code and documentation:
 
 Likewise, NEST's threefold PMT-occupancy approximation is not the same thing as the complete waveform-level S1 pulse classification and SS reconstruction. The current code's NEST pass flags and WS ROI therefore remain an intermediate response, not a complete event-selection chain.
 
-### 14.4 Profile-likelihood blockers after the response-grid work
+### 14.4 Official 2D signal PDFs and waveform study are not reproduced by Fig. S2
+
+The 2026 paper states that the signal and background PDFs in
+\((S1_c,\log_{10}S2_c)\) are generated with the BACCARAT package based on
+GEANT4, with the tuned NEST v2.4.5 model providing the detector response.
+The one-dimensional Fig. S2 cumulative efficiency does not provide that
+two-dimensional migration kernel. Nor does it supply the exact event
+geometry, reconstruction smearing, production detector maps, or all
+selection correlations needed to reconstruct the collaboration's signal
+PDF.
+
+The Supplemental waveform section is an event-specific diagnostic, not an
+additional generic signal cut. At \(S1_c\sim550\) phd, the paper says S1
+timing has limited event-by-event ER/NR discrimination and the candidate is
+generally compatible with both populations. The candidate S2 shape is
+consistent with a single-site interaction near its reconstructed position;
+the top-bottom S1 partition is consistent with the same depth. The S1 hit
+pattern is compatible with single-scatter ER events at roughly 2σ in z and
+1σ in (x,y), while it disfavors an RFR MSSI template but does not distinguish
+a single scatter from a wall-MSSI template. These event-specific waveform
+checks must not be turned into an unmotivated multiplicative NR acceptance.
+
+### 14.5 Profile-likelihood blockers after the response-grid work
 
 The remaining blockers are now explicit:
 
