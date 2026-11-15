@@ -252,6 +252,44 @@ Implementation:
 - `.github/workflows/lz-2026-s1-coincidence-mode-crosscheck.yml`
 
 
+
+
+### Three-body NR response fold: 1-keV reference and 0.5-keV high-energy check
+
+The full-range three-body signal has been folded through the event-level NEST
+response using the exact piecewise-linear GCN/JJ55 recoil spectra. The
+1-keV response is the full-range reference; the 5/10-keV comparisons are
+diagnostics only. The 0.5-keV refinement covers 225.4–269.9 keV, where the
+\(m_s=360\) keV benchmark approaches the upper S1c boundary.
+
+The successful high-energy refinement is [run 43675776534](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43675776534),
+artifact 14146681605, SHA-256
+de195140fc2d4b3e3205a7543ea822a9ed2b325373db60078ec79cae78ab78b5.
+Across 64 comparisons, the maximum 0.5-keV versus 1-keV accepted-rate
+difference is 0.46895% and the maximum 2D total-variation distance is 2.5446%.
+After a \(10^{-12}\) numerical tolerance, two rate comparisons (EFT2024
+black benchmark, GCN/JJ55) exceed both split-sample rate checks; no 2D shape
+comparison does. This is a refinement diagnostic, not a formal convergence
+PASS. The full interpretation is in
+[LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md](lz_2026_extended_nr/LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md).
+
+The 1-keV 2D intensity contains NEST Parametric S1 coincidence, NEST S2
+threshold, and the WS S1c/raw-S2/S2c ROI. It is an intermediate
+NEST-level/WS-ROI prediction, not the final LZ selected signal PDF. The
+published final cumulative Fig. S2 efficiency is already folded separately
+at rate level in
+[lz_2026_rate_level_event_yields.csv](lz_2026_extended_nr/rate_level_event_yields/lz_2026_rate_level_event_yields.csv).
+Do not multiply that final efficiency into the existing 2D map: the WS ROI
+and some NEST acceptance are already represented, and the missing selections
+do not have a validated 2D migration model.
+
+Implementation:
+- \`cpp/lz_2026_nr_stratified_energy_response.cc\` — stratified event-level NEST NR response.
+- \`converge_lz_2026_three_body_energy_grid.py\` — 1/5/10-keV response fold and provenance checks.
+- \`compare_lz_2026_nr_high_energy_half_kev.py\` — 0.5/1-keV high-energy response comparison.
+- \`.github/workflows/lz-2026-three-body-response-grid-convergence.yml\` — pinned NEST build, samples, folds, checks, and artifact upload.
+
+
 A further 265-bin monotonicity diagnostic against the published final cumulative
 Fig. S2 efficiency finds that Table S5 NEST+WS-ROI acceptance is never below
 the published curve, while the EFT2024, WS2024, and generic candidates are
