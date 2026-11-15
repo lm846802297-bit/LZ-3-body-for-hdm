@@ -148,3 +148,9 @@ python research/lz_detector_response/paired_s1_ensemble_tv_bootstrap.py \
 ```
 
 The output directory contains the 16-row bootstrap summary, 160-row leave-one-seed-out table, 160-row reproduction-closure table, exact paired-randomization results, metadata, and a SHA-256 manifest. The full 100,000-value-per-observable bootstrap samples are not committed; the script and fixed RNG seed reproduce the summary without storing an 82-MB raw distribution CSV.
+
+## 9. GitHub Actions reproduction
+
+The dedicated workflow completed successfully in [run 43776602229](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43776602229), artifact `14186985280`. The five unit tests passed; the workflow then completed all 100,000 paired bootstrap replicates, all exact paired permutations, row-count checks, and reproduction-closure checks.
+
+The CI artifact reproduces the local summary to a maximum absolute floating-point difference of `6.94e-18`; the exact permutation, leave-one-seed-out, and reproduction-closure CSVs match exactly. The CI artifact is the independent repository-side execution record.
