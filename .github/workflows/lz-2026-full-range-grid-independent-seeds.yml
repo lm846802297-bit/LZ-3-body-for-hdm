@@ -12,6 +12,10 @@ on:
       - research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/**
   workflow_dispatch:
 
+concurrency:
+  group: lz-2026-full-range-grid-independent-seeds-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
