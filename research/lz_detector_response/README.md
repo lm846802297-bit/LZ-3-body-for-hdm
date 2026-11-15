@@ -230,6 +230,23 @@ artifact 14140966494, SHA-256
 a2a138d262245e811c94b8bc41d76f4af16c53196d1a12adea044bf66a9f7bc1.
 It includes local-drift closure and deterministic bootstrap output.
 
+### Complete LZ 2026 selection and three-sample likelihood audit
+
+The updated selection audit now distinguishes the hardware S2 DAQ trigger from
+the NEST S2 pulse threshold, and separates NEST's threefold PMT-occupancy
+approximation from the official S1 pulse classification and single-scatter
+reconstruction. It records the inherited WS2024 selection chain, the exact
+2026 4.71-tonne fiducial-volume requirements, the WS ROI, prompt/delayed
+Skin/OD veto definitions, and the three correlated likelihood samples:
+[LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md](lz_2026_extended_nr/LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md).
+
+The 2026 likelihood uses science, prompt-veto, and delayed-veto samples
+simultaneously, with expected counts correlated through tagging-efficiency
+parameters. The present 2D response has no veto-sample label and is therefore
+not a complete likelihood signal model. The 2.84 tonne-year exposure already
+uses the 220 live days after the published live-time exclusions; do not apply
+the 81.5% live-time retention a second time.
+
 ### Parametric-versus-Full S1 coincidence validation
 
 Because the three-body stratified driver uses NEST Parametric S1 mode, a paired
