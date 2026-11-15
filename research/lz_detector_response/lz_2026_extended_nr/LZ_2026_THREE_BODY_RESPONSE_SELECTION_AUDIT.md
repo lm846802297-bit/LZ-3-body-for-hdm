@@ -183,7 +183,7 @@ The largest differences over all four response families, four particle benchmark
 
 | Response grid | Maximum relative accepted-rate difference vs 1 keV | Maximum 2D total-variation distance vs 1 keV |
 |---|---:|---:|
-| 5 keV | 0.5131% | 0.8499% |
+| 5 keV | 0.5131% | 0.8896% |
 | 10 keV | 1.2146% | 2.4649% |
 
 For the primary public EFT2024 candidate, the maxima across both acceptance modes are:
