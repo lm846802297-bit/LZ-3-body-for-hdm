@@ -21,6 +21,9 @@ high-efficiency nuclear-recoil region.
   of the NEST NR mean-yield equations, including the high-energy p(E) branch.
 - `LZ_2026_PUBLIC_INPUTS_AUDIT.md` and `P0_NEST_AND_WIDTH_CLOSURE_STATUS.md`:
   public-input availability and P0 closure status.
+- `lz_2026_extended_nr/LZ_2026_ENERGY_RESOLVED_SELECTION_MC_AND_BLACK_TAIL_AUDIT.md`:
+  artifact-level weighted-MC uncertainty, black-tail band decomposition, and
+  independent-seed 1/5/0.5-keV grid checks.
 - `tests/test_lz_2026_nr_mean_yield.py`: unit tests for the isolated mean-yield port.
 
 ## Provenance and interpretation
@@ -34,6 +37,19 @@ the comparison with an independent digitization.
 The gray band is retained as a detector-systematic range. LZ does not assign
 a confidence level to that envelope. The curve is not rescaled to force exact
 agreement with the rounded published mean efficiency.
+
+### Latest energy-resolved selection audit
+
+The latest artifact-level selection bridge and weighted-MC diagnostic are
+documented in
+[`LZ_2026_ENERGY_RESOLVED_SELECTION_MC_AND_BLACK_TAIL_AUDIT.md`](lz_2026_extended_nr/LZ_2026_ENERGY_RESOLVED_SELECTION_MC_AND_BLACK_TAIL_AUDIT.md).
+The 5-keV black-support comparison passes the 1% accepted-rate and 1% mean-map
+TV point-estimate gates using three independent seeds per grid; the 0.5-keV
+high-tail check also passes those point-estimate gates. These are numerical
+grid checks for the current NEST proxy, not validation of the complete LZ
+selection response. The report explicitly retains the distinction between
+NEST's approximate S1 coincidence/S2 pulse threshold and the official DAQ,
+SS/data-analysis, FV, and veto selections.
 
 The event-level pilot uses the Table S5 NR mean-yield vector with the public LZ WS2024 detector class and compares its tuned NR width vector with generic NEST defaults. Its first paired 248-keV run is a one-energy, one-position sanity check, not a full reproduction of the published NR band. The paper's Fig. 2 band is constructed from flat-in-energy NR spectra and evaluated at fixed S1c. The historical flat-spectrum pilot tests both the 5.4–269.9 keV analysis-window prior and approximately 0.1–330 keV AmBe range at the candidate position, but used hybrid Table-S5/WS2024 inputs and is superseded. The primary public candidate is now NEST commit 541b643's `SetEFT2024Configuration()`; full-S1c NR and ER bands plus conditional 2D PDFs are documented in `LZ_2026_NR_ER_FULL_RESPONSE_CANDIDATE_REPORT.md`. The uniform active-TPC position distribution remains a proxy, not the actual D-D/AmBe calibration-source distribution.
 
