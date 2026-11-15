@@ -39,6 +39,25 @@ class PairedS1Mode2DResponseTests(unittest.TestCase):
         self.assertAlmostEqual(p, 2.0/3.0)
         self.assertAlmostEqual(d, -1.0/6.0)
 
+    def test_union_schema_csv_accepts_optional_ws_only_diagnostics(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "summary.csv"
+            rows = [
+                {"benchmark": "red", "stage": "nest", "rate": 1.0},
+                {
+                    "benchmark": "red", "stage": "ws_roi", "rate": 0.8,
+                    "paired_integrated_rate_difference_mc_se_events_kg_day": 0.01,
+                    "integrated_rate_difference_over_mc_se_diagnostic": -2.0,
+                },
+            ]
+            MOD.write_union_schema_csv(path, rows)
+            with path.open(newline="", encoding="utf-8") as handle:
+                output = list(csv.DictReader(handle))
+            self.assertEqual(len(output), 2)
+            self.assertEqual(output[0]["stage"], "nest")
+            self.assertEqual(output[0]["integrated_rate_difference_over_mc_se_diagnostic"], "")
+            self.assertEqual(output[1]["integrated_rate_difference_over_mc_se_diagnostic"], "-2.0")
+
     def test_total_variation(self):
         self.assertEqual(MOD.total_variation({(1, 2): 1.0}, {(1, 2): 4.0}), 0.0)
         self.assertAlmostEqual(
