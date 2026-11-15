@@ -140,7 +140,7 @@ def accumulate_weighted_response(
             roi_pass = nest_pass and grid.ws_roi_pass(s1c, s2r, s2c)
 
             for key, (xs, ys) in spectra.items():
-                weight = grid.interpolate_linear(xs, ys, energy)
+                weight = grid.interpolate(energy, xs, ys)
                 bucket = sums[(key, ibin)]
                 bucket["raw"][replica] += weight
                 bucket["n"][replica] += 1
