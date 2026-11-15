@@ -509,3 +509,56 @@ complete an independent-seed high-statistics check of the EFT2024 black
 high-energy tail before replacing the 1-keV reference in production
 predictions. This grid decision is separate from the remaining full-LZ
 selection and likelihood blockers in Section 14.5.
+
+### 15.3 Independent-seed high-energy-tail validation (2026-11-15)
+
+The original single-stream EFT2024 black-benchmark tail comparison showed a
+0.45--0.47% accepted-rate difference and about 1.87--1.89% 2D TV between
+0.5-keV and 1-keV folds. To distinguish a stable grid effect from finite-MC
+fluctuations, six independent full productions were generated:
+
+- 1-keV seeds: 20261120, 20261122, 20261124.
+- 0.5-keV seeds: 20261121, 20261123, 20261125.
+- 10,000 events per energy stratum per seed, over 225.4--269.9 keV.
+- EFT2024 response, black benchmark, both GCN and JJ55; 4.02 million events total.
+- The two within-seed halves are used only as internal diagnostics; the three
+  full productions per grid are the independent replication units.
+
+The WS-ROI mean-rate comparison is:
+
+| Nuclear response | Mean 1-keV rate (events kg\(^{-1}\) day\(^{-1}\)) | Mean 0.5-keV rate (events kg\(^{-1}\) day\(^{-1}\)) | Relative rate difference | Difference / combined seed SEM | TV between mean 2D maps |
+|---|---:|---:|---:|---:|---:|
+| GCN | \(2.4334094\times10^{-15}\) | \(2.4329815\times10^{-15}\) | 0.01758% | 0.171 | 0.6865% |
+| JJ55 | \(2.4549401\times10^{-15}\) | \(2.4544830\times10^{-15}\) | 0.01862% | 0.186 | 0.6803% |
+
+For the NEST-only mode, the accepted rates are identical between the two
+energy grids; the TV distances between mean maps are 0.8489% (GCN) and
+0.8407% (JJ55). Therefore, across both acceptance modes and both nuclear
+responses, the maximum mean-map TV is 0.8489%, and the maximum accepted-rate
+difference is 0.01862%. The independent-seed mean-map comparison passes the
+same 1.0% / 1.0% local-tail numerical gate.
+
+The earlier 0.45--0.47% rate difference is not reproduced by the independent
+seed means. The new difference is only 0.17--0.19 of the combined seed
+standard error. This supports finite-MC fluctuations as the dominant source
+of the earlier discrepancy; it does not establish a calibrated hypothesis
+test, because there are only three independent productions per grid.
+
+Individual-seed shape fluctuations remain larger than the mean-map
+difference: the largest pairwise seed TV is about 1.87% for 1 keV and
+1.39% for 0.5 keV across the tested modes. The mean-map gate therefore
+validates the grid-averaged tail shape, not a complete cell-by-cell
+covariance matrix.
+
+The workflow and archived raw samples are [run 43691194242](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43691194242),
+artifact 14152587160, SHA-256
+1668469cea1c8282b987f3386fca088a14a71083795d7dd506bc3c2e0fd71549.
+
+**Updated grid decision:** the 5-keV grid is accepted as the coarse
+production grid for the intermediate NEST+WS-ROI 2D response, under the
+approved 1.0% accepted-rate / 1.0% TV gate. Keep 1 keV as the reference
+cross-check. The independent 0.5-keV tail result supports the high-energy
+part of this decision, but it is not a full-range 0.5-keV production.
+Neither grid decision closes the missing SS/data-analysis, official FV,
+Skin/OD sample migration, or complete LZ selection response.
+
