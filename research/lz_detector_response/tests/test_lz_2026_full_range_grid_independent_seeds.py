@@ -22,21 +22,32 @@ class FullRangeIndependentSeedTests(unittest.TestCase):
         self.assertAlmostEqual(five[-1], 269.9)
 
     def test_response_validation_accepts_both_independent_grid_widths(self):
-        for width, events_per_bin in ((1.0, 4000), (5.0, 20000)):
+        for width in (1.0, 5.0):
             edges = MOD.grid.make_edges(
                 MOD.ROI_MIN_KEV, MOD.ROI_MAX_KEV, width
             )
             stats = {}
             for ibin, (lo, hi) in enumerate(zip(edges, edges[1:])):
+                expected_total = round(4000 * (hi - lo))
                 for replica in (0, 1):
                     stats[(ibin, replica)] = {
                         "lo": lo,
                         "hi": hi,
-                        "n": events_per_bin // 2,
+                        "n": expected_total // 2,
                     }
             MOD.validate_response_sample(
-                stats, width, events_per_bin, f"test-{width:g}keV"
+                stats, width, 4000, f"test-{width:g}keV"
             )
+
+    def test_partial_terminal_bins_scale_event_count_with_exact_width(self):
+        one_edges = MOD.grid.make_edges(
+            MOD.ROI_MIN_KEV, MOD.ROI_MAX_KEV, 1.0
+        )
+        five_edges = MOD.grid.make_edges(
+            MOD.ROI_MIN_KEV, MOD.ROI_MAX_KEV, 5.0
+        )
+        self.assertEqual(round(4000 * (one_edges[-1] - one_edges[-2])), 2000)
+        self.assertEqual(round(4000 * (five_edges[-1] - five_edges[-2])), 18000)
 
     def test_response_validation_rejects_missing_replica(self):
         edges = MOD.grid.make_edges(
