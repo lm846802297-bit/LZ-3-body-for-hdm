@@ -90,11 +90,13 @@ class FullRangeIndependentSeedTests(unittest.TestCase):
                         "pooled": {
                             "ws_roi": {
                                 "accepted_rate_events_kg_day": rate,
-                                "intensity": {
+                            },
+                            "intensity": {
+                                "ws_roi": {
                                     (0, 0): fraction,
                                     (1, 0): 1.0 - fraction,
-                                },
-                            }
+                                }
+                            },
                         },
                         "split_rate_difference": {"ws_roi": 0.001},
                         "split_tv_distance": {"ws_roi": 0.002},
