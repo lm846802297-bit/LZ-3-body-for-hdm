@@ -104,6 +104,9 @@ if ([double]$nativeMeta.particle_inputs.speed_km_s -ne 800.0) {
 if ($nativeMeta.integration.width_scheme -ne "pole" -or $nativeMeta.integration.W2_mapping -ne "threshold_u2") {
     throw "Unexpected width or W2-mapping convention in Mathematica metadata."
 }
+if ([int]$nativeMeta.integration.quadrature.nW -ne $NW -or [int]$nativeMeta.integration.quadrature.nz -ne $NZ -or [int]$nativeMeta.integration.quadrature.nphi -ne $NPhi) {
+    throw "Mathematica metadata quadrature orders do not match the requested orders."
+}
 if ($RequireFullGrid -and ([int]$comparison.rows -ne 652 -or [int]$comparison.open_phase_space_rows -ne 500)) {
     throw "Full-grid acceptance requires 652 rows and 500 open phase-space rows."
 }
