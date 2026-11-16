@@ -1,6 +1,6 @@
-# LZ 2026 three-body NR response: selection audit and energy-grid convergence plan
+# LZ 2026 three-body NR response: selection audit and energy-grid convergence record
 
-Date: 2026-11-15  
+Date: 2026-11-16
 Branch: `research/figure2-p0-4-mainline`  
 NEST source pin: `541b6430dae6ea289cf110c99f174a9187f7fdee`
 
