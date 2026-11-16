@@ -8,7 +8,7 @@
 
 ## 研究文档入口
 
-- [AFH Xe-131 核响应、三体散射与天然氙反冲率主报告](research/docs/09_afh_xe131_three_body_scattering_natural_xenon.md)：完整正文及正式附录 A–G。
+- [AFH Xe-131 核响应、三体散射与天然氙反冲率主报告](research/docs/09_afh_xe131_three_body_scattering_natural_xenon.md)：完整正文及正式附录 A–H。
 - [研究文档索引](research/docs/README.md)：主报告、独立附录、公式索引和补充记录。
 - [公式—符号—正文—程序—结果交叉引用](research/docs/formula_symbol_code_cross_reference.md)：F1–F12 公式、单位、程序入口、输出和适用边界。
 - [研究目录索引](research/README.md)：各专题的内容和科学状态。
