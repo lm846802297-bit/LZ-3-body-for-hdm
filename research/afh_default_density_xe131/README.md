@@ -339,13 +339,13 @@ until that recomputation is complete.
 
 ## Full Eq. (6) differential-cross-section status
 
-The native AFH response layer is validated: the archived Wolfram 14.0.0 run compares all 2,401 Xe-131 (q) nodes against the Python translation, with maximum relative difference (3.59\times10^{-9}).
+The native AFH response layer is validated: the archived Wolfram 14.0.0 run compares all 2,401 Xe-131 \(q\) nodes against the Python translation, with maximum relative difference \(3.59\times10^{-9}\).
 
-Separately, the Python-only v=800 km/s fixed-speed Xe-131 full Eq. (6) calculation has completed 652 rows (500 open, 152 closed) and 16 high-order anchors. Its maximum (I_6) relative difference is (1.66367\times10^{-11}), the AFH factor-four mapping residual is (3.55679\times10^{-16}), and the physical/no-factor-four ratio residual is zero. The workflow [run 43591097068](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43591097068) archived artifact [14112736343](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43591097068).
+Separately, the Python-only v=800 km/s fixed-speed Xe-131 full Eq. (6) calculation has completed 652 rows (500 open, 152 closed) and 16 high-order anchors. Its maximum \(I_6\) relative difference is \(1.66367\times10^{-11}\), the AFH factor-four mapping residual is \(3.55679\times10^{-16}\), and the physical/no-factor-four ratio residual is zero. The workflow [run 43591097068](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43591097068) archived artifact [14112736343](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43591097068).
 
 This is an end-to-end factor-four PASS **within the Python implementation**, under the conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions. It is not a natural-xenon halo fold and does not establish Mathematica/Python full-cross-section agreement.
 
-The native Wolfram runner `run_afh_eq6_full_dsigma.wls` reads the already archived AFH-native 2,401-node response table and independently recomputes (I_6). The Python comparator `compare_full_dsigma_mathematica.py` independently recomputes (I_6) and compares the AFH response, full (d\sigma_A/dE_R), no-factor-four control, momentum, mediator denominator and unit conversion.
+The native Wolfram runner `run_afh_eq6_full_dsigma.wls` reads the already archived AFH-native 2,401-node response table and independently recomputes \(I_6\). The Python comparator `compare_full_dsigma_mathematica.py` independently recomputes \(I_6\) and compares the AFH response, full \(d\sigma_A/dE_R\), no-factor-four control, momentum, mediator denominator and unit conversion.
 
 On Windows, use `run_native_full_dsigma_windows.ps1` from the repository root after installing the requirements and ensuring `wolframscript` is on `PATH`. The wrapper checks the native and Python AFH inputs, the fixed 800 km/s / pole-width / threshold-(u^2) assumptions and quadrature metadata; it then runs the native integrator and Python comparator. After PASS it writes the native and comparison CSV/JSON files, `full_dsigma_sha256_manifest.json`, and `SHA256SUMS.txt`, including source/input hashes and Wolfram/Python runtime versions.
 
@@ -400,7 +400,7 @@ powershell -ExecutionPolicy Bypass -File research/afh_default_density_xe131/run_
 ~~~
 
 This requires Mathematica or Wolfram Engine with wolframscript available on
-PATH. The wrapper checks both archived native and Python AFH response tables,
+PATH. The wrapper checks both archived native and Python AFH response tables, validates the fixed 800 km/s / pole-width / threshold-\(u^2\) assumptions and quadrature metadata, runs the Wolfram I6 integration, and invokes the independent Python comparator. It requires the complete 652-row grid and checks the incoming dark-matter momentum, mediator denominator, I6, nuclear response, physical/no-factor-four rates, and unit conversion.
 validates the fixed 800 km/s / pole-width / threshold-u2 settings and
 quadrature metadata, runs the Wolfram I6 integration, and invokes the
 independent Python comparator. It requires the complete 652-row grid and
