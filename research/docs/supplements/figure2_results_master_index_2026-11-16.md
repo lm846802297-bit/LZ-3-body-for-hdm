@@ -1,6 +1,6 @@
 # Figure 2 and natural-xenon results master index
 
-**Current source:** PR #45, branch `docs/scientific-content-audit-20261116`, targeting `main`  
+**Current source:** `main` at merge commit `15eb3a24e5295868ca208166a94c078fbc1747a7` (PR #45; 201 commits preserved)  
 **Updated:** 2026-11-16  
 **Coverage:** 13 result groups; 92 file entries with SHA-256 and byte sizes.
 
