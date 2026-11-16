@@ -1,8 +1,31 @@
-# LZ detector-response inputs and rate-level archive
+# LZ detector-response research archive
 
-This directory stores the detector-response inputs used to connect the
-three-body natural-xenon recoil spectra to the published LZ 2026
-high-efficiency nuclear-recoil region.
+This directory contains the public LZ 2026 detector-response inputs, NEST
+response simulations, three-body two-dimensional folds, rate-level efficiency
+folds, numerical audits, and reproducibility records. The detailed index for
+the extended NR/ER response study is in
+[`lz_2026_extended_nr/README.md`](lz_2026_extended_nr/README.md).
+
+## Current status (2026-11-16)
+
+- The pinned NEST `541b643` `SetEFT2024Configuration()` is a well-supported
+  public configuration candidate, not confirmation of the exact LZ
+  collaboration production build.
+- Keep the **1-keV full-range recoil grid** as the numerical reference. The
+  independent full-range 1/5-keV study fails the 1% 2D-TV gate (1.4812% for
+  EFT2024 and 1.4681% for Table S5), even though its accepted-rate comparison
+  passes. The restricted black-support 1/5-keV and high-tail 0.5-keV checks
+  do not override this full-range result.
+- The paired S1 study uses ten independent seeds and 4.7 million unique
+  events. Its 100,000-replicate seed-cluster bootstrap and 1,024 exact paired
+  label swaps show that the black 360-keV point TV below 1% is not a robust
+  equivalence claim; the red 200-keV mode-shape difference is statistically
+  detectable after Holm correction.
+- The NEST/WS-ROI 2D map remains an intermediate detector-response proxy,
+  not the official waveform-level selected-event PDF. DAQ trigger, waveform
+  S1 timing, SS/data-analysis cuts, official FV, Skin/OD, live-time migration,
+  joint detector-systematic covariance, backgrounds, and profile likelihood
+  are not complete.
 
 ## Contents
 
@@ -43,13 +66,14 @@ agreement with the rounded published mean efficiency.
 The latest artifact-level selection bridge and weighted-MC diagnostic are
 documented in
 [`LZ_2026_ENERGY_RESOLVED_SELECTION_MC_AND_BLACK_TAIL_AUDIT.md`](lz_2026_extended_nr/LZ_2026_ENERGY_RESOLVED_SELECTION_MC_AND_BLACK_TAIL_AUDIT.md).
-The 5-keV black-support comparison passes the 1% accepted-rate and 1% mean-map
-TV point-estimate gates using three independent seeds per grid; the 0.5-keV
-high-tail check also passes those point-estimate gates. These are numerical
-grid checks for the current NEST proxy, not validation of the complete LZ
-selection response. The report explicitly retains the distinction between
-NEST's approximate S1 coincidence/S2 pulse threshold and the official DAQ,
-SS/data-analysis, FV, and veto selections.
+The restricted 5-keV black-support comparison passes the 1% accepted-rate
+and 1% mean-map TV point-estimate gates using three independent seeds per
+grid; the 0.5-keV check is restricted to the high-energy tail. A separate
+independent full-range 1/5-keV comparison fails the 1% 2D-TV gate, so 1 keV
+remains the global reference grid. These are numerical checks for the current
+NEST proxy, not validation of the complete LZ selection response. The report
+retains the distinction between NEST's approximate S1 coincidence/S2 pulse
+threshold and the official DAQ, SS/data-analysis, FV, and veto selections.
 
 The event-level pilot uses the Table S5 NR mean-yield vector with the public LZ WS2024 detector class and compares its tuned NR width vector with generic NEST defaults. Its first paired 248-keV run is a one-energy, one-position sanity check, not a full reproduction of the published NR band. The paper's Fig. 2 band is constructed from flat-in-energy NR spectra and evaluated at fixed S1c. The historical flat-spectrum pilot tests both the 5.4–269.9 keV analysis-window prior and approximately 0.1–330 keV AmBe range at the candidate position, but used hybrid Table-S5/WS2024 inputs and is superseded. The primary public candidate is now NEST commit 541b643's `SetEFT2024Configuration()`; full-S1c NR and ER bands plus conditional 2D PDFs are documented in `LZ_2026_NR_ER_FULL_RESPONSE_CANDIDATE_REPORT.md`. The uniform active-TPC position distribution remains a proxy, not the actual D-D/AmBe calibration-source distribution.
 
@@ -448,15 +472,17 @@ The ten-independent-seed EFT2024 paired S1 ensemble generated 4.7 million
 paired events (ten disjoint 470,000-event productions) and closed all 16
 benchmark/nuclear/stage ensemble summaries plus 160 per-seed summaries.
 For the WS-ROI maps, the ten-seed ensemble-mean Parametric/Full TV is
-0.648--0.938%, while the mean per-seed mode TV is 1.753--2.900% and the
-within-mode pairwise seed TV is 1.884--3.003%. These quantities are
-descriptive and are not confidence intervals or an equivalence test.
+0.648--0.943%, while the mean per-seed mode TV is 1.753--2.900% and the
+within-mode pairwise seed TV is 1.884--3.003%. These point estimates are
+descriptive; the paired bootstrap and randomization audit below supplies
+additional seed-level uncertainty diagnostics, not a formal equivalence test.
 
-The black 360-keV benchmark remains sensitive: its combined ten-seed
-WS-ROI mean-map TV is 0.938%, but the seven newly added seeds alone give
-1.124%, so the combined point estimate does not establish a robust
-sub-1% equivalence result. The black WS-ROI integrated rate changes by
-about -0.59% between Full and Parametric modes.
+The black 360-keV benchmark remains sensitive: the current ten-seed
+WS-ROI mean-map TV is 0.943% (GCN) and 0.932% (JJ55). The leave-one-seed-out
+ranges are 0.955--1.011% (GCN) and 0.942--0.998% (JJ55), so the point estimate
+below 1% does not establish a robust sub-1% equivalence result. The black
+WS-ROI integrated rate changes by about -0.59% between Full and Parametric
+modes.
 
 The ten-seed observable-binning audit contains 48 ensemble rows and 480
 per-seed rows. It exactly aggregates the same maps without interpolation
@@ -472,15 +498,23 @@ See Section 15.8 of the linked selection audit and the
 
 - Independent-seed production: [run 43750948249](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43750948249), artifact 14176882910.
 - Observable-binning audit: [run 43754946092](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43754946092), artifact 14177248273.
-- No bootstrap confidence interval for the ensemble-map TV is included; these results do not establish mode equivalence or validate the official waveform-level LZ reconstruction.
+- The paired seed-cluster bootstrap, leave-one-seed-out ranges, and exact
+  randomization results are now archived in the
+  [paired S1 bootstrap audit](lz_2026_extended_nr/LZ_2026_PAIRED_S1_ENSEMBLE_BOOTSTRAP_AUDIT_2026-11-16.md).
+  Its percentile and basic intervals are method-sensitive diagnostics for a
+  non-smooth TV statistic with only ten independent clusters; neither is a
+  formal equivalence interval. These results do not validate the official
+  waveform-level LZ reconstruction.
 
 Implementation:
 - cpp/lz_2026_nr_paired_s1_mode_2d_response.cc — paired Parametric/Full S1 and common Full S2 generation.
 - fold_lz_2026_paired_s1_mode_2d_response.py — exact event-weighted 2D signal maps.
 - audit_lz_2026_paired_s1_2d_sampling_noise.py — pooled-TV closure, marginal TV, and within-stream split-half stability.
 - aggregate_lz_2026_paired_s1_2d_independent_seeds.py — ten-seed ensemble maps, per-seed summaries, rate closure, and seed-spread diagnostics.
+- paired_s1_ensemble_tv_bootstrap.py — paired seed-cluster bootstrap, leave-one-seed-out checks, exact paired randomization, and archive-closure validation.
 - audit_lz_2026_paired_s1_2d_binning_stability.py and .github/workflows/lz-2026-paired-s1-binning-stability.yml — 10-seed exact 10/20/40-phd by 0.02/0.04/0.08-dex rebin audit (48 ensemble and 480 per-seed rows).
 - tests/test_lz_2026_paired_s1_mode_2d_response.py and tests/test_lz_2026_paired_s1_2d_sampling_noise.py — fold and diagnostic tests.
+- tests/test_paired_s1_ensemble_tv_bootstrap.py — bootstrap, exact-randomization, and closure regression tests.
 - .github/workflows/lz-2026-paired-s1-mode-2d-response.yml — pinned-NEST build, response production, fold, validation, and artifact upload.
 
 The calculation passed in [run 43717240547](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43717240547), artifact 14162588482, ZIP SHA-256
