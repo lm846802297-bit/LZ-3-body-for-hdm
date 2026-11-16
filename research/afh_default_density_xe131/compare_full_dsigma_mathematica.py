@@ -32,6 +32,15 @@ def rel(a: float, b: float) -> float:
     return abs(a - b) / max(abs(b), 1e-300)
 
 
+def portable_path(path: Path) -> str:
+    """Avoid machine-specific absolute paths in committed or uploaded metadata."""
+    resolved = path.resolve()
+    try:
+        return resolved.relative_to(REPO.resolve()).as_posix()
+    except ValueError:
+        return path.name
+
+
 def conversion_identity_residual(
     converted_cm2_per_keV: float, dsigma_GeVminus3: float, opened: bool
 ) -> float:
@@ -239,7 +248,8 @@ def main() -> None:
         "W2_mappings": sorted(set(m.W2_mapping.astype(str))),
         "factor4_convention": "R_A_phys=4*C0*R_A_AFH_package; per-nucleon gVN remains in Eq. (6) prefactor",
         "width_assumption": "conditional Dirac, real scalar, pure scalar g2, chi2 -> chi1 s only",
-        "comparison_csv": str(args.out_csv), "mathematica_csv": str(args.mathematica_csv),
+        "comparison_csv": portable_path(args.out_csv), "mathematica_csv": portable_path(args.mathematica_csv),
+        "path_convention": "Repository paths are repository-relative; paths outside the repository are stored as portable basenames.",
     }
     args.metadata.parent.mkdir(parents=True, exist_ok=True)
     args.metadata.write_text(json.dumps(metadata, indent=2)+"\n", encoding="utf-8")
