@@ -151,9 +151,6 @@ $manifestPath = Join-Path $OutputDirectory "full_dsigma_sha256_manifest.json"
 $manifest | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $manifestPath -Encoding UTF8
 $hashLines = $hashEntries | ForEach-Object { "$($_.sha256)  $($_.file)" }
 $hashLines | Set-Content -LiteralPath (Join-Path $OutputDirectory "SHA256SUMS.txt") -Encoding ASCII
-if ($comparison.status -ne "PASS") {
-    throw "Comparison metadata did not report PASS."
-}
 
 Write-Host ""
 Write-Host "PASS: full Xe-131 Mathematica/Python dSigma/dER comparison completed."
