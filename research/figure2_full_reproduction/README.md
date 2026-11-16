@@ -266,7 +266,7 @@ This milestone remains a fixed-speed, single-isotope diagnostic with the A*u mas
 
 ## AFH Xe-131 native response validation
 
-The independent Wolfram 14.0.0 native Mathematica/Python 2401-point response comparison is archived at [NATIVE_MATHEMATICA_AUDIT.md](../afh_default_density_xe131/output/native_audit/NATIVE_MATHEMATICA_AUDIT.md). This validates the Xe-131 AFH response layer only; it does not validate the full Eq. (6) continuous recoil integral, the seven-isotope AFH continuous spectrum, or an LZ detector likelihood.
+The independent Wolfram 14.0.0 native Mathematica/Python 2401-point response comparison is archived at [NATIVE_MATHEMATICA_AUDIT.md](../afh_default_density_xe131/output/native_audit/NATIVE_MATHEMATICA_AUDIT.md). This validates the Xe-131 AFH response layer only; it does not validate the full Eq. (6) differential-cross-section integral. The separate AFH-7/Hybrid-9 seven-isotope 84-point full-range grid-sampled spectra and their quadrature audit are archived in `research/afh_default_density_natural_xenon_halo/`; they do not constitute AFH-9 or an LZ detector likelihood.
 
 ## P1-PhaseSpace numerical convergence audit (2026-11-14)
 
@@ -293,5 +293,5 @@ python -m unittest discover -s research/figure2_full_reproduction/tests -p 'test
 
 The runner writes mapping, angular, threshold-neighborhood, raw-\(d\Phi_3\) prefactor, historical-800-km/s, and off-shell near-pole CSVs, plus metadata and SHA-256 outputs below \`research/figure2_full_reproduction/results/phase_space_convergence_2026-11-14/\`. The P1 GitHub Actions workflow uploads a short-lived reproduction artifact and compares the fresh CSV tables against the committed archive.
 
-The audit covers four fixed-speed benchmarks, five \(v_{\min}\)-offset checks, the historical 800 km/s mass-convention anchor, and an off-shell near-pole scan at \(E_R=267\) keV and \(v=776\) km/s. The latter compares zero-width, constant pole-width and diagnostic running-width prescriptions for \(g_2=0.1,1\), while keeping the \(\chi_2\) pole above \(W_{\max}\). The sine-squared map provides a second endpoint-focused quadrature check. This is still not a full continuous recoil-grid convergence proof, a complete halo fold, or a detector likelihood. The nine-test module reuses the existing Dirac spin trace and is not an independent second amplitude calculation.
+The audit covers four fixed-speed benchmarks, five v_min-offset checks, the historical 800 km/s mass-convention anchor, and an off-shell near-pole scan at E_R=267 keV and v=776 km/s. The latter compares zero-width, constant pole-width and diagnostic running-width prescriptions for g2=0.1,1, while keeping the chi2 pole above Wmax. The sine-squared map provides a second endpoint-focused quadrature check. This P1 audit is not a full continuous-grid convergence proof for GCN/JJ55 or a full Mathematica/Python cross-section validation; the separate AFH-7/Hybrid-9 84-point grid has its own high-order convergence audit. It is not a complete halo fold for all nuclear models or a detector likelihood. The nine-test module reuses the existing Dirac spin trace and is not an independent second amplitude calculation.
 
