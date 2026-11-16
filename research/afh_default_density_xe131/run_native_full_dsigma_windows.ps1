@@ -13,6 +13,15 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+$Benchmark = $Benchmark.ToLowerInvariant()
+$allowedBenchmarks = @("all", "red_ms200_dm1", "green_ms300_dm1", "black_ms360_dm1", "blue_ms300_dm10")
+if ($allowedBenchmarks -notcontains $Benchmark) {
+    throw "Unknown benchmark: $Benchmark"
+}
+if ($NW -lt 1 -or $NZ -lt 1 -or $NPhi -lt 1 -or $RelativeTolerance -le 0 -or $ResponseTolerance -le 0) {
+    throw "Quadrature orders and comparison tolerances must be positive."
+}
+
 if ($RequireFullGrid -and $Benchmark -ne "all") {
     throw "RequireFullGrid needs -Benchmark all. For a single-benchmark pilot, pass -RequireFullGrid `$false."
 }
