@@ -12,7 +12,7 @@ This directory stores generated response tables, corrected cross sections, valid
 
 ## Full Eq. (6) differential-cross-section status (2026-11-16)
 
-- The Python-only full Xe-131 fixed-speed grid runner has been executed and its CSV, metadata, and high-order anchors are archived as GitHub Actions artifact 14112736343. It covers 652 rows (500 open, 152 closed) and 16 high-order anchors; maximum I6 relative difference is 1.66367e-11, AFH factor-four mapping residual is 3.55679e-16, and physical/no-factor-four ratio residual is zero. This confirms the factor-four transfer within the Python implementation.
+- The Python-only full Xe-131 fixed-speed (v=800 km/s) grid runner, under the conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions, has been executed and its CSV, metadata, and high-order anchors are archived as GitHub Actions artifact 14112736343. It covers 652 rows (500 open, 152 closed) and 16 high-order anchors; maximum I6 relative difference is 1.66367e-11, AFH factor-four mapping residual is 3.55679e-16, and physical/no-factor-four ratio residual is zero. This confirms the factor-four transfer within the Python implementation.
 - The native Wolfram 652-row full-grid run and independent pointwise Python comparator remain **pending**. The code-level review is complete, but no native full-grid CSV, comparison JSON, or SHA-256 manifest is yet archived. Do not report a Mathematica/Python full-dsigma cross-code PASS; the Python-only PASS above does not replace it.
 - The 2401-node native response-level PASS and the historical I6 mapping audit are separate validation layers; neither substitutes for the full Eq. (6) cross-code comparison.
 
