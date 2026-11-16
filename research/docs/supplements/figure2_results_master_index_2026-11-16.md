@@ -1,6 +1,6 @@
 # Figure 2 and natural-xenon results master index
 
-**Current source:** `main` at merge commit `15eb3a24e5295868ca208166a94c078fbc1747a7` (PR #45; 201 commits preserved)  
+**Source integration:** PR #45 merged into `main` via merge commit `15eb3a24e5295868ca208166a94c078fbc1747a7` (201 research/audit commits preserved)  
 **Updated:** 2026-11-16  
 **Coverage:** 13 result groups; 92 file entries with SHA-256 and byte sizes.
 
