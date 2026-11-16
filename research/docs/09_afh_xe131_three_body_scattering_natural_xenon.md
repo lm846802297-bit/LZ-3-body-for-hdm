@@ -1755,7 +1755,7 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 
 完整复现命令、输入质量方案、响应插值和限制分别记录在附录 F.7、固定速度曲线结果记录及 pointwise benchmark local-validation record 中。
 
-### 12.6 科学状态表（P0–P2，2026-11-13）
+### 12.6 科学状态表（P0–P2，2026-11-16）
 
 状态定义：**已验证**表示公式、程序与归档数值在明确适用范围内闭合；**条件性验证**表示核心实现和代表性测试通过，但仍受参数覆盖、独立推导或物理假设限制；**未完成**表示所需计算或物理输入尚不存在。
 
@@ -1763,22 +1763,23 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 |---|---|---|---|
 | F1 精确空间动量、四动量转移与 \(t\) | 已验证 | 核质量壳关系、28 个 AFH 样本 q 审计、exact/NR 对照 | NR 仅为小反冲敏感性对照 |
 | F2 \(W_{\min}^2,W_{\max}^2\) 与相空间开闭 | 条件性验证 | limits、wmax_squared、开闭区间和阈值回归 | 尚未对更宽质量—速度区域做独立扫描 |
-| F3 三体相空间变量与 \(I_6\) | 条件性验证（代表点和阈值邻域收敛通过） | 独立 \(d\Phi_3\) 推导、三种变量映射、四组 fixed-speed benchmark、五个阈值邻域速度点、角积分阶数与 raw-\(d\Phi_3\) 前因子对照；六项回归测试通过 | 近传播子极点、不同宽度处方系统比较、完整连续反冲网格与 halo fold 仍需验证 |
+| F3 三体相空间变量与 \(I_6\) | 部分验证（按计算链分层） | AFH-7/Hybrid-9 84 点 threshold-\(u^2\) 网格；基准谱到 \(24\times8\times8\times4\) 高阶谱的最大差异 \(6.47\times10^{-6}\) | GCN/JJ55 仍为 legacy linear-\(W^2\)、\(8\times8\times4\)，最大 kernel-order difference \(2.18895\times10^{-4}\)；近极点宽度处方系统比较与跨模型匹配重算仍开放 |
 | F4 两张辐射图与 Dirac trace | 条件性验证 | before/after/干涉分解、显式自旋求和、壳条件与四动量闭合 | 目前是代表性测试点，不是全参数扫描 |
 | F5 单同位素固定速度 Eq. (6) | 条件性验证 | 四 benchmark 的 AFH/GCN/JJ55 响应替换与截面重构 | 共用既有 \(I_6\)，并非 640 个独立三体积分重算 |
-| F6 AFH 响应与因子 4 归一化 | 已验证（限定 Xe-131 response-level） | 原始 \(A^2/4\)、物理 \(A^2\)；2401 点 mpmath 与原生 Mathematica/Python 比较通过；最大相对差异 \(3.59\times10^{-9}\) | 完整 AFH 天然氙连续谱仍缺 Xe-124/Xe-126 输入和完整同位素响应网格 |
+| F6 AFH 响应与因子 4 归一化 | 已验证（限定范围） | Xe-131 2401 点 mpmath/原生 Mathematica-Python response-level 对照通过，最大相对差异 \(3.59\times10^{-9}\)；七同位素 AFH response grid 16,807 行已提交；因子 4 只计一次 | AFH-7 覆盖天然氙原子丰度 0.998158；Xe-124/Xe-126 仍缺官方 default matrices |
 | F7 同位素质量、丰度与 \(N_T\) | 已验证 | 九同位素质量—丰度表、精确加权平均质量和每 kg 靶核数 | 电子结合能忽略；AFH 响应可用同位素仅七种 |
 | F8 三体 \(v_{\min,A}\) | 已验证 | 28/28 逐同位素阈值复算；最大速度差 \(4.35\times10^{-10}\) km/s | 适用范围为当前 benchmark 与输入质量约定 |
 | F9 实验室系速度 PDF | 已验证 | untruncated MB 与 truncated SHM 数值积分归一化 | 物理预测仍依赖所选 halo 参数 |
-| F10 天然氙 \(dR/dE_R\) | 条件性验证 | AFH selected-point；GCN/JJ55 连续谱及速度积分收敛 | 完整 AFH 连续谱和 Xe-124/Xe-126 响应未完成 |
+| F10 天然氙 \(dR/dE_R\) | 已验证（限 AFH-7/Hybrid-9 84 点网格） | AFH-7/Hybrid-9 四 benchmark、84 点、1,344 行 baseline spectra；GCN/JJ55 亦有四 benchmark 84 点谱 | GCN/JJ55 使用不同的 legacy linear-\(W^2\) mapping，需统一 threshold-\(u^2\) 后重算；AFH-9 输入仍缺失 |
 | F11 LZ 效率加权事件数 | 条件性验证 | 一维 Fig. S2 efficiency、2.84 tonne-year、rate-level 折叠 | 二维 NEST、能量分辨、背景与 profile likelihood 未完成 |
 | F12 \(\chi_2\to\chi_1s\) pole width | 条件性验证 | 条件性 Dirac 纯标量单通道宽度公式和数值测试 | 非完整自能；未纳入所有可能开放衰变道 |
 | 三体相空间 Jacobian / \(256\pi^3\) 独立推导 | 已验证 | 从单粒子不变测度独立重建 \(d\Phi_3\)，并逐项核对 \(t\leftrightarrow E_R\)、\(z,\phi_*\)、通量与核电荷流 | 适用于未极化靶、相干且仅保留 \(J_A^0\) 的近似；完整数值积分收敛另行检查 |
 | AFH 原生 Mathematica 全网格运行 | 已完成 PASS | Wolfram 14.0.0 Windows；2401 点；q 网格完全一致；四种响应量比较全部通过；最大相对差异 \(3.59\times10^{-9}\)；SHA-256 manifest 已归档 | 适用范围仅为 Xe-131 AFH response-level；不替代三体积分、天然氙连续谱或 LZ likelihood 验证 |
-| AFH 完整天然氙连续谱 | 未完成 | 七种可用同位素 selected-point rate 已完成 | 需要七同位素完整响应网格；Xe-124/Xe-126 还缺 AFH density matrix |
+| AFH-7/Hybrid-9 84 点 full-range grid | PASS_WITH_NOTES | 16,807 行七同位素响应网格；1,344 行 baseline spectra；高阶摘要最大 baseline-to-final spectrum difference \(6.47\times10^{-6}\) | 高阶 1,344 行 ZIP 仍为外部 checksum-only；AFH-7 非 AFH-9，Xe-124/Xe-126 尚缺官方矩阵 |
+| GCN/JJ55 84 点天然氙谱 | PASS_WITH_NOTES | 四 benchmark 的 84 点谱和 metadata 已归档；速度求积最大差异 \(1.60401\times10^{-6}\) | production 使用 legacy linear-\(W^2\)、\(8\times8\times4\)；最大 kernel-order difference \(2.18895\times10^{-4}\)；threshold-\(u^2\) 匹配重算待完成 |
 | 完整 LZ detector-level recast | 未完成 | GCN/JJ55 一维效率加权 rate-level yields | 需要二维信号 PDF、NEST nuisance、背景和 profile likelihood |
 
-**P0 判定：** 精确空间动量 Python 复算、60 位 mpmath 全网格检查、Wolfram 14.0.0 原生 Mathematica/Python 2401 点比较和归档输出核验均已完成。**P1 判定：** F1–F12 的追溯索引和重点一致性检查已完成；F3 除解析相空间 Jacobian 与 \(256\pi^3\) 已独立验证外，还完成四组 fixed-speed benchmark、五个阈值邻域速度点、三种变量映射、代表点角积分和 raw-\(d\Phi_3\) 数值复核；近极点及完整连续反冲网格收敛仍未完成。**P2 判定：** 完整 AFH 天然氙连续谱和完整 LZ likelihood 仍未完成，不能因 Xe-131 response-level 对照通过而升级状态。
+**P0 判定：** 精确空间动量 Python 复算、60 位 mpmath 全网格检查、Wolfram 14.0.0 原生 Mathematica/Python 2401 点 response-level 比较和归档输出核验均已完成。**P1 判定：** AFH-7/Hybrid-9 84 点网格与高阶摘要已通过当前 \(10^{-5}\) 验收；GCN/JJ55 仍需统一 threshold-\(u^2\) 后重算，近极点宽度处方系统比较仍开放，完整 Eq. (6) Mathematica–Python 截面对照仍未完成。**P2 判定：** AFH-9 缺失同位素输入和完整 LZ likelihood 仍未完成；AFH-7 grid 或 Xe-131 response-level PASS 均不能替代这些任务。
 
 ## 13. 公式—符号—程序—结果交叉引用
 
@@ -1828,7 +1829,9 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 
 为避免主报告、附录和结果目录分别维护不同的 benchmark 口径，当前归档另设三份互相对应的维护记录：
 
-- [Figure 2 数值结果总索引](supplements/figure2_results_master_index_2026-11-13.md)：benchmark、输入、参数、输出文件与 SHA-256；机器可读清单见 [JSON manifest](supplements/figure2_results_master_index_2026-11-13.json)。
+- [当前 Figure 2 数值结果总索引](supplements/figure2_results_master_index_2026-11-16.md)：12 组结果、87 个文件条目的当前 SHA-256 provenance；旧版 2026-11-13 索引保留为历史快照。
+- [当前机器可读结果清单](supplements/figure2_results_master_index_2026-11-16.json)：记录当前源提交、参数、路径、SHA-256 与外部归档边界。
+- [Phase 1 科学内容审查](supplements/scientific_content_audit_2026-11-16.md)：AFH-7 全网格、旧新积分方案差异、GCN/JJ55 匹配精度缺口及剩余验证边界。
 - [物理公式交叉审查](supplements/figure2_physics_formula_audit_2026-11-13.md)：从原始拉格朗日量、两张辐射图、Dirac trace、三体相空间、\(256\pi^3\)、AFH factor 4、三体 \(v_{\min}\) 到天然氙速率逐项对照主报告、附录和代码。
 - [科学结果状态表](supplements/figure2_scientific_status_2026-11-13.md)：将每项结果明确标记为已验证、部分验证、待补输入或尚未完成，并注明适用范围和剩余限制。
 
