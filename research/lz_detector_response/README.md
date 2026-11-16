@@ -516,6 +516,7 @@ Implementation:
 - tests/test_lz_2026_paired_s1_mode_2d_response.py and tests/test_lz_2026_paired_s1_2d_sampling_noise.py — fold and diagnostic tests.
 - tests/test_paired_s1_ensemble_tv_bootstrap.py — bootstrap, exact-randomization, and closure regression tests.
 - .github/workflows/lz-2026-paired-s1-mode-2d-response.yml — pinned-NEST build, response production, fold, validation, and artifact upload.
+- .github/workflows/lz-2026-paired-s1-bootstrap.yml — runs the five bootstrap regression tests, 100,000 paired seed-cluster replicates, exact randomization, archive-closure checks, and output archival.
 
 The calculation passed in [run 43717240547](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43717240547), artifact 14162588482, ZIP SHA-256
 6002e6ea4c345c13aa8c3e056647bb317bb41e3d6ff670dabf23c0bb343bee9b.
