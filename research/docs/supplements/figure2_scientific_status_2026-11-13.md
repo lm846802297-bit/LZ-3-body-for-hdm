@@ -17,7 +17,7 @@ This update supersedes the 2026-11-14 snapshot rows below for the AFH-7 full-gri
 
 The Python-only full fixed-speed result and the native Mathematica/Python 652-row cross-code result are separate calculation layers. The latter now verifies pointwise agreement of the complete fixed-speed Xe-131 Eq. (6) implementation after the per-code unit-conversion identities were separated from the converted-rate cross-code comparison. Neither result is a natural-xenon halo fold or an official LZ detector likelihood. The historical Section 2–5 tables below retain their original dates and should be read as snapshots where they differ from this current-status table.
 
-The 2026-11-16 source-of-truth index is [13 groups / 92 files](figure2_results_master_index_2026-11-16.md), including the native full Eq. (6) Mathematica/Python cross-code archive. The full audit is [scientific_content_audit_2026-11-16.md](scientific_content_audit_2026-11-16.md).
+The 2026-11-16 source-of-truth index is [13 groups / 98 files](figure2_results_master_index_2026-11-16.md), including the native full Eq. (6) Mathematica/Python cross-code archive. The full audit is [scientific_content_audit_2026-11-16.md](scientific_content_audit_2026-11-16.md).
 
 日期：2026-11-16（以下原始表保留 2026-11-14 状态快照；本页以新增 2026-11-16 更新为当前状态）
 本表按“当前可证明的范围”给状态，不把某个局部 benchmark 的通过推广成整个模型或整条连续谱均已验证。
@@ -41,11 +41,11 @@ The 2026-11-16 source-of-truth index is [13 groups / 92 files](figure2_results_m
 | \(q^\mu,t,Q\) 运动学关系 | **已验证** | 核质量壳解析推导；`rate_kinematics.py` 与 `joint_xe131.py` 使用 exact spatial \(Q\) | fixed-speed Xe-131 与 natural-xenon 使用不同且已记录的核质量输入方案 |
 | \(W_{\min},W_{\max}\) 与三体相空间开放条件 | **已验证** | 主报告 §2.4、附录 A.2；`eq6_kernel.limits` 与 `rate_kinematics.wmax_squared` 一致 | 不是对任意 UV 模型和任意传播子方案的验证 |
 | \(W^2,z,\phi_*\) 相空间 Jacobian 与 \(256\pi^3\) | **已验证（解析层）** | 正文 §2.5.1–2.5.8、附录 A.4.1–A.4.2；独立分解 \(d\Phi_3\)、flux、azimuthal average；\([I_6]={\rm GeV}^2\) 维度检查 | 解析结论限定于未极化相干靶和 leading \(J_A^0\) 近似；数值收敛另列如下 |
-| \(I_6\) 数值求积收敛（P1-PhaseSpace） | **部分验证（按计算链分层）** | AFH-7/Hybrid-9 已有 84 点全范围 threshold-\(u^2\) 谱；基准到最终 \(24\times8\times8\times4\) 谱差异最大 \(6.47\times10^{-6}\)。GCN/JJ55 仍使用 linear-\(W^2\) \(8\times8\times4\)，\(16\times16\times8\) 检查最大 kernel 差异 \(2.18895\times10^{-4}\) | GCN/JJ55 需统一 threshold-\(u^2\) 后重算；近传播子极点宽度处方系统比较仍开放；完整 Mathematica–Python 截面对照未完成 |
+| \(I_6\) 数值求积收敛（P1-PhaseSpace） | **部分验证（按计算链分层）** | AFH-7/Hybrid-9 已有 84 点全范围 threshold-\(u^2\) 谱；基准到最终 \(24\times8\times8\times4\) 谱差异最大 \(6.47\times10^{-6}\)。GCN/JJ55 仍使用 linear-\(W^2\) \(8\times8\times4\)，\(16\times16\times8\) 检查最大 kernel 差异 \(2.18895\times10^{-4}\) | Native Mathematica/Python 完整 Eq. (6) 截面对照已在固定速度 Xe-131 范围内单独通过；GCN/JJ55 匹配求积和近传播子极点宽度处方系统比较仍开放 |
 | 三体 \(v_{\min}\) 闭式公式 | **已验证** | 从 \(W_{\max}=m_{\chi_1}+m_s\) 独立推导；64 组输入与独立求根最大 \(|\Delta\beta|=3.89\times10^{-13}\) | 仍需对新增质量区间和完整连续谱网格做专门数值检查 |
 | 450 keV pointwise \(L_{00}\) benchmark | **已验证（单点数值范围）** | \(48\times40\times24\) 求积、run manifest、局部验证记录、SHA-256 manifest | 单点 kernel 结果，不代表整条 \(d\sigma/dE_R\)、halo-fold 或 LZ 事件数 |
 | 固定速度 Xe-131 \(d\sigma/dE_R\) 曲线 | **部分验证** | 105 个内部能量点、GCN/JJ55、metadata 与 SHA-256 校验 | 与 450 keV pointwise \(L_{00}\) 不同；端点外推/积分和 halo-fold 不包含在该曲线内 |
-| 完整 (d\sigma_A/dE_R) Mathematica/Python 端到端对照 | **尚未完成** | 新增 Wolfram Language runner、Python 独立重算器和主报告附录 H；固定 AFH native 2401 点响应作为输入 | Wolfram 原生 (I_6) 尚未运行；历史四 benchmark CSV 复用归档 (I_6)，不能充当 Mathematica 独立对照；还需解释 green benchmark 200 keV 归档值与当前 Python 预检的 (4.11\times10^{-5}) 差异 |
+| 完整 (d\sigma_A/dE_R) Mathematica/Python 端到端对照 | **PASS（数值比较器）；PASS_WITH_NOTES（科学范围）** | Native Wolfram 14.2.0 与独立 Python：652 行（500 open、152 closed）、4 组 benchmark、16×16×8；max I6/dσ = 1.33872e-12，converted dσ = 1.33857e-12，AFH response = 3.36e-16，factor-four mapping residual = 4.303e-16；comparison JSON PASS | 固定速度 Xe-131；两端使用同一份原生 AFH 响应表；条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width；不代表天然氙 halo fold 或官方 LZ likelihood |
 
 ## 3. AFH 核响应与核靶输入
 
@@ -53,7 +53,7 @@ The 2026-11-16 source-of-truth index is [13 groups / 92 files](figure2_results_m
 |---|---|---|---|
 | AFH v6.0 Xe-131 67 项密度矩阵提取 | **已验证（source + translation）** | 官方 v6.0 来源哈希、67 项逐项解析、CSV 与 source translation 对照；`v6/dmformfactor-V6.m` 已提交；七同位素矩阵和 16,807 行响应网格另已归档 | 原始 AFH package ZIP 仍为 checksum-only provenance；Xe-124/Xe-126 仍无 AFH default matrix |
 | AFH Xe-131 2401 点响应 | **已验证（限定 response-level）** | 0–0.6 GeV、2401 节点；60 位 mpmath 与 Wolfram 14.0.0 原生 Mathematica/Python 逐点比较；四种响应量全部通过，最大相对差异 \(3.59087\times10^{-9}\) | 仅验证 Xe-131 AFH response-level，不代表三体 kernel、天然氙连续谱或 LZ likelihood |
-| AFH factor-of-four 物理归一化 | **历史快照：response-level PASS** | raw (A^2/4)；setter (c_{\rm set}=2g_{VN})；physical (R_A(0)=A^2)；原生 2401 点响应表与 Python 对照通过 | 当前状态已在顶部 2026-11-16 更新：Python-only fixed-speed full Eq. (6) factor-four ledger 也已 PASS；独立 Mathematica/Python 完整截面对照仍待完成 |
+| AFH factor-of-four 物理归一化 | **历史快照：response-level PASS** | raw (A^2/4)；setter (c_{\rm set}=2g_{VN})；physical (R_A(0)=A^2)；原生 2401 点响应表与 Python 对照通过 | 当前状态已在顶部 2026-11-16 更新：Python-only fixed-speed full Eq. (6) factor-four ledger 与原生 Mathematica/Python 652 行完整截面对照均已 PASS；适用范围仍限固定速度 Xe-131 和条件性宽度假设 |
 | AFH Xe-131 响应极小值 | **部分验证** | 固定文献 \(b_A\)、精确空间 \(q\)、AFH default 67 项矩阵，三个 Figure 2 范围内的主要极小值已提取 | 这些是核响应极小值，不自动等于完整截面或 halo 事件率极小值 |
 | AFH 七同位素响应 | **已验证（响应网格归档，限七同位素）** | 七种可用同位素；7×2401=16,807 个 direct finite-sum 响应节点及 source matrices 已提交；另保留 56 个 NIST/AME2020 selected-q mpmath 检查 | Xe-124/Xe-126 缺少官方 AFH default density matrix；AFH-7 不等于 AFH-9 |
 | Xe-124、Xe-126 AFH default 密度矩阵 | **AFH v6.0 default dispatch 未提供** | 官方源文件第 1555–1597 行只列出 128、129、130、131、132、134、136；124/126 进入通用回退；新增静态 dispatch 回归测试 | 需独立、可追溯的核结构密度矩阵；0.1842% 原子丰度不是事件率误差上界 |
@@ -75,7 +75,7 @@ The 2026-11-16 source-of-truth index is [13 groups / 92 files](figure2_results_m
 
 | 子任务 | 当前状态 | 已有证据 | 尚存边界 |
 |---|---|---|---|
-| Figure 2 结果总索引 | **已验证（2026-11-16 main）** | [当前机器可读总清单](figure2_results_master_index_2026-11-16.json)：12 组、87 个文件条目，含 SHA-256、大小、参数和用途 | 2026-11-13 的 9 组/60 文件清单保留为历史快照；外部高阶 ZIP 仍为 checksum-only |
+| Figure 2 结果总索引 | **已验证（PR #46 分支；待合并 main）** | [当前机器可读总清单](figure2_results_master_index_2026-11-16.json)：13 组、98 个顶层文件条目，含 SHA-256、大小、参数和用途 | 97 个组内引用对应 96 个唯一文件路径；另有 2 个未归组 manuscript 文件；外部高阶 ZIP 仍为 checksum-only |
 | AFH response sample SHA-256 | **已验证（当前 main 归档）** | 历史 28 点 sample digest 与 exact-q 归档仍可复现；完整 16,807 行七同位素 response grid 已提交并有 SHA-256 manifest；84 点 AFH-7/Hybrid-9 谱已归档 | 外部高阶 ZIP 未提交完整内容；不把 AFH-7 描述为 AFH-9 |
 | 原始论文 AFH response 公式 | **已修正** | `paper-source/main.tex` 改为 factor 4 physical mapping 和 exact spatial \(q\)；`paper-source/SHA256SUMS` 同步 | 合并后仍需在正式 Overleaf / PDF 构建中检查排版 |
 | 主报告—附录 A–H—代码公式索引 | **部分验证** | F1–F12 公式索引、主报告、附录 A–H、代码入口和结果路径已交叉检查 | 仍需按最终固定的 Dirac/Majorana 模型约定做一轮完整 UV 层复核 |
@@ -94,7 +94,7 @@ The 2026-11-16 source-of-truth index is [13 groups / 92 files](figure2_results_m
 - **P1 关闭条件：** 原始拉格朗日量、主报告、附录 A–G、代码和单位约定无未解释的符号冲突；Dirac/Majorana 与宽度模型的边界由物理输入明确固定。
 - **P2 关闭条件：** 每个科学结论都有状态、证据、输入缺口和适用范围；任何 selected-point、fixed-speed 或 rate-level 结果都不被表述为更高层的完整验证。
 
-当前 P0 总索引已更新为 main 上 12 组/87 文件；AFH-7 七同位素 response grid 和 84 点谱已归档，P1 已修正公式和 provenance 不一致；剩余开放项为 GCN/JJ55 threshold-\(u^2\) 匹配重算、近极点宽度处方系统比较、AFH-9 缺失同位素输入、完整 Mathematica–Python Eq. (6) 截面对照，以及官方 LZ detector likelihood。
+当前 PR #46 分支的 Figure 2 总索引为 13 组、98 个顶层文件条目；97 个组内引用对应 96 个唯一文件路径，另有 2 个未归组 manuscript 文件。AFH-7 七同位素 response grid 和 84 点谱已归档；原生 Mathematica/Python 完整 Xe-131 fixed-speed Eq. (6) 对照已 PASS。剩余开放项为 GCN/JJ55 threshold-\(u^2\) 匹配重算、近极点宽度处方系统比较、AFH-9 缺失同位素输入，以及官方 LZ detector likelihood。
 
 
 ## 8. 2026-11-14 comparator correction and final CI confirmation

@@ -154,7 +154,7 @@ The native Wolfram 14.2.0 run completed all four benchmarks on the full 163-ener
 | Physical/no-factor-four ratio | 0 | \(2\times10^{-12}\) |
 | Mathematica unit-conversion identity | \(3.34766\times10^{-16}\) | \(2\times10^{-12}\) |
 | Python unit-conversion identity | 0 | \(2\times10^{-12}\) |
-| Cross-code converted \(d\sigma_A/dE_R\) | \(1.33872\times10^{-12}\) | \(2\times10^{-7}\) |
+l=>l.replace("1.33872","1.33857")
 
 The original comparator incorrectly treated the cross-code difference between the converted rates as a pure unit-conversion identity and used mismatched AFH response tables. The corrected comparator uses the same fixed native Mathematica response table in both implementations, tests each code's own conversion identity independently at 2e-12, and compares the converted physical observable across codes at the same 2e-7 tolerance as the unconverted observable. No physics tolerance was relaxed.
 
@@ -165,14 +165,15 @@ The machine-readable result is `output/full_dsigma_mathematica/mathematica_pytho
 
 The PowerShell wrapper now supports a reduced benchmark/recoil selection.
 From the study directory on Windows, this command checks one benchmark at
-the four explicit anchor energies; phase-space openness is evaluated from the 800 km/s kinematics for this benchmark:
+the single explicitly requested recoil energy, 200 keV; phase-space openness
+is evaluated from the 800 km/s kinematics for this benchmark:
 
 ~~~powershell
 .\run_native_full_dsigma_windows.ps1 -OutputDirectory "$env:TEMP\lz-xe131-smoke" -Benchmark "green_ms300_dm1" -ERListKeV "200" -NW 8 -NZ 8 -NPhi 4 -RequireFullGrid:$false
 ~~~
 
-The WLS script deliberately appends the four explicit anchor energies even
-when ERListKeV is supplied. This smoke test checks Wolfram syntax, output
+The explicit ERListKeV argument is an exact recoil-grid override: no regular
+grid points or standard anchor energies are appended. This smoke test checks Wolfram syntax, output
 generation, the independent Python comparison, and the factor-four ledger;
 it is not a quadrature-convergence result. The full run uses the default
 652-row grid and \(16\times16\times8\) order.

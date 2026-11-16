@@ -268,10 +268,11 @@ be performed on Windows:
 .\run_native_full_dsigma_windows.ps1 -OutputDirectory "$env:TEMP\lz-xe131-smoke" -Benchmark "green_ms300_dm1" -ERListKeV "200" -NW 8 -NZ 8 -NPhi 4 -RequireFullGrid:$false
 ~~~
 
-This uses the four explicit anchor energies (101, 200, 267, 542 keV) for the
-selected benchmark. It validates code execution and cross-code agreement at
-the same low quadrature order, not numerical convergence. The normal default
-remains the complete 652-row grid at \(16\times16\times8\).
+The explicit -ERListKeV "200" argument is an exact recoil-grid override,
+so this command checks only 200 keV. It validates code execution and cross-code
+agreement at the same low quadrature order, not numerical convergence. To
+check the four explicit anchors, pass -ERListKeV "101,200,267,542".
+The normal default remains the complete 652-row grid at \(16\times16\times8\).
 
 ## AME2020/CODATA2022 nuclear-mass update
 
@@ -349,7 +350,7 @@ The native Wolfram runner `run_afh_eq6_full_dsigma.wls` reads the already archiv
 The completed full-grid output is archived in `output/full_dsigma_mathematica/`: 652 rows (500 open, 152 closed), Wolfram 14.2.0, four benchmarks, fixed 800 km/s, `threshold_u2`, pole width and 16×16×8 quadrature. Both implementations use the same fixed native AFH response input. The comparison JSON reports PASS: maximum I6, dσ and converted cross-section differences are (1.34\times10^{-12}); AFH interpolation is (3.36\times10^{-16}); Mathematica/Python unit-conversion identity residuals are (3.35\times10^{-16})/0; and the factor-four ratio residual is 0.
 
 On Windows, use `run_native_full_dsigma_windows.ps1` from the repository root after installing the requirements and ensuring `wolframscript` is on `PATH`. Mathematica and the independent Python integrator both use the same fixed native AFH response input; the source-translated Python AFH response remains a separate 2401-node audit. The wrapper checks the fixed 800 km/s / pole-width / threshold-\(u^2\) assumptions and quadrature metadata; it then runs the native integrator and Python comparator. After PASS it writes the native and comparison CSV/JSON files, `full_dsigma_sha256_manifest.json`, and `SHA256SUMS.txt`, including source/input hashes, the exact benchmark/recoil grid, and Wolfram/Python runtime versions.
-The wrapper's full provenance manifest is generated in its selected run-local output directory. The committed `output/full_dsigma_mathematica/SHA256SUMS.txt` is the compact archive checksum for the four committed CSV/JSON result files; CI verifies those committed hashes independently.
+The wrapper's full provenance manifest is generated in its selected run-local output directory. In the committed archive, `SHA256SUMS.txt` contains 14 repository-relative checksums for source/input files and the full-grid outputs; `green_high_order_SHA256SUMS.txt` separately covers the four Green high-order artifacts. CI verifies both checksum lists from the repository root.
 
 High-order anchors are a separate quadrature-convergence check. For a focused comparison, use a distinct output directory, one benchmark, 48x40x24, and `-RequireFullGrid $false`; the wrapper still compares every row in that subset. Do not infer quadrature convergence from cross-code agreement at one order.
 

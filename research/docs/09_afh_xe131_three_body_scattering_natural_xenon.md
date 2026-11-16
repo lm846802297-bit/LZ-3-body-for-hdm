@@ -1768,7 +1768,7 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 | F2 \(W_{\min}^2,W_{\max}^2\) 与相空间开闭 | 条件性验证 | limits、wmax_squared、开闭区间和阈值回归 | 尚未对更宽质量—速度区域做独立扫描 |
 | F3 三体相空间变量与 \(I_6\) | 部分验证（按计算链分层） | AFH-7/Hybrid-9 84 点 threshold-\(u^2\) 网格；基准谱到 \(24\times8\times8\times4\) 高阶谱的最大差异 \(6.47\times10^{-6}\) | GCN/JJ55 仍为 legacy linear-\(W^2\)、\(8\times8\times4\)，最大 kernel-order difference \(2.18895\times10^{-4}\)；近极点宽度处方系统比较与跨模型匹配重算仍开放 |
 | F4 两张辐射图与 Dirac trace | 条件性验证 | before/after/干涉分解、显式自旋求和、壳条件与四动量闭合 | 目前是代表性测试点，不是全参数扫描 |
-| F5 单同位素固定速度 Eq. (6) | **PASS：原生 Mathematica/Python full-grid cross-code** | 652 行（500 open、152 closed），四组 benchmark，v=800 km/s，16×16×8；max I6 1.33872e-12、dσ 1.33872e-12、converted dσ 1.33872e-12；per-code unit-conversion residuals 3.35e-16/0；SHA-256 归档在 `output/full_dsigma_mathematica/` | 条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width；不是天然氙 halo fold 或 detector likelihood；求积收敛仍需与 cross-code 一致性分开判断 |
+| F5 单同位素固定速度 Eq. (6) | **PASS：原生 Mathematica/Python full-grid cross-code** | 652 行（500 open、152 closed），四组 benchmark，v=800 km/s，16×16×8；max I6 1.33872e-12、dσ 1.33872e-12、converted dσ 1.33857e-12；per-code unit-conversion residuals 3.35e-16/0；SHA-256 归档在 `output/full_dsigma_mathematica/` | 条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width；不是天然氙 halo fold 或 detector likelihood；求积收敛仍需与 cross-code 一致性分开判断 |
 | F6 AFH 响应与因子 4 归一化 | **PASS_WITH_NOTES：response-level + full Eq. (6) cross-code** | Xe-131 2401 点 response-level 最大差异 3.59e-9；full Eq. (6) 652 行 factor-four mapping residual 4.30e-16、physical/no-factor-four ratio residual 0；Mathematica/Python conversion identities 3.35e-16/0 | 限定 Xe-131 fixed-speed 和条件性 pole-width；AFH-7 仍覆盖天然氙原子丰度 0.998158，Xe-124/Xe-126 缺官方 default matrices；不是 AFH-9 或 LZ likelihood |
 | F7 同位素质量、丰度与 \(N_T\) | 已验证 | 九同位素质量—丰度表、精确加权平均质量和每 kg 靶核数 | 电子结合能忽略；AFH 响应可用同位素仅七种 |
 | F8 三体 \(v_{\min,A}\) | 已验证 | 28/28 逐同位素阈值复算；最大速度差 \(4.35\times10^{-10}\) km/s | 适用范围为当前 benchmark 与输入质量约定 |
@@ -1832,7 +1832,7 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 
 为避免主报告、附录和结果目录分别维护不同的 benchmark 口径，当前归档另设三份互相对应的维护记录：
 
-- [当前 Figure 2 数值结果总索引](supplements/figure2_results_master_index_2026-11-16.md)：12 组结果、87 个文件条目的当前 SHA-256 provenance；旧版 2026-11-13 索引保留为历史快照。
+- [当前 Figure 2 数值结果总索引](supplements/figure2_results_master_index_2026-11-16.md)：13 组结果、98 个文件条目的当前 SHA-256 provenance；旧版 2026-11-13 索引保留为历史快照。
 - [当前机器可读结果清单](supplements/figure2_results_master_index_2026-11-16.json)：记录当前源提交、参数、路径、SHA-256 与外部归档边界。
 - [Phase 1 科学内容审查](supplements/scientific_content_audit_2026-11-16.md)：AFH-7 全网格、旧新积分方案差异、GCN/JJ55 匹配精度缺口及剩余验证边界。
 - [物理公式交叉审查](supplements/figure2_physics_formula_audit_2026-11-13.md)：从原始拉格朗日量、两张辐射图、Dirac trace、三体相空间、\(256\pi^3\)、AFH factor 4、三体 \(v_{\min}\) 到天然氙速率逐项对照主报告、附录和代码。
@@ -4783,7 +4783,7 @@ I_6^{\rm archived}=1.4336780722867665\times10^6\ {\rm GeV}^2.
 | AFH PCHIP response | \(3.36051\times10^{-16}\) | \(2\times10^{-10}\) |
 | Factor-four mapping | \(4.30300\times10^{-16}\) | \(2\times10^{-12}\) |
 | Mathematica / Python conversion identity | \(3.34766\times10^{-16}\) / 0 | \(2\times10^{-12}\) |
-| Converted cross-code \(d\sigma_A/dE_R\) | \(1.33872\times10^{-12}\) | \(2\times10^{-7}\) |
+l=>l.replace("1.33872","1.33857")
 
 原始 comparator 曾把两个代码输出的 converted-dσ 之间的差异误作单位转换恒等式误差。该差异包含 AFH PCHIP 源翻译的已接受差异，因此应作为同一物理观测量的 cross-code 比较，并使用 dσ 的 2e-7 容差。修正后，Mathematica 和 Python 各自的单位转换恒等式仍分别以 2e-12 单独验收；没有放宽物理量的 cross-code 精度。
 
