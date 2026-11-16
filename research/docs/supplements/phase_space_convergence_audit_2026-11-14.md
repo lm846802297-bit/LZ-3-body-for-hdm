@@ -320,3 +320,36 @@ The completed independent scan probes four \(\Delta m\) values just above the ki
 The final artifact shows that the endpoint-mapped running-width sequence is stable: for \(n_W=512\), the relative difference from the highest-order reference is at most \(3.5\times10^{-11}\) across the four selected mass gaps. The 1024/2048/4096 comparisons are also at the \(10^{-10}\) level or better. This replaces the preliminary 1024-order estimate from the earlier artifact; do not quote that preliminary estimate as the final convergence result.
 
 The near-pole scan remains a separate diagnostic artifact rather than a committed reference CSV. Its SHA-256 is recorded in the artifact's \`SHA256SUMS.txt\`; the artifact ZIP digest is recorded by GitHub Actions. It tests quadrature stability only and does not determine the physical \(\chi_2\) self-energy or make an off-shell pole into an on-shell state.
+
+## 12. 2026-11-16 full-grid update and remaining cross-model gap
+
+The “full continuous recoil grid remains open” statement in the 2026-11-14 conclusion is superseded for the **AFH-7/Hybrid-9 calculation path**. A separate AFH-7/Hybrid-9 runner now evaluates the AFH finite sum at exact isotope-specific spatial (q) and integrates the phase space with threshold-(u^2) on an 84-point recoil grid from 5 to 800 keV.
+
+Committed baseline and high-order summary:
+
+- Four benchmarks × four response scenarios × 84 recoil points = 1,344 baseline spectrum rows.
+- Baseline quadrature: 24 speed nodes and (6\times6\times3) internal threshold-(u^2) quadrature.
+- High-order final quadrature: (24\times8\times8\times4).
+- 1,726 kinematically open and 1,298 closed isotope/benchmark/recoil combinations.
+- Maximum baseline-to-final spectrum difference: (6.46772\times10^{-6}), below (10^{-5}).
+- Speed order 12→24 maximum difference: (6.63735\times10^{-6}); worst-32-point 24→48 refinement: (2.21749\times10^{-7}).
+- Independent Numba/Python reference on 12 points: (5.32907\times10^{-15}).
+
+The baseline spectrum, high-order audit, metadata and summary CSVs are committed under `research/afh_default_density_natural_xenon_halo/results/`. The full 1,344-row high-order ZIP is not committed; only its 736,245-byte size and SHA-256 `e55442d3ad4289dfd6c16e8e6cdb43d669561df074beddefcf87e8d1024f3471` are recorded.
+
+### 12.1 GCN/JJ55 remain on the legacy linear-(W^2) path
+
+The GCN/JJ55 84-point spectra in `research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/` still use the legacy linear-(W^2), (8\times8\times4) kernel. Across the four benchmark metadata files, the (16\times16\times8) spot-check reaches a maximum kernel-order difference of (2.18895\times10^{-4}); the maximum speed-quadrature difference is (1.60401\times10^{-6}).
+
+Thus the current AFH-7/Hybrid-9 and GCN/JJ55 full-range spectra are not matched in their phase-space mapping or integration error. The 12–19% GCN/JJ55 tail differences are much larger than the reported kernel difference, but the 0.66–1.16% Hybrid-9 shifts have less margin. Recompute GCN/JJ55 with threshold-(u^2), common speed nodes and a common (10^{-5}) acceptance target before precision cross-model comparisons or downstream rate-level tables are frozen.
+
+### 12.2 What remains open
+
+- Near-propagator-pole narrow-peak convergence and systematic comparison of pole-width, zero-width and running-width prescriptions remain open. The CI off-shell scan is a quadrature diagnostic, not a physical self-energy calculation.
+- The 84-point AFH-7 grid is a sampled full-range spectrum, not a 1-keV grid or an analytic continuum.
+- AFH-7 covers seven official AFH default-density isotopes; Xe-124/Xe-126 remain missing. Hybrid-9 is a labelled Helm fallback, not AFH-9.
+- GCN/JJ55 have not yet been rerun with the threshold-(u^2) mapping.
+- The full Mathematica–Python (d\sigma_A/dE_R) comparison remains separate and open.
+
+The 2026-11-16 fixed-speed, zero-width Xe-131 (I_6) mapping audit is another limited diagnostic. It does not replace the natural-xenon, pole-width, halo-folded comparison above.
+
