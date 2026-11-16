@@ -86,7 +86,7 @@ The public NEST `LZ_WS2024.hh` detector file explicitly describes WS2024/EFT2024
 The paper's public NR efficiency curve remains a valuable independent validation target, but it is not a substitute for the conditional two-dimensional response.
 
 ## 4. Original NEST implementation checklist (progress recorded in later sections)
-The following A1–A3 items preserve the original implementation checklist. Their completed substeps are documented in the later progress sections; the executive status above and Section 18 supersede any earlier 'pending' wording.
+The following A1–A3 items preserve the original implementation checklist. Their completed substeps are documented in the later progress sections; the executive status above and Sections 17–21 supersede any earlier 'pending' wording.
 
 ### A1. Mean-yield implementation and verification
 
@@ -374,7 +374,7 @@ Interpretation limits: this is an NR response pilot at one central reference pos
 **S2 threshold bookkeeping correction:** NEST tests the configured 783 phe threshold on raw S2 pulse area, then applies electron-lifetime/position corrections to S2c. The raw threshold after DPE conversion is 644.98 phd; at the pilot reference depth (525 us drift, 9000 us electron lifetime, unit spatial correction) the corresponding corrected-S2c boundary is 683.72 phd. The driver now records both values and preserves the sign-based NEST threshold flag. The 645 phd paper comparison is only a raw-threshold numerical comparison unless the paper's observable definition confirms otherwise.
 
 
-## 16. First event-level NEST pilot completed; flat-spectrum NR band is next (2026-11-15)
+## 17. First event-level NEST pilot completed; flat-spectrum NR band is next (2026-11-15)
 
 A C++ driver now executes the pinned NEST event path `FullCalculation -> GetS1 -> GetS2` with the 2026 Table S5 mean-yield vector and the LZ WS2024 detector class. The driver extracts `s1[5]` and `s2[7]` as S1c and S2c, following the pinned `execNEST.cpp` `store_signals` mapping.
 
@@ -390,7 +390,7 @@ Run and artifact:
 **Important correction to the next-step definition:** the 2026 paper states that its NR band is formed using flat-in-energy NR recoil spectra and evaluated along lines of fixed S1c; Fig. 2 reports the mean and 10th–90th percentiles in ({S1_c,\log_{10}S2_c}). A single monoenergetic 248-keV simulation is therefore only a sanity check, not a reproduction of the published NR band. A second workflow now generates a flat 5.4–269.9 keV spectrum at the central reference position and bins (log_{10}S2_c) by S1c. This first pass still omits the spatial averaging, full FV, and calibration nuisance treatment. See [the 2026 paper, Fig. 2 description and calibration section](https://arxiv.org/abs/2609.02823).
 
 
-## 17. Flat-spectrum NR band checked at the candidate reconstructed position (2026-11-15)
+## 18. Flat-spectrum NR band checked at the candidate reconstructed position (2026-11-15)
 
 The first flat-spectrum band pilot used a central reference position. This was refined after checking the paper's Fig. 3: the candidate is reconstructed at (z=26.4\,\mathrm{cm}) above the cathode and near (r=45.9\,\mathrm{cm}). The event generator now uses (x=459\,\mathrm{mm},y=0,z=264\,\mathrm{mm}), invoking the WS2024 detector class's position-dependent S1/S2 corrections.
 
@@ -410,7 +410,7 @@ Here (sigma_{eq}=(Q_{90}-Q_{10})/2.5631), a Gaussian-equivalent scale derived fr
 The full 0.1–330 keV band comparison also contains 148 populated 5-phd S1c bins. Across matching bins, the mean absolute difference between WS2024 and generic-width median curves is (9.63\times10^{-4}) dex (maximum (7.03\times10^{-3}) dex); in the candidate bin the median difference is (7.40\times10^{-4}) dex. The complete report now includes these full-band shape diagnostics. This confirms that the two candidate NR width vectors produce nearly coincident band curves in this pilot; it does not select or validate either vector against the collaboration's calibration fit.
 
 
-## 13. Corrected NEST configuration provenance: EFT2024 public candidate found (2026-11-15)
+## 19. Corrected NEST configuration provenance: EFT2024 public candidate found (2026-11-15)
 
 ### HEPData result
 
@@ -446,10 +446,10 @@ The previous pilot used the rounded Table S5 NR mean vector, WS2024 or generic w
 
 It generates the full 0.1–330 keV flat NR band both at the candidate position and under a uniform-active-TPC spatial proxy. The latter is an explicit approximation, not the actual calibration-source spatial distribution.
 
-**Historical validation boundary (before the full-band follow-up):** at that stage, the event-level band workflow was still running. It subsequently completed; the full-S1c NR/ER band and conditional 2D response status is recorded in Section 18 and the linked candidate report. The remaining boundary is exact calibration-source geometry, official build provenance, nuisance covariance, and BACCARAT likelihood inputs.
+**Historical validation boundary (before the full-band follow-up):** at that stage, the event-level band workflow was still running. It subsequently completed; the full-S1c NR/ER band and conditional 2D response status is recorded in Sections 18 and 20 and the linked candidate report. The remaining boundary is exact calibration-source geometry, official build provenance, nuisance covariance, and BACCARAT likelihood inputs.
 
 
-## 18. HEPData configuration audit, full NR band, and ER/2D response pilots (2026-11-15)
+## 20. HEPData configuration audit, full NR band, and ER/2D response pilots (2026-11-15)
 
 ### HEPData audit
 The original supplied `HEPData-ins3199115-v1.zip` was inspected directly: 47 members (one `submission.yaml` plus 46 table YAMLs); no `additional_resources` key; no NEST header, configuration, NRERWidthsParam, or calibration event cloud. SHA-256: `ab02f6eacd1008a260f0eb8f441beb206069e18f10c6b7b2f44fcfd70463f1f1`. The HEPData v1 archive is therefore a table/data release, not the source of a standalone NEST config.
@@ -486,7 +486,7 @@ Full report: `lz_2026_extended_nr/LZ_2026_NR_ER_FULL_RESPONSE_CANDIDATE_REPORT.m
 The four-family NR band and EFT2024/Table-S3/generic ER band and conditional 2D pilots are now available. Remaining gates: actual D-D/AmBe spatial source distributions, exact official NEST production snapshot confirmation, calibration nuisance covariance, event-level calibration clouds, and official BACCARAT signal/background PDFs. No official LZ likelihood reproduction is claimed.
 
 
-## 18. Three-body recoil spectra folded through the NR 2D NEST response (2026-11-15)
+## 21. Three-body recoil spectra folded through the NR 2D NEST response (2026-11-15)
 
 The first end-to-end pre-selection observable fold is complete. The calculation reuses the archived continuous natural-xenon three-body recoil spectra (four benchmarks, GCN/JJ55) and generates exact-ROI event-level NEST response samples with 200,000 events for each of four response families: EFT2024, rounded Table S5 means plus EFT2024 widths, WS2024, and generic NEST.
 
