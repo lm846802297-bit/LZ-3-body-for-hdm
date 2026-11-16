@@ -154,6 +154,8 @@ $manifest = [ordered]@{
     speed_km_s = [double]$nativeMeta.particle_inputs.speed_km_s
     require_full_grid = $RequireFullGrid
     rows = [int]$comparison.rows
+    benchmarks = $comparison.benchmarks
+    recoil_energies_keV = $comparison.recoil_energies_keV
     open_phase_space_rows = [int]$comparison.open_phase_space_rows
     quadrature = [ordered]@{ nW = $NW; nz = $NZ; nphi = $NPhi }
     width_scheme = $nativeMeta.integration.width_scheme
