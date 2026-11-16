@@ -1,6 +1,6 @@
 # Native Mathematica–Python audit of the complete Xe-131 differential cross section
 
-**Status: native Mathematica 652-row execution completed; independent Python comparison reports PASS_WITH_NOTES after correcting the unit-conversion acceptance logic.**
+**Status: native Mathematica 652-row execution completed; the machine-readable comparator JSON reports PASS, and the scientific result is classified PASS_WITH_NOTES because the fixed-speed Xe-131 calculation retains conditional width assumptions.**
 
 The completed 2401-node native AFH comparison validates the nuclear response layer only. It does not validate the three-body integral I6 or the complete differential cross section.
 
