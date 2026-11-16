@@ -5,10 +5,16 @@ This directory stores generated response tables, corrected cross sections, valid
 ## Canonical and validated outputs
 
 - `afh_default_xe131_WM00.csv`: 2401-node source-translated Python AFH v6.0 Xe-131 response grid.
-- `figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv`: canonical corrected long-form four-benchmark cross-section table.
+- `figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv`: canonical corrected long-form four-benchmark fixed-speed cross-section table. It reuses the archived 5-keV-grid I6 values and replaces the nuclear response; it is not a fresh independent 640-integral recomputation or the native Mathematica full-cross-section comparison.
 - `figure2_four_benchmarks_AFH_GCN_JJ55_wide_audit.csv`: matching wide-form audit table.
 - `native_exports/`: direct 2401-node native Wolfram response CSV and execution metadata emitted by `run_afh_default_xe131.wls`.
 - `native_audit/`: independent native Wolfram/Python pointwise comparison archive. Its manifest reports PASS for the 2401-point Xe-131 response comparison.
+
+## Full Eq. (6) differential-cross-section status (2026-11-16)
+
+- The Python-only full Xe-131 fixed-speed grid runner has been executed and its CSV, metadata, and high-order anchors are archived as a GitHub Actions artifact; the generated bundle is not materialized in this committed directory. See the study-level README for the run procedure and interpretation.
+- The native Wolfram 652-row full-grid run and independent pointwise Python comparator remain **pending**. The code-level review is complete, but no native full-grid CSV, comparison JSON, or SHA-256 manifest is yet archived. Do not report a Mathematica/Python full-dsigma PASS.
+- The 2401-node native response-level PASS and the historical I6 mapping audit are separate validation layers; neither substitutes for the full Eq. (6) cross-code comparison.
 
 ## Historical or diagnostic outputs
 
