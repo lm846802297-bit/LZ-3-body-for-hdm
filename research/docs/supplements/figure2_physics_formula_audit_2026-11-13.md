@@ -4,7 +4,7 @@
 
 The 2026-11-13 formula audit remains a historical review of the selected-point and pre-full-grid state. Since then, the seven-isotope AFH v6.0 response grid (16,807 rows) and the AFH-7/Hybrid-9 84-point recoil-grid spectra have been committed on `main`. The AFH-7 runner evaluates the finite-sum response at exact isotope-specific spatial q and uses threshold-\(u^2\) phase-space integration. The full high-order 1,344-row spectrum ZIP remains external/checksum-only; the committed 1,344-row spectrum is the baseline calculation with a separately committed high-order summary.
 
-Do not interpret this update as a full AFH-9 result: Xe-124/Xe-126 still lack AFH default-density matrices. The GCN/JJ55 84-point spectra still use the legacy linear-\(W^2\), \(8\times8\times4\) kernel; the maximum \(16\times16\times8\) kernel-order difference across four benchmark metadata files is \(2.18895\times10^{-4}\). Recompute them with threshold-\(u^2\) before precision cross-model comparisons. The full Mathematica–Python Eq. (6) cross-section comparison and official LZ likelihood remain open.
+Do not interpret this update as a full AFH-9 result: Xe-124/Xe-126 still lack AFH default-density matrices. The GCN/JJ55 84-point spectra still use the legacy linear-\(W^2\), \(8\times8\times4\) kernel; the maximum \(16\times16\times8\) kernel-order difference across four benchmark metadata files is \(2.18895\times10^{-4}\). Recompute them with threshold-\(u^2\) before precision cross-model comparisons. The native Mathematica/Python full Xe-131 Eq. (6) 652-row cross-code comparison is now PASS_WITH_NOTES under the fixed-speed conditional-width benchmark; the official LZ likelihood remains open.
 
 日期：2026-11-13  
 审查对象：`paper-source/main.tex`、主报告、附录 A–G、Eq. (6) kernel、AFH 响应生成与自然氙 halo-fold 程序。  
@@ -392,6 +392,6 @@ N_{\rm sig}^{\rm ROI}
 下一轮应优先：
 1. 由模型作者/原始拉格朗日量固定 Dirac/Majorana 与 CP/手征约定；
 2. 为 Xe-124、Xe-126 寻找独立、可追溯的 one-body density matrix；当前 AFH-7 的七同位素响应网格和 84 点谱已完成，取得这两种同位素的矩阵后才可将 Hybrid-9 fallback 替换为真正的 AFH-9；
-3. 不再重复 Xe-131 原生 Mathematica 2401 点 response-level 或 Python-only 652 行 factor-4 计算；下一步只做原生 Wolfram full Eq. (6) 652 行运行及其与独立 Python 输出的逐点比较，核对两端的 (I_6)、物理/no-factor-four 截面比、单位转换和误差分布；同时将 GCN/JJ55 重算为与 AFH-7 匹配的 threshold-(u^2) 求积方案。
+3. 不再重复 Xe-131 原生 Mathematica 2401 点 response-level、Python-only 652 行 factor-4 或 native Mathematica/Python 652 行 full Eq. (6) 计算；这三层均已有对应归档。下一步将 GCN/JJ55 重算为与 AFH-7 匹配的 threshold-\(u^2\) 求积方案，并扩展近极点宽度处方系统比较。
 4. 只有在以上输入和模型约定固定后，才推进 LZ 二维 NEST/background/profile-likelihood recast。
 
