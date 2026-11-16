@@ -1,6 +1,6 @@
 # LZ 2026 public-input audit for the three-body xenon recast
 
-Date: 2026-11-14
+Date: 2026-11-16
 Repository branch: research/figure2-p0-4-mainline
 Paper: LZ Collaboration, arXiv:2609.02823v1
 HEPData DOI: 10.17182/hepdata.182472.v1
