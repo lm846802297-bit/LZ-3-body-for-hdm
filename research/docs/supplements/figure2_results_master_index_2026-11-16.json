@@ -3,7 +3,7 @@
   "created_on": "2026-11-16",
   "repository": "lm846802297-bit/LZ-3-body-for-hdm",
   "branch": "main",
-  "purpose": "Current unified provenance index for Figure 2 and natural-xenon results, including the seven-isotope AFH response grid, AFH-7/Hybrid-9 84-point spectra, high-order convergence summaries, native AFH Xe-131 response validation, and explicit numerical/model scope boundaries.",
+  "purpose": "Current unified provenance index for Figure 2 and natural-xenon results, including the seven-isotope AFH response grid, AFH-7/Hybrid-9 spectra, native Xe-131 response validation, and the completed native Mathematica/Python full Eq. (6) cross-code archive.",
   "sha256_method": "For committed text files listed here, SHA-256 was recomputed from exact repository file bytes returned in base64 form. For artifacts covered by existing committed SHA256SUMS, the recorded per-file digest was cross-checked against that manifest. External/uncommitted inputs are explicitly listed as checksum-only provenance, not as locally available files.",
   "external_or_checksum_only_inputs": [
     {
@@ -903,6 +903,85 @@
           "role": "speed 24-to-48 refinement summary"
         }
       ]
+    },
+    {
+      "id": "native-xe131-full-dsigma-crosscheck",
+      "description": "Native Wolfram 14.2.0 and independent Python pointwise comparison of the complete fixed-speed Xe-131 Eq. (6) differential cross section; four benchmarks, 652 rows, 500 open and 152 closed. PASS_WITH_NOTES under conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions.",
+      "parameters": {
+        "isotope": "Xe-131",
+        "A": 131,
+        "speed_km_s": 800,
+        "benchmarks": [
+          "red_ms200_dm1",
+          "green_ms300_dm1",
+          "black_ms360_dm1",
+          "blue_ms300_dm10"
+        ],
+        "recoil_energy_nodes_per_benchmark": 163,
+        "rows": 652,
+        "open_phase_space_rows": 500,
+        "closed_phase_space_rows": 152,
+        "quadrature": {
+          "nW": 16,
+          "nz": 16,
+          "nphi": 8
+        },
+        "width_scheme": "pole",
+        "W2_mapping": "threshold_u2",
+        "assumption": "conditional Dirac, real scalar, pure scalar g2, chi2 -> chi1 s only",
+        "max_relative_differences": {
+          "I6": 1.3387195271053361e-12,
+          "dsigma": 2.5763244333492954e-9,
+          "dsigma_no4": 2.5763244333492954e-9,
+          "dsigma_conversion": 2.576324170261011e-9,
+          "R_A_physical": 2.5750909445416853e-9,
+          "factor4_mapping": 4.3029970254329936e-16,
+          "mathematica_unit_conversion_identity": 4.440892098500626e-16,
+          "python_unit_conversion_identity": 0
+        },
+        "tolerances": {
+          "I6_dsigma_and_cross_code_converted_dsigma": 2e-7,
+          "AFH_PCHIP_response": 2e-8,
+          "algebraic_and_per_code_unit_conversion_identities": 2e-12
+        }
+      },
+      "files": [
+        {
+          "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131.csv",
+          "name": "mathematica_full_dsigma_xe131.csv",
+          "sha256": "585b806fd937760f085d07b9907718f45ca331708021addee618a8362e2c2cce",
+          "bytes": 221014,
+          "role": "Native Wolfram 14.2.0 full Eq. (6) Xe-131 differential cross section; 652 rows"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131_metadata.json",
+          "name": "mathematica_full_dsigma_xe131_metadata.json",
+          "sha256": "f7802e985d95bda7747f2faa1d804bbcb753e6e8d8d92fb9c1da0c7098a65dc3",
+          "bytes": 4021,
+          "role": "Native Wolfram execution metadata, four benchmarks, 800 km/s, pole-width, threshold-u2 and 16x16x8 quadrature"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_python_full_dsigma_comparison.csv",
+          "name": "mathematica_python_full_dsigma_comparison.csv",
+          "sha256": "d24714cd9e036e0b18c743f179aafd72c5d573fcd6013e3edbad987d34de765d",
+          "bytes": 340014,
+          "role": "652-row independent Python pointwise comparison of I6, AFH response, physical/no-factor-four cross sections and conversion identities"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_python_full_dsigma_comparison.json",
+          "name": "mathematica_python_full_dsigma_comparison.json",
+          "sha256": "00838a849ce40c9fe97a3d058d203e00df31f56aa695bcae37509b62ec7aa643",
+          "bytes": 3755,
+          "role": "Machine-readable Mathematica/Python full-cross-section comparison; PASS_WITH_NOTES"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/SHA256SUMS.txt",
+          "name": "SHA256SUMS.txt",
+          "sha256": "f519b5f72012ca13da55fdbeb396162ed1995b1c819384a2dc9fefcfb1cf80e7",
+          "bytes": 435,
+          "role": "SHA-256 checksums for native outputs and corrected pointwise comparison outputs"
+        }
+      ]
     }
   ],
   "files": [
@@ -1427,7 +1506,42 @@
       "sha256": "f81273fba1e46ce1ca1b45e926bf0804011d889af351f756b90c3f385f12db29",
       "bytes": 131,
       "role": "speed 24-to-48 refinement summary"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131.csv",
+      "name": "mathematica_full_dsigma_xe131.csv",
+      "sha256": "585b806fd937760f085d07b9907718f45ca331708021addee618a8362e2c2cce",
+      "bytes": 221014,
+      "role": "Native Wolfram 14.2.0 full Eq. (6) Xe-131 differential cross section; 652 rows"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131_metadata.json",
+      "name": "mathematica_full_dsigma_xe131_metadata.json",
+      "sha256": "f7802e985d95bda7747f2faa1d804bbcb753e6e8d8d92fb9c1da0c7098a65dc3",
+      "bytes": 4021,
+      "role": "Native Wolfram execution metadata, four benchmarks, 800 km/s, pole-width, threshold-u2 and 16x16x8 quadrature"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_python_full_dsigma_comparison.csv",
+      "name": "mathematica_python_full_dsigma_comparison.csv",
+      "sha256": "d24714cd9e036e0b18c743f179aafd72c5d573fcd6013e3edbad987d34de765d",
+      "bytes": 340014,
+      "role": "652-row independent Python pointwise comparison of I6, AFH response, physical/no-factor-four cross sections and conversion identities"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_python_full_dsigma_comparison.json",
+      "name": "mathematica_python_full_dsigma_comparison.json",
+      "sha256": "00838a849ce40c9fe97a3d058d203e00df31f56aa695bcae37509b62ec7aa643",
+      "bytes": 3755,
+      "role": "Machine-readable Mathematica/Python full-cross-section comparison; PASS_WITH_NOTES"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/SHA256SUMS.txt",
+      "name": "SHA256SUMS.txt",
+      "sha256": "f519b5f72012ca13da55fdbeb396162ed1995b1c819384a2dc9fefcfb1cf80e7",
+      "bytes": 435,
+      "role": "SHA-256 checksums for native outputs and corrected pointwise comparison outputs"
     }
   ],
-  "source_commit": "58f97ab27e104cdb65c3ce542bb3d7f1bc1c2648"
+  "source_commit": "PR #45 head branch docs/scientific-content-audit-20261116; refresh to the merge commit after PR #45 is merged."
 }
