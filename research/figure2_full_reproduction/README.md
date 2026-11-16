@@ -266,7 +266,7 @@ This milestone remains a fixed-speed, single-isotope diagnostic with the A*u mas
 
 ## AFH Xe-131 native response validation
 
-The independent Wolfram 14.0.0 native Mathematica/Python 2401-point response comparison is archived at [NATIVE_MATHEMATICA_AUDIT.md](../afh_default_density_xe131/output/native_audit/NATIVE_MATHEMATICA_AUDIT.md). This validates the Xe-131 AFH response layer only; it does not validate the full Eq. (6) differential-cross-section integral. The separate AFH-7/Hybrid-9 seven-isotope 84-point full-range grid-sampled spectra and their quadrature audit are archived in `research/afh_default_density_natural_xenon_halo/`; they do not constitute AFH-9 or an LZ detector likelihood.
+The independent Wolfram 14.0.0 native Mathematica/Python 2401-point response comparison is archived at [NATIVE_MATHEMATICA_AUDIT.md](../afh_default_density_xe131/output/native_audit/NATIVE_MATHEMATICA_AUDIT.md). Separately, the Python-only v=800 km/s fixed-speed Xe-131 full Eq. (6) calculation has passed 652 rows and the factor-four ledger under the conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions (mapping residual 3.56e-16; physical/no-factor-four ratio residual 0). The native Wolfram 652-row full-dsigma run and pointwise Mathematica/Python cross-code comparison remain pending. The separate AFH-7/Hybrid-9 seven-isotope 84-point full-range grid-sampled spectra and their quadrature audit are archived in `research/afh_default_density_natural_xenon_halo/`; they do not constitute AFH-9 or an LZ detector likelihood.
 
 ## P1-PhaseSpace numerical convergence audit (2026-11-14)
 
