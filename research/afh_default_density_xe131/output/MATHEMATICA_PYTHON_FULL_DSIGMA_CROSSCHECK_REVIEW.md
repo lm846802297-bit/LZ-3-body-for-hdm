@@ -2,7 +2,7 @@
 
 **Status: native Wolfram execution and 652-row pointwise Mathematica/Python comparison completed; corrected comparison metadata reports PASS.**
 
-This review checks that the native Wolfram Language runner and the independent Python implementation use the same physical inputs, phase-space measure, spin trace, width prescription, AFH response convention, and cross-section prefactor. It is not a numerical execution report.
+This review records both the source-level agreement of the native Wolfram Language runner and independent Python implementation, and the completed 652-row numerical execution. It checks matched physical inputs, phase-space measure, spin trace, width prescription, AFH response convention, cross-section prefactor and the pointwise result.
 
 ## 1. Matched inputs and output grid
 
