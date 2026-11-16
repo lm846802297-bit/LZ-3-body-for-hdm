@@ -40,7 +40,7 @@ This update supersedes older selected-point-only statements in the report.
 - AFH-7 covers natural atom fraction 0.998158. Xe-124/Xe-126 remain missing from the official AFH default-density inputs; Hybrid-9 uses Helm only for those two isotopes and is not AFH-9.
 - The old AFH selected-point rates use the legacy linear-\(W^2\), \(8\times8\times4\) kernel. At common points they differ from the new threshold-\(u^2\) AFH-7 grid by about 230–255 ppm, consistent with the documented low-order linear-\(W^2\) quadrature bias. Keep the old table as a historical result.
 - GCN/JJ55 84-point spectra still use legacy linear-\(W^2\), \(8\times8\times4\). Their \(16\times16\times8\) spot-check reaches \(2.18895\times10^{-4}\) maximum kernel-order difference; AFH-7/Hybrid-9 use threshold-\(u^2\). Cross-model precision is not yet matched.
-- AFH Xe-131 response-level native Mathematica/Python validation has passed. Separately, the Python-only v=800 km/s fixed-speed Xe-131 full Eq. (6) calculation under the conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions has passed 652 rows (500 open, 152 closed) and the factor-four ledger: 16 high-order anchors, maximum I6 relative difference 1.66367e-11, factor-four mapping residual 3.55679e-16, and physical/no-factor-four ratio residual 0. The native Wolfram 652-row execution and independent Mathematica/Python full-cross-section pointwise comparison remain pending. Near-pole width-prescription systematics, AFH-9 inputs and the official LZ likelihood also remain open.
+- AFH Xe-131 response-level native Mathematica/Python validation has passed. The native Wolfram 14.2.0 full Eq. (6) run and independent Python pointwise comparison have also completed: 652 rows (500 open, 152 closed), four benchmarks, fixed 800 km/s, threshold-u2, pole width and 16×16×8. The corrected comparison JSON reports PASS_WITH_NOTES; maximum relative differences are I6 1.34e-12, physical/no4 dσ 2.58e-9, AFH response 2.58e-9 and converted cross-code dσ 2.58e-9. The latter uses the same 2e-7 observable tolerance as dσ; per-code unit-conversion identities separately pass at 2e-12. Near-pole width-prescription systematics, AFH-9 inputs and the official LZ likelihood remain open.
 
 The detailed sections below preserve earlier calculations and their provenance. Where an older paragraph says AFH is selected-point-only or that the full AFH response grid is absent, read it as the historical status before the 2026-11-14 full-grid run.
 
@@ -1428,6 +1428,7 @@ Green benchmark 在其他网格锚点的当前 AFH-7 速率为：
 - GCN/JJ55 天然氙连续谱已与 LZ 2026 一维效率曲线及 2.84 tonne-year exposure 做 rate-level 折叠；分段线性函数乘积采用解析积分，稠密梯形交叉检查的最大相对差异为 \(3.77\times10^{-7}\)（CI run 43151727539）。该事件数只对应 GCN/JJ55 连续谱，不对应 AFH-7/Hybrid-9 预测。GCN/JJ55 production kernel 仍为 legacy linear-\(W^2\)、\(8\times8\times4\)，四组 benchmark 的 \(16\times16\times8\) spot-check 最大差异为 \(2.18895\times10^{-4}\)；与 AFH-7 threshold-\(u^2\) 尚未匹配。
 
 - **Python-only 完整 Xe-131 Eq. (6) 与因子 4 ledger 已通过（限定范围）：** v=800 km/s fixed-speed、652 行（500 open、152 closed）、16 个高阶锚点；最大 I6 相对差异 1.66367e-11，factor-4 mapping residual 3.55679e-16，physical/no-factor-four ratio residual 0。该结果依赖条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width 假设；不是 Mathematica/Python 独立交叉验证，也不是 halo-folded 截面。GitHub Actions artifact 14112736343。
+- **原生 Mathematica/Python 完整 Eq. (6) 截面对照已通过（限定范围）：** Wolfram 14.2.0、Python 3.14.7；652 行（500 open、152 closed）；最大相对差异 I6 = 1.33872e-12、dσ = 2.57632e-9、AFH response = 2.57510e-9；factor-four mapping residual = 4.30300e-16；Mathematica/Python 自身单位转换 residual 分别为 4.44089e-16/0。比较结果与 SHA-256 归档见 `research/afh_default_density_xe131/output/full_dsigma_mathematica/`。交叉代码的 converted-dσ 差异按 2e-7 观测量容差验收，而非 2e-12 代数恒等式容差。
 
 ### 8.2 尚未完成或不能过度声称的事项
 
@@ -1462,11 +1463,11 @@ Green benchmark 在其他网格锚点的当前 AFH-7 速率为：
 7. GCN/JJ55 连续谱的 LZ efficiency-weighted event yields 仅为 rate-level 结果，灰色效率包络不是置信区间；
 8. 不把固定速度截面、AFH selected-point 速率、天然氙连续谱和完整 LZ detector-level likelihood 混为一谈。
 
-后续事项按物理依赖关系排列。Xe-131 原生 Mathematica 2401 点 response-level 对照已完成；Python-only v=800 km/s fixed-speed Xe-131 完整 Eq. (6) 652 行及因子 4 ledger 也已通过（条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width 假设）。**尚未完成的是原生 Wolfram 652 行运行及 Mathematica/Python 完整截面逐点交叉验证**，不能把前两项 PASS 外推为第三项 PASS：
+后续事项按物理依赖关系排列。Xe-131 原生 Mathematica 2401 点 response-level 对照、Python-only full Eq. (6) 因子 4 ledger，以及原生 Mathematica/Python 652 行完整截面对照均已完成（最后一项为 PASS_WITH_NOTES，限定固定速度和条件性宽度假设）。当前未完成事项不再包括 full-cross-section cross-code 比较：
 
 1. **统一核模型相空间积分。** 将 GCN/JJ55 84 点谱从 legacy linear-\(W^2\) 改为 threshold-\(u^2\)，使用与 AFH-7 相同的速度积分和 \(10^{-5}\) 收敛标准；重算 GCN/JJ55 谱、225–269.9 keV 高能尾部比例和依赖它们的 rate-level event yields。
 2. **补齐高阶结果归档。** 将 AFH-7/Hybrid-9 \(24\times8\times8\times4\) 的完整 1,344 行高阶谱以及独立 Numba 实现作为 native files 或版本化 Release 提交；不要只保留外部 ZIP checksum。
-3. **完成原生 Mathematica 完整截面对照。** 在 Wolfram Engine 中运行 652 行 full Eq. (6) runner，归档 CSV、metadata 和 SHA-256；再与独立 Python 输出逐点比较 \(I_6\)、物理/no-factor-four 截面比、单位转换和误差分布。求积收敛与代码间一致性分别验收。
+3. **评估条件性 pole-width 的模型系统误差。** 当前 full-grid cross-code 对照采用 Dirac / real-scalar / pure-scalar / single-channel pole-width 假设；需与完整 vector-plus-scalar self-energy、其他开放衰变道及可能的 Majorana/CP 结构分开比较。
 4. **扩展 AFH 到九种天然氙同位素。** 只有在取得 Xe-124/Xe-126 的可追溯 AFH default-density matrices 后，才能将 Hybrid-9 fallback 替换为真正的 AFH-9；不得通过丰度重归一化掩盖输入缺失。
 5. **模型与 halo 系统误差。** 在固定基准定义后，分别评估核响应模型、halo 参数和条件性 \(\chi_2\) 极点宽度对结果的影响；各项假设应分开报告，不用统一经验缩放代替。
 6. **完整 LZ detector-level likelihood。** 现有一维效率曲线、NEST public-candidate response 和 rate-level yields 是接口基线；真正的 recast 还需实际校准源空间分布、官方生产 build provenance、二维信号响应、能量分辨/重建、校准与 nuisance covariance、背景数据及 profile likelihood。不能直接移植 LZ 的两体非弹性 WIMP 限制。
@@ -1766,8 +1767,8 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 | F2 \(W_{\min}^2,W_{\max}^2\) 与相空间开闭 | 条件性验证 | limits、wmax_squared、开闭区间和阈值回归 | 尚未对更宽质量—速度区域做独立扫描 |
 | F3 三体相空间变量与 \(I_6\) | 部分验证（按计算链分层） | AFH-7/Hybrid-9 84 点 threshold-\(u^2\) 网格；基准谱到 \(24\times8\times8\times4\) 高阶谱的最大差异 \(6.47\times10^{-6}\) | GCN/JJ55 仍为 legacy linear-\(W^2\)、\(8\times8\times4\)，最大 kernel-order difference \(2.18895\times10^{-4}\)；近极点宽度处方系统比较与跨模型匹配重算仍开放 |
 | F4 两张辐射图与 Dirac trace | 条件性验证 | before/after/干涉分解、显式自旋求和、壳条件与四动量闭合 | 目前是代表性测试点，不是全参数扫描 |
-| F5 单同位素固定速度 Eq. (6) | 条件性验证（Python-only full-grid PASS；Mathematica cross-code pending） | 历史四 benchmark 响应替换表复用既有 \(I_6\)，不是 640 个独立三体积分；另有 Python-only \(v=800\) km/s Xe-131 完整 Eq. (6) 652 行计算（500 open、152 closed）、16 个高阶锚点，最大 \(I_6\) 相对差异 \(1.66367\times10^{-11}\)，单位转换 residual 0；artifact 14112736343 | 结果依赖条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width 假设；不是天然氙 halo fold。原生 Wolfram 652 行与 Mathematica/Python 完整截面逐点对照仍待执行 |
-| F6 AFH 响应与因子 4 归一化 | 已验证（response-level + Python-only full-dsigma；Mathematica cross-code pending） | Xe-131 2401 点 mpmath/原生 Mathematica-Python response-level 对照通过，最大相对差异 \(3.59\times10^{-9}\)；Python-only \(v=800\) km/s fixed-speed 完整 Xe-131 Eq. (6) 因子 4 ledger 通过：652 行（500 open、152 closed）、16 个高阶锚点；最大 \(I_6\) 相对差异 \(1.66367\times10^{-11}\)，factor-4 mapping residual \(3.55679\times10^{-16}\)，physical/no-factor-four ratio residual 0 | Python full-dsigma 采用条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width 假设；不是天然氙 halo fold。AFH-7 覆盖天然氙原子丰度 0.998158；Xe-124/Xe-126 仍缺官方 default matrices；原生 Wolfram 652 行及 Mathematica/Python 逐点对照尚未运行 |
+| F5 单同位素固定速度 Eq. (6) | **PASS_WITH_NOTES：原生 Mathematica/Python full-grid cross-code** | 652 行（500 open、152 closed），四组 benchmark，v=800 km/s，16×16×8；max I6 1.33872e-12、dσ 2.57632e-9、converted dσ 2.57632e-9；per-code unit-conversion residuals 4.44e-16/0；SHA-256 归档在 `output/full_dsigma_mathematica/` | 条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width；不是天然氙 halo fold 或 detector likelihood；求积收敛仍需与 cross-code 一致性分开判断 |
+| F6 AFH 响应与因子 4 归一化 | **PASS_WITH_NOTES：response-level + full Eq. (6) cross-code** | Xe-131 2401 点 response-level 最大差异 3.59e-9；full Eq. (6) 652 行 factor-four mapping residual 4.30e-16、physical/no-factor-four ratio residual 0；Mathematica/Python conversion identities 4.44e-16/0 | 限定 Xe-131 fixed-speed 和条件性 pole-width；AFH-7 仍覆盖天然氙原子丰度 0.998158，Xe-124/Xe-126 缺官方 default matrices；不是 AFH-9 或 LZ likelihood |
 | F7 同位素质量、丰度与 \(N_T\) | 已验证 | 九同位素质量—丰度表、精确加权平均质量和每 kg 靶核数 | 电子结合能忽略；AFH 响应可用同位素仅七种 |
 | F8 三体 \(v_{\min,A}\) | 已验证 | 28/28 逐同位素阈值复算；最大速度差 \(4.35\times10^{-10}\) km/s | 适用范围为当前 benchmark 与输入质量约定 |
 | F9 实验室系速度 PDF | 已验证 | untruncated MB 与 truncated SHM 数值积分归一化 | 物理预测仍依赖所选 halo 参数 |
@@ -1780,7 +1781,7 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 | GCN/JJ55 84 点天然氙谱 | PASS_WITH_NOTES | 四 benchmark 的 84 点谱和 metadata 已归档；速度求积最大差异 \(1.60401\times10^{-6}\) | production 使用 legacy linear-\(W^2\)、\(8\times8\times4\)；最大 kernel-order difference \(2.18895\times10^{-4}\)；threshold-\(u^2\) 匹配重算待完成 |
 | 完整 LZ detector-level recast | 未完成 | GCN/JJ55 一维效率加权 rate-level yields | 需要二维信号 PDF、NEST nuisance、背景和 profile likelihood |
 
-**P0 判定：** 精确空间动量 Python 复算、60 位 mpmath 全网格检查、Wolfram 14.0.0 原生 Mathematica/Python 2401 点 response-level 比较和归档输出核验均已完成。**P1 判定：** AFH-7/Hybrid-9 84 点网格与高阶摘要已通过当前 \(10^{-5}\) 验收；GCN/JJ55 仍需统一 threshold-\(u^2\) 后重算，近极点宽度处方系统比较仍开放，完整 Eq. (6) Mathematica–Python 截面对照仍未完成。**P2 判定：** AFH-9 缺失同位素输入和完整 LZ likelihood 仍未完成；AFH-7 grid 或 Xe-131 response-level PASS 均不能替代这些任务。
+**P0 判定：** 精确空间动量 Python 复算、60 位 mpmath 全网格检查、Wolfram 14.0.0 原生 Mathematica/Python 2401 点 response-level 比较、Wolfram 14.2.0 原生完整 Eq. (6) 652 行运行及独立 Python 逐点对照均已完成；full cross-code comparison 为 PASS_WITH_NOTES。**P1 判定：** AFH-7/Hybrid-9 84 点网格与高阶摘要已通过当前 10^-5 验收；GCN/JJ55 仍需统一 threshold-u^2 后重算，近极点宽度处方系统比较仍开放。**P2 判定：** AFH-9 缺失同位素输入和完整 LZ likelihood 仍未完成。
 
 ## 13. 公式—符号—程序—结果交叉引用
 
@@ -4599,7 +4600,7 @@ Xe-131 AFH default response 的原生 Mathematica/Python 2401 点比较已通过
 
 ## 附录 H：完整 Eq. (6) 微分截面的 Mathematica–Python 对照
 
-本附录把三个不同的验收层级分开：AFH Xe-131 核响应的原生 Mathematica/Python 2401 点对照已 PASS；Python-only v=800 km/s fixed-speed 完整 Eq. (6) 652 行计算及因子 4 ledger 也已 PASS（条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width 假设）；**原生 Wolfram 652 行与独立 Python 的完整截面逐点对照仍未执行**。因此，不能把前两项通过误写为完整 Mathematica/Python 截面对照 PASS。
+本附录把三个不同的验收层级分开：AFH Xe-131 核响应的原生 Mathematica/Python 2401 点对照已 PASS；Python-only v=800 km/s fixed-speed 完整 Eq. (6) 652 行计算及因子 4 ledger 已 PASS；原生 Wolfram 14.2.0 652 行与独立 Python 的完整截面逐点对照也已完成，修正单位转换验收逻辑后的机器可读比较 JSON 报告 PASS。此 cross-code PASS 只覆盖固定速度 Xe-131、四组 benchmark 和条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width 假设，不代表天然氙 halo fold 或 detector-level likelihood。
 
 ### H.1 从公式 (6) 拆分出独立三体积分
 
@@ -4714,6 +4715,7 @@ t=-2m_AE_R.
 - **research/afh_default_density_xe131/compare_full_dsigma_mathematica.py**：独立调用 research/figure2_full_reproduction/eq6_kernel.py 重新计算同一组 \(I_6\)，使用 SciPy PCHIP 独立插值 AFH 响应，再与 Mathematica CSV 逐点比较。
 - **research/afh_default_density_xe131/run_native_full_dsigma_windows.ps1**：Windows 端到端封装；检查 652 行/500 open full-grid、固定 800 km/s、pole-width、threshold-\(u^2\) 和求积阶数；完成对照后输出 CSV/JSON、SHA-256 manifest，并记录 Wolfram/Python runtime versions。该脚本尚未在 Mathematica 环境执行。
 - **research/afh_default_density_xe131/run_python_full_dsigma_xe131.py**：已执行独立 Python-only v=800 km/s fixed-speed 652 行 full Eq. (6) 网格；CSV、metadata 和 16 个高阶锚点归档为 GitHub Actions artifact `14112736343`。其 factor-four ledger 在 Python 内部通过，但不替代上面的 Mathematica/Python cross-code 检验。
+- **research/afh_default_density_xe131/output/full_dsigma_mathematica/**：原生 Mathematica 14.2.0 652 行 CSV/metadata、Python 独立逐点比较 CSV/JSON 和 SHA-256 校验清单。比较 JSON 为 `PASS`；交叉代码 converted-dσ 差异使用与 dσ 相同的 2e-7 观测量容差，每个实现内部的单位转换恒等式仍使用 2e-12。
 - **research/afh_default_density_xe131/output/NATIVE_MATHEMATICA_FULL_DSIGMA_AUDIT.md**：记录固定输入、代码路径、验收标准和未完成边界。
 
 首轮完整网格采用四组固定速度 benchmark，\(v=800\ {\rm km/s}\)，\(m_{\chi_1}=1\ {\rm TeV}\)，\(m_V=10\ {\rm GeV}\)，\(m_A=131u\)，\((g_1g_2g_{VN})^2=10^{-8}\)，\(g_2=1\)。四组 \((m_s,\Delta m)\) 分别为 \((200\,{\rm keV},1\,{\rm MeV})\)、\((300\,{\rm keV},1\,{\rm MeV})\)、\((360\,{\rm keV},1\,{\rm MeV})\) 和 \((300\,{\rm keV},10\,{\rm MeV})\)。这里 \(g_2=1\) 是对图注耦合乘积的一种 benchmark 分解，并不能由耦合乘积本身唯一推出。
@@ -4755,7 +4757,7 @@ I_6^{\rm archived}=1.4336780722867665\times10^6\ {\rm GeV}^2.
 \left.\frac{d\sigma_A}{dE_R}\right|_{\rm no4}
 \simeq7.39568938\times10^{-9}\ {\rm GeV}^{-3}.
 \]
-两者比值为 4。这只证明该点的代数装配按预期传递因子 4；尚不能替代原生 Mathematica 的完整截面对照。
+两者比值为 4，且完整 652 行 native Mathematica/Python 对照进一步验证了物理/no-factor-four 截面关系；该点代数检查现作为全网格对照的局部辅助，而非其替代。
 
 ### H.6 验收状态
 | 层次 | 当前状态 | 说明 |
@@ -4764,11 +4766,27 @@ I_6^{\rm archived}=1.4336780722867665\times10^6\ {\rm GeV}^2.
 | AFH package \(\to R_A^{\rm phys}\) 因子 4 | **已验证（response-level）** | \(R_A^{\rm phys}=4C_0R_A^{\rm package}\)，\(C_0\) 单独记录 |
 | 历史 Python 单点 \(I_6\) 求积预检 | **历史诊断** | green benchmark 单点求积阶数对照和 800 km/s 历史点质量常数/映射误差分离；已被后续完整 Python 网格结果补充，不应作为当前唯一状态 |
 | Python-only 完整 Xe-131 Eq. (6) 与因子 4 ledger | **PASS_WITH_NOTES（Python 内部）** | v=800 km/s、652 行（500 open、152 closed）、16 个高阶锚点；最大 \(I_6\) 相对差异 \(1.66367\times10^{-11}\)，factor-4 mapping residual \(3.55679\times10^{-16}\)，physical/no-factor-four ratio residual 0；artifact 14112736343。依赖条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width 假设 |
-| 原生 Wolfram 完整网格 \(I_6\) | **待执行** | 新 WLS runner 已提交，尚无 Wolfram 652 行运行产物 |
-| 完整 \(d\sigma_A/dE_R\) Mathematica/Python 逐点对照 | **未完成** | 必须等待 WLS 输出 CSV 和 Python comparator 的机器可读 PASS；Python-only 内部 PASS 不替代 cross-code 验收 |
+| 原生 Wolfram 完整网格 \(I_6\) | **已执行并通过逐点对照** | 652 行原生输出；Python 独立重算的 I6 最大相对差异 1.34e-12 |
+| 完整 \(d\sigma_A/dE_R\) Mathematica/Python 逐点对照 | **PASS_WITH_NOTES** | 652 行；dσ 最大相对差异 2.58e-9；converted dσ cross-code difference 2.58e-9（按 2e-7 观测量容差）；per-code conversion identities 分别 4.44e-16 和 0 |
 | 完整宽度与 UV 自能 | **未完成** | 当前 pole width 仍是 Dirac/纯 scalar/单道条件性宽度 |
 
 完整网格的第一层使用 \(16\times16\times8\)；随后对阈值附近、AFH 响应极小值附近和积分收敛最慢的点进行 \(48\times40\times24\) 高阶复算。代码间对照和求积收敛是两个独立验收：前者检查 Mathematica 与 Python 是否实现同一积分，后者检查该积分本身是否达到所需精度。
+
+
+### H.7 原生 Mathematica/Python 完整截面对照结果（2026-11-16）
+
+| Quantity | 最大相对差异/残差 | 验收容差 |
+|---|---:|---:|
+| \(I_6\) | \(1.33872\times10^{-12}\) | \(2\times10^{-7}\) |
+| \(d\sigma_A/dE_R\) | \(2.57632\times10^{-9}\) | \(2\times10^{-7}\) |
+| AFH PCHIP response | \(2.57510\times10^{-9}\) | \(2\times10^{-8}\) |
+| Factor-four mapping | \(4.30300\times10^{-16}\) | \(2\times10^{-12}\) |
+| Mathematica / Python conversion identity | \(4.44089\times10^{-16}\) / 0 | \(2\times10^{-12}\) |
+| Converted cross-code \(d\sigma_A/dE_R\) | \(2.57632\times10^{-9}\) | \(2\times10^{-7}\) |
+
+原始 comparator 曾把两个代码输出的 converted-dσ 之间的差异误作单位转换恒等式误差。该差异包含 AFH PCHIP 源翻译的已接受差异，因此应作为同一物理观测量的 cross-code 比较，并使用 dσ 的 2e-7 容差。修正后，Mathematica 和 Python 各自的单位转换恒等式仍分别以 2e-12 单独验收；没有放宽物理量的 cross-code 精度。
+
+原生输出、comparison JSON 和 SHA-256 文件位于 `research/afh_default_density_xe131/output/full_dsigma_mathematica/`。该结果只适用于 Xe-131、v=800 km/s fixed-speed、四组 benchmark、16×16×8 求积和条件性 pole-width 假设；代码间一致性不等同于求积收敛，也不构成天然氙 halo fold 或 LZ likelihood。
 
 
 ## 14. Phase II update: high-energy tail nuclear-model sensitivity (2026-11-14)
