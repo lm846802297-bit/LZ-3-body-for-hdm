@@ -48,7 +48,7 @@ The 2026-11-16 source-of-truth index is [12 groups / 87 files](figure2_results_m
 
 | 子任务 | 当前状态 | 已有证据 | 尚存边界 |
 |---|---|---|---|
-| AFH v6.0 Xe-131 67 项密度矩阵提取 | **已验证（source + translation）** | 官方 v6.0 来源哈希、67 项逐项解析、CSV 与 source translation 对照；`v6/dmformfactor-V6.m` 已提交 | 原始 ZIP 仍为 checksum-only provenance；完整七同位素响应表未提交 |
+| AFH v6.0 Xe-131 67 项密度矩阵提取 | **已验证（source + translation）** | 官方 v6.0 来源哈希、67 项逐项解析、CSV 与 source translation 对照；`v6/dmformfactor-V6.m` 已提交；七同位素矩阵和 16,807 行响应网格另已归档 | 原始 AFH package ZIP 仍为 checksum-only provenance；Xe-124/Xe-126 仍无 AFH default matrix |
 | AFH Xe-131 2401 点响应 | **已验证（限定 response-level）** | 0–0.6 GeV、2401 节点；60 位 mpmath 与 Wolfram 14.0.0 原生 Mathematica/Python 逐点比较；四种响应量全部通过，最大相对差异 \(3.59087\times10^{-9}\) | 仅验证 Xe-131 AFH response-level，不代表三体 kernel、天然氙连续谱或 LZ likelihood |
 | AFH factor-of-four 物理归一化 | **已验证（response-level）** | raw (A^2/4)；setter (c_{\rm set}=2g_{VN})；physical (R_A(0)=A^2)；原生 2401 点响应表与 Python 对照通过；主报告附录 H 定义了 no-factor-four 截面控制 | 已验证的是 AFH package 到物理核响应的映射；因子 4 从响应传递到完整 (d\sigma/dE_R) 的 Mathematica/Python 端到端验收仍待完成 |
 | AFH Xe-131 响应极小值 | **部分验证** | 固定文献 \(b_A\)、精确空间 \(q\)、AFH default 67 项矩阵，三个 Figure 2 范围内的主要极小值已提取 | 这些是核响应极小值，不自动等于完整截面或 halo 事件率极小值 |
@@ -75,7 +75,7 @@ The 2026-11-16 source-of-truth index is [12 groups / 87 files](figure2_results_m
 | Figure 2 结果总索引 | **已验证（2026-11-16 main）** | [当前机器可读总清单](figure2_results_master_index_2026-11-16.json)：12 组、87 个文件条目，含 SHA-256、大小、参数和用途 | 2026-11-13 的 9 组/60 文件清单保留为历史快照；外部高阶 ZIP 仍为 checksum-only |
 | AFH response sample SHA-256 | **已验证（当前 main 归档）** | 历史 28 点 sample digest 与 exact-q 归档仍可复现；完整 16,807 行七同位素 response grid 已提交并有 SHA-256 manifest；84 点 AFH-7/Hybrid-9 谱已归档 | 外部高阶 ZIP 未提交完整内容；不把 AFH-7 描述为 AFH-9 |
 | 原始论文 AFH response 公式 | **已修正** | `paper-source/main.tex` 改为 factor 4 physical mapping 和 exact spatial \(q\)；`paper-source/SHA256SUMS` 同步 | 合并后仍需在正式 Overleaf / PDF 构建中检查排版 |
-| 主报告—附录 A–G—代码公式索引 | **部分验证** | F1–F12 公式索引、附录 A–G、代码入口和主报告已交叉检查 | 仍需按最终固定的 Dirac/Majorana 模型约定做一轮完整 UV 层复核 |
+| 主报告—附录 A–H—代码公式索引 | **部分验证** | F1–F12 公式索引、主报告、附录 A–H、代码入口和结果路径已交叉检查 | 仍需按最终固定的 Dirac/Majorana 模型约定做一轮完整 UV 层复核 |
 | 完整 Eq. (6) 截面对照程序 | **已提交，尚未运行** | 新增 run_afh_eq6_full_dsigma.wls、compare_full_dsigma_mathematica.py、主报告附录 H 与附录 A.8 | 没有 Wolfram 运行产物和逐点 comparison CSV；不把脚本存在或 CI 通过等同于物理结果验证 |
 
 ## 6. 不得混淆的四组结果
@@ -91,11 +91,11 @@ The 2026-11-16 source-of-truth index is [12 groups / 87 files](figure2_results_m
 - **P1 关闭条件：** 原始拉格朗日量、主报告、附录 A–G、代码和单位约定无未解释的符号冲突；Dirac/Majorana 与宽度模型的边界由物理输入明确固定。
 - **P2 关闭条件：** 每个科学结论都有状态、证据、输入缺口和适用范围；任何 selected-point、fixed-speed 或 rate-level 结果都不被表述为更高层的完整验证。
 
-当前 P0 总索引已更新为 main 上 12 组/87 文件；AFH-7 七同位素 response grid 和 84 点谱已归档，P1 已修正公式和 provenance 不一致；
+当前 P0 总索引已更新为 main 上 12 组/87 文件；AFH-7 七同位素 response grid 和 84 点谱已归档，P1 已修正公式和 provenance 不一致；剩余开放项为 GCN/JJ55 threshold-\(u^2\) 匹配重算、近极点宽度处方系统比较、AFH-9 缺失同位素输入、完整 Mathematica–Python Eq. (6) 截面对照，以及官方 LZ detector likelihood。
 
 
 ## 9. 2026-11-14 comparator correction and final CI confirmation
 
 The first archive comparison failed only for the derived residual `relative_to_archived = I_6/I_6^{\\rm archive}-1`. Since this residual is close to zero, applying a relative tolerance to it was ill-conditioned: small upstream differences in `I_6` were magnified in the residual comparison even though the physical integral column satisfied its original tolerance. PR #34 changed only this comparator branch to `rel_tol=0, abs_tol=5e-8`; all other numerical columns retain `rel_tol=5e-8, abs_tol=1e-12`. No physical calculation, historical input, or archived output was changed.
 
-The corrected workflow passed in [run 43581233498]
+The corrected workflow passed in [run 43581233498](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43581233498): 13/13 Eq. (6) kernel tests, 9/9 phase-space tests, benchmark/threshold/historical-800/off-shell near-pole scans, artifact preservation, and row-by-row comparison with committed phase-space CSV archives. The AFH-7/Hybrid-9 84-point threshold-\(u^2\) grid and its high-order summary were added later; GCN/JJ55 still use the legacy linear-\(W^2\) kernel. Neither this CI run nor the AFH grid closes near-pole width-prescription systematics or the full Mathematica–Python (d\sigma_A/dE_R) comparison.
