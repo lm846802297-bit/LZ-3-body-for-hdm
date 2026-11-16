@@ -83,13 +83,13 @@ The AFH-7/Hybrid-9 outputs are pre-detector nuclear-recoil spectra. The NEST pai
 
 | Work item | Audit status | Current boundary |
 |---|---|---|
-| Three-body kinematic limits and exact spatial (q) | PASS_WITH_NOTES | Inspected formula/code conventions are internally consistent; full parameter scan not claimed |
+| Three-body kinematic limits and exact spatial \(q\) | PASS_WITH_NOTES | Inspected formula/code conventions are internally consistent; full parameter scan not claimed |
 | AFH factor-four normalization | PASS_WITH_NOTES | Xe-131 native response comparison passes; Python-only 652-row full Eq. (6) factor-four ledger passes with mapping residual 3.55679e-16 and physical/no-factor-four ratio residual 0 | Independent native Wolfram 652-row run and Mathematica/Python pointwise comparison remain open |
-| AFH-7/Hybrid-9 84-point spectra | PASS_WITH_NOTES | (10^{-5}) high-order summary passes; full high-order ZIP is external; not AFH-9 |
+| AFH-7/Hybrid-9 84-point spectra | PASS_WITH_NOTES | \(10^{-5}\) high-order summary passes; full high-order ZIP is external; not AFH-9 |
 | Legacy AFH selected-point rate table | HISTORICAL | Reproducible old linear-(W^2) low-order result; do not mix with new threshold-(u^2) grid |
-| GCN/JJ55 continuous spectra | PASS_WITH_NOTES | 84-point outputs exist; kernel-order check is (2.19\times10^{-4}); matched threshold-(u^2) rerun pending |
+| GCN/JJ55 continuous spectra | PASS_WITH_NOTES | 84-point outputs exist; kernel-order check is \(2.19\times10^{-4}\); matched threshold-\(u^2\) rerun pending |
 | High-energy nuclear-model tail comparison | PROVISIONAL | Broad GCN/JJ55 shifts exceed numerical error; Hybrid-9 comparison should be rerun at matched precision |
-| Full Mathematica–Python (d\\sigma_A/dE_R) | OPEN | AFH Xe-131 response-level native Mathematica/Python PASS; separate Python-only v=800 km/s fixed-speed full Eq. (6) 652-row run and factor-four ledger also PASS_WITH_NOTES within Python | Native Wolfram 652-row run and independent pointwise full-cross-section comparison remain open |
+| Full Mathematica–Python \(d\sigma_A/dE_R\) | OPEN | AFH Xe-131 response-level native Mathematica/Python PASS; separate Python-only v=800 km/s fixed-speed full Eq. (6) 652-row run and factor-four ledger also PASS_WITH_NOTES within Python | Native Wolfram 652-row run and independent pointwise full-cross-section comparison remain open |
 | Official LZ detector likelihood | OPEN | No official 2D selected PDF/profile likelihood/90% CL exclusion |
 
 ## 6. Documentation records reviewed in this phase
