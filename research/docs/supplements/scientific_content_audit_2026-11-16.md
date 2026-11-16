@@ -116,3 +116,13 @@ A third consistency pass checked the Xe-131 AFH README, the Figure 2 Anand-respo
 ## 8. Documentation structure and cross-reference QA — 2026-11-16
 
 A structural consistency pass was run across the 36 files changed on this audit branch. All checked relative Markdown links resolve against the branch tree; the machine-readable Figure 2 result index parses as valid JSON; no remaining control characters were found in the reviewed Markdown set. The pass also repaired the NEST progress-section numbering (1–21), nested the later 15.8–15.11 selection-audit material under Section 15, restored malformed LaTeX in the Anand AFH normalization note, and made the status-table section numbering contiguous. This is a documentation-integrity result, not a claim that all 106 research Markdown files have undergone full scientific review.
+
+## 9. Native full-dsigma runner source audit — 2026-11-16
+
+The native Wolfram source, independent Python comparator, and Windows orchestration script were reviewed together. Their default full-grid construction is consistent: 160 regular recoil energies from 5 to 800 keV, plus three additional non-grid anchors (101, 267, 542 keV; 200 keV is already on the regular grid), giving 163 energies per benchmark and 652 rows across four benchmarks. The comparator requires this exact key set when full-grid mode is enabled.
+
+The comparator independently recomputes \(I_6\) and checks the phase-space mask, \(q\), \(C_0\), package and physical AFH responses, \(d\sigma_A/dE_R\), the no-factor-four control, unit conversion, incoming momentum, mediator denominator, and factor-four identities. Its tolerance split is \(2\times10^{-7}\) for \(I_6\)/cross sections, \(2\times10^{-8}\) for the independently translated AFH PCHIP response, and \(2\times10^{-12}\) for algebraic/unit identities.
+
+The Windows wrapper now rejects a one-benchmark run when full-grid mode is requested; checks the native metadata against the requested quadrature orders, 800 km/s, pole-width and threshold-\(u^2\) settings; and requires 652 rows with 500 open points for full-grid acceptance. On a successful pointwise PASS it writes the CSV/JSON results, full_dsigma_sha256_manifest.json, and SHA256SUMS.txt. The manifest hashes the source files, input response tables and generated outputs, and records Wolfram/Python runtime versions.
+
+**Execution boundary:** this was a source-level review only. The Wolfram 652-row job and the Windows wrapper have not been executed in this review; no native Mathematica/Python full-cross-section PASS is claimed. The Python-only full Eq. (6) and factor-four PASS remains a separate, already archived validation layer.
