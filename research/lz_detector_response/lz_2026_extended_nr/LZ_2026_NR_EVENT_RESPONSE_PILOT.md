@@ -1,6 +1,6 @@
 # LZ 2026 NR event-level NEST response pilot
 
-**Status:** implementation prepared; local numerical execution is pending. No event-level output is claimed yet.
+**Status:** the implementation described here has since been executed as a paired 20,000-event pilot (see `LZ_2026_NR_EVENT_LEVEL_PILOT_248KEV.md` and the later full-band candidate report). This file preserves the original driver/protocol and numerical definitions; its outputs are historical candidate-model diagnostics, not an official LZ 2026 response or likelihood reproduction.
 
 ## 1. Objective
 
