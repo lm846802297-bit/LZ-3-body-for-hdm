@@ -8,7 +8,7 @@
 
 ## Current audit and status registers
 
-- [Current Figure 2 results master index](supplements/figure2_results_master_index_2026-11-16.md): current main-branch result map, 12 groups and 87 SHA-256/size records, including the full AFH-7 response grid and AFH-7/Hybrid-9 84-point spectra.
+- [Current Figure 2 results master index](supplements/figure2_results_master_index_2026-11-16.md): current PR #45 result map targeting main: 13 groups, 91 committed SHA-256/size records plus one external high-order archive checksum (92 output records), including the full AFH-7 response grid and AFH-7/Hybrid-9 84-point spectra.
 - [Current machine-readable result manifest](supplements/figure2_results_master_index_2026-11-16.json): source commit, parameters, repository paths, SHA-256 digests, byte sizes, and explicit external-archive boundaries.
 - [Historical Figure 2 results index (2026-11-13)](supplements/figure2_results_master_index_2026-11-13.md): retained as the earlier nine-group/60-file snapshot.
 - [Physics formula cross-audit](supplements/figure2_physics_formula_audit_2026-11-13.md): original Lagrangian, two radiation diagrams, Dirac trace, three-body phase-space Jacobian, \(256\pi^3\), AFH factor four, \(v_{\min}\), and natural-xenon rate normalization.
