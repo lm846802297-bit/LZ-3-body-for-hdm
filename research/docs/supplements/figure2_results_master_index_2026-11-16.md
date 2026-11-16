@@ -3,7 +3,6 @@
 **Current source:** PR #45, branch `docs/scientific-content-audit-20261116`, targeting `main`  
 **Updated:** 2026-11-16  
 **Coverage:** 13 result groups; 92 file entries with SHA-256 and byte sizes.
-**Coverage:** 12 result groups; 87 file entries with SHA-256 and byte sizes.
 
 The [2026-11-13 index](figure2_results_master_index_2026-11-13.md) is retained as a historical snapshot. This index supersedes its statement that the full 16,807-row AFH seven-isotope response grid is checksum-only and not committed.
 
@@ -42,7 +41,7 @@ Path: `research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full
 - Workflow [run 43591097068](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43591097068) completed successfully; head commit `c2d0590114ad0bf90fc741278e21868af52b65cf`; artifact [14112736343](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43591097068) is retained.
 - The v=800 km/s fixed-speed Xe-131 calculation covers 652 rows (500 open, 152 closed) and 16 high-order anchors. Maximum I6 relative difference: 1.66367e-11; AFH factor-four mapping residual: 3.55679e-16; physical/no-factor-four ratio residual: 0.
 - This is a Python-only full Eq. (6) and factor-four PASS_WITH_NOTES under the conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions. It is not a natural-xenon halo fold.
-- The independent native Wolfram 652-row execution and pointwise Mathematica/Python full-cross-section comparison remain pending. The 2,401-node Xe-131 response-level PASS does not substitute for that cross-code gate.
+- The independent native Wolfram 652-row execution and pointwise Mathematica/Python full-cross-section comparison are now complete and archived in Section 5 below; the 2,401-node response-level PASS remains a distinct earlier validation layer.
 
 ### 5. Native Mathematica/Python full Xe-131 Eq. (6) cross-code comparison
 
@@ -64,7 +63,7 @@ The historical selected-point AFH rates are retained and reproducible, but their
 
 - AFH-7 is not AFH-9: Xe-124 and Xe-126 lack AFH v6.0 default-density matrices.
 - Hybrid-9 is AFH-7 plus a Helm fallback for those two isotopes; it is a labelled diagnostic.
-- The native Mathematica Xe-131 response-level comparison is distinct from the Python-only full Eq. (6) result above; neither by itself closes the native-Wolfram/Python full-cross-section cross-code gate.
+- The native Mathematica Xe-131 response-level comparison and the full fixed-speed Xe-131 Eq. (6) cross-code comparison are distinct validation layers; the latter passes for the 652-row, 800 km/s, conditional pole-width benchmark, but neither result is a natural-xenon halo fold or LZ likelihood.
 - The LZ NEST response archive remains an intermediate detector-response diagnostic, not an official waveform-level selected PDF, profile likelihood or 90% CL exclusion.
 
 ## Historical index
