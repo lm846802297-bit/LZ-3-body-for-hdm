@@ -62,6 +62,7 @@ The detailed sections below preserve earlier calculations and their provenance. 
 |---|---|---|
 | AFH Xe-131 核响应 | 2401 个 \(q\) 节点；60 位精度 mpmath 与 Wolfram 14.0.0 原生逐点对照均通过，最大相对差异 \(3.59\times10^{-9}\) | 仅验证 Xe-131 AFH response-level；不代表完整天然氙连续谱或 LZ likelihood |
 | Python-only 完整 Eq. (6) 截面与因子 4 | v=800 km/s、Xe-131、652 行（500 open、152 closed），16 个高阶锚点；factor-4 mapping residual \(3.56\times10^{-16}\)，physical/no-factor-four ratio residual 0 | 条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width；Python 内部 PASS，不是 Mathematica/Python cross-code PASS，也不是天然氙 halo fold |
+| 原生 Mathematica/Python 完整 Eq. (6) 截面对照 | Wolfram 14.2.0 与独立 Python 652 行逐点比较 PASS_WITH_NOTES（500 open、152 closed）；max I6 1.34e-12、dσ 2.58e-9、AFH response 2.58e-9、factor-four mapping residual 4.30e-16；per-code conversion identity 4.44e-16/0 | 固定速度 Xe-131、四组 benchmark、条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width；不是天然氙 halo fold 或 LZ likelihood；converted dσ cross-code 使用 2e-7 观测量容差 |
 | AFH 天然氙速率 | 七种可用同位素 16,807 行响应网格和 84 点 AFH-7 full-range spectrum | Xe-124/Xe-126 缺少当前 AFH default density matrix；尚未得到 AFH-9 |
 | GCN/JJ55 天然氙谱 | 四组 benchmark 的 84 点连续反冲谱 | 是独立核模型对照；仍使用 legacy linear-\(W^2\) 求积，与 AFH-7 threshold-\(u^2\) 尚未匹配 |
 | 450 keV supplied benchmark | 单点 \(\mathcal L_{00}\)/\(I_6\) 本地验收；另有 105 点 Xe-131 fixed-speed curve | 不是天然氙 halo rate；curve 使用 \(M_A=131u\)、zero width，且未积分两端开放区间 |
