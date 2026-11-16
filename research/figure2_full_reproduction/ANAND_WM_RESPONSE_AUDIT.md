@@ -107,53 +107,57 @@ SetIsotope[54,131,"default","default"]
 
 This selects both the AFH default Xe-131 density matrix and the AFH default
 oscillator prescription. The resulting length is
-
-[
+\[
 b_{131}=2.2923417985218975 mathrm{fm}.
 ]
 
+
 ### 7.1 AFH isoscalar normalization
 
-The package call `ResponseNuclear[y,1,0,0]` returns the AFH isoscalar
-`W_M^{00}`. Its isospin convention includes a factor one half in the
+The package call ResponseNuclear[y,1,0,0] returns the AFH isoscalar
+\(W_M^{00}\). Its isospin convention includes a factor one half in the
 isoscalar nucleon operator. Consequently,
 
-[
-rac{4pi}{2J_A+1}W_{M,mathrm{AFH}}^{00}(0)
-=rac{A^2}{4},
-]
+\[
+\frac{4\pi}{2J_A+1}W_{M,\mathrm{AFH}}^{00}(0)
+=
+\frac{A^2}{4},
+\]
 
-not (A^2). For the physical equal-proton/equal-neutron coupling in the
+not \(A^2\). For the physical equal-proton/equal-neutron coupling in the
 manuscript, the coherent response is four times the AFH package's
 isoscalar-normalized response:
 
-[
-oxed{
-mathcal R_A(q)
-=4,rac{4pi}{2J_A+1}W_{M,mathrm{AFH}}^{00}(q)
+\[
+\boxed{
+\mathcal R_A(q)
+=4\,\frac{4\pi}{2J_A+1}W_{M,\mathrm{AFH}}^{00}(q)
 }
-]
+\]
 
 up to the tiny overall correction associated with the finite decimal
 precision of the tabulated density-matrix coefficients. We remove only that
-constant offset by normalizing the response shape to its computed q=0 value:
+constant offset by normalizing the response shape to its computed \(q=0\) value:
 
-[
-mathcal R_A(q)=A^2
-rac{W_{M,mathrm{AFH}}^{00}(q)}
-     {W_{M,mathrm{AFH}}^{00}(0)}.
-]
+\[
+\mathcal R_A(q)=A^2
+\frac{W_{M,\mathrm{AFH}}^{00}(q)}
+     {W_{M,\mathrm{AFH}}^{00}(0)}.
+\]
 
 The direct source translation gives
-((4pi/(2J_A+1))W_M^{00}(0)=4289.8959557), compared with
-(A^2/4=4290.25), a relative difference (8.25	imes10^{-5}).
-The normalized equal-p/n response satisfies (mathcal R_A(0)=17161).
+\[
+\frac{4\pi}{2J_A+1}W_{M,\mathrm{AFH}}^{00}(0)=4289.8959557,
+\qquad
+\frac{A^2}{4}=4290.25,
+\]
+a relative difference of \(8.25\times10^{-5}\). The normalized
+equal-\(p/n\) response satisfies \(\mathcal R_A(0)=17161\).
 
 This is the same physical convention as the existing dmscatter calculation,
 which sums the four pp, pn, np, nn response channels. It is not correct to
-compare the raw AFH package (W_M^{00}) to that four-channel sum without
+compare the raw AFH package \(W_M^{00}\) to that four-channel sum without
 the factor of four.
-
 ### 7.2 AFH default response minima
 
 | Model | q_min [MeV] | E_R,min [keV] | R_min/R(0) |
