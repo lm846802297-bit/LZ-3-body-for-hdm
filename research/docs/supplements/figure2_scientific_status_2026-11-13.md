@@ -2,7 +2,7 @@
 
 ## 0. Current status update — 2026-11-16
 
-This update supersedes the 2026-11-14 snapshot rows below for the AFH-7 full-grid milestone and the 2026-11-16 Python-only full Eq. (6) / factor-four validation. Historical tables remain below for provenance; they are not the current status where this update gives a newer result.
+This update supersedes the 2026-11-14 snapshot rows below for the AFH-7 full-grid milestone and the 2026-11-16 Python-only full Eq. (6) / factor-four validation and native Mathematica/Python 652-row full-cross-section comparison. Historical tables remain below for provenance; they are not the current status where this update gives a newer result.
 
 | Topic | Current status | Evidence | Remaining boundary |
 |---|---|---|---|
