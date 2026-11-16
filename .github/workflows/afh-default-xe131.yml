@@ -87,7 +87,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: native-xe131-full-dsigma-crosscheck
-          path: \${{ runner.temp }}/full_dsigma_crosscheck/
+          path: ${{ runner.temp }}/full_dsigma_crosscheck/
           if-no-files-found: error
           retention-days: 90
 
