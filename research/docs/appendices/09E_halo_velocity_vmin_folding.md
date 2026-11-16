@@ -376,7 +376,8 @@ q_{\rm NR}=\sqrt{2m_AE_R}
 
 这解释了为什么 Green 在 101 keV 处只剩 Xe-136 有贡献：Xe-136 是当前七种可用同位素中质量最大的核，因而在该点具有最低的三体阈值速度。其他六种同位素的阈值均高于 SHM 支持区间。Xe-136 虽然开放，但只剩极窄的速度积分区间，且 PDF 在 776 km/s 处趋于零，因此速率仍然极小。
 
-## E.5 已归档的 selected-point 速率
+## E.5 历史 selected-point 速率（保留为历史基准）
+本节的 101、200、267、542 keV 数值来自早期 selected-point halo fold，使用当时的低阶 linear-\(W^2\) kernel。2026-11-14 后，AFH-7/Hybrid-9 已有独立的 84 点、5–800 keV threshold-\(u^2\) grid-sampled spectra；共同反冲点上旧 selected-point 值与新 AFH-7 grid 可相差约 230–255 ppm。旧表保留用于 provenance，不应覆盖或混用为当前 AFH-7 谱。
 
 在 \(E_R=101\) keV，结果为：
 
@@ -398,23 +399,23 @@ Green benchmark 在其他三个选定反冲能量的结果为：
 
 这些是 selected-point 理论速率，不是连续反冲谱，也不是 LZ 探测器层面的事件预测。
 
-## E.6 速度求积与适用范围
+## E.6 历史 selected-point 速度求积与当前全网格状态
 
-当前天然氙计算采用：
+以下求积阶数和交叉检查仅描述本附录所列的历史 selected-point fold：
 
 - 速度积分：32 点 Gauss–Legendre；
 - 三体 kernel：\(8\times8\times4\) 个 \(W^2,z,\phi_*\) 求积节点；
 - 六个代表性点的 kernel 阶数对照：\(8\times8\times4\) 与 \(16\times16\times8\)，最大相对差异 \(2.19\times10^{-4}\)；
 - 五个代表性点的速度阶数对照：32 与 64 节点，最大相对差异 \(3.31\times10^{-6}\)。
 
-当前所有 selected-point 的 \(v_{\min}\) 都高于 \(v_{\rm esc}-v_E=312\) km/s，因此这些积分点均落在截断 SHM PDF 的第二个解析分支。若未来计算完整连续反冲谱，使某些 \(v_{\min}\) 低于 312 km/s，应在该分段点处分割速度积分区间，以避免 Gauss–Legendre 求积跨越 PDF 的解析分支切换点。
+当前这些 selected-point 的 \(v_{\min}\) 都高于 \(v_{\rm esc}-v_E=312\) km/s，因此旧表中的积分点均落在截断 SHM PDF 的第二个解析分支。新的 AFH-7/Hybrid-9 84 点 runner 已在该分支点处分段积分；GCN/JJ55 仍需在统一 threshold-\(u^2\) 方案下重算并复核速度积分。
 
 当前尚未加入：
 
 - 年度调制；
 - \(v_0,v_E,v_{\rm esc}\) 的系统参数扫描；
 - Xe-124、Xe-126 的 AFH 响应；
-- 连续反冲谱的全网格收敛；
+- GCN/JJ55 与 AFH-7/Hybrid-9 匹配的 threshold-\(u^2\) 全网格重算及共同精度验收；
 - 探测器效率、分辨率、曝光、选择切和背景似然。
 
 主要程序和结果：
@@ -449,4 +450,4 @@ python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_hal
 
 若显式选择 nr_approx，程序会因输入样本仍采用 exact spatial q 而报错，除非同时提供在 NR q 处重新计算的匹配响应值。该检查用于防止把一个 q 点的 \(R_A\) 错误地标记成另一个 q 点的响应。
 
-本节的 selected-point 速率保留 exact spatial q，不进行经验重标度。NR 近似的响应变化见独立补充技术说明；连续反冲谱仍需恢复完整七同位素 AFH 响应网格后再开展。
+本节的 selected-point 速率保留 exact spatial q，不进行经验重标度。NR 近似的响应变化见独立补充技术说明。当前 AFH-7/Hybrid-9 已有逐同位素 exact-q 的 84 点全范围 sampled spectra（5–800 keV），但它们是 pre-detector grid-sampled rates，不是 analytic continuum；高阶 1,344 行 ZIP 仍为外部 checksum-only，且 Xe-124/Xe-126 的 AFH 输入仍缺失。
