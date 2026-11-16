@@ -13,6 +13,10 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+if ($RequireFullGrid -and $Benchmark -ne "all") {
+    throw "RequireFullGrid needs -Benchmark all. For a single-benchmark pilot, pass -RequireFullGrid `$false."
+}
+
 $studyDir = $PSScriptRoot
 $wolframFile = Join-Path $studyDir "run_afh_eq6_full_dsigma.wls"
 $pythonComparator = Join-Path $studyDir "compare_full_dsigma_mathematica.py"
@@ -87,6 +91,61 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 $comparison = Get-Content -Raw -Path $comparisonMetadata | ConvertFrom-Json
+$nativeMeta = Get-Content -Raw -Path $mathematicaMetadata | ConvertFrom-Json
+if ($comparison.status -ne "PASS") {
+    throw "Comparison metadata did not report PASS."
+}
+if ([int]$nativeMeta.output.rows -ne [int]$comparison.rows) {
+    throw "Mathematica metadata row count does not match the Python comparison."
+}
+if ([double]$nativeMeta.particle_inputs.speed_km_s -ne 800.0) {
+    throw "Unexpected fixed speed in Mathematica metadata; expected 800 km/s."
+}
+if ($nativeMeta.integration.width_scheme -ne "pole" -or $nativeMeta.integration.W2_mapping -ne "threshold_u2") {
+    throw "Unexpected width or W2-mapping convention in Mathematica metadata."
+}
+if ($RequireFullGrid -and ([int]$comparison.rows -ne 652 -or [int]$comparison.open_phase_space_rows -ne 500)) {
+    throw "Full-grid acceptance requires 652 rows and 500 open phase-space rows."
+}
+
+$eq6Kernel = Join-Path $studyDir "..\figure2_full_reproduction\eq6_kernel.py"
+$phaseSpace = Join-Path $studyDir "..\figure2_full_reproduction\phase_space_convergence.py"
+$requirements = Join-Path $studyDir "requirements.txt"
+$filesToHash = @(
+    $wolframFile, $pythonComparator, $PSCommandPath, $eq6Kernel, $phaseSpace,
+    $requirements, $pythonAfhTable, $nativeAfhTable,
+    $mathematicaCsv, $mathematicaMetadata, $comparisonCsv, $comparisonMetadata
+)
+$hashEntries = @()
+foreach ($file in $filesToHash) {
+    if (-not (Test-Path -LiteralPath $file)) {
+        throw "Cannot create a complete provenance manifest; missing file: $file"
+    }
+    $hash = Get-FileHash -LiteralPath $file -Algorithm SHA256
+    $hashEntries += [pscustomobject]@{
+        file = (Split-Path -Leaf $file)
+        sha256 = $hash.Hash.ToLowerInvariant()
+    }
+}
+$manifest = [ordered]@{
+    schema_version = 1
+    generated_utc = [DateTime]::UtcNow.ToString("o")
+    status = $comparison.status
+    benchmark = $Benchmark
+    speed_km_s = [double]$nativeMeta.particle_inputs.speed_km_s
+    require_full_grid = $RequireFullGrid
+    rows = [int]$comparison.rows
+    open_phase_space_rows = [int]$comparison.open_phase_space_rows
+    quadrature = [ordered]@{ nW = $NW; nz = $NZ; nphi = $NPhi }
+    width_scheme = $nativeMeta.integration.width_scheme
+    W2_mapping = $nativeMeta.integration.W2_mapping
+    max_relative_differences = $comparison.max_relative_differences
+    files = $hashEntries
+}
+$manifestPath = Join-Path $OutputDirectory "full_dsigma_sha256_manifest.json"
+$manifest | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $manifestPath -Encoding UTF8
+$hashLines = $hashEntries | ForEach-Object { "$($_.sha256)  $($_.file)" }
+$hashLines | Set-Content -LiteralPath (Join-Path $OutputDirectory "SHA256SUMS.txt") -Encoding ASCII
 if ($comparison.status -ne "PASS") {
     throw "Comparison metadata did not report PASS."
 }
@@ -99,3 +158,4 @@ Write-Host ("Maximum dSigma relative difference: {0:E6}" -f $comparison.max_rela
 Write-Host ("Maximum AFH response relative difference: {0:E6}" -f $comparison.max_relative_differences.R_A_physical)
 Write-Host ("Factor-four mapping residual: {0:E6}" -f $comparison.max_relative_differences.factor4_mapping)
 Write-Host ("Comparison archive: {0}" -f $OutputDirectory)
+Write-Host ("SHA-256 manifest: {0}" -f $manifestPath)
