@@ -114,8 +114,12 @@ if ($RequireFullGrid -and (-not [bool]$comparison.full_grid_required -or [int]$c
 $eq6Kernel = Join-Path $studyDir "..\figure2_full_reproduction\eq6_kernel.py"
 $phaseSpace = Join-Path $studyDir "..\figure2_full_reproduction\phase_space_convergence.py"
 $requirements = Join-Path $studyDir "requirements.txt"
+$nativeAfhGenerator = Join-Path $studyDir "run_afh_default_xe131.wls"
+$nativeAfhComparator = Join-Path $studyDir "compare_afh_mathematica_python.py"
+$nativeAfhManifest = Join-Path $studyDir "output\native_audit\afh_native_audit_manifest.json"
 $filesToHash = @(
     $wolframFile, $pythonComparator, $PSCommandPath, $eq6Kernel, $phaseSpace,
+    $nativeAfhGenerator, $nativeAfhComparator, $nativeAfhManifest,
     $requirements, $pythonAfhTable, $nativeAfhTable,
     $mathematicaCsv, $mathematicaMetadata, $comparisonCsv, $comparisonMetadata
 )
