@@ -349,7 +349,7 @@ Thus the current AFH-7/Hybrid-9 and GCN/JJ55 full-range spectra are not matched 
 - The 84-point AFH-7 grid is a sampled full-range spectrum, not a 1-keV grid or an analytic continuum.
 - AFH-7 covers seven official AFH default-density isotopes; Xe-124/Xe-126 remain missing. Hybrid-9 is a labelled Helm fallback, not AFH-9.
 - GCN/JJ55 have not yet been rerun with the threshold-(u^2) mapping.
-- The full Mathematica–Python (d\sigma_A/dE_R) comparison remains separate and open.
+- The fixed-speed Xe-131 full Mathematica–Python \(d\sigma_A/dE_R\) comparison was completed on 2026-11-16 (652 rows; comparator JSON PASS; scientific status PASS_WITH_NOTES). This is a separate single-isotope cross-code validation; it does not close the natural-xenon GCN/JJ55 matched-mapping, halo-fold, near-pole width-systematics, or detector-likelihood tasks.
 
 The 2026-11-16 fixed-speed, zero-width Xe-131 (I_6) mapping audit is another limited diagnostic. It does not replace the natural-xenon, pole-width, halo-folded comparison above.
 
