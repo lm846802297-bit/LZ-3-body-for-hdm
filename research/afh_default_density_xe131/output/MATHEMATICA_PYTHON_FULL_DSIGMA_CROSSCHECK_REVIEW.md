@@ -193,6 +193,7 @@ For the green smoke point, all four anchor energies 101, 200, 267 and
 ## 8. Scientific status
 
 - AFH factor-four normalization: already validated at the 2401-node response
+- Python-only full Xe-131 Eq. (6) and factor-four ledger: PASS on 652 rows (500 open, 152 closed), 16 high-order anchors, maximum I6 relative difference 1.66367e-11, factor-four mapping residual 3.55679e-16, and physical/no-factor-four ratio residual 0. This validates the transfer within the Python implementation only.
   level by the archived native Mathematica/Python audit.
 - Historical green \(I_6\) mapping audit: complete; see
   [HISTORICAL_I6_MAPPING_AUDIT.md](HISTORICAL_I6_MAPPING_AUDIT.md).
