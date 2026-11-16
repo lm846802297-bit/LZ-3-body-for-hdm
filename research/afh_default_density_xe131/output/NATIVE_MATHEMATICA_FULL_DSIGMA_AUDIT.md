@@ -127,6 +127,8 @@ A matched historical-I6 mapping audit is now complete: [workflow run 43768639839
 |---|---|
 | AFH v6.0 Xe-131 response, native Mathematica vs Python, 2401 q nodes | **PASS** |
 | AFH factor-four convention and C0 separation | **PASS at response level** |
+| Python-only full Xe-131 Eq. (6) and factor-four ledger, 652 rows | **PASS within Python implementation**; artifact 14112736343 |
+| Native Wolfram full 652-row Eq. (6) and independent Python comparison | **Pending; no cross-code PASS** |
 | Historical green I6 archive vs legacy and stable W2 mappings | **PASS: archived value reproduced; threshold_u2 converged** |
 | Wolfram Language full I6 implementation | **Prepared; not yet executed** |
 | Full d sigma/dE_R, Mathematica vs Python | **Not yet validated** |
