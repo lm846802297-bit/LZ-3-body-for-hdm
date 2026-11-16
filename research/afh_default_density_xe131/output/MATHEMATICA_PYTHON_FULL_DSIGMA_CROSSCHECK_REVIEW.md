@@ -210,13 +210,11 @@ For the green smoke point, all four anchor energies 101, 200, 267 and
 
 ## 9. Scientific status
 
-- AFH factor-four normalization: already validated at the 2401-node response
-- Python-only v=800 km/s fixed-speed Xe-131 Eq. (6) and factor-four ledger under the conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions: PASS on 652 rows (500 open, 152 closed), 16 high-order anchors, maximum I6 relative difference 1.66367e-11, factor-four mapping residual 3.55679e-16, and physical/no-factor-four ratio residual 0. This validates the transfer within the Python implementation only.
-  level by the archived native Mathematica/Python audit.
-- Historical green \(I_6\) mapping audit: complete; see
-  [HISTORICAL_I6_MAPPING_AUDIT.md](HISTORICAL_I6_MAPPING_AUDIT.md).
-- Native Mathematica/Python full \(d\sigma_A/dE_R\): **PASS_WITH_NOTES** on 652 rows (500 open, 152 closed); max \(I_6\) difference 1.34e-12, \(d\sigma\) difference 2.58e-9, AFH response difference 2.58e-9, factor-four mapping residual 4.30e-16. Per-code unit-conversion identities pass at 2e-12; cross-code converted-rate comparison is within the 2e-7 observable tolerance.
-- Detector response and final LZ likelihood: outside this Xe-131 fixed-speed cross-code validation.
-  output CSV, and SHA-256 manifest have been reviewed.
-- Detector response and final LZ likelihood: outside this Xe-131 fixed-speed
-  cross-code validation.
+- **AFH factor-four normalization:** validated at the 2401-node response level; the full-grid audit separately verifies the factor-four transfer at all 652 benchmark-energy points.
+- **Python-only full Xe-131 Eq. (6):** PASS within the Python implementation on 652 rows (500 open, 152 closed), with 16 high-order anchors; maximum \(I_6\) relative difference \(1.66367\times10^{-11}\), factor-four mapping residual \(3.55679\times10^{-16}\), and physical/no-factor-four ratio residual 0.
+- **Native Wolfram/Python full \(d\sigma_A/dE_R\):** PASS_WITH_NOTES on 652 rows (500 open, 152 closed); maximum \(I_6\) difference \(1.33872\times10^{-12}\), physical \(d\sigma\) difference \(2.57632\times10^{-9}\), AFH response difference \(2.57509\times10^{-9}\), and factor-four mapping residual \(4.30300\times10^{-16}\). Per-code unit-conversion identities pass at \(4.44089\times10^{-16}\) (Mathematica) and 0 (Python).
+- **Comparator status distinction:** the committed machine-readable comparison JSON reports `PASS` because all numerical acceptance criteria pass. The broader scientific classification is `PASS_WITH_NOTES` because the result is fixed-speed Xe-131 and uses the conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions.
+- **Historical green \(I_6\) mapping audit:** complete; see [HISTORICAL_I6_MAPPING_AUDIT.md](HISTORICAL_I6_MAPPING_AUDIT.md).
+- **Natural xenon and LZ likelihood:** outside this Xe-131 fixed-speed cross-code validation. No natural-xenon halo fold, detector response, official LZ selected PDF, or detector-level likelihood is claimed.
+
+The native full-cross-section run, native CSV/metadata, independent pointwise comparison, and refreshed SHA-256 checksums are archived under `output/full_dsigma_mathematica/`.
