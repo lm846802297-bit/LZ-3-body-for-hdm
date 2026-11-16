@@ -130,14 +130,14 @@ The script checks out the exact NEST commit, builds NESTCore and the C++ driver,
 
 ## 9. Interpretation limits and next gates
 
-1. **No numerical result exists until the PowerShell run completes.** Source inspection and code preparation must not be described as a successful event-level reproduction.
+1. **Historical pre-run rule:** before the paired pilot completed, source inspection and code preparation alone were not evidence of a successful event-level reproduction. The subsequent paired 20,000-event run is recorded in `LZ_2026_NR_EVENT_LEVEL_PILOT_248KEV.md`.
 2. The WS2024 detector class is a well-motivated LZ candidate because its gain and S2 threshold agree closely with values quoted in the 2026 paper. It is not confirmed as the exact 2026 extended-NR response configuration.
 3. The detector header recommends NEST v2.4.0, while the 2026 paper says NEST v2.4.5. The selected source commit contains the high-energy Table S5 mean-yield extension but is a commit pin, not an official tagged-version claim.
 4. The pilot uses a central reference position, not the full spatial distribution or detector maps.
 5. S2 waveform mode, waveform diffusion/electron-train details, the complete selection, ER model, calibration PDFs, nuisance covariance, backgrounds, and the 2D signal likelihood are not included.
 6. The 248 keV candidate event is not a calibration anchor and must not be used to tune the NR response.
 
-After local execution, inspect the CSV integrity, compare A/B distributions at 74.7, 248, and 269.9 keV first, then expand only if the pilot passes. Any claim of matching the 2026 NR band requires the relevant collaboration response configuration and calibration checks.
+The paired pilot has completed and its CSV integrity and A/B comparison are archived in `LZ_2026_NR_EVENT_LEVEL_PILOT_248KEV.md`; the expanded full-S1c NR/ER candidate bands and conditional response studies are in `LZ_2026_NR_ER_FULL_RESPONSE_CANDIDATE_REPORT.md`. Further claims of matching the 2026 NR band still require the collaboration's exact response configuration and calibration distributions.
 
 ## 10. Reproducibility files
 
