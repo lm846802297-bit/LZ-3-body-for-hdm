@@ -1766,7 +1766,7 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 | F3 三体相空间变量与 \(I_6\) | 部分验证（按计算链分层） | AFH-7/Hybrid-9 84 点 threshold-\(u^2\) 网格；基准谱到 \(24\times8\times8\times4\) 高阶谱的最大差异 \(6.47\times10^{-6}\) | GCN/JJ55 仍为 legacy linear-\(W^2\)、\(8\times8\times4\)，最大 kernel-order difference \(2.18895\times10^{-4}\)；近极点宽度处方系统比较与跨模型匹配重算仍开放 |
 | F4 两张辐射图与 Dirac trace | 条件性验证 | before/after/干涉分解、显式自旋求和、壳条件与四动量闭合 | 目前是代表性测试点，不是全参数扫描 |
 | F5 单同位素固定速度 Eq. (6) | 条件性验证 | 四 benchmark 的 AFH/GCN/JJ55 响应替换与截面重构 | 共用既有 \(I_6\)，并非 640 个独立三体积分重算 |
-| F6 AFH 响应与因子 4 归一化 | 已验证（限定 response-level） | Xe-131 2401 点 mpmath/原生 Mathematica-Python response-level 对照通过，最大相对差异 \\(3.59\\times10^{-9}\\)；七同位素 AFH response grid 16,807 行已提交；代码约定为 raw-to-physical factor 4 只应用一次 | AFH-7 覆盖天然氙原子丰度 0.998158；Xe-124/Xe-126 仍缺官方 default matrices；factor 4 从核响应到完整 Eq. (6) 截面的端到端传递尚未由 Mathematica/Python 对照关闭 |
+| F6 AFH 响应与因子 4 归一化 | 已验证（限定 response-level） | Xe-131 2401 点 mpmath/原生 Mathematica-Python response-level 对照通过，最大相对差异 \(3.59\times10^{-9}\)；七同位素 AFH response grid 16,807 行已提交；代码约定为 raw-to-physical factor 4 只应用一次 | AFH-7 覆盖天然氙原子丰度 0.998158；Xe-124/Xe-126 仍缺官方 default matrices；factor 4 从核响应到完整 Eq. (6) 截面的端到端传递尚未由 Mathematica/Python 对照关闭 |
 | F7 同位素质量、丰度与 \(N_T\) | 已验证 | 九同位素质量—丰度表、精确加权平均质量和每 kg 靶核数 | 电子结合能忽略；AFH 响应可用同位素仅七种 |
 | F8 三体 \(v_{\min,A}\) | 已验证 | 28/28 逐同位素阈值复算；最大速度差 \(4.35\times10^{-10}\) km/s | 适用范围为当前 benchmark 与输入质量约定 |
 | F9 实验室系速度 PDF | 已验证 | untruncated MB 与 truncated SHM 数值积分归一化 | 物理预测仍依赖所选 halo 参数 |
