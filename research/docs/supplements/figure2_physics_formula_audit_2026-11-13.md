@@ -392,6 +392,6 @@ N_{\rm sig}^{\rm ROI}
 下一轮应优先：
 1. 由模型作者/原始拉格朗日量固定 Dirac/Majorana 与 CP/手征约定；
 2. 为 Xe-124、Xe-126 寻找独立、可追溯的 one-body density matrix；当前 AFH-7 的七同位素响应网格和 84 点谱已完成，取得这两种同位素的矩阵后才可将 Hybrid-9 fallback 替换为真正的 AFH-9；
-3. 不再重复 Xe-131 原生 Mathematica 2401 点 response-level 计算；优先完成完整 Eq. (6) pole-width \(I_6\) 与 \(d\\sigma_A/dE_R\) 的 Mathematica–Python 端到端对照，并检查 factor 4 从核响应到最终截面的传递；同时将 GCN/JJ55 重算为与 AFH-7 匹配的 threshold-\(u^2\) 求积方案；
+3. 不再重复 Xe-131 原生 Mathematica 2401 点 response-level 计算；优先完成完整 Eq. (6) pole-width \(I_6\) 与 \(d\sigma_A/dE_R\) 的 Mathematica–Python 端到端对照，并检查 factor 4 从核响应到最终截面的传递；同时将 GCN/JJ55 重算为与 AFH-7 匹配的 threshold-\(u^2\) 求积方案；
 4. 只有在以上输入和模型约定固定后，才推进 LZ 二维 NEST/background/profile-likelihood recast。
 
