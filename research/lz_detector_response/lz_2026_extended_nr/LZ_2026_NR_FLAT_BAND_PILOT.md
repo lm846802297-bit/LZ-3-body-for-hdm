@@ -1,6 +1,6 @@
 # LZ 2026 flat-spectrum NR band pilot at the candidate position
 
-**Status:** two 200,000-event-per-sample NEST simulations completed successfully. The output reproduces the reported candidate's approximate displacement from the NR median at the correct approximate reconstructed location. This remains a candidate-model cross-check, not an exact reconstruction of the collaboration's final band.
+**Status:** two 200,000-event-per-sample WS2024/generic NEST simulations completed successfully. This is a historical candidate-position cross-check; the later EFT2024 full-band candidate report supersedes it as the primary public-configuration comparison. Neither study is an exact reconstruction of the collaboration's final calibration band.
 
 ## 1. Source prescription and position
 
