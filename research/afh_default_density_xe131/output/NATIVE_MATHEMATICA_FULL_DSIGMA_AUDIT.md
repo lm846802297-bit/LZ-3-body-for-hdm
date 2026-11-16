@@ -122,7 +122,7 @@ The comparator uses 2e-7 relative tolerance for I6, d sigma/dER, and the cross-c
 
 A matched historical-I6 mapping audit is now complete: [workflow run 43768639839](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43768639839), artifact 14182804837. At the archived green point (v=776 km/s, zero width, 40x32x20), the legacy Eq. (6) kernel reproduces the archived I6 exactly; the independent linear-W^2 mapping agrees within 5.42e-11 relative, and linear-W within 2.32e-9. The threshold_u2 mapping at the same 40x32x20 order is lower by 2.14--2.23e-6, but its 48x40x24 and 64x48x32 results agree within 1.40e-11. Thus the archived finite-order value is reproduced, while the threshold-regularized high-order result is converged. The earlier 4.11e-5 preflight discrepancy is not reproduced under these matched inputs and is retained only as an unverified preliminary observation. Full values and hashes are in [HISTORICAL_I6_MAPPING_AUDIT.md](HISTORICAL_I6_MAPPING_AUDIT.md). This audit changes neither the AFH response nor the full-cross-section status.
 
-## 5.1 Executed native result — 2026-11-16
+### 5.1 Executed native result — 2026-11-16
 
 | Quantity | Maximum relative difference / residual | Acceptance |
 |---|---:|---:|
