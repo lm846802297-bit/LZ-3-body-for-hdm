@@ -85,7 +85,8 @@ The public NEST `LZ_WS2024.hh` detector file explicitly describes WS2024/EFT2024
 
 The paper's public NR efficiency curve remains a valuable independent validation target, but it is not a substitute for the conditional two-dimensional response.
 
-## 4. NEST implementation work to perform next
+## 4. Original NEST implementation checklist (progress recorded in later sections)
+The following A1–A3 items preserve the original implementation checklist. Their completed substeps are documented in the later progress sections; the executive status above and Section 18 supersede any earlier 'pending' wording.
 
 ### A1. Mean-yield implementation and verification
 
@@ -445,7 +446,7 @@ The previous pilot used the rounded Table S5 NR mean vector, WS2024 or generic w
 
 It generates the full 0.1–330 keV flat NR band both at the candidate position and under a uniform-active-TPC spatial proxy. The latter is an explicit approximation, not the actual calibration-source spatial distribution.
 
-**Current validation boundary:** exact source vectors and code mappings are now audited; the new event-level band workflow is running. The EFT2024 candidate still needs comparison against the digitized full published NR band and the calibration data before being called a reproduction.
+**Historical validation boundary (before the full-band follow-up):** at that stage, the event-level band workflow was still running. It subsequently completed; the full-S1c NR/ER band and conditional 2D response status is recorded in Section 18 and the linked candidate report. The remaining boundary is exact calibration-source geometry, official build provenance, nuisance covariance, and BACCARAT likelihood inputs.
 
 
 ## 18. HEPData configuration audit, full NR band, and ER/2D response pilots (2026-11-15)
