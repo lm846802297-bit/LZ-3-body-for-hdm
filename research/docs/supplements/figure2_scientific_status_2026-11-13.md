@@ -17,7 +17,7 @@ This update supersedes the 2026-11-14 snapshot rows below for the AFH-7 full-gri
 
 The Python-only full fixed-speed result and the native Mathematica/Python 652-row cross-code result are separate calculation layers. The latter now verifies pointwise agreement of the complete fixed-speed Xe-131 Eq. (6) implementation after the per-code unit-conversion identities were separated from the converted-rate cross-code comparison. Neither result is a natural-xenon halo fold or an official LZ detector likelihood. The historical Section 2–5 tables below retain their original dates and should be read as snapshots where they differ from this current-status table.
 
-The 2026-11-16 source-of-truth index is [12 groups / 87 files](figure2_results_master_index_2026-11-16.md). The full audit is [scientific_content_audit_2026-11-16.md](scientific_content_audit_2026-11-16.md).
+The 2026-11-16 source-of-truth index is [13 groups / 92 files](figure2_results_master_index_2026-11-16.md), including the native full Eq. (6) Mathematica/Python cross-code archive. The full audit is [scientific_content_audit_2026-11-16.md](scientific_content_audit_2026-11-16.md).
 
 日期：2026-11-16（以下原始表保留 2026-11-14 状态快照；本页以新增 2026-11-16 更新为当前状态）
 本表按“当前可证明的范围”给状态，不把某个局部 benchmark 的通过推广成整个模型或整条连续谱均已验证。
