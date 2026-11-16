@@ -17,7 +17,7 @@ Read [WORKFLOW.md](WORKFLOW.md) before starting a new study. Use [_template/READ
 - [figure2_kinematic_audit/](figure2_kinematic_audit/README.md): threshold conditions, maximum scalar mass, and phase-space checks.
 - [figure2_full_reproduction/](figure2_full_reproduction/README.md): Eq. (6) kernel, GCN/JJ55 natural-xenon halo-folded continuous spectra, fixed-speed Xe-131 diagnostics, the supplied 450-keV pointwise benchmark, tests, and numerical outputs. The 450-keV fixed-speed curve is a single-isotope zero-width diagnostic, not a halo or detector-level prediction.
 - [afh_default_density_xe131/](afh_default_density_xe131/README.md): AFH v6.0 Xe-131 response, normalization and momentum-convention audits, AME2020/CODATA-2022 mass diagnostics, and the historical I6 mapping/quadrature audit. The latter reproduces I6 only; it does not validate the full differential cross section.
-- [afh_default_density_natural_xenon_halo/](afh_default_density_natural_xenon_halo/README.md): isotope-resolved AFH default-density natural-xenon halo fold, seven-isotope response extraction, selected-q 60-digit mpmath validation, interpolation-accuracy audit, and AFH-7/Hybrid-9 continuous recoil spectra with high-order quadrature checks. The selected-point AME2020 fold remains a distinct mass-scheme record; none of these results is a detector-level LZ likelihood.
+- [afh_default_density_natural_xenon_halo/](afh_default_density_natural_xenon_halo/README.md): 七同位素 AFH default-density 响应网格（16,807 行）、selected-q 60 位 mpmath 验证、插值审查，以及 AFH-7/Hybrid-9 的 84 点全范围反冲网格谱。最终高阶谱归档目前仅有外部 checksum；selected-point AME2020 fold 仍是独立质量方案记录。以上都不是 detector-level LZ likelihood。
 - [lz_detector_response/](lz_detector_response/README.md): LZ 2026 public-input and NEST provenance, NR/ER response audits, event-level and two-dimensional three-body response folds, paired Parametric/Full S1 ten-seed statistics and bootstrap, Fig. S2 rate-level folds, and selection-stage diagnostics. The [extended NR/ER archive index](lz_detector_response/lz_2026_extended_nr/README.md) distinguishes the reproducible intermediate NEST proxy from the missing official waveform-level selected PDF and likelihood.
 - [figure_packs/](figure_packs/README.md): curated scientific figure collections, indexes, manifests, checksums, and scope notes; metadata does not imply that every image binary is committed.
 ## Current result layers
@@ -45,6 +45,7 @@ Keep the following quantities separate:
 
 ## Figure 2 P0–P2 audit records
 
-- [Figure 2 numerical-results master index](docs/supplements/figure2_results_master_index_2026-11-13.md): benchmark/input/output provenance and SHA-256 inventory, including the native AFH Xe-131 Mathematica audit.
+- [Figure 2 numerical-results master index](docs/supplements/figure2_results_master_index_2026-11-16.md): current main-branch result provenance, including the full AFH-7 response grid and 84-point spectra.
+- [Phase 1 scientific content audit](docs/supplements/scientific_content_audit_2026-11-16.md): current numerical-method and documentation consistency findings.
 - [Figure 2 physics-formula audit](docs/supplements/figure2_physics_formula_audit_2026-11-13.md): equation, implementation, normalization, and validation cross-checks.
 - [Figure 2 scientific-status table](docs/supplements/figure2_scientific_status_2026-11-13.md): verified scope and remaining scientific boundaries.
