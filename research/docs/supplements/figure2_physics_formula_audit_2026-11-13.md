@@ -1,5 +1,11 @@
 # Figure 2 三体暗物质计算：物理公式交叉审查
 
+## 2026-11-16 superseding status
+
+The 2026-11-13 formula audit remains a historical review of the selected-point and pre-full-grid state. Since then, the seven-isotope AFH v6.0 response grid (16,807 rows) and the AFH-7/Hybrid-9 84-point recoil-grid spectra have been committed on `main`. The AFH-7 runner evaluates the finite-sum response at exact isotope-specific spatial q and uses threshold-\(u^2\) phase-space integration. The full high-order 1,344-row spectrum ZIP remains external/checksum-only; the committed 1,344-row spectrum is the baseline calculation with a separately committed high-order summary.
+
+Do not interpret this update as a full AFH-9 result: Xe-124/Xe-126 still lack AFH default-density matrices. The GCN/JJ55 84-point spectra still use the legacy linear-\(W^2\), \(8\times8\times4\) kernel; the maximum \(16\times16\times8\) kernel-order difference across four benchmark metadata files is \(2.18895\times10^{-4}\). Recompute them with threshold-\(u^2\) before precision cross-model comparisons. The full Mathematica–Python Eq. (6) cross-section comparison and official LZ likelihood remain open.
+
 日期：2026-11-13  
 审查对象：`paper-source/main.tex`、主报告、附录 A–G、Eq. (6) kernel、AFH 响应生成与自然氙 halo-fold 程序。  
 审查原则：解析推导、代码实现、输入约定和数值验证分别判定；其中一项通过不自动代表其余层次通过。
@@ -26,7 +32,7 @@
 | \(256\pi^3\) 前因子 | 主报告 §2.5；附录 A.4.1 | `eq6_kernel.py` 的 \(I_6\) 与 `joint_xe131.py` 的 Eq. (6) 前因子 | 独立相空间推导通过 |
 | AFH factor 4 与 \(R_A(0)\) | 主报告 §3.2–3.3；附录 B、C | AFH response CSV；`compute_four_benchmark_dsigma.py`; `recompute_afh_four_benchmarks.py` | raw-to-physical 映射一致；已修正源论文 |
 | 三体 \(v_{\min}\) | 主报告 §6.3；附录 E.2 | `rate_kinematics.py`: `vmin_three_body_beta` | 解析推导一致；独立求根数值对照通过 |
-| 天然氙速率与单位 | 主报告 §6–7；附录 D、E | `run_natural_xenon_halo_fold.py`; `run_afh_natural_xenon_halo_fold.py` | 通量、靶数、丰度、单位换算一致；AFH 仍为 selected points |
+| 天然氙速率与单位 | 主报告 §6–7；附录 D、E | `run_natural_xenon_halo_fold.py`; `run_afh_natural_xenon_halo_fold.py`; `run_afh7_hybrid9_continuous_spectrum.py` | AFH-7/Hybrid-9 84 点 full-range grid 已归档；AFH-7 direct exact-q + threshold-\(u^2\)；GCN/JJ55 仍为 legacy linear-\(W^2\)，跨模型积分精度尚未统一 |
 | LZ 一维效率折叠 | 主报告 §11.6；LZ rate-level metadata | `fold_lz_2026_rate_level.py` | 解析分段积分与稠密梯形交叉检查一致；不等于二维 likelihood |
 
 ## 3. 粒子物理：相互作用、内部传播子与自旋振幅
@@ -375,7 +381,7 @@ N_{\rm sig}^{\rm ROI}
 | P1-04 | Dirac/Majorana 性质与完整 \(\chi_2\) 自能未由原始模型文本固定；benchmark 已明确采用实 \(g_1,g_2\) | 明确保留为模型输入/理论扩展，不将条件性宽度推广 | <span>待补模型定义</span> |
 | P1-05 | Xe-124、Xe-126 的 AFH default response 缺失；完整 16807 行七同位素响应表未提交 | 已审计官方 v6.0 `SetIsotope` dispatch：仅列出 128、129、130、131、132、134、136；124/126 进入缺失矩阵回退 | **缺失已确认；需独立核结构输入** |
 | P1-06 | 原始 Figure 2 的单同位素/天然氙靶定义不明确 | 不把当前 LZ 天然氙扩展误称为原图已确认靶定义 | <span>待补原始输入</span> |
-| P1-07 | 完整 AFH 天然氙连续谱与 LZ 二维 likelihood 未完成 | 继续保留为后续研究，不以 selected points 或一维效率折叠替代 | <span>尚未完成</span> |
+| P1-07 | AFH-7 七同位素 84 点 full-range grid 已完成；AFH-9 仍缺 Xe-124/Xe-126 matrices，LZ 二维 likelihood 未完成 | 保留 AFH-7 与 Hybrid-9 的范围标签；不能将 Hybrid-9 说成 full AFH-9；继续推进 detector response 与 likelihood | <span>部分完成 / 尚未完成</span> |
 | P1-08 | Xe-131 AFH 原生 Mathematica/Python 2401 点独立比较 | Wolfram 14.0.0；相同 \(q\) 网格；四种响应量全部通过；最大相对差异 \(3.59087\times10^{-9}\) | **已完成（仅 response-level）** |
 | P1-09 | AFH v6.0 Xe-124/Xe-126 默认矩阵是否只是提取遗漏 | 源文件第 1555–1597 行的 dispatch 仅包含七种 Xe 同位素；新增静态回归测试锁定该覆盖范围 | **已完成（source-level audit）** |
 
@@ -385,7 +391,7 @@ N_{\rm sig}^{\rm ROI}
 
 下一轮应优先：
 1. 由模型作者/原始拉格朗日量固定 Dirac/Majorana 与 CP/手征约定；
-2. 为 Xe-124、Xe-126 寻找独立、可追溯的 one-body density matrix（轨道空间、相互作用、截断和归一化均需明确）；不能从邻近同位素插值。取得输入后再完成七同位素连续 AFH response grid 和天然氙谱；
+2. 为 Xe-124、Xe-126 寻找独立、可追溯的 one-body density matrix；当前 AFH-7 的七同位素响应网格和 84 点谱已完成，取得这两种同位素的矩阵后才可将 Hybrid-9 fallback 替换为真正的 AFH-9；
 3. 不再重复 Xe-131 原生 Mathematica 2401 点计算；将工作转向七同位素 AFH 连续响应输入与完整 \(I_6\) 连续反冲网格收敛；
 4. 只有在以上输入和模型约定固定后，才推进 LZ 二维 NEST/background/profile-likelihood recast。
 
