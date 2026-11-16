@@ -347,7 +347,7 @@ This is an end-to-end factor-four PASS **within the Python implementation**, und
 
 The native Wolfram runner `run_afh_eq6_full_dsigma.wls` reads the already archived AFH-native 2,401-node response table and independently recomputes \(I_6\). The Python comparator `compare_full_dsigma_mathematica.py` independently recomputes \(I_6\) and compares the AFH response, full \(d\sigma_A/dE_R\), no-factor-four control, momentum, mediator denominator and unit conversion.
 
-On Windows, use `run_native_full_dsigma_windows.ps1` from the repository root after installing the requirements and ensuring `wolframscript` is on `PATH`. The wrapper checks the native and Python AFH inputs, the fixed 800 km/s / pole-width / threshold-(u^2) assumptions and quadrature metadata; it then runs the native integrator and Python comparator. After PASS it writes the native and comparison CSV/JSON files, `full_dsigma_sha256_manifest.json`, and `SHA256SUMS.txt`, including source/input hashes and Wolfram/Python runtime versions.
+On Windows, use `run_native_full_dsigma_windows.ps1` from the repository root after installing the requirements and ensuring `wolframscript` is on `PATH`. The wrapper checks the native and Python AFH inputs, the fixed 800 km/s / pole-width / threshold-\(u^2\) assumptions and quadrature metadata; it then runs the native integrator and Python comparator. After PASS it writes the native and comparison CSV/JSON files, `full_dsigma_sha256_manifest.json`, and `SHA256SUMS.txt`, including source/input hashes and Wolfram/Python runtime versions.
 
 High-order anchors are a separate quadrature-convergence check. For a focused comparison, use a distinct output directory, one benchmark, 48x40x24, and `-RequireFullGrid $false`; the wrapper still compares every row in that subset. Do not infer quadrature convergence from cross-code agreement at one order.
 
@@ -401,11 +401,6 @@ powershell -ExecutionPolicy Bypass -File research/afh_default_density_xe131/run_
 
 This requires Mathematica or Wolfram Engine with wolframscript available on
 PATH. The wrapper checks both archived native and Python AFH response tables, validates the fixed 800 km/s / pole-width / threshold-\(u^2\) assumptions and quadrature metadata, runs the Wolfram I6 integration, and invokes the independent Python comparator. It requires the complete 652-row grid and checks the incoming dark-matter momentum, mediator denominator, I6, nuclear response, physical/no-factor-four rates, and unit conversion.
-validates the fixed 800 km/s / pole-width / threshold-u2 settings and
-quadrature metadata, runs the Wolfram I6 integration, and invokes the
-independent Python comparator. It requires the complete 652-row grid and
-checks the incoming dark-matter momentum, mediator denominator, I6, nuclear
-response, physical/no-factor-four rates, and unit conversion.
 The default output is written under the system temporary directory, not into
 the source tree.
 
@@ -421,7 +416,7 @@ A successful run writes:
 - mathematica_full_dsigma_xe131.csv and its metadata;
 - mathematica_python_full_dsigma_comparison.csv;
 - mathematica_python_full_dsigma_comparison.json.
-- `full_dsigma_sha256_manifest.json` and `SHA256SUMS.txt`, covering the native/Python CSVs, metadata, AFH response inputs, and the source files used by the run.
+- `full_dsigma_sha256_manifest.json` and `SHA256SUMS.txt`, covering the native/Python CSVs, metadata, AFH response inputs, the source files used by the run, and the recorded Wolfram/Python runtime versions.
 
 For a separate high-order anchor check, use a distinct output directory and
 disable the full-grid requirement:
