@@ -30,7 +30,7 @@ permissions:
 jobs:
   validation:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 90
     steps:
       - name: Check out source
         uses: actions/checkout@v4
@@ -59,6 +59,37 @@ jobs:
           python -m unittest discover -s research/figure2_full_reproduction/tests -p 'test_eq6_kernel.py' -v
           python -m unittest discover -s research/figure2_full_reproduction/tests -p 'test_phase_space_convergence.py' -v
           python -m unittest discover -s research/figure2_full_reproduction/tests -p 'test_user_l00_benchmark.py' -v
+
+      - name: Recompute and validate the native Mathematica/Python full-grid comparison
+        run: |
+          mkdir -p "$RUNNER_TEMP/full_dsigma_crosscheck"
+          python research/afh_default_density_xe131/compare_full_dsigma_mathematica.py \
+            --mathematica-csv research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131.csv \
+            --out-csv "$RUNNER_TEMP/full_dsigma_crosscheck/comparison.csv" \
+            --metadata "$RUNNER_TEMP/full_dsigma_crosscheck/comparison.json" \
+            --require-full-grid
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p = Path(os.environ["RUNNER_TEMP"]) / "full_dsigma_crosscheck" / "comparison.json"
+          meta = json.loads(p.read_text())
+          assert meta["status"] == "PASS", meta
+          assert meta["rows"] == 652
+          assert meta["open_phase_space_rows"] == 500
+          maxima = meta["max_relative_differences"]
+          assert maxima["dsigma_conversion"] <= 2e-7
+          assert maxima["dsigma_conversion_identity_Mathematica"] <= 2e-12
+          assert maxima["dsigma_conversion_identity_Python"] <= 2e-12
+          print("PASS: native 652-row Mathematica/Python Eq. (6) comparison and per-code unit-conversion identities.")
+          PY
+
+      - name: Upload recomputed Mathematica/Python cross-check
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-xe131-full-dsigma-crosscheck
+          path: \${{ runner.temp }}/full_dsigma_crosscheck/
+          if-no-files-found: error
+          retention-days: 90
 
       - name: Run natural-xenon target and archived-data checks
         run: |
