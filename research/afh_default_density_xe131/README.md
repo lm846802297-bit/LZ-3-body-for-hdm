@@ -230,7 +230,23 @@ check is documented in `audit/AFH_COUPLING_NORMALIZATION_MAPPING.md`.
 The early selected-point natural-xenon isotope sum and halo velocity fold are
 implemented separately in
 `../afh_default_density_natural_xenon_halo/`. The selected-point AME2020
-mass-scheme result remains distinct from the later seven-isotope AFH-7 and Hybrid-9 full-range 84-point grid-sampled spectra, which use the committed AFH default response grids and high-order quadrature checks. The provenance metadata distinguishes the original 16,807-row seven-isotope response grid from the historical 28-row selected-sample file; the full grid is now committed at `../afh_default_density_natural_xenon_halo/results/full_afh_v6_default_7_isotope_response/`. The Xe-131 response table has an archived native Mathematica/Wolfram 14.0.0 output and a 2401-point Python comparison (PASS). This response-level PASS does not by itself validate the full Eq. (6) three-body integral.
+mass-scheme result remains distinct from the later AFH-7/Hybrid-9 full-range
+84-point grid-sampled spectra, which use the committed AFH default response
+grids and high-order quadrature checks.
+
+A separate seven-isotope AME2020 direct exact-q selected-point fold is archived
+at `../afh_default_density_natural_xenon_halo/results/AME2020_DIRECT_EXACT_Q_RECALCULATION_2026-11-12.md`
+and `../afh_default_density_natural_xenon_halo/results/ame2020_direct_exactq_fold/`.
+It supersedes the older Xe-131-only PCHIP hybrid for selected-point mass-scheme
+comparison, but it is not a full 84-point AME2020 spectrum.
+
+The provenance metadata distinguishes the original 16,807-row seven-isotope
+response grid from the historical 28-row selected-sample file; the full grid
+is now committed at
+`../afh_default_density_natural_xenon_halo/results/full_afh_v6_default_7_isotope_response/`.
+The Xe-131 response table has an archived native Mathematica/Wolfram 14.0.0
+output and a 2401-point Python comparison (PASS). This response-level PASS
+does not by itself validate the full Eq. (6) three-body integral.
 
 The GCN/JJ55 files from `dmscatter` remain separate nuclear-structure
 calculations and are not relabeled or substituted for AFH default.
@@ -279,7 +295,7 @@ diagnostic. The calculation and its numerical outputs are archived under
 A separate Xe-131-only hybrid diagnostic replaces the Xe-131 term in the
 existing NIST natural-xenon selected-point sum with the AME2020 result while
 leaving the other six isotope terms at their NIST baseline. It is explicitly
-not a full AME2020 natural-xenon prediction. The full seven-isotope AFH default response grids are now archived. A complete seven-isotope AME2020 halo fold remains a separate calculation: it must reevaluate each isotope's exact spatial q and rate kernel using the AME2020 nuclear masses, then perform the abundance-weighted halo fold. That full AME2020 calculation has not been claimed as complete.
+not a full AME2020 natural-xenon prediction. The full seven-isotope AFH default response grids are now archived, and a separate exact-q AME2020 selected-point fold is complete. A full 84-point AME2020 grid-sampled spectrum remains uncomputed; it must reevaluate each isotope's exact spatial q and rate kernel using AME2020 nuclear masses at every recoil point, then perform the abundance-weighted halo fold.
 
 The exact-spatial-q calculation, mass-scheme comparison, and Xe-131-only
 hybrid diagnostic passed in
