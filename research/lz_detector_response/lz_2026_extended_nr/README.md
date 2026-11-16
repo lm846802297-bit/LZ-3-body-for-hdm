@@ -44,7 +44,7 @@ The code is kept in the parent study directory so existing workflow paths and Py
 | NEST candidate and Table S5 parameter inputs | `lz_2026_nest_eft2024_configuration_candidate.json`, `lz_2026_nest_nr_mean_yield_parameters.json`, `lz_2026_nr_yield_params_s5.txt` |
 | Main selection audit | `LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md` |
 
-Key entry points include `../converge_lz_2026_three_body_energy_grid.py`, `../fold_lz_2026_three_body_2d_response.py`, `../fold_lz_2026_three_body_event_weighted_response.py`, `../fold_lz_2026_paired_s1_mode_2d_response.py`, and `../paired_s1_ensemble_tv_bootstrap.py`.
+Key entry points include [the energy-grid convergence driver](../converge_lz_2026_three_body_energy_grid.py), [the three-body 2D fold](../fold_lz_2026_three_body_2d_response.py), [the event-weighted fold](../fold_lz_2026_three_body_event_weighted_response.py), [the paired S1 2D fold](../fold_lz_2026_paired_s1_mode_2d_response.py), and [the paired S1 bootstrap](../paired_s1_ensemble_tv_bootstrap.py).
 
 ## Machine-readable archives
 
