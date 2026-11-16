@@ -421,12 +421,12 @@ powershell -ExecutionPolicy Bypass -File research/afh_default_density_xe131/run_
 ~~~
 
 This requires Mathematica or Wolfram Engine with wolframscript available on
-PATH. The wrapper checks both archived native and Python AFH response tables, validates the fixed 800 km/s/pole/threshold-u2 settings and quadrature metadata, runs the Wolfram I6 integration, and then calls compare_full_dsigma_mathematica.py for the independent Python recomputation. After PASS it writes a SHA-256 JSON manifest and SHA256SUMS.txt for inputs, source files and outputs.
-runs the Wolfram I6 integration, and then calls
-compare_full_dsigma_mathematica.py for the independent Python recomputation.
-The comparison requires the complete 652-row grid and independently checks
-the incoming dark-matter momentum and mediator denominator in addition to
-I6, the nuclear response, the physical/no-factor-four rates, and units.
+PATH. The wrapper checks both archived native and Python AFH response tables,
+validates the fixed 800 km/s / pole-width / threshold-u2 settings and
+quadrature metadata, runs the Wolfram I6 integration, and invokes the
+independent Python comparator. It requires the complete 652-row grid and
+checks the incoming dark-matter momentum, mediator denominator, I6, nuclear
+response, physical/no-factor-four rates, and unit conversion.
 The default output is written under the system temporary directory, not into
 the source tree.
 
@@ -444,6 +444,16 @@ A successful run writes:
 - mathematica_python_full_dsigma_comparison.json.
 - `full_dsigma_sha256_manifest.json` and `SHA256SUMS.txt`, covering the native/Python CSVs, metadata, AFH response inputs, and the source files used by the run.
 
+For a separate high-order anchor check, use a distinct output directory and
+disable the full-grid requirement:
+
+~~~powershell
+powershell -ExecutionPolicy Bypass -File research/afh_default_density_xe131/run_native_full_dsigma_windows.ps1 -OutputDirectory "$env:TEMP\lz-xe131-highorder" -Benchmark "green_ms300_dm1" -ERListKeV "200,300,500" -NW 48 -NZ 40 -NPhi 24 -RequireFullGrid $false
+~~~
+
+This is a subset comparison, not the 652-row full-grid acceptance. The WLS
+runner also inserts the explicit 101, 200, 267 and 542 keV anchors; 200 keV
+is already on the regular 5-keV grid.
 Do not mark the full Mathematica/Python cross-section comparison complete
 until this run reports PASS and the comparison metadata has been reviewed.
 
