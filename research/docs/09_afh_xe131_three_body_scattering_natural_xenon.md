@@ -4712,6 +4712,7 @@ t=-2m_AE_R.
 
 - **research/afh_default_density_xe131/run_afh_eq6_full_dsigma.wls**：在 Wolfram Language 中独立构造三体末态四动量、计算完整 Dirac trace、执行 \(W^2,z,\phi_*\) 求积，并装配完整截面。它只读取已经归档的 AFH 2401 点响应表，不重新运行 AFH package。
 - **research/afh_default_density_xe131/compare_full_dsigma_mathematica.py**：独立调用 research/figure2_full_reproduction/eq6_kernel.py 重新计算同一组 \(I_6\)，使用 SciPy PCHIP 独立插值 AFH 响应，再与 Mathematica CSV 逐点比较。
+- **research/afh_default_density_xe131/run_native_full_dsigma_windows.ps1**：Windows 端到端封装；检查 652 行/500 open full-grid、固定 800 km/s、pole-width、threshold-\\(u^2\\) 和求积阶数；完成对照后输出 CSV/JSON、SHA-256 manifest，并记录 Wolfram/Python runtime versions。该脚本尚未在 Mathematica 环境执行。
 - **research/afh_default_density_xe131/run_python_full_dsigma_xe131.py**：已执行独立 Python-only v=800 km/s fixed-speed 652 行 full Eq. (6) 网格；CSV、metadata 和 16 个高阶锚点归档为 GitHub Actions artifact `14112736343`。其 factor-four ledger 在 Python 内部通过，但不替代上面的 Mathematica/Python cross-code 检验。
 - **research/afh_default_density_xe131/output/NATIVE_MATHEMATICA_FULL_DSIGMA_AUDIT.md**：记录固定输入、代码路径、验收标准和未完成边界。
 
