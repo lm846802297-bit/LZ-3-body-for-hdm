@@ -13,7 +13,7 @@ No new algebraic defect was established in the inspected three-body kinematic bo
 2. The old AFH selected-point rate table uses the legacy low-order linear-(W^2) kernel. The newer AFH-7 grid uses threshold-(u^2) integration. Their common points differ by about (2.3\times10^{-4})–(2.6\times10^{-4}) relatively, consistent with the previously measured low-order linear-(W^2) quadrature bias. The old table must remain historical, not be silently mixed with the new grid.
 3. The committed GCN/JJ55 continuous spectra still use the legacy linear-(W^2), (8×8×4) kernel. Their (16×16×8) spot checks reach (2.18895×10^{-4}) in the kernel, whereas the AFH-7 grid uses threshold-(u^2). At the production 24-speed-node setting, the final internal-kernel increment is (5.96430×10^{-10}); the separate 12-speed-node comparison is (6.02323×10^{-10}). Cross-model comparisons therefore do not yet have matched numerical integration.
 4. The final (24\times8\times8\times4) AFH-7/Hybrid-9 high-order spectra are described by a committed audit and checksum, but the complete 1,344-row high-order archive is external; the committed 1,344-row spectrum is the (24\times6\times6\times3) baseline.
-5. The full Mathematica–Python (d\sigma_A/dE_R) comparison and the official LZ detector likelihood remain incomplete.
+5. The native Mathematica–Python full Eq. (6) cross-code comparison and official LZ detector likelihood remain incomplete. The separate Python-only 652-row full Eq. (6) calculation and factor-four ledger have passed within Python, but do not close the native cross-code gate.
 
 The documentation updates in this branch correct the current status and preserve the historical outputs. They do **not** change model parameters, numerical inputs, or archived physics results.
 
