@@ -115,7 +115,7 @@ A third consistency pass checked the Xe-131 AFH README, the Figure 2 Anand-respo
 
 ## 8. Documentation structure and cross-reference QA — 2026-11-16
 
-A structural consistency pass was run across the 36 files changed on this audit branch. All checked relative Markdown links resolve against the branch tree; the machine-readable Figure 2 result index parses as valid JSON; no remaining control characters were found in the reviewed Markdown set. The pass also repaired the NEST progress-section numbering (1–21), nested the later 15.8–15.11 selection-audit material under Section 15, restored malformed LaTeX in the Anand AFH normalization note, and made the status-table section numbering contiguous. This is a documentation-integrity result, not a claim that all 106 research Markdown files have undergone full scientific review.
+A structural consistency pass was run across the 36 documentation files changed at that stage; the three subsequently modified runner source files are reviewed separately in Section 9. All checked relative Markdown links resolve against the branch tree; the machine-readable Figure 2 result index parses as valid JSON; no remaining control characters were found in the reviewed Markdown set. The pass also repaired the NEST progress-section numbering (1–21), nested the later 15.8–15.11 selection-audit material under Section 15, restored malformed LaTeX in the Anand AFH normalization note, and made the status-table section numbering contiguous. This is a documentation-integrity result, not a claim that all 106 research Markdown files have undergone full scientific review.
 
 ## 9. Native full-dsigma runner source audit — 2026-11-16
 
