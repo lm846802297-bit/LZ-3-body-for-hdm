@@ -1,7 +1,7 @@
 # 公式—符号—正文—程序—结果交叉引用索引
 
 > 所属主报告：[09_afh_xe131_three_body_scattering_natural_xenon.md](09_afh_xe131_three_body_scattering_natural_xenon.md)  
-> 当前规范基线：`main` @ `58f97ab27e104cdb65c3ce542bb3d7f1bc1c2648`；历史 PR #27 分支已落后主线，不作为当前公式/结果依据。  
+> 当前规范基线：PR #45 branch `docs/scientific-content-audit-20261116`（目标为 `main`）；native Mathematica/Python full Eq. (6) 652-row result and corrected comparison archive are included in this branch.  
 > 文档性质：可追溯性索引；P1-PhaseSpace 的数值验证范围和结果见独立审计报告，不改变振幅或 UV 模型假设。
 
 ## 1. 使用方法与统一约定
