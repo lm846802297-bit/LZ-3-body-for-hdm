@@ -1504,8 +1504,8 @@
     },
     {
       "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131_metadata.json",
-      "sha256": "f7802e985d95bda7747f2faa1d804bbcb753e6e8d8d92fb9c1da0c7098a65dc3",
-      "bytes": 4021,
+      "sha256": "1a8b205287156a76d39d5cd0458d51f06e5e6c40a07f2e2d05972e3f743bbbfc",
+      "bytes": 4102,
       "role": "Native Wolfram execution metadata, four benchmarks, 800 km/s, pole-width, threshold-u2 and 16x16x8 quadrature"
     },
     {
@@ -1516,9 +1516,9 @@
     },
     {
       "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_python_full_dsigma_comparison.json",
-      "sha256": "00838a849ce40c9fe97a3d058d203e00df31f56aa695bcae37509b62ec7aa643",
-      "bytes": 3755,
-      "role": "Machine-readable Mathematica/Python full-cross-section comparison; PASS_WITH_NOTES"
+      "sha256": "40b0427eaf113771bd74c0ba229c10a93c6587b4fbd8cbec5004ee85a15b9408",
+      "bytes": 3863,
+      "role": "Machine-readable Mathematica/Python full-cross-section comparator result; JSON status PASS, scientific status PASS_WITH_NOTES"
     }
   ],
   "source_commit": "PR #45 head branch docs/scientific-content-audit-20261116; refresh to the merge commit after PR #45 is merged."
