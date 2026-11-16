@@ -157,6 +157,7 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 | AFH 谷值 | 已完成 | 离散候选点、直接响应局部极小化、minima.csv | 不需要调整 \(b_A\) |
 | mpmath 独立有限和 | 已完成全网格 | 60 位精度、2401 个 q 节点；最大振幅绝对差 \(3.98\times10^{-14}\)，最大响应绝对差除以 \(A^2\) 为 \(1.22\times10^{-15}\) | 无；原生 Mathematica 对照另有独立 PASS 记录 |
 | AFH 原生 Mathematica | 已完成（限定 Xe-131 response-level） | Wolfram 14.0.0 原生执行；2401 个 q 节点；四种响应量与 Python 逐点比较通过，最大相对差异 \(3.59\times10^{-9}\)；SHA-256 manifest 已归档 | 不验证完整 Eq. (6) pole-width \(I_6\) 或 \(d\sigma_A/dE_R\)；后者的端到端 Mathematica/Python 对照仍待完成 |
+| Python-only full Xe-131 Eq. (6) and factor-four ledger | PASS_WITH_NOTES | GitHub Actions run 43591097068; 652 rows (500 open, 152 closed), 16 high-order anchors; max \(I_6\) relative difference \(1.6636692\times10^{-11}\); factor-four mapping residual \(3.5567862\times10^{-16}\); physical/no-factor-four ratio residual 0; unit-conversion residual 0; artifact 14112736343 | This is a Python-only full fixed-speed cross-section and normalization PASS under the conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions; native Wolfram 652-row execution and pointwise Mathematica/Python comparison remain pending |
 | GCN/JJ55 对照 | 已完成归档 | 三种响应、四 benchmark、1920 行 long table | 对照共享既有 \(I_6\)，不是 640 次独立重算 |
 | 三体运动学/Dirac trace | 已完成代表性检查 | 壳条件、四动量闭合、显式自旋求和、干涉分解 | 扩展到更宽的参数和质量网格 |
 | 450 keV pointwise \(\mathcal L_{00}\)/\(I_6\) benchmark | 已完成本地验收 | 六项 regression tests、显式自旋求和、四动量闭合、三阶求积对照；见 local validation record | 仅覆盖指定诊断运动学点；pole width 依赖 Dirac / pure-scalar / single-channel 假设 |
