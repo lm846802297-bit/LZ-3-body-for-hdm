@@ -15,7 +15,7 @@
 - [Figure 2 数值结果总索引](research/docs/supplements/figure2_results_master_index_2026-11-13.md)：benchmark、输入、参数、输出和 SHA-256 provenance。
 - [Figure 2 科学状态表](research/docs/supplements/figure2_scientific_status_2026-11-13.md)：明确各项验证的适用范围和未完成边界。
 - [Eq. (6) kernel 与 Figure 2 数值复现入口](research/figure2_full_reproduction/README.md)。
-- [LZ detector-response 输入与 rate-level 归档说明](research/lz_detector_response/README.md)。
+- [LZ detector-response 研究档案](research/lz_detector_response/README.md)，以及 [2026 NR/ER 响应、二维折叠与统计审计索引](research/lz_detector_response/lz_2026_extended_nr/README.md)。
 
 ## 论文源码
 
@@ -55,12 +55,12 @@
 - [\(\chi_2\to\chi_1s\) pole width 推导与验证](research/docs/08_chi2_decay_width.md)
 - [AFH v6.0、Eq. (6)、天然氙与 LZ rate-level 主报告](research/docs/09_afh_xe131_three_body_scattering_natural_xenon.md)
 
-## 当前科学状态（2026-11-14）
+## 当前科学状态（2026-11-16）
 
 - **Eq. (6) kernel：** 已有 Dirac-spinor 实现、运动学/自旋迹检查和数值积分测试；模型的 Dirac/Majorana、完整矢量扇区等输入仍须按具体 benchmark 明确。
 - **核响应与天然氙：** AFH Xe-131 的 2401 点响应已通过 60 位 mpmath 检查和 Wolfram 14.0.0 原生 Mathematica/Python 逐点比较（最大相对差异 $3.59\times10^{-9}$）；七种官方 AFH default 同位素的 AFH-7 连续谱及 AFH-7 + Helm-2 的 Hybrid-9 连续谱现已归档。Xe-124/Xe-126 仍无官方 AFH default density matrix，不伪造输入。
-- **LZ 接口：** 已完成一维 final-ROI efficiency 加权的 GCN/JJ55 rate-level event-yield estimates；尚不是二维 NEST + background + profile-likelihood 的完整 LZ recast，也不是 90% CL exclusion。
+- **LZ 探测器响应：** 已归档公开 NEST `541b643` 的 EFT2024 配置候选、NR/ER 响应审计、三体二维响应折叠、Fig. S2 rate-level folds，以及十独立种子的 paired S1 响应和 100,000 次 seed-cluster bootstrap。1-keV 仍是全范围数值参考；独立全范围 1/5-keV 比较未通过 1% 二维 TV 门槛。黑色 360-keV benchmark 的点估计低于 1%，但 bootstrap 和 leave-one-out 不支持稳健等价性声明。以上均为中间 NEST 响应诊断，不是官方 waveform-level selected PDF、profile likelihood 或 90% CL exclusion。
 - **450 keV benchmark：** 已归档一个条件性 pointwise \(\mathcal L_{00}\)/\(I_6\) 验证，以及一个独立的 Xe-131 固定速度、零宽度、\(A u\) 质量近似曲线。后者只覆盖 130–650 keV 的内部网格，不能当作天然氙 halo rate。
 - **高能尾部核模型敏感性：** 225–269.9 keV 效率加权尾部已比较 AFH-7、Hybrid-9、GCN、JJ55 和 Helm-9；Hybrid-9 相对 AFH-7 的变化约 0.7–1.2%，GCN/JJ55 约 12–19%，Helm-9 约 4.5–4.7 倍。结果是 rate-level 诊断，不是 likelihood。
-- **完整 Eq. (6) 截面：** response-level AFH 原生 Mathematica 验证已有 PASS 归档；完整 \(I_6\) 与 \(d\sigma_A/dE_R\) 的 Mathematica–Python 逐点验证仍待执行，安排在其他研究工作完成之后。
+- **完整 Eq. (6) 截面：** response-level AFH 原生 Mathematica 验证已有 PASS 归档。新增的历史 Xe-131 (I_6) mapping/quadrature audit 在匹配点复现 legacy 值，独立 linear-(W^2) mapping 与归档差异最大为 (5.42\times10^{-11})；这只是 (I_6) 积分审计，不是完整截面验证。完整 (I_6) 与 (d\sigma_A/dE_R) 的 Mathematica–Python 逐点验证仍待执行。
 - **总体解释：** 代码、文档和归档完成不等于所有物理假设均已验证，更不代表模型已经解释 LZ 候选事件。
