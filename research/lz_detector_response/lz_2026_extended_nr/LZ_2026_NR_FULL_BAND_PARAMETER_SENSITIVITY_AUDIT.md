@@ -1,6 +1,6 @@
 # LZ 2026 NR full-band parameter-sensitivity and drift audit
 
-Date: 2026-11-15
+Date: 2026-11-16
 
 **Status:** source-level parameter audit and corrected event-local-drift workflow are complete; outputs are archived. Pre-fix band numbers remain historical diagnostics and are superseded. The corrected full-band proxy still does not reproduce the exact collaboration calibration-source geometry or likelihood.
 
