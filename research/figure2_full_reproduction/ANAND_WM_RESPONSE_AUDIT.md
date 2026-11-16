@@ -199,7 +199,7 @@ minima, and regression tests are archived under
 `research/afh_default_density_xe131/`. Six regression tests pass, including
 selected 60-digit mpmath checks of the radial/angular kernel.
 
-This closes the AFH-default Xe-131 response calculation. It does not yet
+This closes the AFH-default Xe-131 response calculation. It does not, by itself, close the complete Eq. (6) differential-cross-section comparison or the natural-xenon detector-level prediction.
 establish the original Figure 2 isotope mixture, compute the full
 natural-xenon isotope-summed three-body event rate, or perform the final
 halo-speed fold.
