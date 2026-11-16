@@ -39,7 +39,7 @@ Path: `research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full
 
 ### 4. Python-only full Xe-131 Eq. (6) and AFH factor-four audit
 
-- Workflow [run 43591097068](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43591097068) completed successfully; artifact [14112736343](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43591097068) is retained.
+- Workflow [run 43591097068](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43591097068) completed successfully; head commit `c2d0590114ad0bf90fc741278e21868af52b65cf`; artifact [14112736343](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43591097068) is retained.
 - The v=800 km/s fixed-speed Xe-131 calculation covers 652 rows (500 open, 152 closed) and 16 high-order anchors. Maximum I6 relative difference: 1.66367e-11; AFH factor-four mapping residual: 3.55679e-16; physical/no-factor-four ratio residual: 0.
 - This is a Python-only full Eq. (6) and factor-four PASS_WITH_NOTES under the conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions. It is not a natural-xenon halo fold.
 - The independent native Wolfram 652-row execution and pointwise Mathematica/Python full-cross-section comparison remain pending. The 2,401-node Xe-131 response-level PASS does not substitute for that cross-code gate.
