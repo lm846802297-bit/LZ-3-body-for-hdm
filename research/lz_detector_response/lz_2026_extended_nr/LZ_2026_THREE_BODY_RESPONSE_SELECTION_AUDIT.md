@@ -1128,7 +1128,7 @@ residual \(7.20\times10^{-15}\), below the \(5\times10^{-12}\) tolerance.
 The workflow passes six unit tests, artifact-manifest verification,
 support/event-count checks, output-row checks, and checksum validation.
 
-### 15.10.1 Integrated rate shifts
+#### 15.10.1 Integrated rate shifts
 
 The relative change is the mean of ten seed-level Full/Parametric S1 ROI
 rate ratios; intervals are 95% Student-\(t\) intervals over the ten
@@ -1145,7 +1145,7 @@ and the S2 selections, the S1 ROI and WS-ROI changes are identical.
 | blue | full | -0.02067% [-0.02635, -0.01499] | -0.02112% [-0.02689, -0.01535] |
 | blue | common 205--269.9 | -0.07939% [-0.10020, -0.05857] | -0.08036% [-0.10137, -0.05936] |
 
-### 15.10.2 The benchmark spectrum explains the black enhancement
+#### 15.10.2 The benchmark spectrum explains the black enhancement
 
 The fraction of each benchmark's total rate lying in the common
 205--269.9 keV interval is approximately 8% for red, 26.5% for green,
@@ -1168,7 +1168,7 @@ high recoil energy. The black integrated shift is much larger because its
 spectrum strongly weights the highest-energy band; it is not evidence for
 a different detector response configuration.
 
-### 15.10.3 S1/S2 selection closure
+#### 15.10.3 S1/S2 selection closure
 
 Across the full non-zero support of each benchmark, every generated event
 passes both Parametric and Full S1 coincidence flags, the NEST S2 threshold,
@@ -1183,7 +1183,7 @@ The minimum raw S2 values are 1,940.29, 3,723.33, 4,855.60, and
 equals the S1 \([3,600]\)-phd acceptance. This is a benchmark-support
 statement, not a general claim about all NR energies.
 
-### 15.10.4 Shape diagnostics and limitations
+#### 15.10.4 Shape diagnostics and limitations
 
 On common support, ensemble-mean S1 histogram TVs are 0.54--0.60%;
 S1 upper-tail TVs for \(S1_c>500\) are 0.44--0.58%; NEST-stage 2D TVs
