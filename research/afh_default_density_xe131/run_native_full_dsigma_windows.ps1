@@ -143,6 +143,8 @@ $manifest = [ordered]@{
     width_scheme = $nativeMeta.integration.width_scheme
     W2_mapping = $nativeMeta.integration.W2_mapping
     max_relative_differences = $comparison.max_relative_differences
+    wolfram_environment = $nativeMeta.environment
+    python_environment = $comparison.python_environment
     files = $hashEntries
 }
 $manifestPath = Join-Path $OutputDirectory "full_dsigma_sha256_manifest.json"
