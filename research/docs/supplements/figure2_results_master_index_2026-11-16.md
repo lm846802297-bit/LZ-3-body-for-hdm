@@ -1,8 +1,8 @@
 # Figure 2 and natural-xenon results master index
 
-**Current source:** `main` at `58f97ab27e104cdb65c3ce542bb3d7f1bc1c2648`  
+**Current source:** PR #45, branch `docs/scientific-content-audit-20261116`, targeting `main`  
 **Updated:** 2026-11-16  
-**Machine-readable manifest:** [figure2_results_master_index_2026-11-16.json](figure2_results_master_index_2026-11-16.json)  
+**Coverage:** 13 result groups; 92 file entries with SHA-256 and byte sizes.
 **Coverage:** 12 result groups; 87 file entries with SHA-256 and byte sizes.
 
 The [2026-11-13 index](figure2_results_master_index_2026-11-13.md) is retained as a historical snapshot. This index supersedes its statement that the full 16,807-row AFH seven-isotope response grid is checksum-only and not committed.
@@ -43,6 +43,16 @@ Path: `research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full
 - The v=800 km/s fixed-speed Xe-131 calculation covers 652 rows (500 open, 152 closed) and 16 high-order anchors. Maximum I6 relative difference: 1.66367e-11; AFH factor-four mapping residual: 3.55679e-16; physical/no-factor-four ratio residual: 0.
 - This is a Python-only full Eq. (6) and factor-four PASS_WITH_NOTES under the conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions. It is not a natural-xenon halo fold.
 - The independent native Wolfram 652-row execution and pointwise Mathematica/Python full-cross-section comparison remain pending. The 2,401-node Xe-131 response-level PASS does not substitute for that cross-code gate.
+
+### 5. Native Mathematica/Python full Xe-131 Eq. (6) cross-code comparison
+
+Path: `research/afh_default_density_xe131/output/full_dsigma_mathematica/`
+
+- Native Wolfram 14.2.0 run and independent Python recomputation: 652 rows, 4 benchmarks, 163 recoil energies per benchmark; 500 open and 152 closed phase-space points.
+- Fixed speed 800 km/s, pole-width scheme, threshold-\(u^2\) mapping, \(16\times16\times8\) quadrature; conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions.
+- Maximum relative differences: \(I_6=1.33872\times10^{-12}\), physical/no-factor-four \(d\sigma=2.57632\times10^{-9}\), AFH response \(2.57510\times10^{-9}\), factor-four mapping residual \(4.30300\times10^{-16}\).
+- Mathematica/Python unit-conversion identities are checked separately at \(2\times10^{-12}\); observed residuals are \(4.44\times10^{-16}\) and 0. The cross-code converted-\(d\sigma\) difference is \(2.57632\times10^{-9}\) and uses the same \(2\times10^{-7}\) observable tolerance as unconverted \(d\sigma\).
+- Corrected comparison JSON reports **PASS**; row-level comparison CSV and SHA-256 checksums are committed. This is fixed-speed Xe-131, not a natural-xenon halo fold or LZ detector likelihood.
 
 ## Numerical comparison caveat
 
