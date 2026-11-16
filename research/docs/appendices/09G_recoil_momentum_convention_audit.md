@@ -175,5 +175,5 @@ q 审计程序保存以下文件：
 | 28 个天然氙样本 | 已核实 | 全部匹配 exact spatial q |
 | Xe-131 NR 近似影响 | 已计算 | NIST 与 \(M_A=131u\) 两种质量约定均有对照 |
 | 天然氙 halo fold | exact-q 基线 | 98 个同位素贡献、14 个总速率复现；最大总速率差异 \(2.67\\times10^{-12}\)，CI run 43044583357 通过 |
-| AFH-7/Hybrid-9 全范围反冲谱 | PASS_WITH_NOTES | 四 benchmark、84 点、1,344 baseline rows；AFH direct exact-q + threshold-\\(u^2\\)；高阶 baseline-to-final spectrum difference 最大 \\(6.46772\\times10^{-6}\\) | 这是 grid-sampled pre-detector spectrum；高阶 ZIP 仅外部 checksum；Xe-124/Xe-126 缺 AFH matrices；GCN/JJ55 求积尚未匹配 |
+| AFH-7/Hybrid-9 全范围反冲谱 | PASS_WITH_NOTES | 四 benchmark、84 点、1,344 baseline rows；AFH direct exact-q + threshold-\(u^2\)；高阶 baseline-to-final spectrum difference 最大 \(6.46772\times10^{-6}\) | 这是 grid-sampled pre-detector spectrum；高阶 ZIP 仅外部 checksum；Xe-124/Xe-126 缺 AFH matrices；GCN/JJ55 求积尚未匹配 |
 | 原生 Mathematica 复算 | 已完成 PASS（Xe-131 response-level） | Wolfram 14.0.0；2401 个 q 节点；与 Python 最大相对差异 (3.59\times10^{-9})；SHA-256 manifest 已归档 | 不代表完整 AFH 天然氙连续谱或 LZ likelihood |
