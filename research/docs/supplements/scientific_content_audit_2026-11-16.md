@@ -13,7 +13,7 @@ No new algebraic defect was established in the inspected three-body kinematic bo
 2. The old AFH selected-point rate table uses the legacy low-order linear-(W^2) kernel. The newer AFH-7 grid uses threshold-(u^2) integration. Their common points differ by about (2.3\times10^{-4})–(2.6\times10^{-4}) relatively, consistent with the previously measured low-order linear-(W^2) quadrature bias. The old table must remain historical, not be silently mixed with the new grid.
 3. The committed GCN/JJ55 continuous spectra still use the legacy linear-(W^2), (8×8×4) kernel. Their (16×16×8) spot checks reach (2.18895×10^{-4}) in the kernel, whereas the AFH-7 grid uses threshold-(u^2). At the production 24-speed-node setting, the final internal-kernel increment is (5.96430×10^{-10}); the separate 12-speed-node comparison is (6.02323×10^{-10}). Cross-model comparisons therefore do not yet have matched numerical integration.
 4. The final (24\times8\times8\times4) AFH-7/Hybrid-9 high-order spectra are described by a committed audit and checksum, but the complete 1,344-row high-order archive is external; the committed 1,344-row spectrum is the (24\times6\times6\times3) baseline.
-5. The native Mathematica–Python full Eq. (6) cross-code comparison and official LZ detector likelihood remain incomplete. The separate Python-only 652-row full Eq. (6) calculation and factor-four ledger have passed within Python, but do not close the native cross-code gate.
+5. The native Mathematica–Python full Eq. (6) cross-code comparison has now passed for the fixed-speed Xe-131 652-row grid under the stated conditional width assumptions. The official LZ detector likelihood remains incomplete.
 
 The documentation updates in this branch correct the current status and preserve the historical outputs. They do **not** change model parameters, numerical inputs, or archived physics results.
 
@@ -75,7 +75,7 @@ The reported GCN/JJ55 tail shifts of roughly 12–19% are much larger than this 
 
 ## 4. AFH normalization, isotope sum, and detector boundary
 
-The inspected AFH response implementation keeps the raw isoscalar (A^2/4) convention distinct from the physical equal-proton/equal-neutron response (R_A(0)=A^2); the factor 4 is applied once at the response-definition layer. The Python-only full Xe-131 Eq. (6) audit at v=800 km/s under the conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions passed 652 rows (500 open, 152 closed): maximum I6 relative difference 1.66367e-11, factor-four mapping residual 3.55679e-16, and physical/no-factor-four ratio residual 0. Thus the response-to-cross-section factor-four transfer is verified end-to-end within the Python implementation. The independent native Wolfram 652-row run and pointwise Mathematica/Python comparison remain pending. The natural-xenon target number uses the full nine-isotope abundance-weighted mean atomic mass, while the AFH response sum includes only the seven supported isotopes and does not renormalize their abundance.
+The inspected AFH response implementation keeps the raw isoscalar (A^2/4) convention distinct from the physical equal-proton/equal-neutron response (R_A(0)=A^2); the factor 4 is applied once at the response-definition layer. The Python-only full Xe-131 Eq. (6) audit at v=800 km/s passed 652 rows (500 open, 152 closed), and the native Wolfram 14.2.0 / independent Python cross-code comparison has now also passed with PASS_WITH_NOTES. Maximum differences: I6 1.33872e-12, dσ 2.57632e-9, AFH response 2.57509e-9, factor-four mapping residual 4.30300e-16. The Mathematica and Python unit-conversion identities are 4.44089e-16 and 0; the converted cross-code rate difference is 2.57632e-9 and uses the 2e-7 observable tolerance. This result is fixed-speed Xe-131 under the conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions, not a halo fold or detector likelihood. The natural-xenon target number uses the full nine-isotope abundance-weighted mean atomic mass, while the AFH response sum includes only the seven supported isotopes and does not renormalize their abundance.
 
 The AFH-7/Hybrid-9 outputs are pre-detector nuclear-recoil spectra. The NEST paired-S1/2D response archive is a separate intermediate detector-response study. Neither result is an official waveform-level LZ selected PDF, background/profile likelihood, or 90% CL exclusion.
 
@@ -84,12 +84,12 @@ The AFH-7/Hybrid-9 outputs are pre-detector nuclear-recoil spectra. The NEST pai
 | Work item | Audit status | Current boundary |
 |---|---|---|
 | Three-body kinematic limits and exact spatial \(q\) | PASS_WITH_NOTES | Inspected formula/code conventions are internally consistent; full parameter scan not claimed |
-| AFH factor-four normalization | PASS_WITH_NOTES | Xe-131 native response comparison passes; Python-only 652-row full Eq. (6) factor-four ledger passes with mapping residual 3.55679e-16 and physical/no-factor-four ratio residual 0 | Independent native Wolfram 652-row run and Mathematica/Python pointwise comparison remain open |
+| AFH factor-four normalization | PASS_WITH_NOTES | Xe-131 response-level native comparison, Python-only full Eq. (6) ledger, and native Mathematica/Python 652-row cross-code comparison pass; factor-four mapping residual 4.303e-16 | Fixed-speed Xe-131 and conditional width assumptions; not natural-xenon halo fold or LZ likelihood |
 | AFH-7/Hybrid-9 84-point spectra | PASS_WITH_NOTES | \(10^{-5}\) high-order summary passes; full high-order ZIP is external; not AFH-9 |
 | Legacy AFH selected-point rate table | HISTORICAL | Reproducible old linear-(W^2) low-order result; do not mix with new threshold-(u^2) grid |
 | GCN/JJ55 continuous spectra | PASS_WITH_NOTES | 84-point outputs exist; kernel-order check is \(2.19\times10^{-4}\); matched threshold-\(u^2\) rerun pending |
 | High-energy nuclear-model tail comparison | PROVISIONAL | Broad GCN/JJ55 shifts exceed numerical error; Hybrid-9 comparison should be rerun at matched precision |
-| Full Mathematica–Python \(d\sigma_A/dE_R\) | OPEN | AFH Xe-131 response-level native Mathematica/Python PASS; separate Python-only v=800 km/s fixed-speed full Eq. (6) 652-row run and factor-four ledger also PASS_WITH_NOTES within Python | Native Wolfram 652-row run and independent pointwise full-cross-section comparison remain open |
+| Full Mathematica–Python \(d\sigma_A/dE_R\) | PASS_WITH_NOTES | Native Wolfram 14.2.0 vs independent Python, 652 rows (500 open, 152 closed); max I6 1.34e-12, dσ 2.58e-9, AFH response 2.58e-9; per-code conversion identities 4.44e-16/0 | Fixed-speed Xe-131, conditional Dirac / real-scalar / pure-scalar / single-channel pole-width; not a halo fold |
 | Official LZ detector likelihood | OPEN | No official 2D selected PDF/profile likelihood/90% CL exclusion |
 
 ## 6. Documentation records reviewed in this phase
@@ -102,14 +102,14 @@ An additional cross-document status-reconciliation pass on 2026-11-16 updated Ap
 
 A second topic pass covered the LZ detector-response record set: the P0 closure report, public-input audit, NEST configuration provenance, event-response pilot, flat-band pilot, full-band drift audit, ER-tail bootstrap audit, energy-resolved black-tail audit, and the three-body response-selection audit. Their current summaries now distinguish completed public-candidate calculations from the still-open official-build, calibration-geometry, nuisance, background, and likelihood requirements. In particular, the local black-support 5-keV point-estimate gate is not a full-range 5-keV grid PASS; the event-weighted fold retains 1 keV as its numerical reference, and the ER empirical PDF still has zero support in the candidate's 2D cell. No detector or particle-physics numerical outputs were recomputed in this documentation pass.
 
-A third consistency pass checked the Xe-131 AFH README, the Figure 2 Anand-response audit, the historical Eq. (6) calculation note, the native full-dsigma audit, the Mathematica/Python cross-check review, and the output archive index. The 2,401-node Xe-131 AFH response comparison is a verified response-level PASS. The Python-only v=800 km/s fixed-speed Xe-131 d-sigma job under the conditional width assumptions has completed and its artifact is archived; its 652-row factor-four ledger also passes end-to-end within Python (maximum mapping residual 3.56e-16, physical/no-factor-four ratio residual 0). The separate native Wolfram 652-row Eq. (6) run and pointwise Mathematica/Python comparator have **not** been executed, so no full-cross-section cross-code PASS is claimed. The older Eq. (6) note is now explicitly labelled as a historical snapshot, and the Xe-131 README distinguishes the AFH-7 84-point full-range grid from the old 28-row selected-sample file.
+A third consistency pass checked the Xe-131 AFH README, the Figure 2 Anand-response audit, the historical Eq. (6) calculation note, the native full-dsigma audit, the Mathematica/Python cross-check review, and the output archive index. The 2,401-node Xe-131 AFH response comparison is a verified response-level PASS. The Python-only v=800 km/s fixed-speed Xe-131 full-dsigma calculation and factor-four ledger passed within Python. The native Wolfram 14.2.0 652-row Eq. (6) run and independent Python pointwise comparison have now also completed; the corrected comparison JSON reports PASS_WITH_NOTES. The cross-code converted-dσ difference is 2.57632e-9 and is compared at the same 2e-7 observable tolerance as dσ, while each implementation's own conversion identity is separately checked at 2e-12. The older Eq. (6) note remains explicitly labelled as a historical snapshot.
 
 ## 7. Next actions
 
 1. Recompute GCN/JJ55 spectra with threshold-(u^2), common speed/kernel convergence criteria, and matching output metadata.
 2. Recompute the high-energy-tail comparison and downstream GCN/JJ55 rate-level yields from the matched spectra.
 3. Archive the full AFH-7/Hybrid-9 high-order outputs and the independent Numba implementation as native files or a versioned Release; do not leave the full output as checksum-only external provenance.
-4. Complete the native Mathematica–Python full (I_6) and (d\sigma_A/dE_R) pointwise comparison.
+4. Extend the width-prescription audit beyond the conditional pole-width benchmark and continue the detector-response work without upgrading the NEST proxy to an official LZ likelihood.
 5. Continue the detector-response audit without upgrading the current NEST proxy to an official LZ likelihood.
 
 
@@ -121,9 +121,25 @@ A structural consistency pass was run across the 36 documentation files changed 
 
 The native Wolfram source, independent Python comparator, and Windows orchestration script were reviewed together. Their default full-grid construction is consistent: 160 regular recoil energies from 5 to 800 keV, plus three additional non-grid anchors (101, 267, 542 keV; 200 keV is already on the regular grid), giving 163 energies per benchmark and 652 rows across four benchmarks. The comparator requires this exact key set when full-grid mode is enabled.
 
-The comparator independently recomputes \(I_6\) and checks the phase-space mask, \(q\), \(C_0\), package and physical AFH responses, \(d\sigma_A/dE_R\), the no-factor-four control, unit conversion, incoming momentum, mediator denominator, and factor-four identities. Its tolerance split is \(2\times10^{-7}\) for \(I_6\)/cross sections, \(2\times10^{-8}\) for the independently translated AFH PCHIP response, and \(2\times10^{-12}\) for algebraic/unit identities.
+The comparator independently recomputes \(I_6\) and checks the phase-space mask, \(q\), \(C_0\), package and physical AFH responses, \(d\sigma_A/dE_R\), the no-factor-four control, each code's unit-conversion identity, incoming momentum, mediator denominator, and factor-four identities. Cross-code \(I_6\), dσ and converted-dσ observables use \(2\times10^{-7}\); AFH PCHIP response uses \(2\times10^{-8}\); algebraic/unit identities use \(2\times10^{-12}\).
 
 The Windows wrapper now rejects a one-benchmark run when full-grid mode is requested; checks the native metadata against the requested quadrature orders, 800 km/s, pole-width and threshold-\(u^2\) settings; and requires 652 rows with 500 open points for full-grid acceptance. On a successful pointwise PASS it writes the CSV/JSON results, full_dsigma_sha256_manifest.json, and SHA256SUMS.txt. The manifest hashes the source files, input response tables and generated outputs, and records Wolfram/Python runtime versions.
 The Python-only result artifact was independently traced to successful PR workflow run 43591097068 (branch `research/python-xe131-full-dsigma-20261114`, head `c2d0590114ad0bf90fc741278e21868af52b65cf`); artifact 14112736343 is still available and unexpired. The current audit branch has byte-identical Git blobs for the Python runner (`876fccad75b53b8d102827205661e55370dff4b1`), Eq. (6) kernel (`ab7e725439b2724187721388e1e19c9d693e6e13`), phase-space integrator (`d079cd5d1f94f48a0573ab12f4497dd8e66cf3df`), and AFH response CSV (`47808fff17d815a239829b054a53789a1299f9c3`). The audit markdown was updated after that run, but the numerical source code and input table used by the artifact are unchanged.
 
-**Execution boundary:** this was a source-level review only. The Wolfram 652-row job and the Windows wrapper have not been executed in this review; no native Mathematica/Python full-cross-section PASS is claimed. The Python-only full Eq. (6) and factor-four PASS remains a separate, already archived validation layer.
+**Execution boundary:** the source-level review in Section 9 preceded the user's completed native run. The subsequent Wolfram 14.2.0 652-row execution and independent Python comparison are now archived under `research/afh_default_density_xe131/output/full_dsigma_mathematica/`; corrected comparison JSON status is PASS. The source review did not itself execute Mathematica, but the new archived run closes that execution gate.
+
+
+## 10. Native full-grid execution and comparison result — 2026-11-16
+
+The native Mathematica output contains 652 rows over four benchmarks and 163 recoil energies per benchmark; 500 rows are phase-space open and 152 closed. The independent Python comparator recomputes the full Eq. (6) integral at the quadrature orders recorded in the native rows.
+
+| Quantity | Maximum relative difference / residual | Acceptance |
+|---|---:|---:|
+| \(I_6\) | \(1.33872\times10^{-12}\) | \(2\times10^{-7}\) |
+| \(d\sigma_A/dE_R\) and no-factor-four control | \(2.57632\times10^{-9}\) | \(2\times10^{-7}\) |
+| AFH response | \(2.57509\times10^{-9}\) | \(2\times10^{-8}\) |
+| Factor-four mapping | \(4.30300\times10^{-16}\) | \(2\times10^{-12}\) |
+| Mathematica/Python conversion identities | \(4.44089\times10^{-16}\) / 0 | \(2\times10^{-12}\) |
+| Cross-code converted \(d\sigma_A/dE_R\) | \(2.57632\times10^{-9}\) | \(2\times10^{-7}\) |
+
+The initial comparator classified the converted-rate cross-code difference as a unit-conversion identity and therefore applied 2e-12 to a quantity that also contains the AFH response translation difference. The corrected comparator separates (i) the cross-code comparison of the converted physical observable, which uses the same 2e-7 tolerance as dσ, and (ii) each implementation's own conversion identity, which remains at 2e-12. No physics tolerance was relaxed. The corrected CSV/JSON and refreshed SHA256SUMS are committed with the native output.
