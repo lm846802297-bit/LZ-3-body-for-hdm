@@ -1521,5 +1521,5 @@
       "role": "Machine-readable Mathematica/Python full-cross-section comparator result; JSON status PASS, scientific status PASS_WITH_NOTES"
     }
   ],
-  "source_commit": "PR #45 head branch docs/scientific-content-audit-20261116; refresh to the merge commit after PR #45 is merged."
+  "source_commit": "PR #45 head fdec6ffb4d58474e8ae1998472f2aa9c935a04a9; merged into main by merge commit 15eb3a24e5295868ca208166a94c078fbc1747a7."
 }
