@@ -45,6 +45,10 @@ jobs:
           python -m pip install --upgrade pip
           python -m pip install -r research/afh_default_density_xe131/requirements.txt
 
+      - name: Verify committed native full-dsigma archive SHA-256 checksums
+        working-directory: research/afh_default_density_xe131/output/full_dsigma_mathematica
+        run: sha256sum --check SHA256SUMS.txt
+
       - name: Compile Python implementations and comparators
         run: |
           python -m py_compile research/figure2_full_reproduction/eq6_kernel.py
