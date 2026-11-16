@@ -1,7 +1,7 @@
 # Eq. (6) kernel and Figure 2 numerical reproduction
 
 > Canonical archive: main  
-> Documentation update: 2026-11-13  
+> Documentation update: 2026-11-16  
 > Scope: three-body kernel, nuclear-response comparisons, natural-xenon theory rates, and the separate 450 keV diagnostics below.
 
 ## Scope and calculation layers
@@ -10,7 +10,7 @@ This directory contains the Eq. (6) particle-physics kernel and the numerical ru
 
 1. **Kernel layer:** reconstruct the final-state four-momenta, evaluate the Dirac trace, retain interference between the two scalar-emission orderings, and integrate the reduced three-body kernel over \(W^2,z,\phi_*\).
 2. **Fixed-speed cross-section layer:** combine the kernel with a specified single-isotope nuclear response to obtain \(d\sigma_A/dE_R\).
-3. **Natural-xenon theory-rate layer:** sum isotope-specific contributions and fold over an explicitly selected laboratory-frame halo distribution. The GCN/JJ55 continuous-spectrum runner is a separate nuclear-model comparison; AFH default-density natural-xenon results are archived in the sibling study directory and remain selected-point only.
+3. **Natural-xenon theory-rate layer:** sum isotope-specific contributions and fold over an explicitly selected laboratory-frame halo distribution. GCN/JJ55 have 84-point full-range spectra in this directory, using the legacy linear-W^2 kernel. AFH-7/Hybrid-9 have a separate 84-point full-range grid in the sibling study directory, using direct exact-q AFH responses and threshold-u^2 integration. These spectra are pre-detector and do not yet have matched kernel quadrature.
 4. **Detector-interface layer:** fold GCN/JJ55 continuous spectra with the LZ 2026 one-dimensional final-ROI efficiency. This gives rate-level expected event yields, not the official LZ likelihood.
 5. **450 keV diagnostics:** a pointwise \(\mathcal L_{00}/I_6\) benchmark with a conditional scalar pole-width comparison, and a separate fixed-speed Xe-131 curve with GCN/JJ55 responses, \(m_A=131u\), and zero width. These two diagnostics are not interchangeable.
 
@@ -22,7 +22,15 @@ The kernel uses the interaction/current written in paper-source/main.tex and exp
 - Both manuscript scalar-emission diagrams are included coherently.
 - The initial-spin average and final-spin sum are obtained from the Dirac trace.
 - The before/after interference term is retained.
-- Gauss-Legendre integration is used for \(W^2\) and \(z\), with the azimuthal average normalized consistently with Eq. (6).
+- The legacy `eq6_kernel.reduced_kernel` uses Gauss-Legendre integration with a linear \(W^2\) map and an azimuthal average normalized consistently with Eq. (6). A separate threshold-\(u^2\) integration is implemented in `phase_space_convergence.py` and in the AFH-7 full-grid runner; do not assume the legacy and threshold-stable paths have the same finite-order error.
+
+## Natural-xenon spectral integration status (2026-11-16)
+
+- The GCN/JJ55 84-point spectra are archived under `results/natural_xenon_continuous_spectrum/<benchmark>/`. Their production kernel is linear-(W^2), (8\times8\times4); the (16\times16\times8) spot-check reaches (2.18895\times10^{-4}) maximum kernel-order difference across the four benchmark metadata files.
+- The AFH-7/Hybrid-9 84-point spectra are archived in the sibling `research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/`. Their production uses direct finite-sum AFH responses at exact spatial (q) and threshold-(u^2) integration. The high-order audit reports (6.47\times10^{-6}) maximum baseline-to-final spectrum difference.
+- The two paths are not yet matched in their phase-space mapping or numerical precision. The GCN/JJ55 tail differences of 12–19% are much larger than their reported quadrature difference; the 0.66–1.16% Hybrid-9 shifts have less margin. Recompute GCN/JJ55 with threshold-(u^2) before publishing precision cross-model comparisons.
+- The full Mathematica–Python (d\sigma_A/dE_R) comparison remains open. The AFH Xe-131 native Mathematica response-level comparison is not the same as a full Eq. (6) cross-section comparison.
+- None of these theory spectra is an official LZ likelihood or a detector-level exclusion.
 
 ## Reproduce the core regression tests
 
