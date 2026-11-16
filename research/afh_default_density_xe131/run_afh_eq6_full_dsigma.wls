@@ -263,6 +263,7 @@ benchmarkMeta = Association @@ Map[
   selectedBenchmarks];
 meta = <|
   "calculation" -> "Native Wolfram Language full Eq. (6) Xe-131 differential cross section",
+  "environment" -> <|"wolfram_version" -> $Version, "system_id" -> $SystemID|>,
   "target" -> <|"A" -> A, "Z" -> Z, "J_A" -> JA, "mA_GeV" -> mA,
     "mass_scheme" -> "A*u approximation, retained to match archived four-benchmark diagnostic"|>,
   "particle_inputs" -> <|"m_chi1_GeV" -> mchi, "m_V_GeV" -> mV, "g2" -> g2,
