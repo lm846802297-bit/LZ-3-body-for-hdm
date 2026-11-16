@@ -208,7 +208,8 @@
   ],
   "factor4_convention": "R_A_phys=4*C0*R_A_AFH_package; per-nucleon gVN remains in Eq. (6) prefactor",
   "width_assumption": "conditional Dirac, real scalar, pure scalar g2, chi2 -> chi1 s only",
-  "comparison_csv": "C:\\Users\\84680\\AppData\\Local\\Temp\\lz-xe131-full-dsigma\\mathematica_python_full_dsigma_comparison.csv",
-  "mathematica_csv": "research\\afh_default_density_xe131\\output\\full_dsigma_mathematica\\mathematica_full_dsigma_xe131.csv",
-  "conversion_comparison_note": "dsigma_conversion is the cross-code difference between the converted physical differential cross sections and therefore uses the same 2e-7 observable tolerance as dsigma. The Mathematica and Python unit-conversion identities are checked independently against dsigma_GeVminus3 * 0.3893793721e-33 at 2e-12."
+  "comparison_csv": "mathematica_python_full_dsigma_comparison.csv",
+  "mathematica_csv": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131.csv",
+  "conversion_comparison_note": "dsigma_conversion is the cross-code difference between the converted physical differential cross sections and therefore uses the same 2e-7 observable tolerance as dsigma. The Mathematica and Python unit-conversion identities are checked independently against dsigma_GeVminus3 * 0.3893793721e-33 at 2e-12.",
+  "path_convention": "Repository paths are repository-relative; paths outside the repository are stored as portable basenames. Machine-specific absolute paths are omitted."
 }
