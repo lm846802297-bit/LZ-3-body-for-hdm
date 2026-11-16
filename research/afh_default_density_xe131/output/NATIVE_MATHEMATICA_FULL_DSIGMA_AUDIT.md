@@ -107,7 +107,7 @@ wolframscript -file research/afh_default_density_xe131/run_afh_eq6_full_dsigma.w
 ~~~
 
 The Python comparator must be run on each Mathematica output. The full grid uses 16x16x8; high-order anchors assess quadrature convergence separately. Agreement between codes at one order is not itself a convergence test.
-For the complete Windows archive, use `run_native_full_dsigma_windows.ps1` from the repository root. The wrapper validates the 652-row/500-open full grid, the fixed 800 km/s pole-width and threshold-u2 settings, and the requested quadrature orders; after the pointwise comparator reports PASS, it writes `full_dsigma_sha256_manifest.json` and `SHA256SUMS.txt` covering the input response tables, source files, and generated outputs, and the Wolfram/Python runtime versions. The direct `wolframscript` commands above are useful for diagnostics but do not by themselves create this combined manifest.
+For the complete Windows archive, use `run_native_full_dsigma_windows.ps1` from the repository root. The wrapper validates the 652-row/500-open full grid, the fixed 800 km/s pole-width and threshold-u2 settings, and the requested quadrature orders; after the pointwise comparator reports PASS, it writes `full_dsigma_sha256_manifest.json` and `SHA256SUMS.txt` covering the input response tables, source files, and generated outputs, the exact benchmark/recoil grid, and the Wolfram/Python runtime versions. The direct `wolframscript` commands above are useful for diagnostics but do not by themselves create this combined manifest.
 
 ## 5. Acceptance criteria
 
