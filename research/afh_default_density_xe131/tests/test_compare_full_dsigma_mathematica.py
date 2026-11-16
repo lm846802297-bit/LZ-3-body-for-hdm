@@ -42,6 +42,17 @@ class FullDsigmComparatorUnitConversionTests(unittest.TestCase):
     def test_closed_phase_space_zero_is_exact(self):
         self.assertEqual(comparator.conversion_identity_residual(0.0, 0.0, False), 0.0)
 
+    def test_portable_path_is_repository_relative_for_committed_inputs(self):
+        path = comparator.REPO / "research" / "afh_default_density_xe131" / "input.csv"
+        self.assertEqual(
+            comparator.portable_path(path),
+            "research/afh_default_density_xe131/input.csv",
+        )
+
+    def test_portable_path_drops_external_machine_specific_root(self):
+        path = Path.home() / "private-machine-path" / "comparison.csv"
+        self.assertEqual(comparator.portable_path(path), "comparison.csv")
+
 
 if __name__ == "__main__":
     unittest.main()
