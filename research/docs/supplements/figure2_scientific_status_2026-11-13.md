@@ -53,7 +53,7 @@ The 2026-11-16 source-of-truth index is [12 groups / 87 files](figure2_results_m
 |---|---|---|---|
 | AFH v6.0 Xe-131 67 项密度矩阵提取 | **已验证（source + translation）** | 官方 v6.0 来源哈希、67 项逐项解析、CSV 与 source translation 对照；`v6/dmformfactor-V6.m` 已提交；七同位素矩阵和 16,807 行响应网格另已归档 | 原始 AFH package ZIP 仍为 checksum-only provenance；Xe-124/Xe-126 仍无 AFH default matrix |
 | AFH Xe-131 2401 点响应 | **已验证（限定 response-level）** | 0–0.6 GeV、2401 节点；60 位 mpmath 与 Wolfram 14.0.0 原生 Mathematica/Python 逐点比较；四种响应量全部通过，最大相对差异 \(3.59087\times10^{-9}\) | 仅验证 Xe-131 AFH response-level，不代表三体 kernel、天然氙连续谱或 LZ likelihood |
-| AFH factor-of-four 物理归一化 | **历史快照：response-level PASS** | raw (A^2/4)；setter (c_{\\rm set}=2g_{VN})；physical (R_A(0)=A^2)；原生 2401 点响应表与 Python 对照通过 | 当前状态已在顶部 2026-11-16 更新：Python-only fixed-speed full Eq. (6) factor-four ledger 也已 PASS；独立 Mathematica/Python 完整截面对照仍待完成 |
+| AFH factor-of-four 物理归一化 | **历史快照：response-level PASS** | raw (A^2/4)；setter (c_{\rm set}=2g_{VN})；physical (R_A(0)=A^2)；原生 2401 点响应表与 Python 对照通过 | 当前状态已在顶部 2026-11-16 更新：Python-only fixed-speed full Eq. (6) factor-four ledger 也已 PASS；独立 Mathematica/Python 完整截面对照仍待完成 |
 | AFH Xe-131 响应极小值 | **部分验证** | 固定文献 \(b_A\)、精确空间 \(q\)、AFH default 67 项矩阵，三个 Figure 2 范围内的主要极小值已提取 | 这些是核响应极小值，不自动等于完整截面或 halo 事件率极小值 |
 | AFH 七同位素响应 | **已验证（响应网格归档，限七同位素）** | 七种可用同位素；7×2401=16,807 个 direct finite-sum 响应节点及 source matrices 已提交；另保留 56 个 NIST/AME2020 selected-q mpmath 检查 | Xe-124/Xe-126 缺少官方 AFH default density matrix；AFH-7 不等于 AFH-9 |
 | Xe-124、Xe-126 AFH default 密度矩阵 | **AFH v6.0 default dispatch 未提供** | 官方源文件第 1555–1597 行只列出 128、129、130、131、132、134、136；124/126 进入通用回退；新增静态 dispatch 回归测试 | 需独立、可追溯的核结构密度矩阵；0.1842% 原子丰度不是事件率误差上界 |
@@ -97,7 +97,7 @@ The 2026-11-16 source-of-truth index is [12 groups / 87 files](figure2_results_m
 当前 P0 总索引已更新为 main 上 12 组/87 文件；AFH-7 七同位素 response grid 和 84 点谱已归档，P1 已修正公式和 provenance 不一致；剩余开放项为 GCN/JJ55 threshold-\(u^2\) 匹配重算、近极点宽度处方系统比较、AFH-9 缺失同位素输入、完整 Mathematica–Python Eq. (6) 截面对照，以及官方 LZ detector likelihood。
 
 
-## 9. 2026-11-14 comparator correction and final CI confirmation
+## 8. 2026-11-14 comparator correction and final CI confirmation
 
 The first archive comparison failed only for the derived residual `relative_to_archived = I_6/I_6^{\\rm archive}-1`. Since this residual is close to zero, applying a relative tolerance to it was ill-conditioned: small upstream differences in `I_6` were magnified in the residual comparison even though the physical integral column satisfied its original tolerance. PR #34 changed only this comparator branch to `rel_tol=0, abs_tol=5e-8`; all other numerical columns retain `rel_tol=5e-8, abs_tol=1e-12`. No physical calculation, historical input, or archived output was changed.
 
