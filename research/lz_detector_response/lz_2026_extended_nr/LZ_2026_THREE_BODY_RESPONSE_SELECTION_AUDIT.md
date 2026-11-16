@@ -624,6 +624,53 @@ be used as a strict nested-efficiency proof or as a stand-alone rule for
 selecting the production model.
 
 
+### 15.5 Conditional Fig. S2 bridge is model-dependent (2026-11-15)
+
+The updated event-weighted 2D fold was joined to the four vector-extracted
+Fig. S2 cumulative stages separately for EFT2024 and the Table S5-mean /
+EFT2024-width hybrid. Each family has eight matched rows (four benchmarks ×
+GCN/JJ55). The maximum absolute rate-level factorisation mismatch is 7.6250%
+for EFT2024 and 13.0272% for Table S5.
+
+For the black \(m_s=360\) keV, GCN point:
+
+| Quantity | EFT2024 | Table S5 hybrid |
+|---|---:|---:|
+| NEST-only acceptance | 100.00% | 100.00% |
+| WS ROI conditional acceptance | 74.0612% | 90.6191% |
+| Fig. S2 SS+DA conditional efficiency | 95.5790% | 95.5790% |
+| Fig. S2 ROI conditional efficiency | 80.1746% | 80.1746% |
+| Fig. S2 final cumulative efficiency | 76.6301% | 76.6301% |
+| NEST ROI × residual SS+DA factor | 70.7870% | 86.6128% |
+| Factorised / Fig. S2 final − 1 | −7.6250% | +13.0272% |
+
+JJ55 gives −7.5937% (EFT2024) and +12.7022% (Table S5). The red/green/blue
+benchmarks close to within about 0.63% or better. The opposite-sign mismatch
+for the black point is therefore not a universal residual-efficiency
+normalization issue; it is tied to the high-energy ROI response and the
+choice of NR mean-yield family.
+
+The factorisation used here is
+\[
+\epsilon_{\rm NEST}\,
+\epsilon_{\rm WS\,ROI\mid NEST}\,
+\epsilon_{\rm SS+DA\mid preROI},
+\]
+compared with the Fig. S2 final cumulative efficiency. The WS ROI is already
+present in the 2D response, so the Fig. S2 ROI conditional factor is not
+multiplied again. This is only a rate-level bookkeeping test. It does not
+supply the conditional 2D SS/DA migration kernel and cannot be used as a
+global scalar correction to the \((S1_c,\log_{10}S2_c)\) intensity.
+
+The calculation is [run 43697104437](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43697104437),
+artifact 14155360851, ZIP SHA-256
+682e2ba71063d6ef835b37a6d328a84ab7c609f404856aa83d56e4b875794bab.
+The artifact was downloaded and the two response-family bridge JSON files
+were independently inspected.
+
+
+
+
 ### 15.6 Full-range independent-seed 1-keV versus 5-keV validation (2026-11-15)
 
 The deterministic 5-keV reaggregation was followed by genuinely independent
@@ -688,53 +735,6 @@ cost is necessary, the next justified step is a targeted higher-statistics
 black-benchmark comparison or additional independent seeds, not relaxing
 the gate. This remains an intermediate NEST/WS-ROI result and does not
 supply the missing full LZ selected-event response.
-
-
-### 15.5 Conditional Fig. S2 bridge is model-dependent (2026-11-15)
-
-The updated event-weighted 2D fold was joined to the four vector-extracted
-Fig. S2 cumulative stages separately for EFT2024 and the Table S5-mean /
-EFT2024-width hybrid. Each family has eight matched rows (four benchmarks ×
-GCN/JJ55). The maximum absolute rate-level factorisation mismatch is 7.6250%
-for EFT2024 and 13.0272% for Table S5.
-
-For the black \(m_s=360\) keV, GCN point:
-
-| Quantity | EFT2024 | Table S5 hybrid |
-|---|---:|---:|
-| NEST-only acceptance | 100.00% | 100.00% |
-| WS ROI conditional acceptance | 74.0612% | 90.6191% |
-| Fig. S2 SS+DA conditional efficiency | 95.5790% | 95.5790% |
-| Fig. S2 ROI conditional efficiency | 80.1746% | 80.1746% |
-| Fig. S2 final cumulative efficiency | 76.6301% | 76.6301% |
-| NEST ROI × residual SS+DA factor | 70.7870% | 86.6128% |
-| Factorised / Fig. S2 final − 1 | −7.6250% | +13.0272% |
-
-JJ55 gives −7.5937% (EFT2024) and +12.7022% (Table S5). The red/green/blue
-benchmarks close to within about 0.63% or better. The opposite-sign mismatch
-for the black point is therefore not a universal residual-efficiency
-normalization issue; it is tied to the high-energy ROI response and the
-choice of NR mean-yield family.
-
-The factorisation used here is
-\[
-\epsilon_{\rm NEST}\,
-\epsilon_{\rm WS\,ROI\mid NEST}\,
-\epsilon_{\rm SS+DA\mid preROI},
-\]
-compared with the Fig. S2 final cumulative efficiency. The WS ROI is already
-present in the 2D response, so the Fig. S2 ROI conditional factor is not
-multiplied again. This is only a rate-level bookkeeping test. It does not
-supply the conditional 2D SS/DA migration kernel and cannot be used as a
-global scalar correction to the \((S1_c,\log_{10}S2_c)\) intensity.
-
-The calculation is [run 43697104437](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43697104437),
-artifact 14155360851, ZIP SHA-256
-682e2ba71063d6ef835b37a6d328a84ab7c609f404856aa83d56e4b875794bab.
-The artifact was downloaded and the two response-family bridge JSON files
-were independently inspected.
-
-
 
 
 ### 15.7 Paired Parametric/Full S1 two-dimensional response and finite-sample stability (2026-11-15)
@@ -860,9 +860,9 @@ artifact 14162588482, ZIP SHA-256
 The downloaded archive and all response/summary files were independently
 inspected.
 
-## 15.8 Independent-seed paired S1 ensemble and observable-binning audit
+### 15.8 Independent-seed paired S1 ensemble and observable-binning audit
 
-### Production design and provenance
+#### Production design and provenance
 
 The initial three-seed study has been extended to ten independent paired
 Parametric/Full S1 productions. Each production covers the complete
@@ -899,7 +899,7 @@ metadata. The ten raw event CSVs remain in the immutable Actions artifact;
 raw_event_artifact_SHA256SUMS.txt preserves the complete 75-file manifest.
 The original production artifact remains unchanged.
 
-### Independent-seed ensemble results
+#### Independent-seed ensemble results
 
 The ensemble map is the equal-weight arithmetic mean of the ten
 event-weighted per-seed rate maps. The table below averages the GCN and JJ55
@@ -957,7 +957,7 @@ NEST threshold stage. Since S2 is shared event by event, the NEST-stage
 S2 marginal remains identical between the two S1 modes; the small
 nonzero WS-ROI S2-marginal difference arises from S1-dependent selection.
 
-### Observable histogram-binning dependence
+#### Observable histogram-binning dependence
 
 The ten-seed binning audit exactly aggregates the same native maps from
 10-phd by 0.02-dex cells to 20-phd by 0.04-dex and 40-phd by 0.08-dex
@@ -994,7 +994,7 @@ binning is chosen from detector resolution and the background/statistical
 model, then independently checked for stability. This observable-binning
 audit is distinct from the 1/5/10-keV true-recoil response-grid study.
 
-### Interpretation and next requirement
+#### Interpretation and next requirement
 
 The ten-seed production and 48/480-row binning audit close the numerical
 production, map aggregation, and exact-rebinning bookkeeping. They do not
@@ -1016,7 +1016,7 @@ independent scalar. No final profile likelihood or 90% CL exclusion is
 authorized.
 
 
-## 15.9 Black 360-keV S1 upper-tail and ROI-migration audit
+### 15.9 Black 360-keV S1 upper-tail and ROI-migration audit
 
 The dedicated ten-independent-seed upper-tail audit is complete. It reuses
 the immutable paired Parametric/Full EFT2024 NEST production from run
@@ -1031,7 +1031,7 @@ relative closure residual over all seeds, GCN/JJ55 models, and strata is
 corrected audit passes its unit tests and all production-manifest,
 row-count, stratum-closure, selection-closure, and output validations.
 
-### 15.9.1 Main rate and S1 upper-tail result
+#### 15.9.1 Main rate and S1 upper-tail result
 
 | Nuclear response | Parametric S1 ROI | Full S1 ROI | Full/Parametric change | 95% seed-level interval |
 |---|---:|---:|---:|---:|
@@ -1047,7 +1047,7 @@ Full \(S1_c>600\), while 6.0201% and 5.9585%, respectively, cross in the
 opposite direction. The net accepted-weight loss is about 0.44 percentage
 points.
 
-### 15.9.2 Energy dependence and shape
+#### 15.9.2 Energy dependence and shape
 
 | True recoil band [keV] | GCN change | JJ55 change |
 |---|---:|---:|
@@ -1068,7 +1068,7 @@ S1 thresholds 550--625 phd is consistently about +0.44--0.48 percentage
 points in both nuclear models, confirming a broad upper-tail migration
 rather than a fluctuation isolated at the 600-phd cut.
 
-### 15.9.3 S2 selection is inactive in this support
+#### 15.9.3 S2 selection is inactive in this support
 
 The raw-event selection audit shows that all 1,300,000 events pass both S1
 coincidence flags, the NEST S2 threshold, the strict
@@ -1083,7 +1083,7 @@ Thus, for this black support, the WS-ROI acceptance equals the S1
 change is caused by the S1 upper-boundary migration, not S2 selection.
 This conclusion is specific to this benchmark and energy support.
 
-### 15.9.4 Interpretation and limits
+#### 15.9.4 Interpretation and limits
 
 The audit resolves the mechanism behind the black benchmark's integrated
 mode dependence: Full S1 is slightly higher in its upper tail, so more
@@ -1105,7 +1105,7 @@ The successful audit is
 artifact 14181285817.
 
 
-## 15.10 Four-benchmark paired S1 upper-tail and ROI-migration audit
+### 15.10 Four-benchmark paired S1 upper-tail and ROI-migration audit
 
 The ten-seed S1 upper-tail audit has been extended from black to red, green,
 black, and blue using the same immutable paired EFT2024 NEST event production.
@@ -1204,7 +1204,7 @@ The successful audit is
 artifact 14181863680.
 
 
-## 15.11 Paired S1 ensemble bootstrap and exact paired randomization
+### 15.11 Paired S1 ensemble bootstrap and exact paired randomization
 
 A paired seed-cluster bootstrap and exact seed-level randomization audit has been completed using the immutable ten-seed production from run [43750948249](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43750948249). The production ZIP SHA-256 was verified, all 75 internal artifact entries passed their checksum manifest, and the 14 required archived inputs were rechecked by the analysis script.
 
