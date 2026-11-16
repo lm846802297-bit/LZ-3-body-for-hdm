@@ -1,19 +1,18 @@
 # P0 detector response and propagator-width closure: current audit
 
-Date: 2026-11-15
-Branch: research/figure2-p0-4-mainline
+Date: 2026-11-16
+Documentation sync branch: docs/scientific-content-audit-20261116; original calculation branches and commit pins remain recorded in the individual audit sections.
 
 ## Executive status
 
-The final LZ parameter scan remains frozen. Two P0 tracks are active:
+The final LZ parameter scan remains frozen. The two P0 tracks have made substantial progress, but neither has closed the official detector-level inference:
 
-- Track A: reconstruct the LZ 2026 NR detector response using the actual high-energy NEST model, beginning with the published Table S5 parameter set.
-- Track B: close the independent-coupling and finite-width assumptions in the three-body propagator.
+- **Track A — NEST response:** the public EFT2024 LZ-specific candidate at NEST commit `541b643` is pinned; NR mean-yield Python/C++ cross-language checks passed; full-S1c NR and ER band proxies and conditional 2D response pilots are archived; and the three-body spectrum has been folded through a pre-selection NR 2D response. These are reproducible public-candidate studies, not confirmation of the exact LZ 2026 production build or the collaboration calibration-source spatial prior.
+- **Track B — propagator width:** the chi2 -> chi1 s width remains conditional on Dirac fermions, a real scalar, a pure scalar off-diagonal coupling, and a single open decay channel. Pole-width/running-width comparisons are diagnostics; the complete model self-energy and width prescription are not closed.
+- **Still open:** exact collaboration NEST/configuration provenance, D-D/AmBe source geometry and calibration clouds, full fiducial-volume and selection treatment, nuisance covariance, ER/background templates, and the official extended likelihood. No official LZ likelihood, 90% CL exclusion, or candidate-event interpretation is claimed.
 
-A new machine-readable archive of the LZ 2026 NR mean-yield parameters has been added:
-`research/lz_detector_response/lz_2026_extended_nr/lz_2026_nest_nr_mean_yield_parameters.json`.
+The machine-readable NR mean-yield parameter archive remains a verified input extraction. The later sections of this report document the completed mean-yield, event-level, band, and 2D-response steps; earlier statements that those runs were pending are historical snapshots, not the current status.
 
-This is a verified input extraction, not a completed detector-response simulation.
 
 ## 1. LZ 2026 NR mean-yield model: verified Table S5 input
 
@@ -41,7 +40,7 @@ The exponent used in the charge-yield power law is:
 
 [
 p(E)=
-egin{cases}
+\begin{cases}
 0.5, & Ele E_0,\
 0.5+aln[1+b(E-E_0)], & E>E_0.
 end{cases}
@@ -121,8 +120,8 @@ The manuscript's vector-vector Lagrangian is:
 
 [
 mathcal L_{mathrm{int}}supset
-g_1 V^muarchi_2gamma_muchi_1
-+g_2sarchi_2chi_1+mathrm{h.c.}
+g_1 V^mu\barchi_2gamma_muchi_1
++g_2s\barchi_2chi_1+mathrm{h.c.}
 ]
 
 The plotted normalization specifies only ((g_1g_2g_{VN})^2), while the propagator uses a pole width. The product normalization does not determine (g_2) separately, and the width is proportional to (|g_2|^2) under the conditional Dirac scalar-decay calculation.
