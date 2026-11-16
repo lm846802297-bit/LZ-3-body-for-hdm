@@ -421,7 +421,7 @@ powershell -ExecutionPolicy Bypass -File research/afh_default_density_xe131/run_
 ~~~
 
 This requires Mathematica or Wolfram Engine with wolframscript available on
-PATH. The script checks both archived native and Python AFH response tables,
+PATH. The wrapper checks both archived native and Python AFH response tables, validates the fixed 800 km/s/pole/threshold-u2 settings and quadrature metadata, runs the Wolfram I6 integration, and then calls compare_full_dsigma_mathematica.py for the independent Python recomputation. After PASS it writes a SHA-256 JSON manifest and SHA256SUMS.txt for inputs, source files and outputs.
 runs the Wolfram I6 integration, and then calls
 compare_full_dsigma_mathematica.py for the independent Python recomputation.
 The comparison requires the complete 652-row grid and independently checks
@@ -442,6 +442,7 @@ A successful run writes:
 - mathematica_full_dsigma_xe131.csv and its metadata;
 - mathematica_python_full_dsigma_comparison.csv;
 - mathematica_python_full_dsigma_comparison.json.
+- `full_dsigma_sha256_manifest.json` and `SHA256SUMS.txt`, covering the native/Python CSVs, metadata, AFH response inputs, and the source files used by the run.
 
 Do not mark the full Mathematica/Python cross-section comparison complete
 until this run reports PASS and the comparison metadata has been reviewed.
