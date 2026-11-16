@@ -108,7 +108,7 @@ SetIsotope[54,131,"default","default"]
 This selects both the AFH default Xe-131 density matrix and the AFH default
 oscillator prescription. The resulting length is
 \[
-b_{131}=2.2923417985218975 mathrm{fm}.
+b_{131}=2.2923417985218975\ \mathrm{fm}.
 ]
 
 
