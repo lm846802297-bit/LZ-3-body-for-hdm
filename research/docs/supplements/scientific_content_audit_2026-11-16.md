@@ -89,7 +89,7 @@ The AFH-7/Hybrid-9 outputs are pre-detector nuclear-recoil spectra. The NEST pai
 | Legacy AFH selected-point rate table | HISTORICAL | Reproducible old linear-(W^2) low-order result; do not mix with new threshold-(u^2) grid |
 | GCN/JJ55 continuous spectra | PASS_WITH_NOTES | 84-point outputs exist; kernel-order check is (2.19\times10^{-4}); matched threshold-(u^2) rerun pending |
 | High-energy nuclear-model tail comparison | PROVISIONAL | Broad GCN/JJ55 shifts exceed numerical error; Hybrid-9 comparison should be rerun at matched precision |
-| Full Mathematica–Python (d\sigma_A/dE_R) | OPEN | Native AFH Xe-131 response-level PASS does not close the full Eq. (6) cross-section check |
+| Full Mathematica–Python (d\\sigma_A/dE_R) | OPEN | AFH Xe-131 response-level native Mathematica/Python PASS; separate Python-only v=800 km/s fixed-speed full Eq. (6) 652-row run and factor-four ledger also PASS_WITH_NOTES within Python | Native Wolfram 652-row run and independent pointwise full-cross-section comparison remain open |
 | Official LZ detector likelihood | OPEN | No official 2D selected PDF/profile likelihood/90% CL exclusion |
 
 ## 6. Documentation records reviewed in this phase
@@ -111,3 +111,8 @@ A third consistency pass checked the Xe-131 AFH README, the Figure 2 Anand-respo
 3. Archive the full AFH-7/Hybrid-9 high-order outputs and the independent Numba implementation as native files or a versioned Release; do not leave the full output as checksum-only external provenance.
 4. Complete the native Mathematica–Python full (I_6) and (d\sigma_A/dE_R) pointwise comparison.
 5. Continue the detector-response audit without upgrading the current NEST proxy to an official LZ likelihood.
+
+
+## 8. Documentation structure and cross-reference QA — 2026-11-16
+
+A structural consistency pass was run across the 36 files changed on this audit branch. All checked relative Markdown links resolve against the branch tree; the machine-readable Figure 2 result index parses as valid JSON; no remaining control characters were found in the reviewed Markdown set. The pass also repaired the NEST progress-section numbering (1–21), nested the later 15.8–15.11 selection-audit material under Section 15, restored malformed LaTeX in the Anand AFH normalization note, and made the status-table section numbering contiguous. This is a documentation-integrity result, not a claim that all 106 research Markdown files have undergone full scientific review.
