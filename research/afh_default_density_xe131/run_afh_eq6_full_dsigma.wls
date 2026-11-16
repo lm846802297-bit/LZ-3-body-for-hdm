@@ -283,7 +283,7 @@ meta = <|
     "max_native_table_mapping_relative_residual" -> responseNodeResidual,
     "max_full_grid_factor_four_relative_residual" -> maxFactor4GridResidual,
     "minimum_chi2_pole_clearance_keV" -> minPoleClearance*10^6|>,
-  "output" -> <|"rows" -> Length[rows], "csv" -> outPath|>,
+  "output" -> <|"rows" -> Length[rows], "csv" -> FileNameTake[outPath], "csv_path_basis" -> "portable filename relative to the output archive directory"|>,
   "scope" -> {"Xe-131 only; fixed v=800 km/s; no halo fold or detector response",
     "g2=1 is a chosen factorization of the caption coupling product",
     "pole width is conditional on Dirac chi states, real scalar, pure scalar Yukawa and chi2 -> chi1 s only",
