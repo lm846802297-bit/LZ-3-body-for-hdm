@@ -154,7 +154,7 @@
 - **条件性验证：** 核心实现与代表性回归检查通过，但仍受独立推导、参数覆盖、核模型输入或物理假设限制。
 - **未完成：** 尚无对应的数值结果或所需物理输入；不得以 CI 通过、脚本存在或其他核模型结果替代。
 
-F1–F12 的逐项状态见第 2 节。当前 AFH-7/Hybrid-9 84 点 grid-sampled spectrum 已归档；GCN/JJ55 的 84 点谱仍使用 legacy linear-\(W^2\) kernel，须在统一 threshold-\(u^2\) 后再做精密跨模型比较。完整 Mathematica–Python \(d\sigma_A/dE_R\) 端到端对照仍待执行。
+F1–F12 的逐项状态见第 2 节。当前 AFH-7/Hybrid-9 84 点 grid-sampled spectrum 已归档；GCN/JJ55 的 84 点谱仍使用 legacy linear-\(W^2\) kernel，须在统一 threshold-\(u^2\) 后再做精密跨模型比较。Python-only v=800 km/s Xe-131 full Eq. (6) 652 行和 factor-four ledger 已 PASS_WITH_NOTES；**原生 Mathematica 652 行与独立 Python 的完整截面逐点对照仍待执行**。
 
 
 ## 8. Phase II high-energy tail and full-cross-section validation status
@@ -162,5 +162,6 @@ F1–F12 的逐项状态见第 2 节。当前 AFH-7/Hybrid-9 84 点 grid-sampled
 - AFH-7 and Hybrid-9 natural-xenon continuous spectra: archived with isotope-resolved exact-spatial-(q) kernels and high-order quadrature checks.
 - Candidate-window tail (225\text{--}269.9\,\mathrm{keV}): archived for AFH-7, Hybrid-9, Helm-9, GCN and JJ55 in `afh_default_density_natural_xenon_halo/results/high_energy_tail_model_sensitivity_2026-11-14.csv`.
 - The tail comparison is one-dimensional efficiency-weighted rate-level output. It is not a detector-level reconstructed spectrum or a profile likelihood.
+- Python-only full fixed-speed Xe-131 Eq. (6): v=800 km/s; 652 rows (500 open, 152 closed); 16 high-order anchors; max I6 relative difference 1.66367e-11; factor-four mapping residual 3.55679e-16; physical/no-factor-four ratio residual 0; artifact `14112736343`. This is an internal Python PASS under conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions, not a Mathematica/Python cross-code PASS.
 - Full Eq. (6) cross-section implementation: `afh_default_density_xe131/run_afh_eq6_full_dsigma.wls`; independent Python comparator: `afh_default_density_xe131/compare_full_dsigma_mathematica.py`.
 - The native full-(I_6)/(d\sigma_A/dE_R) run remains the final Mathematica verification gate; no PASS is claimed before its CSV and comparator metadata are inspected.
