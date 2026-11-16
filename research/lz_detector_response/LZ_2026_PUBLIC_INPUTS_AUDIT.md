@@ -47,7 +47,7 @@ The digitization metadata records:
 - lower/upper envelope at 248 keV = 0.88355 / 0.98000;
 - gray envelope has no confidence level assigned by LZ and must be treated as a systematic variation, not a confidence interval.
 
-At the time of the initial public-input audit, the next action was to retrieve and version the NEST parameters. This was subsequently addressed by locating and pinning the separate public NEST EFT2024 candidate in Section 13; it was not found inside the supplied HEPData v1 ZIP. The exact identity of that public candidate with the collaboration's production build remains unconfirmed.
+At the time of the initial public-input audit, the next action was to retrieve and version the NEST parameters. This was subsequently addressed by locating and pinning the separate public NEST EFT2024 candidate in Section 19; it was not found inside the supplied HEPData v1 ZIP. The exact identity of that public candidate with the collaboration's production build remains unconfirmed.
 
 ## 3. What the official detector likelihood actually uses
 
