@@ -75,7 +75,7 @@ The reported GCN/JJ55 tail shifts of roughly 12–19% are much larger than this 
 
 ## 4. AFH normalization, isotope sum, and detector boundary
 
-The inspected AFH response implementation keeps the raw isoscalar (A^2/4) convention distinct from the physical equal-proton/equal-neutron response (R_A(0)=A^2); the factor 4 is applied once. The natural-xenon target number uses the full nine-isotope abundance-weighted mean atomic mass, while the AFH response sum includes only the seven supported isotopes and does not renormalize their abundance.
+The inspected AFH response implementation keeps the raw isoscalar (A^2/4) convention distinct from the physical equal-proton/equal-neutron response (R_A(0)=A^2); the factor 4 is applied once at the response-definition layer. Its propagation through the complete pole-width Eq. (6) dσ_A/dE_R calculation has not yet passed an end-to-end Mathematica/Python comparison. The natural-xenon target number uses the full nine-isotope abundance-weighted mean atomic mass, while the AFH response sum includes only the seven supported isotopes and does not renormalize their abundance.
 
 The AFH-7/Hybrid-9 outputs are pre-detector nuclear-recoil spectra. The NEST paired-S1/2D response archive is a separate intermediate detector-response study. Neither result is an official waveform-level LZ selected PDF, background/profile likelihood, or 90% CL exclusion.
 
@@ -84,7 +84,7 @@ The AFH-7/Hybrid-9 outputs are pre-detector nuclear-recoil spectra. The NEST pai
 | Work item | Audit status | Current boundary |
 |---|---|---|
 | Three-body kinematic limits and exact spatial (q) | PASS_WITH_NOTES | Inspected formula/code conventions are internally consistent; full parameter scan not claimed |
-| AFH factor-four normalization | PASS_WITH_NOTES | Xe-131 native response comparison passes; seven-isotope response grid is archived |
+| AFH factor-four normalization | PASS_WITH_NOTES | Xe-131 native response comparison passes and raw-to-physical factor 4 is fixed at response level; end-to-end transfer through full Eq. (6) remains open |
 | AFH-7/Hybrid-9 84-point spectra | PASS_WITH_NOTES | (10^{-5}) high-order summary passes; full high-order ZIP is external; not AFH-9 |
 | Legacy AFH selected-point rate table | HISTORICAL | Reproducible old linear-(W^2) low-order result; do not mix with new threshold-(u^2) grid |
 | GCN/JJ55 continuous spectra | PASS_WITH_NOTES | 84-point outputs exist; kernel-order check is (2.19\times10^{-4}); matched threshold-(u^2) rerun pending |
@@ -97,6 +97,8 @@ The AFH-7/Hybrid-9 outputs are pre-detector nuclear-recoil spectra. The NEST pai
 The first-pass review covers the root and research navigation, the main AFH/natural-xenon report, the Eq. (6) kernel README and code, the AFH natural-xenon README and generator, the AFH response interpolation and phase-space audits, the GCN/JJ55 spectrum generator and metadata, the high-energy-tail report, the Figure 2 formula/status/result indices, and the LZ extended-NR README/bootstrap report.
 
 This is a high-impact first batch, not a claim that all 106 research Markdown files have been scientifically reviewed. Remaining documents will be reviewed by topic in subsequent batches.
+
+An additional cross-document status-reconciliation pass on 2026-11-16 updated Appendix D (natural-xenon coverage), Appendix E (historical selected-point versus current AFH-7 grid), Appendix F (numerical validation matrix and detector boundary), Appendix G (committed 16,807-row response grid), the missing-isotope appendix, the high-energy-tail appendix, the research decision register, the formula cross-reference, and the formula/status audit. These edits correct stale completion labels and preserve historical calculations as historical; they do not change physical inputs or recompute numerical outputs.
 
 ## 7. Next actions
 
