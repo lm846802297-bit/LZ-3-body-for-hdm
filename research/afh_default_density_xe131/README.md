@@ -337,40 +337,21 @@ Do not use the PCHIP-based values above as the final AME2020 rate prediction
 until that recomputation is complete.
 
 
-## Full Eq. (6) Mathematica–Python differential-cross-section audit
+## Full Eq. (6) differential-cross-section status
 
-The native AFH response layer is already validated: the archived Wolfram
-14.0.0 run compares all 2,401 Xe-131 (q) nodes against the Python
-translation and passes with a maximum relative difference of
-(3.59\times10^{-9}). The remaining, distinct task is the full three-body
-integral and differential cross section.
+The native AFH response layer is validated: the archived Wolfram 14.0.0 run compares all 2,401 Xe-131 (q) nodes against the Python translation, with maximum relative difference (3.59\times10^{-9}).
 
-The Wolfram runner
-`run_afh_eq6_full_dsigma.wls` reads the archived native AFH response table,
-reconstructs the three-body four-momenta and Dirac trace, and independently
-integrates (I_6). It does not rerun the AFH package. The Python comparator
-`compare_full_dsigma_mathematica.py` independently recomputes (I_6) using
-`phase_space_convergence.integrate_i6`, compares both AFH response
-conventions, the full cross section, the no-factor-four control and the
-(mathrm{cm^2/keV}) conversion.
+Separately, the Python-only v=800 km/s fixed-speed Xe-131 full Eq. (6) calculation has completed 652 rows (500 open, 152 closed) and 16 high-order anchors. Its maximum (I_6) relative difference is (1.66367\times10^{-11}), the AFH factor-four mapping residual is (3.55679\times10^{-16}), and the physical/no-factor-four ratio residual is zero. The workflow [run 43591097068](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43591097068) archived artifact [14112736343](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43591097068).
 
-From the repository root, after the final Mathematica gate is authorized:
+This is an end-to-end factor-four PASS **within the Python implementation**, under the conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions. It is not a natural-xenon halo fold and does not establish Mathematica/Python full-cross-section agreement.
 
-```powershell
-wolframscript -file research/afh_default_density_xe131/run_afh_eq6_full_dsigma.wls --nw 16 --nz 16 --nphi 8 --w2-mapping threshold_u2 --width-scheme pole
-python research/afh_default_density_xe131/compare_full_dsigma_mathematica.py --mathematica-csv research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131.csv --out-csv research/afh_default_density_xe131/output/full_dsigma_mathematica/pointwise_comparison.csv --metadata research/afh_default_density_xe131/output/full_dsigma_mathematica/comparison_metadata.json
-```
+The native Wolfram runner `run_afh_eq6_full_dsigma.wls` reads the already archived AFH-native 2,401-node response table and independently recomputes (I_6). The Python comparator `compare_full_dsigma_mathematica.py` independently recomputes (I_6) and compares the AFH response, full (d\sigma_A/dE_R), no-factor-four control, momentum, mediator denominator and unit conversion.
 
-High-order anchors must be run separately, e.g. (48\times40\times24),
-because agreement between two implementations at one quadrature order is not
-a convergence test. The exact inputs, width assumptions, tolerances and
-scientific boundaries are documented in
-`output/NATIVE_MATHEMATICA_FULL_DSIGMA_AUDIT.md`.
+On Windows, use `run_native_full_dsigma_windows.ps1` from the repository root after installing the requirements and ensuring `wolframscript` is on `PATH`. The wrapper checks the native and Python AFH inputs, the fixed 800 km/s / pole-width / threshold-(u^2) assumptions and quadrature metadata; it then runs the native integrator and Python comparator. After PASS it writes the native and comparison CSV/JSON files, `full_dsigma_sha256_manifest.json`, and `SHA256SUMS.txt`, including source/input hashes and Wolfram/Python runtime versions.
 
-**Status:** implementation and Python-side phase-space convergence checks
-are prepared; the full native Wolfram run and pointwise comparator have not
-been executed. They remain deliberately deferred until the other
-non-Mathematica research work is complete.
+High-order anchors are a separate quadrature-convergence check. For a focused comparison, use a distinct output directory, one benchmark, 48x40x24, and `-RequireFullGrid $false`; the wrapper still compares every row in that subset. Do not infer quadrature convergence from cross-code agreement at one order.
+
+**Current remaining gate:** the native Wolfram 652-row run and independent pointwise Mathematica/Python full-cross-section comparison have not yet been executed. Do not mark the full cross-code comparison PASS until the comparator reports PASS and its metadata and SHA-256 manifest have been reviewed.
 
 
 ## Python-first full differential-cross-section stage (2026-11-14)
@@ -396,9 +377,7 @@ section.
 The machine-readable normalization and numerical boundaries are documented
 in audit/PYTHON_FULL_DSIGMA_FACTOR4_AUDIT.md. GitHub Actions runs the
 Python-only full-grid calculation and uploads its CSV/metadata/anchor archive.
-The final native Mathematica full-\(d\sigma_A/dE_R\) calculation remains
-deferred until the Python calculation and the other non-Mathematica research
-work are complete.
+The Python-only full-grid calculation described above has since completed and its CSV, metadata and high-order anchors are archived. The remaining independent check is the native Wolfram full-grid execution and pointwise comparison against the Python implementation; it is no longer waiting on the Python calculation.
 
 The native Wolfram runner now reads the already archived AFH-native response
 from output/native_exports/afh_default_xe131_WM00_mathematica.csv; the
