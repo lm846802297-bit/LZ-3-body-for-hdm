@@ -269,6 +269,8 @@ meta = <|
   "particle_inputs" -> <|"m_chi1_GeV" -> mchi, "m_V_GeV" -> mV, "g2" -> g2,
     "coupling_product_squared" -> gProductSquared, "speed_km_s" -> speedKms, "pchi_GeV" -> pChi|>,
   "benchmarks" -> benchmarkMeta,
+  "benchmark_names" -> (First /@ selectedBenchmarks),
+  "energy_grid_keV" -> erGrid,
   "integration" -> <|"I6_recomputed_in_Wolfram_Language" -> True,
     "quadrature" -> <|"nW" -> nw, "nz" -> nz, "nphi" -> nphi|>,
     "definition" -> "Integral dW2 sqrt(lambda_dim) dz (1/(2 Pi)) dphi L00",
