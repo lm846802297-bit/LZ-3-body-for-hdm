@@ -11,7 +11,7 @@ No new algebraic defect was established in the inspected three-body kinematic bo
 
 1. The seven-isotope AFH default-density response grid and an 84-point AFH-7/Hybrid-9 recoil-grid spectrum are already committed to `main`. Several older documents still say AFH is selected-point-only.
 2. The old AFH selected-point rate table uses the legacy low-order linear-(W^2) kernel. The newer AFH-7 grid uses threshold-(u^2) integration. Their common points differ by about (2.3\times10^{-4})–(2.6\times10^{-4}) relatively, consistent with the previously measured low-order linear-(W^2) quadrature bias. The old table must remain historical, not be silently mixed with the new grid.
-3. The committed GCN/JJ55 continuous spectra still use the legacy linear-(W^2), (8\times8\times4) kernel. Their (16\times16\times8) spot checks reach (2.18895\times10^{-4}) in the kernel, whereas the AFH-7 grid uses threshold-(u^2) and has a reported internal-order difference below (6.0\times10^{-10}). Cross-model comparisons therefore do not yet have matched numerical integration.
+3. The committed GCN/JJ55 continuous spectra still use the legacy linear-(W^2), (8×8×4) kernel. Their (16×16×8) spot checks reach (2.18895×10^{-4}) in the kernel, whereas the AFH-7 grid uses threshold-(u^2). At the production 24-speed-node setting, the final internal-kernel increment is (5.96430×10^{-10}); the separate 12-speed-node comparison is (6.02323×10^{-10}). Cross-model comparisons therefore do not yet have matched numerical integration.
 4. The final (24\times8\times8\times4) AFH-7/Hybrid-9 high-order spectra are described by a committed audit and checksum, but the complete 1,344-row high-order archive is external; the committed 1,344-row spectrum is the (24\times6\times6\times3) baseline.
 5. The full Mathematica–Python (d\sigma_A/dE_R) comparison and the official LZ detector likelihood remain incomplete.
 
@@ -29,17 +29,18 @@ The following inputs and outputs are present on `main`:
 
 The grid is **sampled on 84 recoil points**; “continuous spectrum” in older descriptions means a full-range grid-sampled spectrum rather than an analytic continuum or a 1-keV grid.
 
-The committed baseline calculation uses threshold-(u^2) phase-space integration with 24 speed nodes and (6\times6\times3) internal quadrature. The separate high-order audit reports:
+The committed baseline spectrum uses threshold-(u^2) phase-space integration with 24 speed nodes and (6×6×3) internal quadrature. The convergence audit additionally uses a 12-speed-node (12×6×6×3) reference to isolate the speed-order increment; its final comparison uses 24×8×8×4. The separate high-order audit reports:
 
 | Check | Maximum relative difference |
 |---|---:|
 | Speed order 12 → 24, all open points | (6.63735\times10^{-6}) |
 | Internal order (6\times6\times3\to8\times8\times4), all open points | (6.02323\times10^{-10}) |
-| Baseline → final (24\times8\times8\times4) spectrum | (6.63746\times10^{-6}) |
+| 12×6×6×3 kernel integral → 24×8×8×4, all open points | (6.63746×10^{-6}) |
+| Committed spectrum 24×6×6×3 → high-order spectrum 24×8×8×4 | (6.46772×10^{-6}) |
 | Speed order 24 → 48, worst 32 points | (2.21749\times10^{-7}) |
 | Independent Numba/Python reference, 12 points | (5.32907\times10^{-15}) |
 
-All reported differences are below the (10^{-5}) acceptance threshold. The full high-order 1,344-row output is recorded as a 736,245-byte external ZIP with SHA-256 `e55442d3ad4289dfd6c16e8e6cdb43d669561df074beddefcf87e8d1024f3471`; the repository currently contains the audit summary and the baseline spectrum, not the full high-order ZIP contents.
+All reported differences are below the (10^{-5}) acceptance threshold. Two comparisons must not be conflated: (6.63746×10^{-6}) is the maximum pointwise kernel-integral difference between the 12-speed-node reference and the 24-speed-node high-order calculation; (6.46772×10^{-6}) is the maximum difference between the committed 24-speed-node baseline spectrum and the high-order spectrum. The full high-order 1,344-row output is recorded as a 736,245-byte external ZIP with SHA-256 `e55442d3ad4289dfd6c16e8e6cdb43d669561df074beddefcf87e8d1024f3471`; the repository currently contains the audit summary and the baseline spectrum, not the full high-order ZIP contents.
 
 ## 2. Legacy selected-point rates versus the new AFH-7 grid
 
