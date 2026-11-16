@@ -52,7 +52,7 @@ The detailed sections below preserve earlier calculations and their provenance. 
 2. **核结构输入：** 采用 AFH/DMFormFactor v6.0 内置的 Xe-131 default density matrix，严格使用文献给出的谐振子长度处方，不把 \(b_A\) 当作拟合参数；并处理 AFH 原始 isoscalar response 与物理等质子、等中子耦合之间的因子 4。
 3. **真实天然氙靶的理论速率：** 对可用氙同位素按天然丰度求和，并对实验室系暗物质速度分布积分，得到 \(dR/dE_R\)。这一步与固定速度下的 \(d\sigma_A/dE_R\) 是不同的物理量。
 
-目前已经形成 AFH default Xe-131 原生 Mathematica/Python response-level 对照、七同位素 16,807 行 AFH 响应网格、AFH-7/Hybrid-9 84 点天然氙全范围谱、GCN/JJ55 84 点天然氙谱、四组固定速度 benchmark，以及 LZ 一维效率加权 rate-level 诊断。LZ 2026 Fig. S2 的一维 final-ROI efficiency 曲线及灰色系统包络也已从官方 PDF 提取，并与独立数字化结果对照；基于 GCN/JJ55 连续谱、2.84 tonne-year exposure 和该效率曲线，已得到初步 efficiency-weighted rate-level event yields。该结果不是完整的 LZ likelihood recast。Xe-131 AFH 响应现已同时通过 60 位精度 mpmath 独立有限和检查，以及 Wolfram 14.0.0 原生 Mathematica 对 2401 个 q 节点的逐点比较；Python 与 Mathematica 的 q 网格完全一致，四种响应量的最大相对差异为 \(3.59\times10^{-9}\)，全部 2401 点通过。原始 AFH 响应、物理等质子等中子响应、因子 4 一次转换和有限密度矩阵精度导致的 q=0 小归一化修正均分别归档。该原生验证仅针对 Xe-131 响应层，不等于完整 AFH 天然氙连续谱或 LZ likelihood。另有独立 Python-only fixed-speed Xe-131 完整 Eq. (6) 652 行计算及因子 4 ledger 通过，验证了因子 4 从 AFH 响应到完整 Python 截面的内部传递；但原生 Wolfram 652 行和 Mathematica/Python 完整截面逐点对照仍待执行。进一步核查 AFH 原始定义后，确认其响应变量 \(y=(q b_A/2)^2\) 中的 \(q\) 是空间动量转移；现有 28 个天然氙响应样本采用的 exact spatial q 与精确三体质量壳关系一致。exact spatial q 作为默认，NR-q 仅作小反冲近似对照。当前 AFH-7/Hybrid-9 与 GCN/JJ55 均有 84 点 full-range spectra；前者使用 threshold-\(u^2\)，后者仍使用 legacy linear-\(W^2\)，因此跨模型积分尚未达到匹配精度。一维效率加权 event yields 目前仍是 GCN/JJ55 rate-level 结果，不能混称为 AFH yields 或完整实验重铸。
+目前已经形成 AFH default Xe-131 原生 Mathematica/Python response-level 对照、七同位素 16,807 行 AFH 响应网格、AFH-7/Hybrid-9 84 点天然氙全范围谱、GCN/JJ55 84 点天然氙谱、四组固定速度 benchmark，以及 LZ 一维效率加权 rate-level 诊断。LZ 2026 Fig. S2 的一维 final-ROI efficiency 曲线及灰色系统包络也已从官方 PDF 提取，并与独立数字化结果对照；基于 GCN/JJ55 连续谱、2.84 tonne-year exposure 和该效率曲线，已得到初步 efficiency-weighted rate-level event yields。该结果不是完整的 LZ likelihood recast。Xe-131 AFH 响应现已通过 60 位精度 mpmath 独立有限和检查，以及 Wolfram 14.0.0 原生 Mathematica 对 2401 个 q 节点的逐点比较；最大相对差异为 3.59e-9。另已完成原生 Wolfram 14.2.0 的 full Eq. (6) 652 行计算，并由独立 Python 对 652 行逐点复算：500 open、152 closed；最大 I6 差异 1.34e-12，dσ 差异 2.58e-9，AFH response 差异 2.58e-9，factor-four mapping residual 4.30e-16。原 comparator 将 converted-dσ 的跨代码差异误作单位转换恒等式；现已改为每个实现分别检查 conversion identity（2e-12），而 converted observable 的跨代码差异按 dσ 的 2e-7 容差验收，comparison JSON 为 PASS。该 cross-code 结果仅针对固定速度 Xe-131 和条件性 pole-width benchmark，不是天然氙 halo fold 或 LZ likelihood。进一步核查 AFH 原始定义后，确认其响应变量 y=(q b_A/2)^2 中的 q 是空间动量转移；当前 AFH-7/Hybrid-9 与 GCN/JJ55 均有 84 点 full-range spectra，但前者使用 threshold-u^2、后者仍使用 legacy linear-W^2，因此跨模型积分尚未达到匹配精度。一维效率加权 event yields 目前仍是 GCN/JJ55 rate-level 结果，不能混称为 AFH yields 或完整实验重铸。
 
 本轮正文还补入了从相互作用拉格朗日量到两张树图、Dirac trace、三体相空间和 Eq. (6) 整体前因子的连贯推导；附录进一步逐步推导最优反冲能量与最大标量质量、条件性二体 pole width、截断 SHM 实验室速度 PDF、天然氙靶核数和通量事件率，并解释核响应极小值、三体阈值、halo 端点和 LZ 效率折叠各自代表的物理机制。完整的 Lorentz boost、相空间归一化、AFH 密度矩阵有限和、因子 4、同位素输入和 halo 数值约定仍分别保留在正式附录 A–H，避免正文与附录互相替代。
 
@@ -4713,7 +4713,7 @@ t=-2m_AE_R.
 
 - **research/afh_default_density_xe131/run_afh_eq6_full_dsigma.wls**：在 Wolfram Language 中独立构造三体末态四动量、计算完整 Dirac trace、执行 \(W^2,z,\phi_*\) 求积，并装配完整截面。它只读取已经归档的 AFH 2401 点响应表，不重新运行 AFH package。
 - **research/afh_default_density_xe131/compare_full_dsigma_mathematica.py**：独立调用 research/figure2_full_reproduction/eq6_kernel.py 重新计算同一组 \(I_6\)，使用 SciPy PCHIP 独立插值 AFH 响应，再与 Mathematica CSV 逐点比较。
-- **research/afh_default_density_xe131/run_native_full_dsigma_windows.ps1**：Windows 端到端封装；检查 652 行/500 open full-grid、固定 800 km/s、pole-width、threshold-\(u^2\) 和求积阶数；完成对照后输出 CSV/JSON、SHA-256 manifest，并记录 Wolfram/Python runtime versions。该脚本尚未在 Mathematica 环境执行。
+- **research/afh_default_density_xe131/run_native_full_dsigma_windows.ps1**：Windows 端到端封装；检查 652 行/500 open full-grid、固定 800 km/s、pole-width、threshold-\(u^2\) 和求积阶数；原生运行已在 Wolfram 14.2.0 完成，输出 CSV/JSON、SHA-256 manifest，并记录 Wolfram/Python runtime versions。
 - **research/afh_default_density_xe131/run_python_full_dsigma_xe131.py**：已执行独立 Python-only v=800 km/s fixed-speed 652 行 full Eq. (6) 网格；CSV、metadata 和 16 个高阶锚点归档为 GitHub Actions artifact `14112736343`。其 factor-four ledger 在 Python 内部通过，但不替代上面的 Mathematica/Python cross-code 检验。
 - **research/afh_default_density_xe131/output/full_dsigma_mathematica/**：原生 Mathematica 14.2.0 652 行 CSV/metadata、Python 独立逐点比较 CSV/JSON 和 SHA-256 校验清单。比较 JSON 为 `PASS`；交叉代码 converted-dσ 差异使用与 dσ 相同的 2e-7 观测量容差，每个实现内部的单位转换恒等式仍使用 2e-12。
 - **research/afh_default_density_xe131/output/NATIVE_MATHEMATICA_FULL_DSIGMA_AUDIT.md**：记录固定输入、代码路径、验收标准和未完成边界。
@@ -4815,8 +4815,4 @@ cover seven natural-xenon isotopes; Xe-124/Xe-126 remain absent and are not
 invented. The one-dimensional efficiency fold is not energy-resolution
 smearing, a NEST S1/S2 response, a background model, or a profile likelihood.
 
-The Xe-131 AFH response-level Mathematica/Python comparison is already
-archived as PASS from Wolfram 14.0.0. The remaining native-Wolfram gate is
-the full Eq. (6) (I_6) and (d\sigma_A/dE_R) pointwise comparison against
-the independent Python implementation. That final execution is deliberately
-deferred until the remaining non-Mathematica research integration is complete.
+**Historical note (2026-11-14):** At the time of this Phase II update, only the Xe-131 AFH response-level Mathematica/Python comparison (Wolfram 14.0.0) had completed and the native full Eq. (6) gate was still open. That gate has since been closed by the 2026-11-16 Wolfram 14.2.0 652-row execution and independent Python comparison recorded in Appendix H.7.
