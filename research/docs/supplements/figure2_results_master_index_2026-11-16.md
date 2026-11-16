@@ -39,7 +39,7 @@ Path: `research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full
 
 ## Numerical comparison caveat
 
-The GCN/JJ55 84-point spectra currently use the legacy linear-(W^2), (8\times8\times4) kernel; their (16\times16\times8) spot-check reaches (2.18895\times10^{-4}) maximum kernel-order difference across the four benchmark metadata files. The AFH-7/Hybrid-9 spectra use threshold-(u^2), with a reported (6.0\times10^{-10}) internal-order difference. The cross-model comparison is therefore not yet a matched-precision comparison. GCN/JJ55 should be recomputed with threshold-(u^2) before final precision claims, especially for the 0.66–1.16% Hybrid-9 shifts.
+The GCN/JJ55 84-point spectra currently use the legacy linear-(W^2), (8×8×4) kernel; their (16×16×8) spot-check reaches (2.18895×10^{-4}) maximum kernel-order difference across the four benchmark metadata files. The AFH-7/Hybrid-9 spectra use threshold-(u^2). At the production 24-speed-node setting, the final internal-kernel increment is (5.96430×10^{-10}); the separate 12-speed-node comparison is (6.02323×10^{-10}). The cross-model comparison is therefore not yet a matched-precision comparison. GCN/JJ55 should be recomputed with threshold-(u^2) before final precision claims, especially for the 0.66–1.16% Hybrid-9 shifts.
 
 The historical selected-point AFH rates are retained and reproducible, but their old low-order linear-(W^2) integration differs from the new AFH-7 threshold-(u^2) grid by about 230–255 ppm at common points. Do not mix the historical selected-point table with the current full-grid result.
 
