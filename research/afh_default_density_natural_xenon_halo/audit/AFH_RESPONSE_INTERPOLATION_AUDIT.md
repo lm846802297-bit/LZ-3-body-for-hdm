@@ -1,5 +1,21 @@
 # AFH selected-response regression and interpolation audit
 
+## 2026-11-16 superseding status: direct exact-q AFH-7 grid is now archived
+
+This audit's original conclusion remains valid for the **historical 28-row PCHIP sample path**: PCHIP interpolation near AFH response curvature/minima is not accepted as a substitute for direct finite-sum evaluation when a precision response is required. The older selected-point runner and its PCHIP samples remain historical records.
+
+A separate full-grid path has since been added to `main` and must not be conflated with that historical PCHIP path:
+
+- Seven AFH v6.0 default-density isotope matrices and seven 2,401-node response tables are committed under `results/full_afh_v6_default_7_isotope_response/`; the combined response table has 16,807 rows and a SHA-256 manifest.
+- `run_afh7_hybrid9_continuous_spectrum.py` evaluates the AFH finite sum directly at each exact isotope-specific spatial momentum for the 84-point recoil grid; it does not use the old 28-row PCHIP sample file as the full-grid response source.
+- The 84-point AFH-7/Hybrid-9 natural-xenon spectra and baseline metadata are committed under `results/afh7_hybrid9_continuous_2026-11-14/`.
+- The high-order audit reports a maximum baseline-to-final spectrum difference of `6.46772e-6`, below the `1e-5` threshold. The full 1,344-row `24x8x8x4` high-order ZIP remains external/checksum-only; the committed spectrum is the `24x6x6x3` baseline plus the high-order summary.
+- AFH-7 covers natural atom fraction `0.998158`. Xe-124 and Xe-126 still lack AFH v6.0 default-density matrices; Hybrid-9 uses Helm only for those two isotopes and is not AFH-9.
+
+Accordingly, the historical PCHIP warning is **not** a statement that AFH-7 full-grid spectra are absent. It is a warning against using the old interpolated 28-row sample path as if it were the new direct finite-sum grid. The selected-point legacy halo rates also use the old linear-`W^2` low-order kernel and differ from the new threshold-`u^2` AFH-7 grid by about 230–255 ppm at common points; keep those outputs separately labelled.
+
+GCN/JJ55 spectra in `research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/` remain on the legacy linear-`W^2`, `8x8x4` kernel. Their `16x16x8` spot checks reach `2.18895e-4` maximum kernel-order difference across the four benchmarks. A matched threshold-`u^2` rerun is still required before precision cross-model comparisons.
+
 **Status:** diagnostic completed; the 2401-node response grids reproduce the historical PCHIP samples, but the existing PCHIP interpolation is not yet accepted for the precision halo fold.
 
 **Scope:** AFH v6.0 default-density responses for Xe-128, Xe-129, Xe-130, Xe-131, Xe-132, Xe-134 and Xe-136; 28 historical selected points (seven isotopes at four recoil energies); exact spatial momentum
