@@ -6,7 +6,7 @@
 > 参考源码：\`paper-source/main.tex\`  
 > 单位约定：自然单位制 \(\hbar=c=1\)，程序内部质量和能量均以 GeV 输入。
 
-> **状态更新（2026-11-16）：** 本文第 0 节的“尚未得到完整截面”是早期研究快照，不能作为当前仓库状态的唯一依据。此后已提交 AFH-7/Hybrid-9 七同位素 84 点全范围反冲谱；Python-only Xe-131 full-dsigma runner 已完成 652 行（500 open、152 closed）并归档 GitHub Actions artifact 14112736343；16 个高阶锚点的最大 I6 相对差异为 1.66367e-11，AFH factor-four mapping residual 为 3.55679e-16，physical/no-factor-four ratio residual 为 0。因此，**因子 4 从 AFH 响应传递到完整 Python Eq. (6) 截面的内部验证已通过**。但完整 652 行 Mathematica 输出尚未运行归档，Mathematica/Python full-cross-section pointwise PASS 仍未成立；请以 `research/afh_default_density_xe131/output/MATHEMATICA_PYTHON_FULL_DSIGMA_CROSSCHECK_REVIEW.md` 和 `NATIVE_MATHEMATICA_FULL_DSIGMA_AUDIT.md` 的当前状态为准。现有四 benchmark 固定速度截面表复用已存 I6 网格，不等同于独立的完整 652 行交叉验证。自然氙 AFH-7 是 84 点 pre-detector grid-sampled spectrum，LZ detector likelihood 仍未完成。
+> **状态更新（2026-11-16）：** 本文第 0 节的“尚未得到完整截面”是早期研究快照，不能作为当前仓库状态的唯一依据。此后已提交 AFH-7/Hybrid-9 七同位素 84 点全范围反冲谱；Python-only Xe-131 v=800 km/s fixed-speed full-dsigma runner（条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width）已完成 652 行（500 open、152 closed）并归档 GitHub Actions artifact 14112736343；16 个高阶锚点的最大 I6 相对差异为 1.66367e-11，AFH factor-four mapping residual 为 3.55679e-16，physical/no-factor-four ratio residual 为 0。因此，**因子 4 从 AFH 响应传递到完整 Python Eq. (6) 截面的内部验证已通过**。但完整 652 行 Mathematica 输出尚未运行归档，Mathematica/Python full-cross-section pointwise PASS 仍未成立；请以 `research/afh_default_density_xe131/output/MATHEMATICA_PYTHON_FULL_DSIGMA_CROSSCHECK_REVIEW.md` 和 `NATIVE_MATHEMATICA_FULL_DSIGMA_AUDIT.md` 的当前状态为准。现有四 benchmark 固定速度截面表复用已存 I6 网格，不等同于独立的完整 652 行交叉验证。自然氙 AFH-7 是 84 点 pre-detector grid-sampled spectrum，LZ detector likelihood 仍未完成。
 
 
 ---
