@@ -1,6 +1,6 @@
 > 所属主报告：[AFH v6.0 氙核响应与三体暗物质散射](../09_afh_xe131_three_body_scattering_natural_xenon.md)
 
-> 最近更新：2026-11-12  
+> 最近更新：2026-11-16  
 
 # 补充文档：研究讨论、最终决定与文档状态登记
 
@@ -32,7 +32,7 @@
 | 中间态可达性 | 将“存在 \(\chi_2\) 传播子”理解为允许真实产生 \(\chi_2\) | 当前参数讨论要求在所考虑的 halo 速度范围内满足 \(W_{\max}<m_{\chi_2}\)，从而把 \(\chi_2\) 保持为虚中间态 | 已采用为参数空间条件；不是对任意输入自动成立的普遍定理 |
 | 空间动量与不变量 | 将 AFH 响应中的空间动量 \(q=|\mathbf q|\) 与传播子中的 \(t=q^\mu q_\mu\) 当作同一个量 | 核质量壳关系给出 \(q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}\)，而 \(t=-2m_AE_R\)。AFH 响应使用前者，矢量传播子使用后者 | 已采用。\(q_{\rm NR}=\sqrt{2m_AE_R}\) 仅作为小反冲近似对照 |
 | AFH 谐振子长度 | 为了让响应极小值接近某条曲线而调节 \(b_A\) | 固定 AFH v6.0 default 处方 \(b_A=\sqrt{41.467/(45A^{-1/3}-25A^{-2/3})}\,\mathrm{fm}\)，不把 \(b_A\) 作为拟合参数 | 已采用。更换核模型或振子长度属于改变核结构输入，不能伪装成同一 AFH default 结果 |
-| AFH 因子 4 | 把 AFH 原始 isoscalar 响应的 \(A^2/4\) 直接当作物理等质子、等中子响应，或在响应和耦合两处重复乘 4 | 当前论文约定保留物理单核子耦合 \(g_{VN}\)，并将物理响应定义为 \(R_A^{\rm phys}=16\pi W_{M,\rm AFH}^{00}/(2J_A+1)\)，使零动量归一化为 \(A^2\)。因子 4 只计入一次 | 已采用。夸克—核子匹配 \(g_{VN}=3g_{Vq}\) 与 AFH 接口归一化是不同关系 |
+| AFH 因子 4 | 把 AFH 原始 isoscalar 响应的 \(A^2/4\) 直接当作物理等质子、等中子响应，或在响应和耦合两处重复乘 4 | 当前论文约定保留物理单核子耦合 \(g_{VN}\)，物理响应定义为 \(R_A^{\rm phys}=16\pi W_{M,\rm AFH}^{00}/(2J_A+1)\)，使零动量归一化为 \(A^2\)。Python-only \(v=800\) km/s fixed-speed Xe-131 full-dsigma 652 行审计已通过：factor-4 mapping residual \(3.55679\times10^{-16}\)，physical/no-factor-four ratio residual 0，且 \(I_6\) 16×16×8 到 48×40×24 最大差异 \(1.66367\times10^{-11}\) | 在条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width 假设下，Python-only 完整 Eq. (6) factor-4 传递 PASS；原生 Wolfram 14.2.0 与独立 Python 的 652 行 cross-code 对照已 PASS_WITH_NOTES（I6 1.34e-12，dσ 2.58e-9；per-code conversion identities 4.44e-16/0）；夸克—核子匹配 \(g_{VN}=3g_{Vq}\) 与 AFH 接口归一化是不同关系 |
 | 核响应与三体积分 | 对 AFH、GCN、JJ55 分别计算或指定不同的粒子侧三体积分，或把 Xe-131 的 \(I_6\) 直接用于所有同位素 | 对相同同位素、相同 \(E_R\) 和相同入射运动学，核响应因式分解在 \(I_6\) 外，因此三种核模型共用同一个 \(I_6\)，只替换 \(R_A(E_R)\)。不同同位素必须使用各自的质量、阈值和 \(I_{6,A}\) | 已采用。因式分解不意味着跨同位素共用同一个三体积分 |
 | 天然氙靶 | 用 Xe-131 代表整个天然氙靶，或用平均核质量和平均核响应替代同位素求和 | 逐同位素使用各自核质量、响应和三体阈值，最后乘天然原子丰度 \(x_A\) 求和 | 已采用。平均原子质量只用于每千克靶核总数，不替代逐同位素散射计算 |
 | 缺失同位素 | 将可用的七种同位素重新归一化到 100%，或把缺失丰度直接称为事件率误差 | 当前 AFH default 响应集合覆盖 Xe-128、129、130、131、132、134、136，原始天然丰度覆盖率为 0.998158；Xe-124/Xe-126 不重新分配丰度 | 已采用。0.1842% 是缺失原子丰度，不是已证明的相对事件率误差 |
@@ -41,7 +41,7 @@
 | \(\chi_2\) 极点宽度 | 把某个简单 Breit–Wigner 宽度称为任意 Dirac/Majorana 模型的完整自能 | 当前归档宽度仅在 Dirac 费米子、实标量、纯 scalar off-diagonal Yukawa，且唯一开放衰变道为 \(\chi_2\to\chi_1s\) 的条件下使用 | 有条件采用。它不是完整的 Dyson 自能，也不自动覆盖 Majorana 或其他开放衰变道 |
 | 自旋子性质 | 把当前 Dirac 自旋求和结果写成不依赖费米子性质的通用结果 | 当前三体 kernel 明确采用 Dirac 外部自旋子；原始模型尚未完整固定 Dirac/Majorana、CP 和手征约定 | 已限定范围。不得将当前迹公式无条件外推到 Majorana 情形 |
 | 从理论速率到 LZ 结果 | 将 \(dR/dE_R\) 或效率加权事件数称为完整 LZ 排除或对候选事件的解释 | 当前输出区分 pre-detector 理论反冲率、初步 rate-level event-yield fold 和真正 detector-level likelihood。已发布的两体非弹性 benchmark 不直接转移到本三体末态过程 | 不作完整实验排除结论。缺少完整二维信号 PDF、能量分辨、背景与似然时，不称为完整 LZ recast |
-| AFH 原生程序验证 | 将 Python 源码翻译和 mpmath 高精度对照称为已经运行官方 Mathematica 包 | 当前文档将其表述为 AFH v6.0 源码到 Python 的翻译，并有独立 mpmath 有限和对照；原生 Wolfram kernel 执行仍单独标为待完成 | 状态分开记录。高精度数值对照不能替代原生 Mathematica 执行 |
+| AFH 原生程序验证 | 将 Python 源码翻译和 mpmath 高精度对照称为已经运行官方 Mathematica 包 | 2026-11-16 已有 Wolfram 14.0.0 原生 Xe-131 response-level 2401 点 Mathematica/Python PASS（最大相对差异 3.59e-9）；Python-only full-dsigma 652 行及 factor-4 ledger 也已 PASS；完整 Wolfram 652 行 I6/dsigma 及独立 cross-code 逐点比较已通过（PASS_WITH_NOTES）；converted-dσ cross-code tolerance 为 2e-7，per-code conversion identity tolerance 仍为 2e-12 | 状态分层记录。response-level 与 Python-only PASS 均不能替代 full Mathematica/Python cross-code 验收 |
 | 数值验收与物理结论 | 将单元测试、网格收敛或 CI 成功等同于模型完整性和物理复现成功 | 附录 F 将代码测试、局部积分收敛、输入完整性、物理模型边界和实验映射分别列项 | 已采用。每一项结论只覆盖其明确测试对象和适用范围 |
 
 ## H.4 六项文档补充任务的对应关系

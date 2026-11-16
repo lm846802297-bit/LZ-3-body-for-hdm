@@ -6,6 +6,9 @@
 > 参考源码：\`paper-source/main.tex\`  
 > 单位约定：自然单位制 \(\hbar=c=1\)，程序内部质量和能量均以 GeV 输入。
 
+> **状态更新（2026-11-16，PR #45）：** 此前“完整截面尚未得到”的文字属于历史研究快照。此后已完成原生 Wolfram 14.2.0 的 Xe-131 full Eq. (6) 652 行运行，并由独立 Python comparator 逐点复算（四组 benchmark，500 open、152 closed，v=800 km/s，threshold-\(u^2\)，pole width，\(16\times16\times8\)）。修正单位转换验收逻辑后，comparison JSON 为 PASS：最大 \(I_6\) 差异 \(1.34\times10^{-12}\)，物理/no-factor-four \(d\sigma\) 差异 \(2.58\times10^{-9}\)，AFH response 差异 \(2.58\times10^{-9}\)，factor-four mapping residual \(4.30\times10^{-16}\)，Mathematica/Python 自身单位转换恒等式残差为 \(4.44\times10^{-16}/0\)。交叉代码 converted-dσ 差异按 \(2\times10^{-7}\) 观测量容差验收；各自转换恒等式仍按 \(2\times10^{-12}\) 验收。结果和 SHA-256 归档见 `research/afh_default_density_xe131/output/full_dsigma_mathematica/`。该结果仍仅为固定速度 Xe-131 条件性 pole-width benchmark，不是天然氙 halo fold 或 LZ likelihood。
+
+
 ---
 
 ## 0. 摘要与结论边界

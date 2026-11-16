@@ -164,7 +164,7 @@ q 审计程序保存以下文件：
 - research/afh_default_density_natural_xenon_halo/results/xe131_fixed_benchmark_q_comparison.csv：\(M_A=131u\) 下的固定 benchmark 对照；
 - research/afh_default_density_natural_xenon_halo/results/q_convention_audit_summary.json：机器可读汇总。
 
-当前完整 16807 行的七同位素原始响应表仅保留哈希和 28 个选定点样本。对于本附录所列的 selected-point exact-q 计算，28 个样本已足够；若要扩展到连续反冲谱，则仍需恢复完整 AFH v6.0 响应输入或官方源包。
+当前 16,807 行的七同位素 AFH v6.0 default-density response grid 已提交，包含七个 2,401 点 direct finite-sum exact-q 响应表、七种 source density matrices、metadata 和 SHA-256 manifest。早期 28 个 selected-point exact-q 样本仍作为历史输入与交叉检查保留，但不再是连续谱的唯一 AFH 响应输入。基于完整七同位素网格，AFH-7/Hybrid-9 的 84 点、5–800 keV grid-sampled spectra 已归档；Xe-124/Xe-126 仍无 AFH default matrices，完整高阶 1,344 行 ZIP 仍为外部 checksum-only。
 
 ## G.8 验收标准
 
@@ -175,5 +175,5 @@ q 审计程序保存以下文件：
 | 28 个天然氙样本 | 已核实 | 全部匹配 exact spatial q |
 | Xe-131 NR 近似影响 | 已计算 | NIST 与 \(M_A=131u\) 两种质量约定均有对照 |
 | 天然氙 halo fold | exact-q 基线 | 98 个同位素贡献、14 个总速率复现；最大总速率差异 \(2.67\\times10^{-12}\)，CI run 43044583357 通过 |
-| 连续反冲谱 | 待完成 | 需要完整七同位素 AFH 响应输入 |
+| AFH-7/Hybrid-9 全范围反冲谱 | PASS_WITH_NOTES | 四 benchmark、84 点、1,344 baseline rows；AFH direct exact-q + threshold-\(u^2\)；高阶 baseline-to-final spectrum difference 最大 \(6.46772\times10^{-6}\) | 这是 grid-sampled pre-detector spectrum；高阶 ZIP 仅外部 checksum；Xe-124/Xe-126 缺 AFH matrices；GCN/JJ55 求积尚未匹配 |
 | 原生 Mathematica 复算 | 已完成 PASS（Xe-131 response-level） | Wolfram 14.0.0；2401 个 q 节点；与 Python 最大相对差异 (3.59\times10^{-9})；SHA-256 manifest 已归档 | 不代表完整 AFH 天然氙连续谱或 LZ likelihood |

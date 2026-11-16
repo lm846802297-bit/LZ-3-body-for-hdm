@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Independent Python recomputation and pointwise comparison of Mathematica Eq. (6) output."""
 from __future__ import annotations
-import argparse, json, math, sys
+import argparse, json, math, platform, sys
+import scipy
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -17,6 +18,8 @@ A = 131
 M_A = A * 0.93149410242
 M_CHI, M_V, G_PRODUCT_SQ, SPEED = 1000.0, 10.0, 1.0e-8, 800.0
 C_KM_S = 299792.458
+GEV3_TO_CM2_PER_KEV = 0.3893793721e-33
+CONVERSION_IDENTITY_RTOL = 2.0e-12
 BENCHMARKS = {
     "red_ms200_dm1": (200e-6, 1e-3),
     "green_ms300_dm1": (300e-6, 1e-3),
@@ -27,6 +30,40 @@ BENCHMARKS = {
 
 def rel(a: float, b: float) -> float:
     return abs(a - b) / max(abs(b), 1e-300)
+
+
+def portable_path(path: Path) -> str:
+    """Avoid machine-specific absolute paths in committed or uploaded metadata."""
+    resolved = path.resolve()
+    try:
+        return resolved.relative_to(REPO.resolve()).as_posix()
+    except ValueError:
+        return path.name
+
+
+def conversion_identity_residual(
+    converted_cm2_per_keV: float, dsigma_GeVminus3: float, opened: bool
+) -> float:
+    """Check one code's own GeV^-3 -> cm^2/keV conversion, not cross-code agreement."""
+    expected = dsigma_GeVminus3 * GEV3_TO_CM2_PER_KEV
+    return rel(converted_cm2_per_keV, expected) if opened else abs(converted_cm2_per_keV - expected)
+
+
+def comparison_passes(
+    maxima: dict[str, float], rtol: float, response_rtol: float
+) -> bool:
+    """Apply observable-level and algebraic-identity tolerances separately."""
+    return (
+        maxima["I6"] <= rtol and maxima["dsigma"] <= rtol
+        and maxima["dsigma_no4"] <= rtol and maxima["dsigma_conversion"] <= rtol
+        and maxima["R_A_physical"] <= response_rtol
+        and maxima["R_A_package"] <= response_rtol
+        and all(maxima[key] <= CONVERSION_IDENTITY_RTOL for key in (
+            "q", "C0", "dsigma_conversion_identity_Mathematica",
+            "dsigma_conversion_identity_Python", "factor4_mapping",
+            "factor4_ratio", "pchi", "mediator_denominator",
+        ))
+    )
 
 
 def main() -> None:
@@ -87,7 +124,10 @@ def main() -> None:
     phys = PchipInterpolator(q, r_physical, extrapolate=False)
     out = []
     maxima = {"I6": 0.0, "dsigma": 0.0, "dsigma_no4": 0.0,
-              "dsigma_conversion": 0.0, "R_A_physical": 0.0,
+              "dsigma_conversion": 0.0,
+              "dsigma_conversion_identity_Mathematica": 0.0,
+              "dsigma_conversion_identity_Python": 0.0,
+              "R_A_physical": 0.0,
               "R_A_package": 0.0, "factor4_mapping": 0.0,
               "factor4_ratio": 0.0, "C0": 0.0, "q": 0.0,
               "pchi": 0.0, "mediator_denominator": 0.0}
@@ -126,7 +166,7 @@ def main() -> None:
         pref = M_A*G_PRODUCT_SQ/(256*math.pi**3*pchi**2*den)
         ds_py = pref*rf_py*i6py if opened else 0.0
         ds_no4_py = ds_py/4.0
-        ds_cm_py = ds_py*0.3893793721e-33
+        ds_cm_py = ds_py*GEV3_TO_CM2_PER_KEV
         i6m, dsm = float(r.I6_GeV2), float(r.dsigma_dER_GeVminus3)
         ds_no4_m = float(r.dsigma_without_factor4_GeVminus3)
         ds_cm_m = float(r.dsigma_cm2_per_keV)
@@ -139,6 +179,8 @@ def main() -> None:
             "dsigma": rel(dsm, ds_py) if opened else abs(dsm-ds_py),
             "dsigma_no4": rel(ds_no4_m, ds_no4_py) if opened else abs(ds_no4_m-ds_no4_py),
             "dsigma_conversion": rel(ds_cm_m, ds_cm_py) if opened else abs(ds_cm_m-ds_cm_py),
+            "dsigma_conversion_identity_Mathematica": conversion_identity_residual(ds_cm_m, dsm, opened),
+            "dsigma_conversion_identity_Python": conversion_identity_residual(ds_cm_py, ds_py, opened),
             "R_A_physical": rel(ram, rf_py),
             "R_A_package": rel(rpm, rp_py),
             "factor4_mapping": rel(ram, 4*c0*rpm),
@@ -175,34 +217,39 @@ def main() -> None:
             "dsigma_cm2_per_keV_Mathematica": ds_cm_m,
             "dsigma_cm2_per_keV_Python": ds_cm_py,
             "dsigma_conversion_relative_difference": values["dsigma_conversion"],
+            "dsigma_conversion_identity_Mathematica_relative_residual": values["dsigma_conversion_identity_Mathematica"],
+            "dsigma_conversion_identity_Python_relative_residual": values["dsigma_conversion_identity_Python"],
             "dsigma_factor4_ratio": factor4_ratio if opened else 0.0,
         })
 
     result = pd.DataFrame(out)
     args.out_csv.parent.mkdir(parents=True, exist_ok=True)
     result.to_csv(args.out_csv, index=False, float_format="%.14g")
-    passed = (maxima["I6"] <= args.rtol and maxima["dsigma"] <= args.rtol
-              and maxima["dsigma_no4"] <= args.rtol
-              and maxima["R_A_physical"] <= args.response_rtol
-              and maxima["R_A_package"] <= args.response_rtol
-              and maxima["q"] <= 2e-12 and maxima["C0"] <= 2e-12
-              and maxima["dsigma_conversion"] <= 2e-12
-              and maxima["factor4_mapping"] <= 2e-12 and maxima["factor4_ratio"] <= 2e-12
-              and maxima["pchi"] <= 2e-12 and maxima["mediator_denominator"] <= 2e-12)
+    passed = comparison_passes(maxima, args.rtol, args.response_rtol)
     metadata = {
         "status": "PASS" if passed else "FAIL", "rows": len(result),
+        "benchmarks": sorted(set(m.benchmark.astype(str))),
+        "recoil_energies_keV": sorted(float(x) for x in m.ER_keV.unique()),
+        "python_environment": {
+            "python_version": platform.python_version(),
+            "numpy_version": np.__version__,
+            "pandas_version": pd.__version__,
+            "scipy_version": scipy.__version__,
+        },
         "open_phase_space_rows": open_count, "max_relative_differences": maxima,
         "tolerances": {
-            "I6_and_dsigma": args.rtol,
+            "I6_dsigma_and_cross_code_converted_dsigma": args.rtol,
             "PCHIP_response": args.response_rtol,
             "response_tolerance_rationale": "The archived 2401-node native Mathematica/Python AFH comparison has a maximum relative difference of 3.59e-9; this comparison uses 2e-8 to preserve that independently established source-translation tolerance.",
-            "q_C0_units_factor4_pchi_and_mediator_denominator": 2e-12,
+            "q_C0_per_code_unit_conversion_identities_factor4_pchi_and_mediator_denominator": CONVERSION_IDENTITY_RTOL,
+            "unit_conversion_factor_GeVminus3_to_cm2_per_keV": GEV3_TO_CM2_PER_KEV,
         },
         "full_grid_required": args.require_full_grid,
         "W2_mappings": sorted(set(m.W2_mapping.astype(str))),
         "factor4_convention": "R_A_phys=4*C0*R_A_AFH_package; per-nucleon gVN remains in Eq. (6) prefactor",
         "width_assumption": "conditional Dirac, real scalar, pure scalar g2, chi2 -> chi1 s only",
-        "comparison_csv": str(args.out_csv), "mathematica_csv": str(args.mathematica_csv),
+        "comparison_csv": portable_path(args.out_csv), "mathematica_csv": portable_path(args.mathematica_csv),
+        "path_convention": "Repository paths are repository-relative; paths outside the repository are stored as portable basenames.",
     }
     args.metadata.parent.mkdir(parents=True, exist_ok=True)
     args.metadata.write_text(json.dumps(metadata, indent=2)+"\n", encoding="utf-8")

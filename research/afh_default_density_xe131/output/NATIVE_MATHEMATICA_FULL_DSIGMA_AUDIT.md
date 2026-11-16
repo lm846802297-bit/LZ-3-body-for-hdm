@@ -1,6 +1,6 @@
 # Native Mathematica–Python audit of the complete Xe-131 differential cross section
 
-**Status: implementation prepared; native Mathematica execution and cross-code comparison are pending.**
+**Status: native Mathematica 652-row execution completed; the machine-readable comparator JSON reports PASS, and the scientific result is classified PASS_WITH_NOTES because the fixed-speed Xe-131 calculation retains conditional width assumptions.**
 
 The completed 2401-node native AFH comparison validates the nuclear response layer only. It does not validate the three-body integral I6 or the complete differential cross section.
 
@@ -97,7 +97,7 @@ Full-grid command from the repository root:
 
 ~~~powershell
 wolframscript -file research/afh_default_density_xe131/run_afh_eq6_full_dsigma.wls --nw 16 --nz 16 --nphi 8 --w2-mapping threshold_u2 --width-scheme pole
-python research/afh_default_density_xe131/compare_full_dsigma_mathematica.py --mathematica-csv research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131.csv --out-csv research/afh_default_density_xe131/output/full_dsigma_mathematica/pointwise_comparison.csv --metadata research/afh_default_density_xe131/output/full_dsigma_mathematica/comparison_metadata.json
+python research/afh_default_density_xe131/compare_full_dsigma_mathematica.py --mathematica-csv research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131.csv --out-csv research/afh_default_density_xe131/output/full_dsigma_mathematica/pointwise_comparison.csv --metadata research/afh_default_density_xe131/output/full_dsigma_mathematica/comparison_metadata.json --require-full-grid
 ~~~
 
 High-order anchor example:
@@ -107,6 +107,7 @@ wolframscript -file research/afh_default_density_xe131/run_afh_eq6_full_dsigma.w
 ~~~
 
 The Python comparator must be run on each Mathematica output. The full grid uses 16x16x8; high-order anchors assess quadrature convergence separately. Agreement between codes at one order is not itself a convergence test.
+For the complete Windows archive, use `run_native_full_dsigma_windows.ps1` from the repository root. The wrapper validates the 652-row/500-open full grid, the fixed 800 km/s pole-width and threshold-u2 settings, and the requested quadrature orders; after the pointwise comparator reports PASS, it writes `full_dsigma_sha256_manifest.json` and `SHA256SUMS.txt` covering the input response tables, source files, and generated outputs, the exact benchmark/recoil grid, and the Wolfram/Python runtime versions. The direct `wolframscript` commands above are useful for diagnostics but do not by themselves create this combined manifest.
 
 ## 5. Acceptance criteria
 
@@ -117,9 +118,25 @@ The Python comparator must be run on each Mathematica output. The full grid uses
 5. The chi2 pole clearance remains positive at every open point in the fixed-speed scan.
 6. High-order anchors demonstrate quadrature convergence separately.
 
-The comparator defaults to 2e-7 relative tolerance for I6 and d sigma/dE_R, 2e-8 for AFH PCHIP response, and 2e-12 for q, C0, unit conversion, and factor-four identities. It also compares the no-factor-four control against the independently recomputed Python cross section divided by four.
+The comparator uses 2e-7 relative tolerance for I6, d sigma/dER, and the cross-code comparison of the converted d sigma/dER observable; 2e-8 for AFH PCHIP response; and 2e-12 for q, C0, each implementation's own unit-conversion identity, factor-four identities, and kinematic identities. The converted-rate cross-code difference is not itself a unit-conversion identity.
 
 A matched historical-I6 mapping audit is now complete: [workflow run 43768639839](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43768639839), artifact 14182804837. At the archived green point (v=776 km/s, zero width, 40x32x20), the legacy Eq. (6) kernel reproduces the archived I6 exactly; the independent linear-W^2 mapping agrees within 5.42e-11 relative, and linear-W within 2.32e-9. The threshold_u2 mapping at the same 40x32x20 order is lower by 2.14--2.23e-6, but its 48x40x24 and 64x48x32 results agree within 1.40e-11. Thus the archived finite-order value is reproduced, while the threshold-regularized high-order result is converged. The earlier 4.11e-5 preflight discrepancy is not reproduced under these matched inputs and is retained only as an unverified preliminary observation. Full values and hashes are in [HISTORICAL_I6_MAPPING_AUDIT.md](HISTORICAL_I6_MAPPING_AUDIT.md). This audit changes neither the AFH response nor the full-cross-section status.
+
+### 5.1 Executed native result — 2026-11-16
+
+| Quantity | Maximum relative difference / residual | Acceptance |
+|---|---:|---:|
+| \(I_6\) | \(1.33872\times10^{-12}\) | \(2\times10^{-7}\) |
+| Physical \(d\sigma_A/dE_R\) | \(2.57632\times10^{-9}\) | \(2\times10^{-7}\) |
+| No-factor-four \(d\sigma_A/dE_R\) | \(2.57632\times10^{-9}\) | \(2\times10^{-7}\) |
+| AFH response | \(2.57510\times10^{-9}\) | \(2\times10^{-8}\) |
+| Factor-four mapping | \(4.30300\times10^{-16}\) | \(2\times10^{-12}\) |
+| Mathematica unit-conversion identity | \(4.44089\times10^{-16}\) | \(2\times10^{-12}\) |
+| Python unit-conversion identity | 0 | \(2\times10^{-12}\) |
+| Cross-code converted \(d\sigma_A/dE_R\) | \(2.57632\times10^{-9}\) | \(2\times10^{-7}\) |
+
+The first archived comparator marked the result FAIL because it applied the 2e-12 algebraic-identity tolerance to the difference between two independently computed converted rates. That difference is the same physical cross-code observable as dσ and inherits the AFH response translation difference. The corrected comparator separately checks each code's own conversion identity at 2e-12 and compares the converted observable across codes at 2e-7. This corrects the classification of the test; it does not relax a physical precision requirement.
+
 
 ## 6. Scientific status
 
@@ -127,10 +144,12 @@ A matched historical-I6 mapping audit is now complete: [workflow run 43768639839
 |---|---|
 | AFH v6.0 Xe-131 response, native Mathematica vs Python, 2401 q nodes | **PASS** |
 | AFH factor-four convention and C0 separation | **PASS at response level** |
+| Python-only full Xe-131 Eq. (6) and factor-four ledger, v=800 km/s fixed-speed, 652 rows | **PASS within Python implementation**; artifact 14112736343 |
+| Native Wolfram full 652-row Eq. (6) and independent Python comparison | **PASS_WITH_NOTES** | 652 rows (500 open, 152 closed); Wolfram 14.2.0; fixed v=800 km/s; four benchmarks; threshold_u2; pole width; 16×16×8 |
 | Historical green I6 archive vs legacy and stable W2 mappings | **PASS: archived value reproduced; threshold_u2 converged** |
-| Wolfram Language full I6 implementation | **Prepared; not yet executed** |
-| Full d sigma/dE_R, Mathematica vs Python | **Not yet validated** |
+| Wolfram Language full I6 implementation | **Executed** | Native 652-row CSV and metadata archived; independent Python recomputation agrees pointwise |
+| Full d sigma/dE_R, Mathematica vs Python | **PASS_WITH_NOTES** | Max relative differences: I6 1.34e-12; physical/no4 dσ 2.58e-9; AFH response 2.58e-9; converted dσ 2.58e-9 (accepted at 2e-7) |
 | Constant pole width | **Conditional Dirac / scalar-only assumption** |
 | Natural-xenon continuous AFH spectrum and LZ likelihood | **Outside this audit** |
 
-No native full-cross-section run, output CSV, or pointwise Mathematica–Python PASS is claimed until the Wolfram runner has completed and the generated artifacts have been compared.
+The native full-cross-section run, output CSV, pointwise Mathematica/Python comparison and refreshed SHA-256 checksums are archived under `output/full_dsigma_mathematica/`. The corrected comparison metadata reports PASS. This is a fixed-speed Xe-131 result under the conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions; it is not a natural-xenon halo fold, full width/self-energy calculation or detector-level LZ likelihood.

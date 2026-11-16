@@ -12,7 +12,7 @@ and does not contain sdgXe124 or sdgXe126. The source does list the ground-state
 
 The scientifically clean baseline is therefore:
 
-1. compute the complete continuous AFH v6.0 response for the seven supported isotopes;
+1. the seven supported isotopes have now been evaluated on the committed 16,807-row direct finite-sum exact-q response grid and the 84-point AFH-7 full-range recoil spectrum;
 2. preserve the natural abundances without renormalizing those seven isotopes to unity;
 3. report the missing \(^{124}\mathrm{Xe}\) and \(^{126}\mathrm{Xe}\) fractions explicitly;
 4. evaluate a separately labelled Helm fallback for those two isotopes as a *hybrid model*, never as AFH data.
@@ -109,17 +109,18 @@ The Helm curve is a phenomenological nuclear-density model. It must be stored in
 
 For the supported isotopes, compare Helm and AFH on the same exact-\(q\) grid before assigning a model-spread uncertainty to the missing isotopes. In particular, do not infer that a low-\(q\) agreement guarantees agreement around a high-\(q\) diffraction minimum.
 
-## 6. Required numerical comparison
+## 6. Numerical comparison: AFH-7 / Hybrid-9 baseline completed
 
-After the seven-isotope AFH continuous grid is generated and validated:
+The seven-isotope AFH response grid and the AFH-7/Hybrid-9 recoil spectra were generated and archived on 2026-11-14. The completed comparison covers four particle benchmarks, 84 recoil points from 5 to 800 keV, and four response scenarios:
 
-1. compute the strict seven-isotope AFH natural-xenon spectrum using the original natural atom fractions;
-2. compute a nine-isotope hybrid spectrum with Helm only for Xe-124 and Xe-126;
-3. compute a conservative missing-isotope envelope by replacing their Helm response with the coherent upper normalization \(R_A(q)=A^2\), while preserving their isotope-specific masses and \(v_{\min}\);
-4. compare strict-AFH and hybrid spectra over the actual recoil-energy grid and each benchmark halo/kinematic setup;
-5. report both absolute rate changes and relative changes, especially near any response minimum or kinematic endpoint.
+1. computed the strict seven-isotope AFH natural-xenon spectrum using the original natural atom fractions;
+2. computed a nine-isotope Hybrid-9 spectrum with Helm only for Xe-124 and Xe-126;
+3. computed a conservative missing-isotope envelope by replacing their Helm response with the coherent upper normalization
+4. compared strict-AFH and hybrid spectra over the actual recoil-energy grid and each benchmark halo/kinematic setup;
+5. reported both absolute rate changes and relative changes, especially near response minima and kinematic endpoints.
 
 The envelope in item 3 is a deliberately conservative coherent-response diagnostic, not an alternative nuclear calculation.
+The baseline outputs are under `research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/`. The separate high-order audit uses \(24\times8\times8\times4\) and reports a maximum baseline-to-final spectrum difference of \(6.46772\times10^{-6}\); its full 1,344-row ZIP remains external/checksum-only. AFH-7 is not AFH-9, and Hybrid-9 remains a labelled Helm fallback for the two missing isotopes.
 
 ## 7. Reporting vocabulary
 

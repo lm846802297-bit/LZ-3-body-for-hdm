@@ -1,6 +1,6 @@
 # LZ 2026 NEST configuration provenance audit
 
-Date: 2026-11-15  
+Date: 2026-11-16
 Branch: `research/figure2-p0-4-mainline`
 
 ## Executive conclusion
@@ -122,7 +122,7 @@ They were useful API and sensitivity checks, but they were **hybrid comparison r
 - they did not use EFT2024 `g1`, `g1_gas`, `s2_thr`, or `eLife_us`;
 - their WS2024-versus-generic comparison changed only width vectors while keeping the same Table S5 mean-yield vector.
 
-The old reports remain archived for reproducibility, but their numerical NR-band residuals must not be presented as the primary LZ 2026 response result. The next production-candidate run must use NEST commit `541b643`, call `SetEFT2024Configuration()`, and separately compare WS2024 and generic baselines.
+The old reports remain archived for reproducibility, but their numerical NR-band residuals must not be presented as the primary LZ 2026 response result. The subsequent EFT2024 full-band and conditional-2D candidate study has now been executed and is documented in `LZ_2026_NR_ER_FULL_RESPONSE_CANDIDATE_REPORT.md`; use that report for current candidate comparisons.
 
 ## 5. NR calibration-band reconstruction plan
 
@@ -132,9 +132,10 @@ Two spatial prescriptions will be kept separate:
 1. **Candidate-position diagnostic:** \(r\simeq45.9\) cm and (z=26.4) cm above cathode. This is only a local check.
 2. **Uniform-active-TPC proxy:** uniform in volume inside the public detector class's cylindrical active geometry. This is a transparent spatial prior, not a claim to reproduce the actual D-D/AmBe calibration source distribution.
 
-The full band will be generated for the EFT2024 candidate, WS2024, and generic NEST defaults with common energy and position seeds. The report must state the prior and detector configuration for every sample. Calibration-source position distributions and event-level calibration data are not present in the HEPData table ZIP, so the uniform-volume proxy cannot be called an exact reproduction of the collaboration's calibration sample.
+The full 0.1–330 keV flat NR band has since been generated for the EFT2024 candidate, WS2024, and generic NEST families, with common energy/position conventions documented in `LZ_2026_NR_ER_FULL_RESPONSE_CANDIDATE_REPORT.md`. The uniform-volume prior remains a proxy, not the actual calibration-source spatial distribution.
 
-## 6. ER fluctuations and 2D response plan
+## 6. ER fluctuations and 2D response: completed candidate study and remaining boundary
+The ER mean-yield alternatives, Table S4 fluctuation mapping, full-S1c ER band, and conditional 2D response pilots have since been generated for EFT2024 (m6=-1), literal Table S3 (m6=0), and generic NEST. See `LZ_2026_NR_ER_FULL_RESPONSE_CANDIDATE_REPORT.md` and `LZ_2026_ER_TAIL_SUPPORT_AUDIT.md`. The detailed items below preserve the implementation specification; they are not an assertion that the work remains unstarted.
 
 Use the same audited NEST commit and the EFT2024 public configuration as the primary executable candidate:
 - ER mean yields from `ERYieldsParam_EFT2024`;
@@ -217,4 +218,4 @@ The ER-only controls at indices 6–10 and 13–16 are not active in the NR bran
 The full source-level index mapping and variance formula are recorded in
 [LZ_2026_NR_FULL_BAND_PARAMETER_SENSITIVITY_AUDIT.md](LZ_2026_NR_FULL_BAND_PARAMETER_SENSITIVITY_AUDIT.md).
 
-The first full-band artifact used one detector-centre drift velocity for all event positions. That was not sufficiently local for a position-dependent electric field and its candidate-band numbers are superseded. The corrected driver computes v_d(E(x,y,z)) event by event, stores drift distance/time/speed, and the summarizer checks their kinematic closure. The corrected workflow also adds a separate rounded-Table-S5 mean-yield candidate.
+The first full-band artifact used one detector-centre drift velocity for all event positions and is superseded. The corrected event-local driver computes v_d(E(x,y,z)) event by event, stores drift distance/time/speed, and the summarizer checks their kinematic closure. The corrected full-band workflow completed; the final candidate-band and conditional 2D results are documented in `LZ_2026_NR_ER_FULL_RESPONSE_CANDIDATE_REPORT.md`.

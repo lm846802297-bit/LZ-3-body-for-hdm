@@ -1,5 +1,23 @@
 # AFH selected-response regression and interpolation audit
 
+## 2026-11-16 superseding status: direct exact-q AFH-7 grid is now archived
+
+This audit's original conclusion remains valid for the **historical 28-row PCHIP sample path**: PCHIP interpolation near AFH response curvature/minima is not accepted as a substitute for direct finite-sum evaluation when a precision response is required. The older selected-point runner and its PCHIP samples remain historical records.
+
+A separate full-grid path has since been added to `main` and must not be conflated with that historical PCHIP path:
+
+- Seven AFH v6.0 default-density isotope matrices and seven 2,401-node response tables are committed under `results/full_afh_v6_default_7_isotope_response/`; the combined response table has 16,807 rows and a SHA-256 manifest.
+- `run_afh7_hybrid9_continuous_spectrum.py` evaluates the AFH finite sum directly at each exact isotope-specific spatial momentum for the 84-point recoil grid; it does not use the old 28-row PCHIP sample file as the full-grid response source.
+- The 84-point AFH-7/Hybrid-9 natural-xenon spectra and baseline metadata are committed under `results/afh7_hybrid9_continuous_2026-11-14/`.
+- The high-order audit reports a maximum baseline-to-final spectrum difference of `6.46772e-6`, below the `1e-5` threshold. The full 1,344-row `24x8x8x4` high-order ZIP remains external/checksum-only; the committed spectrum is the `24x6x6x3` baseline plus the high-order summary.
+- AFH-7 covers natural atom fraction `0.998158`. Xe-124 and Xe-126 still lack AFH v6.0 default-density matrices; Hybrid-9 uses Helm only for those two isotopes and is not AFH-9.
+- A separate seven-isotope AME2020 selected-point halo fold now uses the 56 archived direct exact-q AFH finite-sum responses; its 392 kernel/halo integrals, 784 isotope contributions, 112 rate summaries and SHA-256 manifests are archived under `results/AME2020_DIRECT_EXACT_Q_RECALCULATION_2026-11-12.md` and `results/ame2020_direct_exactq_fold/`. It is a selected-point mass-scheme cross-check, not the 84-point AFH-7 spectrum or a detector-level prediction; it was calculated locally, not by CI.
+- The Xe-131 AFH response layer also passed a native Wolfram 14.0.0 / Python comparison at 2,401 q nodes, with maximum relative difference `3.59e-9`. This validates the response layer only; it does not validate the complete Eq. (6) pole-width cross section.
+
+Accordingly, the historical PCHIP warning is **not** a statement that AFH-7 full-grid spectra are absent. It is a warning against using the old interpolated 28-row sample path as if it were the new direct finite-sum grid. The selected-point legacy halo rates also use the old linear-`W^2` low-order kernel and differ from the new threshold-`u^2` AFH-7 grid by about 230–255 ppm at common points; keep those outputs separately labelled.
+
+GCN/JJ55 spectra in `research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/` remain on the legacy linear-`W^2`, `8x8x4` kernel. Their `16x16x8` spot checks reach `2.18895e-4` maximum kernel-order difference across the four benchmarks. A matched threshold-`u^2` rerun is still required before precision cross-model comparisons.
+
 **Status:** diagnostic completed; the 2401-node response grids reproduce the historical PCHIP samples, but the existing PCHIP interpolation is not yet accepted for the precision halo fold.
 
 **Scope:** AFH v6.0 default-density responses for Xe-128, Xe-129, Xe-130, Xe-131, Xe-132, Xe-134 and Xe-136; 28 historical selected points (seven isotopes at four recoil energies); exact spatial momentum
@@ -86,7 +104,7 @@ The largest selected-point interpolation residuals, expressed as \(|R_A^{\rm exa
 
 The sign is point-dependent: for example, the direct Xe-128 response at 542 keV is above PCHIP, whereas the direct Xe-132 response at 101 keV is below PCHIP. This is not a universal multiplicative normalization error.
 
-A local high-precision grid-refinement diagnostic was also performed at all 28 selected momenta. It evaluates neighboring AFH nodes around each selected point and then applies PCHIP locally:
+A local high-precision grid-refinement diagnostic was also performed at all 28 selected momenta. This is a local refinement of the historical PCHIP interpolation path, not a global convergence test of the separately committed direct finite-sum 16,807-row response grid.
 
 | Local grid spacing | Maximum relative interpolation residual |
 |---:|---:|
@@ -96,7 +114,7 @@ A local high-precision grid-refinement diagnostic was also performed at all 28 s
 | 0.03125 MeV | \(7.31\times10^{-6}\) |
 | 0.015625 MeV | \(1.61\times10^{-6}\) |
 
-This is a selected-point local refinement diagnostic, not yet a full 16807-node global convergence study. It nevertheless demonstrates that the original 0.25 MeV spacing can be inadequate near narrow response minima.
+This is a selected-point local refinement diagnostic for the historical PCHIP path; it is not a global convergence study of PCHIP over 16,807 nodes. The new direct finite-sum AFH-7 response grid is separately committed and is not built from this interpolation.
 
 ## 5. Impact on the existing NIST natural-xenon selected-point rates
 
@@ -131,13 +149,13 @@ The response-generation regression now separates two tests:
 - **Historical archive reproduction:** PCHIP from the regenerated 2401-node grid must reproduce the 28 historical PCHIP samples within \(5\times10^{-7}\). This tests reproducibility of the old archive.
 - **Off-grid interpolation accuracy:** direct exact-q response is compared with PCHIP and independently checked with mpmath. This is a separate numerical-accuracy diagnostic; it must not be hidden by changing the historical regression tolerance.
 
-The selected-point fold must use the direct exact-q response table, or a separately demonstrated sufficiently refined/adaptive grid. The current `run_ame2020_natural_xenon_halo_fold.py` still interpolates the 2401-node grid with PCHIP. **Its seven-isotope rates are not accepted until that interpolation is replaced or validated.**
+The historical `run_ame2020_natural_xenon_halo_fold.py` PCHIP path remains unaccepted for precision rates. A separate `run_ame2020_direct_exactq_natural_xenon_halo_fold.py` has since recomputed the selected-point seven-isotope NIST and AME2020 folds from the 56 archived direct exact-q responses; its local outputs and manifests are recorded in the natural-xenon README. This does not promote the selected-point calculation to a continuous spectrum, and it does not make the old PCHIP path acceptable.
 
 Additional boundaries:
 
 - Xe-124 and Xe-126 still lack AFH v6.0 built-in default-density matrices. Their \(A^2\) values remain a coherent-charge ceiling only, not AFH central responses.
 - The seven-isotope AFH abundance coverage is 0.998158; no renormalization of the seven available isotope abundances is applied.
-- The selected-point mpmath check is not a native Mathematica execution and does not validate the full continuous response curve.
+- The selected-point 60-digit mpmath check is an independent high-precision Python validation, not a native Mathematica execution. A separate native Wolfram 14.0.0 / Python Xe-131 2,401-node response-level PASS is now archived; neither response-level check validates the full Eq. (6) pole-width cross section.
 - The complete AME2020 seven-isotope halo fold and its final rate tables remain pending.
 
 ## 7. CI and archival record
@@ -146,4 +164,4 @@ Additional boundaries:
 - [Run 43205816978](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43205816978): passed the corrected historical-PCHIP reproduction test, extracted all seven matrices, generated all 16807 response rows, and archived the native files on the research branch.
 - The follow-up run adding the independent 60-digit selected-q validator is recorded in the linked workflow history. Its result must be checked before the exact-q table is treated as an archived CI-validated input.
 
-No result in this audit is a reason to merge the seven-isotope AME2020 fold into `main`. The Draft PR must retain the interpolation limitation and keep the fold unaccepted until the exact-q response table is used and the rate-level checks are rerun.
+The old PCHIP-derived selected-point rates remain superseded and should not be merged as precision results. The separate direct exact-q AME2020 selected-point fold is archived with its local outputs and manifests; it remains distinct from the AFH-7 84-point spectrum, the full Eq. (6) Mathematica/Python cross-section audit, and detector-level likelihood. Keep the PCHIP limitation attached to the historical runner rather than applying it to the direct exact-q path.

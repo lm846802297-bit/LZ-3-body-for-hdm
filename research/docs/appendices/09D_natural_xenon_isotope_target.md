@@ -214,4 +214,4 @@ q_{{\rm resp},A}=\sqrt{2m_AE_R+E_R^2}.
 
 这说明当前 0.998158 的 AFH 原子丰度覆盖率是 AFH v6.0 输入能力的真实边界，而不是提取程序的偶然遗漏。补齐两种同位素需要取得独立、可追溯的核结构输入（例如对应的单粒子轨道空间、相互作用、截断方案和 one-body density matrix），并明确其与 AFH 多极展开及归一化约定的映射。不能仅由 Xe-128/Xe-130 的响应插值，也不能把剩余丰度重新分配给七种已有同位素。
 
-在获得并验证这两种密度矩阵之前，AFH 天然氙结果应继续称为七种可用同位素的 selected-point halo fold；缺失的 0.1842% 原子丰度也不能直接当作 0.1842% 的事件率误差。
+截至 2026-11-16，七种官方 AFH default 同位素的 16,807 行 direct finite-sum response grid 已提交，AFH-7/Hybrid-9 的 84 点、5–800 keV grid-sampled pre-detector recoil spectra 也已归档。因而当前 AFH-7 不再只是 selected-point halo fold；但它仍不是 AFH-9：Xe-124/Xe-126 的 AFH default density matrices 仍缺失，天然丰度不重归一化。高阶 1,344 行谱 ZIP 目前只有外部 SHA-256，仓库内保存 baseline spectra 与高阶审计摘要。详见主报告 §12.6 和 Phase 1 scientific audit。

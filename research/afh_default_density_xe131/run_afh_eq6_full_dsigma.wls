@@ -44,8 +44,8 @@ selectedBenchmarks = If[benchmarkArg === "all", benchmarks,
 If[selectedBenchmarks === {}, Print["Unknown benchmark: ", benchmarkArg]; Exit[2]];
 erGridBase = If[StringLength[erListString] > 0,
   ToExpression /@ StringSplit[erListString, ","], N[Range[erStart, erStop, erStep]]];
-(* Match the Python runner: retain the full requested grid and insert its four
-   nonuniform Figure-2/high-order anchor energies explicitly. *)
+(* Match the Python runner: retain the full requested grid and insert the
+   Figure-2/high-order anchors explicitly; 200 keV is already on the 5-keV grid. *)
 erGrid = Sort[DeleteDuplicates[Join[erGridBase, N[{101., 200., 267., 542.}]]]];
 
 (* AFH response table: columns 1, 4, 7 are q, raw package response, physical response. *)
@@ -263,11 +263,14 @@ benchmarkMeta = Association @@ Map[
   selectedBenchmarks];
 meta = <|
   "calculation" -> "Native Wolfram Language full Eq. (6) Xe-131 differential cross section",
+  "environment" -> <|"wolfram_version" -> $Version, "system_id" -> $SystemID|>,
   "target" -> <|"A" -> A, "Z" -> Z, "J_A" -> JA, "mA_GeV" -> mA,
     "mass_scheme" -> "A*u approximation, retained to match archived four-benchmark diagnostic"|>,
   "particle_inputs" -> <|"m_chi1_GeV" -> mchi, "m_V_GeV" -> mV, "g2" -> g2,
     "coupling_product_squared" -> gProductSquared, "speed_km_s" -> speedKms, "pchi_GeV" -> pChi|>,
   "benchmarks" -> benchmarkMeta,
+  "benchmark_names" -> (First /@ selectedBenchmarks),
+  "energy_grid_keV" -> erGrid,
   "integration" -> <|"I6_recomputed_in_Wolfram_Language" -> True,
     "quadrature" -> <|"nW" -> nw, "nz" -> nz, "nphi" -> nphi|>,
     "definition" -> "Integral dW2 sqrt(lambda_dim) dz (1/(2 Pi)) dphi L00",
@@ -280,7 +283,7 @@ meta = <|
     "max_native_table_mapping_relative_residual" -> responseNodeResidual,
     "max_full_grid_factor_four_relative_residual" -> maxFactor4GridResidual,
     "minimum_chi2_pole_clearance_keV" -> minPoleClearance*10^6|>,
-  "output" -> <|"rows" -> Length[rows], "csv" -> outPath|>,
+  "output" -> <|"rows" -> Length[rows], "csv" -> FileNameTake[outPath], "csv_path_basis" -> "portable filename relative to the output archive directory"|>,
   "scope" -> {"Xe-131 only; fixed v=800 km/s; no halo fold or detector response",
     "g2=1 is a chosen factorization of the caption coupling product",
     "pole width is conditional on Dirac chi states, real scalar, pure scalar Yukawa and chi2 -> chi1 s only",

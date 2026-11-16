@@ -1,6 +1,6 @@
 # LZ 2026 public-input audit for the three-body xenon recast
 
-Date: 2026-11-14
+Date: 2026-11-16
 Repository branch: research/figure2-p0-4-mainline
 Paper: LZ Collaboration, arXiv:2609.02823v1
 HEPData DOI: 10.17182/hepdata.182472.v1
@@ -47,7 +47,7 @@ The digitization metadata records:
 - lower/upper envelope at 248 keV = 0.88355 / 0.98000;
 - gray envelope has no confidence level assigned by LZ and must be treated as a systematic variation, not a confidence interval.
 
-The official paper states that the final NEST response parameters are supplied in the data release. Therefore the next action is to retrieve and version those parameters and check whether the HEPData record contains machine-readable calibration points, efficiency tables, and likelihood-related data.
+At the time of the initial public-input audit, the next action was to retrieve and version the NEST parameters. This was subsequently addressed by locating and pinning the separate public NEST EFT2024 candidate in Section 19; it was not found inside the supplied HEPData v1 ZIP. The exact identity of that public candidate with the collaboration's production build remains unconfirmed.
 
 ## 3. What the official detector likelihood actually uses
 
@@ -200,4 +200,4 @@ Keep four families separate:
 3. **WS2024 configuration:** separate 2024 LZ mean-yield and 13-element width vectors, with its own detector gains/threshold/lifetime.
 4. **Generic NEST defaults:** upstream generic defaults; not LZ-tuned.
 
-The earlier NR band pilots used rounded Table S5 means with WS2024 or generic width vectors and default WS2024 detector overrides. They are hybrid API/sensitivity checks, not the EFT2024 candidate response. Their numerical residuals are retained for reproducibility but superseded as the primary response result. The next band run uses NEST commit 541b643 and explicitly compares EFT2024, WS2024, and generic parameter families.
+The earlier NR band pilots used rounded Table S5 means with WS2024 or generic width vectors and default WS2024 detector overrides. They remain historical API/sensitivity checks, not the primary EFT2024 candidate response. The subsequent full-S1c NR/ER band and conditional 2D response pilots are documented in `lz_2026_extended_nr/LZ_2026_NR_ER_FULL_RESPONSE_CANDIDATE_REPORT.md`; the uniform-volume spatial prior remains an explicit proxy.

@@ -1,7 +1,7 @@
 # AFH v6.0 Xe-131 核响应、三体暗物质散射与天然氙反冲率
 
 > 整理日期：2026-11-11（原始主报告整理日期）
-> 最近文档更新：2026-11-14（新增 P1-PhaseSpace 三体积分变量映射、阈值稳定性、代表点角积分与 raw-\(d\Phi_3\) 归一化数值审计；保留近极点和完整连续反冲网格未完成边界）
+> 最近文档更新：2026-11-16（新增 AFH-7/Hybrid-9 84 点 full-range spectra、16,807 行七同位素响应网格、高阶求积摘要，以及 GCN/JJ55 与 AFH-7 的数值精度边界）
 > 对话来源：[ChatGPT 分享对话](https://chatgpt.com/share/6af4660e-e388-83ea-a86a-2482b065dcea)  
 > 对应研究仓库：`lm846802297-bit/LZ-3-body-for-hdm`  
 > 当前正式归档：main；PR #10 于 2026-11-13 合并，merge commit 724d9e7877fb76f4cc477fbb9e24e1e706bf37a6。PR #7 是此前研究分支内的历史合并记录。
@@ -30,6 +30,20 @@
 - **2026-11-13：** 将 `research/p1-mma-local` 中已完成的 Wolfram 14.0.0 原生 AFH Xe-131 2401 点结果、Python 对照、minima、源文件和 SHA-256 manifest 逐文件纳入本 PR；更新 README、附录 B/G、F6 索引和 P0–P2 状态。该归档不改变 Eq. (6) kernel 或天然氙连续谱的完成边界。
 - **2026-11-14：** 新增 P1-PhaseSpace 数值收敛审计：比较线性 \(W^2\)、线性 \(W\) 与 threshold-\(u^2\) 参数化，检查五个 \(v_{\min}\) 邻域速度点和代表点角积分，并以未归一化 Lorentz-invariant \(d\Phi_3\) 路径复核 Eq. (6) 前因子；新增六项回归测试和结果 SHA-256 归档；随后测试模块扩展为九项。近极点积分、完整连续反冲网格和 halo fold 仍未完成。
 
+## 0. Current status update — 2026-11-16
+
+This update supersedes older selected-point-only statements in the report.
+
+- AFH v6.0 default-density matrices for seven xenon isotopes, seven 2,401-node response tables and the combined 16,807-row response grid are committed.
+- AFH-7/Hybrid-9 now have 84-point grid-sampled spectra from 5 to 800 keV, four benchmarks and four response scenarios (1,344 rows). The runner evaluates the AFH finite sum directly at exact isotope-specific spatial q and uses threshold-\(u^2\) phase-space integration.
+- The committed AFH-7/Hybrid-9 baseline uses 24 speed nodes and \(6\times6\times3\) internal quadrature. The high-order \(24\times8\times8\times4\) audit reports a maximum baseline-to-final spectrum difference \(6.46772\times10^{-6}\), below \(10^{-5}\). The full high-order 1,344-row ZIP remains external/checksum-only; baseline spectra and high-order summaries are committed.
+- AFH-7 covers natural atom fraction 0.998158. Xe-124/Xe-126 remain missing from the official AFH default-density inputs; Hybrid-9 uses Helm only for those two isotopes and is not AFH-9.
+- The old AFH selected-point rates use the legacy linear-\(W^2\), \(8\times8\times4\) kernel. At common points they differ from the new threshold-\(u^2\) AFH-7 grid by about 230–255 ppm, consistent with the documented low-order linear-\(W^2\) quadrature bias. Keep the old table as a historical result.
+- GCN/JJ55 84-point spectra still use legacy linear-\(W^2\), \(8\times8\times4\). Their \(16\times16\times8\) spot-check reaches \(2.18895\times10^{-4}\) maximum kernel-order difference; AFH-7/Hybrid-9 use threshold-\(u^2\). Cross-model precision is not yet matched.
+- AFH Xe-131 response-level native Mathematica/Python validation has passed. The native Wolfram 14.2.0 full Eq. (6) run and independent Python pointwise comparison have also completed: 652 rows (500 open, 152 closed), four benchmarks, fixed 800 km/s, threshold-u2, pole width and 16×16×8. The corrected comparison JSON reports PASS_WITH_NOTES; maximum relative differences are I6 1.34e-12, physical/no4 dσ 2.58e-9, AFH response 2.58e-9 and converted cross-code dσ 2.58e-9. The latter uses the same 2e-7 observable tolerance as dσ; per-code unit-conversion identities separately pass at 2e-12. Near-pole width-prescription systematics, AFH-9 inputs and the official LZ likelihood remain open.
+
+The detailed sections below preserve earlier calculations and their provenance. Where an older paragraph says AFH is selected-point-only or that the full AFH response grid is absent, read it as the historical status before the 2026-11-14 full-grid run.
+
 ## 摘要
 
 本次讨论的核心，是把论文 Eq. (6) 中的三体微分散射截面与真实氙靶的核结构和银河系暗物质速度分布连接起来。研究分成三个层次：
@@ -38,17 +52,19 @@
 2. **核结构输入：** 采用 AFH/DMFormFactor v6.0 内置的 Xe-131 default density matrix，严格使用文献给出的谐振子长度处方，不把 \(b_A\) 当作拟合参数；并处理 AFH 原始 isoscalar response 与物理等质子、等中子耦合之间的因子 4。
 3. **真实天然氙靶的理论速率：** 对可用氙同位素按天然丰度求和，并对实验室系暗物质速度分布积分，得到 \(dR/dE_R\)。这一步与固定速度下的 \(d\sigma_A/dE_R\) 是不同的物理量。
 
-目前已经形成 AFH default Xe-131 响应、GCN/JJ55 核模型对照、四组固定速度 benchmark、AFH 天然氙 selected-point halo-folded rates，以及 GCN/JJ55 天然氙连续反冲谱。LZ 2026 Fig. S2 的一维 final-ROI efficiency 曲线及灰色系统包络也已从官方 PDF 提取，并与独立数字化结果对照；基于 GCN/JJ55 连续谱、2.84 tonne-year exposure 和该效率曲线，已得到初步 efficiency-weighted rate-level event yields。该结果不是完整的 LZ likelihood recast。Xe-131 AFH 响应现已同时通过 60 位精度 mpmath 独立有限和检查，以及 Wolfram 14.0.0 原生 Mathematica 对 2401 个 q 节点的逐点比较；Python 与 Mathematica 的 q 网格完全一致，四种响应量的最大相对差异为 \\(3.59\\times10^{-9}\\)，全部 2401 点通过。原始 AFH 响应、物理等质子等中子响应、因子 4 一次转换和有限密度矩阵精度导致的 q=0 小归一化修正均分别归档。该原生验证仅针对 Xe-131 响应层，不等于完整 AFH 天然氙连续谱或 LZ likelihood。进一步核查 AFH 原始定义后，确认其响应变量 \(y=(q b_A/2)^2\) 中的 \(q\) 是空间动量转移；现有 28 个天然氙响应样本采用的 exact spatial q 与精确三体质量壳关系一致。exact spatial q 作为默认，NR-q 仅作小反冲近似对照。当前 AFH 天然氙结果仍限于 selected points；连续谱和 LZ rate-level yields 使用 GCN/JJ55 响应，不能混称为 AFH 连续谱或完整实验重铸。
+目前已经形成 AFH default Xe-131 原生 Mathematica/Python response-level 对照、七同位素 16,807 行 AFH 响应网格、AFH-7/Hybrid-9 84 点天然氙全范围谱、GCN/JJ55 84 点天然氙谱、四组固定速度 benchmark，以及 LZ 一维效率加权 rate-level 诊断。LZ 2026 Fig. S2 的一维 final-ROI efficiency 曲线及灰色系统包络也已从官方 PDF 提取，并与独立数字化结果对照；基于 GCN/JJ55 连续谱、2.84 tonne-year exposure 和该效率曲线，已得到初步 efficiency-weighted rate-level event yields。该结果不是完整的 LZ likelihood recast。Xe-131 AFH 响应现已通过 60 位精度 mpmath 独立有限和检查，以及 Wolfram 14.0.0 原生 Mathematica 对 2401 个 q 节点的逐点比较；最大相对差异为 3.59e-9。另已完成原生 Wolfram 14.2.0 的 full Eq. (6) 652 行计算，并由独立 Python 对 652 行逐点复算：500 open、152 closed；最大 I6 差异 1.34e-12，dσ 差异 2.58e-9，AFH response 差异 2.58e-9，factor-four mapping residual 4.30e-16。原 comparator 将 converted-dσ 的跨代码差异误作单位转换恒等式；现已改为每个实现分别检查 conversion identity（2e-12），而 converted observable 的跨代码差异按 dσ 的 2e-7 容差验收，comparison JSON 为 PASS。该 cross-code 结果仅针对固定速度 Xe-131 和条件性 pole-width benchmark，不是天然氙 halo fold 或 LZ likelihood。进一步核查 AFH 原始定义后，确认其响应变量 y=(q b_A/2)^2 中的 q 是空间动量转移；当前 AFH-7/Hybrid-9 与 GCN/JJ55 均有 84 点 full-range spectra，但前者使用 threshold-u^2、后者仍使用 legacy linear-W^2，因此跨模型积分尚未达到匹配精度。一维效率加权 event yields 目前仍是 GCN/JJ55 rate-level 结果，不能混称为 AFH yields 或完整实验重铸。
 
-本轮正文还补入了从相互作用拉格朗日量到两张树图、Dirac trace、三体相空间和 Eq. (6) 整体前因子的连贯推导；附录进一步逐步推导最优反冲能量与最大标量质量、条件性二体 pole width、截断 SHM 实验室速度 PDF、天然氙靶核数和通量事件率，并解释核响应极小值、三体阈值、halo 端点和 LZ 效率折叠各自代表的物理机制。完整的 Lorentz boost、相空间归一化、AFH 密度矩阵有限和、因子 4、同位素输入和 halo 数值约定仍分别保留在附录 A–G，避免正文与附录互相替代。
+本轮正文还补入了从相互作用拉格朗日量到两张树图、Dirac trace、三体相空间和 Eq. (6) 整体前因子的连贯推导；附录进一步逐步推导最优反冲能量与最大标量质量、条件性二体 pole width、截断 SHM 实验室速度 PDF、天然氙靶核数和通量事件率，并解释核响应极小值、三体阈值、halo 端点和 LZ 效率折叠各自代表的物理机制。完整的 Lorentz boost、相空间归一化、AFH 密度矩阵有限和、因子 4、同位素输入和 halo 数值约定仍分别保留在正式附录 A–H，避免正文与附录互相替代。
 
 另外，仓库还归档了一个独立的 450 keV benchmark：其一是单一运动学点的 \(\mathcal L_{00}\) 与 reduced \(I_6\) 对照，使用条件性标量 pole width；其二是 Xe-131 固定速度微分截面曲线，使用 GCN/JJ55 响应、\(v=776\) km/s、\(M_A=131u\) 和 zero-width prescription。两者的输入与物理层级不同，均不替代天然氙 halo fold 或 LZ detector-level likelihood。
 
 | 研究层级 | 当前归档结果 | 明确边界 |
 |---|---|---|
 | AFH Xe-131 核响应 | 2401 个 \(q\) 节点；60 位精度 mpmath 与 Wolfram 14.0.0 原生逐点对照均通过，最大相对差异 \(3.59\times10^{-9}\) | 仅验证 Xe-131 AFH response-level；不代表完整天然氙连续谱或 LZ likelihood |
-| AFH 天然氙速率 | 七种可用同位素的 selected-point halo fold | Xe-124/Xe-126 缺少当前 AFH default density matrix；尚无完整 AFH 连续谱 |
-| GCN/JJ55 天然氙谱 | 四组 benchmark 的连续反冲谱，覆盖当前可用七种同位素 | 是独立核模型对照，不代表 LZ 合作组使用的修改后 WimPyDD 核输入 |
+| Python-only 完整 Eq. (6) 截面与因子 4 | v=800 km/s、Xe-131、652 行（500 open、152 closed），16 个高阶锚点；factor-4 mapping residual \(3.56\times10^{-16}\)，physical/no-factor-four ratio residual 0 | 条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width；Python 内部 PASS，不是 Mathematica/Python cross-code PASS，也不是天然氙 halo fold |
+| 原生 Mathematica/Python 完整 Eq. (6) 截面对照 | Wolfram 14.2.0 与独立 Python 652 行逐点比较 PASS_WITH_NOTES（500 open、152 closed）；max I6 1.34e-12、dσ 2.58e-9、AFH response 2.58e-9、factor-four mapping residual 4.30e-16；per-code conversion identity 4.44e-16/0 | 固定速度 Xe-131、四组 benchmark、条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width；不是天然氙 halo fold 或 LZ likelihood；converted dσ cross-code 使用 2e-7 观测量容差 |
+| AFH 天然氙速率 | 七种可用同位素 16,807 行响应网格和 84 点 AFH-7 full-range spectrum | Xe-124/Xe-126 缺少当前 AFH default density matrix；尚未得到 AFH-9 |
+| GCN/JJ55 天然氙谱 | 四组 benchmark 的 84 点连续反冲谱 | 是独立核模型对照；仍使用 legacy linear-\(W^2\) 求积，与 AFH-7 threshold-\(u^2\) 尚未匹配 |
 | 450 keV supplied benchmark | 单点 \(\mathcal L_{00}\)/\(I_6\) 本地验收；另有 105 点 Xe-131 fixed-speed curve | 不是天然氙 halo rate；curve 使用 \(M_A=131u\)、zero width，且未积分两端开放区间 |
 | LZ rate-level interface | Fig. S2 一维效率曲线与 2.84 tonne-year exposure 折叠，得到 GCN/JJ55 预期事件数 | 未构造二维 \(S1_c\)–\(\log_{10}S2_c\) PDF、完整 nuisance/background likelihood 或实验排除 |
 
@@ -1306,9 +1322,9 @@ v_{\max}-v_{\min,136}\simeq0.194\ {\rm km/s}.
 同样，Black 在 \(E_R=101\) keV 的截断 SHM 速率为零，准确含义是当前可用同位素的 \(v_{\min,A}\) 全部高于 \(776\) km/s，故该 halo 模型的积分支持区间为空；这不是说该粒子物理模型在任意更高速度下的微分截面恒等于零。untruncated boosted Maxwell–Boltzmann 诊断允许更高速度，因此给出非零结果，但那是另一个 halo 假设，不应拿它替代截断 SHM 的基准结论。
 
 
-## 7. 天然氙 halo-folded selected-point 结果
+## 7. 历史 selected-point 结果与 AFH-7/Hybrid-9 full-range grid
 
-在 \(E_R=101\) keV，截断 SHM 下的理论速率为：
+以下 101 keV 数值来自历史 selected-point archive，使用旧 linear-\(W^2\)、\(8\times8\times4\) reduced-kernel 求积；当前 threshold-\(u^2\) AFH-7 数值见 §7.2。历史表保留作可复现记录，不覆盖。
 
 | benchmark | \(m_s\) | \(\Delta m\) | \(dR/dE_R\) [events/(kg day keV)] |
 |---|---:|---:|---:|
@@ -1326,7 +1342,7 @@ v_{\max}-v_{\min,136}\simeq0.194\ {\rm km/s}.
 | Black | \(6.2236\times10^{-14}\) |
 | Blue | \(1.1079\times10^{-14}\) |
 
-这些数值差异主要是运动学阈值与 halo 速度端点的共同结果，不应被误判为数值积分不稳定。
+这些历史数值之间的 benchmark 差异主要由运动学阈值与 halo 速度端点决定；但历史值与当前 threshold-\(u^2\) AFH-7 网格之间另有约 230–255 ppm 的数值求积差异，不能把两类差异混为一谈。
 
 在 \(E_R=101\) keV：
 
@@ -1335,7 +1351,7 @@ v_{\max}-v_{\min,136}\simeq0.194\ {\rm km/s}.
 - Green/Blue 的 Xe-136 阈值为 775.806 km/s，只比 SHM 上限 776 km/s 低 0.194 km/s；
 - Black 的 \(v_{\min}\) 范围为 888.3–914.2 km/s，超过截断 SHM 上限，故没有可用同位素开放。
 
-Green benchmark 在其他几个反冲点的截断 SHM 速率为：
+历史 selected-point archive 中 Green benchmark 在其他几个反冲点的截断 SHM 速率为（当前 AFH-7 grid 值见 §7.2）：
 
 | \(E_R\) [keV] | \(dR/dE_R\) [events/(kg day keV)] |
 |---:|---:|
@@ -1359,6 +1375,40 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 判断一个小事件率时，应分别检查 \(W_{\max}-W_{\min}\)、\(v_{\max}-v_{\min}\) 和 \(R_A(E_R)/A^2\)，而不是仅看最终速率一个数字。Green 在 101 keV 的主要问题是 halo 端点抑制；Black 在同一点是运动学关闭；核响应极小值则是另一条独立的核结构效应。三者不能混为同一种“截面谷值”。
 
 
+### 7.2 当前 AFH-7/Hybrid-9 84 点全范围反冲网格（2026-11-16）
+
+早期本节的 selected-point 表和 untruncated-MB 诊断值均为历史输出；当前 AFH-7/Hybrid-9 全范围谱来自独立的 direct finite-sum exact-q runner，不应将两套数值混用。
+
+- AFH v6.0 default-density 七同位素响应矩阵和 7×2401 个响应节点已提交；合并响应表共 16,807 行。
+- 全网格 runner 在每个反冲点、每个同位素上直接计算 AFH finite sum，使用精确空间动量 \(q_A=\sqrt{2m_AE_R+E_R^2}\)，不以旧 28 点 PCHIP 表作为 full-grid 响应源。
+- 反冲网格包含 84 个 \(5\)–\(800\) keV 点：低能区按 5 keV 间隔，高能区按 20 keV 间隔，并显式加入 101、200、267、542 keV 锚点。
+- 四组 benchmark × 四种核响应情景 × 84 个反冲点，共 1,344 行 baseline spectrum。
+- baseline 使用 truncated SHM、24 个速度节点和 threshold-\(u^2\) 的 \(6\times6\times3\) 内部求积。
+- 高阶 \(24\times8\times8\times4\) 审计报告最大 baseline-to-final spectrum 差异 \(6.46772\times10^{-6}\)，低于 \(10^{-5}\) 验收阈值；全网格共有 1,726 个运动学开放点、1,298 个关闭点。
+
+这里的“全范围谱”是 84 点 grid-sampled spectrum，不是解析连续函数，也不是 1 keV 等间隔网格。完整高阶 1,344 行 ZIP 为 736,245 bytes，SHA-256 为 e55442d3ad4289dfd6c16e8e6cdb43d669561df074beddefcf87e8d1024f3471；目前 main 提交了 baseline spectrum、metadata 和高阶 audit/summary，完整高阶 ZIP 仍为外部 checksum-only 归档。
+
+当前 AFH-7 只包含 Xe-128、129、130、131、132、134、136，天然原子丰度覆盖 0.998158，不对七种同位素重新归一化。Xe-124 与 Xe-126 仍缺官方 AFH default-density matrix。Hybrid-9 对这两种缺失同位素使用 Helm fallback；它是明确标注的诊断情景，不是完整 AFH-9。
+
+在 101 keV 的当前 AFH-7 truncated-SHM 速率为：
+
+| benchmark | \(m_s\) | \(\Delta m\) | 当前 AFH-7 \(dR/dE_R\) [events/(kg day keV)] |
+|---|---:|---:|---:|
+| Red | 200 keV | 1 MeV | \(5.279789\times10^{-11}\) |
+| Green | 300 keV | 1 MeV | \(2.598864\times10^{-22}\) |
+| Black | 360 keV | 1 MeV | 0（运动学关闭） |
+| Blue | 300 keV | 10 MeV | \(2.166994\times10^{-24}\) |
+
+Green benchmark 在其他网格锚点的当前 AFH-7 速率为：
+
+| \(E_R\) [keV] | 当前 AFH-7 \(dR/dE_R\) [events/(kg day keV)] |
+|---:|---:|
+| 200 | \(1.813160\times10^{-11}\) |
+| 267 | \(2.726493\times10^{-13}\) |
+| 542 | \(1.455774\times10^{-15}\) |
+
+这些是 pre-detector theory rates，不包含 NEST selection、LZ signal PDF 或 profile likelihood。
+
 ## 8. 数值验证、归档状态与限制
 
 ### 8.1 已完成的检查
@@ -1367,20 +1417,25 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 - AFH source-to-Python 翻译与源文件数据一致；
 - **独立 60 位精度 mpmath 全网格对照已通过：** 对全部 2401 个 q 节点逐点比较，最大振幅绝对差为 \(3.98\times10^{-14}\)，最大相对振幅差（参考振幅绝对值大于 \(10^{-10}\)）为 \(8.83\times10^{-13}\)，最大响应绝对差除以 \(A^2\) 为 \(1.22\times10^{-15}\)；
 - Xe-131 AFH 脚本的 Python regression tests 通过；
+- **AFH Xe-131 原生 Mathematica/Python response-level 对照已通过：** Wolfram 14.0.0、2401 点、最大相对差异 \(3.59\times10^{-9}\)；这只验证核响应，不验证完整 Eq. (6)；
+- 七种 AFH v6.0 default-density 同位素的 16,807 行 direct finite-sum response grid 已提交；AFH-7/Hybrid-9 的 84 点、1,344 行 baseline spectrum 已提交，高阶 \(24\times8\times8\times4\) summary 最大谱差异为 \(6.46772\times10^{-6}\)；完整高阶 ZIP 仍为外部 checksum-only；
 - 四组 benchmark 的 AFH/GCN/JJ55 响应替换表完成逐点重构检查，并已统一改用 exact spatial q；
-- 天然氙 Eq. (6) kernel 与速度积分完成 selected-point 网格收敛检查；
+- 历史天然氙 selected-point Eq. (6) kernel 与速度积分完成网格收敛检查；新 AFH-7/Hybrid-9 full-grid 使用 threshold-\(u^2\)，与旧 selected-point 结果分开归档；
 - 天然氙归档完整性验证 workflow 通过；
 - AFH exact_spatial 默认模式重新计算 98 个逐同位素贡献和 14 个总速率，与归档结果的最大总速率相对差异为 \(2.67\times10^{-12}\)，CI run 43044583357 通过；
 - 核响应 (q) 与精确三体运动学 (q) 的定义、质量壳推导及 NR 近似对照见正式附录 G。
 - AFH q 审计、NR 近似敏感性和固定 (M_A=131u) 的四点对照已由 CI run 43045857679 通过；四组 fixed-speed benchmark 已按 exact spatial q 重算并上传 artifact。
 - LZ 2026 Fig. S2 的 final-ROI central efficiency 曲线与灰色系统包络已从官方 PDF 的矢量路径提取，并与独立数字化在 248 keV 处对照；灰色包络仅作为系统范围，不赋予置信水平（CI run 43151814368）。
-- GCN/JJ55 天然氙连续谱已与 LZ 2026 一维效率曲线及 2.84 tonne-year exposure 做 rate-level 折叠；分段线性函数乘积采用解析积分，稠密梯形交叉检查的最大相对差异为 \(3.77\times10^{-7}\)（CI run 43151727539）。该事件数只对应 GCN/JJ55 连续谱，不对应 AFH selected-point 结果。
+- GCN/JJ55 天然氙连续谱已与 LZ 2026 一维效率曲线及 2.84 tonne-year exposure 做 rate-level 折叠；分段线性函数乘积采用解析积分，稠密梯形交叉检查的最大相对差异为 \(3.77\times10^{-7}\)（CI run 43151727539）。该事件数只对应 GCN/JJ55 连续谱，不对应 AFH-7/Hybrid-9 预测。GCN/JJ55 production kernel 仍为 legacy linear-\(W^2\)、\(8\times8\times4\)，四组 benchmark 的 \(16\times16\times8\) spot-check 最大差异为 \(2.18895\times10^{-4}\)；与 AFH-7 threshold-\(u^2\) 尚未匹配。
+
+- **Python-only 完整 Xe-131 Eq. (6) 与因子 4 ledger 已通过（限定范围）：** v=800 km/s fixed-speed、652 行（500 open、152 closed）、16 个高阶锚点；最大 I6 相对差异 1.66367e-11，factor-4 mapping residual 3.55679e-16，physical/no-factor-four ratio residual 0。该结果依赖条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width 假设；不是 Mathematica/Python 独立交叉验证，也不是 halo-folded 截面。GitHub Actions artifact 14112736343。
+- **原生 Mathematica/Python 完整 Eq. (6) 截面对照已通过（限定范围）：** Wolfram 14.2.0、Python 3.14.7；652 行（500 open、152 closed）；最大相对差异 I6 = 1.33872e-12、dσ = 2.57632e-9、AFH response = 2.57510e-9；factor-four mapping residual = 4.30300e-16；Mathematica/Python 自身单位转换 residual 分别为 4.44089e-16/0。比较结果与 SHA-256 归档见 `research/afh_default_density_xe131/output/full_dsigma_mathematica/`。交叉代码的 converted-dσ 差异按 2e-7 观测量容差验收，而非 2e-12 代数恒等式容差。
 
 ### 8.2 尚未完成或不能过度声称的事项
 
 1. **AFH 空间 q 与 NR 近似必须继续分开表述。** AFH 定义 \(y=(q b_A/2)^2\)，其中 \(q\) 是空间动量转移；精确质量壳关系给出 \(q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}\)。28 个天然氙样本全部匹配 exact spatial q，现作为默认物理基线。\(q_{\rm NR}=\sqrt{2m_AE_R}\) 仅作为小反冲近似，其 Xe-131 响应差异已定量记录。
 2. **Xe-124/Xe-126 尚未纳入 AFH default-density 天然氙求和。** 缺少当前 AFH v6.0 内置 density matrix；七种可用同位素覆盖天然丰度 0.998158，未对这七种同位素重新归一化。
-3. **连续谱的核模型覆盖并不相同。** GCN/JJ55 已有四组 benchmark 的天然氙连续反冲谱；AFH 目前仍是 selected-point rates，因为尚未恢复完整的七同位素 AFH 响应网格。不能把 GCN/JJ55 连续谱称为 AFH 连续谱。
+3. **连续谱的核模型积分方案尚未匹配。** AFH-7/Hybrid-9 已有 84 点 full-range grid-sampled spectra；GCN/JJ55 也有四组 benchmark 的 84 点谱，但仍使用 legacy linear-\(W^2\)、\(8\times8\times4\) kernel。不能把两条链称为同精度计算；需统一 threshold-\(u^2\) 后重算。
 4. **LZ detector mapping 已完成 rate-level 的第一层，但尚非完整 recast。** 已提取 LZ 2026 Fig. S2 的一维 final-ROI efficiency central curve 和灰色系统包络，并使用 2.84 tonne-year exposure 对 GCN/JJ55 连续谱计算 efficiency-weighted event yields。尚缺能量分辨/重建卷积、二维 \({S1_c,\log_{10}S2_c}\) 信号 PDF、NEST 响应及其 nuisance covariance、背景样本与相关约束、profile likelihood。因此这些 event yields 不是 90% CL 排除，也不能单独解释 248 keV 候选事件。
 5. **极点宽度是条件性的。** 只包括给定假设下的 \(\chi_2\to\chi_1s\) 标量通道，不等于完整模型的矢量加标量自能。
 6. **halo 模型依赖尚未做系统扫描。** untruncated MB 只用于高速度尾部敏感性诊断，不作为默认 halo 结果。
@@ -1394,6 +1449,8 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 
 修正后 AFH 开放点截面相对早期旧值的最大变化为 \(2.7406\times10^{-4}\)。此外，四组 benchmark 已从 NR-q 近似统一到 exact spatial q；在 101、200、267、542 keV 四个 selected recoil 点，Xe-131 的 NR 近似响应偏差最大约 225 ppm。引用结果时应使用当前 exact-spatial corrected archive，不应使用早期 CSV。
 
+**2026-11-16 数值方法补充：** 旧天然氙 selected-point halo rates 与新 AFH-7 网格的共同点相差约 230–255 ppm。phase-space audit 已发现旧 linear-\(W^2\)、\(8\times8\times4\) 低阶积分在测试点相对高阶 threshold-\(u^2\) reference 的最大差异为 \(2.42445\times10^{-4}\)；新 AFH-7 threshold-\(u^2\) 网格的高阶谱差异最大为 \(6.47\times10^{-6}\)。这与观察到的速率变化相符，但不是前述 AFH \(R_A\) 列复制错误，也不是 exact-q 与 NR-q 的 225 ppm 响应差异。旧输出保留为历史结果。
+
 ## 9. 当前研究决策与下一步
 
 本阶段已经固定的决定：
@@ -1401,21 +1458,22 @@ Green benchmark 在其他几个反冲点的截断 SHM 速率为：
 1. AFH v6.0 default density 作为本阶段 Xe 核响应的标准输入；
 2. 固定 AFH 文献默认 \(b_A\)，不拟合谷值；
 3. 物理等质子、等中子耦合与 AFH 原始 isoscalar response 之间的因子 4 只计入一次；
-4. 对固定同位素和运动学条件，AFH/GCN/JJ55 共用同一个 \(I_6\)，只替换核响应；
+4. 对固定同位素和运动学条件，AFH/GCN/JJ55 共用同一个 \(I_6\) 定义，只替换核响应；但当前 AFH-7 使用 threshold-\(u^2\)，GCN/JJ55 使用 legacy linear-\(W^2\)，有限阶数误差尚未匹配；
 5. 天然氙采用逐同位素丰度加权，且不对当前缺失的 Xe-124/Xe-126 丰度重新归一化；
 6. 截断 SHM 作为 halo 基准，untruncated MB 仅作为尾部敏感性诊断；
 7. GCN/JJ55 连续谱的 LZ efficiency-weighted event yields 仅为 rate-level 结果，灰色效率包络不是置信区间；
-8. 不把固定速度截面、AFH selected-point 速率、GCN/JJ55 连续谱和完整 LZ detector-level likelihood 混为一谈。
+8. 不把固定速度截面、AFH selected-point 速率、天然氙连续谱和完整 LZ detector-level likelihood 混为一谈。
 
-后续研究事项按物理依赖关系排列；Xe-131 原生 Mathematica 2401 点响应对照已经完成并归档，不再列为待执行任务：
+后续事项按物理依赖关系排列。Xe-131 原生 Mathematica 2401 点 response-level 对照、Python-only full Eq. (6) 因子 4 ledger，以及原生 Mathematica/Python 652 行完整截面对照均已完成（最后一项为 PASS_WITH_NOTES，限定固定速度和条件性宽度假设）。当前未完成事项不再包括 full-cross-section cross-code 比较：
 
-1. **AFH 连续谱输入。** 恢复完整七同位素 AFH 响应网格后，才能将 AFH selected-point halo fold 扩展为连续谱。Xe-124/Xe-126 的密度矩阵缺失应单独处理，不得用丰度重归一化掩盖。
-2. **完整 LZ detector-level likelihood。** 现有一维效率曲线和 GCN/JJ55 rate-level yields 是接口基线；真正的 recast 还需 NEST 二维响应、能量分辨/重建、校准与 nuisance covariance、背景数据及 profile likelihood。不能直接移植 LZ 的两体非弹性 WIMP 限制。
-3. **模型与 halo 系统误差。** 在固定基准定义后，分别评估核响应模型、halo 参数和条件性 \(\chi_2\) 极点宽度对结果的影响；各项假设应分开报告，不用统一经验缩放代替。
+1. **统一核模型相空间积分。** 将 GCN/JJ55 84 点谱从 legacy linear-\(W^2\) 改为 threshold-\(u^2\)，使用与 AFH-7 相同的速度积分和 \(10^{-5}\) 收敛标准；重算 GCN/JJ55 谱、225–269.9 keV 高能尾部比例和依赖它们的 rate-level event yields。
+2. **补齐高阶结果归档。** 将 AFH-7/Hybrid-9 \(24\times8\times8\times4\) 的完整 1,344 行高阶谱以及独立 Numba 实现作为 native files 或版本化 Release 提交；不要只保留外部 ZIP checksum。
+3. **评估条件性 pole-width 的模型系统误差。** 当前 full-grid cross-code 对照采用 Dirac / real-scalar / pure-scalar / single-channel pole-width 假设；需与完整 vector-plus-scalar self-energy、其他开放衰变道及可能的 Majorana/CP 结构分开比较。
+4. **扩展 AFH 到九种天然氙同位素。** 只有在取得 Xe-124/Xe-126 的可追溯 AFH default-density matrices 后，才能将 Hybrid-9 fallback 替换为真正的 AFH-9；不得通过丰度重归一化掩盖输入缺失。
+5. **模型与 halo 系统误差。** 在固定基准定义后，分别评估核响应模型、halo 参数和条件性 \(\chi_2\) 极点宽度对结果的影响；各项假设应分开报告，不用统一经验缩放代替。
+6. **完整 LZ detector-level likelihood。** 现有一维效率曲线、NEST public-candidate response 和 rate-level yields 是接口基线；真正的 recast 还需实际校准源空间分布、官方生产 build provenance、二维信号响应、能量分辨/重建、校准与 nuisance covariance、背景数据及 profile likelihood。不能直接移植 LZ 的两体非弹性 WIMP 限制。
 
-本报告的下一轮编辑优先任务是让摘要、状态表、数值验收矩阵和 detector-level 接口章节对上述完成状态使用完全一致的术语。本报告的下一轮编辑优先任务是让摘要、状态表、数值验收矩阵和 detector-level 接口章节对上述完成状态使用完全一致的术语。
----
-
+本报告的下一轮编辑应继续检查摘要、状态表、数值验收矩阵和 detector-level 接口章节是否对上述完成状态使用完全一致的术语。
 ## 10. 代码、数据和文献入口
 
 ### 仓库内的主要研究记录
@@ -1520,7 +1578,7 @@ The final LZ selection is applied in the two-dimensional \(S1_c\)–\(\log_{10}S
 
 ### 11.3 Scope boundary for the present calculation
 
-The current \(5\)–\(800\) keV theoretical recoil grid is intentionally wider than the high-efficiency LZ search window. The continuous GCN/JJ55 numerical scan uses 5 keV spacing through 270 keV, then 20 keV spacing from 280 to 800 keV; the selected comparison points 101, 200, 267 and 542 keV are inserted explicitly. The AFH natural-xenon result remains selected-point only. For the 2026 LZ comparison, only the \(5.4\)–\(269.9\) keV interval enters the quoted WIMP-search ROI at greater than 50% efficiency. The \(270\)–\(800\) keV part remains a theoretical prediction and should not be counted as accepted LZ exposure. The efficiency-weighted event yields reported below apply only to the continuous GCN/JJ55 spectra.
+The current \(5\)–\(800\) keV theoretical recoil grid is intentionally wider than the high-efficiency LZ search window. AFH-7/Hybrid-9 and GCN/JJ55 both have 84-point grid-sampled spectra, using 5 keV spacing through 270 keV, then 20 keV spacing from 280 to 800 keV; the selected comparison points 101, 200, 267 and 542 keV are inserted explicitly. Their phase-space mappings are not yet matched: AFH-7/Hybrid-9 use threshold-\(u^2\), while GCN/JJ55 use legacy linear-\(W^2\). For the 2026 LZ comparison, only the \(5.4\)–\(269.9\) keV interval enters the quoted WIMP-search ROI at greater than 50% efficiency. The \(270\)–\(800\) keV part remains a theoretical prediction and should not be counted as accepted LZ exposure. The efficiency-weighted event yields reported below apply only to the GCN/JJ55 spectra; they are not AFH-7 yields. The AFH-7/Hybrid-9 spectra have not yet been folded through the same LZ efficiency pipeline.
 
 The central final-ROI efficiency curve and the gray uncertainty envelope have now been extracted from the vector paths in Fig. S2 and archived at:
 
@@ -1636,7 +1694,7 @@ N_{\rm sig}^{\rm ROI}
 | GCN/JJ55 天然氙 | 四组 benchmark 的连续反冲谱 | 这些核响应等同于 LZ 合作组的修改后 WimPyDD 输入 |
 | LZ rate-level interface | 一维效率曲线、灰色系统包络和 2.84 tonne-year exposure 折叠 | 已构造二维信号 PDF、背景 likelihood 或实验排除 |
 
-AFH 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失的 Xe-124 与 Xe-126 丰度没有重新分配给其他同位素。AFH 当前的天然氙结果仍是 selected-point rates。连续谱和下表的 LZ efficiency-weighted yields 使用 GCN/JJ55 核响应。
+AFH-7 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失的 Xe-124 与 Xe-126 丰度没有重新分配给其他同位素。AFH-7/Hybrid-9 的 84 点谱已归档；GCN/JJ55 也有 84 点谱，但使用不同的相空间积分方案。下表的 LZ efficiency-weighted yields 仍只使用 GCN/JJ55 核响应。
 
 ### 12.3 LZ rate-level event yields 与高能尾部
 
@@ -1657,7 +1715,7 @@ AFH 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失的 
 - Black 的高能尾部比例超过 92%，但总接受事件数只有约 \(3\times10^{-9}\)；
 - Green 与 Blue 的高能尾部比例约为 8.6%–8.8%，但在参考耦合下总事件数仍很小。
 
-因此，单独拥有较硬的高能谱尾并不足以解释 248 keV 候选事件；总归一化、探测器响应和完整统计模型同样重要。上述事件数只对应 GCN/JJ55 连续谱，不是 AFH 连续谱预测。
+因此，单独拥有较硬的高能谱尾并不足以解释 248 keV 候选事件；总归一化、探测器响应和完整统计模型同样重要。上述事件数只对应 GCN/JJ55 连续谱，不是 AFH-7/Hybrid-9 网格预测。GCN/JJ55 当前 production kernel 为 legacy linear-\(W^2\)、\(8\times8\times4\)；四组 benchmark 的 \(16\times16\times8\) spot-check 最大 kernel-order difference 为 \(2.18895\times10^{-4}\)。AFH-7/Hybrid-9 使用 threshold-\(u^2\)，高阶 baseline-to-final spectrum difference 最大 \(6.47\times10^{-6}\)。跨模型 tail ratios 是有用的 rate-level 诊断，但不是 matched-precision comparison；GCN/JJ55 应统一积分后重算，尤其是 0.66%–1.16% 的 Hybrid-9 shift。
 
 ### 12.4 本阶段结论的适用边界
 
@@ -1669,7 +1727,9 @@ AFH 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失的 
 2. 不能把 LZ 论文中的两体 \(\chi_1+A\to\chi_2+A\) 限制直接移植到本研究的三体过程；
 3. 不能把 GCN/JJ55 连续谱或其 LZ 效率加权事件数标记为 AFH 预测；
 4. 不能把 248 keV 单个候选事件当作信号计数进行拟合；
-5. 不能把 mpmath 高精度交叉检查描述为官方 Mathematica 原生验证。
+5. 不能把 Xe-131 response-level mpmath/Mathematica 高精度交叉检查描述为完整 Mathematica–Python \(d\sigma_A/dE_R\) 验证；
+6. 不能把 AFH-7 或 Hybrid-9 称为完整九同位素 AFH-9；Xe-124/Xe-126 仍缺官方 AFH default-density matrices；
+7. 不能将 84 点 grid-sampled spectrum 描述为解析连续函数或 1 keV 等间隔网格。
 
 后续物理工作仍取决于完整 AFH 同位素响应输入，以及 LZ 的二维 NEST 响应、校准协方差、背景数据和 profile likelihood；Xe-131 原生 Mathematica 对照已完成。
 
@@ -1698,7 +1758,7 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 
 完整复现命令、输入质量方案、响应插值和限制分别记录在附录 F.7、固定速度曲线结果记录及 pointwise benchmark local-validation record 中。
 
-### 12.6 科学状态表（P0–P2，2026-11-13）
+### 12.6 科学状态表（P0–P2，2026-11-16）
 
 状态定义：**已验证**表示公式、程序与归档数值在明确适用范围内闭合；**条件性验证**表示核心实现和代表性测试通过，但仍受参数覆盖、独立推导或物理假设限制；**未完成**表示所需计算或物理输入尚不存在。
 
@@ -1706,22 +1766,23 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 |---|---|---|---|
 | F1 精确空间动量、四动量转移与 \(t\) | 已验证 | 核质量壳关系、28 个 AFH 样本 q 审计、exact/NR 对照 | NR 仅为小反冲敏感性对照 |
 | F2 \(W_{\min}^2,W_{\max}^2\) 与相空间开闭 | 条件性验证 | limits、wmax_squared、开闭区间和阈值回归 | 尚未对更宽质量—速度区域做独立扫描 |
-| F3 三体相空间变量与 \(I_6\) | 条件性验证（代表点和阈值邻域收敛通过） | 独立 \(d\Phi_3\) 推导、三种变量映射、四组 fixed-speed benchmark、五个阈值邻域速度点、角积分阶数与 raw-\(d\Phi_3\) 前因子对照；六项回归测试通过 | 近传播子极点、不同宽度处方系统比较、完整连续反冲网格与 halo fold 仍需验证 |
+| F3 三体相空间变量与 \(I_6\) | 部分验证（按计算链分层） | AFH-7/Hybrid-9 84 点 threshold-\(u^2\) 网格；基准谱到 \(24\times8\times8\times4\) 高阶谱的最大差异 \(6.47\times10^{-6}\) | GCN/JJ55 仍为 legacy linear-\(W^2\)、\(8\times8\times4\)，最大 kernel-order difference \(2.18895\times10^{-4}\)；近极点宽度处方系统比较与跨模型匹配重算仍开放 |
 | F4 两张辐射图与 Dirac trace | 条件性验证 | before/after/干涉分解、显式自旋求和、壳条件与四动量闭合 | 目前是代表性测试点，不是全参数扫描 |
-| F5 单同位素固定速度 Eq. (6) | 条件性验证 | 四 benchmark 的 AFH/GCN/JJ55 响应替换与截面重构 | 共用既有 \(I_6\)，并非 640 个独立三体积分重算 |
-| F6 AFH 响应与因子 4 归一化 | 已验证（限定 Xe-131 response-level） | 原始 \(A^2/4\)、物理 \(A^2\)；2401 点 mpmath 与原生 Mathematica/Python 比较通过；最大相对差异 \(3.59\times10^{-9}\) | 完整 AFH 天然氙连续谱仍缺 Xe-124/Xe-126 输入和完整同位素响应网格 |
+| F5 单同位素固定速度 Eq. (6) | **PASS_WITH_NOTES：原生 Mathematica/Python full-grid cross-code** | 652 行（500 open、152 closed），四组 benchmark，v=800 km/s，16×16×8；max I6 1.33872e-12、dσ 2.57632e-9、converted dσ 2.57632e-9；per-code unit-conversion residuals 4.44e-16/0；SHA-256 归档在 `output/full_dsigma_mathematica/` | 条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width；不是天然氙 halo fold 或 detector likelihood；求积收敛仍需与 cross-code 一致性分开判断 |
+| F6 AFH 响应与因子 4 归一化 | **PASS_WITH_NOTES：response-level + full Eq. (6) cross-code** | Xe-131 2401 点 response-level 最大差异 3.59e-9；full Eq. (6) 652 行 factor-four mapping residual 4.30e-16、physical/no-factor-four ratio residual 0；Mathematica/Python conversion identities 4.44e-16/0 | 限定 Xe-131 fixed-speed 和条件性 pole-width；AFH-7 仍覆盖天然氙原子丰度 0.998158，Xe-124/Xe-126 缺官方 default matrices；不是 AFH-9 或 LZ likelihood |
 | F7 同位素质量、丰度与 \(N_T\) | 已验证 | 九同位素质量—丰度表、精确加权平均质量和每 kg 靶核数 | 电子结合能忽略；AFH 响应可用同位素仅七种 |
 | F8 三体 \(v_{\min,A}\) | 已验证 | 28/28 逐同位素阈值复算；最大速度差 \(4.35\times10^{-10}\) km/s | 适用范围为当前 benchmark 与输入质量约定 |
 | F9 实验室系速度 PDF | 已验证 | untruncated MB 与 truncated SHM 数值积分归一化 | 物理预测仍依赖所选 halo 参数 |
-| F10 天然氙 \(dR/dE_R\) | 条件性验证 | AFH selected-point；GCN/JJ55 连续谱及速度积分收敛 | 完整 AFH 连续谱和 Xe-124/Xe-126 响应未完成 |
+| F10 天然氙 \(dR/dE_R\) | 已验证（限 AFH-7/Hybrid-9 84 点网格） | AFH-7/Hybrid-9 四 benchmark、84 点、1,344 行 baseline spectra；GCN/JJ55 亦有四 benchmark 84 点谱 | GCN/JJ55 使用不同的 legacy linear-\(W^2\) mapping，需统一 threshold-\(u^2\) 后重算；AFH-9 输入仍缺失 |
 | F11 LZ 效率加权事件数 | 条件性验证 | 一维 Fig. S2 efficiency、2.84 tonne-year、rate-level 折叠 | 二维 NEST、能量分辨、背景与 profile likelihood 未完成 |
 | F12 \(\chi_2\to\chi_1s\) pole width | 条件性验证 | 条件性 Dirac 纯标量单通道宽度公式和数值测试 | 非完整自能；未纳入所有可能开放衰变道 |
 | 三体相空间 Jacobian / \(256\pi^3\) 独立推导 | 已验证 | 从单粒子不变测度独立重建 \(d\Phi_3\)，并逐项核对 \(t\leftrightarrow E_R\)、\(z,\phi_*\)、通量与核电荷流 | 适用于未极化靶、相干且仅保留 \(J_A^0\) 的近似；完整数值积分收敛另行检查 |
 | AFH 原生 Mathematica 全网格运行 | 已完成 PASS | Wolfram 14.0.0 Windows；2401 点；q 网格完全一致；四种响应量比较全部通过；最大相对差异 \(3.59\times10^{-9}\)；SHA-256 manifest 已归档 | 适用范围仅为 Xe-131 AFH response-level；不替代三体积分、天然氙连续谱或 LZ likelihood 验证 |
-| AFH 完整天然氙连续谱 | 未完成 | 七种可用同位素 selected-point rate 已完成 | 需要七同位素完整响应网格；Xe-124/Xe-126 还缺 AFH density matrix |
+| AFH-7/Hybrid-9 84 点 full-range grid | PASS_WITH_NOTES | 16,807 行七同位素响应网格；1,344 行 baseline spectra；高阶摘要最大 baseline-to-final spectrum difference \(6.47\times10^{-6}\) | 高阶 1,344 行 ZIP 仍为外部 checksum-only；AFH-7 非 AFH-9，Xe-124/Xe-126 尚缺官方矩阵 |
+| GCN/JJ55 84 点天然氙谱 | PASS_WITH_NOTES | 四 benchmark 的 84 点谱和 metadata 已归档；速度求积最大差异 \(1.60401\times10^{-6}\) | production 使用 legacy linear-\(W^2\)、\(8\times8\times4\)；最大 kernel-order difference \(2.18895\times10^{-4}\)；threshold-\(u^2\) 匹配重算待完成 |
 | 完整 LZ detector-level recast | 未完成 | GCN/JJ55 一维效率加权 rate-level yields | 需要二维信号 PDF、NEST nuisance、背景和 profile likelihood |
 
-**P0 判定：** 精确空间动量 Python 复算、60 位 mpmath 全网格检查、Wolfram 14.0.0 原生 Mathematica/Python 2401 点比较和归档输出核验均已完成。**P1 判定：** F1–F12 的追溯索引和重点一致性检查已完成；F3 除解析相空间 Jacobian 与 \(256\pi^3\) 已独立验证外，还完成四组 fixed-speed benchmark、五个阈值邻域速度点、三种变量映射、代表点角积分和 raw-\(d\Phi_3\) 数值复核；近极点及完整连续反冲网格收敛仍未完成。**P2 判定：** 完整 AFH 天然氙连续谱和完整 LZ likelihood 仍未完成，不能因 Xe-131 response-level 对照通过而升级状态。
+**P0 判定：** 精确空间动量 Python 复算、60 位 mpmath 全网格检查、Wolfram 14.0.0 原生 Mathematica/Python 2401 点 response-level 比较、Wolfram 14.2.0 原生完整 Eq. (6) 652 行运行及独立 Python 逐点对照均已完成；full cross-code comparison 为 PASS_WITH_NOTES。**P1 判定：** AFH-7/Hybrid-9 84 点网格与高阶摘要已通过当前 10^-5 验收；GCN/JJ55 仍需统一 threshold-u^2 后重算，近极点宽度处方系统比较仍开放。**P2 判定：** AFH-9 缺失同位素输入和完整 LZ likelihood 仍未完成。
 
 ## 13. 公式—符号—程序—结果交叉引用
 
@@ -1771,7 +1832,9 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 
 为避免主报告、附录和结果目录分别维护不同的 benchmark 口径，当前归档另设三份互相对应的维护记录：
 
-- [Figure 2 数值结果总索引](supplements/figure2_results_master_index_2026-11-13.md)：benchmark、输入、参数、输出文件与 SHA-256；机器可读清单见 [JSON manifest](supplements/figure2_results_master_index_2026-11-13.json)。
+- [当前 Figure 2 数值结果总索引](supplements/figure2_results_master_index_2026-11-16.md)：12 组结果、87 个文件条目的当前 SHA-256 provenance；旧版 2026-11-13 索引保留为历史快照。
+- [当前机器可读结果清单](supplements/figure2_results_master_index_2026-11-16.json)：记录当前源提交、参数、路径、SHA-256 与外部归档边界。
+- [Phase 1 科学内容审查](supplements/scientific_content_audit_2026-11-16.md)：AFH-7 全网格、旧新积分方案差异、GCN/JJ55 匹配精度缺口及剩余验证边界。
 - [物理公式交叉审查](supplements/figure2_physics_formula_audit_2026-11-13.md)：从原始拉格朗日量、两张辐射图、Dirac trace、三体相空间、\(256\pi^3\)、AFH factor 4、三体 \(v_{\min}\) 到天然氙速率逐项对照主报告、附录和代码。
 - [科学结果状态表](supplements/figure2_scientific_status_2026-11-13.md)：将每项结果明确标记为已验证、部分验证、待补输入或尚未完成，并注明适用范围和剩余限制。
 
@@ -4538,7 +4601,7 @@ Xe-131 AFH default response 的原生 Mathematica/Python 2401 点比较已通过
 
 ## 附录 H：完整 Eq. (6) 微分截面的 Mathematica–Python 对照
 
-本附录把已完成的 AFH 核响应验证，与尚待完成的完整三体截面验证分开。**2401 个 \(q\) 节点的 Mathematica/Python 对照只验证 \(R_A(q)\)，不验证 \(I_6\)，也不验证完整 \(d\sigma_A/dE_R\)。** 因此，以下原生计算器和比较器是本轮新增的独立验收链；在 Wolfram Engine 实际运行并完成逐点比较之前，不将完整截面标记为 PASS。
+本附录把三个不同的验收层级分开：AFH Xe-131 核响应的原生 Mathematica/Python 2401 点对照已 PASS；Python-only v=800 km/s fixed-speed 完整 Eq. (6) 652 行计算及因子 4 ledger 已 PASS；原生 Wolfram 14.2.0 652 行与独立 Python 的完整截面逐点对照也已完成，修正单位转换验收逻辑后的机器可读比较 JSON 报告 PASS。此 cross-code PASS 只覆盖固定速度 Xe-131、四组 benchmark 和条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width 假设，不代表天然氙 halo fold 或 detector-level likelihood。
 
 ### H.1 从公式 (6) 拆分出独立三体积分
 
@@ -4651,6 +4714,9 @@ t=-2m_AE_R.
 
 - **research/afh_default_density_xe131/run_afh_eq6_full_dsigma.wls**：在 Wolfram Language 中独立构造三体末态四动量、计算完整 Dirac trace、执行 \(W^2,z,\phi_*\) 求积，并装配完整截面。它只读取已经归档的 AFH 2401 点响应表，不重新运行 AFH package。
 - **research/afh_default_density_xe131/compare_full_dsigma_mathematica.py**：独立调用 research/figure2_full_reproduction/eq6_kernel.py 重新计算同一组 \(I_6\)，使用 SciPy PCHIP 独立插值 AFH 响应，再与 Mathematica CSV 逐点比较。
+- **research/afh_default_density_xe131/run_native_full_dsigma_windows.ps1**：Windows 端到端封装；检查 652 行/500 open full-grid、固定 800 km/s、pole-width、threshold-\(u^2\) 和求积阶数；原生运行已在 Wolfram 14.2.0 完成，输出 CSV/JSON、SHA-256 manifest，并记录 Wolfram/Python runtime versions。
+- **research/afh_default_density_xe131/run_python_full_dsigma_xe131.py**：已执行独立 Python-only v=800 km/s fixed-speed 652 行 full Eq. (6) 网格；CSV、metadata 和 16 个高阶锚点归档为 GitHub Actions artifact `14112736343`。其 factor-four ledger 在 Python 内部通过，但不替代上面的 Mathematica/Python cross-code 检验。
+- **research/afh_default_density_xe131/output/full_dsigma_mathematica/**：原生 Mathematica 14.2.0 652 行 CSV/metadata、Python 独立逐点比较 CSV/JSON 和 SHA-256 校验清单。比较 JSON 为 `PASS`；交叉代码 converted-dσ 差异使用与 dσ 相同的 2e-7 观测量容差，每个实现内部的单位转换恒等式仍使用 2e-12。
 - **research/afh_default_density_xe131/output/NATIVE_MATHEMATICA_FULL_DSIGMA_AUDIT.md**：记录固定输入、代码路径、验收标准和未完成边界。
 
 首轮完整网格采用四组固定速度 benchmark，\(v=800\ {\rm km/s}\)，\(m_{\chi_1}=1\ {\rm TeV}\)，\(m_V=10\ {\rm GeV}\)，\(m_A=131u\)，\((g_1g_2g_{VN})^2=10^{-8}\)，\(g_2=1\)。四组 \((m_s,\Delta m)\) 分别为 \((200\,{\rm keV},1\,{\rm MeV})\)、\((300\,{\rm keV},1\,{\rm MeV})\)、\((360\,{\rm keV},1\,{\rm MeV})\) 和 \((300\,{\rm keV},10\,{\rm MeV})\)。这里 \(g_2=1\) 是对图注耦合乘积的一种 benchmark 分解，并不能由耦合乘积本身唯一推出。
@@ -4692,20 +4758,36 @@ I_6^{\rm archived}=1.4336780722867665\times10^6\ {\rm GeV}^2.
 \left.\frac{d\sigma_A}{dE_R}\right|_{\rm no4}
 \simeq7.39568938\times10^{-9}\ {\rm GeV}^{-3}.
 \]
-两者比值为 4。这只证明该点的代数装配按预期传递因子 4；尚不能替代原生 Mathematica 的完整截面对照。
+两者比值为 4，且完整 652 行 native Mathematica/Python 对照进一步验证了物理/no-factor-four 截面关系；该点代数检查现作为全网格对照的局部辅助，而非其替代。
 
 ### H.6 验收状态
-
 | 层次 | 当前状态 | 说明 |
 |---|---|---|
 | AFH Xe-131 \(R_A(q)\) | **已验证** | 原生 Mathematica/Python 2401 点比较已通过 |
 | AFH package \(\to R_A^{\rm phys}\) 因子 4 | **已验证（response-level）** | \(R_A^{\rm phys}=4C_0R_A^{\rm package}\)，\(C_0\) 单独记录 |
-| Python 单点 \(I_6\) 求积预检 | **条件性验证** | green benchmark 单点求积阶数对照已完成；800 km/s 历史点的质量常数与映射误差已分离 |
-| 完整网格 Mathematica \(I_6\) | **待执行** | 新 WLS runner 已提交，尚无 Wolfram 运行产物 |
-| 完整 \(d\sigma_A/dE_R\) Mathematica/Python 逐点对照 | **未完成** | 必须等待 WLS 输出 CSV 和 Python comparator 的机器可读 PASS |
+| 历史 Python 单点 \(I_6\) 求积预检 | **历史诊断** | green benchmark 单点求积阶数对照和 800 km/s 历史点质量常数/映射误差分离；已被后续完整 Python 网格结果补充，不应作为当前唯一状态 |
+| Python-only 完整 Xe-131 Eq. (6) 与因子 4 ledger | **PASS_WITH_NOTES（Python 内部）** | v=800 km/s、652 行（500 open、152 closed）、16 个高阶锚点；最大 \(I_6\) 相对差异 \(1.66367\times10^{-11}\)，factor-4 mapping residual \(3.55679\times10^{-16}\)，physical/no-factor-four ratio residual 0；artifact 14112736343。依赖条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width 假设 |
+| 原生 Wolfram 完整网格 \(I_6\) | **已执行并通过逐点对照** | 652 行原生输出；Python 独立重算的 I6 最大相对差异 1.34e-12 |
+| 完整 \(d\sigma_A/dE_R\) Mathematica/Python 逐点对照 | **PASS_WITH_NOTES** | 652 行；dσ 最大相对差异 2.58e-9；converted dσ cross-code difference 2.58e-9（按 2e-7 观测量容差）；per-code conversion identities 分别 4.44e-16 和 0 |
 | 完整宽度与 UV 自能 | **未完成** | 当前 pole width 仍是 Dirac/纯 scalar/单道条件性宽度 |
 
 完整网格的第一层使用 \(16\times16\times8\)；随后对阈值附近、AFH 响应极小值附近和积分收敛最慢的点进行 \(48\times40\times24\) 高阶复算。代码间对照和求积收敛是两个独立验收：前者检查 Mathematica 与 Python 是否实现同一积分，后者检查该积分本身是否达到所需精度。
+
+
+### H.7 原生 Mathematica/Python 完整截面对照结果（2026-11-16）
+
+| Quantity | 最大相对差异/残差 | 验收容差 |
+|---|---:|---:|
+| \(I_6\) | \(1.33872\times10^{-12}\) | \(2\times10^{-7}\) |
+| \(d\sigma_A/dE_R\) | \(2.57632\times10^{-9}\) | \(2\times10^{-7}\) |
+| AFH PCHIP response | \(2.57510\times10^{-9}\) | \(2\times10^{-8}\) |
+| Factor-four mapping | \(4.30300\times10^{-16}\) | \(2\times10^{-12}\) |
+| Mathematica / Python conversion identity | \(4.44089\times10^{-16}\) / 0 | \(2\times10^{-12}\) |
+| Converted cross-code \(d\sigma_A/dE_R\) | \(2.57632\times10^{-9}\) | \(2\times10^{-7}\) |
+
+原始 comparator 曾把两个代码输出的 converted-dσ 之间的差异误作单位转换恒等式误差。该差异包含 AFH PCHIP 源翻译的已接受差异，因此应作为同一物理观测量的 cross-code 比较，并使用 dσ 的 2e-7 容差。修正后，Mathematica 和 Python 各自的单位转换恒等式仍分别以 2e-12 单独验收；没有放宽物理量的 cross-code 精度。
+
+原生输出、comparison JSON 和 SHA-256 文件位于 `research/afh_default_density_xe131/output/full_dsigma_mathematica/`。该结果只适用于 Xe-131、v=800 km/s fixed-speed、四组 benchmark、16×16×8 求积和条件性 pole-width 假设；代码间一致性不等同于求积收敛，也不构成天然氙 halo fold 或 LZ likelihood。
 
 
 ## 14. Phase II update: high-energy tail nuclear-model sensitivity (2026-11-14)
@@ -4734,8 +4816,4 @@ cover seven natural-xenon isotopes; Xe-124/Xe-126 remain absent and are not
 invented. The one-dimensional efficiency fold is not energy-resolution
 smearing, a NEST S1/S2 response, a background model, or a profile likelihood.
 
-The Xe-131 AFH response-level Mathematica/Python comparison is already
-archived as PASS from Wolfram 14.0.0. The remaining native-Wolfram gate is
-the full Eq. (6) (I_6) and (d\sigma_A/dE_R) pointwise comparison against
-the independent Python implementation. That final execution is deliberately
-deferred until the remaining non-Mathematica research integration is complete.
+**Historical note (2026-11-14):** At the time of this Phase II update, only the Xe-131 AFH response-level Mathematica/Python comparison (Wolfram 14.0.0) had completed and the native full Eq. (6) gate was still open. That gate has since been closed by the 2026-11-16 Wolfram 14.2.0 652-row execution and independent Python comparison recorded in Appendix H.7.

@@ -1,7 +1,7 @@
 # Eq. (6) kernel and Figure 2 numerical reproduction
 
 > Canonical archive: main  
-> Documentation update: 2026-11-13  
+> Documentation update: 2026-11-16  
 > Scope: three-body kernel, nuclear-response comparisons, natural-xenon theory rates, and the separate 450 keV diagnostics below.
 
 ## Scope and calculation layers
@@ -10,7 +10,7 @@ This directory contains the Eq. (6) particle-physics kernel and the numerical ru
 
 1. **Kernel layer:** reconstruct the final-state four-momenta, evaluate the Dirac trace, retain interference between the two scalar-emission orderings, and integrate the reduced three-body kernel over \(W^2,z,\phi_*\).
 2. **Fixed-speed cross-section layer:** combine the kernel with a specified single-isotope nuclear response to obtain \(d\sigma_A/dE_R\).
-3. **Natural-xenon theory-rate layer:** sum isotope-specific contributions and fold over an explicitly selected laboratory-frame halo distribution. The GCN/JJ55 continuous-spectrum runner is a separate nuclear-model comparison; AFH default-density natural-xenon results are archived in the sibling study directory and remain selected-point only.
+3. **Natural-xenon theory-rate layer:** sum isotope-specific contributions and fold over an explicitly selected laboratory-frame halo distribution. GCN/JJ55 have 84-point full-range spectra in this directory, using the legacy linear-W^2 kernel. AFH-7/Hybrid-9 have a separate 84-point full-range grid in the sibling study directory, using direct exact-q AFH responses and threshold-u^2 integration. These spectra are pre-detector and do not yet have matched kernel quadrature.
 4. **Detector-interface layer:** fold GCN/JJ55 continuous spectra with the LZ 2026 one-dimensional final-ROI efficiency. This gives rate-level expected event yields, not the official LZ likelihood.
 5. **450 keV diagnostics:** a pointwise \(\mathcal L_{00}/I_6\) benchmark with a conditional scalar pole-width comparison, and a separate fixed-speed Xe-131 curve with GCN/JJ55 responses, \(m_A=131u\), and zero width. These two diagnostics are not interchangeable.
 
@@ -22,7 +22,15 @@ The kernel uses the interaction/current written in paper-source/main.tex and exp
 - Both manuscript scalar-emission diagrams are included coherently.
 - The initial-spin average and final-spin sum are obtained from the Dirac trace.
 - The before/after interference term is retained.
-- Gauss-Legendre integration is used for \(W^2\) and \(z\), with the azimuthal average normalized consistently with Eq. (6).
+- The legacy `eq6_kernel.reduced_kernel` uses Gauss-Legendre integration with a linear \(W^2\) map and an azimuthal average normalized consistently with Eq. (6). A separate threshold-\(u^2\) integration is implemented in `phase_space_convergence.py` and in the AFH-7 full-grid runner; do not assume the legacy and threshold-stable paths have the same finite-order error.
+
+## Natural-xenon spectral integration status (2026-11-16)
+
+- The GCN/JJ55 84-point spectra are archived under `results/natural_xenon_continuous_spectrum/<benchmark>/`. Their production kernel is linear-(W^2), (8\times8\times4); the (16\times16\times8) spot-check reaches (2.18895\times10^{-4}) maximum kernel-order difference across the four benchmark metadata files.
+- The AFH-7/Hybrid-9 84-point spectra are archived in the sibling `research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/`. Their production uses direct finite-sum AFH responses at exact spatial (q) and threshold-(u^2) integration. The high-order audit reports (6.47\times10^{-6}) maximum baseline-to-final spectrum difference.
+- The two paths are not yet matched in their phase-space mapping or numerical precision. The GCN/JJ55 tail differences of 12–19% are much larger than their reported quadrature difference; the 0.66–1.16% Hybrid-9 shifts have less margin. Recompute GCN/JJ55 with threshold-(u^2) before publishing precision cross-model comparisons.
+- The native Wolfram 14.2.0 / independent Python full Mathematica–Python \(d\sigma_A/dE_R\) comparison has completed: 652 rows (500 open, 152 closed), four fixed-speed Xe-131 benchmarks, 16×16×8 quadrature; comparator JSON PASS and scientific status PASS_WITH_NOTES. The 2401-node AFH response-level comparison is a separate validation layer. See `research/afh_default_density_xe131/output/MATHEMATICA_PYTHON_FULL_DSIGMA_CROSSCHECK_REVIEW.md`.
+- None of these theory spectra is an official LZ likelihood or a detector-level exclusion.
 
 ## Reproduce the core regression tests
 
@@ -258,7 +266,7 @@ This milestone remains a fixed-speed, single-isotope diagnostic with the A*u mas
 
 ## AFH Xe-131 native response validation
 
-The independent Wolfram 14.0.0 native Mathematica/Python 2401-point response comparison is archived at [NATIVE_MATHEMATICA_AUDIT.md](../afh_default_density_xe131/output/native_audit/NATIVE_MATHEMATICA_AUDIT.md). This validates the Xe-131 AFH response layer only; it does not validate the full Eq. (6) continuous recoil integral, the seven-isotope AFH continuous spectrum, or an LZ detector likelihood.
+The independent Wolfram 14.0.0 native Mathematica/Python 2401-point response comparison is archived at [NATIVE_MATHEMATICA_AUDIT.md](../afh_default_density_xe131/output/native_audit/NATIVE_MATHEMATICA_AUDIT.md). Separately, the Python-only v=800 km/s fixed-speed Xe-131 full Eq. (6) calculation passed 652 rows and the factor-four ledger. The native Wolfram 14.2.0 full-dsigma run and independent Python pointwise comparison have since also completed (652 rows; comparator JSON PASS; scientific status PASS_WITH_NOTES). These are fixed-speed Xe-131 cross-section validations, not a natural-xenon halo fold. The separate AFH-7/Hybrid-9 seven-isotope 84-point full-range grid-sampled spectra and their quadrature audit are archived in `research/afh_default_density_natural_xenon_halo/`; they do not constitute AFH-9 or an LZ detector likelihood.
 
 ## P1-PhaseSpace numerical convergence audit (2026-11-14)
 
@@ -285,5 +293,5 @@ python -m unittest discover -s research/figure2_full_reproduction/tests -p 'test
 
 The runner writes mapping, angular, threshold-neighborhood, raw-\(d\Phi_3\) prefactor, historical-800-km/s, and off-shell near-pole CSVs, plus metadata and SHA-256 outputs below \`research/figure2_full_reproduction/results/phase_space_convergence_2026-11-14/\`. The P1 GitHub Actions workflow uploads a short-lived reproduction artifact and compares the fresh CSV tables against the committed archive.
 
-The audit covers four fixed-speed benchmarks, five \(v_{\min}\)-offset checks, the historical 800 km/s mass-convention anchor, and an off-shell near-pole scan at \(E_R=267\) keV and \(v=776\) km/s. The latter compares zero-width, constant pole-width and diagnostic running-width prescriptions for \(g_2=0.1,1\), while keeping the \(\chi_2\) pole above \(W_{\max}\). The sine-squared map provides a second endpoint-focused quadrature check. This is still not a full continuous recoil-grid convergence proof, a complete halo fold, or a detector likelihood. The nine-test module reuses the existing Dirac spin trace and is not an independent second amplitude calculation.
+The audit covers four fixed-speed benchmarks, five v_min-offset checks, the historical 800 km/s mass-convention anchor, and an off-shell near-pole scan at E_R=267 keV and v=776 km/s. The latter compares zero-width, constant pole-width and diagnostic running-width prescriptions for g2=0.1,1, while keeping the chi2 pole above Wmax. The sine-squared map provides a second endpoint-focused quadrature check. This P1 audit is not a full continuous-grid convergence proof for GCN/JJ55 or a full Mathematica/Python cross-section validation; the separate AFH-7/Hybrid-9 84-point grid has its own high-order convergence audit. It is not a complete halo fold for all nuclear models or a detector likelihood. The nine-test module reuses the existing Dirac spin trace and is not an independent second amplitude calculation.
 

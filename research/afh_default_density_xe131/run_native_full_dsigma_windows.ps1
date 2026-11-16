@@ -13,16 +13,38 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+$Benchmark = $Benchmark.ToLowerInvariant()
+$allowedBenchmarks = @("all", "red_ms200_dm1", "green_ms300_dm1", "black_ms360_dm1", "blue_ms300_dm10")
+if ($allowedBenchmarks -notcontains $Benchmark) {
+    throw "Unknown benchmark: $Benchmark"
+}
+if ($NW -lt 1 -or $NZ -lt 1 -or $NPhi -lt 1 -or $RelativeTolerance -le 0 -or $ResponseTolerance -le 0) {
+    throw "Quadrature orders and comparison tolerances must be positive."
+}
+
+if ($RequireFullGrid -and $Benchmark -ne "all") {
+    throw "RequireFullGrid needs -Benchmark all. For a single-benchmark pilot, pass -RequireFullGrid `$false."
+}
+
 $studyDir = $PSScriptRoot
 $wolframFile = Join-Path $studyDir "run_afh_eq6_full_dsigma.wls"
 $pythonComparator = Join-Path $studyDir "compare_full_dsigma_mathematica.py"
 $pythonAfhTable = Join-Path $studyDir "output\afh_default_xe131_WM00.csv"
 $nativeAfhTable = Join-Path $studyDir "output\native_exports\afh_default_xe131_WM00_mathematica.csv"
+$eq6Kernel = Join-Path $studyDir "..\figure2_full_reproduction\eq6_kernel.py"
+$phaseSpace = Join-Path $studyDir "..\figure2_full_reproduction\phase_space_convergence.py"
+$requirements = Join-Path $studyDir "requirements.txt"
+$nativeAfhGenerator = Join-Path $studyDir "run_afh_default_xe131.wls"
+$nativeAfhComparator = Join-Path $studyDir "compare_afh_mathematica_python.py"
+$nativeAfhManifest = Join-Path $studyDir "output\native_audit\afh_native_audit_manifest.json"
 
 if (-not (Test-Path $wolframFile)) { throw "Missing Wolfram script: $wolframFile" }
 if (-not (Test-Path $pythonComparator)) { throw "Missing Python comparator: $pythonComparator" }
 if (-not (Test-Path $pythonAfhTable)) { throw "Missing Python AFH response table: $pythonAfhTable" }
 if (-not (Test-Path $nativeAfhTable)) { throw "Missing native Mathematica AFH response table: $nativeAfhTable" }
+foreach ($requiredFile in @($eq6Kernel, $phaseSpace, $requirements, $nativeAfhGenerator, $nativeAfhComparator, $nativeAfhManifest)) {
+    if (-not (Test-Path -LiteralPath $requiredFile)) { throw "Missing provenance/source file: $requiredFile" }
+}
 
 $wolfram = Get-Command "wolframscript" -ErrorAction SilentlyContinue
 if (-not $wolfram) {
@@ -87,9 +109,66 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 $comparison = Get-Content -Raw -Path $comparisonMetadata | ConvertFrom-Json
+$nativeMeta = Get-Content -Raw -Path $mathematicaMetadata | ConvertFrom-Json
 if ($comparison.status -ne "PASS") {
     throw "Comparison metadata did not report PASS."
 }
+if ([int]$nativeMeta.output.rows -ne [int]$comparison.rows) {
+    throw "Mathematica metadata row count does not match the Python comparison."
+}
+if ([double]$nativeMeta.particle_inputs.speed_km_s -ne 800.0) {
+    throw "Unexpected fixed speed in Mathematica metadata; expected 800 km/s."
+}
+if ($nativeMeta.integration.width_scheme -ne "pole" -or $nativeMeta.integration.W2_mapping -ne "threshold_u2") {
+    throw "Unexpected width or W2-mapping convention in Mathematica metadata."
+}
+if ([int]$nativeMeta.integration.quadrature.nW -ne $NW -or [int]$nativeMeta.integration.quadrature.nz -ne $NZ -or [int]$nativeMeta.integration.quadrature.nphi -ne $NPhi) {
+    throw "Mathematica metadata quadrature orders do not match the requested orders."
+}
+if ($RequireFullGrid -and (-not [bool]$comparison.full_grid_required -or [int]$comparison.rows -ne 652 -or [int]$comparison.open_phase_space_rows -ne 500)) {
+    throw "Full-grid acceptance requires full_grid_required=true, 652 rows and 500 open phase-space rows."
+}
+
+$filesToHash = @(
+    $wolframFile, $pythonComparator, $PSCommandPath, $eq6Kernel, $phaseSpace,
+    $nativeAfhGenerator, $nativeAfhComparator, $nativeAfhManifest,
+    $requirements, $pythonAfhTable, $nativeAfhTable,
+    $mathematicaCsv, $mathematicaMetadata, $comparisonCsv, $comparisonMetadata
+)
+$hashEntries = @()
+foreach ($file in $filesToHash) {
+    if (-not (Test-Path -LiteralPath $file)) {
+        throw "Cannot create a complete provenance manifest; missing file: $file"
+    }
+    $hash = Get-FileHash -LiteralPath $file -Algorithm SHA256
+    $hashEntries += [pscustomobject]@{
+        file = (Split-Path -Leaf $file)
+        sha256 = $hash.Hash.ToLowerInvariant()
+    }
+}
+$manifest = [ordered]@{
+    schema_version = 1
+    generated_utc = [DateTime]::UtcNow.ToString("o")
+    status = $comparison.status
+    benchmark = $Benchmark
+    speed_km_s = [double]$nativeMeta.particle_inputs.speed_km_s
+    require_full_grid = $RequireFullGrid
+    rows = [int]$comparison.rows
+    benchmarks = $comparison.benchmarks
+    recoil_energies_keV = $comparison.recoil_energies_keV
+    open_phase_space_rows = [int]$comparison.open_phase_space_rows
+    quadrature = [ordered]@{ nW = $NW; nz = $NZ; nphi = $NPhi }
+    width_scheme = $nativeMeta.integration.width_scheme
+    W2_mapping = $nativeMeta.integration.W2_mapping
+    max_relative_differences = $comparison.max_relative_differences
+    wolfram_environment = $nativeMeta.environment
+    python_environment = $comparison.python_environment
+    files = $hashEntries
+}
+$manifestPath = Join-Path $OutputDirectory "full_dsigma_sha256_manifest.json"
+$manifest | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath $manifestPath -Encoding UTF8
+$hashLines = $hashEntries | ForEach-Object { "$($_.sha256)  $($_.file)" }
+$hashLines | Set-Content -LiteralPath (Join-Path $OutputDirectory "SHA256SUMS.txt") -Encoding ASCII
 
 Write-Host ""
 Write-Host "PASS: full Xe-131 Mathematica/Python dSigma/dER comparison completed."
@@ -99,3 +178,4 @@ Write-Host ("Maximum dSigma relative difference: {0:E6}" -f $comparison.max_rela
 Write-Host ("Maximum AFH response relative difference: {0:E6}" -f $comparison.max_relative_differences.R_A_physical)
 Write-Host ("Factor-four mapping residual: {0:E6}" -f $comparison.max_relative_differences.factor4_mapping)
 Write-Host ("Comparison archive: {0}" -f $OutputDirectory)
+Write-Host ("SHA-256 manifest: {0}" -f $manifestPath)

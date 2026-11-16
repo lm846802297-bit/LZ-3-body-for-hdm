@@ -1,6 +1,6 @@
 # LZ 2026 energy-resolved selection, MC uncertainty, and black-tail audit
 
-Date: 2026-11-15  
+Date: 2026-11-16
 Branch: \`integration/lz-2026-nest-nr-fullband-20261115\`  
 NEST source pin: \`541b6430dae6ea289cf110c99f174a9187f7fdee\`
 
@@ -12,7 +12,7 @@ This note records the artifact-level follow-up to the energy-resolved Fig. S2 re
 2. identify which true-recoil-energy intervals dominate the \(m_s=360\) keV (black) benchmark;
 3. record the independent-seed 1-keV/5-keV and 1-keV/0.5-keV grid checks.
 
-**Status:** the rate-level bridge and its numerical diagnostics reproduce in CI. The 5-keV black-support point estimates satisfy the proposed 1% rate and 1% two-dimensional TV gates. The 0.5-keV high-tail check also satisfies those point-estimate gates. None of these results closes the official LZ two-dimensional selection response, calibration-source geometry, FV, veto samples, or nuisance covariance. No profile likelihood is authorized by this note.
+**Status:** the rate-level bridge and its numerical diagnostics reproduce in CI. The 5-keV black-support and 0.5-keV high-tail checks pass the proposed point-estimate gates only on their stated local support intervals; this is not a full-range 5-keV production-grid PASS. Neither result closes the official LZ two-dimensional selection response, calibration-source geometry, FV, veto samples, or nuisance covariance. No profile likelihood is authorized by this note.
 
 ## 2. Exact meaning of the rate-level bridge
 
