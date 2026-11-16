@@ -100,6 +100,8 @@ This is a high-impact first batch, not a claim that all 106 research Markdown fi
 
 An additional cross-document status-reconciliation pass on 2026-11-16 updated Appendix D (natural-xenon coverage), Appendix E (historical selected-point versus current AFH-7 grid), Appendix F (numerical validation matrix and detector boundary), Appendix G (committed 16,807-row response grid), the missing-isotope appendix, the high-energy-tail appendix, the research decision register, the formula cross-reference, and the formula/status audit. These edits correct stale completion labels and preserve historical calculations as historical; they do not change physical inputs or recompute numerical outputs.
 
+A second topic pass covered the LZ detector-response record set: the P0 closure report, public-input audit, NEST configuration provenance, event-response pilot, flat-band pilot, full-band drift audit, ER-tail bootstrap audit, energy-resolved black-tail audit, and the three-body response-selection audit. Their current summaries now distinguish completed public-candidate calculations from the still-open official-build, calibration-geometry, nuisance, background, and likelihood requirements. In particular, the local black-support 5-keV point-estimate gate is not a full-range 5-keV grid PASS; the event-weighted fold retains 1 keV as its numerical reference, and the ER empirical PDF still has zero support in the candidate's 2D cell. No detector or particle-physics numerical outputs were recomputed in this documentation pass.
+
 ## 7. Next actions
 
 1. Recompute GCN/JJ55 spectra with threshold-(u^2), common speed/kernel convergence criteria, and matching output metadata.
