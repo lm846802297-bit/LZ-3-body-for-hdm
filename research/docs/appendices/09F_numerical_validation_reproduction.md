@@ -155,17 +155,17 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 | AFH 默认 \(b_A\) | 已完成 | 公式、单位转换、Xe-131 数值回归测试 | 不需要拟合；不得用谷值调参 |
 | AFH 零动量归一化 | 已完成（含有限精度修正） | 原始 \(A^2/4\)、物理响应 \(A^2\)、偏差 \(8.2523\times10^{-5}\) | 记录 AFH 空间 q 的精确质量壳关系，并区分 NR 近似 |
 | AFH 谷值 | 已完成 | 离散候选点、直接响应局部极小化、minima.csv | 不需要调整 \(b_A\) |
-| mpmath 独立有限和 | 已完成全网格 | 60 位精度、2401 个 q 节点；最大振幅绝对差 \\(3.98\\times10^{-14}\\)，最大响应绝对差除以 \\(A^2\\) 为 \\(1.22\\times10^{-15}\\) | 无；原生 Mathematica 对照另有独立 PASS 记录 |
-| AFH 原生 Mathematica | 已完成（限定 Xe-131 response-level） | Wolfram 14.0.0 原生执行；2401 个 q 节点；四种响应量与 Python 逐点比较通过，最大相对差异 \\(3.59\\times10^{-9}\\)；SHA-256 manifest 已归档 | 不验证完整 Eq. (6) pole-width \\(I_6\\) 或 \\(d\\sigma_A/dE_R\\)；后者的端到端 Mathematica/Python 对照仍待完成 |
+| mpmath 独立有限和 | 已完成全网格 | 60 位精度、2401 个 q 节点；最大振幅绝对差 \(3.98\times10^{-14}\)，最大响应绝对差除以 \(A^2\) 为 \(1.22\times10^{-15}\) | 无；原生 Mathematica 对照另有独立 PASS 记录 |
+| AFH 原生 Mathematica | 已完成（限定 Xe-131 response-level） | Wolfram 14.0.0 原生执行；2401 个 q 节点；四种响应量与 Python 逐点比较通过，最大相对差异 \(3.59\times10^{-9}\)；SHA-256 manifest 已归档 | 不验证完整 Eq. (6) pole-width \(I_6\) 或 \(d\sigma_A/dE_R\)；后者的端到端 Mathematica/Python 对照仍待完成 |
 | GCN/JJ55 对照 | 已完成归档 | 三种响应、四 benchmark、1920 行 long table | 对照共享既有 \(I_6\)，不是 640 次独立重算 |
 | 三体运动学/Dirac trace | 已完成代表性检查 | 壳条件、四动量闭合、显式自旋求和、干涉分解 | 扩展到更宽的参数和质量网格 |
 | 450 keV pointwise \(\mathcal L_{00}\)/\(I_6\) benchmark | 已完成本地验收 | 六项 regression tests、显式自旋求和、四动量闭合、三阶求积对照；见 local validation record | 仅覆盖指定诊断运动学点；pole width 依赖 Dirac / pure-scalar / single-channel 假设 |
 | 450 keV Xe-131 fixed-speed curve | 已归档的内部网格诊断 | 105 点 130–650 keV、独立 PCHIP 重构、Eq. (6) anchor convergence、运动学端点 bracket | 109.150–654.956 keV 两端尚未完成高阶积分；固定速度、A×u 质量近似、zero width，不是 halo rate |
-| 三体积分收敛 | 部分验证（按计算路径分层） | AFH-7/Hybrid-9 84 点 grid：baseline \\(24\\times6\\times6\\times3\\) 到 high-order \\(24\\times8\\times8\\times4\\) 的最大谱差异 \\(6.46772\\times10^{-6}\\)；12-speed-node kernel 到 24-speed-node high-order kernel 的最大差异 \\(6.63746\\times10^{-6}\\)；24-speed-node 内部阶数增量 \\(5.96430\\times10^{-10}\\) | GCN/JJ55 仍为 legacy linear-\\(W^2\\)、\\(8\\times8\\times4\\)；\\(16\\times16\\times8\\) spot-check 最大差异 \\(2.18895\\times10^{-4}\\)；需统一 threshold-\\(u^2\\) 重算；近极点宽度处方系统比较仍开放 |
-| 天然氙速度积分 | 部分验证（按计算路径分层） | 历史 selected-point fold 的 32/64 节点检查最大差异 \\(3.31\\times10^{-6}\\)，98 个逐同位素贡献和 14 个总速率复现最大总速率差异 \\(2.67\\times10^{-12}\\)；AFH-7 grid 的速度 12→24 节点最大差异 \\(6.63735\\times10^{-6}\\)，最差 32 点 24→48 节点最大差异 \\(2.21749\\times10^{-7}\\) | GCN/JJ55 匹配 threshold-\\(u^2\\) 后需重新执行全网格速度收敛；halo 参数扫描和年度调制未完成 |
+| 三体积分收敛 | 部分验证（按计算路径分层） | AFH-7/Hybrid-9 84 点 grid：baseline \(24\times6\times6\times3\) 到 high-order \(24\times8\times8\times4\) 的最大谱差异 \(6.46772\times10^{-6}\)；12-speed-node kernel 到 24-speed-node high-order kernel 的最大差异 \(6.63746\times10^{-6}\)；24-speed-node 内部阶数增量 \(5.96430\times10^{-10}\) | GCN/JJ55 仍为 legacy linear-\(W^2\)、\(8\times8\times4\)；\(16\times16\times8\) spot-check 最大差异 \(2.18895\times10^{-4}\)；需统一 threshold-\(u^2\) 重算；近极点宽度处方系统比较仍开放 |
+| 天然氙速度积分 | 部分验证（按计算路径分层） | 历史 selected-point fold 的 32/64 节点检查最大差异 \(3.31\times10^{-6}\)，98 个逐同位素贡献和 14 个总速率复现最大总速率差异 \(2.67\times10^{-12}\)；AFH-7 grid 的速度 12→24 节点最大差异 \(6.63735\times10^{-6}\)，最差 32 点 24→48 节点最大差异 \(2.21749\times10^{-7}\) | GCN/JJ55 匹配 threshold-\(u^2\) 后需重新执行全网格速度收敛；halo 参数扫描和年度调制未完成 |
 | AFH 空间 q 与 NR 近似 | 已完成（输入/响应层） | 28 个历史天然氙样本匹配 exact spatial q；七同位素 AFH response grid 16,807 行已提交并逐同位素 direct finite-sum at exact q；Xe-131 四点 NR 近似响应差异约 5.5–225 ppm | Xe-124/Xe-126 仍缺 AFH matrices；不得把 AFH-7 或 Hybrid-9 称为 AFH-9 |
 | Xe-124/Xe-126 | 输入缺失 | 缺失丰度合计 0.001842 | 取得密度矩阵并补算响应、阈值和速率 |
-| 天然氙全范围反冲谱 | 部分完成（按核模型区分） | AFH-7/Hybrid-9：四 benchmark、84 点、1,344 baseline rows、5–800 keV、threshold-\\(u^2\\)；高阶摘要最大 baseline-to-final 谱差异 \\(6.46772\\times10^{-6}\\)。GCN/JJ55 也有四组 84 点谱 | GCN/JJ55 仍为 legacy linear-\\(W^2\\)、\\(8\\times8\\times4\\)，尚未匹配 AFH-7 求积；AFH-9 缺 Xe-124/Xe-126 matrices；高阶 AFH ZIP 仅外部 checksum |
+| 天然氙全范围反冲谱 | 部分完成（按核模型区分） | AFH-7/Hybrid-9：四 benchmark、84 点、1,344 baseline rows、5–800 keV、threshold-\(u^2\)；高阶摘要最大 baseline-to-final 谱差异 \(6.46772\times10^{-6}\)。GCN/JJ55 也有四组 84 点谱 | GCN/JJ55 仍为 legacy linear-\(W^2\)、\(8\times8\times4\)，尚未匹配 AFH-7 求积；AFH-9 缺 Xe-124/Xe-126 matrices；高阶 AFH ZIP 仅外部 checksum |
 | LZ efficiency-weighted rate-level fold | 部分完成（仅 GCN/JJ55 rate-level） | Fig. S2 一维效率曲线及灰色包络；2.84 tonne-year；四组 benchmark 事件数；解析分段积分与稠密梯形对照 | 现有事件数只对应 GCN/JJ55；AFH-7/Hybrid-9 84 点谱尚未折叠到本表；NEST 二维响应、能量分辨/重建、nuisance covariance、背景样本和 profile likelihood 未完成 |
 
 这张表把软件测试、局部数值收敛和物理模型完整性分开。测试通过只说明被测试的代码路径满足相应断言，不等于所有参数点、所有核模型、halo 假设或实验响应都已验证。
