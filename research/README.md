@@ -15,9 +15,9 @@ Read [WORKFLOW.md](WORKFLOW.md) before starting a new study. Use [_template/READ
 - [docs/](docs/README.md): cross-topic model definitions, phenomenology notes, the AFH/natural-xenon main report, appendices A–G, formula cross-reference index, source audits, and research decisions.
 - figure2_kinematic_audit/: threshold conditions, maximum scalar mass, and phase-space checks.
 - [figure2_full_reproduction/](figure2_full_reproduction/README.md): Eq. (6) kernel, GCN/JJ55 natural-xenon halo-folded continuous spectra, fixed-speed Xe-131 diagnostics, the supplied 450 keV pointwise benchmark, tests, and numerical outputs. The 450 keV fixed-speed curve is a single-isotope zero-width diagnostic, not a halo or detector-level prediction.
-- afh_default_density_xe131/: AFH v6.0 Xe-131 response, response normalization and momentum-convention audits, plus AME2020/CODATA-2022 mass and Xe-131-only hybrid diagnostics. The legacy PCHIP partial-rate tables are not the primary direct-exact-q result.
+- [afh_default_density_xe131/](afh_default_density_xe131/README.md): AFH v6.0 Xe-131 response, normalization and momentum-convention audits, AME2020/CODATA-2022 mass diagnostics, and the historical I6 mapping/quadrature audit. The latter reproduces I6 only; it does not validate the full differential cross section. The legacy PCHIP partial-rate tables are not the primary direct-exact-q result.
 - afh_default_density_natural_xenon_halo/: isotope-resolved AFH default-density natural-xenon halo fold, seven-isotope response extraction, selected-q 60-digit mpmath validation, interpolation-accuracy audit, and the AFH-7/Hybrid-9 continuous recoil spectra with high-order quadrature checks. The selected-point AME2020 fold remains a distinct mass-scheme record; none of these results is a detector-level LZ likelihood.
-- [lz_detector_response/](lz_detector_response/README.md): LZ 2026 Fig. S2 efficiency digitization, source/provenance metadata, and one-dimensional efficiency-weighted GCN/JJ55 rate-level event yields. This is not the official LZ likelihood or an exclusion.
+- [lz_detector_response/](lz_detector_response/README.md): LZ 2026 public-input and NEST provenance, NR/ER response audits, event-level and two-dimensional three-body response folds, paired Parametric/Full S1 ten-seed statistics and bootstrap, Fig. S2 rate-level folds, and selection-stage diagnostics. The detailed [extended NR/ER archive index](lz_detector_response/lz_2026_extended_nr/README.md) separates the reproducible intermediate NEST proxy from the still-missing official waveform-level selected PDF and likelihood.
 
 ## Current result layers
 
@@ -26,8 +26,8 @@ Keep the following quantities separate:
 1. **Microscopic level:** single-isotope, fixed-speed \(d\sigma_A/dE_R\).
 2. **Nuclear/target level:** isotope-specific responses and natural-xenon abundance weighting.
 3. **Astrophysical level:** laboratory-frame halo average \(dR/dE_R\).
-4. **Detector interface:** one-dimensional efficiency-weighted expected event counts.
-5. **Experiment likelihood:** two-dimensional detector response, calibration/background nuisance parameters, and profile likelihood; this layer is not implemented here.
+4. **Detector interface:** one-dimensional efficiency-weighted expected event counts plus an intermediate NEST-based two-dimensional S1c/log10(S2c) response proxy. These are distinct result layers and must not be multiplied together as if they were independent efficiencies.
+5. **Experiment likelihood:** official waveform-level selection, calibration/background nuisance parameters, detector-systematic covariance, and profile likelihood; this layer is not implemented here.
 
 ## Phase II high-energy tail audit
 
