@@ -1,9 +1,17 @@
 # 高能候选能区核模型敏感性与 AFH 原生 Mathematica 验证计划
 
+## 2026-11-16 数值与验证状态补充
+
+本报告中的核模型尾部结果仍可作为 rate-level 敏感性诊断，但必须保留求积方案差异：AFH-7/Hybrid-9 使用 threshold-\(u^2\) 的 84 点网格；GCN/JJ55 使用 legacy linear-\(W^2\) 的 \(8\times8\times4\) 网格。四组 GCN/JJ55 metadata 的 \(16\times16\times8\) kernel-order 最大差异为 \(2.18895\times10^{-4}\)，速度求积最大差异为 \(1.60401\times10^{-6}\)。GCN/JJ55 的 12–19% 尾部变化明显大于此误差；Hybrid-9 的 0.66–1.16% 变化应在匹配 threshold-\(u^2\) 后再作为精密比较值。
+
+AFH-7/Hybrid-9 的 baseline 84 点谱已提交；最终 \(24\times8\times8\times4\) 的 1,344 行高阶谱 ZIP 目前只以外部 checksum 记录，仓库提交的是高阶 audit/summary。AFH-7 覆盖七种官方 AFH default 同位素，不包括缺失 Xe-124/Xe-126；Hybrid-9 的 Helm-2 是明确标注的 fallback。
+
+本报告原第 6 节的“Mathematica 尚未执行”只适用于当时状态。2026-11-16 已有 AFH Xe-131 response-level 原生 Mathematica/Python PASS；完整 Eq. (6) pole-width cross-section runner 仍未执行完成。
+
 **研究阶段：** Phase II — high-energy tail and native AFH validation  
 **日期：** 2026-11-14  
 **基准数据版本：** `main` at `ce4e500363778832c672117819dfd385f9346be7`  
-**状态：** 高能尾部积分已完成；原生 Mathematica 执行尚待实际 Wolfram kernel。
+**状态：** 高能尾部积分结果已归档；本报告中的 GCN/JJ55 求积为 legacy linear-\(W^2\) 路径，跨模型精密比较需统一积分后重算。AFH Xe-131 response-level 原生 Mathematica 对照现已 PASS；完整 Eq. (6) Mathematica–Python 截面对照仍待完成。
 
 ## 1. 研究问题与积分区间
 
@@ -131,7 +139,7 @@ GCN 和 JJ55 与 AFH-7 使用相同的七同位素覆盖、NIST 核质量、精�
 
 这说明核结构选择对高能尾部的影响依赖粒子物理 benchmark 和相空间支持区间，并不是一个可以用单一整体比例描述的常数。
 
-数值求积的独立收敛审计已显示：AFH-7 高阶谱的最大基准—最终差异约 (6.64\times10^{-6})；GCN/JJ55 归档 metadata 的最大 kernel 阶数差异约 (2.07\times10^{-4})，速度求积差异约 (1.60\times10^{-6})。这些误差远小于 red/green/blue 中观测到的 12–19% 模型差异。
+数值求积的独立收敛审计已显示：AFH-7 高阶谱的最大基准—最终差异约 \(6.64\times10^{-6}\)；GCN/JJ55 归档 metadata 的最大 kernel 阶数差异为 \(2.18895\times10^{-4}\)（此前摘要中的 \(2.07\times10^{-4}\) 低估了四个 benchmark metadata 的最大值），速度求积差异最大约 \(1.60401\times10^{-6}\)。这些误差远小于 red/green/blue 中观测到的 12–19% 模型差异；但 Hybrid-9 的 0.66–1.16% 变化只有约 30 倍的数值余量，仍应在统一积分后复核。
 
 ## 6. 原生 Mathematica 验证：脚本已准备，执行仍待完成
 
@@ -167,7 +175,7 @@ wolframscript -file research/afh_default_density_xe131/validate_afh_mathematica_
 
 验收条件包括：2401 个节点完整、(q) 网格差异低于 (10^{-12}\,\mathrm{GeV})、AFH 原始 (q=0) 归一化符合 (A^2/4)、物理归一化满足 (R_A(0)=A^2)，以及全网格物理响应的最大绝对差异除以 (A^2) 小于 (10^{-10})。
 
-**重要状态说明：** 当前执行环境没有 Wolfram kernel / `wolframscript`，因此这里没有声称原生 Mathematica 已运行或通过。新增脚本是原生验证 harness，不是执行结果。只有实际运行并归档 CSV/JSON 后，才能将 Mathematica 项标记为 PASS。
+**重要状态说明（2026-11-16 更新）：** AFH Xe-131 的 2401 点 response-level 原生 Mathematica/Python 比较已实际运行并通过，结果见 `research/afh_default_density_xe131/output/native_audit/`。这不是本报告所列完整 Eq. (6) 截面 runner 的执行结果；完整 pole-width (I_6) 与 (d\sigma_A/dE_R) 的 Mathematica–Python 逐点比较仍未通过实际运行和归档关闭。
 
 ## 7. 当前结论与下一步
 
@@ -175,7 +183,7 @@ wolframscript -file research/afh_default_density_xe131/validate_afh_mathematica_
 2. GCN/JJ55 相对 AFH-7 的尾部差异约 12–19%（除 black 阈值受限 benchmark 外），值得作为核模型系统敏感性保留。
 3. Helm-9 与 AFH-7 的大差异来自高 (q) 区域的深衍射极小值差异，不能把 Helm-9 当作 Hybrid-9 的等价替代。
 4. black benchmark 尾部占比很高，但绝对事件数极小；必须同时报告 (N_{\rm tail}) 和 (f_{\rm tail})。
-5. 下一项 P0 是在 Windows 上真正运行原生 Mathematica harness，并归档 2401 点比较结果。完成之前，不启动完整 LZ likelihood recast。
+5. 下一项 P0 是完成完整 Eq. (6) 的原生 Mathematica–Python (I_6) 与 (d\sigma_A/dE_R) 逐点比较；Xe-131 response-level 2401 点验证已经完成，但不能替代这一关。
 
 ## 8. 可复现文件
 
