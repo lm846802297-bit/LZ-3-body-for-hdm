@@ -62,5 +62,5 @@
 - **LZ 探测器响应：** 已归档公开 NEST `541b643` 的 EFT2024 配置候选、NR/ER 响应审计、三体二维响应折叠、Fig. S2 rate-level folds，以及十独立种子的 paired S1 响应和 100,000 次 seed-cluster bootstrap。1-keV 仍是全范围数值参考；独立全范围 1/5-keV 比较未通过 1% 二维 TV 门槛。黑色 360-keV benchmark 的点估计低于 1%，但 bootstrap 和 leave-one-out 不支持稳健等价性声明。以上均为中间 NEST 响应诊断，不是官方 waveform-level selected PDF、profile likelihood 或 90% CL exclusion。
 - **450 keV benchmark：** 已归档一个条件性 pointwise \(\mathcal L_{00}\)/\(I_6\) 验证，以及一个独立的 Xe-131 固定速度、零宽度、\(A u\) 质量近似曲线。后者只覆盖 130–650 keV 的内部网格，不能当作天然氙 halo rate。
 - **高能尾部核模型敏感性：** 225–269.9 keV 效率加权尾部已比较 AFH-7、Hybrid-9、GCN、JJ55 和 Helm-9；Hybrid-9 相对 AFH-7 的变化约 0.7–1.2%，GCN/JJ55 约 12–19%，Helm-9 约 4.5–4.7 倍。结果是 rate-level 诊断，不是 likelihood。
-- **完整 Eq. (6) 截面：** response-level AFH 原生 Mathematica 验证已有 PASS 归档。新增的历史 Xe-131 (I_6) mapping/quadrature audit 在匹配点复现 legacy 值，独立 linear-(W^2) mapping 与归档差异最大为 (5.42\times10^{-11})；这只是 (I_6) 积分审计，不是完整截面验证。完整 (I_6) 与 (d\sigma_A/dE_R) 的 Mathematica–Python 逐点验证仍待执行。
+- **完整 Eq. (6) 截面：** response-level AFH 原生 Mathematica 验证已有 PASS 归档。新增的历史 Xe-131 $I_6$ mapping/quadrature audit 在匹配点复现 legacy 值，独立 linear-$W^2$ mapping 与归档差异最大为 $5.42\times10^{-11}$；这只是 $I_6$ 积分审计，不是完整截面验证。完整 $I_6$ 与 $d\sigma_A/dE_R$ 的 Mathematica–Python 逐点验证仍待执行。
 - **总体解释：** 代码、文档和归档完成不等于所有物理假设均已验证，更不代表模型已经解释 LZ 候选事件。
