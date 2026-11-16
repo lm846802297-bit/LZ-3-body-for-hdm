@@ -1,6 +1,6 @@
 # LZ 2026 ER candidate-tail support audit
 
-Date: 2026-11-15
+Date: 2026-11-16
 
 **Status:** empirical support audit, corrected event-local drift, and 2,000-replica bootstrap rerun are complete (successful workflow 43662363556). This is a diagnostic of the public EFT2024 candidate, not an official LZ ER likelihood; the empirical ER PDF still has zero support in the candidate's 2D cell.
 
