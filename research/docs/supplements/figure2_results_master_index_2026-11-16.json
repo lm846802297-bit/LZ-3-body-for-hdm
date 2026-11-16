@@ -948,38 +948,27 @@
       "files": [
         {
           "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131.csv",
-          "name": "mathematica_full_dsigma_xe131.csv",
           "sha256": "585b806fd937760f085d07b9907718f45ca331708021addee618a8362e2c2cce",
           "bytes": 221014,
           "role": "Native Wolfram 14.2.0 full Eq. (6) Xe-131 differential cross section; 652 rows"
         },
         {
           "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131_metadata.json",
-          "name": "mathematica_full_dsigma_xe131_metadata.json",
           "sha256": "f7802e985d95bda7747f2faa1d804bbcb753e6e8d8d92fb9c1da0c7098a65dc3",
           "bytes": 4021,
           "role": "Native Wolfram execution metadata, four benchmarks, 800 km/s, pole-width, threshold-u2 and 16x16x8 quadrature"
         },
         {
           "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_python_full_dsigma_comparison.csv",
-          "name": "mathematica_python_full_dsigma_comparison.csv",
           "sha256": "d24714cd9e036e0b18c743f179aafd72c5d573fcd6013e3edbad987d34de765d",
           "bytes": 340014,
           "role": "652-row independent Python pointwise comparison of I6, AFH response, physical/no-factor-four cross sections and conversion identities"
         },
         {
           "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_python_full_dsigma_comparison.json",
-          "name": "mathematica_python_full_dsigma_comparison.json",
           "sha256": "00838a849ce40c9fe97a3d058d203e00df31f56aa695bcae37509b62ec7aa643",
           "bytes": 3755,
           "role": "Machine-readable Mathematica/Python full-cross-section comparison; PASS_WITH_NOTES"
-        },
-        {
-          "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/SHA256SUMS.txt",
-          "name": "SHA256SUMS.txt",
-          "sha256": "f519b5f72012ca13da55fdbeb396162ed1995b1c819384a2dc9fefcfb1cf80e7",
-          "bytes": 435,
-          "role": "SHA-256 checksums for native outputs and corrected pointwise comparison outputs"
         }
       ]
     }
@@ -1509,38 +1498,27 @@
     },
     {
       "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131.csv",
-      "name": "mathematica_full_dsigma_xe131.csv",
       "sha256": "585b806fd937760f085d07b9907718f45ca331708021addee618a8362e2c2cce",
       "bytes": 221014,
       "role": "Native Wolfram 14.2.0 full Eq. (6) Xe-131 differential cross section; 652 rows"
     },
     {
       "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131_metadata.json",
-      "name": "mathematica_full_dsigma_xe131_metadata.json",
       "sha256": "f7802e985d95bda7747f2faa1d804bbcb753e6e8d8d92fb9c1da0c7098a65dc3",
       "bytes": 4021,
       "role": "Native Wolfram execution metadata, four benchmarks, 800 km/s, pole-width, threshold-u2 and 16x16x8 quadrature"
     },
     {
       "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_python_full_dsigma_comparison.csv",
-      "name": "mathematica_python_full_dsigma_comparison.csv",
       "sha256": "d24714cd9e036e0b18c743f179aafd72c5d573fcd6013e3edbad987d34de765d",
       "bytes": 340014,
       "role": "652-row independent Python pointwise comparison of I6, AFH response, physical/no-factor-four cross sections and conversion identities"
     },
     {
       "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_python_full_dsigma_comparison.json",
-      "name": "mathematica_python_full_dsigma_comparison.json",
       "sha256": "00838a849ce40c9fe97a3d058d203e00df31f56aa695bcae37509b62ec7aa643",
       "bytes": 3755,
       "role": "Machine-readable Mathematica/Python full-cross-section comparison; PASS_WITH_NOTES"
-    },
-    {
-      "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/SHA256SUMS.txt",
-      "name": "SHA256SUMS.txt",
-      "sha256": "f519b5f72012ca13da55fdbeb396162ed1995b1c819384a2dc9fefcfb1cf80e7",
-      "bytes": 435,
-      "role": "SHA-256 checksums for native outputs and corrected pointwise comparison outputs"
     }
   ],
   "source_commit": "PR #45 head branch docs/scientific-content-audit-20261116; refresh to the merge commit after PR #45 is merged."
