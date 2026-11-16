@@ -31,11 +31,20 @@ $wolframFile = Join-Path $studyDir "run_afh_eq6_full_dsigma.wls"
 $pythonComparator = Join-Path $studyDir "compare_full_dsigma_mathematica.py"
 $pythonAfhTable = Join-Path $studyDir "output\afh_default_xe131_WM00.csv"
 $nativeAfhTable = Join-Path $studyDir "output\native_exports\afh_default_xe131_WM00_mathematica.csv"
+$eq6Kernel = Join-Path $studyDir "..\figure2_full_reproduction\eq6_kernel.py"
+$phaseSpace = Join-Path $studyDir "..\figure2_full_reproduction\phase_space_convergence.py"
+$requirements = Join-Path $studyDir "requirements.txt"
+$nativeAfhGenerator = Join-Path $studyDir "run_afh_default_xe131.wls"
+$nativeAfhComparator = Join-Path $studyDir "compare_afh_mathematica_python.py"
+$nativeAfhManifest = Join-Path $studyDir "output\native_audit\afh_native_audit_manifest.json"
 
 if (-not (Test-Path $wolframFile)) { throw "Missing Wolfram script: $wolframFile" }
 if (-not (Test-Path $pythonComparator)) { throw "Missing Python comparator: $pythonComparator" }
 if (-not (Test-Path $pythonAfhTable)) { throw "Missing Python AFH response table: $pythonAfhTable" }
 if (-not (Test-Path $nativeAfhTable)) { throw "Missing native Mathematica AFH response table: $nativeAfhTable" }
+foreach ($requiredFile in @($eq6Kernel, $phaseSpace, $requirements, $nativeAfhGenerator, $nativeAfhComparator, $nativeAfhManifest)) {
+    if (-not (Test-Path -LiteralPath $requiredFile)) { throw "Missing provenance/source file: $requiredFile" }
+}
 
 $wolfram = Get-Command "wolframscript" -ErrorAction SilentlyContinue
 if (-not $wolfram) {
@@ -120,12 +129,6 @@ if ($RequireFullGrid -and (-not [bool]$comparison.full_grid_required -or [int]$c
     throw "Full-grid acceptance requires full_grid_required=true, 652 rows and 500 open phase-space rows."
 }
 
-$eq6Kernel = Join-Path $studyDir "..\figure2_full_reproduction\eq6_kernel.py"
-$phaseSpace = Join-Path $studyDir "..\figure2_full_reproduction\phase_space_convergence.py"
-$requirements = Join-Path $studyDir "requirements.txt"
-$nativeAfhGenerator = Join-Path $studyDir "run_afh_default_xe131.wls"
-$nativeAfhComparator = Join-Path $studyDir "compare_afh_mathematica_python.py"
-$nativeAfhManifest = Join-Path $studyDir "output\native_audit\afh_native_audit_manifest.json"
 $filesToHash = @(
     $wolframFile, $pythonComparator, $PSCommandPath, $eq6Kernel, $phaseSpace,
     $nativeAfhGenerator, $nativeAfhComparator, $nativeAfhManifest,
