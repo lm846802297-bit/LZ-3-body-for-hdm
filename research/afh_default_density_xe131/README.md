@@ -378,7 +378,7 @@ section.
 The machine-readable normalization and numerical boundaries are documented
 in audit/PYTHON_FULL_DSIGMA_FACTOR4_AUDIT.md. GitHub Actions runs the
 Python-only full-grid calculation and uploads its CSV/metadata/anchor archive.
-The Python-only full-grid calculation described above has since completed and its CSV, metadata and high-order anchors are archived. The remaining independent check is the native Wolfram full-grid execution and pointwise comparison against the Python implementation; it is no longer waiting on the Python calculation.
+The Python-only full-grid calculation described above has completed. The subsequent native Wolfram 14.2.0 full-grid execution and independent Python pointwise comparison also completed on 2026-11-16; see `output/full_dsigma_mathematica/` and `output/MATHEMATICA_PYTHON_FULL_DSIGMA_CROSSCHECK_REVIEW.md`. The comparator JSON reports `PASS`; the overall scientific classification is `PASS_WITH_NOTES` because the result remains fixed-speed Xe-131 under the stated conditional width assumptions.
 
 The native Wolfram runner now reads the already archived AFH-native response
 from output/native_exports/afh_default_xe131_WM00_mathematica.csv; the
@@ -388,10 +388,7 @@ table at output/afh_default_xe131_WM00.csv.
 
 ## Native Mathematica vs Python full-cross-section comparison
 
-The Python-only full-grid job has completed and archived its CSV, metadata and
-high-order anchors. The remaining independent check is to execute the native
-Wolfram Language integrator and compare its output point by point with the
-Python implementation.
+The native Wolfram Language integrator and independent Python comparator have completed the full 652-row pointwise comparison. The commands below reproduce the archived fixed-speed Xe-131 calculation; they do not produce a natural-xenon halo fold or detector-level likelihood.
 
 On Windows, from a PowerShell session at the repository root, run:
 
@@ -429,8 +426,7 @@ powershell -ExecutionPolicy Bypass -File research/afh_default_density_xe131/run_
 This is a subset comparison, not the 652-row full-grid acceptance. The WLS
 runner also inserts the explicit 101, 200, 267 and 542 keV anchors; 200 keV
 is already on the regular 5-keV grid.
-Do not mark the full Mathematica/Python cross-section comparison complete
-until this run reports PASS and the comparison metadata has been reviewed.
+**Acceptance status (2026-11-16):** the native Mathematica/Python full-cross-section gate is complete. The committed comparator JSON reports `PASS`, and the scientific result is classified `PASS_WITH_NOTES` because the width prescription and fixed-speed Xe-131 scope remain conditional. The CSV, metadata, row-level comparison and SHA-256 archive have been reviewed.
 
 
 ## Historical Xe-131 I6 mapping and quadrature audit
