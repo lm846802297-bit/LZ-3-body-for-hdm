@@ -18,4 +18,4 @@ This directory stores generated response tables, corrected cross sections, valid
 
 The direct Mathematica exports and the independent pointwise comparison are intentionally stored in separate subdirectories: `native_exports/` contains the package's raw run products, while `native_audit/` contains the verification outputs and PASS manifest. Do not treat the former as a substitute for the latter.
 
-- \`historical_i6_mapping_audit/\`: matched 776 km/s, zero-width green Xe-131 I6 comparison across legacy, linear-W2, linear-W, threshold-u2, and sine2 mappings; see \`HISTORICAL_I6_MAPPING_AUDIT.md\` for interpretation and provenance.
+- `historical_i6_mapping_audit/`: matched 776 km/s, zero-width green Xe-131 I6 comparison across legacy, linear-W2, linear-W, threshold-u2, and sine-squared mappings. The archive contains the comparison CSV, metadata, README, and SHA-256 manifest; see [HISTORICAL_I6_MAPPING_AUDIT.md](HISTORICAL_I6_MAPPING_AUDIT.md) for the numerical interpretation. This is an I6-only phase-space audit, not a full differential-cross-section validation.
