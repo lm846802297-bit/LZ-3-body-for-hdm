@@ -192,6 +192,8 @@ def main() -> None:
               and maxima["pchi"] <= 2e-12 and maxima["mediator_denominator"] <= 2e-12)
     metadata = {
         "status": "PASS" if passed else "FAIL", "rows": len(result),
+        "benchmarks": sorted(set(m.benchmark.astype(str))),
+        "recoil_energies_keV": sorted(float(x) for x in m.ER_keV.unique()),
         "python_environment": {
             "python_version": platform.python_version(),
             "numpy_version": np.__version__,
