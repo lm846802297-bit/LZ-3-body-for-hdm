@@ -379,7 +379,7 @@ N_{\rm sig}^{\rm ROI}
 | P1-02 | 原始工作稿将 \(y=b_A^2m_AE_R/2\) 写成无条件定义 | 改为 \(y=(b_AQ/2)^2\)，并标明前式为小反冲近似 | **已修正** |
 | P1-03 | 天然氙 metadata 的 `response_sample_sha256` 实际为 40 位 Git blob SHA-1 | 替换为文件真实 64 位 SHA-256；runner 和 validator 增加校验 | **已修正** |
 | P1-04 | Dirac/Majorana 性质与完整 \(\chi_2\) 自能未由原始模型文本固定；benchmark 已明确采用实 \(g_1,g_2\) | 明确保留为模型输入/理论扩展，不将条件性宽度推广 | <span>待补模型定义</span> |
-| P1-05 | Xe-124、Xe-126 的 AFH default response 缺失；完整 16807 行七同位素响应表未提交 | 已审计官方 v6.0 `SetIsotope` dispatch：仅列出 128、129、130、131、132、134、136；124/126 进入缺失矩阵回退 | **缺失已确认；需独立核结构输入** |
+| P1-05 | Xe-124、Xe-126 的 AFH default response 缺失；七同位素完整 16,807 行响应表已提交 | 已审计官方 v6.0 `SetIsotope` dispatch：仅列出 128、129、130、131、132、134、136；七种响应矩阵与 7×2401 direct finite-sum 网格已归档 | **七同位素网格已完成；Xe-124/Xe-126 缺失已确认，需独立核结构输入** |
 | P1-06 | 原始 Figure 2 的单同位素/天然氙靶定义不明确 | 不把当前 LZ 天然氙扩展误称为原图已确认靶定义 | <span>待补原始输入</span> |
 | P1-07 | AFH-7 七同位素 84 点 full-range grid 已完成；AFH-9 仍缺 Xe-124/Xe-126 matrices，LZ 二维 likelihood 未完成 | 保留 AFH-7 与 Hybrid-9 的范围标签；不能将 Hybrid-9 说成 full AFH-9；继续推进 detector response 与 likelihood | <span>部分完成 / 尚未完成</span> |
 | P1-08 | Xe-131 AFH 原生 Mathematica/Python 2401 点独立比较 | Wolfram 14.0.0；相同 \(q\) 网格；四种响应量全部通过；最大相对差异 \(3.59087\times10^{-9}\) | **已完成（仅 response-level）** |
@@ -392,6 +392,6 @@ N_{\rm sig}^{\rm ROI}
 下一轮应优先：
 1. 由模型作者/原始拉格朗日量固定 Dirac/Majorana 与 CP/手征约定；
 2. 为 Xe-124、Xe-126 寻找独立、可追溯的 one-body density matrix；当前 AFH-7 的七同位素响应网格和 84 点谱已完成，取得这两种同位素的矩阵后才可将 Hybrid-9 fallback 替换为真正的 AFH-9；
-3. 不再重复 Xe-131 原生 Mathematica 2401 点计算；将工作转向七同位素 AFH 连续响应输入与完整 \(I_6\) 连续反冲网格收敛；
+3. 不再重复 Xe-131 原生 Mathematica 2401 点 response-level 计算；优先完成完整 Eq. (6) pole-width \(I_6\) 与 \(d\\sigma_A/dE_R\) 的 Mathematica–Python 端到端对照，并检查 factor 4 从核响应到最终截面的传递；同时将 GCN/JJ55 重算为与 AFH-7 匹配的 threshold-\(u^2\) 求积方案；
 4. 只有在以上输入和模型约定固定后，才推进 LZ 二维 NEST/background/profile-likelihood recast。
 
