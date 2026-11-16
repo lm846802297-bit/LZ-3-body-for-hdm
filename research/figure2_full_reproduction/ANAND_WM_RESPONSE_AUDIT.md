@@ -24,7 +24,7 @@ This fixes the interpretation: the Figure 2 calculation uses the **isoscalar coh
 
 In the Anand formalism, (W_X^{\tau\tau'}(y)) are nuclear response functions, while (R_X^{\tau\tau'}) denote dark-matter response functions built from the non-relativistic operator coefficients.
 
-The manuscript's (mathcal R_A(E_R)) is its own shorthand for the normalized nuclear factor
+The manuscript's \(\mathcal R_A(E_R)\) is its own shorthand for the normalized nuclear factor
 \[
 \mathcal R_A(E_R)=\frac{4\pi}{2J_A+1}W_M^{00}(y),
 \]
@@ -109,7 +109,7 @@ This selects both the AFH default Xe-131 density matrix and the AFH default
 oscillator prescription. The resulting length is
 \[
 b_{131}=2.2923417985218975\ \mathrm{fm}.
-]
+\]
 
 
 ### 7.1 AFH isoscalar normalization
