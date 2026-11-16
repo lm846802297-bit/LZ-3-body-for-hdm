@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Independent Python recomputation and pointwise comparison of Mathematica Eq. (6) output."""
 from __future__ import annotations
-import argparse, json, math, sys
+import argparse, json, math, platform, sys
+import scipy
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -191,6 +192,12 @@ def main() -> None:
               and maxima["pchi"] <= 2e-12 and maxima["mediator_denominator"] <= 2e-12)
     metadata = {
         "status": "PASS" if passed else "FAIL", "rows": len(result),
+        "python_environment": {
+            "python_version": platform.python_version(),
+            "numpy_version": np.__version__,
+            "pandas_version": pd.__version__,
+            "scipy_version": scipy.__version__,
+        },
         "open_phase_space_rows": open_count, "max_relative_differences": maxima,
         "tolerances": {
             "I6_and_dsigma": args.rtol,
