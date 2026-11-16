@@ -37,6 +37,13 @@ Path: `research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full
 - Maximum baseline-to-final spectrum difference (6.46772\times10^{-6}), below (10^{-5}).
 - The full 1,344-row high-order output is a 736,245-byte external ZIP with SHA-256 `e55442d3ad4289dfd6c16e8e6cdb43d669561df074beddefcf87e8d1024f3471`. The ZIP contents are not committed; only the audit report, metadata and summary CSVs are included in this manifest.
 
+### 4. Python-only full Xe-131 Eq. (6) and AFH factor-four audit
+
+- Workflow [run 43591097068](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43591097068) completed successfully; artifact [14112736343](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43591097068) is retained.
+- The v=800 km/s fixed-speed Xe-131 calculation covers 652 rows (500 open, 152 closed) and 16 high-order anchors. Maximum I6 relative difference: 1.66367e-11; AFH factor-four mapping residual: 3.55679e-16; physical/no-factor-four ratio residual: 0.
+- This is a Python-only full Eq. (6) and factor-four PASS_WITH_NOTES under the conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions. It is not a natural-xenon halo fold.
+- The independent native Wolfram 652-row execution and pointwise Mathematica/Python full-cross-section comparison remain pending. The 2,401-node Xe-131 response-level PASS does not substitute for that cross-code gate.
+
 ## Numerical comparison caveat
 
 The GCN/JJ55 84-point spectra currently use the legacy linear-(W^2), (8×8×4) kernel; their (16×16×8) spot-check reaches (2.18895×10^{-4}) maximum kernel-order difference across the four benchmark metadata files. The AFH-7/Hybrid-9 spectra use threshold-(u^2). At the production 24-speed-node setting, the final internal-kernel increment is (5.96430×10^{-10}); the separate 12-speed-node comparison is (6.02323×10^{-10}). The cross-model comparison is therefore not yet a matched-precision comparison. GCN/JJ55 should be recomputed with threshold-(u^2) before final precision claims, especially for the 0.66–1.16% Hybrid-9 shifts.
@@ -47,7 +54,7 @@ The historical selected-point AFH rates are retained and reproducible, but their
 
 - AFH-7 is not AFH-9: Xe-124 and Xe-126 lack AFH v6.0 default-density matrices.
 - Hybrid-9 is AFH-7 plus a Helm fallback for those two isotopes; it is a labelled diagnostic.
-- The native Mathematica Xe-131 response-level comparison does not complete the full Mathematica–Python (d\sigma_A/dE_R) comparison.
+- The native Mathematica Xe-131 response-level comparison is distinct from the Python-only full Eq. (6) result above; neither by itself closes the native-Wolfram/Python full-cross-section cross-code gate.
 - The LZ NEST response archive remains an intermediate detector-response diagnostic, not an official waveform-level selected PDF, profile likelihood or 90% CL exclusion.
 
 ## Historical index
