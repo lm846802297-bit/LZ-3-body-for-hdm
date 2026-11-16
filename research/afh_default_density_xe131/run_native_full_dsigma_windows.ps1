@@ -5,7 +5,7 @@ param(
     [int]$NZ = 16,
     [int]$NPhi = 8,
     [double]$RelativeTolerance = 2e-7,
-    [double]$ResponseTolerance = 2e-8,
+    [double]$ResponseTolerance = 2e-10,
     [string]$Benchmark = "all",
     [string]$ERListKeV = "",
     [bool]$RequireFullGrid = $true
@@ -29,7 +29,6 @@ if ($RequireFullGrid -and $Benchmark -ne "all") {
 $studyDir = $PSScriptRoot
 $wolframFile = Join-Path $studyDir "run_afh_eq6_full_dsigma.wls"
 $pythonComparator = Join-Path $studyDir "compare_full_dsigma_mathematica.py"
-$pythonAfhTable = Join-Path $studyDir "output\afh_default_xe131_WM00.csv"
 $nativeAfhTable = Join-Path $studyDir "output\native_exports\afh_default_xe131_WM00_mathematica.csv"
 $eq6Kernel = Join-Path $studyDir "..\figure2_full_reproduction\eq6_kernel.py"
 $phaseSpace = Join-Path $studyDir "..\figure2_full_reproduction\phase_space_convergence.py"
@@ -40,7 +39,6 @@ $nativeAfhManifest = Join-Path $studyDir "output\native_audit\afh_native_audit_m
 
 if (-not (Test-Path $wolframFile)) { throw "Missing Wolfram script: $wolframFile" }
 if (-not (Test-Path $pythonComparator)) { throw "Missing Python comparator: $pythonComparator" }
-if (-not (Test-Path $pythonAfhTable)) { throw "Missing Python AFH response table: $pythonAfhTable" }
 if (-not (Test-Path $nativeAfhTable)) { throw "Missing native Mathematica AFH response table: $nativeAfhTable" }
 foreach ($requiredFile in @($eq6Kernel, $phaseSpace, $requirements, $nativeAfhGenerator, $nativeAfhComparator, $nativeAfhManifest)) {
     if (-not (Test-Path -LiteralPath $requiredFile)) { throw "Missing provenance/source file: $requiredFile" }
@@ -63,10 +61,11 @@ $mathematicaCsv = Join-Path $OutputDirectory "mathematica_full_dsigma_xe131.csv"
 $mathematicaMetadata = Join-Path $OutputDirectory "mathematica_full_dsigma_xe131_metadata.json"
 $comparisonCsv = Join-Path $OutputDirectory "mathematica_python_full_dsigma_comparison.csv"
 $comparisonMetadata = Join-Path $OutputDirectory "mathematica_python_full_dsigma_comparison.json"
+Remove-Item -LiteralPath $mathematicaCsv, $mathematicaMetadata -Force -ErrorAction SilentlyContinue
 
 Write-Host "Running native Wolfram Language Eq. (6) integration..."
 $wolframArgs = @(
-    "-file", $wolframFile,
+    "-script", "run_afh_eq6_full_dsigma.wls",
     "--nw", "$NW",
     "--nz", "$NZ",
     "--nphi", "$NPhi",
@@ -82,9 +81,17 @@ $wolframArgs = @(
 if (-not [string]::IsNullOrWhiteSpace($ERListKeV)) {
     $wolframArgs += @("--er-list-kev", $ERListKeV)
 }
-& $wolfram.Source @wolframArgs
-if ($LASTEXITCODE -ne 0) {
-    throw "Native Wolfram calculation failed with exit code $LASTEXITCODE."
+$previousLocation = Get-Location
+try {
+    Set-Location -LiteralPath $studyDir
+    & $wolfram.Source @wolframArgs
+    $wolframExitCode = $LASTEXITCODE
+}
+finally {
+    Set-Location -LiteralPath $previousLocation
+}
+if ($wolframExitCode -ne 0) {
+    throw "Native Wolfram calculation failed with exit code $wolframExitCode."
 }
 if (-not (Test-Path $mathematicaCsv) -or -not (Test-Path $mathematicaMetadata)) {
     throw "Wolfram returned success but its CSV/metadata outputs are missing."
@@ -92,9 +99,9 @@ if (-not (Test-Path $mathematicaCsv) -or -not (Test-Path $mathematicaMetadata)) 
 
 Write-Host "Comparing Mathematica against the independent Python recomputation..."
 $compareArgs = @(
-    $pythonComparator,
+    "compare_full_dsigma_mathematica.py",
     "--mathematica-csv", $mathematicaCsv,
-    "--afh-response-csv", $pythonAfhTable,
+    "--afh-response-csv", "output\native_exports\afh_default_xe131_WM00_mathematica.csv",
     "--out-csv", $comparisonCsv,
     "--metadata", $comparisonMetadata,
     "--rtol", "$RelativeTolerance",
@@ -103,9 +110,17 @@ $compareArgs = @(
 if ($RequireFullGrid) {
     $compareArgs += "--require-full-grid"
 }
-& $python.Source @compareArgs
-if ($LASTEXITCODE -ne 0) {
-    throw "Mathematica/Python pointwise comparison failed with exit code $LASTEXITCODE."
+$previousLocation = Get-Location
+try {
+    Set-Location -LiteralPath $studyDir
+    & $python.Source @compareArgs
+    $pythonExitCode = $LASTEXITCODE
+}
+finally {
+    Set-Location -LiteralPath $previousLocation
+}
+if ($pythonExitCode -ne 0) {
+    throw "Mathematica/Python pointwise comparison failed with exit code $pythonExitCode."
 }
 
 $comparison = Get-Content -Raw -Path $comparisonMetadata | ConvertFrom-Json
@@ -132,7 +147,7 @@ if ($RequireFullGrid -and (-not [bool]$comparison.full_grid_required -or [int]$c
 $filesToHash = @(
     $wolframFile, $pythonComparator, $PSCommandPath, $eq6Kernel, $phaseSpace,
     $nativeAfhGenerator, $nativeAfhComparator, $nativeAfhManifest,
-    $requirements, $pythonAfhTable, $nativeAfhTable,
+    $requirements, $nativeAfhTable,
     $mathematicaCsv, $mathematicaMetadata, $comparisonCsv, $comparisonMetadata
 )
 $hashEntries = @()

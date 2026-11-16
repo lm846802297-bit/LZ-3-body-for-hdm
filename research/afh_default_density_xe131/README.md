@@ -346,14 +346,14 @@ Separately, the Python-only v=800 km/s fixed-speed Xe-131 full Eq. (6) calculati
 The Python-only calculation is an end-to-end factor-four PASS within the Python implementation under the conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions. It is not a natural-xenon halo fold.
 
 The native Wolfram runner `run_afh_eq6_full_dsigma.wls` reads the already archived AFH-native 2,401-node response table and independently recomputes \(I_6\). The Python comparator `compare_full_dsigma_mathematica.py` independently recomputes \(I_6\) and compares the AFH response, full \(d\sigma_A/dE_R\), no-factor-four control, momentum, mediator denominator and unit conversion.
-The completed full-grid output is archived in `output/full_dsigma_mathematica/`: 652 rows (500 open, 152 closed), Wolfram 14.2.0, four benchmarks, fixed 800 km/s, `threshold_u2`, pole width and 16×16×8 quadrature. The comparison JSON reports PASS after separating the cross-code converted-rate comparison from each implementation's own unit-conversion identity. The native Mathematica conversion residual is 4.44e-16; Python is 0; the cross-code converted-dσ difference is 2.58e-9 and is below the 2e-7 dσ tolerance.
+The completed full-grid output is archived in `output/full_dsigma_mathematica/`: 652 rows (500 open, 152 closed), Wolfram 14.2.0, four benchmarks, fixed 800 km/s, `threshold_u2`, pole width and 16×16×8 quadrature. Both implementations use the same fixed native AFH response input. The comparison JSON reports PASS: maximum I6, dσ and converted cross-section differences are (1.34\times10^{-12}); AFH interpolation is (3.36\times10^{-16}); Mathematica/Python unit-conversion identity residuals are (3.35\times10^{-16})/0; and the factor-four ratio residual is 0.
 
-On Windows, use `run_native_full_dsigma_windows.ps1` from the repository root after installing the requirements and ensuring `wolframscript` is on `PATH`. The wrapper checks the native and Python AFH inputs, the fixed 800 km/s / pole-width / threshold-\(u^2\) assumptions and quadrature metadata; it then runs the native integrator and Python comparator. After PASS it writes the native and comparison CSV/JSON files, `full_dsigma_sha256_manifest.json`, and `SHA256SUMS.txt`, including source/input hashes, the exact benchmark/recoil grid, and Wolfram/Python runtime versions.
+On Windows, use `run_native_full_dsigma_windows.ps1` from the repository root after installing the requirements and ensuring `wolframscript` is on `PATH`. Mathematica and the independent Python integrator both use the same fixed native AFH response input; the source-translated Python AFH response remains a separate 2401-node audit. The wrapper checks the fixed 800 km/s / pole-width / threshold-\(u^2\) assumptions and quadrature metadata; it then runs the native integrator and Python comparator. After PASS it writes the native and comparison CSV/JSON files, `full_dsigma_sha256_manifest.json`, and `SHA256SUMS.txt`, including source/input hashes, the exact benchmark/recoil grid, and Wolfram/Python runtime versions.
 The wrapper's full provenance manifest is generated in its selected run-local output directory. The committed `output/full_dsigma_mathematica/SHA256SUMS.txt` is the compact archive checksum for the four committed CSV/JSON result files; CI verifies those committed hashes independently.
 
 High-order anchors are a separate quadrature-convergence check. For a focused comparison, use a distinct output directory, one benchmark, 48x40x24, and `-RequireFullGrid $false`; the wrapper still compares every row in that subset. Do not infer quadrature convergence from cross-code agreement at one order.
 
-**Current result:** the native Wolfram 652-row run and independent pointwise Mathematica/Python full-cross-section comparison are archived and report PASS_WITH_NOTES. The comparison uses 2e-7 for I6, dσ and the converted cross-code dσ; 2e-8 for AFH PCHIP response; and 2e-12 for q, C0, each code's own unit-conversion identity, factor-four identities, incoming momentum and mediator denominator. The cross-code converted-dσ difference (2.58e-9) is an observable comparison, not a standalone conversion-identity residual. See `output/full_dsigma_mathematica/` and the audit review. The fixed-speed result does not establish a natural-xenon halo fold or LZ likelihood.
+**Current result: PASS for the P1-MMA cross-code gate.** The full 652-row comparison and 48x40x24 anchors at 200, 300, and 500 keV pass. Tolerances are 2e-7 for I6/dσ and converted cross-code dσ, 2e-10 for AFH interpolation using the shared fixed native table, and 2e-12 for per-code conversion identities, factor-four relations, and kinematic identities. The high-order anchors differ from the 16x16x8 values at those same energies by at most (6.70\times10^{-12}). The broader result remains fixed-speed Xe-131 under conditional width assumptions; it does not establish a natural-xenon halo fold or LZ likelihood.
 
 
 ## Python-first full differential-cross-section stage (2026-11-14)
@@ -379,12 +379,11 @@ section.
 The machine-readable normalization and numerical boundaries are documented
 in audit/PYTHON_FULL_DSIGMA_FACTOR4_AUDIT.md. GitHub Actions runs the
 Python-only full-grid calculation and uploads its CSV/metadata/anchor archive.
-The Python-only full-grid calculation described above has completed. The subsequent native Wolfram 14.2.0 full-grid execution and independent Python pointwise comparison also completed on 2026-11-16; see `output/full_dsigma_mathematica/` and `output/MATHEMATICA_PYTHON_FULL_DSIGMA_CROSSCHECK_REVIEW.md`. The comparator JSON reports `PASS`; the overall scientific classification is `PASS_WITH_NOTES` because the result remains fixed-speed Xe-131 under the stated conditional width assumptions.
+The Python-only full-grid calculation described above and the subsequent native Wolfram 14.2.0 full-grid execution with independent Python pointwise comparison both completed on 2026-11-16. The strict shared-input comparator and separate high-order anchor comparison report `PASS`; see `output/full_dsigma_mathematica/` and `output/MATHEMATICA_PYTHON_FULL_DSIGMA_CROSSCHECK_REVIEW.md`. The result remains fixed-speed Xe-131 under the stated conditional width assumptions.
 
-The native Wolfram runner now reads the already archived AFH-native response
-from output/native_exports/afh_default_xe131_WM00_mathematica.csv; the
-Python comparator defaults to the independent source-translated response
-table at output/afh_default_xe131_WM00.csv.
+The native Wolfram runner and Python comparator both read the archived native
+response from output/native_exports/afh_default_xe131_WM00_mathematica.csv.
+The independent source-translated AFH table is checked separately.
 
 
 ## Native Mathematica vs Python full-cross-section comparison
@@ -399,17 +398,21 @@ powershell -ExecutionPolicy Bypass -File research/afh_default_density_xe131/run_
 ~~~
 
 This requires Mathematica or Wolfram Engine with wolframscript available on
-PATH. The wrapper checks both archived native and Python AFH response tables, validates the fixed 800 km/s / pole-width / threshold-\(u^2\) assumptions and quadrature metadata, runs the Wolfram I6 integration, and invokes the independent Python comparator. It requires the complete 652-row grid and checks the incoming dark-matter momentum, mediator denominator, I6, nuclear response, physical/no-factor-four rates, and unit conversion.
+PATH. The wrapper uses the same archived native AFH response table in both
+implementations, validates the fixed 800 km/s / pole-width / threshold-\(u^2\)
+assumptions and quadrature metadata, runs the Wolfram I6 integration, and
+invokes the independent Python comparator. It requires the complete 652-row
+grid and checks kinematics, I6, nuclear response, physical/no-factor-four
+rates, and each implementation's unit-conversion identity.
 The default output is written under the system temporary directory, not into
 the source tree.
 
 The Wolfram and Python default recoil grids now both contain the regular
 5--800 keV grid plus the explicit 101, 200, 267 and 542 keV anchors. The
-comparison uses a 2e-7 tolerance for I6 and d sigma/dER. For the independently
-translated AFH response table, it uses 2e-8, consistent with the already
-archived 2401-node Mathematica/Python AFH response comparison (maximum
-relative difference 3.59e-9). The factor-four mapping, q, C0, and unit
-conversion checks retain their tighter 2e-12 tolerance.
+comparison uses 2e-7 for I6, d sigma/dER and the converted cross-code rate;
+2e-10 for PCHIP interpolation from the shared native AFH table; and 2e-12 for
+each code's unit-conversion identity, factor-four mapping, q and C0. The
+independent source-translated AFH comparison retains its separate 2e-8 tolerance.
 
 A successful run writes:
 - mathematica_full_dsigma_xe131.csv and its metadata;
@@ -424,9 +427,11 @@ disable the full-grid requirement:
 powershell -ExecutionPolicy Bypass -File research/afh_default_density_xe131/run_native_full_dsigma_windows.ps1 -OutputDirectory "$env:TEMP\lz-xe131-highorder" -Benchmark "green_ms300_dm1" -ERListKeV "200,300,500" -NW 48 -NZ 40 -NPhi 24 -RequireFullGrid $false
 ~~~
 
-This is a subset comparison, not the 652-row full-grid acceptance. The WLS
-runner also inserts the explicit 101, 200, 267 and 542 keV anchors; 200 keV
-is already on the regular 5-keV grid.
+This is a subset comparison, separate from the 652-row full-grid acceptance.
+An explicit recoil list is used exactly, without inserting standard grid
+anchors. The 200, 300, and 500 keV 48x40x24 run and pointwise Python comparison
+both report PASS; the largest change from 16x16x8 at those same energies is
+\(6.70\times10^{-12}\) in I6 and the cross section.
 **Acceptance status (2026-11-16):** the native Mathematica/Python full-cross-section gate is complete. The committed comparator JSON reports `PASS`, and the scientific result is classified `PASS_WITH_NOTES` because the width prescription and fixed-speed Xe-131 scope remain conditional. The CSV, metadata, row-level comparison and SHA-256 archive have been reviewed.
 
 

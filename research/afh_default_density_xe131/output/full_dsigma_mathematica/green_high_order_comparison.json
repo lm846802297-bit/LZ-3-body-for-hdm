@@ -1,0 +1,51 @@
+{
+  "status": "PASS",
+  "rows": 3,
+  "benchmarks": [
+    "green_ms300_dm1"
+  ],
+  "recoil_energies_keV": [
+    200.0,
+    300.0,
+    500.0
+  ],
+  "python_environment": {
+    "python_version": "3.14.7",
+    "numpy_version": "2.5.4",
+    "pandas_version": "3.1.1",
+    "scipy_version": "1.18.1"
+  },
+  "open_phase_space_rows": 3,
+  "max_relative_differences": {
+    "I6": 1.0314480950186254e-12,
+    "dsigma": 1.03138412273981e-12,
+    "dsigma_no4": 1.03138412273981e-12,
+    "dsigma_conversion": 1.031428206769638e-12,
+    "dsigma_conversion_identity_Mathematica": 2.2129179471579313e-16,
+    "dsigma_conversion_identity_Python": 0.0,
+    "R_A_physical": 1.8566243046164224e-16,
+    "R_A_package": 0.0,
+    "factor4_mapping": 0.0,
+    "factor4_ratio": 0.0,
+    "C0": 0.0,
+    "q": 0.0,
+    "pchi": 0.0,
+    "mediator_denominator": 0.0
+  },
+  "tolerances": {
+    "I6_dsigma_and_cross_code_converted_dsigma": 2e-07,
+    "PCHIP_response": 2e-10,
+    "response_tolerance_rationale": "Both implementations interpolate the same fixed native Mathematica AFH response table; source-translation differences are audited separately.",
+    "q_C0_per_code_unit_conversion_identities_factor4_pchi_and_mediator_denominator": 2e-12,
+    "unit_conversion_factor_GeVminus3_to_cm2_per_keV": 3.893793721e-34
+  },
+  "full_grid_required": false,
+  "W2_mappings": [
+    "threshold_u2"
+  ],
+  "factor4_convention": "R_A_phys=4*C0*R_A_AFH_package; per-nucleon gVN remains in Eq. (6) prefactor",
+  "width_assumption": "conditional Dirac, real scalar, pure scalar g2, chi2 -> chi1 s only",
+  "comparison_csv": "green_high_order_comparison.csv",
+  "mathematica_csv": "green_high_order.csv",
+  "path_convention": "Repository paths are repository-relative; paths outside the repository are stored as portable basenames."
+}
