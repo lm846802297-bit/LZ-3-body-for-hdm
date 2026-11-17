@@ -60,12 +60,12 @@ def zero_momentum_rows(grids: dict[int, list[dict[str, str]]]) -> list[dict]:
         physical = float(row["R_equal_pn_normalized"])
         result.append({
             "A": A, "isotope": f"Xe-{A}", "J_A": float(row["J_A"]),
-            "raw_AFH_R0": f"{raw:.15g}",
-            "expected_A2_over_4": f"{expected:.15g}",
-            "raw_relative_error": f"{raw / expected - 1.0:.12g}",
-            "raw_error_ppm": f"{(raw / expected - 1.0) * 1e6:.8f}",
-            "physical_R0": f"{physical:.15g}", "expected_A2": A * A,
-            "physical_relative_error": f"{physical / (A * A) - 1.0:.12g}",
+            "raw_AFH_R0": raw,
+            "expected_A2_over_4": expected,
+            "raw_relative_error": raw / expected - 1.0,
+            "raw_error_ppm": (raw / expected - 1.0) * 1e6,
+            "physical_R0": physical, "expected_A2": A * A,
+            "physical_relative_error": physical / (A * A) - 1.0,
         })
     return result
 
@@ -92,9 +92,9 @@ def multipole_reconstruction_rows(
             max_abs = max(max_abs, absolute)
         result.append({
             "A": isotope, "points": len(rows),
-            "max_relative_reconstruction_residual": f"{max_rel:.12g}",
-            "max_absolute_reconstruction_residual": f"{max_abs:.12g}",
-            "q_at_max_relative_residual_GeV": f"{max_q:.8g}",
+            "max_relative_reconstruction_residual": max_rel,
+            "max_absolute_reconstruction_residual": max_abs,
+            "q_at_max_relative_residual_GeV": max_q,
             "status": "PASS" if max_rel < 1e-12 else "FAIL",
         })
     return result
@@ -138,7 +138,7 @@ def xe131_rank2_rows(grids: dict[int, list[dict[str, str]]]) -> list[dict]:
         result.append({
             "q_GeV": row["q_GeV"], "ER_keV": row["ER_keV"],
             "F2_total": row["R_over_A2"],
-            "rank2_fraction_of_M_response": f"{fraction:.12g}",
+            "rank2_fraction_of_M_response": fraction,
         })
     return result
 
@@ -164,17 +164,17 @@ def selected_shape_rows() -> list[dict]:
         ) / denom
         out = {
             "ER_keV": energy,
-            "AFH7_A2_weighted_F2": f"{weighted:.12g}",
-            "Xe131_F2": f"{xe131:.12g}",
-            "AFH7_vs_Xe131_relative_difference": f"{weighted / xe131 - 1.0:.12g}",
+            "AFH7_A2_weighted_F2": weighted,
+            "Xe131_F2": xe131,
+            "AFH7_vs_Xe131_relative_difference": weighted / xe131 - 1.0,
             "minimum_isotope": f"Xe-{minimum_A}",
-            "minimum_F2": f"{values[minimum_A]:.12g}",
+            "minimum_F2": values[minimum_A],
             "maximum_isotope": f"Xe-{maximum_A}",
-            "maximum_F2": f"{values[maximum_A]:.12g}",
-            "max_over_min_minus_one": f"{values[maximum_A] / values[minimum_A] - 1.0:.12g}",
+            "maximum_F2": values[maximum_A],
+            "max_over_min_minus_one": values[maximum_A] / values[minimum_A] - 1.0,
         }
         for A in ISOTOPES:
-            out[f"Xe{A}_F2"] = f"{values[A]:.12g}"
+            out[f"Xe{A}_F2"] = values[A]
         result.append(out)
     return result
 
