@@ -1,5 +1,5 @@
 {
-  "status": "charge_sector_diagnostic_full_spatial_current_contraction_pending",
+  "status": "exploratory_unmatched_charge_projection_stress_test",
   "three_body_source": {
     "pr": 53,
     "branch": "research/vector-current-response-audit-20261118",
@@ -15,23 +15,18 @@
     "selected_points_sha256": "2b8e50f1ec4c291a0c4bd695ea5ed8504f53a51f21db192fce8a8ea2d4f0a7cf",
     "native_mathematica_phi_crosscheck": "PENDING"
   },
-  "multipole_matching": {
-    "equation": "M_C = F1*(1-eta/2)*M + F1*eta*PhiPP",
+  "trial_coefficient_map": {
+    "equation": "M_C/F1=(1-eta/2), PhiPP_C/F1=eta",
     "eta": "qA^2/(4*mN^2)*(1+2*F2/F1)",
-    "responses": {
-      "M": "ResponseNuclear[y,1,0,0]",
-      "PhiPP": "ResponseNuclear[y,4,0,0]",
-      "MPhiPP": "ResponseNuclear[y,7,0,0]"
-    },
-    "nucleon_mass_GeV": 0.939,
-    "target_mass_GeV": 122.02572741702,
-    "F2_over_F1_scenarios": [0.0, -0.14, -0.15, -0.17]
+    "status": "UNMATCHED_TRIAL_ANSATZ_NOT_A_PHYSICAL_THREE_BODY_COEFFICIENT"
   },
+  "F2_over_F1_scenarios": [0.0, -0.14, -0.15, -0.17],
   "scope_limitations": [
-    "Only the Coulomb/charge multipole T3^0 times (M,Phi'') is contracted.",
-    "Spatial T3^i terms and Sigma', Sigma'', Delta, and Phi-tilde-prime responses are not included.",
-    "Finite-t F2/F1 is not determined; nonzero values are sensitivity benchmarks.",
-    "The AFH Phi'' native Mathematica cross-check is still pending, so interference sign/normalization remain provisional.",
-    "No absolute cross section, halo integral, natural-xenon isotope sum, detector response, or likelihood is included."
+    "The charge-only projection is not the full T3^mu J_N_mu amplitude.",
+    "Spatial-current terms may modify or cancel the charge-piece spin-orbit contribution.",
+    "The reported R_charge values are sensitivity diagnostics, not physical rate corrections.",
+    "Finite-t F2/F1 is not determined.",
+    "The AFH Phi'' native Mathematica cross-check remains pending.",
+    "No physical AFH coefficients, absolute cross section, halo fold, isotope sum, detector response, or likelihood are claimed."
   ]
 }
