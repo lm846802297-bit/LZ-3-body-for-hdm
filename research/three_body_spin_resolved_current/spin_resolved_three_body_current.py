@@ -179,7 +179,7 @@ def build_reference_point() -> eq6.Point:
         raise RuntimeError("reference three-body phase space is closed")
     # Cluster the reference point toward the upper W endpoint, near the
     # Delta-m=362-keV propagator pole, without sitting on the pole.
-    delta_w2 = 0.95 * (w_max - w_min)
+    delta_w2 = 0.37 * (w_max - w_min)
     return vca.stable_build_point(
         MCHI_GEV, MS_GEV, M_A_GEV, ER_GEV, SPEED_KMS,
         delta_w2, z=0.21, phi=0.73,

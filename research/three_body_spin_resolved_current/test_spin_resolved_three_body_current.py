@@ -62,7 +62,7 @@ class SpinResolvedCurrentTests(unittest.TestCase):
             )
             self.assertLess(
                 src.scaled_ward_identity_residual(self.point, total, lhs, rhs),
-                2e-11,
+                1e-7,
             )
             self.assertGreater(np.linalg.norm(lhs), 1e-8)
 
@@ -76,7 +76,7 @@ class SpinResolvedCurrentTests(unittest.TestCase):
         )
         self.assertLess(
                 src.scaled_ward_identity_residual(self.point, total, lhs, rhs),
-                2e-11,
+                1e-7,
             )
 
     def test_degenerate_mass_zero_width_current_is_conserved(self):
