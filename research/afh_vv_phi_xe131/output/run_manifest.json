@@ -12,7 +12,7 @@
     "Cauchy_Schwarz_max": 0.9999998601592628,
     "Cauchy_Schwarz_max_q_GeV": 0.47075,
     "W_M_against_existing_AFH_grid": {
-      "max_relative_difference": 2.8418620300601274e-15,
+      "max_relative_difference": 6.692986881717466e-16,
       "points": 2401,
       "status": "PASS"
     },
@@ -66,7 +66,7 @@
   "outputs": {
     "afh_vv_phi_xe131_full_grid.csv": {
       "rows": 2401,
-      "sha256": "246cdc078f1b56cc730bd7b06693b8e0520a11092e577d74468efbe44fe0ab26"
+      "sha256": "3acbe52036ceee42500d1385263b7f45a70ac1e622c363358f1baf793798f28e"
     },
     "afh_vv_phi_xe131_selected_points.csv": {
       "rows": 4,
@@ -83,6 +83,6 @@
     "factor_4pi_over_2Jplus1": 3.141592653589793,
     "note": "Raw physical response is reported. The separate 1.00008253 mass-response q=0 shape correction is not imposed on Phi or M-Phi."
   },
-  "source_commit": "842b40039c8d67946e8572fa34d61c85ad914e9b",
+  "source_commit": "4065fd9f252d3fee56b5f2aba3414f24dc306801",
   "status": "Python_AFH_v6_translation_reproducible_native_Mathematica_crosscheck_pending"
 }
