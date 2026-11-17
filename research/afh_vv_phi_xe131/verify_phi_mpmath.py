@@ -113,6 +113,7 @@ def main():
         manifest.setdefault('checks',{})['mpmath_spot_check']={'status':'PASS','precision_digits':mp.mp.dps,'points':len(records),'max_relative_difference':maxrel}
         manifest.setdefault('outputs',{})[a.output.name]={'sha256':digest(a.output),'rows':len(records)}
         manifest.setdefault('code',{})['mpmath_verifier_sha256']=digest(Path(__file__))
+        manifest.setdefault('environment',{})['mpmath']=mp.__version__
         manifest_path.write_text(json.dumps(manifest,indent=2,sort_keys=True)+'\n',encoding='utf-8')
     print(json.dumps(result,indent=2))
 if __name__=='__main__': main()
