@@ -190,16 +190,24 @@ def run(outdir: Path) -> dict:
     convergence = []
     near_case = next(case for case in CASES if case["name"] == "near_pole_dm362_g2_1")
     for er_keV in (267.0, 274.5):
-        low = integrate(near_case, er_keV, "pole", (48, 12, 6))
-        high = integrate(near_case, er_keV, "pole", (80, 16, 8))
-        for key in ("I00", "Icharge", "Ifull"):
-            convergence.append({
-                "ER_keV": er_keV,
-                "observable": key,
-                "order_low": "48x12x6",
-                "order_high": "80x16x8",
-                "relative_difference": abs(high[key] / low[key] - 1.0),
-            })
+        for scheme in ("zero", "pole", "running"):
+            low = integrate(near_case, er_keV, scheme, (48, 12, 6))
+            high = integrate(near_case, er_keV, scheme, (80, 16, 8))
+            for key in ("I00", "Icharge", "Ifull"):
+                relative_difference = abs(high[key] / low[key] - 1.0)
+                convergence.append({
+                    "ER_keV": er_keV,
+                    "width_scheme": scheme,
+                    "observable": key,
+                    "order_low": "48x12x6",
+                    "order_high": "80x16x8",
+                    "relative_difference": relative_difference,
+                    "status": (
+                        "converged_at_1e-7"
+                        if relative_difference < 1.0e-7
+                        else "requires_higher_order"
+                    ),
+                })
 
     csv_path = outdir / "finite_width_recoil_spectrum.csv"
     conv_path = outdir / "near_pole_quadrature_convergence.csv"
