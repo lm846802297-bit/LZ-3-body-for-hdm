@@ -120,6 +120,13 @@ correlation extracted from the CSV is
 This is a response-matrix consistency result, not an independent nuclear
 model calculation.
 
+A separate Python source translation of AFH PhiPPJ, including its four
+summands and BesselElementMinus/Plus radial integrals, reproduces native
+Xe-131 W_M, W_PhiPP and signed W_MPhiPP at eight q anchors. The maximum
+relative differences are 2.96e-9, 1.04e-12 and 9.14e-11, respectively.
+This is a selected-anchor cross-check, not an independent 2,401-point
+full-grid recalculation, and it does not validate SigmaPrime or Delta.
+
 The raw zero-momentum normalization is
 \[
 R_M^{\rm raw}(0)=4289.895955714992,

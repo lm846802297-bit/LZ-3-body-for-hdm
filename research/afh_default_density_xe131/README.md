@@ -477,7 +477,11 @@ The raw AFH isoscalar responses are retained. The physical equal-p/n mapping
 \(R_X^{\rm phys}=4R_X^{\rm raw}\) is applied once to \(M\), \(\Phi''\), and
 \(M\Phi''\), with no extra q=0 shape renormalization. The dedicated Python
 validator reports PASS for response bookkeeping and provenance checks.
-This is a response-level archive only: it does not supply the three-body
+A separate Python translation of AFH PhiPPJ also reproduces native Xe-131
+M, PhiPP and signed M-PhiPP at eight selected q anchors, with maximum
+relative differences 2.96e-9, 1.04e-12 and 9.14e-11. This is not a
+2,401-point independent full-grid comparison. The archive is response-level
+only: it does not supply the three-body
 Wilson coefficients, finite-\(t_A\) nucleon form factors, or the full
 \(L_{\mu\nu}W_A^{\mu\nu}\) contraction.
 

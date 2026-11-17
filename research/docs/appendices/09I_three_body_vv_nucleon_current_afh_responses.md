@@ -353,6 +353,17 @@ research/afh_default_density_xe131/output/phi_response_native/。
 偏差为 \(8.25230\times10^{-5}\)。该 validator 检查响应 bookkeeping、
 正定性和 provenance，不是独立核结构计算或三体截面比较。
 
+另有一项独立的 Python 源码翻译对照：按 AFH v6.0 的
+\(\Phi''\) 定义（PhiPPJ 及其四个 summand）实现径向积分和角动量耦合，
+在八个 \(q_A\) 锚点上与 native Wolfram 的 \(W_M,W_{\Phi''},W_{M\Phi''}\)
+逐点比较。最大相对差异分别为
+\(2.96\times10^{-9}\)、\(1.04\times10^{-12}\) 和
+\(9.14\times10^{-11}\)。该对照还定位并修正了旧 Python spatial
+pre-audit 的因子 2 归一化错误；现有 Python 对角和干涉响应统一采用
+AFH 包约定的 \(1/4\) 多极振幅乘积。该结果只验证共享的 \(M/\Phi''\)
+径向和多极实现，不验证 \(\Sigma'\)、\(\Delta\) 的算符映射，也不是
+2,401 点全网格的独立 Python 复算。
+
 在四个采样到的 \(M\) 局部极小值处，raw response 为：
 
 | \(q_A\) [GeV] | \(R_M^{\rm raw}\) | \(R_{\Phi''}^{\rm raw}\) | \(R_{M\Phi''}^{\rm raw}\) | \(R_{\Phi''}/R_M\) |

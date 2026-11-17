@@ -21,7 +21,10 @@ The validator checks the grid, \(y=(q_Ab_A/2)^2\), response conversion,
 factor-four bookkeeping, diagonal positivity, imaginary residuals,
 Cauchy-Schwarz consistency, q=0 charge normalization, and CSV provenance.
 It does not independently recalculate the AFH matrix elements or contract
-the response with the full three-body tensor.
+the response with the full three-body tensor. A separate Python translation
+of PhiPPJ does reproduce native Xe-131 M, PhiPP and signed M-PhiPP at eight
+selected q anchors (maximum relative differences 2.96e-9, 1.04e-12 and
+9.14e-11); this does not constitute a full-grid or three-body contraction.
 
 See the detailed audit record
 (../../audit/AFH_PHI_RESPONSE_XE131_NATIVE_PLAN.md) for numerical findings
