@@ -108,7 +108,7 @@ def sigma_prime_element(y,Np,tjp,N,tj,L):
     return -math.sqrt(L)/qnorm(L)*mjl_sigma(L+1)+math.sqrt(L+1)/qnorm(L)*mjl_sigma(L-1)
 
 def delta_inner_element(y,Np,tjp,N,tj,L):
-    """Literal AFH DeltaPrime/MJLDivQ expression, before parity wrapper."""
+    """AFH MJLDivQ with lcap=L: Deltaop, the operator called by DeltaJ."""
     nrp,lp=orbital(Np,tjp); nr,l=orbital(N,tj); jp=tjp/2; j=tj/2
     def divq(lcap):
         if lcap < 0: return 0.0
@@ -118,10 +118,10 @@ def delta_inner_element(y,Np,tjp,N,tj,L):
         if l>0:
             s2=math.sqrt(l)*qnorm(l-1)*w6(lcap,1,L,l,lp,l-1)*w3(lp,lcap,l-1)*bessel_derivative(y,nrp,lp,nr,l,lcap,"plus")
         return overall*(s1+s2)
-    return -math.sqrt(L)/qnorm(L)*divq(L+1)+math.sqrt(L+1)/qnorm(L)*divq(L-1)
+    return divq(L)
 
 def delta_element(y,Np,tjp,N,tj,L):
-    # Exact source wrapper: DeltaJ uses PhysicalConditionsAbnormal.
+    # AFH DeltaJ calls Deltaop=MJLDivQ(..., jcap=L, lcap=L); DeltaPrime is distinct.
     if not abnormal_allowed(Np,tjp,N,tj,L): return 0.0
     return delta_inner_element(y,Np,tjp,N,tj,L)
 
@@ -157,12 +157,12 @@ def response(A,q,rows):
     wsd=sum(amp["SigmaPrime"][L]*amp["Delta"][L] for L in amp["SigmaPrime"])/4
     return wm,ws,wd,wsd,amp
 
-def parity_conflict():
-    # Delta's internal 3j requires l'+(J±1)+(l±1) even, i.e. l+l'+J even.
-    # Its PhysicalConditionsAbnormal wrapper instead requires l+l'+J odd.
-    return {"delta_wrapper_requires":"l+l'+J odd",
-            "delta_inner_3j_requires":"l+l'+J even",
-            "logical_conflict":True}
+def parity_audit():
+    # DeltaJ uses Deltaop with lcap=L; its 3j parity is consistent with abnormal parity.
+    return {"delta_wrapper_requires":"l+l'+L odd",
+            "deltaop_3j_requires":"l'+L+(l±1) even",
+            "logical_conflict":False,
+            "delta_prime_is_not_delta_j":True}
 
 def main():
     p=argparse.ArgumentParser()
@@ -186,7 +186,7 @@ def main():
           "isospin":"tau1=tau2=0 (AFH isoscalar package convention)",
           "responses":"W_M, W_SigmaPrime, W_Delta, W_SigmaPrimeDelta",
           "normalization":"same AFH package normalization as ResponseNuclear[y,i,0,0]; factor four for physical equal-p/n response is not applied here",
-          "delta_parity_audit":parity_conflict(),
+          "delta_operator_audit":parity_audit(),
           "limitations":["No native Wolfram cross-check has yet been run for SigmaPrime.",
           "AFH DeltaJ source wrapper and its internal 3j parity selection are mutually incompatible; literal Delta output is zero and must not be interpreted as a physical prediction.",
           "No finite-Q2 baryon-current Pauli form factors or three-body L_mu_nu W_A^mu_nu contraction are included.",
