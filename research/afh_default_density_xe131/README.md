@@ -492,3 +492,25 @@ ratio must not be interpreted as a 115.8-fold cross-section enhancement.
 See the native response audit
 (audit/AFH_PHI_RESPONSE_XE131_NATIVE_PLAN.md) and the output README
 (output/phi_response_native/README.md).
+
+## Xe-129/Xe-131 spatial responses: provisional Python grid
+
+The development translation can be evaluated on the common 2,401-point grid
+used by the native response work:
+
+\`\`\`bash
+python research/afh_default_density_xe131/run_afh_spatial_response_audit.py \\
+  --outdir /tmp/afh-spatial-full-grid --grid-points 2401 --q-min 0 --q-max 0.6
+
+python research/afh_default_density_xe131/validate_afh_spatial_python_grid.py \\
+  --csv /tmp/afh-spatial-full-grid/afh_spatial_response_full_grid.csv \\
+  --out-json /tmp/afh-spatial-full-grid/validation.json \\
+  --expected-points 2401 --q-min 0 --q-max 0.6
+\`\`\`
+
+The validator checks the q grid, finite values, diagonal positivity, and
+Cauchy–Schwarz bounds. A PASS is an internal Python consistency result only;
+the \(\Sigma'\), \(\Delta\), and \(\Sigma'\Delta\) translations still require
+pointwise comparison with native AFH Wolfram response indices 3, 6, and 8.
+See \`audit/AFH_SPATIAL_RESPONSE_FIRST_AUDIT.md\` for the provisional
+full-grid findings and the native-run status.
