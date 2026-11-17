@@ -2,20 +2,26 @@
 
 ## 1. Purpose and conclusion
 
-The purpose of this note is to establish whether the AFH Xe-131 spin-orbit
-response can be neglected at the momentum transfers where the existing
-coherent mass response has deep minima.
+The purpose of this note is to determine whether the Xe-131 AFH spin-orbit
+response changes the vector-charge part of the radiative three-body recoil
+spectrum near the deep \(W_M\) minima.
 
-The calculation finds that it cannot be excluded on nuclear-response grounds:
-\(W_{\Phi''}^{00}\) remains nonzero and is substantially larger than
-\(W_M^{00}\) near the second mass-response minimum. The mixed response
-\(W_{M\Phi''}^{00}\) is also nonzero.
+The AFH response audit establishes that \(W_{\Phi''}^{00}\) remains nonzero
+and can be much larger than \(W_M^{00}\) near the second mass-response
+minimum. The mixed response \(W_{M\Phi''}^{00}\) is also nonzero.
 
-The result is a **target-nucleus response audit**, not a prediction for the
-three-body rate. In particular, it does not prove that the present VV
-three-body amplitude couples to \(\Phi''\) with a coefficient large enough
-to alter the recoil spectrum. That question requires a separate reduction of
-the exact three-body current.
+The first charge-sector matching is now derived from the nonrelativistic
+Dirac--Pauli vector charge. In the explicitly labelled zero-momentum
+form-factor benchmark, the second \(W_M\) minimum receives a
+\(-1.839\%\) correction from adding \(\Phi''\), and a combined
+\(-2.991\%\) correction when the \(t_A/(8m_N^2)\) correction to the
+\(M\) coefficient is also included. These are local Xe-131 charge-sector
+benchmarks, not finite-\(t\) predictions or a complete natural-xenon rate.
+
+The exact three-body time current \(\mathcal T_3^0\) factors out of the
+relative \(M+\Phi''\) charge-sector ratio. The finite-\(t\) flavour
+form factors and spatial-current responses \(\Sigma'\), \(\Sigma''\), and
+\(\Delta\) remain to be completed.
 
 ## 2. Quark-to-nucleon vector-current matching
 
@@ -471,12 +477,19 @@ multi-nucleon effects vanish.
 
 1. N. Anand, A. L. Fitzpatrick, and W. C. Haxton, “Model-independent
    analytic response functions for dark matter direct detection,”
-   [arXiv:1308.6288](https://arxiv.org/abs/1308.6288).
-2. M. Hoferichter, P. Klos, and A. Schwenk, “Chiral power counting of one-
+   [arXiv:1308.6288](https://arxiv.org/abs/1308.6288), especially the
+   definition of \(\Phi''\) in Eq. (51).
+2. M. Hoferichter, J. Menéndez, and A. Schwenk, “Coherent elastic
+   neutrino-nucleus scattering: EFT analysis and nuclear responses,”
+   Phys. Rev. D 102, 074018 (2020),
+   [DOI: 10.1103/PhysRevD.102.074018](https://doi.org/10.1103/PhysRevD.102.074018),
+   especially Eqs. (6) and (41) and the discussion immediately following
+   Eq. (41).
+3. M. Hoferichter, P. Klos, and A. Schwenk, “Chiral power counting of one-
    and two-body currents in direct detection of dark matter,”
-   [arXiv:1503.04811](https://arxiv.org/abs/1503.04811), especially the
-   vector-current form factors and the NREFT matching discussion.
-3. R. J. Hill and M. P. Solon, “Standard Model anatomy of WIMP dark matter
+   [arXiv:1503.04811](https://arxiv.org/abs/1503.04811), for the
+   vector-current form factors and NREFT matching discussion.
+4. R. J. Hill and M. P. Solon, “Standard Model anatomy of WIMP dark matter
    direct detection. II. QCD analysis and hadronic matrix elements,”
-   [arXiv:1409.8290](https://arxiv.org/abs/1409.8290), especially the
-   flavour decomposition of vector Dirac and Pauli form factors.
+   [arXiv:1409.8290](https://arxiv.org/abs/1409.8290), for the flavour
+   decomposition of vector Dirac and Pauli form factors.
