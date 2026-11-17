@@ -139,3 +139,7 @@ near-pole convergence checks, and finite-width Ward diagnostics.
   natural-xenon event rate or detector-level LZ spectrum.
 - No absolute experimental normalization, detector response, efficiency,
   exposure, or likelihood is claimed.
+
+## Results
+
+See [results/2026-11-18/RESULTS.md](results/2026-11-18/RESULTS.md) for the finite-width Ward identity checks, recoil-kernel width comparison, near-pole quadrature convergence, and scope limits. The reproducibility bundle is archived as [finite_width_spin_current_recoil_spectrum.zip](results/2026-11-18/finite_width_spin_current_recoil_spectrum.zip).
