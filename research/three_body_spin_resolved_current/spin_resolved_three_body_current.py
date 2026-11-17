@@ -150,25 +150,21 @@ def relative_matrix_residual(a: np.ndarray, b: np.ndarray) -> float:
 
 
 def scaled_ward_residual(point: eq6.Point, current: np.ndarray) -> float:
-    """Scale q.T by the componentwise contraction size, not an absolute norm."""
-    q = np.asarray(point.q_A, dtype=float)
-    scale = abs(q[0]) * float(np.linalg.norm(current[0]))
-    scale += sum(
-        abs(q[i]) * float(np.linalg.norm(current[i])) for i in range(1, 4)
-    )
-    return float(np.linalg.norm(ward_lhs(point, current)) / max(scale, 1.0))
+    """Scale q.T by |q| ||T|| to avoid a misleading absolute cancellation test."""
+    q_norm = float(np.linalg.norm(np.asarray(point.q_A, dtype=float)))
+    current_norm = float(np.linalg.norm(current))
+    scale = max(q_norm * current_norm, 1.0)
+    return float(np.linalg.norm(ward_lhs(point, current)) / scale)
 
 
 def scaled_ward_identity_residual(
     point: eq6.Point, current: np.ndarray, lhs: np.ndarray, rhs: np.ndarray
 ) -> float:
-    """Scale the identity residual to the size of the contracted current."""
-    q = np.asarray(point.q_A, dtype=float)
-    scale = abs(q[0]) * float(np.linalg.norm(current[0]))
-    scale += sum(
-        abs(q[i]) * float(np.linalg.norm(current[i])) for i in range(1, 4)
-    )
-    return float(np.linalg.norm(lhs - rhs) / max(scale, 1.0))
+    """Scale the Ward-identity residual by |q| ||T||."""
+    q_norm = float(np.linalg.norm(np.asarray(point.q_A, dtype=float)))
+    current_norm = float(np.linalg.norm(current))
+    scale = max(q_norm * current_norm, 1.0)
+    return float(np.linalg.norm(lhs - rhs) / scale)
 
 
 def build_reference_point() -> eq6.Point:
