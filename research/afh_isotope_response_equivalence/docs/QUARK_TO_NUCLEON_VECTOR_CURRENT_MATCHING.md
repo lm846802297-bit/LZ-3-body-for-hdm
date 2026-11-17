@@ -1769,6 +1769,23 @@ PR #51 中的七同位素 AFH 电荷响应审计已经归档：
 
 ### 19.2 已完成与未完成项目的边界
 
+| 研究项目 | 状态 | 当前可以说什么 |
+|---|---|---|
+| AFH 七同位素 \(M\) 响应网格 | 已归档 | 七种同位素的电荷响应数据可复现 |
+| AFH factor-four 和零动量归一化 | 已归档 | 物理等核子耦合响应满足 \(A^2\) |
+| AFH 多极重构闭合 | 已归档 | 内部代数重构通过 |
+| Xe-131 rank-2 \(M\) 多极 | 已归档 | 它属于 \(M\) 电荷响应，不是 SD 或 \(\Phi''\) |
+| flavor-universal 零动量电荷 | 解析匹配 | \(g_p=g_n=3g_{Vq}\) |
+| flavor-universal \(F_1/F_2\) 有限 \(t\) | 未完成 | 需要固定输入和 flavor 权重 |
+| 三体 \(\Gamma_3^\mu\) 全能区收敛 | 未完成 | 历史代表性诊断不能代替全区收敛 |
+| 点核 ppm 结果独立复现 | 未完成 | 历史报告值待恢复原始输入和脚本 |
+| Xe-131 \(\Phi''\) 响应 | 未完成 | 优先数值工作 |
+| Xe-131 \(M\Phi''\) 干涉 | 未完成 | 与 \(\Phi''\) 同步计算 |
+| \(\Sigma'\)、\(\Sigma''\)、\(\Delta\) | 未完成 | 由完整流匹配决定 |
+| VV 两核子流 | 未完成/后续 | 由手征计数和精度预算决定 |
+| 完整三体 \(L_{\mu\nu}W_A^{\mu\nu}\) | 未完成 | 尚不能宣称完整核流已验证 |
+| 天然氙完整三体 halo-folded rate | 未完成 | 需在核流匹配完成后进行 |
+
 ### 19.3 已准备的 Xe-131 原生 \(\Phi''\) 与 \(M\Phi''\) 响应导出
 
 在本次 PR 的同一研究分支上，已经进一步准备了 Xe-131 的 AFH v6.0 原生响应导出流程。它调用官方 package 已有的响应接口，不自行重写角动量代数：
@@ -1825,24 +1842,6 @@ R_X^{\rm phys}=4R_X^{\rm raw}.
 
 **执行状态必须严格区分：** Wolfram 原生脚本已经准备，但尚未在 Windows/Wolfram 环境中执行；因此目前没有新的数值 \(W_{\Phi''}\) 或 \(W_{M\Phi''}\) 结果。也没有由这项导出得到完整三体截面或天然氙反冲谱。只有在原生运行完成、CSV 和 metadata 生成并通过 SHA-256 与 validator 验收后，才可以将这两个核响应标记为已计算。
 
-
-
-| 研究项目 | 状态 | 当前可以说什么 |
-|---|---|---|
-| AFH 七同位素 \(M\) 响应网格 | 已归档 | 七种同位素的电荷响应数据可复现 |
-| AFH factor-four 和零动量归一化 | 已归档 | 物理等核子耦合响应满足 \(A^2\) |
-| AFH 多极重构闭合 | 已归档 | 内部代数重构通过 |
-| Xe-131 rank-2 \(M\) 多极 | 已归档 | 它属于 \(M\) 电荷响应，不是 SD 或 \(\Phi''\) |
-| flavor-universal 零动量电荷 | 解析匹配 | \(g_p=g_n=3g_{Vq}\) |
-| flavor-universal \(F_1/F_2\) 有限 \(t\) | 未完成 | 需要固定输入和 flavor 权重 |
-| 三体 \(\Gamma_3^\mu\) 全能区收敛 | 未完成 | 历史代表性诊断不能代替全区收敛 |
-| 点核 ppm 结果独立复现 | 未完成 | 历史报告值待恢复原始输入和脚本 |
-| Xe-131 \(\Phi''\) 响应 | 未完成 | 优先数值工作 |
-| Xe-131 \(M\Phi''\) 干涉 | 未完成 | 与 \(\Phi''\) 同步计算 |
-| \(\Sigma'\)、\(\Sigma''\)、\(\Delta\) | 未完成 | 由完整流匹配决定 |
-| VV 两核子流 | 未完成/后续 | 由手征计数和精度预算决定 |
-| 完整三体 \(L_{\mu\nu}W_A^{\mu\nu}\) | 未完成 | 尚不能宣称完整核流已验证 |
-| 天然氙完整三体 halo-folded rate | 未完成 | 需在核流匹配完成后进行 |
 
 因此，当前可以继续使用 \(W_M^{00}\) 作为领先阶基准，但不能宣称完整 VV 核流已经由 \(W_M^{00}\) 穷尽，也不能宣称其他响应已经被数值证明可以忽略。
 
@@ -1906,13 +1905,13 @@ R_X^{\rm phys}=4R_X^{\rm raw}.
 后续研究应以完整三体暗物质流和实际夸克—核子 form factors 为起点，逐项推导核子算符，再用 AFH 核响应计算核矩阵元。只有完成这条链条，才能判断当前 \(W_M^{00}\) 近似的精度，以及它是否足以用于天然氙三体反冲谱。
 
 
-## 27. Explicit Dirac-Pauli reduction and why \(F_2^V(0)=0\) does not remove the subleading currents
+## 23. Explicit Dirac-Pauli reduction and the flavor-summed current coefficients
 
 This section fixes the nucleon momentum convention and makes the one-body
 current coefficients explicit. It is a free-nucleon Pauli reduction; the
 three-body dark-sector tensor is still to be contracted with these currents.
 
-### 27.1 Convention and exact covariant current
+### 23.1 Convention and exact covariant current
 
 For a nucleon struck by the nuclear momentum transfer, define
 
@@ -1968,7 +1967,7 @@ J_N^\mu
 This identity is useful because the Dirac and Pauli pieces can be reduced
 with the same external spinors and the same \(q_A\) convention.
 
-### 27.2 Pauli reduction through the first spin-orbit and spatial-current terms
+### 23.2 Pauli reduction through the first spin-orbit and spatial-current terms
 
 Write \(\mathbf K_N=(\mathbf p_N'+\mathbf p_N)/2\) and
 \(\mathbf q_A=\mathbf p_N'-\mathbf p_N\). To the order needed to identify
@@ -2067,47 +2066,54 @@ single-nucleon current, the nuclear matrix element, and the overall
 cross-section normalization. The AFH response functions themselves do not
 supply this relativistic spinor normalization.
 
-### 27.3 Consequence of the universal three-flavor limit
+### 23.3 Consequence of the flavor-universal three-flavor matching
 
-For the low-energy three-flavor benchmark with
-\(c_u=c_d=c_s=1\), the matching recorded above gives
+For the provisional low-energy three-flavor benchmark with
+\(c_u=c_d=c_s=1\), the explicit flavor-separated central values recorded in
+Section 10.4 give
 
 \[
-F_1^V(0)=
-F_1^{u,N}(0)+F_1^{d,N}(0)+F_1^{s,N}(0)=3,
+F_1^V(0)=3,\qquad F_2^V(0)=-0.552.
+\]
+
+The corresponding coefficients in the free-nucleon current reduction are
+
+\[
+F_1^V(0)+2F_2^V(0)=1.896,
 \]
 
 \[
-F_2^V(0)=
-F_2^{u,N}(0)+F_2^{d,N}(0)+F_2^{s,N}(0)=0.
+F_1^V(0)+F_2^V(0)=2.448.
 \]
 
-Consequently, at zero momentum transfer the coefficients of the four
-displayed structures are
+Thus the current benchmark does **not** use \(F_2^V(0)=0\) as its central
+input. The values are provisional central values from the explicit
+flavor-separated form factors; their uncertainties and the finite-\(t_A\)
+dependence must be carried into the production matching.
 
-| Current structure | Form-factor combination | Universal \(u,d,s\) value at \(t_A=0\) |
-|---|---|---:|
-| Leading charge | \(F_1^V\) | 3 |
-| Charge spin-orbit term | \(F_1^V+2F_2^V\) | 3 |
-| Convection current | \(F_1^V\) | 3 |
-| Magnetization current | \(F_1^V+F_2^V\) | 3 |
+| Current structure | Form-factor combination | Explicit 2017 flavor-separated central input | If a reconciled convention instead gives \(F_2^V(0)=0\) |
+|---|---|---:|---:|
+| Leading charge | \(F_1^V\) | 3 | 3 |
+| Charge spin-orbit term | \(F_1^V+2F_2^V\) | 1.896 | 3 |
+| Convection current | \(F_1^V\) | 3 | 3 |
+| Magnetization current | \(F_1^V+F_2^V\) | 2.448 | 3 |
 
-This is an important point: **the cancellation of the universal three-flavor
-Pauli constant \(F_2^V(0)\) does not remove either the charge spin-orbit term
-or the Dirac magnetization current.** Those structures also contain the
-Dirac form factor \(F_1^V\), which is nonzero and equals 3 at zero momentum
-transfer. What cancels is the anomalous Pauli contribution to the indicated
-combinations at \(t_A=0\), not the entire relativistic correction.
+The last column is shown only as a convention-comparison case, not as the
+current benchmark input. The compact 2015 HKS expression and the explicit
+2017 flavor-separated values must be reconciled at the level of their
+definitions before the final production coefficients are frozen. Until
+that audit is complete, the code should expose \(F_1^V(t_A)\) and
+\(F_2^V(t_A)\) as explicit inputs rather than hard-code either a vanishing
+or a constant Pauli term.
 
-At finite \(t_A\), the functions \(F_1^V(t_A)\) and \(F_2^V(t_A)\) must still
-be formed from the UV-weighted flavor sum. The zero-momentum charge and
-Pauli identities do not determine their slopes or higher-order shape
-dependence. If the original UV sum includes \(c,b,t\), their threshold
-matching and low-energy contributions must be treated separately; the
-three-flavor result must not be silently applied to an un-decoupled
-all-flavor current.
+A useful structural point survives either convention: even if a separately
+matched current happened to have \(F_2^V(0)=0\), the charge spin-orbit and
+magnetization coefficients in this Pauli reduction still contain the
+nonzero Dirac form factor \(F_1^V(0)=3\). A vanishing Pauli constant would
+remove only the Pauli contribution to those combinations; it would not
+remove the \(F_1\)-generated terms displayed in the free-nucleon current.
 
-### 27.4 Candidate AFH projections and their relation to the three-body tensor
+### 23.4 Candidate AFH projections and their relation to the three-body tensor
 
 The displayed operators identify the nuclear responses that need to be
 tested:
