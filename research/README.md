@@ -55,3 +55,5 @@ Keep the following quantities separate:
 ### Mathematica three-body natural-xenon calculation
 
 `three_body_natural_xenon/` contains the reorganized main Mathematica notebook, AFH v6 xenon response data, usage notes, and archived comparison tables. The main calculation is inline in the notebook and uses FeynCalc plus Mathematica `NIntegrate`. Optional FeynRules/FeynArts checks need those external packages and a local model-export environment; the notebook keeps their saved outputs, but the third-party packages are not bundled. The run record is explicitly marked historical because this reorganization did not rerun all calculations.
+
+- [three_body_spin_resolved_current/](three_body_spin_resolved_current/README.md): spin-resolved 2x2 three-body current, finite-width Ward identity, conserved-current projection, and fixed-speed recoil-kernel scan with zero/pole/running widths.
