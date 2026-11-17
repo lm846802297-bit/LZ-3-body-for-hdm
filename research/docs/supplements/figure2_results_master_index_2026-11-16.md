@@ -1,8 +1,9 @@
 # Figure 2 and natural-xenon results master index
 
-**Source integration:** PR #45 merged into `main` via merge commit `15eb3a24e5295868ca208166a94c078fbc1747a7` (201 research/audit commits preserved)  
-**Updated:** 2026-11-16  
-**Coverage:** 13 result groups; 92 file entries with SHA-256 and byte sizes.
+**Source integration:** PR #45 merged into `main` via merge commit `15eb3a24e5295868ca208166a94c078fbc1747a7` (201 research/audit commits preserved)
+**Follow-up:** PR #46, branch `docs/scientific-content-audit-20261116`, targeting `main`
+**Updated:** 2026-11-16 (native full-grid and higher-order comparisons synchronized)
+**Coverage:** 13 result groups; 98 file entries with SHA-256 and byte sizes.
 
 The [2026-11-13 index](figure2_results_master_index_2026-11-13.md) is retained as a historical snapshot. This index supersedes its statement that the full 16,807-row AFH seven-isotope response grid is checksum-only and not committed.
 
@@ -49,9 +50,10 @@ Path: `research/afh_default_density_xe131/output/full_dsigma_mathematica/`
 
 - Native Wolfram 14.2.0 run and independent Python recomputation: 652 rows, 4 benchmarks, 163 recoil energies per benchmark; 500 open and 152 closed phase-space points.
 - Fixed speed 800 km/s, pole-width scheme, threshold-\(u^2\) mapping, \(16\times16\times8\) quadrature; conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions.
-- Maximum relative differences: \(I_6=1.33872\times10^{-12}\), physical/no-factor-four \(d\sigma=2.57632\times10^{-9}\), AFH response \(2.57510\times10^{-9}\), factor-four mapping residual \(4.30300\times10^{-16}\).
-- Mathematica/Python unit-conversion identities are checked separately at \(2\times10^{-12}\); observed residuals are \(4.44\times10^{-16}\) and 0. The cross-code converted-\(d\sigma\) difference is \(2.57632\times10^{-9}\) and uses the same \(2\times10^{-7}\) observable tolerance as unconverted \(d\sigma\).
+- Maximum relative differences: \(I_6=1.33872\times10^{-12}\), physical/no-factor-four \(d\sigma=1.33872\times10^{-12}\), AFH response \(3.36051\times10^{-16}\), factor-four mapping residual \(4.30300\times10^{-16}\).
+- Mathematica/Python unit-conversion identities are checked separately at \(2\times10^{-12}\); observed residuals are \(3.35\times10^{-16}\) and 0. The cross-code converted-\(d\sigma\) difference is \(1.33872\times10^{-12}\) and uses the same \(2\times10^{-7}\) observable tolerance as unconverted \(d\sigma\).
 - Corrected comparison JSON reports **PASS**; row-level comparison CSV and SHA-256 checksums are committed. This is fixed-speed Xe-131, not a natural-xenon halo fold or LZ detector likelihood.
+- A separate higher-order Green benchmark at 200, 300 and 500 keV (48×40×24) reports PASS at all three open points. Maximum I6/dσ/converted-dσ cross-code differences are 1.04e-12 / 1.04e-12 / 1.04e-12; low-to-high-order change is at most 6.70e-12. CSV, metadata, comparison and checksums are archived in the same directory.
 
 ## Numerical comparison caveat
 

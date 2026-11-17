@@ -75,3 +75,17 @@ Two non-fatal metadata/package notices remain: REVTeX assumes no affiliation bec
 - No new amplitude, propagator, width, trace, nuclear response, cosmological collision term, or parameter scan has been validated by these manuscript edits. The AFH equation reflects the separate normalization audit; the AFH-7/Hybrid-9 fold tests validate only the rate-level efficiency integration and archive path, not a detector likelihood.
 - No figure data have been redrawn, rescaled, or relabeled.
 - No claim is made that the manuscript is submission-ready or that the model explains the LZ event.
+
+## Uploaded manuscript update — 2026-11-17
+
+The supplied `main.tex`, `ref.bib`, and nine figure PDFs were incorporated. The seven original figure PDFs remain byte-identical to their existing Git blobs; the two fixed-speed spectra are included with their original bytes. The uploaded bibliography style matches the compressed style already in the repository.
+
+The BibTeX invocation is normalized to `\\bibliography{ref}`, matching `ref.bib` and the `main_build` job name used by the build script.
+
+Two source issues found during intake have been corrected:
+- Added `PDG:2024kinematics` for the PDG 2024 Review of Particle Physics, Sec. 49 (“Kinematics”), with the official DOI and PDG page.
+- Renamed the overview equation's label to `eq:radiative-offshell-window-overview`. The later equation retains `eq:radiative-offshell-window`, which is the target of its existing cross-reference. Both displayed relations remain unchanged.
+
+Validation: a source scan found no duplicate equation labels and no citation keys missing from `ref.bib`. A standalone BibTeX run using the repository's `utphys28mod.bst` resolved the PDG citation and generated the bibliography. A full PDF build could not start in this environment because TeX Live has no `pdflatex.fmt` format file. Therefore the manuscript PDF build remains unverified here; no successful full build is claimed.
+
+The SHA-256 inventory below is refreshed for the edited `main.tex` and `ref.bib`; the seven retained and two new figure assets are unchanged from the submitted update.

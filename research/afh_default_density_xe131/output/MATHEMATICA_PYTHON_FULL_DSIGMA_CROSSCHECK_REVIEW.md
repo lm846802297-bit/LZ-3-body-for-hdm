@@ -102,10 +102,13 @@ C_0=\frac{A^2}{4R_{\rm package}(0)},\qquad
 R_A^{\rm phys}(q)=4C_0R_{\rm package}(q).
 \]
 The same shape-preserving PCHIP interpolation is used in Mathematica and
-SciPy. The archived 2401-node native AFH comparison has a maximum relative
-difference of \(3.59\times10^{-9}\); the response comparison therefore uses
-\(2\times10^{-8}\), not a tighter tolerance that would reject the already
-validated source translation.
+SciPy. The 2401-node native AFH response-level comparison is a separate validation
+gate, with a maximum relative difference of \(3.59\times10^{-9}\) against the
+source-translated Python table. For this full Eq. (6) code-to-code comparison,
+both implementations interpolate the same fixed native Mathematica response
+table; the measured PCHIP response difference is \(3.36051\times10^{-16}\),
+and its acceptance tolerance is \(2\times10^{-10}\). The source-translation
+comparison remains independently audited at \(2\times10^{-8}\).
 
 The full cross section is assembled as
 \[
@@ -129,13 +132,13 @@ The conversion from GeV\(^{-3}\) to cm\(^2\)/keV uses
 |---|---:|
 | \(I_6\), pointwise Mathematica/Python | \(2\times10^{-7}\) relative |
 | \(d\sigma_A/dE_R\), pointwise Mathematica/Python | \(2\times10^{-7}\) relative |
-| AFH PCHIP response | \(2\times10^{-8}\) relative |
+| AFH PCHIP response | \(2\times10^{-10}\) relative |
 | \(q\), \(C_0\), factor-four mapping/ratio, per-code unit-conversion identities and kinematic identities | \(2\times10^{-12}\) relative |
 | Full-grid output | exactly 652 rows |
 | Cross-code comparison of converted \(d\sigma_A/dE_R\) | \(2\times10^{-7}\) relative, same as the GeV\(^{-3}\) observable |
 | Native no-factor-four ratio on open points | \(d\sigma/d\sigma_{\rm no4}=4\) within \(8\times10^{-12}\) absolute |
 
-The Python comparator independently recomputes \(I_6\) at the quadrature order recorded in every Mathematica row. It then independently interpolates the Python AFH table and assembles both the physical and no-factor-four cross sections. The converted cross-section comparison is a second representation of the same physical observable, so it uses the same \(2\times10^{-7}\) cross-code tolerance as \(d\sigma_A/dE_R\). The conversion factor itself is tested separately within each implementation against \(0.3893793721\times10^{-33}\) at \(2\times10^{-12}\).
+The Python comparator independently recomputes \(I_6\) at the quadrature order recorded in every Mathematica row. Both implementations interpolate the same fixed native Mathematica AFH response table, then independently assemble the physical and no-factor-four cross sections. The converted cross-section comparison is a second representation of the same physical observable, so it uses the same \(2\times10^{-7}\) cross-code tolerance as \(d\sigma_A/dE_R\). The conversion factor itself is tested separately within each implementation against \(0.3893793721\times10^{-33}\) at \(2\times10^{-12}\).
 
 ## 6. Executed full-grid result — 2026-11-16
 
@@ -144,32 +147,33 @@ The native Wolfram 14.2.0 run completed all four benchmarks on the full 163-ener
 | Quantity | Maximum relative difference / residual | Acceptance |
 |---|---:|---:|
 | \(I_6\) | \(1.33872\times10^{-12}\) | \(2\times10^{-7}\) |
-| Physical \(d\sigma_A/dE_R\) | \(2.57632\times10^{-9}\) | \(2\times10^{-7}\) |
-| No-factor-four \(d\sigma_A/dE_R\) | \(2.57632\times10^{-9}\) | \(2\times10^{-7}\) |
-| AFH physical/package PCHIP response | \(2.57510\times10^{-9}\) | \(2\times10^{-8}\) |
+| Physical \(d\sigma_A/dE_R\) | \(1.33872\times10^{-12}\) | \(2\times10^{-7}\) |
+| No-factor-four \(d\sigma_A/dE_R\) | \(1.33872\times10^{-12}\) | \(2\times10^{-7}\) |
+| AFH physical/package PCHIP response | \(3.36051\times10^{-16}\) | \(2\times10^{-10}\) |
 | Factor-four mapping | \(4.30300\times10^{-16}\) | \(2\times10^{-12}\) |
 | Physical/no-factor-four ratio | 0 | \(2\times10^{-12}\) |
-| Mathematica unit-conversion identity | \(4.44089\times10^{-16}\) | \(2\times10^{-12}\) |
+| Mathematica unit-conversion identity | \(3.34766\times10^{-16}\) | \(2\times10^{-12}\) |
 | Python unit-conversion identity | 0 | \(2\times10^{-12}\) |
-| Cross-code converted \(d\sigma_A/dE_R\) | \(2.57632\times10^{-9}\) | \(2\times10^{-7}\) |
+l=>l.replace("1.33872","1.33857")
 
-The original comparator incorrectly treated the cross-code difference between the converted rates as a pure unit-conversion identity. That difference inherits the already-accepted AFH response translation difference. The corrected comparator now tests each code's own conversion identity independently at 2e-12, while comparing the converted physical observable across codes at the same 2e-7 tolerance as the unconverted observable. No physics tolerance was relaxed.
+The original comparator incorrectly treated the cross-code difference between the converted rates as a pure unit-conversion identity and used mismatched AFH response tables. The corrected comparator uses the same fixed native Mathematica response table in both implementations, tests each code's own conversion identity independently at 2e-12, and compares the converted physical observable across codes at the same 2e-7 tolerance as the unconverted observable. No physics tolerance was relaxed.
 
-The machine-readable result is `output/full_dsigma_mathematica/mathematica_python_full_dsigma_comparison.json` (status `PASS`); the row-level comparison and refreshed SHA-256 checksums are in the same directory. This is fixed-speed Xe-131 only and is conditional on the stated Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions. It is not a halo fold, natural-xenon sum or LZ likelihood.
+The machine-readable result is `output/full_dsigma_mathematica/mathematica_python_full_dsigma_comparison.json` (status `PASS`); the row-level comparison and refreshed SHA-256 checksums are in the same directory. A separate higher-order Green benchmark at 200, 300 and 500 keV (48×40×24) also reports PASS for all three open points; maximum I6, dσ and converted-dσ cross-code differences are 1.04e-12, 1.04e-12 and 1.04e-12, and the low-to-high-order change at those points is at most 6.70e-12. Its CSV, metadata, comparison and checksums are archived alongside the full-grid files. This is fixed-speed Xe-131 only and is conditional on the stated Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions. It is not a halo fold, natural-xenon sum or LZ likelihood.
 
 
 ## 7. Quick smoke test before the full grid
 
 The PowerShell wrapper now supports a reduced benchmark/recoil selection.
 From the study directory on Windows, this command checks one benchmark at
-the four explicit anchor energies; phase-space openness is evaluated from the 800 km/s kinematics for this benchmark:
+the single explicitly requested recoil energy, 200 keV; phase-space openness
+is evaluated from the 800 km/s kinematics for this benchmark:
 
 ~~~powershell
 .\run_native_full_dsigma_windows.ps1 -OutputDirectory "$env:TEMP\lz-xe131-smoke" -Benchmark "green_ms300_dm1" -ERListKeV "200" -NW 8 -NZ 8 -NPhi 4 -RequireFullGrid:$false
 ~~~
 
-The WLS script deliberately appends the four explicit anchor energies even
-when ERListKeV is supplied. This smoke test checks Wolfram syntax, output
+The explicit ERListKeV argument is an exact recoil-grid override: no regular
+grid points or standard anchor energies are appended. This smoke test checks Wolfram syntax, output
 generation, the independent Python comparison, and the factor-four ledger;
 it is not a quadrature-convergence result. The full run uses the default
 652-row grid and \(16\times16\times8\) order.
@@ -212,7 +216,7 @@ For the green smoke point, all four anchor energies 101, 200, 267 and
 
 - **AFH factor-four normalization:** validated at the 2401-node response level; the full-grid audit separately verifies the factor-four transfer at all 652 benchmark-energy points.
 - **Python-only full Xe-131 Eq. (6):** PASS within the Python implementation on 652 rows (500 open, 152 closed), with 16 high-order anchors; maximum \(I_6\) relative difference \(1.66367\times10^{-11}\), factor-four mapping residual \(3.55679\times10^{-16}\), and physical/no-factor-four ratio residual 0.
-- **Native Wolfram/Python full \(d\sigma_A/dE_R\):** PASS_WITH_NOTES on 652 rows (500 open, 152 closed); maximum \(I_6\) difference \(1.33872\times10^{-12}\), physical \(d\sigma\) difference \(2.57632\times10^{-9}\), AFH response difference \(2.57509\times10^{-9}\), and factor-four mapping residual \(4.30300\times10^{-16}\). Per-code unit-conversion identities pass at \(4.44089\times10^{-16}\) (Mathematica) and 0 (Python).
+- **Native Wolfram/Python full \(d\sigma_A/dE_R\):** PASS_WITH_NOTES on 652 rows (500 open, 152 closed); maximum \(I_6\) difference \(1.33872\times10^{-12}\), physical \(d\sigma\) difference \(1.33872\times10^{-12}\), AFH response difference \(3.36051\times10^{-16}\), and factor-four mapping residual \(4.30300\times10^{-16}\). Per-code unit-conversion identities pass at \(3.34766\times10^{-16}\) (Mathematica) and 0 (Python).
 - **Comparator status distinction:** the committed machine-readable comparison JSON reports `PASS` because all numerical acceptance criteria pass. The broader scientific classification is `PASS_WITH_NOTES` because the result is fixed-speed Xe-131 and uses the conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions.
 - **Historical green \(I_6\) mapping audit:** complete; see [HISTORICAL_I6_MAPPING_AUDIT.md](HISTORICAL_I6_MAPPING_AUDIT.md).
 - **Natural xenon and LZ likelihood:** outside this Xe-131 fixed-speed cross-code validation. No natural-xenon halo fold, detector response, official LZ selected PDF, or detector-level likelihood is claimed.

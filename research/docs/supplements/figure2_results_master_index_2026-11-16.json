@@ -80,7 +80,7 @@
       "parameters": {
         "m_chi1_GeV": 1000,
         "m_V_GeV": 10,
-        "coupling_product_squared": 1e-8,
+        "coupling_product_squared": 1e-08,
         "g2": 1,
         "speed_km_s": 800,
         "target_mass_scheme": "M_A=131 u",
@@ -143,7 +143,7 @@
       "parameters": {
         "m_chi1_GeV": 1000,
         "m_V_GeV": 10,
-        "coupling_product_squared": 1e-8,
+        "coupling_product_squared": 1e-08,
         "g2": 1,
         "rho_chi_GeV_cm3": 0.3,
         "benchmarks": {
@@ -236,7 +236,7 @@
         {
           "path": "research/afh_default_density_natural_xenon_halo/results/metadata.json",
           "sha256": "63e4c7c9fcfcc93a2b417dfedc6f7c88804deb7a3bc20f4dd20a198713577456",
-          "bytes": 4310,
+          "bytes": 4808,
           "role": "AFH natural-xenon selected-point fold parameters and provenance; sample SHA-256 corrected"
         },
         {
@@ -284,7 +284,7 @@
         {
           "path": "research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py",
           "sha256": "f4a45e82112ac49b5449d193d17aa962b0efc09011fe225de0ef456503776610",
-          "bytes": 12123,
+          "bytes": 12350,
           "role": "AFH natural-xenon selected-point fold runner; now records response sample SHA-256"
         },
         {
@@ -296,7 +296,8 @@
         {
           "path": "research/afh_default_density_natural_xenon_halo/input/afh_selected_exact_q_responses.csv",
           "sha256": "4d7267390be6aa8fa5f4e051719f7aa4f4adb19ca05a4f30e6427f7b4a7a41cd",
-          "role": "AME2020 direct exact-q selected response input"
+          "role": "AME2020 direct exact-q selected response input",
+          "bytes": 8790
         },
         {
           "path": "research/afh_default_density_xe131/output/natural_xenon_halo_metadata_nist_mass.json",
@@ -354,7 +355,8 @@
         {
           "path": "research/afh_default_density_natural_xenon_halo/input/afh_selected_exact_q_responses.csv",
           "sha256": "4d7267390be6aa8fa5f4e051719f7aa4f4adb19ca05a4f30e6427f7b4a7a41cd",
-          "role": "AME2020 direct exact-q selected response input"
+          "role": "AME2020 direct exact-q selected response input",
+          "bytes": 8790
         }
       ]
     },
@@ -539,12 +541,14 @@
         {
           "path": "research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/QUADRATURE_CONVERGENCE_450KEV.csv",
           "sha256": "5a776ddfbd8022b9f104585984c44de1abd18d87bb9cebbcb9e21941e04872b9",
-          "role": "pointwise L00 quadrature convergence"
+          "role": "pointwise L00 quadrature convergence",
+          "bytes": 520
         },
         {
           "path": "research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md",
           "sha256": "beea8c7420428a75ce5bb38c28eb590ca338048c3c7830683ca8912785a05b38",
-          "role": "pointwise L00 local validation record"
+          "role": "pointwise L00 local validation record",
+          "bytes": 6058
         }
       ]
     },
@@ -600,9 +604,9 @@
         ],
         "q_step_GeV": 0.00025,
         "q_nodes": 2401,
-        "relative_tolerance": 2e-8,
+        "relative_tolerance": 2e-08,
         "absolute_tolerance": 2e-10,
-        "max_relative_difference": 3.5908703199989993e-9
+        "max_relative_difference": 3.5908703199989993e-09
       },
       "files": [
         {
@@ -865,16 +869,16 @@
         "kinematically_open_points": 1726,
         "kinematically_closed_points": 1298,
         "final_quadrature": "24x8x8x4",
-        "acceptance_tolerance": 0.00001,
-        "max_baseline_to_final_spectrum_difference": 0.000006467719031455488,
-        "max_speed_24_to48_worst32_points": 2.2174949521058807e-7,
+        "acceptance_tolerance": 1e-05,
+        "max_baseline_to_final_spectrum_difference": 6.467719031455488e-06,
+        "max_speed_24_to48_worst32_points": 2.2174949521058807e-07,
         "independent_numba_python_12_point_difference": 5.329070518200751e-15,
         "detector_response_applied": false
       },
       "files": [
         {
           "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full_grid_highorder_2026-11-14/P1-AFH-Natural-global-quadrature-audit-2026-11-14.md",
-          "sha256": "c51ddfe723639a4aa96a665371ffa557b2017895dbef2e7391c439c48bc9aa73",
+          "sha256": "503c2dfb16d169b2c50299ac62457dd90b15e388829d0b86efa0cf6aa443883d",
           "bytes": 4306,
           "role": "high-order quadrature audit report"
         },
@@ -886,13 +890,13 @@
         },
         {
           "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full_grid_highorder_2026-11-14/isotope_quadrature_summary.csv",
-          "sha256": "d83eb16e5dd76fd0f082751b749a895663536792a8d43e415bd51b1fc803af68",
+          "sha256": "08bc4924622e0751fc6d45482a1ea25b3ce2080c6a38dec0550a2e2e757c5380",
           "bytes": 774,
           "role": "isotope high-order quadrature summary"
         },
         {
           "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full_grid_highorder_2026-11-14/metadata_full_grid_highorder.json",
-          "sha256": "4deb564cd8a46c90fd787b35888671449cea185218ae5ee434a81fe0d2fb0095",
+          "sha256": "385132e0029a38d276e1f47d92a4f7ada8679f4b1c4048851c37e7e010b71b48",
           "bytes": 1601,
           "role": "high-order run metadata"
         },
@@ -931,18 +935,52 @@
         "assumption": "conditional Dirac, real scalar, pure scalar g2, chi2 -> chi1 s only",
         "max_relative_differences": {
           "I6": 1.3387195271053361e-12,
-          "dsigma": 2.5763244333492954e-9,
-          "dsigma_no4": 2.5763244333492954e-9,
-          "dsigma_conversion": 2.576324170261011e-9,
-          "R_A_physical": 2.5750909445416853e-9,
+          "dsigma": 1.3387182618591446e-12,
+          "dsigma_no4": 1.3387182618591446e-12,
+          "dsigma_conversion": 1.3385707527567757e-12,
+          "R_A_physical": 3.360505976848997e-16,
           "factor4_mapping": 4.3029970254329936e-16,
-          "mathematica_unit_conversion_identity": 4.440892098500626e-16,
-          "python_unit_conversion_identity": 0
+          "mathematica_unit_conversion_identity": 3.3476603561962346e-16,
+          "python_unit_conversion_identity": 0.0,
+          "R_A_package": 3.7668516002026983e-16,
+          "factor4_ratio": 0.0,
+          "C0": 0.0,
+          "q": 0.0,
+          "pchi": 0.0,
+          "mediator_denominator": 0.0
         },
         "tolerances": {
-          "I6_dsigma_and_cross_code_converted_dsigma": 2e-7,
-          "AFH_PCHIP_response": 2e-8,
+          "I6_dsigma_and_cross_code_converted_dsigma": 2e-07,
+          "AFH_PCHIP_response": 2e-10,
           "algebraic_and_per_code_unit_conversion_identities": 2e-12
+        },
+        "full_comparison_json_status": "PASS",
+        "high_order_refinement": {
+          "benchmark": "green_ms300_dm1",
+          "rows": 3,
+          "energies_keV": [
+            200.0,
+            300.0,
+            500.0
+          ],
+          "status": "PASS",
+          "max_relative_differences": {
+            "I6": 1.0314480950186254e-12,
+            "dsigma": 1.03138412273981e-12,
+            "dsigma_no4": 1.03138412273981e-12,
+            "dsigma_conversion": 1.031428206769638e-12,
+            "dsigma_conversion_identity_Mathematica": 2.2129179471579313e-16,
+            "dsigma_conversion_identity_Python": 0.0,
+            "R_A_physical": 1.8566243046164224e-16,
+            "R_A_package": 0.0,
+            "factor4_mapping": 0.0,
+            "factor4_ratio": 0.0,
+            "C0": 0.0,
+            "q": 0.0,
+            "pchi": 0.0,
+            "mediator_denominator": 0.0
+          },
+          "low_to_high_order_max_relative_change_I6_and_dsigma": 6.6959246700463625e-12
         }
       },
       "files": [
@@ -954,21 +992,63 @@
         },
         {
           "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131_metadata.json",
-          "sha256": "f7802e985d95bda7747f2faa1d804bbcb753e6e8d8d92fb9c1da0c7098a65dc3",
-          "bytes": 4021,
+          "sha256": "f9e5a27cf70fa686ee284f2ed93ec90825687c6844ccd894d35da67e4416553a",
+          "bytes": 4212,
           "role": "Native Wolfram execution metadata, four benchmarks, 800 km/s, pole-width, threshold-u2 and 16x16x8 quadrature"
         },
         {
           "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_python_full_dsigma_comparison.csv",
-          "sha256": "d24714cd9e036e0b18c743f179aafd72c5d573fcd6013e3edbad987d34de765d",
-          "bytes": 340014,
+          "sha256": "b9d9a61e0b756f24a01003b4e60e68a746460a2168cacd57cd3b659fb9b09a8a",
+          "bytes": 298792,
           "role": "652-row independent Python pointwise comparison of I6, AFH response, physical/no-factor-four cross sections and conversion identities"
         },
         {
           "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_python_full_dsigma_comparison.json",
-          "sha256": "00838a849ce40c9fe97a3d058d203e00df31f56aa695bcae37509b62ec7aa643",
-          "bytes": 3755,
+          "sha256": "b1b8dd6634c381a561cb23a5c823be38ad799745cbde937017683f8f59d3f4f1",
+          "bytes": 3885,
           "role": "Machine-readable Mathematica/Python full-cross-section comparison; PASS_WITH_NOTES"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/full_dsigma_sha256_manifest.json",
+          "sha256": "3f3bfdb0c722dfda7a0a00d2c2a34d0a7b1df42a2b417bf09044d1cf61ad3d84",
+          "bytes": 11863,
+          "role": "Full-run provenance and SHA-256 manifest"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/SHA256SUMS.txt",
+          "sha256": "965d0ffff24a9ad5b6d8907637d9f8850019b50aa55fbf6750fd59628cbc618d",
+          "bytes": 2037,
+          "role": "14 repository-relative SHA-256 checksums for source/input files and full-grid outputs"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/green_high_order.csv",
+          "sha256": "c1bd8b190aafd64224ebdceeb0dfb3baa3417e5bd2be13daa65062479c056a14",
+          "bytes": 1468,
+          "role": "Native Mathematica higher-order Green benchmark at 200, 300 and 500 keV"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/green_high_order_metadata.json",
+          "sha256": "66288fc1a34112e369125f0696bac8f4e44b111d2ecf32667d10000850c0d14e",
+          "bytes": 2052,
+          "role": "Native Wolfram metadata for the 48x40x24 higher-order Green run"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/green_high_order_comparison.csv",
+          "sha256": "44fb37db7cc79708a268be79991bde7aa2b2da96ab65fdf6b368d32706f84064",
+          "bytes": 2458,
+          "role": "Independent Python higher-order pointwise comparison"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/green_high_order_comparison.json",
+          "sha256": "e690f6ec25b71d53db3baeb6a49635edd056dac60e21638ae824cb14e6d97446",
+          "bytes": 1843,
+          "role": "Machine-readable higher-order comparator result; PASS"
+        },
+        {
+          "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/green_high_order_SHA256SUMS.txt",
+          "sha256": "0a58ba03bdee66ae1c6ff1e61912c2745a8a430ebc9aa5d1a192dce61a3d7dc6",
+          "bytes": 645,
+          "role": "Four repository-relative SHA-256 checksums for Green high-order artifacts"
         }
       ]
     }
@@ -1468,7 +1548,7 @@
     },
     {
       "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full_grid_highorder_2026-11-14/P1-AFH-Natural-global-quadrature-audit-2026-11-14.md",
-      "sha256": "c51ddfe723639a4aa96a665371ffa557b2017895dbef2e7391c439c48bc9aa73",
+      "sha256": "503c2dfb16d169b2c50299ac62457dd90b15e388829d0b86efa0cf6aa443883d",
       "bytes": 4306,
       "role": "high-order quadrature audit report"
     },
@@ -1480,13 +1560,13 @@
     },
     {
       "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full_grid_highorder_2026-11-14/isotope_quadrature_summary.csv",
-      "sha256": "d83eb16e5dd76fd0f082751b749a895663536792a8d43e415bd51b1fc803af68",
+      "sha256": "08bc4924622e0751fc6d45482a1ea25b3ce2080c6a38dec0550a2e2e757c5380",
       "bytes": 774,
       "role": "isotope high-order quadrature summary"
     },
     {
       "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full_grid_highorder_2026-11-14/metadata_full_grid_highorder.json",
-      "sha256": "4deb564cd8a46c90fd787b35888671449cea185218ae5ee434a81fe0d2fb0095",
+      "sha256": "385132e0029a38d276e1f47d92a4f7ada8679f4b1c4048851c37e7e010b71b48",
       "bytes": 1601,
       "role": "high-order run metadata"
     },
@@ -1504,21 +1584,63 @@
     },
     {
       "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131_metadata.json",
-      "sha256": "1a8b205287156a76d39d5cd0458d51f06e5e6c40a07f2e2d05972e3f743bbbfc",
-      "bytes": 4102,
+      "sha256": "f9e5a27cf70fa686ee284f2ed93ec90825687c6844ccd894d35da67e4416553a",
+      "bytes": 4212,
       "role": "Native Wolfram execution metadata, four benchmarks, 800 km/s, pole-width, threshold-u2 and 16x16x8 quadrature"
     },
     {
       "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_python_full_dsigma_comparison.csv",
-      "sha256": "d24714cd9e036e0b18c743f179aafd72c5d573fcd6013e3edbad987d34de765d",
-      "bytes": 340014,
+      "sha256": "b9d9a61e0b756f24a01003b4e60e68a746460a2168cacd57cd3b659fb9b09a8a",
+      "bytes": 298792,
       "role": "652-row independent Python pointwise comparison of I6, AFH response, physical/no-factor-four cross sections and conversion identities"
     },
     {
       "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_python_full_dsigma_comparison.json",
-      "sha256": "40b0427eaf113771bd74c0ba229c10a93c6587b4fbd8cbec5004ee85a15b9408",
-      "bytes": 3863,
-      "role": "Machine-readable Mathematica/Python full-cross-section comparator result; JSON status PASS, scientific status PASS_WITH_NOTES"
+      "sha256": "b1b8dd6634c381a561cb23a5c823be38ad799745cbde937017683f8f59d3f4f1",
+      "bytes": 3885,
+      "role": "Machine-readable Mathematica/Python full-cross-section comparison; PASS_WITH_NOTES"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/full_dsigma_sha256_manifest.json",
+      "sha256": "3f3bfdb0c722dfda7a0a00d2c2a34d0a7b1df42a2b417bf09044d1cf61ad3d84",
+      "bytes": 11863,
+      "role": "Full-run provenance and SHA-256 manifest"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/SHA256SUMS.txt",
+      "sha256": "965d0ffff24a9ad5b6d8907637d9f8850019b50aa55fbf6750fd59628cbc618d",
+      "bytes": 2037,
+      "role": "14 repository-relative SHA-256 checksums for source/input files and full-grid outputs"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/green_high_order.csv",
+      "sha256": "c1bd8b190aafd64224ebdceeb0dfb3baa3417e5bd2be13daa65062479c056a14",
+      "bytes": 1468,
+      "role": "Native Mathematica higher-order Green benchmark at 200, 300 and 500 keV"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/green_high_order_metadata.json",
+      "sha256": "66288fc1a34112e369125f0696bac8f4e44b111d2ecf32667d10000850c0d14e",
+      "bytes": 2052,
+      "role": "Native Wolfram metadata for the 48x40x24 higher-order Green run"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/green_high_order_comparison.csv",
+      "sha256": "44fb37db7cc79708a268be79991bde7aa2b2da96ab65fdf6b368d32706f84064",
+      "bytes": 2458,
+      "role": "Independent Python higher-order pointwise comparison"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/green_high_order_comparison.json",
+      "sha256": "e690f6ec25b71d53db3baeb6a49635edd056dac60e21638ae824cb14e6d97446",
+      "bytes": 1843,
+      "role": "Machine-readable higher-order comparator result; PASS"
+    },
+    {
+      "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/green_high_order_SHA256SUMS.txt",
+      "sha256": "0a58ba03bdee66ae1c6ff1e61912c2745a8a430ebc9aa5d1a192dce61a3d7dc6",
+      "bytes": 645,
+      "role": "Four repository-relative SHA-256 checksums for Green high-order artifacts"
     }
   ],
   "source_commit": "PR #45 head fdec6ffb4d58474e8ae1998472f2aa9c935a04a9; merged into main by merge commit 15eb3a24e5295868ca208166a94c078fbc1747a7."
