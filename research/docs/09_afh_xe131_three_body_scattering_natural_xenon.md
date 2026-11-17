@@ -1909,15 +1909,13 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 | Xe-129/Xe-131 \(\Sigma'\) | **先前表格已撤回；native pending** | 旧 Python source-translated selected-\(q\) 表因算符映射审查已撤回 | native Wolfram 输出、逐点对照、归一化和多极收敛待完成 |
 | AFH \(\Delta\)、\(W_{\Sigma'\Delta}\) | **映射已纠正；native pending** | DeltaJ 已纠正为同阶 MJLDivQ；旧 parity-conflict 判断已撤回 | native Wolfram 输出和 Python 逐点对照尚未完成，不报告数值 |
 | 完整三体 \(L^{\mu\nu}W_A^{\alpha\beta}\) 收缩 | **未完成** | PR #53 已完成 DM 侧 \(L^{\mu\nu}\) 和核质心点流诊断 | 尚未包含核内对流、磁化、自旋—轨道矩阵元、全部允许干涉和天然氙 halo fold |
-| 三体相空间 Jacobian / \(256\pi^3\) 独立推导 | 已验证 | 从单粒子不变测度独立重建 \(d\Phi_3\)，并逐项核对 \(t\leftrightarrow E_R\)、\(z,\phi_*\)、通量与核电荷流 | 适用于未极化靶、相干且只保留领先核电荷项的近似；不包含 (J_N^0) 的 (Phi'') 自旋—轨道修正，也不代表完整 (L_{mu
-u}W_A^{mu
-u}) 收缩 |
+| 三体相空间 Jacobian / \(256\pi^3\) 独立推导 | 已验证 | 从单粒子不变测度独立重建 \(d\Phi_3\)，并逐项核对 \(t\leftrightarrow E_R\)、\(z,\phi_*\)、通量与核电荷流 | 适用于未极化靶、相干且只保留领先核电荷项的近似；不包含 \(J_N^0\) 的 \(\Phi''\) 自旋—轨道修正，也不代表完整 \(L_{\mu\nu}W_A^{\mu\nu}\) 收缩 |
 | AFH 原生 Mathematica 全网格运行 | 已完成 PASS | Wolfram 14.0.0 Windows；2401 点；q 网格完全一致；四种响应量比较全部通过；最大相对差异 \(3.59\times10^{-9}\)；SHA-256 manifest 已归档 | 适用范围仅为 Xe-131 AFH response-level；不替代三体积分、天然氙连续谱或 LZ likelihood 验证 |
 | AFH-7/Hybrid-9 84 点 full-range grid | PASS_WITH_NOTES | 16,807 行七同位素响应网格；1,344 行 baseline spectra；高阶摘要最大 baseline-to-final spectrum difference \(6.47\times10^{-6}\) | 高阶 1,344 行 ZIP 仍为外部 checksum-only；AFH-7 非 AFH-9，Xe-124/Xe-126 尚缺官方矩阵 |
 | GCN/JJ55 84 点天然氙谱 | PASS_WITH_NOTES | 四 benchmark 的 84 点谱和 metadata 已归档；速度求积最大差异 \(1.60401\times10^{-6}\) | production 使用 legacy linear-\(W^2\)、\(8\times8\times4\)；最大 kernel-order difference \(2.18895\times10^{-4}\)；threshold-\(u^2\) 匹配重算待完成 |
 | 完整 LZ detector-level recast | 未完成 | GCN/JJ55 一维效率加权 rate-level yields | 需要二维信号 PDF、NEST nuisance、背景和 profile likelihood |
 
-**P0 判定：** 现有 (M) 电荷响应和固定速度 Eq. (6) 数值基线在所述范围内已通过验证；完整 VV 核流仍未完成，优先执行 Xe-131 (M,\Phi'',M\Phi'') native export，并完成 (F_1/F_2) 有限 (t_A) 匹配。**P1 判定：** 完成 (Sigma')、(Delta J)、(Sigma'\! -\! \Delta J) 的 native 对照、完整三体张量收缩，并统一 GCN/JJ55 threshold-(u^2) 求积。**P2 判定：** AFH-9 缺失同位素输入、完整天然氙 VV 谱和完整 LZ likelihood 仍未完成。
+**P0 判定：** Xe-131 的 \(M,\Phi'',M\Phi''\) native AFH 核响应已归档，response-level validator PASS；不再把该导出列为待办。当前 P0 转为完成有限 \(t_A\) 的 \(F_1/F_2\) 输入及误差传播、从完整三体振幅导出实际 NR 系数，并将有符号 \(M\)-\(\Phi''\) 干涉与其它允许响应逐项收缩；同时完成 AFH native \(\Sigma'\)、\(\Delta\)、\(\Sigma'\Delta\) 输出及逐点对照。**P1 判定：** 完成完整三体相空间与核响应插值的独立收敛、天然氙同位素加权和 halo fold。**P2 判定：** AFH-9 缺失同位素输入及完整 LZ detector-level likelihood 仍未完成。
 
 ## 13. 公式—符号—程序—结果交叉引用
 
