@@ -1,0 +1,27 @@
+{
+  "status": "static_one_nucleon_full_current_matching_diagnostic",
+  "parent_pr": 57,
+  "parent_branch": "research/three-body-spin-resolved-current-20261118",
+  "parent_head": "b81083c1ce8ba9d1ea8b1b460c7dc04b7a5e6a05",
+  "metric": "(+---)",
+  "nucleon_vertex": "Gamma_N^mu=F1*gamma^mu + i*F2*sigma^{mu nu}*q_{N,nu}/(2*mN), q_N=P_N'-P_N",
+  "static_nucleon_kinematics": "p_N=l-q_A/2, p_N'=l+q_A/2, l dot q_A=0, q_N^0=0",
+  "reference_point": {
+    "mchi_GeV": 1000.0,
+    "mchi2_minus_mchi1_keV": 362.0,
+    "ms_keV": 300.0,
+    "ER_keV": 200.0,
+    "speed_km_s": 776.0,
+    "target": "Xe-131, mA=131*u"
+  },
+  "form_factor_scenarios": [
+    {"F1": 1.0, "F2": 0.0},
+    {"F1": 1.0, "F2": -0.15}
+  ],
+  "scope_limitations": [
+    "One phase-space point and one static nucleon momentum orientation only.",
+    "Nuclear recoil q_A^0 is neglected in the on-shell nucleon current.",
+    "No AFH response coefficient is claimed until complete operator and multipole projection.",
+    "No phase-space integral, nuclear many-body response, absolute cross section, halo fold, isotope sum, detector response, or likelihood."
+  ]
+}

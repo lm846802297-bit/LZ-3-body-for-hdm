@@ -1,0 +1,49 @@
+name: Full three-body current and nucleon Dirac-Pauli contraction
+
+on:
+  push:
+    branches:
+      - research/three-body-full-current-nucleon-match-20261118
+  pull_request:
+    paths:
+      - "research/three_body_full_current_nucleon_match/**"
+      - "research/three_body_spin_resolved_current/**"
+      - "research/vector_current_response_audit/**"
+      - ".github/workflows/three-body-full-current-nucleon-match.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  full-current:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install numerical dependency
+        run: python -m pip install --upgrade numpy==2.3.5
+      - name: Compile code and tests
+        run: |
+          python -m py_compile \
+            research/three_body_full_current_nucleon_match/full_current_nucleon_match.py \
+            research/three_body_full_current_nucleon_match/test_full_current_nucleon_match.py
+      - name: Run full-current regression tests
+        run: |
+          python -m unittest discover \
+            -s research/three_body_full_current_nucleon_match \
+            -p 'test_*.py' -v
+      - name: Generate static one-nucleon matching diagnostic
+        run: |
+          python research/three_body_full_current_nucleon_match/full_current_nucleon_match.py \
+            --out /tmp/full-current-nucleon-match.json
+      - name: Upload diagnostic
+        uses: actions/upload-artifact@v4
+        with:
+          name: full-three-body-current-nucleon-match
+          path: /tmp/full-current-nucleon-match.json
+          if-no-files-found: error
+          retention-days: 30
