@@ -1,12 +1,14 @@
-# Three-body nucleon-current matching to AFH: next-stage calculation
+# Three-body nucleon-current matching to AFH: charge sector and remaining spatial currents
 
-**Status:** matching plan and acceptance criteria only. No numerical
-\(W_{\Phi''}\)-corrected three-body rate is claimed in this note.
+**Status:** the \(M+\Phi''\) vector-charge sector has been matched and
+numerically evaluated using the explicitly provisional zero-momentum
+form-factor anchors. The full finite-\(t\), all-current three-body prediction
+is not yet complete.
 
 ## 1. Existing evidence that must be reused, not recalculated
 
-This work is the physical bridge between the existing stacked three-body
-current audit and the independent AFH nuclear-response audit:
+This work connects the existing three-body current and AFH nuclear-response
+audits:
 
 - **PR #53** (research/vector_current_response_audit/): exact four-component
   \(L^{\mu\nu}\), both scalar-emission orderings, their interference, and
@@ -14,9 +16,9 @@ current audit and the independent AFH nuclear-response audit:
   integrated current norm is \(r_\chi\simeq2.47\times10^{-3}\).
 - **PR #54** (research/afh_vv_phi_xe131/): AFH v6.0 Xe-131
   \(W_M^{00}\), \(W_{\Phi''}^{00}\), and \(W_{M\Phi''}^{00}\) on 2401
-  momentum-transfer points. At \(q_A=256.2718676\) MeV,
-  \(W_{\Phi''}/W_M=115.8895\) and
-  \(W_{M\Phi''}/W_M=-1.46249\). These are nuclear responses, not rate
+  momentum-transfer points. At \(q_A=256.271867617\) MeV,
+  \(W_{\Phi''}/W_M=115.8894642\) and
+  \(W_{M\Phi''}/W_M=-1.46248999\). These are nuclear responses, not rate
   multipliers.
 - **This stacked PR #57** (research/three_body_spin_resolved_current/):
   spin-resolved \(2\times2\) matrices for all four \(\mathcal T_3^\mu\)
@@ -28,158 +30,215 @@ The independent native Mathematica export in PR #54 remains pending; its
 Python/AFH response audit must not be described as a completed native
 Mathematica comparison.
 
-## 2. Correct elastic benchmark, and why it is not the three-body answer
+## 2. Matched \(M+\Phi''\) vector-charge sector
 
-The standard elastic VV nucleon-current reduction does contain a
-spin-orbit term. In Hoferichter--Klos--Schwenk, Eq. (25), the VV
-one-body amplitude contains a term proportional to
-
+Use the momentum delivered to the target nucleon,
 \[
-\frac{F_2^{V,N}(t)}{4m_N^2}
-\,\boldsymbol q\cdot(i\boldsymbol\sigma_N\times\boldsymbol P_N),
-\qquad \boldsymbol P_N=\boldsymbol p_N+\boldsymbol p_N'.
+q_A^\mu=k'^\mu-k^\mu,\qquad t_A=q_A^2=-|\boldsymbol q_A|^2,
 \]
-
-With elastic two-body kinematics this contributes to the
-\(\mathcal O_3\) sector, which maps onto the AFH
-\(\Phi''\) and \(M\Phi''\) responses. The older statement that the
-subleading VV channel contains only \(\mathcal O_2,\mathcal O_5\) is
-therefore withdrawn.
-
-But the elastic coefficient cannot be copied into
-\(\chi_1 N\to\chi_1 N s\). In the three-body process,
-
-\[
-q_A=p-p'-k_s,\qquad q_\chi=p-p'=q_A+k_s.
-\]
-
-For the average velocities
-
-\[
-\boldsymbol v_{\rm av}^{(3)}
-=\frac{\boldsymbol p+\boldsymbol p'}{2m_\chi}
--\frac{\boldsymbol k+\boldsymbol k'}{2m_N},
-\]
-
-nonrelativistic energy-momentum conservation gives
-
-\[
-\boldsymbol q_A\cdot\boldsymbol v_{\rm av}^{(3)}
-=E_s-\frac{(\boldsymbol p+\boldsymbol p')\cdot\boldsymbol k_s}
-{2m_\chi},
-\]
-
-not the elastic relation
-\(\boldsymbol q\cdot\boldsymbol v^\perp=0\). The scalar momentum changes
-the transverse kinematics as well. In addition, the DM current is the
-coherent two-diagram \(\mathcal T_3^\mu(p,p',k_s)\), not a single
-\(\bar u_\chi'\gamma^\mu u_\chi\) bilinear.
-
-## 3. Required matching object
-
-At each point in the three-body phase space, use the exact finite-width
-spin-resolved current
-
-\[
-\mathcal T_3^\mu =
-\mathcal T_{\rm before}^\mu+\mathcal T_{\rm after}^\mu
-\]
-
-with the same width insertion as the manuscript prescription. Contract it
-with the one-nucleon Dirac--Pauli current
-
+and the Dirac--Pauli convention
 \[
 J_N^\mu(q_A)=
 \bar u_N(k')
 \left[
-F_1^{V,N}(t)\gamma^\mu
--\frac{iF_2^{V,N}(t)}{2m_N}
+F_1^{V,N}(t_A)\gamma^\mu+
+\frac{iF_2^{V,N}(t_A)}{2m_N}
 \sigma^{\mu\nu}q_{A,\nu}
-\right]u_N(k),
-\qquad t=q_A^2,
+\right]u_N(k).
 \]
+The plus sign is tied to \(q_A=k'-k\). Hoferichter--Menéndez--Schwenk
+use \(q=k-k'=-q_A\) and the equivalent vertex with
+\(-iF_2\sigma^{\mu\nu}q_\nu/(2m_N)\).
 
-using a single consistent sign convention for \(q_A\) and the Pauli term.
-
-The product is a matrix in both DM and nucleon spin spaces. Perform the
-nonrelativistic Pauli reduction and project its coefficients onto the
-nuclear one-body current multipoles. The first required coefficient
-matrices are
-
+For the AFH nuclear Fourier operators, the elastic-reference convention is
+\(\boldsymbol q_{\rm AFH}=-\boldsymbol q_A\). In the radiative process,
 \[
-C_M^{(3)}(p,p',k_s;q_A),\qquad
-C_{\Phi''}^{(3)}(p,p',k_s;q_A),
+\boldsymbol p_\chi'-\boldsymbol p_\chi
+=-\boldsymbol q_A-\boldsymbol k_s.
 \]
+Do not identify the AFH nuclear Fourier momentum with the full DM momentum
+change. The nuclear multipoles are evaluated at the momentum flowing through
+the nucleon current, \(|\boldsymbol q_{\rm AFH}|=|\boldsymbol q_A|\);
+the emitted scalar momentum remains inside the three-body DM current.
 
-followed by the associated mixed term. Do not infer
-\(C_{\Phi''}^{(3)}\) from \(F_2^V(0)\) alone, and do not replace the
-three-body current by its time component before matching.
-
-For each phase-space point, the spin-averaged coefficient products are
-formed from the same \(2\times2\) DM matrices, e.g.
-
+Hoferichter, Menéndez, and Schwenk, PRD 102, 074018 (2020), Eq. (41),
+give the nonrelativistic vector charge
 \[
-\mathcal R_M^{(3)}
-=\frac12\operatorname{Tr}
-\left[C_M^{(3)}C_M^{(3)\dagger}\right],
+J_N^0 =
+F_1^{V,N}(t_A)
++\frac{t_A}{8m_N^2}
+  \left[F_1^{V,N}(t_A)+2F_2^{V,N}(t_A)\right]
+-\frac{i}{4m_N^2}
+  \left[F_1^{V,N}(t_A)+2F_2^{V,N}(t_A)\right]
+  \boldsymbol S_N\cdot
+  (\boldsymbol q_{\rm AFH}\times\boldsymbol P_N),
 \]
+where \(\boldsymbol P_N=\boldsymbol k+\boldsymbol k'\) and
+\(\boldsymbol S_N=\boldsymbol\sigma_N/2\). They state immediately below
+Eq. (41) that the spacelike components do not contribute to their \(M\)
+and spin-orbit \(\Phi^{00}\) responses. The latter is the vector-charge
+spin-orbit response represented by AFH \(\Phi''\), whose operator is
+defined in Anand--Fitzpatrick--Haxton, PRC 89, 065501 (2014), Eq. (51).
 
+Matching the charge expansion gives
 \[
-\mathcal R_{\Phi''}^{(3)}
-=\frac12\operatorname{Tr}
-\left[C_{\Phi''}^{(3)}C_{\Phi''}^{(3)\dagger}\right],
+\boxed{
+c_M(t_A)=F_1^V(t_A)
++\frac{t_A}{8m_N^2}
+ \left[F_1^V(t_A)+2F_2^V(t_A)\right],
+}
 \]
-
 \[
-\mathcal R_{M\Phi''}^{(3)}
-=\operatorname{Re}\frac12\operatorname{Tr}
-\left[C_M^{(3)}C_{\Phi''}^{(3)\dagger}\right].
+\boxed{
+c_{\Phi''}(t_A)=
+\frac{q_A^2}{4m_N^2}
+\left[F_1^V(t_A)+2F_2^V(t_A)\right].
+}
 \]
+The signs correspond to the current and AFH momentum conventions above.
 
-The precise normalization and any explicit powers of \(q_A/m_N\) must be
-fixed by matching the operator definitions in the AFH v6.0 convention,
-not guessed from the ratios of the tabulated \(W\)'s.
-
-The Xe-131 first-stage recoil kernel is then
-
+For
 \[
-I_{\rm Xe131}^{\rm matched}(E_R)
-=\int d\Phi_3\left[
-\mathcal R_M^{(3)}W_M
-+\mathcal R_{\Phi''}^{(3)}W_{\Phi''}
-+\mathcal R_{M\Phi''}^{(3)}W_{M\Phi''}
-\right],
+\chi_1(p)+N(k)\to\chi_1(p')+N(k')+s(k_s),
+\qquad q_A=k'-k=p-p'-k_s,
 \]
+the charge part of the exact radiative amplitude is
+\[
+\boxed{
+\mathcal M_{M+\Phi''}^{(3)}
+=\mathcal T_3^0(p,p',k_s)
+\left[c_M(t_A)M+c_{\Phi''}(t_A)\Phi''\right].
+}
+\]
+Both operators multiply the same exact two-diagram, finite-width
+\(\mathcal T_3^0\). Consequently the common spin-averaged three-body factor
+\[
+I_{00}^{(3)}(E_R)=
+\int d\Phi_3\,
+\frac12\operatorname{Tr}
+\left[\mathcal T_3^0\mathcal T_3^{0\dagger}\right]
+\]
+cancels from the *relative* \(M+\Phi''\) charge-sector correction at fixed
+\(E_R\), when the same isoscalar form factors are used for both responses.
 
-with all three terms evaluated at the same \(q_A\), scalar momentum,
-propagator virtualities, and width prescription.
+With
+\[
+\eta(q_A)=\frac{c_{\Phi''}(t_A)}{c_M(t_A)},
+\]
+the ratio is
+\[
+\boxed{
+Q_{\Phi''}(q_A)=
+1+2\eta\frac{W_{M\Phi''}}{W_M}
++\eta^2\frac{W_{\Phi''}}{W_M}.
+}
+\]
+This is already a genuine three-body charge-sector result. It does not
+require a second three-body phase-space integration for the relative
+correction. It does not, however, replace the phase-space integral needed
+for the absolute rate.
 
-## 4. Mandatory validation sequence
+### 2.1 Zero-momentum form-factor diagnostic
 
-1. **Elastic limit regression.** Replace the emitted scalar by the elastic
-   kinematic limit and reduce \(\mathcal T^\mu\) to the ordinary vector
-   WIMP current. Reproduce the published elastic VV Pauli reduction,
-   including the \(\mathcal O_3\) coefficient and its sign.
+For the universal light-flavour current, use the existing zero-momentum
+anchors
+\[
+F_1^V(0)=3,\qquad F_2^V(0)=-0.552,
+\qquad F_1^V(0)+2F_2^V(0)=1.896,
+\]
+with \(m_N=0.938918\) GeV. These are diagnostic anchors only; they are not
+finite-\(t_A\) form factors.
+
+At the second AFH \(W_M\) minimum,
+\[
+q_A=256.271867617\ {\rm MeV},\qquad
+E_R=269.103897622\ {\rm keV},
+\]
+the coefficients are
+\[
+c_M=2.98234390,\qquad
+c_{\Phi''}=0.03531221,\qquad
+\eta=0.01184042.
+\]
+The exact selected-point AFH responses give
+\[
+W_{\Phi''}/W_M=115.8894642,\qquad
+W_{M\Phi''}/W_M=-1.46248999,
+\]
+and hence
+\[
+\boxed{Q_{\Phi''}=0.9816142.}
+\]
+This is a \(-1.839\%\) correction relative to the same relativistically
+corrected \(M\)-only charge response. Including the \(t_A/(8m_N^2)\)
+correction to \(c_M\), the combined change relative to
+\(F_1^V(0)^2W_M\) is \(-2.991\%\) at this point.
+
+Across the 2401-node Xe-131 grid, the sampled \(Q_{\Phi''}-1\) varies
+locally from \(-13.61\%\) at \(q_A=255.75\) MeV to \(+11.50\%\) at
+\(q_A=256.75\) MeV. These are local ratios to a very small \(W_M\)
+denominator around its deep cancellation, not global event-rate changes.
+The signed interference changes rapidly across the minimum; the matched
+charge response remains nonnegative.
+
+The numerical implementation and output are in PR #54:
+- research/afh_vv_phi_xe131/phi_charge_response_match.py
+- research/afh_vv_phi_xe131/output/phi_charge_match_full_grid.csv
+- research/afh_vv_phi_xe131/output/phi_charge_match_selected_points.csv
+- research/afh_vv_phi_xe131/output/phi_charge_match_summary.json
+
+## 3. Remaining spatial-current matching
+
+The factorization above applies only to the vector-charge \(M+\Phi''\)
+sector. The spatial contraction
+\[
+-\mathcal T_3^i J_{N,i}
+\]
+must still be reduced. Its nucleon convection and magnetization pieces can
+generate orbital/convection and spin responses, including AFH
+\(\Delta\), \(\Sigma'\), and \(\Sigma''\), with possible interference terms.
+
+The next calculation is therefore not to recompute the already matched
+charge sector. It is to use the exact spin-resolved matrices for all four
+\(\mathcal T_3^\mu\) components from PR #53/#57 and the finite-\(t_A\)
+Dirac--Pauli current to derive the spatial-current coefficients. Keep the
+two scalar-emission orderings coherent and retain the same width prescription
+as the existing recoil calculation.
+
+The small integrated ratio \(r_\chi\) is useful for power counting the
+spatial-current terms, but it is not a substitute for the coefficient-level
+projection onto \(\Delta\), \(\Sigma'\), and \(\Sigma''\). Nor should
+\(W_{\Phi''}/W_M\) be multiplied by \(r_\chi\): \(\Phi''\) belongs to the
+vector-charge spin-orbit sector just matched above.
+
+## 4. Mandatory validation sequence for the remaining spatial current
+
+1. **Elastic charge regression.** Reproduce the vector-charge expansion
+   above, including the \(F_1+2F_2\) combination, the \(t_A/(8m_N^2)\)
+   term, and the AFH \(\Phi''\) sign.
 2. **Nucleon-current checks.** Verify the Dirac and Pauli pieces separately,
    \(q_{A\mu}J_N^\mu=0\) for on-shell equal-mass nucleons, and the
-   spin-resolved matrix result against an independent Dirac trace.
+   spin-resolved result against an independent Dirac trace.
 3. **Three-body current checks.** Retain both scalar-emission diagrams and
-   their interference; verify the finite-width Ward identity and the
+   their interference; verify the finite-width Ward identity and
    conserved-target contraction at every sampled phase-space point.
-4. **Width comparison.** Run zero width only as a diagnostic, and compare
-   the manuscript pole width with the running scalar-channel diagnostic.
+4. **Spatial-current projection.** Derive the coefficients of the
+   convection/orbital and magnetization/spin operators. Project them onto
+   AFH \(\Delta\), \(\Sigma'\), and \(\Sigma''\), and calculate their
+   interference terms where allowed by parity and time-reversal symmetry.
+5. **Width comparison.** Keep zero width as a diagnostic and compare the
+   manuscript pole width with the running scalar-channel diagnostic.
    Keep \(g_2\) explicit because the coupling product does not fix
    \(\Gamma_{\chi_2}\).
-5. **AFH normalization.** Apply the equal-\(p=n\) factor of four exactly
-   once to the AFH isoscalar responses. The common factor cancels in
-   \(M\), \(\Phi''\), and mixed-response ratios, but it must remain explicit
-   in absolute rates.
-6. **Quadrature convergence.** Converge the \(W^2,z,\phi\) three-body
-   integration independently for each response coefficient and for their
-   interference. Near-pole points require endpoint-adapted mappings.
-7. **Natural xenon.** Only after the Xe-131 matching passes, repeat the
-   AFH response calculation for the remaining naturally abundant isotopes.
-   Do not use the Xe-131 \(W_{\Phi''}\) curve as a proxy for other isotopes.
+6. **AFH normalization.** Apply the equal-\(p=n\) factor of four exactly
+   once. It cancels in response ratios but remains explicit in absolute
+   rates.
+7. **Quadrature convergence.** Converge the \(W^2,z,\phi\) integration
+   independently for each spatial response and interference. Near-pole
+   points require endpoint-adapted mappings.
+8. **Natural xenon.** Repeat the AFH spatial-response calculation for the
+   other naturally abundant isotopes. Do not use Xe-131 responses as a
+   proxy for other isotopes.
 
 ## 5. Existing \(W_M\)-only natural-xenon baseline
 
@@ -204,13 +263,21 @@ construction**. It does not measure the change caused by adding
 
 ## 6. What can and cannot be concluded now
 
-- The existing \(W_M\)-only natural-xenon spectrum is a reproducible baseline.
-- The Xe-131 \(\Phi''\) response is numerically large near the second
-  \(W_M\) minimum, so it cannot be discarded on nuclear-structure grounds.
-- The exact three-body coefficient multiplying \(\Phi''\) has not yet been
-  computed. Consequently, **the percentage change in the natural-xenon
-  recoil spectrum is not yet known**.
-- A numerical percentage must not be estimated by multiplying
-  \(W_{\Phi''}/W_M\) by \(r_\chi\), by \(F_2/F_1\), or by a point-nucleon
-  kinematic factor. Those quantities do not constitute the matched
-  three-body response coefficient.
+- The \(W_M\)-only natural-xenon spectrum remains a reproducible baseline.
+- The \(M+\Phi''\) charge-sector correction is now matched. With the
+  zero-momentum form-factor benchmark, it is \(-1.839\%\) relative to
+  corrected \(M\)-only at the second \(W_M\) minimum.
+- The \(W_{\Phi''}/W_M=115.89\) nuclear ratio is not a 115.89-fold rate
+  enhancement; the small coefficient and negative mixed response must be
+  included.
+- The numerical charge-sector correction is not yet a finite-\(t\)
+  prediction because the model-specific \(F_1^{V,N}(t_A)\) and
+  \(F_2^{V,N}(t_A)\) are still needed.
+- The spatial-current \(\Delta\), \(\Sigma'\), and \(\Sigma''\) coefficients
+  and the other xenon isotope responses remain pending. Therefore the
+  percentage change in the complete natural-xenon recoil spectrum is not
+  yet known.
+- Do not estimate the complete correction by multiplying
+  \(W_{\Phi''}/W_M\) by \(r_\chi\), \(F_2/F_1\), or a point-nucleon
+  kinematic factor. The charge-sector coefficient has its own derivation,
+  and the spatial-current coefficients require a separate projection.
