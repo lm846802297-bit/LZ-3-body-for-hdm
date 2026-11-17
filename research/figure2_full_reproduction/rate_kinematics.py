@@ -16,11 +16,16 @@ import math
 C_KM_S = 299_792.458
 
 
-def momentum_transfer(mA_GeV: float, ER_GeV: float) -> float:
-    """Exact recoil momentum q=sqrt(2 mA ER + ER^2), in GeV."""
+def nuclear_recoil_momentum(mA_GeV: float, ER_GeV: float) -> float:
+    """Return Q_A=|bold(q_A)|=sqrt(2 m_A E_R+E_R^2), in GeV."""
     if mA_GeV <= 0.0 or ER_GeV < 0.0:
         raise ValueError("Require mA>0 and ER>=0")
     return math.sqrt(2.0 * mA_GeV * ER_GeV + ER_GeV**2)
+
+
+def momentum_transfer(mA_GeV: float, ER_GeV: float) -> float:
+    """Backward-compatible alias for the spatial nuclear transfer Q_A."""
+    return nuclear_recoil_momentum(mA_GeV, ER_GeV)
 
 
 def wmax_squared(
@@ -38,10 +43,10 @@ def wmax_squared(
     gamma = 1.0 / math.sqrt(1.0 - beta * beta)
     Echi = mchi_GeV * gamma
     pchi = Echi * beta
-    q = momentum_transfer(mA_GeV, ER_GeV)
+    Q_A = nuclear_recoil_momentum(mA_GeV, ER_GeV)
     return (
         mchi_GeV**2
-        + 2.0 * pchi * q
+        + 2.0 * pchi * Q_A
         - 2.0 * (Echi + mA_GeV) * ER_GeV
     )
 
@@ -68,13 +73,13 @@ def vmin_three_body_beta(
         raise ValueError("Require mchi,mA>0 and ms,ER>=0")
     if ER_GeV == 0.0 and ms_GeV == 0.0:
         return 0.0
-    q = momentum_transfer(mA_GeV, ER_GeV)
+    Q_A = nuclear_recoil_momentum(mA_GeV, ER_GeV)
     a = ms_GeV + (mA_GeV * ER_GeV + 0.5 * ms_GeV**2) / mchi_GeV
-    denom = q * q + a * a
+    denom = Q_A * Q_A + a * a
     if denom == 0.0:
         return 0.0
-    radicand = q * q - ER_GeV * ER_GeV + a * a
-    beta = (q * ER_GeV + a * math.sqrt(radicand)) / denom
+    radicand = Q_A * Q_A - ER_GeV * ER_GeV + a * a
+    beta = (Q_A * ER_GeV + a * math.sqrt(radicand)) / denom
     return beta
 
 
