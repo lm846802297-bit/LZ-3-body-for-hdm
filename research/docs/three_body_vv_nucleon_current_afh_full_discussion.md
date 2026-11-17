@@ -1715,3 +1715,807 @@ t_N=t_A=-2m_AE_R.
 t_N=-Q_A^2=t_A-E_R^2.
 \]
 这两个处方的差别不是符号问题，而是不同的核子能量转移近似。正式计算必须在 metadata 中记录所用处方；不能把 \(Q_A^2\)、\(t_A\)、\(t_N\) 混为一个 q2。
+
+
+## 30. Dirac–Pauli 核子流的非相对论展开：逐项推导
+
+本节是从单核子流进入 AFH 核结构的关键。不能只引用一个 \(F_1+2F_2\) 的结果；必须同时说明旋量归一化、动量方向、Pauli 项符号以及时间、空间分量分别来自哪里。
+
+### 30.1 运动学变量和外部旋量
+
+定义单核子平均动量
+\[
+\mathbf K_N=\frac{\mathbf p_N'+\mathbf p_N}{2},
+\qquad
+\mathbf q_N=\mathbf p_N'-\mathbf p_N.
+\]
+于是
+\[
+\mathbf p_N'=\mathbf K_N+\frac{\mathbf q_N}{2},
+\qquad
+\mathbf p_N=\mathbf K_N-\frac{\mathbf q_N}{2}.
+\]
+非相对论展开参数为
+\[
+\frac{|\mathbf K_N|}{m_N}\ll1,\qquad
+\frac{Q_N}{m_N}\ll1,\qquad
+Q_N=|\mathbf q_N|.
+\]
+采用 \(\bar u u=2m_N\) 的 Dirac 旋量：
+\[
+u(\mathbf p)=
+\sqrt{E_{\mathbf p}+m_N}
+\begin{pmatrix}
+\xi\\[2pt]
+\dfrac{\boldsymbol\sigma\cdot\mathbf p}
+{E_{\mathbf p}+m_N}\xi
+\end{pmatrix},
+\qquad
+E_{\mathbf p}=\sqrt{m_N^2+\mathbf p^2}.
+\]
+展开到所需阶：
+\[
+E_{\mathbf p}=m_N+\frac{\mathbf p^2}{2m_N}
++\mathcal O\!\left(\frac{p^4}{m_N^3}\right),
+\]
+\[
+\frac{1}{E_{\mathbf p}+m_N}
+=\frac{1}{2m_N}
++\mathcal O\!\left(\frac{p^2}{m_N^3}\right).
+\]
+整个计算只需要 Pauli 矩阵恒等式
+\[
+(\boldsymbol\sigma\cdot\mathbf a)
+(\boldsymbol\sigma\cdot\mathbf b)
+=\mathbf a\cdot\mathbf b
++i\boldsymbol\sigma\cdot(\mathbf a\times\mathbf b).
+\]
+
+### 30.2 时间分量的 Dirac 项
+
+先计算不含 Pauli form factor 的时间分量：
+\[
+J_{D}^{0}
+=F_1\bar u(\mathbf p_N')\gamma^0u(\mathbf p_N).
+\]
+代入旋量，并保留到二阶动量：
+\[
+\begin{aligned}
+\bar u'\gamma^0u
+={}&2m_N\,\xi'^\dagger
+\left[
+1+\frac{\mathbf p_N'^2+\mathbf p_N^2}{8m_N^2}
++\frac{(\boldsymbol\sigma\cdot\mathbf p_N')
+(\boldsymbol\sigma\cdot\mathbf p_N)}
+{4m_N^2}
+\right]\xi+\cdots\\
+={}&2m_N\,\xi'^\dagger
+\left[
+1+\frac{\mathbf p_N'^2+\mathbf p_N^2
++2\mathbf p_N'\cdot\mathbf p_N}{8m_N^2}
++\frac{i\boldsymbol\sigma\cdot
+(\mathbf p_N'\times\mathbf p_N)}{4m_N^2}
+\right]\xi+\cdots .
+\end{aligned}
+\]
+由平均动量定义，
+\[
+\mathbf p_N'^2+\mathbf p_N^2
++2\mathbf p_N'\cdot\mathbf p_N
+=(\mathbf p_N'+\mathbf p_N)^2
+=4\mathbf K_N^2,
+\]
+而
+\[
+\mathbf p_N'\times\mathbf p_N
+=\mathbf q_N\times\mathbf K_N.
+\]
+因此
+\[
+\boxed{
+\bar u'\gamma^0u
+=
+2m_N\,\xi'^\dagger
+\left[
+1+\frac{\mathbf K_N^2}{2m_N^2}
++\frac{i\boldsymbol\sigma_N\cdot
+(\mathbf q_N\times\mathbf K_N)}{4m_N^2}
+\right]\xi+\cdots .
+}
+\]
+这一步已经显示出一个重要事实：即使从纯矢量 Dirac 项开始，时间分量也不只有一个常数电荷项；它还包含核子平均动量与自旋的耦合。
+
+### 30.3 时间分量的 Pauli 项
+
+按本文统一的约定
+\[
+\Gamma_N^\mu=
+F_1(t_N)\gamma^\mu+
+\frac{iF_2(t_N)}{2m_N}
+\sigma^{\mu\nu}q_{N,\nu},
+\]
+有
+\[
+J_P^0=
+\frac{iF_2}{2m_N}
+\bar u'\sigma^{0\nu}q_{N,\nu}u.
+\]
+因为 \(\sigma^{00}=0\)，只剩空间转移。用
+\[
+\sigma^{0i}=i\gamma^0\gamma^i
+\]
+以及 \(q_{N,i}=-q_N^i\)，可得
+\[
+\bar u'i\sigma^{0\nu}q_{N,\nu}u
+=
+\bar u'\boldsymbol\alpha\cdot\mathbf q_Nu.
+\]
+代入非相对论旋量：
+\[
+\begin{aligned}
+\bar u'\boldsymbol\alpha\cdot\mathbf q_Nu
+={}&
+\xi'^\dagger\left[
+(\boldsymbol\sigma\cdot\mathbf q_N)
+(\boldsymbol\sigma\cdot\mathbf p_N)
+-
+(\boldsymbol\sigma\cdot\mathbf p_N')
+(\boldsymbol\sigma\cdot\mathbf q_N)
+\right]\xi+\cdots\\
+={}&
+\xi'^\dagger\left[
+-Q_N^2
++2i\boldsymbol\sigma_N\cdot
+(\mathbf q_N\times\mathbf K_N)
+\right]\xi+\cdots .
+\end{aligned}
+\]
+于是
+\[
+\boxed{
+J_P^0=
+-\frac{F_2Q_N^2}{2m_N}
++i\frac{F_2}{m_N}
+\boldsymbol\sigma_N\cdot
+(\mathbf q_N\times\mathbf K_N)+\cdots .
+}
+\]
+将 Dirac 和 Pauli 两部分相加，得到
+\[
+\boxed{
+\begin{aligned}
+J_N^0={}&
+2m_NF_1
++\frac{F_1}{m_N}\mathbf K_N^2
+-\frac{F_2}{2m_N}Q_N^2\\
+&+
+i\frac{F_1+2F_2}{2m_N}
+\boldsymbol\sigma_N\cdot
+(\mathbf q_N\times\mathbf K_N)
++\cdots .
+\end{aligned}
+}
+\]
+这里的 \(F_i\) 均指 \(F_i^{V,N}(t_N)\)。省略项包含更高阶动量修正及相应 form factor 的更高阶展开。
+
+**为什么出现 \(F_1+2F_2\)？**
+
+Dirac 部分的自旋—轨道系数是 \(F_1/(2m_N)\)，Pauli 部分的系数是 \(F_2/m_N\)。两者相加：
+\[
+\frac{F_1}{2m_N}+\frac{F_2}{m_N}
+=\frac{F_1+2F_2}{2m_N}.
+\]
+所以这个组合不是人为定义出来的，而是 Dirac 和 Pauli 两种相对论结构在时间分量中共同产生的。
+
+### 30.4 空间分量：对流电流和磁化电流
+
+空间 Dirac 项为
+\[
+J_D^i=F_1\bar u'\gamma^iu.
+\]
+利用 Pauli 矩阵恒等式可得
+\[
+\boxed{
+\bar u'\boldsymbol\gamma u
+=
+2\mathbf K_N+i\boldsymbol\sigma_N\times\mathbf q_N
++\cdots .
+}
+\]
+空间 Pauli 项在领先非相对论阶给出
+\[
+\frac{iF_2}{2m_N}
+\bar u'\sigma^{i\nu}q_{N,\nu}u
+=
+iF_2(\boldsymbol\sigma_N\times\mathbf q_N)^i+\cdots .
+\]
+因此
+\[
+\boxed{
+\mathbf J_N=
+2F_1\mathbf K_N+
+i(F_1+F_2)\boldsymbol\sigma_N\times\mathbf q_N
++\cdots .
+}
+\]
+空间流出现的不是 \(F_1+2F_2\)，而是
+\[
+\boxed{G_M=F_1+F_2.}
+\]
+这正是 Sachs 磁 form factor。时间分量的自旋—轨道修正和空间分量的磁化流必须分别保留，不能把二者统一乘同一个 \(F_1+2F_2\)。
+
+### 30.5 用 Sachs form factor 做独立检查
+
+在 Breit 系中 \(\mathbf K_N=0\)、\(q_N^0=0\)。于是
+\[
+J_N^0=2m_NF_1-\frac{F_2Q_N^2}{2m_N}
+=2m_N\left(F_1-\frac{Q_N^2}{4m_N^2}F_2\right),
+\]
+\[
+\mathbf J_N=i(F_1+F_2)\boldsymbol\sigma_N\times\mathbf q_N.
+\]
+定义
+\[
+G_E=F_1-\frac{Q_N^2}{4m_N^2}F_2,\qquad
+G_M=F_1+F_2,
+\]
+则
+\[
+J_N^0=2m_NG_E,\qquad
+\mathbf J_N=iG_M\boldsymbol\sigma_N\times\mathbf q_N.
+\]
+这与标准电、磁 Sachs 分解一致，是检查 Pauli 项符号和动量方向的一个非常有效的单核子测试。
+
+### 30.6 归一化成非相对论核子流
+
+若将协变核子矩阵元整体除以 \(2m_N\)，得到便于嵌入非相对论核算符的形式：
+\[
+\boxed{
+\begin{aligned}
+\frac{J_N^0}{2m_N}
+={}&F_1
++\frac{F_1\mathbf K_N^2}{2m_N^2}
+-\frac{F_2Q_N^2}{4m_N^2}\\
+&+
+i\frac{F_1+2F_2}{4m_N^2}
+\boldsymbol\sigma_N\cdot
+(\mathbf q_N\times\mathbf K_N)+\cdots ,
+\\[4pt]
+\frac{\mathbf J_N}{2m_N}
+={}&
+\frac{F_1}{m_N}\mathbf K_N
++i\frac{F_1+F_2}{2m_N}
+\boldsymbol\sigma_N\times\mathbf q_N+\cdots .
+\end{aligned}
+}
+\]
+四类结构现在可以清楚区分：
+1. \(F_1\)：领先阶矢量电荷；
+2. \(F_1\mathbf K_N^2\) 和 \(F_2Q_N^2\)：时间分量的自旋无关次领先修正；
+3. \(F_1+2F_2\)：时间分量自旋—轨道电荷；
+4. \(F_1\) 与 \(F_1+F_2\)：空间对流和磁化电流。
+
+对当前 \(u+d+s\) 零动量 benchmark，
+\[
+F_1=3,\qquad F_2=-0.552,
+\]
+因此
+\[
+F_1+2F_2=1.896,\qquad F_1+F_2=2.448.
+\]
+这两个组合分别进入时间自旋—轨道项和空间磁化项。
+
+### 30.7 Gordon identity 与流守恒检查
+
+在相同质量、外部核子均在壳时，Gordon identity 为
+\[
+\bar u(p')\gamma^\mu u(p)
+=
+\bar u(p')
+\left[
+\frac{(p'+p)^\mu}{2m_N}
++\frac{i\sigma^{\mu\nu}q_{N,\nu}}{2m_N}
+\right]u(p).
+\]
+同时
+\[
+q_{N\mu}\sigma^{\mu\nu}q_{N,\nu}=0
+\]
+来自 \(\sigma^{\mu\nu}\) 的反对称性，而
+\[
+\bar u(p')\slashed q_Nu(p)
+=\bar u(p')(\slashed p'-\slashed p)u(p)
+=(m_N-m_N)\bar u(p')u(p)=0.
+\]
+因此
+\[
+\boxed{q_{N\mu}J_N^\mu=0.}
+\]
+这应当作为自由核子数值实现的单元测试。若代码在相同质量、在壳旋量和统一 \(q_N\) 约定下不能满足该关系，通常意味着 Pauli 项符号、指标升降或 gamma 矩阵约定有误。
+
+束缚核子不是严格自由在壳粒子，不能把上述自由核子 Ward 恒等式机械地当作每个单粒子近似的精确恒等式。核整体的连续性方程应与所用核 Hamiltonian 和核流近似保持一致；若采用与核 Hamiltonian 不一致的一体流截断，剩余差异需要作为截断误差检查。
+
+## 31. 从单核子流到核内算符：为什么出现 \(M\)、\(\Phi''\)、\(\Delta\) 和 \(\Sigma'\)
+
+### 31.1 把平均核子动量变成核内动量算符
+
+在一体冲量近似中，核子流嵌入原子核时，对第 \(i\) 个核子的平面波因子为
+\[
+e^{i\mathbf q_A\cdot\mathbf r_i}.
+\]
+单核子矩阵元中的平均动量 \(\mathbf K_i\) 在坐标空间不能简单替换成一个数；它应作为作用在束缚核波函数上的动量算符。对任意初末单粒子态，
+\[
+\left\langle p_i'\left|
+\frac12\left\{e^{i\mathbf q_A\cdot\mathbf r_i},\mathbf p_i\right\}
+\right|p_i\right\rangle
+=
+\frac{\mathbf p_i'+\mathbf p_i}{2}
+\langle p_i'|e^{i\mathbf q_A\cdot\mathbf r_i}|p_i\rangle.
+\]
+因此用反对易子可以同时保证：
+- 平均初末动量的正确矩阵元；
+- 对有限动量转移算符的厄米性关系；
+- 导数作用在核波函数上的正确位置。
+
+在 \(F_i\) 暂时取同位素内常数时，归一化的一体核电荷密度可以写成
+\[
+\begin{aligned}
+\widehat\rho_A(\mathbf q_A)
+=\sum_{i=1}^{A}e^{i\mathbf q_A\cdot\mathbf r_i}
+\bigg[
+&F_1^{N_i}
++\frac{F_1^{N_i}}{2m_{N_i}^2}\mathbf K_i^2
+-\frac{F_2^{N_i}}{4m_{N_i}^2}Q_A^2\\
+&+
+i\frac{F_1^{N_i}+2F_2^{N_i}}{4m_{N_i}^2}
+\boldsymbol\sigma_i\cdot(\mathbf q_A\times\mathbf K_i)
+\bigg]+\cdots ,
+\end{aligned}
+\]
+其中最后一项的 \(\mathbf K_i\) 应理解为上面的对称化算符，而不是经典数值。若 \(F_i^{p}\ne F_i^{n}\)，必须分别对质子和中子求和。
+
+### 31.2 四个最直接的一体核算符
+
+把不同项单独写出，可以看到它们在核结构上的差别。
+
+**矢量电荷密度：**
+\[
+\widehat\rho_M(\mathbf q_A)
+=
+\sum_i F_1^{N_i}
+e^{i\mathbf q_A\cdot\mathbf r_i}.
+\]
+这是 AFH 的 \(M\) 响应来源。
+
+**自旋—轨道电荷密度：**
+\[
+\widehat\rho_{\rm SO}(\mathbf q_A)
+=
+\sum_i
+i\frac{F_1^{N_i}+2F_2^{N_i}}{4m_{N_i}^2}
+\boldsymbol\sigma_i\cdot
+\left[
+\mathbf q_A\times
+\frac12\left\{
+e^{i\mathbf q_A\cdot\mathbf r_i},\mathbf p_i
+\right\}
+\right].
+\]
+它包含核子自旋、核内轨道动量和外部动量转移，是 AFH \(\Phi''\) 响应的核心候选来源。
+
+**对流电流：**
+\[
+\widehat{\mathbf j}_{\rm conv}(\mathbf q_A)
+=
+\sum_i\frac{F_1^{N_i}}{m_{N_i}}
+\frac12\left\{
+e^{i\mathbf q_A\cdot\mathbf r_i},\mathbf p_i
+\right\}.
+\]
+它含有核子内部轨道运动；多极展开后，其横向磁投影与 AFH \(\Delta\) 响应相关。
+
+**磁化电流：**
+\[
+\widehat{\mathbf j}_{\rm mag}(\mathbf q_A)
+=
+\sum_i i\frac{F_1^{N_i}+F_2^{N_i}}{2m_{N_i}}
+e^{i\mathbf q_A\cdot\mathbf r_i}
+\boldsymbol\sigma_i\times\mathbf q_A.
+\]
+由于
+\[
+\mathbf q_A\cdot(\boldsymbol\sigma_i\times\mathbf q_A)=0,
+\]
+该领先磁化项是横向电流，直接提示需要检查横向自旋响应。其他纵向自旋结构是否出现，必须由完整相对论流及其高阶展开决定，不能只凭这个领先磁化项推断。
+
+### 31.3 为什么自旋—轨道项对应 \(\Phi''\)，而不是普通 SD
+
+AFH 的矢量电荷多极定义为
+\[
+M_{JM}(\mathbf q_A\mathbf r)
+=j_J(Q_Ar)Y_{JM}(\widehat{\mathbf r}).
+\]
+平面波展开为
+\[
+e^{i\mathbf q_A\cdot\mathbf r}
+=
+4\pi\sum_{JM}i^J
+j_J(Q_Ar)
+Y_{JM}^{*}(\widehat{\mathbf q}_A)
+Y_{JM}(\widehat{\mathbf r}).
+\]
+因此核子密度算符在核态上的矩阵元自然被组织成 \(M_{JM}\) 多极。
+
+AFH 的自旋—轨道多极可以写为
+\[
+\boxed{
+\Phi''_{JM}
+=
+i\left(\frac{1}{Q_A}\boldsymbol\nabla M_{JM}\right)
+\cdot
+\left(
+\boldsymbol\sigma\times\frac{1}{Q_A}\boldsymbol\nabla
+\right),
+}
+\]
+其中右侧的梯度作用在单粒子核波函数上。它正是“外部动量转移 × 核内平均动量，再与核子自旋点乘”的多极化表达。长波极限下，AFH 给出
+\[
+\sqrt{4\pi}\,\Phi''_{00}(0)
+=
+\frac13\sum_i
+\boldsymbol\sigma_i\cdot\mathbf l_i\,t^\tau(i),
+\]
+其中 \(\mathbf l_i=\mathbf r_i\times\mathbf p_i\)，\(t^\tau\) 是同位旋算符。这个极限直接显示它测量的是核子自旋与轨道角动量的相关，而不是单纯的未成对核子总自旋。
+
+因此 \(\Phi''\) 可以产生旋转标量响应，甚至在总核自旋为零的核中也不必严格为零。它与常规 SD 的 \(\Sigma'\)、\(\Sigma''\) 物理含义不同。AFH 对六类基本核算符及其多极结构的系统定义见 Anand–Fitzpatrick–Haxton, arXiv:1308.6288。
+
+### 31.4 \(M\)-\(\Phi''\) 干涉为什么必须保留
+
+如果核电荷密度写成
+\[
+\widehat\rho_A=
+c_M\widehat M+c_\Phi\widehat\Phi''+\cdots ,
+\]
+则核矩阵元为
+\[
+\mathcal A_A=c_M\langle A'|\widehat M|A\rangle
++c_\Phi\langle A'|\widehat\Phi''|A\rangle+\cdots .
+\]
+平方后必然出现
+\[
+\begin{aligned}
+|\mathcal A_A|^2={}&
+|c_M|^2|\langle M\rangle|^2
++|c_\Phi|^2|\langle\Phi''\rangle|^2\\
+&+2\operatorname{Re}
+\left[
+c_Mc_\Phi^*
+\langle M\rangle\langle\Phi''\rangle^*
+\right]+\cdots .
+\end{aligned}
+\]
+在 AFH 语言中，这三项分别对应
+\[
+R_MW_M,\qquad
+R_{\Phi''}W_{\Phi''},\qquad
+R_{M\Phi''}W_{M\Phi''}.
+\]
+因此只计算 \(W_{\Phi''}\) 的对角项而遗漏 \(W_{M\Phi''}\)，并不是完整的一体核流结果。
+
+对于 Xe-131 的 \(W_M\) 深极小值，如果 \(\langle M\rangle\) 接近零，干涉项也可能因相对振幅变化而影响局部谱形。但这不意味着它必然填平极小值：实际大小和符号由 \(\langle\Phi''\rangle\)、两项 Wilson 系数以及相位共同决定。
+
+### 31.5 AFH v6.0 八种响应与当前核流的关系
+
+仓库 v6.0 源程序的 ResponseNuclear 接口按如下顺序输出响应：
+| 编号 | AFH 响应 | 核算符解释 |
+|---:|---|---|
+| 1 | \(M\) | 矢量电荷 |
+| 2 | \(\Sigma''\) | 纵向自旋 |
+| 3 | \(\Sigma'\) | 横向自旋 |
+| 4 | \(\Phi''\) | 自旋—轨道/纵向矢量相关响应 |
+| 5 | \(\widetilde\Phi'\) | 横向电、自旋—速度张量响应 |
+| 6 | \(\Delta\) | 轨道角动量/对流电流相关响应 |
+| 7 | \(M\Phi''\) | 质量与自旋—轨道干涉 |
+| 8 | \(\Sigma'\Delta\) | 横向自旋与轨道干涉 |
+
+对于当前 VV 一体流，第一轮的物理排序是：
+1. \(M\)：领先阶，必须保留；
+2. \(\Phi''\) 与 \(M\Phi''\)：时间分量自旋—轨道项的第一优先级；
+3. \(\Delta\)、\(\Sigma'\)：由完整空间流收缩决定；
+4. \(\Sigma''\)、\(\widetilde\Phi'\)：由完整多极投影决定，不能仅因为程序有接口就自动加入；
+5. 两核子流：在一体流和误差预算明确后，再按手征 EFT 评估。
+
+这个顺序是模型匹配优先级，不是对所有响应大小的预先断言。
+
+## 32. 完整三体张量与 AFH 核响应如何收缩
+
+### 32.1 暗物质张量
+
+定义暗物质侧自旋平均张量
+\[
+L^{\mu\nu}(p,p',k)
+=
+\frac12\sum_{s,s'}
+\mathcal T_3^\mu(s',s)
+\mathcal T_3^{\nu *}(s',s).
+\]
+它可以直接写成 Dirac trace：
+\[
+\boxed{
+L^{\mu\nu}
+=
+\frac12\operatorname{Tr}
+\left[
+(\slashed p'+m_\chi)
+\Gamma_3^\mu
+(\slashed p+m_\chi)
+\overline\Gamma_3^\nu
+\right],
+}
+\]
+其中
+\[
+\overline\Gamma_3^\nu
+=\gamma^0(\Gamma_3^\nu)^\dagger\gamma^0.
+\]
+由于 \(\Gamma_3^\mu\) 包含两张辐射图，\(L^{\mu\nu}\) 自动包含
+\[
+|{\cal M}_a|^2,\qquad |{\cal M}_b|^2,\qquad
+2\operatorname{Re}({\cal M}_a{\cal M}_b^*).
+\]
+程序可以将三项分别输出作诊断，但物理总张量必须由两图先相加后平方得到。
+
+### 32.2 核张量
+
+对初始核自旋 \(J_A\) 平均、对末态核自旋求和，定义
+\[
+W_A^{\mu\nu}(q_A)
+=
+\frac{1}{2J_A+1}
+\sum_{M_A,M_A'}
+J_A^\mu(M_A',M_A)
+J_A^{\nu *}(M_A',M_A).
+\]
+忽略已由核流守恒消去的传播子纵向部分后，
+\[
+\boxed{
+\overline{|\mathcal M_3|^2}
+=
+\frac{1}{|t_A-m_{A'}^2|^2}
+L_{\mu\nu}W_A^{\mu\nu}
+}
+\]
+其中 \(g_1,g_2,g_q\) 等耦合可以包含在 \(L\) 或 \(W_A\) 中，但必须保持统一记账。若媒介子传播子不在重媒介子极限，分母应保留其完整 \(t_A\) 依赖。
+
+AFH 核响应不是任意替代 \(W_A^{00}\) 的一条曲线，而是将核张量按旋转、宇称和 CP 允许的多极算符分解后的独立结构函数。三体过程的暗物质张量依赖 \(k_s\)，所以 AFH 提供核结构矩阵元，但不能替代三体粒子物理张量和相空间积分。
+
+### 32.3 只保留 \(M\) 时的简化条件
+
+若核子矢量电荷项主导，且核侧其他分量的贡献低于目标精度，则
+\[
+L_{\mu\nu}W_A^{\mu\nu}
+\simeq L_{00}W_A^{00}
+\simeq R_M W_M.
+\]
+这就是当前以 \(W_M^{00}\) 为领先阶基准的依据。
+
+但当核子时间流包含自旋—轨道项时，
+\[
+J_A^0=J_{A,M}^0+J_{A,\Phi''}^0+\cdots,
+\]
+即使暗物质空间流很小，仍然存在
+\[
+L_{00}\left[
+W_M+W_{\Phi''}+W_{M\Phi''}
+\right].
+\]
+因此
+\[
+\frac{\sum_i L^{ii}}{L^{00}}\ll1
+\]
+不能推出 \(W_{\Phi''}\) 可以忽略。这个逻辑区别是本项目必须保留 \(M\Phi''\) 审计的核心原因。
+
+### 32.4 AFH factor-four 在张量收缩中的唯一位置
+
+当前 AFH v6.0 package 的等标量 raw 响应零动量归一化为
+\[
+R_{M,\mathrm{raw}}(0)=\frac{A^2}{4},
+\]
+而物理等质子、等中子耦合响应应为
+\[
+R_M^{\mathrm{phys}}(0)=A^2.
+\]
+所以
+\[
+R_M^{\mathrm{phys}}(Q_A)=4R_{M,\mathrm{raw}}(Q_A)
+\]
+仅在 raw-to-physical 映射时执行一次。若已经使用物理归一化 \(W_M^{\mathrm{phys}}\)，截面前因子不能再乘 4；若点核振幅已经带有 \(Ag_{VN}\)，只乘 \(R_M(Q_A)/R_M(0)\)，不能再乘完整 \(A^2\)。
+
+这一因子与夸克—核子匹配 \(g_{VN}=3g_q\) 无关。前者是 AFH package 响应的归一化约定，后者是 UV 流的核子电荷匹配。
+
+## 33. 从不变振幅到 \(d\sigma/dE_R\) 和天然氙事件率
+
+### 33.1 三体微分截面的不变表达式
+
+初态为暗物质和静止核，三体末态为暗物质、反冲核和标量。定义
+\[
+d\Phi_3=(2\pi)^4\delta^{(4)}
+(p+P-p'-P'-k)
+\prod_{f=p',P',k}\frac{d^3p_f}{(2\pi)^3\,2E_f}.
+\]
+则不变截面为
+\[
+\boxed{
+d\sigma_3=
+\frac{\overline{|\mathcal M_3|^2}}
+{4\sqrt{(p\cdot P)^2-m_\chi^2m_A^2}}
+\,d\Phi_3.
+}
+\]
+在靶核静止系，
+\[
+4\sqrt{(p\cdot P)^2-m_\chi^2m_A^2}
+=4m_A|\mathbf p|
+=4m_AE_\chi v.
+\]
+非相对论暗物质下 \(E_\chi\simeq m_\chi\)，所以通量因子约为 \(4m_Am_\chi v\)。
+
+若要得到 \(d\sigma/dE_R\)，需要在 \(d\Phi_3\) 中用
+\[
+E_R=E_A'-m_A
+\]
+插入 \(\delta(E_R-(E_A'-m_A))\)，对末态核方向、末态暗物质和标量动量积分。若矩阵元依赖标量能量或角度，不能只保留 \(I(D)\)，而要对完整 \(\mathcal M_3\) 积分。
+
+### 33.2 \(L^{00}\) 近似与完整结果的对照
+
+建议每个数值点至少同时输出：
+\[
+\begin{aligned}
+\mathcal R_{00}&=L^{00}W_A^{00},\\
+\mathcal R_{0i}&=2\operatorname{Re}(L^{0i}W_A^{0i}),\\
+\mathcal R_{ij}&=L^{ij}W_A^{ij}.
+\end{aligned}
+\]
+这里 \(\mathcal R_{00}\) 还应进一步分解成 \(M\)、\(\Phi''\)、\(M\Phi''\) 等核响应项。只报告 \(\sum_iL^{ii}/L^{00}\) 并不足以验收完整核流，因为它没有包含核张量本身的结构，也没有给出 \(L^{0i}\) 干涉。
+
+推荐同时给出两种截面：
+\[
+\left.\frac{d\sigma_3}{dE_R}\right|_{M\text{-only}},
+\qquad
+\left.\frac{d\sigma_3}{dE_R}\right|_{\rm full\ one-body}.
+\]
+并分别报告绝对差
+\[
+\Delta_{\rm abs}
+=\frac{d\sigma_{\rm full}}{dE_R}
+-\frac{d\sigma_{M}}{dE_R}
+\]
+和相对差
+\[
+\Delta_{\rm rel}
+=\frac{d\sigma_{\rm full}/dE_R}
+{d\sigma_M/dE_R}-1.
+\]
+当 \(W_M\) 位于深极小值时，相对差可能非常大，但绝对事件率仍可能很小；两者必须一起报告。
+
+### 33.3 天然氙同位素求和
+
+对同位素 \(A\)，定义天然丰度数分数 \(x_A\)，并满足
+\[
+\sum_A x_A=1.
+\]
+若按探测器总质量归一化，则同位素质量分数为
+\[
+\xi_A=\frac{x_A m_A}{\sum_Bx_Bm_B}.
+\]
+每单位探测器质量的微分事件率为
+\[
+\boxed{
+\frac{dR}{dE_R}
+=
+\frac{\rho_\chi}{m_\chi}
+\sum_A\frac{\xi_A}{m_A}
+\int d^3v\,f_{\rm lab}(\mathbf v)\,
+v\,\frac{d\sigma_A(v)}{dE_R}.
+}
+\]
+若直接使用数丰度，则可等价写成
+\[
+\frac{dR}{dE_R}
+=
+\frac{\rho_\chi}{m_\chi}
+\frac{1}{\sum_Bx_Bm_B}
+\sum_Ax_A
+\int d^3v\,f_{\rm lab}(\mathbf v)\,
+v\,\frac{d\sigma_A(v)}{dE_R}.
+\]
+两种写法等价，不能一边使用质量分数 \(\xi_A\)，另一边又重复乘 \(m_A\)。
+
+天然氙求和必须在同位素级截面计算完成后进行，因为不同同位素的 \(J_A\)、OBDME、AFH 响应曲线和 \(Q_A(E_R)\) 均不同。一个 Xe-131 的 \(W_M\) 深极小值不能直接等同于天然氙总谱中的同样深度的极小值。
+
+### 33.4 探测器折叠是独立的一层
+
+若实验测量变量为 \(E_{\rm obs}\)，则需要再对核反冲率做探测器响应卷积：
+\[
+\frac{dN}{dE_{\rm obs}}
+=
+\mathcal E
+\int dE_R\,
+\epsilon(E_R)\,
+G(E_{\rm obs}|E_R)\,
+\frac{dR}{dE_R},
+\]
+其中 \(\mathcal E\) 为曝光量，\(\epsilon\) 为效率，\(G\) 为能量响应核。该层不属于 AFH 核响应，也不属于三体相空间。核响应、halo fold、同位素求和和探测器卷积必须分别保存输入和输出。
+
+## 34. 从理论公式到程序实现的最小验收闭环
+
+为避免不同层级的数值误差互相掩盖，建议按下面顺序做单元测试。
+
+| 层级 | 必须验证的关系 | 通过条件 |
+|---|---|---|
+| 四动量 | \(q_A=p-p'-k\) | 每个相空间点四动量守恒残差满足设定精度 |
+| 核反冲 | \(Q_A^2=E_R(E_R+2m_A)\)、\(t_A=-2m_AE_R\) | 精确关系与非相对论近似差异被分别记录 |
+| 三体顶点 | 两张图的 \(r_1,r_2,D_1,D_2\) | 与独立费米子线动量流检查一致 |
+| 极点宽度 | \(\Gamma_{\chi_2}\) | 部分宽度、总宽度和极点位置可追溯 |
+| Ward 收缩 | 零宽度 \(q_A\cdot\mathcal T_3\) 公式 | 与解析式逐点一致；有限宽度方案另行测试 |
+| 核子流 | \(F_1,F_2\) Dirac–Pauli 顶点 | 自由核子直接旋量计算与 NR 展开在共同适用区间一致 |
+| 核子守恒流 | \(q_N\cdot J_N=0\) | 同质量、在壳自由核子测试通过 |
+| flavor 匹配 | \(F_1^{uds}(0)=3\)、\(F_2^{uds}(0)=-0.552\) | 零动量锚点恢复 |
+| AFH \(M\) | raw \(A^2/4\) 到 physical \(A^2\) | factor 4 只出现一次 |
+| AFH \(\Phi''\) | 多极和 OBDME | 选择定则、长波极限及独立矩阵元检查通过 |
+| 干涉 | \(M\Phi''\) | 实部、符号、同位旋通道均可追溯 |
+| 三体相空间 | \(d\Phi_3\) 与 \(I(D)\) | 常振幅极限恢复解析 \(I(D)/(4\pi^2)\) |
+| 数值积分 | \(\epsilon,\Omega_*\)、核反冲和 halo 速度 | 各积分层独立收敛 |
+| 天然氙 | 同位素丰度与质量归一化 | 数丰度和质量分数两种写法一致 |
+
+### 34.1 自由核子直接计算与 NR 展开的对照
+
+对给定 \(p_N,p_N'\)，先直接用 Dirac 矩阵计算
+\[
+J_{\rm exact}^\mu=
+\bar u(p_N')
+\left[
+F_1\gamma^\mu+
+\frac{iF_2}{2m_N}\sigma^{\mu\nu}q_{N,\nu}
+\right]u(p_N).
+\]
+再用 §30 的 NR 公式计算 \(J_{\rm NR}^\mu\)。定义
+\[
+\delta_{\rm NR}
+=
+\frac{\sqrt{\sum_\mu|J_{\rm exact}^\mu-J_{\rm NR}^\mu|^2}}
+{\sqrt{\sum_\mu|J_{\rm exact}^\mu|^2}}.
+\]
+随着 \(|\mathbf p|/m_N\)、\(Q_N/m_N\) 下降，\(\delta_{\rm NR}\) 应按被省略阶数下降。若不下降，优先检查 Pauli 项的指标和符号，而不是调整 AFH 响应。
+
+### 34.2 常振幅三体相空间对照
+
+构造一个人为与 \(\epsilon,\Omega_*\) 无关的常数振幅，分别计算：
+1. 直接三体不变相空间积分；
+2. 先做外层运动学，再使用解析 \(I(D)/(4\pi^2)\)。
+
+两者在相同的重粒子近似和相同 Jacobian 下应一致。然后逐步恢复 \(D_1,D_2\) 的能量和角度依赖，检查常振幅近似何时开始失效。这样可以把相空间算法错误与真实 Breit–Wigner 动力学区别开。
+
+### 34.3 AFH 长波极限和多极检查
+
+对每个同位素分别验证：
+\[
+R_M^{\rm phys}(Q_A\to0)=A^2.
+\]
+对 \(\Phi''\)，检查 \(J=0\) 长波矩阵元与
+\[
+\frac13\sum_i\boldsymbol\sigma_i\cdot\mathbf l_i
+\]
+的对应关系，并检查允许的 \(J=2\) 分量。Xe-131 的 \(M\) rank-2 多极仍然属于 \(M\) 响应，不能因为 \(J=2\) 就把它记成 \(\Phi''\) 或 SD 响应。
+
+### 34.4 必须保持的物理状态边界
+
+本次新增的解析推导不等于完成了下列数值任务：
+- 没有得到完整有限 \(t_N\) 的 \(F_1^{uds,N}(t_N)\)、\(F_2^{uds,N}(t_N)\) 数据及协方差；
+- 没有得到三体完整张量在全部相空间上的独立收敛结果；
+- 没有完成 Xe-131 的 AFH \(W_{\Phi''}\) 与 \(W_{M\Phi''}\) 数值投影；
+- 没有得到完整一体流修正后的天然氙 halo-folded 反冲谱；
+- 没有计算 VV 两核子流对当前高动量区间的数值修正。
+
+因此，现阶段可以说：三体振幅、相空间、单核子流和 AFH 核响应之间的解析联系已经明确；但不能说完整 VV 三体核响应或最终反冲谱已经通过数值验收。
+
