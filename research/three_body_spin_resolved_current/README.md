@@ -143,3 +143,7 @@ near-pole convergence checks, and finite-width Ward diagnostics.
 ## Results
 
 See [results/2026-11-18/RESULTS.md](results/2026-11-18/RESULTS.md) for the finite-width Ward identity checks, recoil-kernel width comparison, near-pole quadrature convergence, and scope limits. The reproducibility bundle is archived as [finite_width_spin_current_recoil_spectrum.zip](results/2026-11-18/finite_width_spin_current_recoil_spectrum.zip).
+
+## AFH matching next stage
+
+See [AFH_MATCHING_NEXT_STAGE.md](AFH_MATCHING_NEXT_STAGE.md) for the corrected elastic-VV versus radiative-three-body matching distinction, the finite-width matching target, the Xe-131 response integration formula, and the validated (W_M)-only natural-xenon halo-fold baseline. The rate-level (Phi'') correction is explicitly pending until its three-body coefficient is derived and validated.
