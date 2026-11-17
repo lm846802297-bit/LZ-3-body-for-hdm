@@ -1084,7 +1084,12 @@ F_2^{s/p}(0)=-0.064,
 F_2^{V,p}(0)=-0.552,\qquad
 F_2^{V,p}(0)/F_1^{V,p}(0)\simeq-0.184.
 \]
-在同位旋对称近似下中子三味总和相同。Hoferichter–Klos–Schwenk 2015 年 Eq. (23) 的紧凑 \(\kappa_N,\kappa_N^s\) 写法若直接求和，会与 2017 年显式 flavor-separated 输入产生不同结论；两套味道定义尚需逐项对照，当前 benchmark 明确采用 2017 年附录 A.1 的中心值，不静默拼接两种参数化。\(F_2^{s/p}(0)\) 的输入误差具有共同来源，尚未传播完整协方差；有限 \(t_A\) 的 form factors 也尚未生成。
+**HKS 2015 的对照与使用边界：** HKS Eq. (21) 给出显式 flavor 重构
+\[
+F_2^{u/p}=2F_2^{\rm EM,p}+F_2^{\rm EM,n}+F_2^{s,N},\qquad
+F_2^{d/p}=F_2^{\rm EM,p}+2F_2^{\rm EM,n}+F_2^{s,N}.
+\]
+结合其 isospin 关系和经验的质子/中子电磁 Pauli form factors、strange Pauli form factor，得到与 Bishara et al. (2017) Appendix A.1 相同的 flavor-separated 中心值 \(1.609,-2.097,-0.064\)，其等权重三味和为 \(-0.552\)。HKS Eq. (23) 的紧凑写法若按字面、并把其中 \(\kappa_N\) 与 Eq. (24) 的物理核子反常磁矩采用同一含义来相加，会形式上得到零和；但它不能在不核清符号定义和近似条件的情况下，作为独立的 flavor-sum 恒等式去覆盖 Eq. (21) 的显式重构。**因此本项目不再使用“由 HKS 紧凑式可知三味 \(F_2^V(0)=0\)”这一历史判断；当前 benchmark 明确采用 Bishara et al. Appendix A.1 的显式 flavor-separated 输入。** 有限 \(t_A\) 的形状、误差和协方差仍待生产级匹配。
 
 因此当前零动量中心值对应
 \[
@@ -1898,7 +1903,7 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 | F11 LZ 效率加权事件数 | 条件性验证 | 一维 Fig. S2 efficiency、2.84 tonne-year、rate-level 折叠 | 二维 NEST、能量分辨、背景与 profile likelihood 未完成 |
 | F12 \(\chi_2\to\chi_1s\) pole width | 条件性验证 | 条件性 Dirac 纯标量单通道宽度公式和数值测试 | 非完整自能；未纳入所有可能开放衰变道 |
 | F13 完整三体 VV 核流张量与 AFH 收缩 | **未完成** | 正式附录 I 固定了 Dirac–Pauli 与 AFH 响应映射；PR #53 的四分量 DM 张量/点核流诊断 exact-source CI 为 8/8 tests PASS；PR #51 已准备 Xe-131 (M,\Phi'',M\Phi'') native exporter | 尚无核内流与完整 (L_{\mu\nu}W_A^{\mu\nu}) 数值收缩；native Wolfram 输出、有限 (t_A) form factors 和天然氙完整 VV 谱仍未完成 |
-| 核子 \(F_1/F_2\) flavor-universal 匹配 | **解析结构已整理；有限 \(t\) 输入未完成** | \(q_A=p_N'-p_N\) 的 Dirac–Pauli 约定；采用 2017 年显式 flavor-separated 输入 \(F_2^V(0)=-0.552\)；与 HKS 2015 紧凑记号的差异保留待核 | 活动味道/阈值匹配、有限 \(t_A\) form factors、误差和自由核子 NR 数值对照仍待完成 |
+| 核子 \(F_1/F_2\) flavor-universal 匹配 | **解析结构已整理；有限 \(t\) 输入未完成** | \(q_A=p_N'-p_N\) 的 Dirac–Pauli 约定；采用 2017 年显式 flavor-separated 输入 \(F_2^V(0)=-0.552\)；HKS Eq. (21) 显式 flavor 重构与该 benchmark 一致；Eq. (23) 紧凑式不单独用于推断零和；有限 t_A 输入仍待完成 | 活动味道/阈值匹配、有限 \(t_A\) form factors、误差和自由核子 NR 数值对照仍待完成 |
 | Xe-131 \(M,\Phi'',M\Phi''\) | **native export prepared; execution pending** | PR #51 已加入 AFH v6.0 原生 Wolfram exporter、2,401 点 grid 和 Python validator | 无 native CSV/metadata；执行和 SHA-256 验收通过前不报告数值 |
 | Xe-129 \(\Phi''\)、\(M\Phi''\) | **未开始 native export** | Xe-131 导出方案完成后再扩展 | 无 AFH 数值网格或完整三体收缩 |
 | Xe-129/Xe-131 \(\Sigma'\) | **先前表格已撤回；native pending** | 旧 Python source-translated selected-\(q\) 表因算符映射审查已撤回 | native Wolfram 输出、逐点对照、归一化和多极收敛待完成 |
@@ -5100,7 +5105,12 @@ F_2^V(0)/F_1^V(0)\simeq-0.184.
 \]
 输入 \(F_2^{s/p}(0)=-0.064(17)\) 的不确定度会同时进入 \(F_2^{u/p}\)、\(F_2^{d/p}\) 和三味总和；没有完整协方差时，不能把这些误差当作独立量简单平方相加。当前 benchmark 明确采用该 2017 年显式 flavor-separated 输入，而不把电磁 \(F_2^p\) 直接代入 universal quark current。
 
-Hoferichter–Klos–Schwenk 2015 年 Eq. (23) 使用 \(\kappa_N,\kappa_N^s\) 的紧凑三味记号；若只按该式的字面形式求和，会得到与上述 2017 年显式 flavor-separated 数值不同的结论。两种写法的 \(\kappa_N\)、strange-current 和 flavor-current 定义必须逐项对照，不能静默拼接。当前记录保留这一文献约定差异，并以 2017 年附录 A.1 的显式中心值作为 benchmark 输入；有限 \(t_A\) 的 \(F_1^{V,N}(t_A)\)、\(F_2^{V,N}(t_A)\) 及其误差/协方差仍待生产级匹配。
+**HKS 2015 的对照与使用边界：** HKS Eq. (21) 给出显式 flavor 重构
+\[
+F_2^{u/p}=2F_2^{\rm EM,p}+F_2^{\rm EM,n}+F_2^{s,N},\qquad
+F_2^{d/p}=F_2^{\rm EM,p}+2F_2^{\rm EM,n}+F_2^{s,N}.
+\]
+结合其 isospin 关系和经验的质子/中子电磁 Pauli form factors、strange Pauli form factor，得到与 Bishara et al. (2017) Appendix A.1 相同的 flavor-separated 中心值 \(1.609,-2.097,-0.064\)，其等权重三味和为 \(-0.552\)。HKS Eq. (23) 的紧凑写法若按字面、并把其中 \(\kappa_N\) 与 Eq. (24) 的物理核子反常磁矩采用同一含义来相加，会形式上得到零和；但它不能在不核清符号定义和近似条件的情况下，作为独立的 flavor-sum 恒等式去覆盖 Eq. (21) 的显式重构。**因此本项目不再使用“由 HKS 紧凑式可知三味 \(F_2^V(0)=0\)”这一历史判断；当前 benchmark 明确采用 Bishara et al. Appendix A.1 的显式 flavor-separated 输入。** 有限 \(t_A\) 的形状、误差和协方差仍待生产级匹配。
 
 这一非零 Pauli 输入会改变两个 NR 系数。以零动量中心值为例，
 \[
