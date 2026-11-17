@@ -876,3 +876,37 @@ J_N^0=2m_NF_1^{V,N}(t)+\cdots
 | \(\Sigma'\)、\(\Sigma''\)、\(\Delta\)、两核子流 | 尚未完成 / 暂不优先 | 由匹配系数和误差预算决定是否扩展 |
 
 **补充结论：** 现有结果支持继续以 \(W_M^{00}\) 作为领先阶主线，但不能据此宣称完整 VV 核流已经由 \(W_M^{00}\) 穷尽。特别是，暗物质侧空间流很小和点状核质心电流只有 ppm 级修正，都不能排除核子时间流中的自旋–轨道电荷项。下一步最有判别力的计算仍然是：在完整三体 \(\mathcal T_3^\mu\) 下完成 flavor-universal Dirac–Pauli 核子流匹配，并定量计算 Xe-131 的 \(W_{\Phi''}\) 与 \(W_{M\Phi''}\)。
+
+## 26. Xe-131 Phi'' response export implementation status (2026-11-18)
+
+The first implementation step has now been added to the existing PR #51 branch.
+The official AFH v6.0 package's existing response interface is used directly:
+
+- index 1: (W_M^{00}), the already validated charge-response baseline;
+- index 4: (W_{Phi''}^{00});
+- index 7: the signed (W_{MPhi''}^{00}) interference response.
+
+The new native Wolfram runner is
+`research/afh_default_density_xe131/run_afh_phi_response_xe131.wls`.
+It checks the exact AFH v6.0 source and Xe-131 density-matrix SHA-256 values,
+uses the same 2,401-node (q_A=0)--0.6 GeV grid and oscillator prescription
+as the existing (W_M) table, and exports the three raw AFH responses plus
+the physical equal-p/n factor-four mapping. It deliberately does not apply
+the separate (q=0) shape renormalization used by the old (W_M) output.
+
+The accompanying validator,
+`research/afh_default_density_xe131/validate_afh_phi_response.py`, checks
+the response-index mapping, exact (y=(q_A b_A/2)^2), the
+(4pi/(2J_A+1)) conversion, one and only one factor of four, diagonal
+positivity, the (M)-(Phi'') Cauchy-Schwarz bound, imaginary residuals,
+zero-momentum (A^2/4	o A^2), and output SHA-256 provenance. Synthetic
+regression tests exercise the bookkeeping and failure paths.
+
+**Execution boundary:** the new Wolfram script has not yet been run on the
+Windows/Wolfram machine. Therefore this update adds a reproducible calculation
+entry point and validator, not new (W_{Phi''}) or (W_{MPhi''}) numerical
+results. It also does not calculate the finite-(t) universal-flavor
+(F_1/F_2), derive the complete three-body Wilson coefficients, or perform
+the (L_{mu
+u}W_A^{mu
+u}) contraction.
