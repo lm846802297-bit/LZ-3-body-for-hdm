@@ -100,29 +100,83 @@ wolframscript -file research/afh_default_density_xe131/run_afh_spatial_response_
 
 The native runner exports the package's own `ResponseNuclear[y,{1,3,6,8},0,0]` results for Xe-129 and Xe-131. Those outputs are the reference data for validating the Python translation.
 
+## Python full-grid result: provisional only
+
+The Python development translation has now been evaluated on a uniform
+2,401-point grid for each isotope:
+\[
+q_A\in[0,0.6]\ \mathrm{GeV},\qquad
+\Delta q_A=0.00025\ \mathrm{GeV}=0.25\ \mathrm{MeV}.
+\]
+The archive contains 4,802 rows total (2,401 each for Xe-129 and Xe-131).
+The full-grid workflow completed successfully, and its validator reported
+**PASS** for grid identity, finite values, nonnegative diagonal responses,
+and the Cauchy–Schwarz bounds for both \(M\)-\(\Phi''\) and
+\(\Sigma'\)-\(\Delta\) response matrices.
+
+**This is a Python internal-consistency PASS only.** It is not a native AFH
+Wolfram comparison and does not validate the translated \(\Sigma'\), \(\Delta\),
+or \(\Sigma'\Delta\) operators against AFH. Do not treat the following ratios
+as physical cross-section enhancements.
+
+| Isotope | Largest sampled \(W_{\Sigma'}/W_M\) | \(q_A\) [GeV] | Largest sampled \(W_\Delta/W_M\) | \(q_A\) [GeV] |
+|---|---:|---:|---:|---:|
+| Xe-129 | \(8.2606\times10^3\) | 0.50100 | 22.6797 | 0.25800 |
+| Xe-131 | 4.91329 | 0.49875 | 2.04565 | 0.25625 |
+
+These large ratios are driven by deep sampled minima of \(W_M\), not by
+large absolute spatial responses. For example:
+
+- Xe-129 at \(q_A=0.501\ \mathrm{GeV}\): \(W_M/W_M(0)=4.38\times10^{-12}\),
+  while \(W_{\Sigma'}/W_{\Sigma'}(0)=1.15\times10^{-3}\). The ratio
+  \(W_{\Sigma'}/W_M\) is therefore dominated by the suppressed denominator.
+- Xe-131 at \(q_A=0.25625\ \mathrm{GeV}\):
+  \(W_M/W_M(0)=6.35\times10^{-8}\),
+  \(W_{\Sigma'}/W_{\Sigma'}(0)=5.31\times10^{-3}\), and
+  \(W_\Delta/W_\Delta(0)=2.77\times10^{-3}\).
+
+The practical implication is that the spatial responses cannot be discarded
+solely because the halo velocity is small or because their ratios are small
+away from diffraction minima. Their actual contribution still depends on the
+three-body Wilson coefficients, nucleon form factors, signed interference,
+and the full particle–nucleus tensor contraction. No rate conclusion follows
+from these response ratios alone.
+
+**Reproducibility**
+
+- Source commit: \`bccea2f710aef62a70b2980f0a6c7f3a901f654f\`.
+- Full-grid Actions run: [44192464067](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44192464067).
+- Downloadable artifact: [artifact 14377421949](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44192464067/artifacts/14377421949).
+- CSV SHA-256: \`08dd97f5db1d9e17d396b992290c694cd09ee88d83ad68affc2ad3ddc794d255\`.
+- Metadata SHA-256: \`2dba829c5fc70b95a1acc2ee9a256cdadf80e96ab81dddc35ca8c2c24cf3b004\`.
+- Validation SHA-256: \`e09c01fb89f7ca981c0b3eeff68788d3b8be842dc22cdc04adac83aee40cbf40\`.
+
+The archive retains the raw AFH isoscalar convention
+\(\tau_1=\tau_2=0\); no physical equal-\(p/n\) factor four is applied.
+The factor four must be introduced once, consistently, only when mapping
+these raw package responses to the physical equal-\(p/n\) coupling.
+
 ## Python/native comparator and execution state
 
-A pointwise comparator is now available at
-\`research/afh_default_density_xe131/compare_afh_spatial_response.py\`. It
-matches Python and native columns for \(W_M\), \(W_{\Sigma'}\), \(W_\Delta\),
-and the signed \(W_{\Sigma'\Delta}\), checks the exact isotope/q-grid
-identity, and independently enforces nonnegative diagonal responses and the
-response-matrix Cauchy–Schwarz bound. Synthetic regression tests cover
-matching, mismatches, duplicate rows, q-grid mismatches, and interference
-bound failures.
+The pointwise comparator is available at
+\`research/afh_default_density_xe131/compare_afh_spatial_response.py\`.
+It matches Python and native columns for \(W_M\), \(W_{\Sigma'}\),
+\(W_\Delta\), and signed \(W_{\Sigma'\Delta}\), checks isotope/q-grid identity,
+and enforces the response-matrix Cauchy–Schwarz bound. Synthetic regression
+tests cover matching, mismatches, duplicate rows, q-grid mismatches, and
+interference-bound failures.
 
-The Linux pre-audit completed with 5/5 spatial-response tests passing and
-uploaded a provisional Python artifact. That run is only an execution and
-software-smoke check; it does not validate the spatial response values.
-The pre-audit q grid has now been aligned to the native Wolfram runner:
+The selected-point Linux pre-audit completed successfully on the same
+11-point grid used by the native runner:
 \(q_A=0,0.05,0.10,0.158,0.20,0.25625,0.30,0.365,0.45,0.49925,0.60\)
-GeV for both Xe-129 and Xe-131.
+GeV for both Xe isotopes. The full-grid Python run above also completed.
+Neither run replaces the native Wolfram comparison.
 
 The native run is configured through the private control repository
 \`lm846802297-bit/research-compute-control\`, with the research checkout
-pinned to commit \`f29209247b4f4124549ca0ee8f164bb5add30b1b\`. The workflow
-has been queued, but no Wolfram output has yet been produced. Therefore
-\(W_{\Sigma'}\), \(W_\Delta\), and \(W_{\Sigma'\Delta}\) remain provisional.
+pinned to commit \`f29209247b4f4124549ca0ee8f164bb5add30b1b\`. The latest
+native workflow run \`44190383661\` is queued and has not produced Wolfram
+output. Therefore the spatial Python translation remains provisional.
 
 ## Next steps
 
