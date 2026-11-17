@@ -1,10 +1,18 @@
 import math
+import sys
 import unittest
+from pathlib import Path
+
 from scipy.integrate import quad
+
+HERE = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(HERE))
 
 from rate_kinematics import (
     C_KM_S,
     mb_lab_speed_pdf,
+    momentum_transfer,
+    nuclear_recoil_momentum,
     vmin_three_body_beta,
     vmin_three_body_km_s,
     wmax_squared,
@@ -12,6 +20,15 @@ from rate_kinematics import (
 
 
 class ThreeBodyKinematicsTests(unittest.TestCase):
+    def test_nuclear_recoil_momentum_is_exact_and_legacy_alias_is_preserved(self):
+        mA, ER = 122.0, 267e-6
+        Q_A = nuclear_recoil_momentum(mA, ER)
+        self.assertAlmostEqual(Q_A**2, ER*(ER+2*mA), delta=1e-14)
+        self.assertEqual(momentum_transfer(mA, ER), Q_A)
+        q_NR = math.sqrt(2.0*mA*ER)
+        self.assertGreaterEqual(Q_A, q_NR)
+        self.assertLess(Q_A/q_NR-1.0, 1e-5)
+
     def test_vmin_solves_wmax_threshold(self):
         mchi, ms, mA, ER = 1000.0, 360e-6, 122.0, 258.178251676e-6
         vmin = vmin_three_body_km_s(mchi, ms, mA, ER)

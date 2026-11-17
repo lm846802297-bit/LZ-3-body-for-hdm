@@ -209,16 +209,21 @@ class PhaseSpaceConvergenceTests(unittest.TestCase):
             delta, z=0.23, phi=1.17,
         )
         P = np.array([self.mA, 0.0, 0.0, 0.0])
-        Pprime = P + point.q
-        closure = point.p - point.p_prime - point.k - point.q
+        Pprime = P + point.q_A
+        closure = point.p + P - point.p_prime - point.k_s - Pprime
+        transfer_closure = point.q_chi - point.q_A - point.k_s
         residuals = (
             eq6.dot(point.p, point.p) - self.mchi**2,
             eq6.dot(point.p_prime, point.p_prime) - self.mchi**2,
-            eq6.dot(point.k, point.k) - self.ms**2,
+            eq6.dot(point.k_s, point.k_s) - self.ms**2,
             eq6.dot(Pprime, Pprime) - self.mA**2,
             np.max(np.abs(closure)),
+            np.max(np.abs(transfer_closure)),
+            eq6.dot(point.q_A, point.q_A) + 2.0 * self.mA * point.E_R,
+            point.Q_A**2 - point.E_R * (point.E_R + 2.0 * self.mA),
             eq6.dot(point.K, point.K) - point.W2,
         )
+        self.assertAlmostEqual(point.E_R, self.ER, places=15)
         self.assertLess(max(abs(float(x)) for x in residuals), 2e-8)
 
 
