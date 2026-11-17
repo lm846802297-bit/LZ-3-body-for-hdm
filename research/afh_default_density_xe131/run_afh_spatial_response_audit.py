@@ -19,7 +19,7 @@ from sympy.physics.wigner import wigner_3j, wigner_6j, wigner_9j
 ROOT = Path(__file__).resolve().parents[1]
 MATRIX_DIR = ROOT / "afh_default_density_natural_xenon_halo" / "input" / "afh_default_density_matrices"
 ISOTOPES = (129, 131)
-Q_POINTS = (0.0, 0.05, 0.10, 0.158, 0.20, 0.256, 0.30, 0.365, 0.45, 0.60)
+Q_POINTS = (0.0, 0.05, 0.10, 0.158, 0.20, 0.25625, 0.30, 0.365, 0.45, 0.49925, 0.60)
 FM_TO_GEV_INV = 5.0677
 
 def h(x):

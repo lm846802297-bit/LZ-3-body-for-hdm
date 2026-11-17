@@ -100,9 +100,38 @@ wolframscript -file research/afh_default_density_xe131/run_afh_spatial_response_
 
 The native runner exports the package's own `ResponseNuclear[y,{1,3,6,8},0,0]` results for Xe-129 and Xe-131. Those outputs are the reference data for validating the Python translation.
 
+## Python/native comparator and execution state
+
+A pointwise comparator is now available at
+\`research/afh_default_density_xe131/compare_afh_spatial_response.py\`. It
+matches Python and native columns for \(W_M\), \(W_{\Sigma'}\), \(W_\Delta\),
+and the signed \(W_{\Sigma'\Delta}\), checks the exact isotope/q-grid
+identity, and independently enforces nonnegative diagonal responses and the
+response-matrix Cauchy–Schwarz bound. Synthetic regression tests cover
+matching, mismatches, duplicate rows, q-grid mismatches, and interference
+bound failures.
+
+The Linux pre-audit completed with 5/5 spatial-response tests passing and
+uploaded a provisional Python artifact. That run is only an execution and
+software-smoke check; it does not validate the spatial response values.
+The pre-audit q grid has now been aligned to the native Wolfram runner:
+\(q_A=0,0.05,0.10,0.158,0.20,0.25625,0.30,0.365,0.45,0.49925,0.60\)
+GeV for both Xe-129 and Xe-131.
+
+The native run is configured through the private control repository
+\`lm846802297-bit/research-compute-control\`, with the research checkout
+pinned to commit \`f29209247b4f4124549ca0ee8f164bb5add30b1b\`. The workflow
+has been queued, but no Wolfram output has yet been produced. Therefore
+\(W_{\Sigma'}\), \(W_\Delta\), and \(W_{\Sigma'\Delta}\) remain provisional.
+
 ## Next steps
 
-1. Run the native Wolfram exporter in an environment with the required Wolfram runtime.
-2. Compare all four responses against the Python implementation and correct any remaining phase, normalization, or radial-integral discrepancies.
-3. Only after the comparison passes, publish numerical (W_\Delta) and (W_{\Sigma'\Delta}) tables.
-4. Match the baryon-current (F_1^{p,n}(Q^2)) and (F_2^{p,n}(Q^2)), construct the three-body particle tensor, and evaluate the complete nuclear-tensor contraction.
+1. Complete the pinned native Wolfram run for response indices \(1,3,6,8\)
+   on both Xe isotopes and the 11-point common grid.
+2. Run the pointwise comparator; inspect signs, normalizations, and residuals
+   before accepting any spatial-response table.
+3. Only after the native comparison passes, extend the q grid and publish
+   validated \(W_\Delta\) and \(W_{\Sigma'\Delta}\) results.
+4. Match finite-\(Q^2\) baryon-current \(F_1^{p,n}\) and \(F_2^{p,n}\),
+   derive the three-body particle tensor coefficients, and evaluate the
+   complete \(L_{\mu\nu}W_A^{\mu\nu}\) contraction.
