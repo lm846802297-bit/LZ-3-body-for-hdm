@@ -30,6 +30,9 @@
 - **2026-11-13：** 将 `research/p1-mma-local` 中已完成的 Wolfram 14.0.0 原生 AFH Xe-131 2401 点结果、Python 对照、minima、源文件和 SHA-256 manifest 逐文件纳入本 PR；更新 README、附录 B/G、F6 索引和 P0–P2 状态。该归档不改变 Eq. (6) kernel 或天然氙连续谱的完成边界。
 - **2026-11-14：** 新增 P1-PhaseSpace 数值收敛审计：比较线性 \(W^2\)、线性 \(W\) 与 threshold-\(u^2\) 参数化，检查五个 \(v_{\min}\) 邻域速度点和代表点角积分，并以未归一化 Lorentz-invariant \(d\Phi_3\) 路径复核 Eq. (6) 前因子；新增六项回归测试和结果 SHA-256 归档；随后测试模块扩展为九项。近极点积分、完整连续反冲网格和 halo fold 仍未完成。
 
+
+- **2026-11-18：** 正式固定 VV 核子流与 AFH 核响应的分层约定：AFH DMFormFactor v6.0 是氙核有限动量核结构的唯一主线输入；不在 AFH 响应上叠加 Helm；单核子 Dirac–Pauli 的有限转移动量 form factor 作为独立匹配层；保留 \(M\) 领先阶并优先审计 \(\Phi''\) 与 \(M\Phi''\)；AFH raw \(A^2/4\) 到物理 \(A^2\) 的因子 4 只计入一次。新增正文 §3.6 和技术附录 I。该更新是物理约定与状态边界整理，不代表 \(\Phi''\) 多体响应或完整三体截面已经计算完成。
+
 ## 0. Current status update — 2026-11-16
 
 This update supersedes older selected-point-only statements in the report.
@@ -44,6 +47,18 @@ This update supersedes older selected-point-only statements in the report.
 
 The detailed sections below preserve earlier calculations and their provenance. Where an older paragraph says AFH is selected-point-only or that the full AFH response grid is absent, read it as the historical status before the 2026-11-14 full-grid run.
 
+
+### 2026-11-18 update：VV 核子流与 AFH 核响应的正式边界
+
+- 本项目把 AFH DMFormFactor v6.0 固定为**氙核层面的有限动量核结构输入**。对已有 AFH default density matrix 的同位素，直接使用 AFH 的 \(W_X(y_A)\)；不再额外乘一个 Helm 核形状因子。
+- AFH 的 \(W_M,W_{\Phi''},W_{\Sigma'},W_{\Sigma''},W_\Delta,\widetilde W_{\Phi'}\) 等是核矩阵元响应；单核子 Dirac、Pauli 形状因子 \(F_1^{V,N}(t_N),F_2^{V,N}(t_N)\) 属于夸克—核子匹配层，AFH 不会自动替本模型提供这些 flavor-dependent 的有限 \(t_N\) 输入。
+- 当前 \(u+d+s\) flavor-universal benchmark 的零动量校验为 \(F_1^{uds,p/n}(0)=3\)、\(F_2^{uds,p/n}(0)=-0.552\)（中子取同位旋对称近似）。这些是零动量锚点，不是 Xe 反冲动量区间的常数 form factor。
+- \(W_M^{00}\) 继续作为领先阶基准，但完整 Dirac–Pauli 流可能通过核子时间分量产生自旋—轨道项。因此 \(W_{\Phi''}\) 与 \(W_{M\Phi''}\) 是第一优先级待审计项；不能仅凭暗物质侧 \(\Gamma^i\) 较小排除它们。
+- AFH 原始等标量 \(A^2/4\) 与物理等质子、等中子耦合 \(A^2\) 之间的因子 4 只在 raw-to-physical 映射中出现一次。密度矩阵有限打印精度导致的 \(C_0\) 是独立的小归一化修正，不是第二个因子 4。
+- 七同位素 AFH-7 仍是当前可追溯的 AFH default-density 主线；Xe-124/Xe-126 缺少当前可用的 AFH v6.0 default matrices，不能将 Hybrid-9 的 Helm fallback 称为 AFH-9。
+- PR #58 目前为 OPEN、DRAFT 的静态单核子流收缩诊断：它尚未给出 AFH 多体投影、\(W_{\Phi''}\)、\(W_{M\Phi''}\) 的归一化系数或完整三体截面。其 \(F_1=1,F_2=0,-0.15\) 是结构测试输入，不是当前 flavor-universal benchmark 的最终输入。
+
+
 ## 摘要
 
 本次讨论的核心，是把论文 Eq. (6) 中的三体微分散射截面与真实氙靶的核结构和银河系暗物质速度分布连接起来。研究分成三个层次：
@@ -57,6 +72,9 @@ The detailed sections below preserve earlier calculations and their provenance. 
 本轮正文还补入了从相互作用拉格朗日量到两张树图、Dirac trace、三体相空间和 Eq. (6) 整体前因子的连贯推导；附录进一步逐步推导最优反冲能量与最大标量质量、条件性二体 pole width、截断 SHM 实验室速度 PDF、天然氙靶核数和通量事件率，并解释核响应极小值、三体阈值、halo 端点和 LZ 效率折叠各自代表的物理机制。完整的 Lorentz boost、相空间归一化、AFH 密度矩阵有限和、因子 4、同位素输入和 halo 数值约定仍分别保留在正式附录 A–H，避免正文与附录互相替代。
 
 另外，仓库还归档了一个独立的 450 keV benchmark：其一是单一运动学点的 \(\mathcal L_{00}\) 与 reduced \(I_6\) 对照，使用条件性标量 pole width；其二是 Xe-131 固定速度微分截面曲线，使用 GCN/JJ55 响应、\(v=776\) km/s、\(M_A=131u\) 和 zero-width prescription。两者的输入与物理层级不同，均不替代天然氙 halo fold 或 LZ detector-level likelihood。
+
+
+本轮（2026-11-18）进一步固定了核结构与单核子匹配的边界：AFH v6.0 提供核整体有限尺寸和核算符响应；单核子 \(F_1/F_2\) 的有限 \(t_N\) 形状不由 AFH 自动提供，必须由 flavor-resolved 核子流匹配给出。主线不在 AFH 响应上叠加 Helm；同时保留 \(M\) 领先阶，并将 \(\Phi''\)、\(M\Phi''\) 作为待完成的优先核响应审计。该更新没有把 PR #58 的静态单核子诊断升级为 AFH 多体结果。
 
 | 研究层级 | 当前归档结果 | 明确边界 |
 |---|---|---|
@@ -1027,6 +1045,126 @@ E_R(Q)=\sqrt{m_A^2+Q^2}-m_A.
 
 最后，**核响应的极小值不必然等于完整截面或 halo-folded 事件率的极小值**。固定速度截面还乘有 \(I_6(v,E_R)\) 和矢量传播子；天然氙速率还对同位素与速度求和/积分。不同同位素的极小值位置不完全相同，速度积分也会对不同反冲点施加不同阈值权重。因此，必须分别讨论 \(R_A\)、\(d\sigma_A/dE_R\) 和 \(dR/dE_R\) 的谱形。
 
+
+### 3.6 VV 核子流与 AFH 核响应的统一计算约定（2026-11-18）
+
+本节把此前分散在核子流匹配、AFH 响应、有限动量 form factor 和三体流讨论中的约定固定为主线计算规范。最重要的区分是：**AFH 负责原子核内部的核结构矩阵元；Dirac–Pauli \(F_1/F_2\) 负责单个核子内部的夸克—核子匹配。二者是串联的两层，不是两种可互相替代的核 form factor。**
+
+#### 3.6.1 AFH 核响应与单核子 form factor 不属于同一层
+
+AFH DMFormFactor v6.0 的 \(W_M,W_{\Phi''},W_{\Sigma'},W_{\Sigma''},W_\Delta,\widetilde W_{\Phi'}\) 等是原子核层面的响应函数。它们由核子算符在指定核态上的矩阵元构造，包含核子在核内的空间分布、有限核尺寸、壳模型轨道、角动量耦合、单体密度矩阵（OBDME）以及相应多极展开。
+
+AFH 的质量/矢量电荷响应以
+\[
+y_A=\left(\frac{Q_A b_A}{2}\right)^2,\qquad Q_A=|\mathbf q_A|
+\]
+为自变量。它不是点核结果，也不是一个额外乘在点核截面上的经验修正。
+
+另一方面，单核子矢量流应写成
+\[
+J_N^\mu=
+\bar u_N(p_N')
+\left[
+F_1^{V,N}(t_N)\gamma^\mu+
+\frac{iF_2^{V,N}(t_N)}{2m_N}
+\sigma^{\mu\nu}q_{N,\nu}
+\right]
+u_N(p_N),
+\qquad q_N=p_N'-p_N.
+\]
+其中 \(F_1\) 是单核子 Dirac 形状因子，\(F_2\) 是 Pauli/磁化形状因子。它们描述夸克、胶子在单个质子或中子内部的结构，不是 AFH 核波函数或 OBDME。
+
+因此：
+\[
+\boxed{\text{AFH 核响应 }W_X(Q_A)\ \ne\ \text{单核子 form factor }F_{1,2}^{V,N}(t_N).}
+\]
+AFH v6.0 不会因为调用 \(W_M^{00}\) 就自动替我们输入 flavor-universal \(u+d+s\) 流的有限 \(t_N\) 形状。\(F_1/F_2\) 必须在核子流匹配层给出，再把产生的核子算符投影到 AFH 核响应上。
+
+#### 3.6.2 不在 AFH 响应上额外乘 Helm
+
+AFH \(W_M(y_A)\) 已经通过核波函数、OBDME 和有限动量多极矩阵元包含了核整体有限尺寸结构。因此，对已经使用 AFH 响应的同一个同位素再乘一个 Helm 核 form factor，会重复施加核整体尺寸抑制。
+
+正式约定如下：
+
+1. 对具有 AFH v6.0 default density matrix 的同位素，有限动量核结构直接采用 AFH v6.0；
+2. 不在 AFH 响应上额外乘 Helm；
+3. 不用 Helm 替换 AFH 已经提供的同位素响应；
+4. Xe-124/Xe-126 当前缺少本项目可追溯的 AFH v6.0 default matrices，因此 AFH-7 不能被称为 AFH-9；主基准应明确报告缺失输入，而不是静默填补；
+5. 若保留 Hybrid-9 中对 Xe-124/Xe-126 的 Helm fallback，它只能作为单独标注的混合核模型敏感性方案，不能与纯 AFH-7 主线混称。
+
+这里禁止的是把 Helm 当成 AFH 响应的额外乘子或静默替代；这不否认 Helm 可用于独立的现象学核模型对照。
+
+#### 3.6.3 有限动量单核子 \(F_1/F_2\)：零动量锚点与有限 \(t_N\) 输入必须分开
+
+当前采用的 flavor-universal \(u+d+s\) 矢量流，在零动量转移下满足
+\[
+F_1^{uds,p}(0)=F_1^{uds,n}(0)=3.
+\]
+这给出电荷归一化 \(g_{Vp}=g_{Vn}=3g_{Vq}\)。但它只固定 \(F_1(0)\)，不能把完整核子流简化成 \(3\bar N\gamma^\mu N\)。
+
+采用 Bishara et al. (2017) Appendix A.1 的显式 flavor-separated 质子输入：
+\[
+F_2^{u/p}(0)=1.609,\quad
+F_2^{d/p}(0)=-2.097,\quad
+F_2^{s/p}(0)=-0.064,
+\]
+得到
+\[
+F_2^{uds,p}(0)=-0.552.
+\]
+在同位旋对称近似下，\(F_2^{uds,n}(0)\simeq-0.552\)。因此零动量中心值组合为
+\[
+F_1+2F_2=1.896,\qquad F_1+F_2=2.448.
+\]
+它们分别出现在本项目关注的时间分量自旋—轨道结构和空间磁化结构中。早期把 HKS 紧凑记号直接解释为三味 \(F_2\) 必然相消为零的判断已经撤回。
+
+这些数值仅是 \(t_N=0\) 的中心值校验。实际 Xe 反冲对应有限动量转移，必须使用 flavor-resolved 的 \(F_1^{q,N}(t_N)\)、\(F_2^{q,N}(t_N)\) 组合及其误差/协方差；不能把 \(-0.552\)、1.896 或 2.448 当成整个反冲区间的常数精确输入。
+
+#### 3.6.4 \(Q_A\)、\(t_A\) 与 \(t_N\) 不得混用
+
+定义
+\[
+q_A^\mu=P_A'^\mu-P_A^\mu,\qquad
+Q_A=|\mathbf q_A|,\qquad t_A=q_A^2.
+\]
+初始核静止时
+\[
+q_A^0=E_R,\quad
+Q_A^2=E_R(E_R+2m_A),\quad
+t_A=-2m_AE_R.
+\]
+AFH 的 \(y_A\) 使用 \(Q_A\)，不是 \(t_A\)。
+
+核子 form factor 的严格变量是
+\[
+q_N^\mu=p_N'^\mu-p_N^\mu,\qquad t_N=q_N^2.
+\]
+在一体冲量近似中 \(\mathbf q_N=\mathbf q_A\)，但 \(q_N^0\) 取值依赖束缚核子流的近似。若取 \(q_N^0=q_A^0=E_R\)，则 \(t_N=t_A\)；若采用静态自由核子诊断并令 \(q_N^0=0\)，则
+\[
+t_N=-Q_A^2=t_A-E_R^2.
+\]
+因此，有限核子 form factor 应作为独立匹配输入处理，同时必须在 metadata 中记录采用外部转移处方还是静态单核子处方。不能把 \(Q_A^2\)、\(t_A\)、\(t_N\) 统称为同一个 q2。
+
+#### 3.6.5 AFH 响应选择：\(M\) 是基准，不是完整性假设
+
+当前 VV benchmark 的领先阶核子矢量电荷密度对应 \(M\) 响应，因此 \(W_M^{00}\) 继续作为主基准。但完整 Dirac–Pauli 流的时间分量也可能含有次领先自旋—轨道电荷项，并与暗物质侧领先阶 \(\mathcal T_3^0\) 收缩。故即使 \(\mathcal T_3^i\) 很小，也不能据此排除 \(\Phi''\)。
+
+第一优先级是
+\[
+W_{\Phi''},\qquad W_{M\Phi''},
+\]
+尤其是 Xe-131 的 \(Q_A\simeq256\) MeV 和 365 MeV 两处深极小值附近，并以约 158 MeV 的第一处极小值作对照。只有在完整三体核子流匹配后，若 Wilson 系数显示相应结构存在且达到精度预算，才扩展 \(\Sigma'\)、\(\Sigma''\)、\(\Delta\)。不因为 AFH 程序能输出某个响应，就人为给模型增加一个没有 UV 匹配依据的相互作用。
+
+#### 3.6.6 因子 4 的唯一记账位置
+
+AFH v6.0 原始等标量响应的零动量归一化为 \(A^2/4\)，物理等质子、等中子耦合的响应应为 \(A^2\)。raw-to-physical 映射中的因子 4 必须且只能出现一次。它与 \(g_{VN}=3g_{Vq}\) 的夸克—核子电荷匹配无关。有限打印精度导致的 \(C_0\) 小归一化修正另行记录，不是第二个物理因子 4。
+
+若点状核振幅已经包含 \(Ag_{VN}\)，有限尺寸修正只能乘归一化形状 \(R_M(Q_A)/R_M(0)\)，不能再乘完整的 \(A^2\) 响应。
+
+#### 3.6.7 当前实现状态
+
+PR #58 目前是 OPEN、DRAFT 的静态单核子 Dirac–Pauli 收缩诊断。它使用一个代表性三体相空间点、一个静态核子动量取向，并用 \(F_1=1\)、\(F_2=0,-0.15\) 作为结构测试场景。它尚未使用当前 \(u+d+s\) 物理 benchmark 的完整有限 \(t_N\) form factors，也没有给出 AFH 多体 \(\Phi''\)、\(M\Phi''\) 的归一化投影、三体相空间积分或绝对截面。因此它是匹配链的中间验证，不是 Xe-131 完整核响应结果。
+
 ## 4. AFH、GCN 与 JJ55 的对照
 
 三种核结构处方的极小值位置接近，但极小值深度存在模型依赖性：
@@ -1440,6 +1578,12 @@ Green benchmark 在其他网格锚点的当前 AFH-7 速率为：
 5. **极点宽度是条件性的。** 只包括给定假设下的 \(\chi_2\to\chi_1s\) 标量通道，不等于完整模型的矢量加标量自能。
 6. **halo 模型依赖尚未做系统扫描。** untruncated MB 只用于高速度尾部敏感性诊断，不作为默认 halo 结果。
 
+
+7. **完整三体 VV 核子流到 AFH 的匹配尚未完成。** PR #58 是 OPEN、DRAFT 的静态单核子收缩诊断；其 \(F_1=1,F_2=0,-0.15\) 仅用于测试 Pauli 项结构，不能视为 \(u+d+s\) benchmark 的物理 form-factor 输入，也没有完成 AFH 多体投影。
+8. **有限 \(t_N\) 的单核子 form factors 尚未完成。** 当前 \(F_1^{uds}(0)=3\)、\(F_2^{uds}(0)=-0.552\) 是零动量锚点；有限动量 flavor-separated 输入、误差和协方差仍需明确。
+9. **Xe-131 的 \(W_{\Phi''}\) 与 \(W_{M\Phi''}\) 尚未完成。** 这是当前 VV 一体流匹配的第一优先级，尤其要检查 \(Q_A\simeq256,365\) MeV 的 \(W_M\) 深极小值附近。
+10. **AFH-9 尚未成立。** AFH default density matrices 当前覆盖七种天然氙同位素；Xe-124/Xe-126 的缺失输入不能由 Hybrid-9 Helm fallback 静默替代。
+
 ### 8.3 数据修正记录
 
 早期 AFH benchmark CSV 曾出现两类归档问题：
@@ -1464,7 +1608,19 @@ Green benchmark 在其他网格锚点的当前 AFH-7 速率为：
 7. GCN/JJ55 连续谱的 LZ efficiency-weighted event yields 仅为 rate-level 结果，灰色效率包络不是置信区间；
 8. 不把固定速度截面、AFH selected-point 速率、天然氙连续谱和完整 LZ detector-level likelihood 混为一谈。
 
+
+9. AFH DMFormFactor v6.0 是具有 default density matrix 的氙同位素之核结构主线输入；AFH 响应上不再额外乘 Helm。
+10. AFH 的有限核尺寸/多极响应与单核子 \(F_1/F_2\) 分属不同层级；不重复计算 AFH 已包含的核整体结构，也不误称 AFH 已自动包含单核子有限 \(t_N\) form factor。
+11. 核子流按统一 Dirac–Pauli 约定匹配：\(q_N=p_N'-p_N\)，\(\Gamma_N^\mu=F_1\gamma^\mu+iF_2\sigma^{\mu\nu}q_{N,\nu}/(2m_N)\)；任何替代符号约定必须同步改变 Pauli 项符号。
+12. \(F_1^{uds}(0)=3\)、\(F_2^{uds}(0)=-0.552\) 仅作为零动量校验；有限 \(t_N\) 的 flavor-resolved 形状和协方差必须独立处理。
+13. \(W_M^{00}\) 是领先阶基准，但不能先验排除 \(W_{\Phi''}\)、\(W_{M\Phi''}\)；后两者是第一优先级审计项，其他响应由实际匹配系数决定。
+14. AFH raw \(A^2/4\) 到物理 \(A^2\) 的因子 4 只在 raw-to-physical 映射中出现一次；\(C_0\) 有限精度修正单独记账。
+15. \(Q_A=|\mathbf q_A|\)、\(t_A=q_A^2\)、\(t_N=q_N^2\) 分别记录；AFH 使用 \(Q_A\)，传播子使用 \(t_A\)，核子 form factor 使用明确处方下的 \(t_N\)。
+
 后续事项按物理依赖关系排列。Xe-131 原生 Mathematica 2401 点 response-level 对照、Python-only full Eq. (6) 因子 4 ledger，以及原生 Mathematica/Python 652 行完整截面对照均已完成（最后一项的比较器状态为 PASS，科学适用范围仍限定于固定速度和条件性宽度假设）。当前未完成事项不再包括 full-cross-section cross-code 比较：
+
+
+**新增 P0 物理工作：** 在继续扩展天然氙谱之前，完成 flavor-universal Dirac–Pauli 单核子流与完整三体 \(\mathcal T_3^\mu\) 的一致匹配，并优先投影 Xe-131 的 \(M+\Phi''+M\Phi''\)。必须先固定 \(t_N\) 处方和 \(F_1/F_2\) 有限动量输入；PR #58 的静态示例参数不能直接作为物理 benchmark。该项完成后再根据匹配系数决定是否扩展 \(\Sigma'\)、\(\Sigma''\)、\(\Delta\)。
 
 1. **统一核模型相空间积分。** 将 GCN/JJ55 84 点谱从 legacy linear-\(W^2\) 改为 threshold-\(u^2\)，使用与 AFH-7 相同的速度积分和 \(10^{-5}\) 收敛标准；重算 GCN/JJ55 谱、225–269.9 keV 高能尾部比例和依赖它们的 rate-level event yields。
 2. **补齐高阶结果归档。** 将 AFH-7/Hybrid-9 \(24\times8\times8\times4\) 的完整 1,344 行高阶谱以及独立 Numba 实现作为 native files 或版本化 Release 提交；不要只保留外部 ZIP checksum。
@@ -1490,6 +1646,11 @@ Green benchmark 在其他网格锚点的当前 AFH-7 速率为：
 - 天然氙 halo fold README：`research/afh_default_density_natural_xenon_halo/README.md`
 - 天然氙 halo fold 审计：`research/afh_default_density_natural_xenon_halo/results/NATURAL_XENON_HALO_FOLD_AUDIT.md`
 - 响应 q 与精确运动学 q 审计：`research/docs/appendices/09G_recoil_momentum_convention_audit.md`
+
+
+- VV 完整三体流与单核子 Dirac–Pauli 收缩诊断：[PR #58](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/pull/58)（OPEN、DRAFT；静态单点，不是 AFH 多体响应验收）。
+- AFH v6.0 核响应源程序：仓库根目录的 v6/dmformfactor-V6.m；其中 ResponseNuclear 给出 AFH 核响应接口，OpRel[5] 与 OpRel[6] 分别提供 VV 与矢量—Pauli 型相对论算符模板。
+- 三体 VV 核子流与 AFH 核响应的完整讨论记录：保存在项目资料库的配套理论档案中；本主报告只收录影响正式计算方案、公式和证据边界的内容。
 
 ### 外部参考
 
@@ -1804,6 +1965,7 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 | F10 | 天然氙 halo-folded 微分事件率 \(dR/dE_R\) | §2.2、§6.3、§7 | [D.3–D.4](appendices/09D_natural_xenon_isotope_target.md)；[E.2–E.3.2](appendices/09E_halo_velocity_vmin_folding.md) | AFH selected-point / GCN-JJ55 continuous-spectrum runners | natural-xenon rate CSV；isotope contribution CSV | 由数密度、速度通量、单核截面和每 kg 靶核数推导；逐同位素使用自己的阈值和 kernel。 |
 | F11 | LZ 一维效率加权预期事件数 \(N_{\rm sig}^{\rm ROI}\) | §11.1、§11.4、§11.6 | §11.6 的二维响应概率投影；附录 F.5 | `fold_lz_2026_rate_level.py` | efficiency CSV；rate-level yield CSV | 一维效率是二维重建响应在 ROI 上的概率投影；当前结果不是二维 likelihood 或 90% CL 排除。 |
 | F12 | 条件性 \(\chi_2\to\chi_1s\) pole width | §1.2、§5 | [A.5–A.6.1](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.chi2_width_dirac_scalar` | benchmark metadata：`width_scheme`、`g2` | 从 Dirac 纯标量 Yukawa 振幅和二体相空间推导；仅适用于 Dirac、实标量、纯标量耦合及单一开放衰变道。 |
+| F13 | 完整三体 VV 核子流、Dirac–Pauli \(F_1/F_2\) 与 AFH \(M,\Phi'',M\Phi''\) 匹配 | §3.6、[附录 I](#附录-i-vv-核子流与-afh-响应的匹配约定) | PR #58 的静态单核子诊断；AFH v6.0 的 ResponseNuclear 与 OpRel[5,6] | 当前仍是匹配任务，不是完整 Xe 核响应或三体截面 PASS。 |
 
 ### 13.2 必须区分的符号和物理层级
 
@@ -1815,6 +1977,12 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 | AFH raw response 与 \(R_A^{\rm phys}\) | AFH 原始 isoscalar 零动量归一化为 \(A^2/4\)；Eq. (6) 中的物理响应归一化为 \(A^2\)，因子 4 只计一次。 |
 | \(I_6\)、\(d\sigma_A/dE_R\)、\(dR/dE_R\)、\(N_{\rm sig}^{\rm ROI}\) | 依次是三体 reduced kernel、单核固定速度微分截面、天然氙 halo-folded 理论速率、再经过一维效率和曝光折叠的预期事件数。 |
 | 固定 \(v=800\) km/s 与截断 SHM | 前者是 Figure-2 固定速度截面诊断；后者的最大实验室速度为 776 km/s，二者不是同一 halo 预测。 |
+
+| \(Q_A\)、\(t_A\)、\(t_N\) | \(Q_A=|\mathbf q_A|\) 用于 AFH \(y_A=(Q_Ab_A/2)^2\)；\(t_A=q_A^2=-2m_AE_R\) 用于媒介子传播子；\(t_N=q_N^2\) 是单核子 \(F_1/F_2\) 的变量，需标明核子能量转移处方。 |
+| AFH 核响应与核子 \(F_1/F_2\) | AFH \(W_X\) 是核态矩阵元；\(F_1/F_2\) 是单核子 flavor form factors。AFH 不自动提供本模型有限 \(t_N\) 输入。 |
+| AFH 响应与 Helm | AFH default density matrix 已包含核整体有限尺寸；不对 AFH 响应再乘 Helm。缺失 Xe-124/Xe-126 的 Hybrid-9 fallback 必须单独标注。 |
+| AFH raw 与 physical response | raw isoscalar \(A^2/4\) 到物理等 \(p,n\) 耦合 \(A^2\) 的 factor 4 只计一次；\(C_0\) 有限精度修正另记。 |
+
 
 ### 13.3 单位总约定
 
@@ -4789,6 +4957,112 @@ l=>l.replace("1.33872","1.33857")
 
 原生输出、comparison JSON 和 SHA-256 文件位于 `research/afh_default_density_xe131/output/full_dsigma_mathematica/`。该结果只适用于 Xe-131、v=800 km/s fixed-speed、四组 benchmark、16×16×8 求积和条件性 pole-width 假设；代码间一致性不等同于求积收敛，也不构成天然氙 halo fold 或 LZ likelihood。
 
+
+
+## 附录 I：VV 核子流与 AFH 核响应的匹配约定
+
+本附录将正文 §3.6 的正式约定写成可供公式审查和代码实现直接使用的形式。它不替代完整三体流匹配，也不把尚未计算的响应写成结果。
+
+### I.1 核整体转移与单核子转移
+
+\[
+q_A^\mu=P_A'^\mu-P_A^\mu,\qquad
+Q_A=|\mathbf q_A|,\qquad
+t_A=q_A^2.
+\]
+初始核静止时
+\[
+q_A^0=E_R,\quad
+Q_A^2=E_R(E_R+2m_A),\quad
+t_A=-2m_AE_R.
+\]
+AFH 的响应变量为
+\[
+y_A=(Q_A b_A/2)^2.
+\]
+传播子使用 \(t_A\)，而不是把 AFH 的空间 \(Q_A^2\) 代入 Minkowski 不变量。
+
+核子流采用
+\[
+q_N^\mu=p_N'^\mu-p_N^\mu,\qquad t_N=q_N^2,
+\]
+\[
+\Gamma_N^\mu=
+F_1^{V,N}(t_N)\gamma^\mu+
+\frac{iF_2^{V,N}(t_N)}{2m_N}
+\sigma^{\mu\nu}q_{N,\nu},
+\quad
+\sigma^{\mu\nu}=\frac{i}{2}[\gamma^\mu,\gamma^\nu].
+\]
+这是本项目的统一符号约定。若代码改用 \(q_N=p_N-p_N'\)，必须同步改变 Pauli 项显式符号。
+
+在 impulse approximation 中 \(\mathbf q_N=\mathbf q_A\)。但若核子能量转移取 \(q_N^0=E_R\)，则 \(t_N=t_A\)；若用静态 on-shell 单核子诊断取 \(q_N^0=0\)，则 \(t_N=-Q_A^2=t_A-E_R^2\)。两者是不同的运动学近似，metadata 必须标记。
+
+### I.2 零动量 form-factor 校验
+
+对当前 \(u+d+s\) 等权重矢量流：
+\[
+F_1^{uds,p/n}(0)=3,\qquad F_2^{uds,p/n}(0)=-0.552
+\]
+（中子值采用同位旋对称近似）。因此
+\[
+F_1+2F_2=1.896,\qquad F_1+F_2=2.448.
+\]
+这些数值只用于 \(t_N=0\) 的校验；有限 \(t_N\) 必须由 flavor-separated form factors 加权求和，不能把零动量值固定为整个反冲区间的常数。
+
+### I.3 AFH v6.0 响应接口与适用范围
+
+源程序的 ResponseNuclear 接口按响应编号提供 \(M,\Sigma'',\Sigma',\Phi'',\widetilde\Phi',\Delta,M\Phi'',\Sigma'\Delta\) 等核响应。OpRel[5] 和 OpRel[6] 分别给出暗物质矢量流与核子矢量流、暗物质矢量流与核子 Pauli 型张量流的相对论结构模板。它们可作为匹配组织工具，但不会自动提供模型特定的 \(F_1^{uds,N}(t_N)\)、\(F_2^{uds,N}(t_N)\)。
+
+AFH 标准 FFfinal 及其结构函数接口按弹性 \(2\to2\) NREFT 系数构造，含标准 \(\mathbf v^\perp\) 运动学。当前三体过程
+\[
+\chi_1+A\to\chi_1+A+s
+\]
+必须保留 \(k_s\) 和两个 \(\chi_2\) 传播子，先计算完整 \(\mathcal T_3^\mu\)，再匹配核子流。不能把标准弹性 FFfinal 直接当作三体截面公式。
+
+### I.4 当前需要的 AFH 响应与优先级
+
+| AFH 响应 | 来源 / 当前决定 |
+|---|---|
+| \(W_M^{00}\) | 领先阶矢量电荷基准，必须保留 |
+| \(W_{\Phi''}\) | 核子时间分量/空间分量 Dirac–Pauli 结构可能诱导的自旋—轨道响应，第一优先级 |
+| \(W_{M\Phi''}\) | 与质量响应的干涉，必须与 \(W_{\Phi''}\) 同时计算 |
+| \(W_{\Sigma'},W_{\Sigma''}\) | 由磁化/自旋流匹配系数决定，暂列第二层 |
+| \(W_\Delta\) | 由对流电流及轨道项匹配系数决定 |
+| 两核子流 | 第一轮不自动加入；在一体流结果和误差预算明确后按手征 EFT 评估 |
+
+特别地，\(\mathcal T_3^i\) 小不能推出 \(W_{\Phi''}\) 小，因为核子时间分量的自旋—轨道项可与领先的 \(\mathcal T_3^0\) 收缩。
+
+### I.5 AFH factor-four 归一化
+
+\[
+R_{\rm AFH,raw}(0)=A^2/4,\qquad
+R_M^{\rm phys}(0)=A^2,
+\]
+因此
+\[
+R_M^{\rm phys}(Q_A)=4R_{\rm AFH,raw}(Q_A)
+\]
+（另将有限密度矩阵打印精度修正 \(C_0\) 单独记录）。若物理响应已按 \(A^2\) 归一化，截面前因子不得再乘 4。若点核振幅已含 \(Ag_{VN}\)，只能乘 \(R_M(Q_A)/R_M(0)\)，不得再次乘完整 \(A^2\)。
+
+### I.6 不使用 Helm 的主线规则与缺失同位素
+
+AFH default density matrix 覆盖的同位素直接使用 AFH v6.0 响应，不再乘 Helm。当前 Xe-124/Xe-126 缺少 AFH default matrices，因此 AFH-7 不等于 AFH-9。Hybrid-9 若使用 Helm fallback，只作为单独标注的混合核模型敏感性方案，不得并入纯 AFH 主线。
+
+### I.7 PR #58 的状态边界
+
+PR #58 为 OPEN、DRAFT 的静态单核子收缩诊断：单一三体相空间点、单一核子动量取向、\(q_N^0=0\)，并用 \(F_1=1,F_2=0,-0.15\) 做示例场景。它尚未使用当前物理 benchmark 的 \(F_1(0)=3,F_2(0)=-0.552\)，更未使用有限 \(t_N\) 的 flavor-resolved 输入；也尚未给出 AFH 多体投影、\(W_{\Phi''}\)、\(W_{M\Phi''}\) 的归一化系数、完整相空间积分或绝对截面。该 PR 不能被引用为完整 Xe-131 核响应的 PASS。
+
+### I.8 最低验收条件
+
+1. \(q_A\)、\(t_A\)、\(q_N\)、\(t_N\) 在代码和 metadata 中分别保存；
+2. \(q_N\) 方向、\(\sigma^{\mu\nu}\)、Pauli 项符号和旋量归一化通过自由核子/Gordon identity 对照；
+3. \(t_N=0\) 恢复 \(F_1^{uds}(0)=3\)、\(F_2^{uds}(0)=-0.552\)；
+4. 有限 \(t_N\) 的 flavor form factors、误差和协方差可追溯；
+5. 两张三体辐射图、两图干涉、\(\chi_2\) 宽度以及 \(L^{00},L^{0i},L^{ij}\) 均保留；
+6. AFH raw \(A^2/4\) 到 physical \(A^2\) 的 factor 4 只出现一次；
+7. Xe-131 \(M,\Phi'',M\Phi''\) 在 \(Q_A\simeq158,256,365\) MeV 附近做高分辨率响应和插值收敛；
+8. 核响应收缩、三体相空间积分、同位素求和与 halo fold 分层验收，不把某一层的 PASS 误称为完整物理结果。
 
 ## 14. Phase II update: high-energy tail nuclear-model sensitivity (2026-11-14)
 
