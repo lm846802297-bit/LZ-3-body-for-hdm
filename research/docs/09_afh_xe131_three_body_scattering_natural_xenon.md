@@ -1666,7 +1666,7 @@ Green benchmark 在其他网格锚点的当前 AFH-7 速率为：
 
 ## 附录导航与独立文件
 
-主报告后文保留完整附录 A–G。为便于检索、单独引用和维护，七份附录还分别保存为独立 Markdown 文件；主报告正文与七份独立副本保持同步：
+主报告后文保留附录 A–G 及本轮新增的附录 I。附录 A–G 分别保存为独立 Markdown 文件；附录 I 目前直接嵌入本主报告，作为 VV 核子流与 AFH 匹配的正式约定：
 
 | 附录 | 内容 | 文件 |
 |---|---|---|
@@ -1677,12 +1677,13 @@ Green benchmark 在其他网格锚点的当前 AFH-7 速率为：
 | E | 实验室系速度分布、三体最小速度与 halo folding | [09E_halo_velocity_vmin_folding.md](appendices/09E_halo_velocity_vmin_folding.md) |
 | F | 计算程序、数据文件、收敛验收和复现命令 | [09F_numerical_validation_reproduction.md](appendices/09F_numerical_validation_reproduction.md) |
 | G | AFH 空间动量转移、精确质量壳关系与 NR 近似审计 | [09G_recoil_momentum_convention_audit.md](appendices/09G_recoil_momentum_convention_audit.md) |
+| I | VV 核子流、Dirac–Pauli form factor 与 AFH 响应匹配约定 | 本主报告内嵌附录 I（§3.6 与附录 I） |
 
 ### 独立研究记录（不属于主报告附录）
 
 - [研究决定登记](supplements/research_decision_register.md)：记录讨论中的候选处理、当前采用的约定和适用边界。
 
-七项主要文档内容分别由附录 A–G 承担。公式交叉引用索引是导航文件，不是新增正式附录；研究决定登记用于专项追溯，也不改变主报告 A–G 的正式结构。
+附录 A–G 分别承担原有七项技术内容；新增附录 I 记录 VV 核子流与 AFH 响应的统一匹配约定。公式交叉引用索引是导航文件，不是新增正式附录；研究决定登记用于专项追溯，不改变原有附录 A–G。
 
 附录与主报告使用同一研究分支维护。程序、CSV 和机器可读结果仍保存在各自计算目录中；附录负责解释其定义、调用方式和验证边界，不复制大体积数据。
 
