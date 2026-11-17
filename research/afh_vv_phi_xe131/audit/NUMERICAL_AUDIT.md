@@ -141,10 +141,10 @@ second \(W_M\) minimum. Therefore a response-level \(W_M\)-only audit is not
 sufficient to prove that spin-orbit nuclear structure is negligible.
 
 The new result is a matched **charge-sector** correction, not a complete
-three-body cross-section prediction. The common (mathcal T_3^0) factor
-cancels only in the relative (M+Phi'') charge-sector ratio. Finite-(t)
-form factors and the spatial-current (Sigma'), (Sigma''), and
-(Delta) sectors remain to be calculated.
+three-body cross-section prediction. The common \(\mathcal T_3^0\) factor
+cancels only in the relative \(M+\Phi''\) charge-sector ratio. Finite-\(t\)
+form factors and the spatial-current \(\Sigma'\), \(\Sigma''\), and
+\(\Delta\) sectors remain to be calculated.
 
 ## Reproduction commands
 
