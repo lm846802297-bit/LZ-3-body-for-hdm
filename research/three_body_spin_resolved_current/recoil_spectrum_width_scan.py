@@ -130,8 +130,15 @@ def run(outdir: Path) -> dict:
                 continue
 
             near = case["mapping"] == "sine2"
-            orders = (48, 12, 6) if near else (24, 12, 6)
             for scheme in ("zero", "pole", "running"):
+                if near and scheme == "zero" and er_keV >= 274.0:
+                    # The zero-width integrand becomes sharply endpoint-peaked
+                    # as Wmax approaches mchi2. Increase nW for the diagnostic
+                    # baseline rather than silently comparing an under-resolved
+                    # zero-width value with the converged finite-width result.
+                    orders = (160, 20, 10)
+                else:
+                    orders = (48, 12, 6) if near else (24, 12, 6)
                 result = integrate(case, er_keV, scheme, orders)
                 gamma_pole_keV = result["Gamma_chi2_keV"]
                 mV_denominator = (
@@ -189,25 +196,38 @@ def run(outdir: Path) -> dict:
     # High-order convergence at the two most sensitive near-pole points.
     convergence = []
     near_case = next(case for case in CASES if case["name"] == "near_pole_dm362_g2_1")
-    for er_keV in (267.0, 274.5):
+    for er_keV in (267.0, 274.0, 274.5):
         for scheme in ("zero", "pole", "running"):
-            low = integrate(near_case, er_keV, scheme, (48, 12, 6))
-            high = integrate(near_case, er_keV, scheme, (80, 16, 8))
-            for key in ("I00", "Icharge", "Ifull"):
-                relative_difference = abs(high[key] / low[key] - 1.0)
-                convergence.append({
-                    "ER_keV": er_keV,
-                    "width_scheme": scheme,
-                    "observable": key,
-                    "order_low": "48x12x6",
-                    "order_high": "80x16x8",
-                    "relative_difference": relative_difference,
-                    "status": (
-                        "converged_at_1e-7"
-                        if relative_difference < 1.0e-7
-                        else "requires_higher_order"
-                    ),
-                })
+            if scheme == "zero" and er_keV == 274.5:
+                order_pairs = (
+                    ((80, 16, 8), (160, 20, 10)),
+                    ((160, 20, 10), (240, 24, 12)),
+                )
+            elif scheme == "zero" and er_keV == 274.0:
+                order_pairs = (
+                    ((48, 12, 6), (80, 16, 8)),
+                    ((80, 16, 8), (160, 20, 10)),
+                )
+            else:
+                order_pairs = (((48, 12, 6), (80, 16, 8)),)
+            for low_order, high_order in order_pairs:
+                low = integrate(near_case, er_keV, scheme, low_order)
+                high = integrate(near_case, er_keV, scheme, high_order)
+                for key in ("I00", "Icharge", "Ifull"):
+                    relative_difference = abs(high[key] / low[key] - 1.0)
+                    convergence.append({
+                        "ER_keV": er_keV,
+                        "width_scheme": scheme,
+                        "observable": key,
+                        "order_low": "x".join(map(str, low_order)),
+                        "order_high": "x".join(map(str, high_order)),
+                        "relative_difference": relative_difference,
+                        "status": (
+                            "converged_at_1e-7"
+                            if relative_difference < 1.0e-7
+                            else "requires_higher_order"
+                        ),
+                    })
 
     csv_path = outdir / "finite_width_recoil_spectrum.csv"
     conv_path = outdir / "near_pole_quadrature_convergence.csv"
