@@ -29,13 +29,13 @@ The compressed bibliography style file has 7,172 bytes and SHA-256 `bf32a2e17dbe
 
 ## 2026-11-17 uploaded manuscript and figure update
 
-The current upload replaces the working manuscript and bibliography and adds two fixed-speed recoil spectra. The seven original figure PDFs remain byte-identical to their previously archived copies. `utphys28mod.bst` remains byte-identical to the decompressed `utphys28mod.bst.gz` already in the repository.
+The current upload replaces the working manuscript and bibliography and adds two fixed-speed recoil spectra. A follow-up source cleanup added the PDG kinematics entry and made the overview equation label unique. The seven original figure PDFs remain byte-identical to their previously archived copies. `utphys28mod.bst` remains byte-identical to the decompressed `utphys28mod.bst.gz` already in the repository.
 
 | Path | Bytes | SHA-256 | Status |
 |---|---:|---|---|
-| `main.tex` | 54,746 | `e2eeb9b1f71954e3055d2d77feab2cf5886cd5a5846d97f465d18dae1312332f` | Current uploaded source; BibTeX filename normalized |
+| `main.tex` | 54,755 | `320486060cdea817afc50796752a7803a74db74521e34ecd663de77ad4bd10bc` | Current uploaded source; BibTeX filename normalized; first duplicate label renamed |
 | `main_original.tex` | 17,254 | `da8ff06a7863da91b908b7762ba0a2f2d1889c1017b3dfca87778515a73f6687` | Preserved unchanged |
-| `ref.bib` | 6,784 | `529a228c37941bf10d8e29bc96df5139e6a18be40ed6efe81d65c9f77ce68f9d` | Current uploaded bibliography |
+| `ref.bib` | 7,187 | `770de34d80d58196bea4e44e65f2ae6c195bf133639f984b2df4b5ea177559ae` | Current uploaded bibliography; PDG 2024 kinematics entry added |
 | `utphys28mod.bst.gz` | 7,172 | `bf32a2e17dbea69b088759d9c55af071b99e6d661d215b5fe7cd63d859067c8a` | Original style archive, retained unchanged |
 | `figures/3_body_contour_ms_coupling_1.pdf` | 53,355 | `88044dd57d06ada3cf465650157d6a13dca784d25a68d8d0675d72a351960d08` | Retained original |
 | `figures/3_body_contour_ms_coupling_2.pdf` | 51,402 | `378d53de4aa37ff50a0f6eaafd9985a9f1b8baa7cb35751cbc4ccdbe2797c5e4` | Retained original |
