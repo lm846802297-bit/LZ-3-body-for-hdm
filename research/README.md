@@ -57,3 +57,5 @@ Keep the following quantities separate:
 `three_body_natural_xenon/` contains the reorganized main Mathematica notebook, AFH v6 xenon response data, usage notes, and archived comparison tables. The main calculation is inline in the notebook and uses FeynCalc plus Mathematica `NIntegrate`. Optional FeynRules/FeynArts checks need those external packages and a local model-export environment; the notebook keeps their saved outputs, but the third-party packages are not bundled. The run record is explicitly marked historical because this reorganization did not rerun all calculations.
 
 - [three_body_spin_resolved_current/](three_body_spin_resolved_current/README.md): spin-resolved 2x2 three-body current, finite-width Ward identity, conserved-current projection, and fixed-speed recoil-kernel scan with zero/pole/running widths.
+
+- [run_natural_xenon_width_comparison.py](three_body_calculation_and_validation/run_natural_xenon_width_comparison.py): selected-point natural-xenon halo-folded comparison of zero, pole, and running chi2 widths using the existing GCN/JJ55 W_M response grids.
