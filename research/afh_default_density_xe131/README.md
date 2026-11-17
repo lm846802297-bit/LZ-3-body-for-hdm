@@ -211,7 +211,7 @@ research/docs/appendices/09G_recoil_momentum_convention_audit.md.
 
 ## Preliminary spatial-current response audit
 
-A first source-translated AFH audit for Xe-129 and Xe-131 is available in `run_afh_spatial_response_audit.py`, with selected-q numerical output generated under the requested output directory. The report is `audit/AFH_SPATIAL_RESPONSE_FIRST_AUDIT.md`. It computes the AFH isoscalar (W_{\Sigma'}) response and flags a source-level parity-selection conflict in the literal `DeltaJ` implementation. The literal zero from that path is **not** treated as a physical prediction. Native Wolfram cross-check and resolution of the `DeltaJ) parity issue are required before (W_\Delta) or (W_{\Sigma'\Delta}) can be considered validated.
+A first source-translated AFH audit for Xe-129 and Xe-131 is available in `run_afh_spatial_response_audit.py`, with selected-q numerical output generated under the requested output directory. The native Mathematica/Wolfram exporter is `run_afh_spatial_response_audit.wls`; it exports AFH response indices 1, 3, 6 and 8 for both isotopes. The report is `audit/AFH_SPATIAL_RESPONSE_FIRST_AUDIT.md`. It computes the AFH isoscalar (W_{\Sigma'}) response and flags a source-level parity-selection conflict in the literal `DeltaJ` implementation. The literal zero from that path is **not** treated as a physical prediction. Native Wolfram cross-check and resolution of the `DeltaJ) parity issue are required before (W_\Delta) or (W_{\Sigma'\Delta}) can be considered validated.
 
 Reproduce the preliminary selected-q calculation with:
 
