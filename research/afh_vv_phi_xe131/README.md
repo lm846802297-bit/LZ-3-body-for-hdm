@@ -8,11 +8,11 @@ This study adds the AFH default-density Xe-131 responses
 nonzero where the existing coherent mass response has deep minima.
 
 A first three-body **charge-sector** matching is now derived: the exact
-radiative time current multiplies both (M) and (Phi''), so it cancels
+radiative time current multiplies both \(M\) and \(\Phi''\), so it cancels
 from their relative correction at fixed recoil. The zero-momentum form-factor
-benchmark gives the first numerical (M+Phi'') correction. This is not yet
-the complete three-body rate: finite-(t) flavour form factors and the
-spatial-current (Sigma'), (Sigma''), and (Delta) sectors remain open.
+benchmark gives the first numerical \(M+\Phi''\) correction. This is not yet
+the complete three-body rate: finite-\(t\) flavour form factors and the
+spatial-current \(\Sigma'\), \(\Sigma''\), and \(\Delta\) sectors remain open.
 
 ## Status
 
