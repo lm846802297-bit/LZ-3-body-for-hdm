@@ -1,0 +1,42 @@
+name: Vector-current response audit
+
+on:
+  push:
+    paths:
+      - "research/vector_current_response_audit/**"
+      - "research/three_body_calculation_and_validation/eq6_kernel.py"
+      - ".github/workflows/vector-current-response-audit.yml"
+  pull_request:
+    paths:
+      - "research/vector_current_response_audit/**"
+      - "research/three_body_calculation_and_validation/eq6_kernel.py"
+      - ".github/workflows/vector-current-response-audit.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependency
+        run: python -m pip install --upgrade numpy
+      - name: Run regression tests
+        run: |
+          python -m unittest discover \
+            -s research/vector_current_response_audit \
+            -p 'test_*.py' -v
+      - name: Reproduce numerical scan
+        run: |
+          python research/vector_current_response_audit/vector_current_response_audit.py \
+            --outdir /tmp/vector-current-response-audit
+      - name: Upload generated results
+        uses: actions/upload-artifact@v4
+        with:
+          name: vector-current-response-audit
+          path: /tmp/vector-current-response-audit/

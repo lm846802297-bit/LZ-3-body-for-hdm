@@ -1,0 +1,19 @@
+{
+  "status": "reproducible_diagnostic_pending_AFH_nuclear_response_contraction",
+  "baseline_main_commit": "45922af23445961df167fb77fa947bdd9100a161",
+  "baseline_eq6_kernel_blob": "68a9f6b3767728898b97494382234f77fc063c79",
+  "units": "GeV, natural units, metric (+---)",
+  "target": "Xe-131, mA=131*0.93149410242 GeV",
+  "dark_matter": {"mchi1_GeV": 1000.0, "speed_kms": 776.0},
+  "scan": "four benchmark kinematic points; zero, pole, and running-width prescriptions; 12 rows total",
+  "result_csv_git_blob": "97af7fd979a5a4cbbc1d0c6b059960cd4290c28f",
+  "quadrature_csv_git_blob": "cec0bed939002ddabf7de4331441a54af8e2e934",
+  "width_model": "conditional Dirac chi2, real scalar, pure scalar, single open chi2->chi1+s channel; vector-sector self-energy not included",
+  "validation": "Regression tests are included and must be run by the PR workflow. Local standalone results are provisional until the workflow executes against the baseline repository kernel.",
+  "limitations": [
+    "No AFH Sigma-prime, Sigma-double-prime, or Delta response has been numerically contracted with the three-body tensor.",
+    "The pointlike spin-zero current includes centre-of-mass convection only, not internal nuclear currents.",
+    "The per-nucleon vN and q/(2mN) factors are kinematic estimates, not AFH nuclear-response ratios.",
+    "No mediator propagator, halo integral, isotope abundance sum, detector response, or likelihood is included."
+  ]
+}
