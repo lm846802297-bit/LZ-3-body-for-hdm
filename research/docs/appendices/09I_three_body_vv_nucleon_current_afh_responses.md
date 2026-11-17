@@ -259,8 +259,8 @@ F_1^{V,N_a}
 | \(M\) | 领先矢量电荷密度 \(F_1\sum_a e^{i\mathbf q\cdot\mathbf r_a}\) | 已有七同位素数值基线；必须保留 |
 | \(\Phi''\) | 时间分量中的自旋—轨道电荷项 \(\boldsymbol\sigma\cdot(\mathbf q_A\times\mathbf K_N)\) | 第一优先级；不能由小 \(L^{ij}\) 排除 |
 | \(M\Phi''\) | 领先电荷与自旋—轨道电荷振幅的干涉 | 必须与 \(\Phi''\) 同时计算；干涉可正可负 |
-| \(\Delta\) | 空间流中的对流/轨道项 \(\mathbf K_N/m_N\)，经相应多极投影 | 由三体系数和 AFH 算符投影决定；当前源翻译存在 parity blocker |
-| \(\Sigma'\) | 空间流中的横向磁化自旋项 \(\boldsymbol\sigma_N\times\mathbf q_A\) | 需要完整匹配系数；已有初步选点源翻译，尚未完成 native cross-check |
+| \(\Delta\) | 空间流中的对流/轨道项 \(\mathbf K_N/m_N\)，经相应多极投影 | AFH DeltaJ 已纠正为同阶 MJLDivQ 映射；native Wolfram 输出与逐点对照待完成 |
+| \(\Sigma'\) | 空间流中的横向磁化自旋项 \(\boldsymbol\sigma_N\times\mathbf q_A\) | 先前 selected-\(q\) 数值表已撤回；native Wolfram 输出与逐点对照待完成 |
 | \(\Sigma''\) | 完整投影中可能出现的纵向自旋结构 | 不因核自旋非零而自动加入；由实际流分解决定 |
 | \(\widetilde\Phi'\) | AFH 横向电/自旋—速度张量算符 | 当前不预设为非零；若完整 NR 投影产生相应算符再计算 |
 
@@ -293,36 +293,51 @@ q_{A,\mu}J_N^\mu=0.
 
 AFH v6.0 七种可用 Xe 同位素的 \(M\) 电荷响应网格、因子 4 映射、零动量归一化和多极重构闭合已归档。Xe-131 的 rank-0/rank-2 分解属于同一个 \(M\) 电荷响应，不能误标为 \(\Phi''\)、\(\Delta\) 或自旋响应。AFH-7 仍不包含缺少官方 default density matrix 的 Xe-124/Xe-126。
 
-### I.7.2 \(\Sigma'\) 的初步源翻译结果
+### I.7.2 \(\Sigma'\) 的当前状态：先前 selected-\(q\) 数值表已撤回
 
-PR #51 分支中的 run_afh_spatial_response_audit.py 已对 Xe-129 和 Xe-131 的若干选定 \(q_A\) 点作 AFH 源代码翻译，得到下列 package-normalized 响应比值：
+PR #51 分支中曾出现一张由 Python 源代码翻译生成的 Xe-129/Xe-131 selected-\(q\) \(W_{\Sigma'} / W_M\) 比值表。后续对 AFH v6.0 实际调用链的复核确认，该表不能作为有效 AFH 数值结果使用，现正式撤回；不得在正文、图表或截面估算中继续引用其中的比值。此前同一翻译链中伴随报告的 \(W_M\) / \(W_{\Sigma'}\) 选点值也不作为 native AFH 证据。
 
-| 同位素 | \(q_A\) [GeV] | 初步 \(W_{\Sigma'}^{00}/W_M^{00}\) |
-|---|---:|---:|
-| Xe-129 | 0 | \(3.1431\times10^{-5}\) |
-| Xe-129 | 0.158 | \(4.0775\times10^{-4}\) |
-| Xe-129 | 0.256 | \(0.15792\) |
-| Xe-129 | 0.365 | \(0.03712\) |
-| Xe-131 | 0 | \(1.0771\times10^{-5}\) |
-| Xe-131 | 0.158 | \(0.06033\) |
-| Xe-131 | 0.256 | \(0.39793\) |
-| Xe-131 | 0.365 | \(1.51717\) |
-
-**这些数字是初步 source-translated selected-\(q\) 诊断，不是已通过 native Mathematica/Wolfram 逐点交叉检查的 AFH 结果，更不是截面修正。** 表中显示的是原始 package isoscalar 约定；尚未把绝对响应提升为物理核子耦合归一化。若一个共同的因子 4 同时作用于两列响应，比值不变，但绝对归一化仍必须逐算符核查。
-
-因此，这张表只能说明：在 \(M\) 响应受抑制的动量区域，初步的 \(\Sigma'\) 核矩阵元可能相对突出，值得进行独立 native 检查。不能将 \(1.517\) 解释为 Xe-131 截面被增强 151.7%，也不能据此宣称 \(\Sigma'\) 已经主导真实谱。
-
-### I.7.3 \(\Delta\) 的 parity blocker
-
-当前源翻译发现 AFH 源码中的 DeltaJ parity wrapper 要求
+AFH v6.0 的空间响应索引为
 \[
-(-1)^{\ell+\ell'+L+1}=+1,
+i=3:\quad \mathrm{SigmaPJ}\longrightarrow W_{\Sigma'},
+\qquad
+i=6:\quad \mathrm{DeltaJ}\longrightarrow W_\Delta,
+\qquad
+i=8:\quad W_{\Sigma'\Delta}.
 \]
-即 \(\ell+\ell'+L\) 为奇数；但内部相应 \(3j\) 符号的全零磁量子数选择定则要求该和为偶数。两者按字面实现相互冲突，导致当前翻译路径给出恒零的 \(\Delta\) 矩阵元。
+当前 Python 代码仍属于 development translation。PR #51 同时准备了 native Wolfram exporter [run_afh_spatial_response_audit.wls](../../afh_default_density_xe131/run_afh_spatial_response_audit.wls)，用于对 Xe-129 和 Xe-131 在相同 \(q_A\) 网格上导出 package-native 响应。只有完成 native 输出、逐点差异比较、归一化和多极收敛检查后，才可重新发布 \(\Sigma'\) 数值表。
 
-**这个零不能解释为物理上 \(W_\Delta=0\)。** 在完成 native AFH/Wolfram 对照、源版本追溯和 parity 约定核查前，\(W_\Delta\) 与 \(W_{\Sigma'\Delta}\) 均标记为 blocked / not validated，不得通过静默修改选择定则制造非零结果。
+### I.7.3 \(\Delta\) 的 AFH 算符映射已纠正，数值验证待完成
 
-### I.7.4 PR #53 的四分量暗物质流诊断
+AFH v6.0 的真实调用链为
+\[
+\mathrm{DeltaJ}\to\mathrm{DeltaJE}\to\mathrm{Deltaop}
+\to\mathrm{MJLDivQ}[\ldots,jcap=L,lcap=L].
+\]
+先前 Python 翻译错误使用了 rank-\(L\pm1\) 的 \(\mathrm{DeltaPrime}\)，而不是 \(\mathrm{DeltaJ}\) 实际调用的同阶 \(L\) 分量。修正后，AFH \(\mathrm{DeltaJ}\) 的 abnormal-parity wrapper 与内部 \(3j\) 选择定则相容；此前声称存在内在 parity contradiction 的判断已撤回。
+
+因此当前正确状态不是“\(\Delta\) 因 parity 矛盾而被阻断”，而是：**算符映射已纠正，但 \(W_\Delta\) 和 \(W_{\Sigma'\Delta}\) 尚无通过 native Wolfram 对照的数值结果。** 相关响应索引为 \(i=6\) 和 \(i=8\)。必须对 native package 输出与 Python development translation 作相同网格的逐点比较，之后才可发布数值。
+
+### I.7.4 Xe-131 的 \(M,\Phi'',M\Phi''\) native 导出已准备，执行仍待完成
+
+PR #51 已新增 [native export plan](../../afh_default_density_xe131/audit/AFH_PHI_RESPONSE_XE131_NATIVE_PLAN.md)、[Wolfram exporter](../../afh_default_density_xe131/run_afh_phi_response_xe131.wls)、[Python validator](../../afh_default_density_xe131/validate_afh_phi_response.py) 和对应单元测试。计划调用 AFH v6.0 原生 \(\mathrm{ResponseNuclear}\) 索引
+\[
+i=1:\ M,\qquad i=4:\ \Phi'',\qquad i=7:\ M\Phi''.
+\]
+具体设置为 Xe-131（\(A=131,Z=54,J_A=3/2\)）、官方内置 sdgXe131 67-entry density matrix、2,401 个 \(q_A\) 节点，范围 \(0\)–\(0.6\) GeV，步长 \(0.25\) MeV。native runner 记录 AFH source 和 density-matrix SHA-256，并输出 raw package response。
+
+该计划对三个响应统一采用
+\[
+R_X^{\rm raw}=\frac{4\pi}{2J_A+1}W_{X,\rm AFH}^{00},
+\qquad
+R_X^{\rm phys}=4R_X^{\rm raw},
+\qquad X\in\{M,\Phi'',M\Phi''\},
+\]
+factor four 只放置一次；同时以 \(R_M^{\rm raw}(0)\simeq A^2/4\) 检查归一化。它不再叠加旧 \(W_M\) 表中的独立零动量形状重归一化，以免干涉响应引入不一致的约定。
+
+**目前只有导出程序、验证器和单元测试，没有 native Wolfram 输出文件。** validator 的单元测试只验证 CSV/metadata 的验收逻辑，不等于 AFH 核矩阵元已经运行或通过。native Wolfram 执行完成、生成文件并核对 SHA-256 之前，不报告新的 \(W_{\Phi''}\) 或 \(W_{M\Phi''}\) 数值。
+
+### I.7.5 PR #53 的四分量暗物质流诊断
 
 相关的 [PR #53 — full three-body vector-current audit](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/pull/53) 已有一个可复现的分支级诊断：构造完整 \(L^{\mu\nu}\)，保留两张辐射图和干涉，并与守恒的核质心点电荷流收缩。其 exact-source workflow 记录为 8/8 tests passed、12 行结果重算与归档表完全一致；扫描中 target-rest-frame
 \[
@@ -341,8 +356,8 @@ r_\chi=\sqrt{\frac{L^{11}+L^{22}+L^{33}}{L^{00}}}
 
 1. **固定 flavor 和 form-factor 输入。** 明确活动味道、UV 权重、重味阈值匹配、\(F_1^{V,p/n}(t_A)\)、\(F_2^{V,p/n}(t_A)\) 的来源、误差和 \(t\) 区间；验证零动量电荷和当前三味分解的 Pauli 常数项。
 2. **完成自由核子 Dirac–Pauli 对照。** 对选定 \(q_A\)、\(\mathbf K_N\) 和自旋态，将完整 Dirac 自旋量计算与上面的 NR 展开逐项比较；检查 \(J_N^\mu\) 的符号、\(F_1+2F_2\)、\(F_1+F_2\) 及 on-shell 流守恒。
-3. **优先计算 \(\Phi''\) 和 \(M\Phi''\)。** 从 \(J_N^0\) 的 spin-orbit charge term 开始，对 Xe-129、Xe-131 生成 AFH 多极矩阵元；特别在 Xe-131 的 \(q_A\simeq158,256,365\) MeV 附近做局部高分辨率扫描。
-4. **完成 AFH 空间响应的 source/native 对照。** 对 \(\Sigma'\) 做同网格 native Wolfram 比较；追查 \(\Delta J\) parity 冲突；必要时扩展 \(\Sigma''\)、\(\Delta\) 和允许的干涉项。每种响应都要单独检查归一化、相位、\(q/m_N\) 因子和选择定则。
+3. **执行已准备的 Xe-131 native \(M,\Phi'',M\Phi''\) 导出。** 先运行 PR #51 的 Wolfram exporter，完成 2,401 点输出、metadata/SHA-256 核对和 Python validator；通过后再扩展 Xe-129，并在 Xe-131 的 \(q_A\simeq158,256,365\) MeV 附近做局部高分辨率扫描。
+4. **完成 AFH 空间响应的 source/native 对照。** 使用 AFH 正确的 \(\Sigma'\)、\(\Delta J\)、\(\Sigma'\! -\! \Delta J\) 索引，对 Xe-129/Xe-131 的 native Wolfram 输出与 Python development translation 作逐点比较；\(\Delta J\) 已纠正为同阶 \(MJLDivQ\) 映射，不再沿用旧 parity-conflict 判断。每种响应都要单独检查归一化、相位、\(q/m_N\) 因子和选择定则。
 5. **进行完整三体张量收缩。** 在每个三体相空间点计算 \(L^{\mu\nu}\)，与含有正确 \(F_1/F_2\) 系数的核流多极响应收缩；分别输出 \(M\)、\(\Phi''\)、\(M\Phi''\)、空间对流和磁化项，保留所有允许干涉。
 6. **分别检查求积收敛。** 三体 \(W^2,z,\phi_*\) 求积、核响应 \(q_A\) 网格/插值和多极截断误差必须分别收敛；不能用一个积分收敛测试代替另一个。
 7. **最后再生成天然氙谱。** 对各同位素使用各自核质量和核响应，按原始天然丰度求和；保留 AFH-7 / Hybrid-9 的输入边界，不把缺失同位素静默补齐。

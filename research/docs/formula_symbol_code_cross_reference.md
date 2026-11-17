@@ -33,8 +33,7 @@
 | \(dR/dE_R\) | 每单位靶质量、时间和反冲能量的理论速率 | events/(kg day keV) | AFH-7/Hybrid-9 有 84 点 grid-sampled spectra；GCN/JJ55 有 84 点谱但使用 legacy linear-\(W^2\) 积分 |
 | F11 | LZ 一维效率加权预期事件数 \(N_{\rm sig}^{\rm ROI}\) | §11.1、§11.4、§11.6 | 主报告 §11.6；附录 F.5 | `fold_lz_2026_rate_level.py` | LZ efficiency CSV；rate-level yield CSV | 一维效率是二维重建响应概率在 ROI 上的投影；不是二维 likelihood 或 90% CL 排除。 |
 | F12 | 条件性 \(\chi_2\to\chi_1s\) pole width | §5、§7 的 width prescription | [附录 A，§A.5–A.6.1](appendices/09A_three_body_kinematics_amplitude.md) | [eq6_kernel.py](../three_body_calculation_and_validation/eq6_kernel.py)：`chi2_width_dirac_scalar` | benchmark metadata：`width_scheme`、`g2` | 从 Dirac 纯标量 Yukawa 振幅和二体相空间推导；仅适用于 Dirac、实标量、纯标量耦合及单一开放衰变道。 |
-| F13 | 完整三体 VV 张量、Dirac–Pauli (F_1/F_2) 与 AFH (M,Phi'',MPhi'',Delta,Sigma',Sigma'') 匹配 | §2.3、§3.6–§3.7 | [附录 I.1–I.9](appendices/09I_three_body_vv_nucleon_current_afh_responses.md) | vector_current_response_audit.py（DM 侧 (L^{mu
-u})/点核流诊断）；run_afh_spatial_response_audit.py（初步 (Sigma')，(Delta J) parity blocker） | PR #53 的 12-row 四分量 DM 张量/点核诊断；PR #51 的初步 selected-(q) (Sigma') 输出 | 采用 2017 显式 flavor-separated (F_2^V(0)=-0.552)；有限 (t) 输入、(Phi'')、(MPhi'')、完整核流收缩和天然氙完整 VV 谱尚未完成 | **未完成（理论映射已整理）** |
+| F13 | 完整三体 VV 张量、Dirac–Pauli \(F_1/F_2\) 与 AFH \(M,\Phi'',M\Phi'',\Delta,\Sigma',\Sigma''\) 匹配 | §2.3、§3.6–§3.7 | [附录 I.1–I.9](appendices/09I_three_body_vv_nucleon_current_afh_responses.md) | vector_current_response_audit.py（DM 侧 \(L^{\mu\nu}\)/点核流诊断）；run_afh_phi_response_xe131.wls（Xe-131 \(M,\Phi'',M\Phi''\) native export prepared）；run_afh_spatial_response_audit.wls（native \(\Sigma',\Delta,\Sigma'\Delta\) exporter） | PR #53 的 12-row 四分量 DM 张量/点核诊断；PR #51 的 native AFH export plans | 采用 2017 显式 flavor-separated \(F_2^V(0)=-0.552\)；native AFH 响应执行、有限 \(t\) 输入、完整三体核流收缩和天然氙完整 VV 谱尚未完成 | **未完成（理论映射已整理）** |
 
 ## 3. 符号、定义与单位表
 
@@ -103,7 +102,7 @@ u})/点核流诊断）；run_afh_spatial_response_audit.py（初步 (Sigma')，(
 | \(\mathbf K_N\) | 受击核子的平均内部动量 \((\mathbf p_N'+\mathbf p_N)/2\) | GeV | 不是三体 \(\chi_1+s\) 子系统的 \(K^\mu\) |
 | \(L_3^{\mu\nu}\) | 完整三体暗物质流张量 | 按迹定义 | PR #53 有 DM 侧四分量诊断；不是完整核流收缩 |
 | \(W_{\Phi''},W_{M\Phi''}\) | 自旋—轨道响应及其与 \(M\) 的干涉 | AFH 响应约定 | 尚无当前模型的完整数值收缩；不能以裸响应比替代截面修正 |
-| \(W_{\Delta},W_{\Sigma'},W_{\Sigma''}\) | 对流/轨道、横向/纵向自旋响应 | AFH 响应约定 | \(\Sigma'\) 有初步 selected-\(q\) source translation；\(\Delta\) parity blocker 未解决 |
+| \(W_{\Delta},W_{\Sigma'},W_{\Sigma''}\) | 对流/轨道、横向/纵向自旋响应 | AFH 响应约定 | 先前 \(\Sigma'\) selected-\(q\) 表已撤回；\(\Delta J\) 映射已纠正，native Wolfram 对照待完成 |
 
 ### 3.5 Halo、事件率与探测器量
 
@@ -186,8 +185,9 @@ F1–F13 的逐项状态见第 2 节。当前 AFH-7/Hybrid-9 84 点 grid-sampled
 - **已归档：** AFH-7 七同位素 \(M\) 响应及 factor-four 归一化。
 - **分支级可复现诊断：** PR #53 的完整暗物质 \(L^{\mu\nu}\) 与核质心点电荷流收缩；它不包含核内单体流。
 - **当前 form-factor benchmark：** 采用 arXiv:1707.06998 Appendix A.1 的显式 flavor-separated 中心值，\(F_2^{V,p/n}(0)=-0.552\)（同位旋对称近似）；HKS 2015 紧凑记号差异待逐项核查，有限 \(t_A\) 输入和协方差未完成。
-- **初步：** Xe-129/Xe-131 \(\Sigma'\) selected-\(q\) source translation，native Wolfram 对照待完成。
-- **Blocked：** \(\Delta J\) parity selection conflict 未解决。
-- **未完成：** \(\Phi''\)、\(M\Phi''\)、完整 \(L^{\mu\nu}W_A^{\alpha\beta}\) 收缩及天然氙完整 VV 谱。
+- **已撤回：** 先前 Xe-129/Xe-131 \(\Sigma'\) selected-\(q\) Python 源翻译表因算符映射审查撤回，不作为数值证据。
+- **映射已纠正、native pending：** AFH \(\Delta J\) 应使用同阶 \(MJLDivQ\)，旧 parity-conflict 判断已撤回；native \(\Sigma'\)、\(\Delta\)、\(\Sigma'\Delta\) 输出和逐点比较待完成。
+- **export prepared：** Xe-131 \(M,\Phi'',M\Phi''\) 的 2,401 点 Wolfram exporter 和 Python validator 已准备，但 native 执行及输出归档待完成。
+- **未完成：** 有限 \(t\) 的 \(F_1/F_2\) 数值匹配、完整 \(L^{\mu\nu}W_A^{\alpha\beta}\) 收缩和天然氙完整 VV 谱。
 
 F13 的定义、符号、程序入口和证据边界见第 2 节及正式附录 I。点核 ppm 结果不能代替核内 \(\Sigma'\)、\(\Delta\) 或 \(\Phi''\) 矩阵元。
