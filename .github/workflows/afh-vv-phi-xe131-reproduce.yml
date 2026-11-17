@@ -1,12 +1,15 @@
 name: AFH Xe-131 VV Phi-double-prime reproduction
 
+concurrency:
+  group: afh-vv-phi-xe131-reproduce
+  cancel-in-progress: false
+
 on:
   push:
     branches:
       - research/vv-phi-xe131-audit-20261118
     paths:
       - 'research/afh_vv_phi_xe131/**'
-      - '.github/workflows/afh-vv-phi-xe131-reproduce.yml'
       - 'research/afh_default_density_xe131/input/afh_default_xe131_density_matrix.csv'
       - 'research/afh_default_density_xe131/output/minima.csv'
       - 'research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv'
@@ -53,5 +56,7 @@ jobs:
             echo "No generated output changes to archive."
           else
             git commit -m "Archive Xe-131 Phi-double-prime response grid"
+            git fetch origin research/vv-phi-xe131-audit-20261118
+            git rebase origin/research/vv-phi-xe131-audit-20261118
             git push origin HEAD:research/vv-phi-xe131-audit-20261118
           fi
