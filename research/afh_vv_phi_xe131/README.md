@@ -19,9 +19,9 @@ spatial-current \(\Sigma'\), \(\Sigma''\), and \(\Delta\) sectors remain open.
 **AFH response grid reproduced; charge-sector benchmark implemented; native
 Mathematica cross-check pending.** The 2401-point Python response grid,
 selected minima, regression tests, and run manifest are archived. The new
-`phi_charge_response_match.py` evaluates the (M+Phi'') charge-sector
+`phi_charge_response_match.py` evaluates the \(M+\Phi''\) charge-sector
 correction using explicitly labelled zero-momentum form-factor anchors.
-This is a controlled benchmark, not yet a finite-(t), all-current prediction
+This is a controlled benchmark, not yet a finite-\(t\), all-current prediction
 for the LZ recoil spectrum.
 
 ## Model branch and assumptions
