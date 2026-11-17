@@ -1,0 +1,12 @@
+Get[FileNameJoin[{DirectoryName[$InputFileName],"figure2_engine.wl"}]];
+failures=0;
+check[name_, condition_]:=If[TrueQ[condition],Print["PASS: ",name],Print["FAIL: ",name];failures++];
+gam=Fig2`Chi2Width[1000.,0.0003,0.001,1.];
+check["physical pole width in GeV",NumericQ[gam] && Abs[gam/0.0001518239115787696-1]<10^-10];
+check["closed decay has zero width",Fig2`Chi2Width[1000.,0.001,0.001,1.]===0.];
+check["partial width scales as |g2| squared",NumericQ[gam] && Abs[Fig2`Chi2Width[1000.,0.0003,0.001,2.]/gam-4]<10^-12];
+zero=Fig2`I6[1000.,0.0003,0.001,122.,0.0002,776.,{16,16,8},0.];
+finite=Fig2`I6[1000.,0.0003,0.001,122.,0.0002,776.,{16,16,8},gam];
+check["zero width agrees with independent Python",NumericQ[zero] && Abs[zero/878098.5567396304-1]<10^-8];
+check["g2=1 finite width agrees with independent Python",NumericQ[finite] && Abs[finite/868246.7879205601-1]<10^-8];
+If[failures>0,Print["FAILED checks: ",failures];Exit[1],Print["PASS all tests"];Exit[0]];
