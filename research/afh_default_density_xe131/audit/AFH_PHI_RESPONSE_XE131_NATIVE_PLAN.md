@@ -2,9 +2,12 @@
 
 ## Status
 
-**Prepared; native Wolfram execution pending.** This record describes the new
-reproducible export and its acceptance checks. No new numerical
-\(W_{\Phi''}\) or \(W_{M\Phi''}\) values are claimed in this commit.
+**Native Wolfram execution archived; response-level validator PASS (2026-11-18).**
+The 2,401-node Xe-131 export, metadata, validation summary, and SHA-256
+manifest are committed under output/phi_response_native/. This validates
+the AFH v6.0 native nuclear responses and their normalization/bookkeeping
+only; it does not validate the three-body Wilson coefficients or the
+complete scattering rate.
 
 The work continues on PR #51 and uses the official AFH v6.0 package and its
 built-in Xe-131 default density matrix. It does not create a second isotope
@@ -102,26 +105,70 @@ The validator checks:
 The Cauchy-Schwarz check is an algebraic consistency test on the response
 matrix. It is not an independent nuclear-structure calculation.
 
+## Archived numerical findings
+
+The committed native CSV contains 2,401 rows and 14 columns. The dedicated
+validator reports PASS with zero recorded residual for the q-to-y map,
+the 4pi/(2J_A+1) response conversion, the factor-four mapping, and the
+imaginary parts; the diagonal responses are non-negative and the
+Cauchy-Schwarz bound is satisfied. The maximum normalized interference
+correlation extracted from the CSV is
+\[
+\max_{q_A}\frac{|R_{M\Phi''}|}{\sqrt{R_M R_{\Phi''}}}
+=0.9999998602.
+\]
+This is a response-matrix consistency result, not an independent nuclear
+model calculation.
+
+The raw zero-momentum normalization is
+\[
+R_M^{\rm raw}(0)=4289.895955714992,
+\qquad A^2/4=4290.25,
+\]
+with relative offset \(8.25230\times10^{-5}\). After the one-time factor-four
+mapping, \(R_M^{\rm phys}(0)=17159.583822859968\), compared with
+\(A^2=17161\). The small difference is the rounded AFH density-matrix
+coefficient offset; no shape renormalization is applied to this export.
+
+The four local minima of the sampled \(R_M\) grid give the following raw
+response values:
+
+| \(q_A\) [GeV] | \(R_M^{\rm raw}\) | \(R_{\Phi''}^{\rm raw}\) | \(R_{M\Phi''}^{\rm raw}\) | \(R_{\Phi''}/R_M\) |
+|---:|---:|---:|---:|---:|
+| 0.15800 | 5.31451e-2 | 7.14832e-1 | 2.62061e-2 | 13.45 |
+| 0.25625 | 2.72531e-4 | 3.15623e-2 | -5.24943e-4 | 115.81 |
+| 0.36500 | 6.70326e-4 | 1.51514e-3 | 2.21762e-4 | 2.26 |
+| 0.49925 | 7.16871e-5 | 4.96083e-5 | -7.30759e-6 | 0.692 |
+
+The large ratio near \(q_A=0.25625\,\mathrm{GeV}\) is driven by the deep
+suppression of \(R_M\): the absolute \(R_{\Phi''}\) there is only
+\(2.11\times10^{-4}\) of its q=0 value. Therefore the ratio is not a
+115.8-fold enhancement of the physical cross section. The signed
+\(M\)-\(\Phi''\) interference and the actual three-body coefficients must
+be included before any rate-level statement is made.
+
 ## Reproduction on the Windows/Wolfram machine
 
 From the repository root, after confirming that wolframscript is on PATH:
 
 ~~~powershell
-wolframscript -file research/afh_default_density_xe131/run_afh_phi_response_xe131.wls
-python research/afh_default_density_xe131/validate_afh_phi_response.py --csv research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_native.csv --metadata research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_metadata.json --summary research/afh_default_density_xe131/output/phi_response_native/validation_summary.json
+powershell -ExecutionPolicy Bypass -File research/afh_default_density_xe131/run_native_phi_response_windows.ps1
 python -m unittest research.afh_default_density_xe131.tests.test_afh_phi_response -v
 ~~~
 
-The native outputs are written individually under
-output/phi_response_native/:
+The committed archive under output/phi_response_native/ contains:
 
-- afh_default_xe131_M_PhiPP_native.csv
-- afh_default_xe131_M_PhiPP_metadata.json
-- validation_summary.json (written by the validator)
+- afh_default_xe131_M_PhiPP_native.csv — 2,401 response rows;
+- afh_default_xe131_M_PhiPP_metadata.json — source/input hashes, Wolfram
+  version, grid and normalization metadata;
+- afh_default_xe131_M_PhiPP_validation.json — Python validator summary;
+- sha256_manifest.json — SHA-256 digests for the CSV, metadata and
+  validation summary.
 
-No output files are committed until a native Wolfram run has actually
-completed and the generated files have been checked and their SHA-256 values
-verified.
+The Windows wrapper writes the validation file under this canonical archive
+name and regenerates the manifest. Re-running it locally should reproduce the
+same numerical rows and metadata values; runtime timestamps are not part of
+the native metadata.
 
 ## What this stage does not establish
 

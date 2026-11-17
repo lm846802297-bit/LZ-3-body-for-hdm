@@ -16,6 +16,6 @@ This directory contains the source-level, normalization, momentum-convention, an
 The audit programs write to explicit `--outdir` / `--out-dir` destinations. They do not overwrite canonical response or cross-section tables.
 
 
-- \`AFH_PHI_RESPONSE_XE131_NATIVE_PLAN.md\`: native AFH v6.0 exporter and
-  acceptance plan for Xe-131 \(W_{\Phi''}\) and \(W_{M\Phi''}\). The plan is
-  prepared, but the native Wolfram run and numerical outputs are still pending.
+- AFH_PHI_RESPONSE_XE131_NATIVE_PLAN.md: completed Xe-131 native AFH
+  \(M\), \(\Phi''\), and \(M\Phi''\) export, response-level validator result,
+  numerical minima, and scientific scope boundary.

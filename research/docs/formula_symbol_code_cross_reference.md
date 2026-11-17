@@ -33,7 +33,7 @@
 | \(dR/dE_R\) | 每单位靶质量、时间和反冲能量的理论速率 | events/(kg day keV) | AFH-7/Hybrid-9 有 84 点 grid-sampled spectra；GCN/JJ55 有 84 点谱但使用 legacy linear-\(W^2\) 积分 |
 | F11 | LZ 一维效率加权预期事件数 \(N_{\rm sig}^{\rm ROI}\) | §11.1、§11.4、§11.6 | 主报告 §11.6；附录 F.5 | `fold_lz_2026_rate_level.py` | LZ efficiency CSV；rate-level yield CSV | 一维效率是二维重建响应概率在 ROI 上的投影；不是二维 likelihood 或 90% CL 排除。 |
 | F12 | 条件性 \(\chi_2\to\chi_1s\) pole width | §5、§7 的 width prescription | [附录 A，§A.5–A.6.1](appendices/09A_three_body_kinematics_amplitude.md) | [eq6_kernel.py](../three_body_calculation_and_validation/eq6_kernel.py)：`chi2_width_dirac_scalar` | benchmark metadata：`width_scheme`、`g2` | 从 Dirac 纯标量 Yukawa 振幅和二体相空间推导；仅适用于 Dirac、实标量、纯标量耦合及单一开放衰变道。 |
-| F13 | 完整三体 VV 张量、Dirac–Pauli \(F_1/F_2\) 与 AFH \(M,\Phi'',M\Phi'',\Delta,\Sigma',\Sigma''\) 匹配 | §2.3、§3.6–§3.7 | [附录 I.1–I.9](appendices/09I_three_body_vv_nucleon_current_afh_responses.md) | vector_current_response_audit.py（DM 侧 \(L^{\mu\nu}\)/点核流诊断）；run_afh_phi_response_xe131.wls（Xe-131 \(M,\Phi'',M\Phi''\) native export prepared）；run_afh_spatial_response_audit.wls（native \(\Sigma',\Delta,\Sigma'\Delta\) exporter） | PR #53 的 12-row 四分量 DM 张量/点核诊断；PR #51 的 native AFH export plans | 采用 2017 显式 flavor-separated \(F_2^V(0)=-0.552\)；native AFH 响应执行、有限 \(t\) 输入、完整三体核流收缩和天然氙完整 VV 谱尚未完成 | **未完成（理论映射已整理）** |
+| F13 | 完整三体 VV 张量、Dirac–Pauli \(F_1/F_2\) 与 AFH \(M,\Phi'',M\Phi'',\Delta,\Sigma',\Sigma''\) 匹配 | §2.3、§3.6–§3.7 | [附录 I.1–I.9](appendices/09I_three_body_vv_nucleon_current_afh_responses.md) | vector_current_response_audit.py（DM 侧 \(L^{\mu\nu}\)/点核流诊断）；run_afh_phi_response_xe131.wls（Xe-131 \(M,\Phi'',M\Phi''\) native response archived）；run_afh_spatial_response_audit.wls（native \(\Sigma',\Delta,\Sigma'\Delta\) exporter） | PR #53 的 12-row 四分量 DM 张量/点核诊断；PR #51 的 2,401-node Xe-131 native response CSV/metadata/validation/manifest | 采用 2017 显式 flavor-separated \(F_2^V(0)=-0.552\)；有限 \(t\) 输入、空间响应 native 对照、完整三体核流收缩和天然氙完整 VV 谱尚未完成 | **未完成（响应层部分完成）** |
 
 ## 3. 符号、定义与单位表
 
@@ -101,7 +101,7 @@
 | \(q_A^\mu\) | 媒介子传给原子核/受击核子的四动量 | GeV | 本文 \(q_A=p_N'-p_N\)；若采用 \(p_N-p_N'\)，Pauli 项符号反转 |
 | \(\mathbf K_N\) | 受击核子的平均内部动量 \((\mathbf p_N'+\mathbf p_N)/2\) | GeV | 不是三体 \(\chi_1+s\) 子系统的 \(K^\mu\) |
 | \(L_3^{\mu\nu}\) | 完整三体暗物质流张量 | 按迹定义 | PR #53 有 DM 侧四分量诊断；不是完整核流收缩 |
-| \(W_{\Phi''},W_{M\Phi''}\) | 自旋—轨道响应及其与 \(M\) 的干涉 | AFH 响应约定 | 尚无当前模型的完整数值收缩；不能以裸响应比替代截面修正 |
+| \(W_{\Phi''},W_{M\Phi''}\) | 自旋—轨道响应及其与 \(M\) 的干涉 | AFH 响应约定 | Xe-131 native nuclear responses are archived on PR #51; the three-body coefficients and full contraction remain open, so bare response ratios are not cross-section corrections |
 | \(W_{\Delta},W_{\Sigma'},W_{\Sigma''}\) | 对流/轨道、横向/纵向自旋响应 | AFH 响应约定 | 先前 \(\Sigma'\) selected-\(q\) 表已撤回；\(\Delta J\) 映射已纠正，native Wolfram 对照待完成 |
 
 ### 3.5 Halo、事件率与探测器量

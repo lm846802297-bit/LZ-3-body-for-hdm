@@ -323,24 +323,55 @@ AFH v6.0 的真实调用链为
 
 因此当前正确状态不是“\(\Delta\) 因 parity 矛盾而被阻断”，而是：**算符映射已纠正，但 \(W_\Delta\) 和 \(W_{\Sigma'\Delta}\) 尚无通过 native Wolfram 对照的数值结果。** 相关响应索引为 \(i=6\) 和 \(i=8\)。必须对 native package 输出与 Python development translation 作相同网格的逐点比较，之后才可发布数值。
 
-### I.7.4 Xe-131 的 \(M,\Phi'',M\Phi''\) native 导出已准备，执行仍待完成
+### I.7.4 Xe-131 的 \(M,\Phi'',M\Phi''\) native 响应已完成（response-level）
 
-PR #51 已新增 [native export plan](../../afh_default_density_xe131/audit/AFH_PHI_RESPONSE_XE131_NATIVE_PLAN.md)、[Wolfram exporter](../../afh_default_density_xe131/run_afh_phi_response_xe131.wls)、[Python validator](../../afh_default_density_xe131/validate_afh_phi_response.py) 和对应单元测试。计划调用 AFH v6.0 原生 \(\mathrm{ResponseNuclear}\) 索引
+PR #51 已归档 AFH v6.0 原生 Wolfram 输出，调用
+\(\mathrm{ResponseNuclear}\) 索引
 \[
 i=1:\ M,\qquad i=4:\ \Phi'',\qquad i=7:\ M\Phi''.
 \]
-具体设置为 Xe-131（\(A=131,Z=54,J_A=3/2\)）、官方内置 sdgXe131 67-entry density matrix、2,401 个 \(q_A\) 节点，范围 \(0\)–\(0.6\) GeV，步长 \(0.25\) MeV。native runner 记录 AFH source 和 density-matrix SHA-256，并输出 raw package response。
+计算对象为 Xe-131（\(A=131,Z=54,J_A=3/2\)）、官方内置
+\(sdgXe131\) 67-entry density matrix；网格为 2,401 个 \(q_A\) 节点，
+范围 \(0\)–\(0.6\) GeV，步长 \(0.25\) MeV。AFH source 和 density-matrix
+SHA-256、Wolfram 14.2.0 版本及 oscillator length 均记录在 metadata。
 
-该计划对三个响应统一采用
+三个响应统一采用
 \[
 R_X^{\rm raw}=\frac{4\pi}{2J_A+1}W_{X,\rm AFH}^{00},
 \qquad
 R_X^{\rm phys}=4R_X^{\rm raw},
 \qquad X\in\{M,\Phi'',M\Phi''\},
 \]
-factor four 只放置一次；同时以 \(R_M^{\rm raw}(0)\simeq A^2/4\) 检查归一化。它不再叠加旧 \(W_M\) 表中的独立零动量形状重归一化，以免干涉响应引入不一致的约定。
+factor four 只放置一次；不叠加旧 \(W_M\) 表中的独立零动量形状重归一化。
+原生 CSV、metadata、Python validation summary 和 SHA-256 manifest 位于
+research/afh_default_density_xe131/output/phi_response_native/。
 
-**目前只有导出程序、验证器和单元测试，没有 native Wolfram 输出文件。** validator 的单元测试只验证 CSV/metadata 的验收逻辑，不等于 AFH 核矩阵元已经运行或通过。native Wolfram 执行完成、生成文件并核对 SHA-256 之前，不报告新的 \(W_{\Phi''}\) 或 \(W_{M\Phi''}\) 数值。
+专用 validator 报告 **PASS**：2,401 点网格和 \(y=(q_Ab_A/2)^2\) 一致；
+\(4\pi/(2J_A+1)\) 与 factor-four 映射残差为零；对角响应非负；
+虚部残差为零；\(M\)-\(\Phi''\) 响应矩阵满足 Cauchy–Schwarz；
+\(R_M^{\rm raw}(0)=4289.895955714992\)，相对 \(A^2/4=4290.25\) 的
+偏差为 \(8.25230\times10^{-5}\)。该 validator 检查响应 bookkeeping、
+正定性和 provenance，不是独立核结构计算或三体截面比较。
+
+在四个采样到的 \(M\) 局部极小值处，raw response 为：
+
+| \(q_A\) [GeV] | \(R_M^{\rm raw}\) | \(R_{\Phi''}^{\rm raw}\) | \(R_{M\Phi''}^{\rm raw}\) | \(R_{\Phi''}/R_M\) |
+|---:|---:|---:|---:|---:|
+| 0.15800 | 5.31451e-2 | 7.14832e-1 | 2.62061e-2 | 13.45 |
+| 0.25625 | 2.72531e-4 | 3.15623e-2 | -5.24943e-4 | 115.81 |
+| 0.36500 | 6.70326e-4 | 1.51514e-3 | 2.21762e-4 | 2.26 |
+| 0.49925 | 7.16871e-5 | 4.96083e-5 | -7.30759e-6 | 0.692 |
+
+\(q_A=0.25625\) GeV 处的 115.81 倍比值来自 \(M\) 响应深极小值；
+该点 \(R_{\Phi''}^{\rm raw}=0.03156\)，仅为其 q=0 值的
+\(2.11\times10^{-4}\)。因此不能把裸响应比解释为截面增强倍数。
+必须保留有符号的 \(M\)-\(\Phi''\) 干涉，并乘上完整三体振幅导出的
+实际系数后，才能判断其对速率的影响。
+
+这一步不确定有限 \(t_A\) 的核子 \(F_1/F_2\)，不导出完整三体 NR
+Wilson coefficients，也不计算 \(\Delta\)、\(\Sigma'\)、\(\Sigma''\)、
+\(\widetilde\Phi'\) 或 \(L_{\mu\nu}W_A^{\mu\nu}\)。完整 VV 核流收缩、
+天然氙谱和 LZ likelihood 仍未完成。
 
 ### I.7.5 PR #53 的四分量暗物质流诊断
 
@@ -359,7 +390,7 @@ r_\chi=\sqrt{\frac{L^{11}+L^{22}+L^{33}}{L^{00}}}
 
 建议按物理依赖关系推进：
 
-1. **固定 flavor 和 form-factor 输入。明确活动味道、UV 权重、重味阈值匹配、\(F_1^{V,p/n}(t_A)\)、\(F_2^{V,p/n}(t_A)\) 的来源、误差和 \(t\) 区间；验证当前三味 benchmark 的 \(F_1^V(0)=3\)、\(F_2^V(0)=-0.552\)，并检查同位旋关系。** 明确活动味道、UV 权重、重味阈值匹配、\(F_1^{V,p/n}(t_A)\)、\(F_2^{V,p/n}(t_A)\) 的来源、误差和 \(t\) 区间；验证零动量电荷和当前三味分解的 Pauli 常数项。
+1. **固定 flavor 和 form-factor 输入。** 明确活动味道、UV 权重、重味阈值匹配、\(F_1^{V,p/n}(t_A)\)、\(F_2^{V,p/n}(t_A)\) 的来源、误差和 \(t\) 区间；验证零动量电荷和当前三味分解的 Pauli 常数项。
 2. **完成自由核子 Dirac–Pauli 对照。** 对选定 \(q_A\)、\(\mathbf K_N\) 和自旋态，将完整 Dirac 自旋量计算与上面的 NR 展开逐项比较；检查 \(J_N^\mu\) 的符号、\(F_1+2F_2\)、\(F_1+F_2\) 及 on-shell 流守恒。
 3. **执行已准备的 Xe-131 native \(M,\Phi'',M\Phi''\) 导出。** 先运行 PR #51 的 Wolfram exporter，完成 2,401 点输出、metadata/SHA-256 核对和 Python validator；通过后再扩展 Xe-129，并在 Xe-131 的 \(q_A\simeq158,256,365\) MeV 附近做局部高分辨率扫描。
 4. **完成 AFH 空间响应的 source/native 对照。** 使用 AFH 正确的 \(\Sigma'\)、\(\Delta J\)、\(\Sigma'\! -\! \Delta J\) 索引，对 Xe-129/Xe-131 的 native Wolfram 输出与 Python development translation 作逐点比较；\(\Delta J\) 已纠正为同阶 \(MJLDivQ\) 映射，不再沿用旧 parity-conflict 判断。每种响应都要单独检查归一化、相位、\(q/m_N\) 因子和选择定则。

@@ -466,29 +466,25 @@ full Mathematica/Python \(d\sigma_A/dE_R\) comparison. See
 
 
 
-## Xe-131 Phi'' and M-Phi'' response export (native run pending)
+## Xe-131 \(M\), \(\Phi''\), and \(M\Phi''\) native response export
 
-The next AFH response target is the spin-orbit charge response
-\(W_{\Phi''}^{00}\) and its signed interference with the leading charge,
-\(W_{M\Phi''}^{00}\). The official AFH v6.0 package already exposes these as
-response indices 4 and 7; index 1 is exported alongside them as the
-normalization baseline.
-
-The native Wolfram exporter is
-run_afh_phi_response_xe131.wls. It evaluates the same 2,401-point
-\(q_A=0\)--0.6 GeV grid and AFH oscillator prescription as the existing
-\(W_M\) archive. Its output and the independent bookkeeping validator are
-documented in:
-
-- audit/AFH_PHI_RESPONSE_XE131_NATIVE_PLAN.md
-- output/phi_response_native/README.md
-- validate_afh_phi_response.py
-- tests/test_afh_phi_response.py
+The AFH v6.0 native Wolfram run is complete and archived in
+output/phi_response_native/. It evaluates response indices 1, 4 and 7
+for Xe-131 on the 2,401-point \(q_A=0\)--0.6 GeV grid, using the built-in
+67-entry sdgXe131 density matrix and the AFH default oscillator length.
 
 The raw AFH isoscalar responses are retained. The physical equal-p/n mapping
-\(R^{\rm phys}=4R^{\rm raw}\) is applied once to each diagonal and
-interference response; no extra q=0 shape renormalization is applied.
-The native Wolfram run has not yet been executed in this update, so no
-\(W_{\Phi''}\) or \(W_{M\Phi''}\) numerical result is claimed. This remains a
-nuclear-response export only, not the three-body \(L_{\mu\nu}W_A^{\mu\nu}\)
-contraction.
+\(R_X^{\rm phys}=4R_X^{\rm raw}\) is applied once to \(M\), \(\Phi''\), and
+\(M\Phi''\), with no extra q=0 shape renormalization. The dedicated Python
+validator reports PASS for response bookkeeping and provenance checks.
+This is a response-level archive only: it does not supply the three-body
+Wilson coefficients, finite-\(t_A\) nucleon form factors, or the full
+\(L_{\mu\nu}W_A^{\mu\nu}\) contraction.
+
+At the second sampled \(M\)-response minimum, \(q_A=0.25625\) GeV,
+\(R_{\Phi''}^{\rm raw}/R_M^{\rm raw}=115.81\). The absolute
+\(R_{\Phi''}^{\rm raw}\) remains small compared with its q=0 value, so this
+ratio must not be interpreted as a 115.8-fold cross-section enhancement.
+See the native response audit
+(audit/AFH_PHI_RESPONSE_XE131_NATIVE_PLAN.md) and the output README
+(output/phi_response_native/README.md).

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""AFH v6.0 source translation audit for Sigma' and Delta responses.
+"""Development translation of AFH v6.0 Sigma' and Delta response operators.
 
-The implementation follows the operator definitions in v6/dmformfactor-V6.m.
-It is a nuclear-response calculation only (isoscalar tau1=tau2=0), not a
-three-body L_mu nu W_A^mu nu contraction. The Delta parity inconsistency is
-reported explicitly rather than silently repaired.
+The Delta mapping follows the source call chain DeltaJ -> Deltaop ->
+MJLDivQ[..., jcap=L, lcap=L]. This is not a native AFH calculation: selected-q
+values remain provisional until pointwise comparison with the Wolfram package.
+No three-body L_mu nu W_A^mu nu contraction is included.
 """
 from __future__ import annotations
 import argparse, csv, json, math
@@ -188,7 +188,7 @@ def main():
           "normalization":"same AFH package normalization as ResponseNuclear[y,i,0,0]; AFH package normalization derived from FF coefficient extraction; factor four for physical equal-p/n response is not applied here",
           "delta_operator_audit":parity_audit(),
           "limitations":["No native Wolfram cross-check has yet been run for SigmaPrime.",
-          "AFH DeltaJ source wrapper and its internal 3j parity selection are mutually incompatible; literal Delta output is zero and must not be interpreted as a physical prediction.",
+          "DeltaJ is mapped to the same-rank MJLDivQ component called by the AFH source; the former parity-conflict diagnosis is withdrawn. Delta values remain provisional until native Wolfram pointwise comparison.",
           "No finite-Q2 baryon-current Pauli form factors or three-body L_mu_nu W_A^mu_nu contraction are included.",
           "No halo integration is included."],
           "isotopes":summaries}

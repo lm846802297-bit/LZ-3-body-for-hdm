@@ -26,7 +26,7 @@ if ($LASTEXITCODE -ne 0) {
 
 $csvPath = Join-Path $outputDir "afh_default_xe131_M_PhiPP_native.csv"
 $metadataPath = Join-Path $outputDir "afh_default_xe131_M_PhiPP_metadata.json"
-$summaryPath = Join-Path $outputDir "validation_summary.json"
+$summaryPath = Join-Path $outputDir "afh_default_xe131_M_PhiPP_validation.json"
 foreach ($path in @($csvPath, $metadataPath)) {
     if (-not (Test-Path -LiteralPath $path -PathType Leaf)) {
         throw "Expected native output is missing: $path"
@@ -42,16 +42,12 @@ if ($LASTEXITCODE -ne 0) {
 Write-Host "[3/3] Write local SHA-256 provenance manifest..."
 $metadata = Get-Content -LiteralPath $metadataPath -Raw | ConvertFrom-Json
 $manifest = [ordered]@{
-    status = "PASS"
-    scope = "Xe-131 native AFH M, Phi'', and M-Phi'' responses only"
-    executedAtUtc = [DateTime]::UtcNow.ToString("o")
-    wolframVersion = $metadata.wolfram_version
-    systemId = $metadata.system_id
-    afhSourceSha256 = (Get-FileHash -LiteralPath (Join-Path (Split-Path -Parent (Split-Path -Parent $scriptDir)) "v6/dmformfactor-V6.m") -Algorithm SHA256).Hash.ToLowerInvariant()
-    densityMatrixCsvSha256 = (Get-FileHash -LiteralPath (Join-Path (Join-Path $scriptDir "input") "afh_default_xe131_density_matrix.csv") -Algorithm SHA256).Hash.ToLowerInvariant()
-    nativeCsvSha256 = (Get-FileHash -LiteralPath $csvPath -Algorithm SHA256).Hash.ToLowerInvariant()
-    nativeMetadataSha256 = (Get-FileHash -LiteralPath $metadataPath -Algorithm SHA256).Hash.ToLowerInvariant()
-    validationSummarySha256 = (Get-FileHash -LiteralPath $summaryPath -Algorithm SHA256).Hash.ToLowerInvariant()
+    status = "COMPLETED"
+    files = [ordered]@{
+        "afh_default_xe131_M_PhiPP_native.csv" = (Get-FileHash -LiteralPath $csvPath -Algorithm SHA256).Hash.ToLowerInvariant()
+        "afh_default_xe131_M_PhiPP_metadata.json" = (Get-FileHash -LiteralPath $metadataPath -Algorithm SHA256).Hash.ToLowerInvariant()
+        "afh_default_xe131_M_PhiPP_validation.json" = (Get-FileHash -LiteralPath $summaryPath -Algorithm SHA256).Hash.ToLowerInvariant()
+    }
 }
 $manifestPath = Join-Path $outputDir "sha256_manifest.json"
 $manifest | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $manifestPath -Encoding UTF8
