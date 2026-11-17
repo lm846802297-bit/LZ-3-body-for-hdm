@@ -451,7 +451,7 @@ def write_csv(path: Path, rows: list[dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     fields = list(rows[0].keys())
     with path.open("w", newline="", encoding="utf-8") as stream:
-        writer = csv.DictWriter(stream, fieldnames=fields)
+        writer = csv.DictWriter(stream, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -493,7 +493,7 @@ def main() -> None:
         "result_file": csv_path.name,
         "result_sha256": sha256_file(csv_path),
         "scope_limitations": [
-            "The point-nucleus current includes only elastic centre-of-mass convection; it does not include internal nuclear orbital or magnetization matrix elements.",
+            "The coherent point-charge current includes only elastic centre-of-mass convection; it does not include internal nuclear orbital or magnetization matrix elements.",
             "The vN=0.1..0.3 and q/(2mN) columns are per-nucleon kinematic amplitude estimates, not AFH nuclear-response ratios.",
             "No AFH Sigma-prime, Sigma-double-prime, or Delta response has been contracted with the three-body tensor.",
             "No mediator propagator, halo integral, isotope abundance sum, detector response, or likelihood is included.",

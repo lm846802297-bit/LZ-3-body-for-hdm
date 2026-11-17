@@ -158,3 +158,25 @@ is \(W_M^{00}\)-only.
    the phase-space-dependent \(L^{\mu\nu}\), especially near \(W_M^{00}\)
    minima. Until that is done, retain \(W_M^{00}\) as the baseline but do not
    claim the other responses are negligible.
+
+
+## 6. Exact-source reproduction evidence
+
+GitHub Actions workflow run 44169485507 executed the committed code at
+source revision 0ebfb5245d0805b070c50bb4d00c8fb29721caf6 using Python 3.13.18
+and NumPy 2.3.5.
+
+- Python compilation: passed.
+- Unit and regression tests: 8/8 passed.
+- Full 12-row width/current scan: completed.
+- Independent temporal-integral cross-checks against
+  phase_space_convergence.py: passed at zero and pole width.
+- Archived-versus-regenerated 12-row numerical comparison: exact agreement
+  at the printed CSV precision; maximum relative difference 0.
+- The workflow artifact contains the regenerated CSV, metadata, and SHA-256
+  file. The archived CSV uses LF line endings so its byte-level SHA-256 is
+  reproducible from the script.
+
+This validates the code paths and numerical diagnostics described above.
+It does not validate the omitted AFH \(\Sigma'\), \(\Sigma''\), or \(\Delta\)
+nuclear matrix elements.

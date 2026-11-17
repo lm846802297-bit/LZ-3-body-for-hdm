@@ -6,7 +6,7 @@
   "target_mass_convention": "mA=131*u with u=0.93149410242 GeV (matching fixed-speed Xe-131 archive)",
   "amplitude": "Gamma^mu = gamma^mu (slash(p-k_s)+mchi2)/D_before + (slash(p'+k_s)+mchi2) gamma^mu/D_after",
   "tensor": "L^{mu nu}=1/2 Tr[(slash(p')+mchi) Gamma^mu (slash(p)+mchi) barGamma^nu]",
-  "nuclear_current": "coherent point-charge current representative J_A^mu=(P+P')^mu; F_A factored out; not the full spinful Xe-131 current",
+  "nuclear_current": "coherent point-charge current representative J_A^mu=(P+P')^mu; F_A factored out",
   "width_assumptions": "zero/pole/running widths use the existing conditional Dirac, real-scalar, pure-scalar, single-open-channel chi2->chi1+s prescription; running is diagnostic",
   "phase_space_mappings": {
     "threshold_u2": "W2=Wmin2+DeltaW2*u^2",
@@ -63,14 +63,13 @@
     }
   ],
   "environment": {
-    "python": "3.13.5",
-    "numpy": "2.3.5",
-    "environment_note": "preliminary mirror run; the PR workflow regenerates the table from the exact repository kernel"
+    "python": "3.13.18",
+    "numpy": "2.3.5"
   },
   "result_file": "vector_current_response_audit.csv",
   "result_sha256": "1836fb8fdd6477534a9332a457aa8d45c43fe7750904fe4e48f9ad0971866c09",
   "scope_limitations": [
-    "The coherent point-charge current includes only the centre-of-mass convection component; it does not include internal nuclear orbital or magnetization matrix elements.",
+    "The coherent point-charge current includes only elastic centre-of-mass convection; it does not include internal nuclear orbital or magnetization matrix elements.",
     "The vN=0.1..0.3 and q/(2mN) columns are per-nucleon kinematic amplitude estimates, not AFH nuclear-response ratios.",
     "No AFH Sigma-prime, Sigma-double-prime, or Delta response has been contracted with the three-body tensor.",
     "No mediator propagator, halo integral, isotope abundance sum, detector response, or likelihood is included.",
