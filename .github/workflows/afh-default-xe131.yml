@@ -46,8 +46,10 @@ jobs:
           python -m pip install -r research/afh_default_density_xe131/requirements.txt
 
       - name: Verify committed native full-dsigma archive SHA-256 checksums
-        working-directory: research/afh_default_density_xe131/output/full_dsigma_mathematica
-        run: sha256sum --check SHA256SUMS.txt
+        run: sha256sum --check research/afh_default_density_xe131/output/full_dsigma_mathematica/SHA256SUMS.txt
+
+      - name: Verify committed Green high-order archive SHA-256 checksums
+        run: sha256sum --check research/afh_default_density_xe131/output/full_dsigma_mathematica/green_high_order_SHA256SUMS.txt
 
       - name: Compile Python implementations and comparators
         run: |
