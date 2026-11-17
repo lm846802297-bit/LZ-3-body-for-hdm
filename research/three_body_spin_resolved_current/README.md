@@ -1,6 +1,6 @@
 # Finite-width three-body current and recoil-spectrum audit
 
-**Status:** finite-width Ward identity and fixed-speed coherent point-nucleus recoil-kernel scan. The complete AFH internal nuclear-current matching remains open.
+**Status:** finite-width Ward identity and fixed-speed coherent point-nucleus recoil-kernel scan are reproduced. The AFH vector-charge (M+Phi'') sector has now been matched using a zero-momentum form-factor benchmark; finite-(t) form factors and the internal spatial-current (Delta), (Sigma'), and (Sigma'') matching remain open.
 
 ## 1. Question
 
@@ -146,4 +146,4 @@ See [results/2026-11-18/RESULTS.md](results/2026-11-18/RESULTS.md) for the finit
 
 ## AFH matching next stage
 
-See [AFH_MATCHING_NEXT_STAGE.md](AFH_MATCHING_NEXT_STAGE.md) for the corrected elastic-VV versus radiative-three-body matching distinction, the finite-width matching target, the Xe-131 response integration formula, and the validated (W_M)-only natural-xenon halo-fold baseline. The rate-level (Phi'') correction is explicitly pending until its three-body coefficient is derived and validated.
+See [AFH_MATCHING_NEXT_STAGE.md](AFH_MATCHING_NEXT_STAGE.md) for the matched (M+Phi'') vector-charge sector, the zero-momentum benchmark correction at the Xe-131 second (W_M) minimum, the remaining spatial-current matching plan, and the validated (W_M)-only natural-xenon halo-fold baseline. The complete finite-(t), all-current natural-xenon spectrum remains pending.
