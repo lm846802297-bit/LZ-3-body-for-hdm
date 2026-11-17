@@ -75,3 +75,13 @@ Two non-fatal metadata/package notices remain: REVTeX assumes no affiliation bec
 - No new amplitude, propagator, width, trace, nuclear response, cosmological collision term, or parameter scan has been validated by these manuscript edits. The AFH equation reflects the separate normalization audit; the AFH-7/Hybrid-9 fold tests validate only the rate-level efficiency integration and archive path, not a detector likelihood.
 - No figure data have been redrawn, rescaled, or relabeled.
 - No claim is made that the manuscript is submission-ready or that the model explains the LZ event.
+
+## Uploaded manuscript update — 2026-11-17
+
+The supplied `main.tex`, `ref.bib`, and nine figure PDFs were incorporated into the working manuscript package. The seven original figure PDFs match their GitHub Git blob IDs and byte sizes; the two fixed-speed spectra are additional figure assets. The uploaded bibliography style has the same size and SHA-256 as the style already preserved in compressed form, so the repository's compressed source remains authoritative.
+
+A source-level BibTeX compatibility issue was corrected: `\\bibliography{ref.bib}{}` is now `\\bibliography{ref}`. The build script continues to invoke `bibtex8 main_build`, which is the matching job name.
+
+Two manuscript issues are recorded without changing the physics or inventing a citation: `PDG:2024kinematics` is cited but absent from the supplied `ref.bib`, and `eq:radiative-offshell-window` is defined twice (at source lines 130 and 474). These require author/reference review; a build warning is not evidence that either issue is resolved.
+
+The updated build was attempted in the current execution environment but could not start: its TeX Live installation has no `pdflatex.fmt` format file (`I can't find the format file 'pdflatex.fmt'`). Therefore no successful PDF build or bibliography-resolution result is claimed for this uploaded version. The checksum manifest is regenerated for the current source files and all nine figure PDFs.
