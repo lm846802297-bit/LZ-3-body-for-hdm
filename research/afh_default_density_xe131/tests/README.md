@@ -1,6 +1,6 @@
 # Xe-131 AFH regression tests
 
-This folder contains the five regression suites for the AFH default Xe-131 study.
+This folder contains the nine regression suites for the AFH default Xe-131 study.
 
 | Test | Coverage |
 |---|---|
