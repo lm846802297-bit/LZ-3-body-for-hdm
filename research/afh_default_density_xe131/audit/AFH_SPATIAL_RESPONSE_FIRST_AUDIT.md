@@ -174,9 +174,9 @@ Neither run replaces the native Wolfram comparison.
 
 The native run is configured through the private control repository
 \`lm846802297-bit/research-compute-control\`, with the research checkout
-pinned to commit \`f29209247b4f4124549ca0ee8f164bb5add30b1b\`. The latest
-native workflow run \`44190383661\` is queued and has not produced Wolfram
-output. Therefore the spatial Python translation remains provisional.
+pinned to commit \`bccea2f710aef62a70b2980f0a6c7f3a901f654f\`. The latest
+native workflow run \`44193473440\` is pending runner assignment and has not
+produced Wolfram output. Therefore the spatial Python translation remains provisional.
 
 ## Next steps
 
