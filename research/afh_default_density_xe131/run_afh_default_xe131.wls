@@ -1,3 +1,8 @@
+(* AME2020 xenon nuclear mass from atomic masses and CODATA-2022 constants. *)
+Global`ame2020XenonAtomicMassU=<|124->123905885174/10^9,126->125904297422/10^9,128->12790353075341/10^11,129->12890478085742/10^11,130->129903509346/10^9,131->13090508412808/10^11,132->13190415508346/10^11,134->133905393030/10^9,136->135907214474/10^9|>;
+Global`xenonZ=54; Global`xenonAtomicMassUnitGeV=93149410372/10^11; Global`electronMassU=5485799090441/10^16;
+Global`xenonElectronBindingEnergyGeV=N[(144381/10^4 Global`xenonZ^(239/100)+155468/10^11 Global`xenonZ^(535/100))10^-9,30];
+Global`xenonNuclearMassGeV[A_Integer]:=Module[{mAtom=Lookup[Global`ame2020XenonAtomicMassU,A,Null]},If[mAtom===Null,Return[$Failed]];N[(mAtom-Global`xenonZ Global`electronMassU)Global`xenonAtomicMassUnitGeV+Global`xenonElectronBindingEnergyGeV,20]];
 (* AFH-native Xe-131 response using the official DMFormFactor v6.0 package. *)
 (* Run: wolframscript -file run_afh_default_xe131.wls *)
 ClearAll["Global`*"];
@@ -7,7 +12,7 @@ packagePath = If[StringQ[envPath] && envPath =!= "", envPath, FileNameJoin[{scri
 If[!FileExistsQ[packagePath], Print["ERROR: AFH dmformfactor-V6.m not found: ", packagePath]; Exit[2]];
 Get[packagePath];
 A = 131; Z = 54; JA = 3/2;
-mA = A*0.93149410242; (* recoil-coordinate convention only *)
+mA = Global`xenonNuclearMassGeV[A]; (* recoil-coordinate convention only *)
 fmToGeVInv = 5.0677; (* exact constant in AFH v6 source *)
 qMax = 0.60; dq = 0.00025;
 bFM = Sqrt[41.467/(45.0 A^(-1.0/3.0) - 25.0 A^(-2.0/3.0))];
@@ -68,7 +73,7 @@ metadata = {
   "A_squared = " <> ToString[A^2],
   "normalization_factor = " <> ToString[InputForm[N[normalizationFactor, 16]]],
   "q_grid_GeV = 0 to 0.6 in 0.00025 steps",
-  "recoil mass convention = m_A = A*0.93149410242 GeV; used only to map q to E_R"
+  "recoil mass convention = m_A = Global`xenonNuclearMassGeV[A] GeV; used only to map q to E_R"
 };
 Export[metaPath, StringRiffle[metadata, "\n"] <> "\n", "Text"];
 Print["AFH Xe-131 default-density response completed."];
