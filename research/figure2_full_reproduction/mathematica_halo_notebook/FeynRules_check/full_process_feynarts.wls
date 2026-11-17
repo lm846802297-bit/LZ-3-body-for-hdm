@@ -1,0 +1,10 @@
+root=DirectoryName[$InputFileName];base=DirectoryName[root];
+AppendTo[$Path,FileNameJoin[{base,"feynarts","FeynArts-3.12"}]];Get["FeynArts`"];
+modelDir=FileNameJoin[{root,"ThreeBodyVV_FA"}];PrependTo[$ModelPath,modelDir];
+top=CreateTopologies[0,2->3,ExcludeTopologies->{Tadpoles,SelfEnergies}];
+ins=InsertFields[top,{F[1],F[3]}->{F[1],F[3],S[1]},Model->"ThreeBodyVV_FA",GenericModel->"ThreeBodyVV_FA",InsertionLevel->{Classes}];
+Print["DIAGRAMS=",Length[ins]];
+amp=CreateFeynAmp[ins,Truncated->True];
+Print["AMPLITUDES=",Length[amp]];
+Print["OUTPUT=",ToString[InputForm[amp],PageWidth->Infinity]];
+If[Length[ins]!=2||Length[amp]!=2,Exit[1]];Exit[0];

@@ -1,0 +1,10 @@
+base=DirectoryName[DirectoryName[$InputFileName]];
+Get[FileNameJoin[{base,"dmformfactor-V6.m"}]];
+dmformfactor`ZeroCoeffs[];dmformfactor`SetJChi[1/2];dmformfactor`SetMChi[50 dmformfactor`GeV];
+dmformfactor`SetCoeffsNonrel[1,1.,0];
+p1=dmformfactor`Private`cpvector[[1]];n1=dmformfactor`Private`cnvector[[1]];
+dmformfactor`ZeroCoeffs[];dmformfactor`SetCoeffsNonrel[1,2.,0];
+p2=dmformfactor`Private`cpvector[[1]];n2=dmformfactor`Private`cnvector[[1]];
+Print["setter c0=1 p,n:",{p1,n1}," c0=2 p,n:",{p2,n2}];
+Print["relative coefficients:",{p2/p1,n2/n1}," equal proton neutron:",{p1===n1,p2===n2}];
+If[!TrueQ[p2/p1==2.]||!TrueQ[n2/n1==2.],Exit[1]];Exit[0];
