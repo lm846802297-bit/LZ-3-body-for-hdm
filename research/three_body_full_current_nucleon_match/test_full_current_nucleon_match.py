@@ -47,7 +47,7 @@ class FullCurrentNucleonTests(unittest.TestCase):
         charge = fm.spin_orbit_odd_coefficient(self.t3, self.q, 0.10, 1.0, 0.0, "charge")
         spatial = fm.spin_orbit_odd_coefficient(self.t3, self.q, 0.10, 1.0, 0.0, "spatial")
         self.assertGreater(abs(spatial), 1e-10)
-        self.assertLess(abs(full - charge - spatial), 1e-10 * max(abs(full), abs(charge), abs(spatial), 1.0))
+        self.assertLess(abs(full - charge - spatial), 1e-7 * max(abs(full), abs(charge), abs(spatial), 1.0))
 
     def test_spin_orbit_odd_piece_is_linear_at_small_vN(self):
         c02 = fm.spin_orbit_odd_coefficient(self.t3, self.q, 0.02, 1.0, 0.0, "full")

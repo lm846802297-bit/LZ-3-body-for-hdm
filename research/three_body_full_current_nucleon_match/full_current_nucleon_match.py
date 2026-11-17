@@ -150,13 +150,15 @@ def spin_orbit_odd_coefficient(
         return 0.0j
     l_plus = M_N_GEV * v_n * perpendicular_unit(q_vec)
     outputs = []
+    # Keep one fixed projection axis while reversing l; otherwise both the
+    # odd coefficient and the projection direction flip and the odd part is lost.
+    q_cross_l_reference = np.cross(q_vec, l_plus)
+    direction = q_cross_l_reference / np.linalg.norm(q_cross_l_reference)
     for l_vec in (l_plus, -l_plus):
         jn, _, _ = nucleon_current_matrices(q_vec, l_vec, f1, f2)
         full, charge, spatial = full_amplitude_operator(dm_current, jn)
         chosen = {"full": full, "charge": charge, "spatial": spatial}[part]
         coeff = pauli_product_coefficients(chosen)
-        q_cross_l = np.cross(q_vec, l_vec)
-        direction = q_cross_l / np.linalg.norm(q_cross_l)
         outputs.append(np.dot(coeff[0, 1:], direction))
     odd = 0.5 * (outputs[0] - outputs[1])
     return complex(odd / (qnorm * M_N_GEV * v_n))
