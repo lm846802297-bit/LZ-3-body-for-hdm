@@ -21,11 +21,11 @@
 2. **三体末态标量 \(s\) 不会自动产生新的核子相互作用。** 当前模型中 \(s\) 从暗物质线上辐射，没有直接的 \(s\bar NN\) 顶点。因此，三体结构主要进入暗物质侧的 \(\mathcal T_3^\mu\) 和三体相空间；核侧仍由媒介子所耦合的矢量流决定。
 3. **不能把标准弹性 AFH 的完整 \(2\to2\) 截面公式直接套到三体过程。** 标准 \(\mathbf v^\perp\) 的正交关系来自弹性二体能量守恒；三体过程中还存在 \(k_s\)，必须从完整 \(\mathcal T_3^\mu\) 出发匹配。
 4. **不能任意添加轴矢量、赝标量、张量等 Wilson 系数；但必须保留 UV 矢量流实际诱导的次领先项。** 对当前 VV 模型，除 \(M\) 外，优先审计的是可能的自旋—轨道 \(\Phi''\) 及其与 \(M\) 的干涉，以及暗物质空间流与核子空间流收缩后可能出现的 \(\Delta\)、\(\Sigma'\) 等响应。
-5. **三味 Pauli form factor 的当前零动量基准不是零。** 早期将 HKS 2015 Eq. (23) 的紧凑记号直接相加、据此断言三味常数项必然相消的判断已经撤回。当前 benchmark 采用 Bishara et al. (2017) Appendix A.1 的显式 flavor-separated 输入：
+5. **三味 Pauli form factor 的当前零动量基准不是零。** 当前 benchmark 采用 Bishara et al. (2017) Appendix A.1 的显式 flavor-separated 输入：
    \[
    F_2^{u/p}(0)=1.609,\quad F_2^{d/p}(0)=-2.097,\quad F_2^{s/p}(0)=-0.064,
    \]
-   因而等权重 \(u+d+s\) 流满足 \(F_2^{V,p}(0)=F_2^{V,n}(0)=-0.552\)（同位旋对称近似），而 \(F_1^V(0)=3\)。所以 \(F_2^V/F_1^V=-0.184\)、\(F_1^V+2F_2^V=1.896\)、\(F_1^V+F_2^V=2.448\)。HKS 的紧凑 Eq. (23) 不应脱离其显式 flavor 重构 Eq. (21) 单独作为零和定理使用；本项目以显式 flavor-separated 输入为准。有限 \(t\) 形状及误差协方差仍需进一步匹配。
+   因而等权重 \(u+d+s\) 流满足 \(F_2^{V,p}(0)=F_2^{V,n}(0)=-0.552\)（同位旋对称近似），而 \(F_1^V(0)=3\)。所以 \(F_2^V/F_1^V=-0.184\)、\(F_1^V+2F_2^V=1.896\)、\(F_1^V+F_2^V=2.448\)。HKS 1503.04811 的 Eq. (23) 是 strange Pauli form factor 的低动量表达，不是三味总 Pauli form factor 的紧凑零和恒等式。此前由该式直接推出三味相消为零的判断属于符号/定义混用，现已撤回。有限 \(t\) 形状及误差协方差仍需进一步匹配。
 6. **AFH v6.0 的因子 4 必须且只能计入一次。** 原始 package 的等标量量 \(4\pi W_M^{00}/(2J_A+1)\) 在零动量转移趋近 \(A^2/4\)；物理等质子、等中子耦合响应趋近 \(A^2\)。
 7. **Xe-131 的 \(M\) 响应深极小值使次领先响应值得检查，但不能据此断言其一定填平谱谷。** 需要实际计算 \(W_{\Phi''}\)、\(W_{M\Phi''}\) 及相关完整张量收缩。
 
@@ -432,12 +432,7 @@ F_1^{uds}+F_2^{uds}=2.448.
 
 这里的 \(-0.552\) 是该 benchmark 的零动量中心值，不是有限 \(t\) 的常数近似。Bishara et al. 对三个 flavor 分量给出的误差有共同输入来源；在没有完整协方差矩阵时，不应把三个误差当作独立量简单平方相加，也不在此处虚构总和误差。
 
-**关于 HKS 2015 的紧凑记号：** HKS Eq. (21) 的显式 flavor 重构为
-\[
-F_2^{u/p}=2F_2^{\rm EM,p}+F_2^{\rm EM,n}+F_2^{s,N},\qquad
-F_2^{d/p}=F_2^{\rm EM,p}+2F_2^{\rm EM,n}+F_2^{s,N},
-\]
-结合其 isospin 关系和经验输入，给出上面的 flavor-separated 数值。HKS Eq. (23) 的紧凑写法若按字面、并把其中 \(\kappa_N\) 与 Eq. (24) 的物理核子反常磁矩采用同一含义来相加，会形式上得到零和；但它不能在不核清符号定义和近似条件的情况下，作为独立的 flavor-sum 恒等式去覆盖 Eq. (21) 的显式重构。**因此本项目不再使用“由 HKS 紧凑式可知三味 \(F_2^V(0)=0\)”这一历史判断；当前 benchmark 明确采用 Bishara et al. Appendix A.1 的显式 flavor-separated 输入。**
+**关于 HKS 2015 的公式编号与旧判断：** HKS 1503.04811 §4.2 的 Eq. (19) 定义夸克矢量流的 Dirac–Pauli 分解，Eq. (20) 给出同位旋关系，Eq. (21) 给出由电磁 form factors 和 strange form factor 重构 flavor 分量的关系，Eq. (22) 给出零动量矢量电荷，Eq. (23) 则是 \(F_2^{s,N}(t)=\kappa_N^s+\mathcal O(t)\)，Eq. (24) 是 Sachs 磁 form factor 的展开。因而 Eq. (23) 并不是三味总 Pauli form factor 的紧凑求和式，更不是 \(F_2^{u,N}+F_2^{d,N}+F_2^{s,N}=0\) 的定理。旧稿把 strange Pauli 项、核子电磁反常磁矩和 flavor-separated form factors 的符号混在一起，才得到形式上的零和；这个推理不成立。当前数值以 Bishara et al. 1707.06998 Appendix A.1 的 Eqs. (80)–(82) 为直接输入。
 
 有限 \(t_N\) 时仍需使用 \(F_1^{uds,N}(t_N)\)、\(F_2^{uds,N}(t_N)\) 的实际形状、误差和协方差；不能把零动量中心值直接外推到整个 Xe 反冲区间。
 
@@ -2518,4 +2513,92 @@ R_M^{\rm phys}(Q_A\to0)=A^2.
 - 没有计算 VV 两核子流对当前高动量区间的数值修正。
 
 因此，现阶段可以说：三体振幅、相空间、单核子流和 AFH 核响应之间的解析联系已经明确；但不能说完整 VV 三体核响应或最终反冲谱已经通过数值验收。
+
+
+
+### 30.8 为什么不能把这一项直接标成弹性散射的 \(\mathcal O_3\)
+
+将时间分量自旋—轨道项写成核子自旋 \(\mathbf S_N=\boldsymbol\sigma_N/2\) 和平均核子速度 \(\mathbf v_N=\mathbf K_N/m_N\)：
+\[
+\frac{J_{N,\mathrm{SO}}^0}{2m_N}
+=
+i\frac{F_1+2F_2}{2m_N^2}
+\mathbf S_N\cdot(\mathbf q_N\times\mathbf K_N)
+=
+i\frac{F_1+2F_2}{2m_N}
+\mathbf S_N\cdot(\mathbf q_N\times\mathbf v_N).
+\]
+这与弹性 NREFT 中常见的自旋—速度结构有相似的张量形式，但不能仅凭这一项就把系数直接认作标准弹性 \(\mathcal O_3\)。原因是标准弹性定义使用相对速度
+\[
+\mathbf v^\perp=
+\frac{\mathbf p+\mathbf p'}{2m_\chi}
+-\frac{\mathbf k+\mathbf k'}{2m_N},
+\]
+并依赖弹性二体能量守恒得到
+\[
+\mathbf q\cdot\mathbf v^\perp=0.
+\]
+在当前三体过程中，暗物质还发射了标量，动量守恒变成
+\[
+\mathbf q_A=\mathbf p-\mathbf p'-\mathbf k_s.
+\]
+若仍用弹性定义的平均速度，则在非相对论近似下
+\[
+\mathbf q_A\cdot\mathbf v^\perp
+=
+E_s-\frac{\mathbf k_s\cdot(\mathbf p+\mathbf p')}{2m_\chi},
+\]
+一般不为零。这里 \(E_s\) 是标量总能量，包含其静质量。
+
+因此，弹性散射中用于消去时间导数、改写算符或建立标准 \(\mathbf v^\perp\) 基底的步骤，在三体过程中必须重新推导。正确顺序是：
+1. 保留完整 \(\mathcal T_3^\mu(p,p',k_s)\)；
+2. 与完整 Dirac–Pauli 核子流 \(J_N^\nu\) 收缩；
+3. 在明确的三体能量守恒关系下做非相对论展开；
+4. 再把所得核子算符投影到 AFH 多极响应。
+
+这也是不能直接调用标准弹性 AFH FFfinal 作为三体截面公式的运动学原因。
+
+
+### 31.6 OBDME 如何把单粒子算符变成核响应
+
+AFH 的输入不是一个经验 Helm 半径，而是核态的一体密度矩阵。把核算符写成单粒子算符之和后，其约化矩阵元可组织为
+\[
+\langle J_A\Vert\widehat{\mathcal O}_{X,J}^{\,\tau}(Q_A)
+\Vert J_A\rangle
+=
+\sum_{ab}
+\rho_{ab}^{(\tau)}
+\langle a\Vert
+\widehat o_{X,J}(Q_A)
+\Vert b\rangle.
+\]
+这里 \(a,b\) 表示单粒子轨道，\(\rho_{ab}^{(\tau)}\) 是相应同位旋通道的一体密度矩阵（OBDME），而单粒子约化矩阵元包含球贝塞尔函数、球谐函数、轨道角动量和自旋耦合。
+
+核响应是这些约化矩阵元的双线性组合：
+\[
+W_{XY}^{\tau\tau'}(Q_A)
+\propto
+\sum_J
+\langle J_A\Vert\widehat{\mathcal O}_{X,J}^{\,\tau}
+\Vert J_A\rangle
+\langle J_A\Vert\widehat{\mathcal O}_{Y,J}^{\,\tau'}
+\Vert J_A\rangle^*.
+\]
+比例中的角动量和归一化因子采用 AFH v6.0 的正式约定，由仓库中的 ResponseNuclear 接口统一处理。不能在外部代码中既使用已经归一化的 AFH 输出，又手动重复乘相同的多极归一化因子。
+
+对 \(X=Y=M\)，得到 \(W_M\)；对 \(X=Y=\Phi''\)，得到 \(W_{\Phi''}\)；对 \(X=M,Y=\Phi''\)，得到 \(W_{M\Phi''}\)。最后一个是两个不同核算符的交叉双线性项，不是 \(W_M\) 和 \(W_{\Phi''}\) 的几何平均，也不能由两个对角响应单独恢复其符号。
+
+这解释了为什么核子流匹配必须先于 AFH 响应计算：只有先确定 \(\widehat o_{X,J}\) 的 Wilson 系数和同位旋权重，才能知道需要调用哪些 OBDME 投影以及如何构造响应之间的干涉。
+
+
+## 35. 推导所依据的文献和代码来源
+
+本档案中的推导分为三类：本模型从 UV 拉格朗日量直接得到的解析结果；采用标准 QFT、相空间和非相对论展开得到的通用关系；由 AFH v6.0 和核子 form factor 文献提供的核结构输入。三者不能混作同一种证据。
+
+1. **本模型的三体振幅与运动学：** 以本项目的相互作用拉格朗日量和论文源文件为准，尤其是仓库的 paper-source/main.tex。两张 \(\chi_2\) 辐射图、传播子分母、三体相空间和 \(I(D)\) 的重粒子近似均应与该源文件及后续完整数值实现交叉检查。
+2. **AFH 核响应：** N. Anand, A. L. Fitzpatrick, W. C. Haxton, *Model-independent WIMP Scattering Responses and Event Rates: A Mathematica Package for Experimental Analysis*, arXiv:1308.6288。该文给出 \(M,\Sigma',\Sigma'',\Delta,\widetilde\Phi',\Phi''\) 多极算符、\(M\leftrightarrow\Phi''\) 和 \(\Delta\leftrightarrow\Sigma'\) 干涉，以及 OBDME 到核响应的构造。链接：https://arxiv.org/abs/1308.6288。
+3. **夸克—核子矢量 form factors：** F. Bishara, J. Brod, B. Grinstein, J. Zupan, *From quarks to nucleons in dark matter direct detection*, arXiv:1707.06998，特别是 Eq. (22)、Appendix A.1 Eqs. (78)–(85)。它给出 flavor-separated \(F_1,F_2\) 的零动量值和 \(F_1\) 斜率。链接：https://arxiv.org/abs/1707.06998。
+4. **矢量流与手征 EFT：** M. Hoferichter, P. Klos, A. Schwenk, *Chiral power counting of one- and two-body currents in direct detection of dark matter*, arXiv:1503.04811。本文用于检查矢量流分解、同位旋关系、单体与两体流的手征计数，以及弹性二体 NREFT 的适用条件。链接：https://arxiv.org/abs/1503.04811。
+5. **AFH v6.0 实现：** 仓库 v6/dmformfactor-V6.m。ResponseNuclear 的编号 1–8、各算符的单粒子矩阵元、OBDME 折叠、等标量 raw 响应归一化以及 \(M\Phi''\) 交叉响应，均以当前仓库版本为准。
+6. **本项目三体流诊断：** PR #58 是静态单核子 Dirac–Pauli 收缩诊断；它不是 AFH 多体 \(\Phi''\) 或 \(M\Phi''\) 数值结果，也不是完整三体截面验收。
 
