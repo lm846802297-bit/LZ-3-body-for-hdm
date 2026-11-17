@@ -25,6 +25,7 @@ class AFHSpatialResponseTests(unittest.TestCase):
                 self.assertGreaterEqual(wm,0.0)
                 self.assertGreaterEqual(ws,0.0)
                 self.assertGreaterEqual(wd,0.0)
+                self.assertLessEqual(wsd*wsd,ws*wd+1e-13*max(1.0,ws*wd))
 
     def test_parity_audit_schema(self):
         audit=spatial.parity_audit()

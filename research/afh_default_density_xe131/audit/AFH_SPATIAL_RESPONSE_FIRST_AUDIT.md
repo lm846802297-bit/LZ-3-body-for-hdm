@@ -19,9 +19,9 @@ The code now evaluates the same-rank `MJLDivQ` component for `DeltaJ`. The earli
 From `v6/dmformfactor-V6.m`:
 
 - response index 1 calls `MJ` and gives (W_M);
-- response index 3 calls `SigmaPJ) and gives (W_{\Sigma'});
-- response index 6 calls `DeltaJ) and gives (W_\Delta);
-- response index 8 is the `SigmaPJ)-`DeltaJ` interference (W_{\Sigma'\Delta}).
+- response index 3 calls `SigmaPJ` and gives (W_{\Sigma'});
+- response index 6 calls `DeltaJ` and gives (W_\Delta);
+- response index 8 is the `SigmaPJ`–`DeltaJ` interference (W_{\Sigma'\Delta}).
 
 The density-matrix inputs in this repository contain 39 entries for Xe-129 and 67 for Xe-131.
 
@@ -52,7 +52,18 @@ This does **not** validate the \(\Sigma'\), \(\Delta\), or
 \(W_\Delta\), \(W_{\Sigma'}\), or \(W_{\Sigma'\Delta}\) are claimed.
 The earlier Python selected-\(q\) spatial-response table remains withdrawn
 until native Wolfram exports for indices 3, 6 and 8 are compared point by
-point.
+point. A new CI pre-audit now runs the development translation on ten selected
+\(q_A\) values for Xe-129 and Xe-131 and uploads a 20-row provisional CSV,
+metadata, and SHA-256 manifest as an Actions artifact. This artifact proves
+that the Python path executes and emits finite outputs; it does **not** turn
+the \(\Sigma'\), \(\Delta\), or \(\Sigma'\Delta\) values into validated AFH
+results.
+
+The PR workflow run [44187336196](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44187336196)
+completed with 5/5 spatial-response tests passing and uploaded artifact
+14373574958. The test suite includes the eight-anchor Xe-131 native comparison
+for \(M\), \(\Phi''\), and signed \(M\Phi''\); the new spatial-channel values
+remain provisional pending native index-3/index-6/index-8 comparison.
 
 The spatial Python translation is still a development implementation. It
 must not be treated as validated until all of the following pass:

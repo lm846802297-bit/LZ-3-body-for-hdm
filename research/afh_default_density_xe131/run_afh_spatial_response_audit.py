@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Development translation of AFH v6.0 Sigma' and Delta response operators.
+"""AFH v6.0 Python translation for M/PhiPP and provisional spatial responses.
 
-The Delta mapping follows the source call chain DeltaJ -> Deltaop ->
-MJLDivQ[..., jcap=L, lcap=L]. This is not a native AFH calculation: selected-q
-values remain provisional until pointwise comparison with the Wolfram package.
-No three-body L_mu nu W_A^mu nu contraction is included.
+The shared M/PhiPP/M-PhiPP implementation is cross-checked against native
+Xe-131 AFH indices 1, 4 and 7 at eight q anchors. SigmaPrime, Delta and their
+interference remain development translations until native Wolfram indices
+3, 6 and 8 are compared point by point. No three-body tensor contraction is
+included.
 """
 from __future__ import annotations
 import argparse, csv, json, math
