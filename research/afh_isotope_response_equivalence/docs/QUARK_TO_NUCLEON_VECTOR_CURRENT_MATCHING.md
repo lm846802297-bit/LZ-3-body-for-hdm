@@ -1021,6 +1021,43 @@ F_2^{u,N}(0)+F_2^{d,N}(0)+F_2^{s,N}(0)=0.
 
 这个推断不能继续作为当前模型的结论。原因是：不能只从一个简写的三味参数化式推断当前 UV 流的 flavor-universal Pauli form factor；必须把同一套 \(F_2^{q,N}\) 与电磁质子、中子和 strange 磁矩的定义逐项对应。
 
+该文先用电磁质子和中子的 Pauli form factors 定义
+
+\[
+a_p=\frac23F_2^{u/p}(0)-\frac13F_2^{d/p}(0)-\frac13F_2^{s/p}(0),
+\]
+
+\[
+a_n=\frac23F_2^{u/n}(0)-\frac13F_2^{d/n}(0)-\frac13F_2^{s/n}(0),
+\]
+
+再利用同位旋关系
+
+\[
+F_2^{u/n}=F_2^{d/p},\qquad
+F_2^{d/n}=F_2^{u/p},\qquad
+F_2^{s/n}=F_2^{s/p}
+\]
+
+以及 strange magnetic moment 输入，得到
+
+\[
+F_2^{u/p}(0)=2a_p+a_n+F_2^{s/p}(0),
+\]
+
+\[
+F_2^{d/p}(0)=a_p+2a_n+F_2^{s/p}(0).
+\]
+
+取 \(a_p=1.793\)、\(a_n=-1.913\)、\(F_2^{s/p}(0)=-0.064\)，就得到下面列出的三个 flavor form factors。三者的和为
+
+\[
+F_2^{u/p}+F_2^{d/p}+F_2^{s/p}
+=3\big(a_p+a_n+F_2^{s/p}\big).
+\]
+
+这一步说明，当前非零结果来自明确的 flavor-separated 电磁磁矩约束和 strange form factor 输入，而不是把电磁 \(F_2^p\) 直接当成 flavor-universal \(F_2^V\)。
+
 Bishara、Brod、Grinstein 和 Zupan 的显式 flavor form-factor 分解（arXiv:1707.06998，附录 A.1）给出质子在 \(q^2=0\) 的中心值：
 
 \[
@@ -1051,7 +1088,9 @@ F_2^{u/p}(0)+F_2^{d/p}(0)+F_2^{s/p}(0)
 \simeq-0.184.
 \]
 
-这里的数值依赖所采用的 strange 磁矩和 flavor form-factor 输入；正式计算应记录这些输入及其误差。不能把这个零动量中心值当成整个 \(t\) 区间的常数，也不能把电磁 form factor 不加 flavor 分解地直接代入当前重子数型流。
+这里的数值依赖所采用的 strange 磁矩和 flavor form-factor 输入；正式计算应记录这些输入及其误差。三个输入值的误差存在共同来源，不能在没有协方差矩阵的情况下把它们当作独立误差简单平方相加。也不能把这个零动量中心值当成整个 \(t\) 区间的常数，更不能把电磁 form factor 不加 flavor 分解地直接代入当前重子数型流。
+
+需要特别保留一个文献约定核查点：Hoferichter–Klos–Schwenk 2015 年文章的 Eq. (23) 使用 \(\kappa_N\) 与 \(\kappa_N^s\) 写出一个紧凑的三味表达式；若只按该式的字面形式求和，会得到与上述 2017 年显式 flavor-separated 数值不同的结论。这里不把两种写法静默地拼接，也不把这种差异解释成一个已经解决的恒等式。当前记录采用 2017 年附录 A 中明确列出的 flavor-separated 数值作为 benchmark 输入；在把它们写入生产代码之前，仍应将两篇文献的 \(\kappa_N\)、strange-current 和 flavor-current 约定逐项对照，并在 provenance 中固定最终选择。
 
 因此，本记录明确撤回“当前 universal \(u,d,s\) 矢量流的 \(F_2^V(0)\) 必然抵消为零”的旧判断。后续应使用明确的 flavor-separated \(F_1^{q,N}(t)\)、\(F_2^{q,N}(t)\) 和当前模型的 \(g_q\) 做加权求和。
 
