@@ -49,3 +49,7 @@ Keep the following quantities separate:
 - [Phase 1 scientific content audit](docs/supplements/scientific_content_audit_2026-11-16.md): current numerical-method and documentation consistency findings.
 - [Figure 2 physics-formula audit](docs/supplements/figure2_physics_formula_audit_2026-11-13.md): equation, implementation, normalization, and validation cross-checks.
 - [Figure 2 scientific-status table](docs/supplements/figure2_scientific_status_2026-11-13.md): verified scope and remaining scientific boundaries.
+
+### Mathematica three-body natural-xenon calculation
+
+`three_body_natural_xenon/` contains the reorganized main Mathematica notebook, AFH v6 xenon response data, usage notes, and archived comparison tables. The main calculation is inline in the notebook and uses FeynCalc plus Mathematica `NIntegrate`. Optional FeynRules/FeynArts checks need those external packages and a local model-export environment; the notebook keeps their saved outputs, but the third-party packages are not bundled. The run record is explicitly marked historical because this reorganization did not rerun all calculations.
