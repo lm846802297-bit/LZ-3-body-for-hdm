@@ -41,6 +41,19 @@ jobs:
       - name: Reproduce 2401-point AFH response grid
         run: python research/afh_vv_phi_xe131/afh_vv_phi_xe131.py
 
+      - name: Compute M plus Phi-double-prime charge-sector benchmark
+        run: |
+          python research/afh_vv_phi_xe131/phi_charge_response_match.py \
+            --grid research/afh_vv_phi_xe131/output/afh_vv_phi_xe131_full_grid.csv \
+            --selected research/afh_vv_phi_xe131/output/afh_vv_phi_xe131_selected_points.csv \
+            --outdir research/afh_vv_phi_xe131/output/
+
+      - name: Compile charge-matching code
+        run: |
+          python -m py_compile \
+            research/afh_vv_phi_xe131/phi_charge_response_match.py \
+            research/afh_vv_phi_xe131/tests/test_phi_charge_response_match.py
+
       - name: Run regression tests
         run: python -m unittest discover -s research/afh_vv_phi_xe131/tests -v
 
