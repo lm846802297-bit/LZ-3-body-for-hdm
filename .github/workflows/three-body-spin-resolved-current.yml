@@ -1,0 +1,49 @@
+name: Spin-resolved three-body current and Ward identity
+
+on:
+  push:
+    branches:
+      - research/three-body-spin-resolved-current-20261118
+  pull_request:
+    paths:
+      - "research/three_body_spin_resolved_current/**"
+      - "research/vector_current_response_audit/**"
+      - "research/three_body_calculation_and_validation/eq6_kernel.py"
+      - ".github/workflows/three-body-spin-resolved-current.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  spin-current:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install numerical dependency
+        run: python -m pip install --upgrade numpy==2.3.5
+      - name: Compile current and tests
+        run: |
+          python -m py_compile \
+            research/three_body_spin_resolved_current/spin_resolved_three_body_current.py \
+            research/three_body_spin_resolved_current/test_spin_resolved_three_body_current.py
+      - name: Run spin trace and Ward identity tests
+        run: |
+          python -m unittest discover \
+            -s research/three_body_spin_resolved_current \
+            -p 'test_*.py' -v
+      - name: Generate reference-point diagnostic
+        run: |
+          python research/three_body_spin_resolved_current/spin_resolved_three_body_current.py \
+            --out /tmp/spin-resolved-current.json
+      - name: Upload diagnostic
+        uses: actions/upload-artifact@v4
+        with:
+          name: spin-resolved-three-body-current
+          path: /tmp/spin-resolved-current.json
+          if-no-files-found: error
+          retention-days: 30
