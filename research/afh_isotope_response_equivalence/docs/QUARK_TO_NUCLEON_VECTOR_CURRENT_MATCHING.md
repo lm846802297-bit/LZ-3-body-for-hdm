@@ -926,8 +926,7 @@ J_q^\mu=\sum_q g_q\bar q\gamma^\mu q.
 F_1^{V,N}(t)\gamma^\mu
 +\frac{iF_2^{V,N}(t)}{2m_N}
 \sigma^{\mu\nu}q_{N,\nu}
-\right]
-u_N(p_N).
+\right]u_N(p_N).
 }
 \]
 
@@ -1239,8 +1238,7 @@ D_{\mu\nu}(q_A)
 F_1^{V,N}(t)\gamma^\nu
 +\frac{iF_2^{V,N}(t)}{2m_N}
 \sigma^{\nu\alpha}q_{A,\alpha}
-\right]
-u_N(p_N)
+\right]u_N(p_N)
 \]
 
 开始，采用固定的动量和自旋量约定做完整 NR 展开，再将所得核子算符投影到 AFH 多极算符。
@@ -1936,8 +1934,7 @@ J_N^\mu
 F_1^V(t_A)\gamma^\mu
 +\frac{iF_2^V(t_A)}{2m_N}
 \sigma^{\mu\nu}q_{A,\nu}
-\right]
-u_N(p_N),
+\right]u_N(p_N),
 \qquad
 \sigma^{\mu\nu}=\frac{i}{2}[\gamma^\mu,\gamma^\nu],
 \]
@@ -1952,8 +1949,7 @@ The Gordon identity in this convention is
 \bar u_N(p_N')\,i\sigma^{\mu\nu}q_{A,\nu}\,u_N(p_N)
 =
 \bar u_N(p_N')
-\left[2m_N\gamma^\mu-2K_N^\mu\right]
-u_N(p_N).
+\left[2m_N\gamma^\mu-2K_N^\mu\right]u_N(p_N).
 \]
 
 Therefore
@@ -1978,7 +1974,7 @@ magnetization current, the Pauli bilinears are
 \bar u_N'\gamma^0u_N
 =
 2m_N\left[
-1-\frac{\mathbf q_A^2}{8m_N^2}
+1+\frac{\mathbf K_N^2}{2m_N^2}
 +\frac{i}{4m_N^2}
 \boldsymbol\sigma_N\cdot(\mathbf q_A\times\mathbf K_N)
 +\cdots
@@ -1989,7 +1985,7 @@ magnetization current, the Pauli bilinears are
 \bar u_N'u_N
 =
 2m_N\left[
-1-\frac{\mathbf K_N^2}{2m_N^2}
+1+\frac{\mathbf q_A^2}{8m_N^2}
 -\frac{i}{4m_N^2}
 \boldsymbol\sigma_N\cdot(\mathbf q_A\times\mathbf K_N)
 +\cdots
