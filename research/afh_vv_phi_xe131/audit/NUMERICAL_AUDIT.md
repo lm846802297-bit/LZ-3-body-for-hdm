@@ -9,7 +9,7 @@
 - Matrix rows: 67; isoscalar normal-parity entries: rank 0 = 16, rank 2 = 8
 - Oscillator length: 2.2923417985218975 fm
 - Grid: 2401 points, 0--0.6 GeV, 0.00025 GeV spacing
-- Local environment: Python 3.13.5, NumPy 2.3.5, SciPy 1.17.0, SymPy 1.14.0, mpmath 1.3.x
+- Reproduction workflow environment (GitHub Actions): Python 3.13.18, NumPy 2.5.5, SciPy 1.18.1, SymPy 1.14.0; the exact mpmath version is recorded in run_manifest.json.
 
 ## Procedure
 
