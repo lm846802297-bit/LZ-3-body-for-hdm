@@ -18,6 +18,6 @@ The model log also records that no electric charges were defined and FeynRules a
 
 ## Regenerating the export
 
-Install FeynRules 2.3.49 separately, place its `FeynRules.m` and package files under `FeynRules_check/feynrules-current/`, then run `export_ufo.wls` from the `FeynRules_check` directory. Third-party FeynRules files are not included in this repository. The export script applies the documented Python 3 syntax adjustment to the generated UFO `object_library.py`.
+FeynRules 2.3.49 source is included at `../feynrules-current/`; run `export_ufo.wls` from the parent `FeynRules_check/` directory. The third-party license and provenance are documented in `../THIRD_PARTY_NOTICES.md`. The export script applies the documented Python 3 syntax adjustment to the generated UFO `object_library.py`.
 
 `SHA256SUMS.txt` records the hashes of the preserved export files. `ufo_export_manifest.json` records the model source, generator, environment, and checks actually performed.
