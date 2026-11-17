@@ -177,7 +177,12 @@ F_2^V(0)/F_1^V(0)\simeq-0.184.
 \]
 输入 \(F_2^{s/p}(0)=-0.064(17)\) 的不确定度会同时进入 \(F_2^{u/p}\)、\(F_2^{d/p}\) 和三味总和；没有完整协方差时，不能把这些误差当作独立量简单平方相加。当前 benchmark 明确采用该 2017 年显式 flavor-separated 输入，而不把电磁 \(F_2^p\) 直接代入 universal quark current。
 
-Hoferichter–Klos–Schwenk 2015 年 Eq. (23) 使用 \(\kappa_N,\kappa_N^s\) 的紧凑三味记号；若只按该式的字面形式求和，会得到与上述 2017 年显式 flavor-separated 数值不同的结论。两种写法的 \(\kappa_N\)、strange-current 和 flavor-current 定义必须逐项对照，不能静默拼接。当前记录保留这一文献约定差异，并以 2017 年附录 A.1 的显式中心值作为 benchmark 输入；有限 \(t_A\) 的 \(F_1^{V,N}(t_A)\)、\(F_2^{V,N}(t_A)\) 及其误差/协方差仍待生产级匹配。
+**HKS 2015 的对照与使用边界：** HKS Eq. (21) 给出显式 flavor 重构
+\[
+F_2^{u/p}=2F_2^{\rm EM,p}+F_2^{\rm EM,n}+F_2^{s,N},\qquad
+F_2^{d/p}=F_2^{\rm EM,p}+2F_2^{\rm EM,n}+F_2^{s,N}.
+\]
+结合其 isospin 关系和经验的质子/中子电磁 Pauli form factors、strange Pauli form factor，得到与 Bishara et al. (2017) Appendix A.1 相同的 flavor-separated 中心值 \(1.609,-2.097,-0.064\)，其等权重三味和为 \(-0.552\)。HKS Eq. (23) 的紧凑写法若按字面、并把其中 \(\kappa_N\) 与 Eq. (24) 的物理核子反常磁矩采用同一含义来相加，会形式上得到零和；但它不能在不核清符号定义和近似条件的情况下，作为独立的 flavor-sum 恒等式去覆盖 Eq. (21) 的显式重构。**因此本项目不再使用“由 HKS 紧凑式可知三味 \(F_2^V(0)=0\)”这一历史判断；当前 benchmark 明确采用 Bishara et al. Appendix A.1 的显式 flavor-separated 输入。** 有限 \(t_A\) 的形状、误差和协方差仍待生产级匹配。
 
 这一非零 Pauli 输入会改变两个 NR 系数。以零动量中心值为例，
 \[
