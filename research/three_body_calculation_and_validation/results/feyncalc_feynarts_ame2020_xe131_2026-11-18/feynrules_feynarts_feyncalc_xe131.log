@@ -1,0 +1,20 @@
+Using FeynArts from: [workspace]/天然氙三体散射/FeynRules_check/FeynArtsPatched
+graphs=2
+FCAMP=-(Spinor[Momentum[R], MNuc, 1] . (I*gc5*DiracGamma[LorentzIndex[Lor1]] . DiracGamma[6] + I*gc5*DiracGamma[LorentzIndex[Lor1]] . DiracGamma[7]) . Spinor[Momentum[P], MNuc, 1]*Spinor[Momentum[r], MChiOne, 1] . (I*gc3*DiracGamma[LorentzIndex[Lor2]] . DiracGamma[6] + I*gc3*DiracGamma[LorentzIndex[Lor2]] . DiracGamma[7]) . (MChiTwo + DiracGamma[Momentum[-P + r + R]]) . (I*gc2*DiracGamma[6] + I*gc2*DiracGamma[7]) . Spinor[Momentum[p], MChiOne, 1]*FeynAmpDenominator[PropagatorDenominator[Momentum[P - R], MMed]]*FeynAmpDenominator[PropagatorDenominator[Momentum[P - r - R], MChiTwo]]*Pair[LorentzIndex[Lor1], LorentzIndex[Lor2]]) - Spinor[Momentum[R], MNuc, 1] . (I*gc5*DiracGamma[LorentzIndex[Lor2]] . DiracGamma[6] + I*gc5*DiracGamma[LorentzIndex[Lor2]] . DiracGamma[7]) . Spinor[Momentum[P], MNuc, 1]*Spinor[Momentum[r], MChiOne, 1] . (I*gc1*DiracGamma[6] + I*gc1*DiracGamma[7]) . (MChiTwo + DiracGamma[Momentum[k + r]]) . (I*gc4*DiracGamma[LorentzIndex[Lor1]] . DiracGamma[6] + I*gc4*DiracGamma[LorentzIndex[Lor1]] . DiracGamma[7]) . Spinor[Momentum[p], MChiOne, 1]*FeynAmpDenominator[PropagatorDenominator[Momentum[-k - r], MChiTwo]]*FeynAmpDenominator[PropagatorDenominator[Momentum[-P + R], MMed]]*Pair[LorentzIndex[Lor1], LorentzIndex[Lor2]]
+Width inserted in radiating propagator: True
+static projected spin trace bytes=519392 remaining propagators=0
+已定义相空间运动学：u→W²，z=cosθ*，phi 为方位角。具体四动量将在下面的固定点检查显示。
+已定义 NIntegrate 被积函数与三维相空间积分；计算结果在固定点及 benchmark 表显示。
+Static projected amplitude squared=1.147056246485467*^14 reference=1.1470562462906581*^14 relative=1.6983392470137915*^-10 + 0.*I
+Integrating FeynCalc static-current amplitude; width mode=pole
+Welcome to DMFormFactor version 1.1.
+Functions are SetCoeffsNonrel, SetCoeffsRel, SetCoeffsNucl, ZeroCoeffs, SetJChi, SetMchi, SetIsotope, SetHALO, SetHelm, TransitionProbability, ResponseNucl, DiffCrossSection, ApproxTotalCrossSection, and EventRate.
+Getting default matrix...
+Setting isotope to xenon-131.
+AFH isotope and response=131 9.628443520056782
+Three-body dsigma GeV^-3=1.9021840212877452
+Three-body dsigma cm2/keV=7.4067121982767525*^-34
+Pointlike R=1 dsigma GeV^-3=0.19755882841555344
+Width GeV=0.00015182391157876957506631008682427055`12.
+Original Gauss (24,24,12) dsigma GeV^-3=1.9022027032291051
+FeynCalc/original - 1=-9.821214809635492*^-6

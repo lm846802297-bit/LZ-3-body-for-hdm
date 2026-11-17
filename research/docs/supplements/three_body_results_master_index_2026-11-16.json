@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
-  "created_on": "2026-11-17",
+  "created_on": "2026-11-18",
   "repository": "lm846802297-bit/LZ-3-body-for-hdm",
   "branch": "main",
-  "purpose": "Current result manifest using AME2020/CODATA-2022 exact xenon nuclear masses; approximate-mass AFH output archives removed.",
+  "purpose": "Current result manifest using AME2020/CODATA-2022 exact xenon nuclear masses and verified FeynArts/FeynCalc Xe-131 comparison.",
   "sha256_method": "For committed text files listed here, SHA-256 was recomputed from exact repository file bytes returned in base64 form. For artifacts covered by existing committed SHA256SUMS, the recorded per-file digest was cross-checked against that manifest. External/uncommitted inputs are explicitly listed as checksum-only provenance, not as locally available files.",
   "external_or_checksum_only_inputs": [
     {
@@ -932,6 +932,31 @@
           "role": "Four repository-relative SHA-256 checksums for Green high-order artifacts"
         }
       ]
+    },
+    {
+      "id": "feyncalc-feynarts-pole-xe131",
+      "description": "FeynRules-exported ThreeBodyVV model checked by FeynArts and FeynCalc; two diagrams, pole-width static-current three-body integration, and comparison to Mathematica Gauss quadrature. The FeynRules export itself was reused and hash-checked, not regenerated in this run.",
+      "parameters": {
+        "isotope": "Xe-131",
+        "mass_scheme": "AME2020/CODATA-2022",
+        "width_mode": "pole",
+        "diagrams": 2,
+        "comparison": "FeynCalc NIntegrate vs Mathematica Gauss {24,24,12}"
+      },
+      "files": [
+        {
+          "path": "research/three_body_calculation_and_validation/results/feyncalc_feynarts_ame2020_xe131_2026-11-18/feynrules_feynarts_feyncalc_xe131.log",
+          "sha256": "047cf8f91f1d3e4793cab9b059c7c6efe752df211f38ddc11edc9cf5326cf4d4"
+        },
+        {
+          "path": "research/three_body_calculation_and_validation/results/feyncalc_feynarts_ame2020_xe131_2026-11-18/metadata.json",
+          "sha256": "e6b8fbfbb27eb5864d51f90f5f3cdc28ded885690c4a5c484510efd125a6cc0d"
+        },
+        {
+          "path": "research/three_body_calculation_and_validation/results/feyncalc_feynarts_ame2020_xe131_2026-11-18/SHA256SUMS.txt",
+          "sha256": "01a5401563c5f59e3986d37aadd628a564fbcb71315c6e1b2f3de2bc0cc456e0"
+        }
+      ]
     }
   ],
   "files": [
@@ -1537,19 +1562,19 @@
     },
     {
       "path": "research/lz_detector_response/lz_2026_extended_nr/afh7_hybrid9_rate_level_yields/lz_2026_afh7_hybrid9_rate_level_event_yields.csv",
-      "sha256": "557b26c4b2564f633c2971f2e9c6f7a7a17bd8d653cc5bd59e92d6b60e11ccb5",
-      "bytes": 7704,
+      "sha256": "19ce0f413b3249cf0f57c035cd56868896b76c9b5350dddb1048d876d9cc3de7",
+      "bytes": 7713,
       "role": "LZ efficiency fold derived from exact-mass spectra"
     },
     {
       "path": "research/lz_detector_response/lz_2026_extended_nr/afh7_hybrid9_rate_level_yields/lz_2026_afh7_hybrid9_rate_level_metadata.json",
-      "sha256": "94f73dbaa2f1698c1a0dbce2d977f9f8edec82c2c84aa62e8988f169d466c3dc",
-      "bytes": 5388,
+      "sha256": "1bf033773442c9477d6d73343fb93606cf2bfc46a8d177b543d454f216e49ed0",
+      "bytes": 5375,
       "role": "Exact-mass LZ rate-level fold metadata"
     },
     {
       "path": "research/lz_detector_response/lz_2026_extended_nr/afh7_hybrid9_rate_level_yields/SHA256SUMS.txt",
-      "sha256": "5454f0f697df7692b1c34bc43ab31757c03d267c9b197210b9a50992f2aac93f",
+      "sha256": "86ca7c0d0eac9170b1381b193a13721c128c92db98de8b73a8166edf1b4f43b9",
       "bytes": 227,
       "role": "Checksums for exact-mass LZ rate-level fold"
     },
@@ -1603,9 +1628,39 @@
     },
     {
       "path": "research/three_body_natural_xenon/完整运行与数值对照.md",
-      "sha256": "b389f6830cfc167e370ed6df2815a49a350c0ac4b912dda95224087eea5c6e80",
-      "bytes": 8617,
+      "sha256": "42f67a527acdbd06e53380253ba9c9dbf2cf1f73e0372647f5477d004cf0c5bd",
+      "bytes": 9004,
       "role": "Current exact-mass calculation and validation report"
+    },
+    {
+      "path": "research/three_body_calculation_and_validation/results/feyncalc_feynarts_ame2020_xe131_2026-11-18/feynrules_feynarts_feyncalc_xe131.log",
+      "sha256": "047cf8f91f1d3e4793cab9b059c7c6efe752df211f38ddc11edc9cf5326cf4d4",
+      "bytes": 2545,
+      "role": "Native Mathematica FeynArts/FeynCalc Xe-131 amplitude and NIntegrate output"
+    },
+    {
+      "path": "research/three_body_calculation_and_validation/results/feyncalc_feynarts_ame2020_xe131_2026-11-18/metadata.json",
+      "sha256": "e6b8fbfbb27eb5864d51f90f5f3cdc28ded885690c4a5c484510efd125a6cc0d",
+      "bytes": 1734,
+      "role": "FeynCalc pole-width Xe-131 cross-check parameters and results"
+    },
+    {
+      "path": "research/three_body_calculation_and_validation/results/feyncalc_feynarts_ame2020_xe131_2026-11-18/SHA256SUMS.txt",
+      "sha256": "01a5401563c5f59e3986d37aadd628a564fbcb71315c6e1b2f3de2bc0cc456e0",
+      "bytes": 184,
+      "role": "Checksums for FeynCalc Xe-131 calculation output"
+    },
+    {
+      "path": "research/three_body_calculation_and_validation/mathematica_halo_notebook/FeynRules_check/feynrules_feyncalc_2to3.wls",
+      "sha256": "d98907799d5186a67d656871d4e7504a0033cfa5eaf10f1047e87a2469331bad",
+      "bytes": 6465,
+      "role": "FeynArts auto-discovery path and correct independent NIntegrate location"
+    },
+    {
+      "path": "research/three_body_calculation_and_validation/mathematica_halo_notebook/FeynRules_check/feynrules_feyncalc_xe131.wls",
+      "sha256": "6f9f8c52999720b838b1695a6006ab8a42314a357526b808ca9a49137dfd9cc2",
+      "bytes": 7041,
+      "role": "FeynArts auto-discovery path and correct independent NIntegrate location"
     }
   ],
   "source_commit": "PR #45 head fdec6ffb4d58474e8ae1998472f2aa9c935a04a9; merged into main by merge commit 15eb3a24e5295868ca208166a94c078fbc1747a7."

@@ -12,6 +12,6 @@
 
 ## 运行要求
 
-主计算需要 Mathematica 和本机安装的 FeynCalc；AFH 核响应数据与 notebook 同目录。笔记本末尾的 FeynRules/FeynArts 验证还需要相应软件包及模型导出环境。本仓库不打包第三方 Mathematica 软件；旧计算输出已从 notebook 清除，避免混用质量方案；FeynRules/FeynArts 验证需先配置本机软件包，运行后才会生成输出。
+主计算需要 Mathematica 和本机安装的 FeynCalc；AFH 核响应数据与 notebook 同目录。笔记本末尾的 FeynRules/FeynArts 验证还需要相应软件包及模型导出环境。本仓库不打包第三方 Mathematica 软件；旧计算输出已从 notebook 清除，避免混用质量方案；FeynArts/FeynCalc 的 Xe-131 对照已在本机运行；工作区安装路径自动识别，完整日志保存在 `three_body_calculation_and_validation/results/feyncalc_feynarts_ame2020_xe131_2026-11-18/`。本仓库不打包第三方 Mathematica 软件。
 
 从 notebook 最上方按顺序运行。旧的嵌入输出已清除，运行各输入单元后会重新显示与当前质量方案一致的结果。更改物理输入或积分精度后，要重新运行后续依赖单元。天然氙事件率没有包含探测器效率、能量分辨率或曝光选择。

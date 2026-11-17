@@ -23,7 +23,7 @@
 
 ## 尚未能重算的链条
 
-FeynRules→FeynArts→FeynCalc 的模型振幅脚本已改用 AME2020 Xe-131 质量输入，但本机 Mathematica 搜索路径没有 FeynArtsPatched，FeynCalc 因而不能载入 FeynArts，也不能产生新图和振幅数值。该链条不标为通过；恢复依赖后再运行。主 notebook 的旧缓存输出已清除，避免把旧质量方案的数值混进当前结果。
+FeynRules→FeynArts→FeynCalc 的 Xe-131 pole-width 计算已于 2026-11-18 实际运行：脚本从工作区根目录 `天然氙三体散射/FeynRules_check/FeynArtsPatched` 加载 FeynArts，生成 2 张树图，FeynCalc 打印振幅并完成自旋迹与 NIntegrate。点状靶静态流迹的固定点相对差为 1.70×10⁻¹⁰；乘 Xe-131 AFH 响应后的截面与 Mathematica `{24,24,12}` Gauss 结果相差 −9.82×10⁻⁶。输出日志在 `results/feyncalc_feynarts_ame2020_xe131_2026-11-18/`。本次复用已存在的 FeynRules 导出模型并通过源文件哈希检查，没有重新导出 FeynRules 模型。
 
 ## 已清理的过期结果
 

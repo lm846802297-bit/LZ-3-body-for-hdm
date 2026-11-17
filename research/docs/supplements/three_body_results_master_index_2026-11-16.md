@@ -80,3 +80,11 @@ esearch/lz_detector_response/lz_2026_extended_nr/afh7_hybrid9_rate_level_yields/
 
 
 Historical A*u AFH full-grid outputs were removed on 2026-11-17 after the exact-mass AFH and GCN/JJ55 spectra and LZ rate-level folds were recomputed. The current outputs, rather than earlier numerical rows in older appendices, are authoritative for the AME2020/CODATA-2022 mass scheme.
+
+
+### 6. FeynRules-exported model / FeynArts / FeynCalc Xe-131 pole-width check
+
+- FeynArts 3.12 was loaded from the workspace-local patched installation; 2 tree diagrams were generated from the already-exported `ThreeBodyVV_FA` model after its FeynRules source hash check.
+- FeynCalc printed the amplitude, evaluated the static-current spin trace, inserted the \(\chi_2\) pole width and performed the three-body `NIntegrate`.
+- Xe-131 result: `1.9021840213 GeV^-3`, versus `1.9022027032 GeV^-3` from the notebook Gauss `{24,24,12}` method; relative difference `−9.82×10^-6`. The independent fixed-point trace difference is `1.70×10^-10`.
+- Output log and metadata: `research/three_body_calculation_and_validation/results/feyncalc_feynarts_ame2020_xe131_2026-11-18/`. This run reused the previously exported FeynRules model; it did not rerun FeynRules export and uses a static nuclear-current projection followed by the AFH response.

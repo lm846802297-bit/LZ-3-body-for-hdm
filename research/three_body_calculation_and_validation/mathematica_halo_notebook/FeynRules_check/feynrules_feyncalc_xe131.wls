@@ -1,6 +1,17 @@
 (* Independent kernel: patched FeynArts is kept inside this project. *)
 workDir=DirectoryName[$InputFileName];projectDir=DirectoryName[workDir];
-FeynCalc`$FeynArtsDirectory=FileNameJoin[{workDir,"FeynArtsPatched"}];
+(* Prefer an explicitly configured install, then the project copy, then the workspace-level FeynArts installations. *)
+feynArtsEnv=Environment["FEYNARTS_DIR"];
+workspaceRoot=Nest[DirectoryName,workDir,5];
+feynArtsCandidates=DeleteCases[{
+  If[StringQ[feynArtsEnv]&&StringLength[feynArtsEnv]>0,feynArtsEnv,$Failed],
+  FileNameJoin[{workDir,"FeynArtsPatched"}],
+  FileNameJoin[{workspaceRoot,FromCharacterCode[{22825,28982,27673,19977,20307,25955,23556}],"FeynRules_check","FeynArtsPatched"}],
+  FileNameJoin[{workspaceRoot,FromCharacterCode[{22825,28982,27673,19977,20307,25955,23556}],"feynarts","FeynArts-3.12"}]
+},$Failed];
+FeynCalc`$FeynArtsDirectory=SelectFirst[feynArtsCandidates,FileExistsQ[FileNameJoin[{#,"FeynArts.m"}]]&,$Failed];
+If[FeynCalc`$FeynArtsDirectory===$Failed,Print["FeynArts.m not found. Set FEYNARTS_DIR to the FeynArts installation folder."];Exit[2]];
+Print["Using FeynArts from: ",FeynCalc`$FeynArtsDirectory];
 sourceModel=FileNameJoin[{workDir,"ThreeBodyVV.fr"}];
 hashFile=FileNameJoin[{workDir,"generated_model_source_sha256.txt"}];
 If[!FileExistsQ[sourceModel]||!FileExistsQ[hashFile]||ToLowerCase[FileHash[sourceModel,"SHA256","HexString"]]=!=StringTrim[Import[hashFile,"Text"]],
@@ -28,7 +39,7 @@ squared=FermionSpinSum[projected conj]/2;
 expr=FeynAmpDenominatorExplicit[Contract[DiracSimplify[squared,DiracTraceEvaluate->True]]];
 Print["static projected spin trace bytes=",ByteCount[expr]," remaining propagators=",Length[Cases[expr,_FeynAmpDenominator,Infinity]]];
 Get[FileNameJoin[{projectDir,"three_body_rate_engine.wl"}]];
-ToExpression[StringReplace[Import[FileNameJoin[{projectDir,"independent_nintegrate.wl"}],"Text"],"299792.458"->"(299792458/1000)"]];
+ToExpression[StringReplace[Import[FileNameJoin[{DirectoryName[projectDir],"independent_nintegrate.wl"}],"Text"],"299792.458"->"(299792458/1000)"]];
 prec=50;args=Rest[$ScriptCommandLine];
 If[!MemberQ[{0,12},Length[args]],Print["Expected no arguments or exactly 12: m,ms,dm,mA,ER,v,mV,g1,g2,gN,A,widthMode."];Exit[2]];
 If[Length[args]==12,

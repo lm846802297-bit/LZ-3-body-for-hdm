@@ -1,0 +1,39 @@
+{
+  "status": "PASS_WITH_NOTES",
+  "date": "2026-11-18",
+  "process": "chi1 + N -> chi1 + N + s",
+  "workflow": "FeynRules-generated FeynArts model -> FeynArts topologies and insertions -> FeynCalc amplitude, spin trace, pole width, and NIntegrate",
+  "feynarts_install": "workspace-local 天然氙三体散射/FeynRules_check/FeynArtsPatched",
+  "feynrules_export": "reused existing exported model; source SHA-256 check passed; FeynRules export was not rerun in this execution",
+  "target": "pointlike Dirac Xe-131 proxy for the amplitude audit; AFH Xe-131 response multiplier applied only for the reported Xe-131 cross section",
+  "mass_scheme": "AME2020/CODATA-2022 bare Xe-131 nuclear mass",
+  "mA_GeV": 121.90992244721734,
+  "benchmark": {
+    "mchi_GeV": 1000.0,
+    "mV_GeV": 10.0,
+    "ms_keV": 300.0,
+    "deltaM_MeV": 1.0,
+    "g1": 1.0,
+    "g2": 1.0,
+    "gVN": 1.0,
+    "ER_keV": 200.0,
+    "speed_km_s": 776.0,
+    "width_mode": "pole",
+    "GammaChi2_GeV": 0.00015182391157876957
+  },
+  "results": {
+    "FeynArts_tree_diagrams": 2,
+    "static_trace_relative_difference": 1.6983392470137915e-10,
+    "AFH_response_multiplier": 9.628443520056782,
+    "FeynCalc_dsigma_GeVminus3": 1.9021840212877452,
+    "FeynCalc_dsigma_cm2_per_keV": 7.4067121982767525e-34,
+    "pointlike_R1_dsigma_GeVminus3": 0.19755882841555344,
+    "Mathematica_Gauss_24_24_12_dsigma_GeVminus3": 1.9022027032291051,
+    "relative_difference_vs_Gauss": -9.821214809635492e-06
+  },
+  "limitations": [
+    "pointlike Dirac target matrix element is not a full finite-size nuclear current",
+    "this static-current amplitude check reuses the notebook phase-space mapping",
+    "FeynRules source was hash-verified but export was not regenerated"
+  ]
+}
