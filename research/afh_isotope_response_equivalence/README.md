@@ -52,4 +52,11 @@ See `docs/AFH_ISOTOPE_RESPONSE_EQUIVALENCE.md` for the physics derivation and nu
 
 ## Vector-current matching boundary
 
-See [三体 VV 核子流与 AFH 核响应——完整物理讨论记录（更新版）](docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md) for the expanded 22-section derivation from the UV quark current through nucleon form factors and the full three-body tensor to AFH nuclear responses. It replaces the earlier concise outline with the complete kinematic, EFT, nuclear-multipole, normalization, form-factor, numerical-evidence, and implementation discussion. The updated record also withdraws the earlier blanket claim that the flavor-universal three-flavor Pauli form factor must vanish; it records the explicit flavor-separated values used from arXiv:1707.06998 and marks the finite-t matching as unfinished.
+See [三体 VV 核子流与 AFH 核响应——完整物理讨论记录（更新版）](docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md) for the complete detailed derivation from the UV quark current through nucleon form factors and the full three-body tensor to AFH nuclear responses. It replaces the earlier concise outline with the complete kinematic, EFT, nuclear-multipole, normalization, form-factor, numerical-evidence, and implementation discussion. The updated record also withdraws the earlier blanket claim that the flavor-universal three-flavor Pauli form factor must vanish; it records the explicit flavor-separated values used from arXiv:1707.06998 and marks the finite-t matching as unfinished.
+
+
+## Formal Appendix I
+
+The main report now contains the formal [Appendix I](../docs/appendices/09I_three_body_vv_nucleon_current_afh_responses.md), which separates the leading AFH \(M\) baseline from the uncompleted \(\Phi''\), \(M\Phi''\), \(\Delta\), and \(\Sigma'\) matching. The adopted zero-momentum flavor-universal benchmark uses the explicit flavor-separated values from arXiv:1707.06998 Appendix A.1, giving \(F_2^V(0)=-0.552\) under isospin symmetry. The different compact notation in Hoferichter–Klos–Schwenk (2015) is retained as an unresolved convention check; finite-\(t\) form factors and covariance propagation remain open.
+
+The complete discussion archive is kept separate from the main report and preserves the derivation history, alternatives, numerical diagnostics, and implementation plan. The complementary four-component DM-side / point-nucleus diagnostic remains in [PR #53](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/pull/53); it does not calculate internal nuclear currents.

@@ -1,13 +1,15 @@
 # AFH v6.0 Xe-131 核响应、三体暗物质散射与天然氙反冲率
 
 > 整理日期：2026-11-11（原始主报告整理日期）
-> 最近文档更新：2026-11-16（新增 AFH-7/Hybrid-9 84 点 full-range spectra、16,807 行七同位素响应网格、高阶求积摘要，以及 GCN/JJ55 与 AFH-7 的数值精度边界）
+> 最近文档更新：2026-11-18（新增 AFH-7/Hybrid-9 84 点 full-range spectra、16,807 行七同位素响应网格、高阶求积摘要，以及 GCN/JJ55 与 AFH-7 的数值精度边界）
 > 对话来源：[ChatGPT 分享对话](https://chatgpt.com/share/6af4660e-e388-83ea-a86a-2482b065dcea)  
 > 对应研究仓库：`lm846802297-bit/LZ-3-body-for-hdm`  
 > 当前正式归档：main；PR #10 于 2026-11-13 合并，merge commit 724d9e7877fb76f4cc477fbb9e24e1e706bf37a6。PR #7 是此前研究分支内的历史合并记录。
 > 研究对象：\(\chi_1+A\rightarrow\chi_1+A+s\) 三体核反冲过程
 
 ## 文档更新记录
+
+- **2026-11-18：** 新增正式附录 I，系统整理三体 VV 完整张量、核子 Dirac–Pauli (F_1/F_2) 流、时间分量自旋—轨道电荷项以及 AFH (M,Phi'',MPhi'',Delta,Sigma',Sigma'') 的对应关系；同步修订 §2.3、§3.6–§3.7、§8、§9、§12.6、§13、README 和公式索引。该轮为理论/文档整合，不新增 (Phi'')、(MPhi'') 或完整核流收缩的数值结果。
 
 - **2026-11-12：** 在附录 A 增加显式 Lorentz boost 及正交基构造，补全从 \(K\) 静止系到靶核静止系的四动量重建说明。
 - **2026-11-12：** 修正附录 D.5 的旧动量约定描述，统一说明固定速度 Xe-131 benchmark 与天然氙 halo fold 均使用精确空间动量；两者区别在核质量输入。
@@ -30,7 +32,9 @@
 - **2026-11-13：** 将 `research/p1-mma-local` 中已完成的 Wolfram 14.0.0 原生 AFH Xe-131 2401 点结果、Python 对照、minima、源文件和 SHA-256 manifest 逐文件纳入本 PR；更新 README、附录 B/G、F6 索引和 P0–P2 状态。该归档不改变 Eq. (6) kernel 或天然氙连续谱的完成边界。
 - **2026-11-14：** 新增 P1-PhaseSpace 数值收敛审计：比较线性 \(W^2\)、线性 \(W\) 与 threshold-\(u^2\) 参数化，检查五个 \(v_{\min}\) 邻域速度点和代表点角积分，并以未归一化 Lorentz-invariant \(d\Phi_3\) 路径复核 Eq. (6) 前因子；新增六项回归测试和结果 SHA-256 归档；随后测试模块扩展为九项。近极点积分、完整连续反冲网格和 halo fold 仍未完成。
 
-## 0. Current status update — 2026-11-16
+## 0. Current status update — 2026-11-18
+
+本次更新将完整一体 VV 核子流匹配正式纳入主报告。AFH 七同位素 (M) 响应及 factor-four 归一化仍是已归档数值基线；(F_1/F_2) 的有限动量输入、(Phi'')、(MPhi'') 和完整三体 (L_{mu\nu}W_A^{mu\nu}) 收缩仍未完成。PR #53 的四分量暗物质张量/点核流结果只作为相关分支级诊断，不代表核内流已验证。
 
 This update supersedes older selected-point-only statements in the report.
 
@@ -293,19 +297,19 @@ R_A^{\rm JJ55}.
 
 两者不能混称为同一条“探测器谱”。
 
-### 2.3 从相互作用顶点到两张辐射图的振幅
+### 2.3 从相互作用顶点到完整三体流张量
 
-在靶核静止系，矢量核电荷流的 leading non-relativistic 分量是时间分量。把核结构因子从核子耦合中提出后，振幅的结构可以写成
+在靶核静止系，领先阶核电荷通常来自矢量流的时间分量，但必须区分“时间分量主导”和“时间分量只有领先 \(F_1\) 电荷项”。把完整核流记为
 \[
-\mathcal M_A\ \propto\
-\frac{g_1g_2g_{VN}}{m_V^2+2m_AE_R}
-\,\mathcal J_{A,\mu}(q)\,
-\bar u(p')\Gamma^\mu u(p),
+J_A^\nu(q_A)=\langle A(P_A')|J_V^\nu(q_A)|A(P_A)\rangle,
 \]
-其中 \(\mathcal J_A^\mu\) 表示已剥离单核子耦合的核电流矩阵元，\(\Gamma^\mu\) 是暗费米子线上的辐射顶点结构。两张树图分别为
+把暗物质线上的两张标量辐射图相干相加，定义
 \[
-\Gamma^\mu=\Gamma^\mu_{\rm before}+\Gamma^\mu_{\rm after},
+\mathcal T_3^\mu=\bar u(p')\Gamma_3^\mu u(p),
+\qquad
+\Gamma_3^\mu=\Gamma^\mu_{\rm before}+\Gamma^\mu_{\rm after}.
 \]
+两张树图分别为
 \[
 \Gamma^\mu_{\rm before}
 =\frac{\gamma^\mu(\slashed p-\slashed k+m_{\chi_2})}
@@ -315,35 +319,58 @@ R_A^{\rm JJ55}.
 =\frac{(\slashed p'+\slashed k+m_{\chi_2})\gamma^\mu}
 {W^2-m_{\chi_2}^2+i m_{\chi_2}\Gamma_{\chi_2}}.
 \]
-before/after 指标量 \(s\) 相对于矢量交换发生在暗费米子线上的先后次序，不是两个不同的末态过程。
+before/after 指标量 \(s\) 相对于矢量交换发生在暗费米子线上的先后次序，不是两个不同末态过程。
 
-在核靶非相对论极限，核的空间电流相对时间分量受到核速度或 \(|\mathbf q|/m_A\) 抑制，因此当前相干电荷近似保留 \(\Gamma^0\) 对应的粒子侧张量：
+完整单次媒介子交换振幅应写成
+\[
+\boxed{
+\mathcal M_3=C_3\,\mathcal T_3^\mu D_{\mu\nu}(q_A)J_A^\nu(q_A),
+}
+\]
+其中 \(C_3\) 包含暗物质侧整体耦合；核子侧的 \(g_{Vq}\)、\(F_1\) 和 \(F_2\) 必须在 \(J_A^\nu\) 或前因子中只计入一次。对应的暗物质张量为
+\[
+L_3^{\mu\rho}
+=\frac12\operatorname{Tr}\left[
+(\slashed p'+m_{\chi_1})\Gamma_3^\mu
+(\slashed p+m_{\chi_1})\overline\Gamma_3^{\,\rho}
+\right],
+\qquad
+\overline\Gamma_3^{\,\rho}
+=\gamma^0(\Gamma_3^\rho)^\dagger\gamma^0.
+\]
+核张量定义为
+\[
+W_A^{\nu\sigma}
+=\frac{1}{2J_A+1}\sum_{M_A,M_A'}
+J_A^\nu(M_A'\!,M_A)J_A^{\sigma *}(M_A'\!,M_A).
+\]
+因此平方振幅一般包含
+\[
+\overline{|\mathcal M_3|^2}
+\propto
+L_3^{\mu\rho}D_{\mu\nu}D_{\rho\sigma}^{*}W_A^{\nu\sigma}.
+\]
+在适当的媒介子传播子/接触极限下，这一结构才可写成 \(L_{\mu\nu}W_A^{\mu\nu}\)。
+
+当前 Eq. (6) benchmark 实际使用的是
 \[
 \mathcal L_{00}
 =\frac12\sum_{s,s'}
-\left|\bar u_{s'}(p')\Gamma^0u_s(p)\right|^2.
-\]
-对 Dirac 外部态使用自旋完备关系，可得到
-\[
-\boxed{
-\mathcal L_{00}
-=\frac12\operatorname{Tr}
-\left[
-(\slashed p'+m_{\chi_1})\Gamma^0
-(\slashed p+m_{\chi_1})\overline\Gamma^{\,0}
+|\bar u_{s'}(p')\Gamma_3^0u_s(p)|^2
+=\frac12\operatorname{Tr}\left[
+(\slashed p'+m_{\chi_1})\Gamma_3^0
+(\slashed p+m_{\chi_1})\overline\Gamma_3^{\,0}
 \right],
-\qquad
-\overline\Gamma^{\,0}=\gamma^0(\Gamma^0)^\dagger\gamma^0.
-}
 \]
-
-令 \(\mathcal M_b\) 和 \(\mathcal M_a\) 分别表示 before 与 after 两张图，则
+并在核侧采用领先 \(M\) 电荷近似
 \[
-|\mathcal M_b+\mathcal M_a|^2
-=|\mathcal M_b|^2+|\mathcal M_a|^2
-+2\,\mathrm{Re}(\mathcal M_b\mathcal M_a^*).
+|\mathcal M_3|^2\simeq |\mathcal K_3|^2W_M^{00}.
 \]
-最后一项就是干涉项。它可以为正，也可以为负；但完整自旋求和后的 \(\mathcal L_{00}\) 必须非负。若把两张图的平方直接相加而不保留交叉项，就不再是原拉格朗日量所定义的完整树级振幅。本文程序将两张图先相加，再计算 Dirac trace；附录 A.5 给出迹表达式和实现检查。
+这不是已经完成的完整 \(L_3^{\mu\nu}W^A_{\mu\nu}\) 收缩。还必须区分两个不同截断：
+1. 只保留暗物质张量的 \(L^{00}\)；
+2. 在核子 \(J_N^0\) 中也只保留领先 \(F_1\) 电荷项，并将其映射为 AFH \(M\) 响应。
+
+第二项比第一项更强。即使暗物质侧只使用 \(L^{00}\)，核子时间分量本身仍含有次领先的自旋—轨道电荷结构；所以“只取时间分量”不自动等于“只取 AFH \(M\) 响应”。完整匹配见正式附录 I。
 
 ### 2.4 为什么积分变量是 \((W^2,z,\phi_*)\)？
 
@@ -1027,6 +1054,78 @@ E_R(Q)=\sqrt{m_A^2+Q^2}-m_A.
 
 最后，**核响应的极小值不必然等于完整截面或 halo-folded 事件率的极小值**。固定速度截面还乘有 \(I_6(v,E_R)\) 和矢量传播子；天然氙速率还对同位素与速度求和/积分。不同同位素的极小值位置不完全相同，速度积分也会对不同反冲点施加不同阈值权重。因此，必须分别讨论 \(R_A\)、\(d\sigma_A/dE_R\) 和 \(dR/dE_R\) 的谱形。
 
+### 3.6 完整 Dirac–Pauli 核子矢量流与 \(F_1/F_2\)
+
+AFH \(M\) 响应的领先算符来自核子矢量电荷，但在有限动量转移下，核子不能被无条件视为点状 Dirac 粒子。按本文的动量方向 \(q_A^\mu=p_N'^\mu-p_N^\mu\)，采用
+\[
+\boxed{
+\langle N(p_N')|J_V^\mu|N(p_N)\rangle
+=\bar u_N(p_N')
+\left[
+F_1^{V,N}(t_A)\gamma^\mu
++\frac{iF_2^{V,N}(t_A)}{2m_N}\sigma^{\mu\nu}q_{A,\nu}
+\right]u_N(p_N).
+}
+\]
+若改用文献中常见的 \(q_N=p_N-p_N'\)，Pauli 项前的符号随之变为负号；两种约定不能混用。
+
+对当前 flavor-universal \(u,d,s\) benchmark，
+\[
+F_i^{V,N}(t)=F_i^{u,N}(t)+F_i^{d,N}(t)+F_i^{s,N}(t).
+\]
+零动量 Dirac 电荷满足 \(F_1^{V,N}(0)=3\)，对应 \(g_{Vp}=g_{Vn}=3g_{Vq}\)。Bishara–Brod–Grinstein–Zupan 的显式 flavor-separated 分解（arXiv:1707.06998，附录 A.1）给出当前采用的质子中心值
+\[
+F_2^{u/p}(0)=1.609,\quad
+F_2^{d/p}(0)=-2.097,\quad
+F_2^{s/p}(0)=-0.064,
+\]
+因此 benchmark 采用
+\[
+F_2^{V,p}(0)=-0.552,\qquad
+F_2^{V,p}(0)/F_1^{V,p}(0)\simeq-0.184.
+\]
+在同位旋对称近似下中子三味总和相同。Hoferichter–Klos–Schwenk 2015 年 Eq. (23) 的紧凑 \(\kappa_N,\kappa_N^s\) 写法若直接求和，会与 2017 年显式 flavor-separated 输入产生不同结论；两套味道定义尚需逐项对照，当前 benchmark 明确采用 2017 年附录 A.1 的中心值，不静默拼接两种参数化。\(F_2^{s/p}(0)\) 的输入误差具有共同来源，尚未传播完整协方差；有限 \(t_A\) 的 form factors 也尚未生成。
+
+因此当前零动量中心值对应
+\[
+F_1^V+2F_2^V=1.896,\qquad
+F_1^V+F_2^V=2.448.
+\]
+这两个组合分别控制时间分量自旋—轨道电荷项和空间磁化项，不能把 \(F_2\) 与磁化流等同。
+
+在协变归一化下，相关非相对论结构为
+\[
+\frac{J_N^0}{2m_N}
+=F_1^{V,N}+\delta_{\rm SI}^{(0)}
++\frac{i(F_1^{V,N}+2F_2^{V,N})}{4m_N^2}
+\boldsymbol\sigma_N\cdot(\mathbf q_A\times\mathbf K_N)+\cdots,
+\]
+\[
+\frac{\mathbf J_N}{2m_N}
+=\frac{F_1^{V,N}}{m_N}\mathbf K_N
++\frac{i(F_1^{V,N}+F_2^{V,N})}{2m_N}
+\boldsymbol\sigma_N\times\mathbf q_A+\cdots,
+\qquad
+\mathbf K_N=\frac{\mathbf p_N'+\mathbf p_N}{2}.
+\]
+时间分量中的 \(F_1+2F_2\) 项是本研究必须单独审计的自旋—轨道电荷结构；空间流则分别包含对流和磁化两部分。完整推导、符号约定及文献对照见正式附录 I.3–I.4。
+
+### 3.7 AFH 非 \(M\) 响应的物理来源与当前状态
+
+完整单体矢量流可能投影到多个 AFH 响应，不能仅凭暗物质空间流小就把它们全部删除：
+
+| AFH 响应 | 主要单核子流来源 | 当前处理 |
+|---|---|---|
+| \(M\) | \(F_1\) 领先电荷密度 | 已有 AFH 七同位素数值基线 |
+| \(\Phi''\) | \(J_N^0\) 中的 \(\boldsymbol\sigma_N\cdot(\mathbf q_A\times\mathbf K_N)\) 自旋—轨道电荷项 | 第一优先级，尚未数值计算 |
+| \(M\Phi''\) | \(M\) 与 \(\Phi''\) 的干涉 | 必须与 \(\Phi''\) 同步计算，尚未数值计算 |
+| \(\Delta\) | 空间流的对流/轨道项 | 当前 AFH 源翻译有 parity blocker，未验证 |
+| \(\Sigma'\) | 空间流的横向磁化自旋项 | 有初步 source-translated selected-\(q\) 输出，native cross-check 未完成 |
+| \(\Sigma''\) | 完整投影中可能出现的纵向自旋结构 | 尚未完成匹配和收缩 |
+| \(\widetilde\Phi'\) | AFH 横向电/自旋—速度张量结构 | 不预设为非零，按完整算符投影决定 |
+
+\(\Phi''\) 不是简单的总核自旋 SD 响应；它编码核子自旋与轨道运动的耦合。\(M\Phi''\) 是可带符号的干涉响应。对流项和磁化项分别需要核内轨道/自旋矩阵元，不能用核质心点电荷流的 ppm 级修正替代。AFH 选择定则、初步 \(\Sigma'\) 数值和 \(\Delta J\) parity 问题均详见正式附录 I.5–I.7。
+
 ## 4. AFH、GCN 与 JJ55 的对照
 
 三种核结构处方的极小值位置接近，但极小值深度存在模型依赖性：
@@ -1431,6 +1530,8 @@ Green benchmark 在其他网格锚点的当前 AFH-7 速率为：
 - **Python-only 完整 Xe-131 Eq. (6) 与因子 4 ledger 已通过（限定范围）：** v=800 km/s fixed-speed、652 行（500 open、152 closed）、16 个高阶锚点；最大 I6 相对差异 1.66367e-11，factor-4 mapping residual 3.55679e-16，physical/no-factor-four ratio residual 0。该结果依赖条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width 假设；不是 Mathematica/Python 独立交叉验证，也不是 halo-folded 截面。GitHub Actions artifact 14112736343。
 - **原生 Mathematica/Python 完整 Eq. (6) 截面对照已通过（限定范围）：** Wolfram 14.2.0、Python 3.14.7；652 行（500 open、152 closed）；最大相对差异 I6 = 1.33872e-12、dσ = 1.33872e-12、AFH response = 3.36051e-16；factor-four mapping residual = 4.30300e-16；Mathematica/Python 自身单位转换 residual 分别为 3.34766e-16/0。比较结果与 SHA-256 归档见 `research/afh_default_density_xe131/output/full_dsigma_mathematica/`。交叉代码的 converted-dσ 差异按 2e-7 观测量容差验收，而非 2e-12 代数恒等式容差。
 
+- **相关分支级四分量诊断（PR #53，尚未合并）：** 已构造完整暗物质 \(L^{\mu\nu}\)，保留两张辐射图干涉，并与守恒的核质心点电荷流收缩；exact-source workflow 记录 8/8 tests passed、12 行重算与归档表最大相对差异为 0。该扫描给出 \(r_\chi\simeq2.47\times10^{-3}\) 和约 4.3–5.1 ppm 的点核完整流修正。它不含核内对流/磁化矩阵元，也不计算 AFH \(\Sigma'\)、\(\Sigma''\)、\(\Delta\)、\(\Phi''\)；详见 PR #53。
+
 ### 8.2 尚未完成或不能过度声称的事项
 
 1. **AFH 空间 q 与 NR 近似必须继续分开表述。** AFH 定义 \(y=(q b_A/2)^2\)，其中 \(q\) 是空间动量转移；精确质量壳关系给出 \(q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}\)。28 个天然氙样本全部匹配 exact spatial q，现作为默认物理基线。\(q_{\rm NR}=\sqrt{2m_AE_R}\) 仅作为小反冲近似，其 Xe-131 响应差异已定量记录。
@@ -1439,6 +1540,9 @@ Green benchmark 在其他网格锚点的当前 AFH-7 速率为：
 4. **LZ detector mapping 已完成 rate-level 的第一层，但尚非完整 recast。** 已提取 LZ 2026 Fig. S2 的一维 final-ROI efficiency central curve 和灰色系统包络，并使用 2.84 tonne-year exposure 对 GCN/JJ55 连续谱计算 efficiency-weighted event yields。尚缺能量分辨/重建卷积、二维 \({S1_c,\log_{10}S2_c}\) 信号 PDF、NEST 响应及其 nuisance covariance、背景样本与相关约束、profile likelihood。因此这些 event yields 不是 90% CL 排除，也不能单独解释 248 keV 候选事件。
 5. **极点宽度是条件性的。** 只包括给定假设下的 \(\chi_2\to\chi_1s\) 标量通道，不等于完整模型的矢量加标量自能。
 6. **halo 模型依赖尚未做系统扫描。** untruncated MB 只用于高速度尾部敏感性诊断，不作为默认 halo 结果。
+
+7. **完整 VV 核子流与 AFH 非 \(M\) 响应尚未完成。** 当前 Eq. (6) 仍是领先 \(M\) 电荷近似。PR #53 的四分量 \(L^{\mu\nu}\) 及点核流诊断只检验核质心流；不能约束核内 \(\Phi''\)、\(M\Phi''\)、\(\Sigma'\) 或 \(\Delta\)。PR #51 分支中的 \(\Sigma'\) selected-\(q\) 源翻译尚未与 native Wolfram 对照；\(\Delta J\) 的 parity 冲突未解决。
+8. **\(F_1/F_2\) 有限动量匹配和完整三体核流收缩仍待计算。** 已固定 Dirac–Pauli 算符结构和三体动量方向，但活动味道、有限 \(t_A\) form factor、自由核子 NR 对照、AFH 多极系数及 \(L^{\mu\nu}W_A^{\mu\nu}\) 的相空间依赖收缩尚未形成可复现数值结果。
 
 ### 8.3 数据修正记录
 
@@ -1462,23 +1566,33 @@ Green benchmark 在其他网格锚点的当前 AFH-7 速率为：
 5. 天然氙采用逐同位素丰度加权，且不对当前缺失的 Xe-124/Xe-126 丰度重新归一化；
 6. 截断 SHM 作为 halo 基准，untruncated MB 仅作为尾部敏感性诊断；
 7. GCN/JJ55 连续谱的 LZ efficiency-weighted event yields 仅为 rate-level 结果，灰色效率包络不是置信区间；
-8. 不把固定速度截面、AFH selected-point 速率、天然氙连续谱和完整 LZ detector-level likelihood 混为一谈。
+8. 不把固定速度截面、AFH selected-point 速率、天然氙连续谱和完整 LZ detector-level likelihood 混为一谈；
+9. **领先 \(M\) 响应与完整 VV 核流明确分层。** \(W_M^{00}\) 是已归档的领先阶电荷响应；除非完整一体流匹配和数值收缩通过，否则不宣称 \(M\)-only 已描述完整 VV 核流；
+10. **Dirac–Pauli 约定固定。** 采用 \(q_A=p_N'-p_N\)、\(\sigma^{\mu\nu}=i[\gamma^\mu,\gamma^\nu]/2\) 和 \(+iF_2\sigma^{\mu\nu}q_{A,\nu}/(2m_N)\)；若引用采用反向 \(q\) 的文献，必须显式翻转 Pauli 项符号；
+11. **不把核质心电流诊断当作核内流约束。** PR #53 的点核 ppm 修正不约束 \(\Phi''\)、\(\Sigma'\)、\(\Delta\) 等内部矩阵元；初步 \(\Sigma'\) 比值也不是截面修正。
 
-后续事项按物理依赖关系排列。Xe-131 原生 Mathematica 2401 点 response-level 对照、Python-only full Eq. (6) 因子 4 ledger，以及原生 Mathematica/Python 652 行完整截面对照均已完成（最后一项的比较器状态为 PASS，科学适用范围仍限定于固定速度和条件性宽度假设）。当前未完成事项不再包括 full-cross-section cross-code 比较：
+后续事项按物理依赖关系排列：
 
-1. **统一核模型相空间积分。** 将 GCN/JJ55 84 点谱从 legacy linear-\(W^2\) 改为 threshold-\(u^2\)，使用与 AFH-7 相同的速度积分和 \(10^{-5}\) 收敛标准；重算 GCN/JJ55 谱、225–269.9 keV 高能尾部比例和依赖它们的 rate-level event yields。
-2. **补齐高阶结果归档。** 将 AFH-7/Hybrid-9 \(24\times8\times8\times4\) 的完整 1,344 行高阶谱以及独立 Numba 实现作为 native files 或版本化 Release 提交；不要只保留外部 ZIP checksum。
-3. **评估条件性 pole-width 的模型系统误差。** 当前 full-grid cross-code 对照采用 Dirac / real-scalar / pure-scalar / single-channel pole-width 假设；需与完整 vector-plus-scalar self-energy、其他开放衰变道及可能的 Majorana/CP 结构分开比较。
-4. **扩展 AFH 到九种天然氙同位素。** 只有在取得 Xe-124/Xe-126 的可追溯 AFH default-density matrices 后，才能将 Hybrid-9 fallback 替换为真正的 AFH-9；不得通过丰度重归一化掩盖输入缺失。
-5. **模型与 halo 系统误差。** 在固定基准定义后，分别评估核响应模型、halo 参数和条件性 \(\chi_2\) 极点宽度对结果的影响；各项假设应分开报告，不用统一经验缩放代替。
-6. **完整 LZ detector-level likelihood。** 现有一维效率曲线、NEST public-candidate response 和 rate-level yields 是接口基线；真正的 recast 还需实际校准源空间分布、官方生产 build provenance、二维信号响应、能量分辨/重建、校准与 nuisance covariance、背景数据及 profile likelihood。不能直接移植 LZ 的两体非弹性 WIMP 限制。
+1. **P0：完成 flavor-universal Dirac–Pauli 核子流匹配。** 固定活动味道和阈值方案，取得 \(F_1^{V,p/n}(t_A)\)、\(F_2^{V,p/n}(t_A)\) 及误差；完成自由核子直接 Dirac 自旋量与 NR 展开的对照，并检查 \(q_\mu J_N^\mu=0\)。
+2. **P0：计算 Xe-129、Xe-131 的 \(\Phi''\) 和 \(M\Phi''\)。** 从时间分量的自旋—轨道电荷项出发；在 Xe-131 的三个 \(M\) 深极小值附近做高分辨率局部网格；核对 AFH 多极、相位和物理归一化。
+3. **P1：完成 AFH 空间响应的 native 验证。** 对现有 \(\Sigma'\) selected-\(q\) 源翻译作 native Wolfram 对照；查明 \(\Delta J\) parity 冲突；只有在源定义和选择定则一致后才生成 \(\Delta\)、\(W_{\Sigma'\Delta}\)，并按完整投影判断是否需要 \(\Sigma''\) 或 \(\widetilde\Phi'\)。
+4. **P1：完成相空间依赖的完整三体张量收缩。** 将 \(\mathcal T_3^\mu\)、核子 Dirac–Pauli 流和 AFH 响应逐点收缩；保留 before/after 干涉、\(L^{0i}\) 和 \(L^{ij}\) 项；分别输出 \(M\)、\(\Phi''\)、\(M\Phi''\)、对流和磁化贡献。
+5. **P1：分别完成核响应与三体求积收敛。** 对 \(q_A\) 插值、多极截断、\(W^2,z,\phi_*\) 求积和深极小值邻域分别验收，不用点核或单核子估算替代核结构。
+6. **P1：统一 GCN/JJ55 的相空间积分。** 将 84 点谱从 legacy linear-\(W^2\) 改为 threshold-\(u^2\)，用与 AFH-7 相同的速度积分和 \(10^{-5}\) 收敛标准，重算高能尾部比例和相关 rate-level yields。
+7. **P1：补齐高阶结果归档。** 将 AFH-7/Hybrid-9 \(24\times8\times8\times4\) 的完整 1,344 行高阶谱以及独立 Numba 实现作为 native files 或版本化 Release 提交，不只保留外部 ZIP checksum。
+8. **P1：评估条件性 pole-width 的模型系统误差。** 当前 full-grid cross-code 对照采用 Dirac / real-scalar / pure-scalar / single-channel pole-width 假设；需与完整 vector-plus-scalar self-energy、其他开放衰变道及可能的 Majorana/CP 结构分开比较。
+9. **P2：扩展 AFH 到九种天然氙同位素。** 只有在取得 Xe-124/Xe-126 的可追溯 AFH default-density matrices 后，才能将 Hybrid-9 fallback 替换为真正的 AFH-9；不得通过丰度重归一化掩盖输入缺失。
+10. **P2：完整 LZ detector-level likelihood。** 现有一维效率曲线、NEST public-candidate response 和 rate-level yields 是接口基线；真正的 recast 还需实际校准源空间分布、官方生产 build provenance、二维信号响应、能量分辨/重建、校准与 nuisance covariance、背景数据及 profile likelihood。不能直接移植 LZ 的两体非弹性 WIMP 限制。
 
-本报告的下一轮编辑应继续检查摘要、状态表、数值验收矩阵和 detector-level 接口章节是否对上述完成状态使用完全一致的术语。
+本报告不声称上述待办事项已执行。尤其在 \(\Phi''\)、\(M\Phi''\) 和完整一体流收缩完成前，天然氙完整谱仍应标注为当前 \(M\)-only benchmark，而不是完整 VV 核流预测。
+
 ## 10. 代码、数据和文献入口
 
 ### 仓库内的主要研究记录
 
-- 公式—符号—正文—程序—结果交叉引用索引：`research/docs/formula_symbol_code_cross_reference.md`（F1–F12 公式追溯、单位、近似、代码入口和结果文件）。
+- 公式—符号—正文—程序—结果交叉引用索引：`research/docs/formula_symbol_code_cross_reference.md`（F1–F13 公式追溯、单位、近似、代码入口和结果文件）。
+- 完整三体 VV 核子流与 AFH 非 (M) 响应：正式附录 I；完整 25 节理论讨论档案见 `research/afh_isotope_response_equivalence/docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md`。
+- 四分量暗物质流的相关分支级诊断见 PR #53；其点核 current 结果不等于核内流匹配。
 - 450 keV pointwise L00 benchmark：[输入与计算记录](../three_body_calculation_and_validation/results/USER_L00_BENCHMARK_G1_G2_GVN_1_DELTA_M_450KEV.md)；[本地验收记录](../three_body_calculation_and_validation/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md)。
 - 450 keV fixed-speed Xe-131 curve：[结果记录](../three_body_calculation_and_validation/results/USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md)；该结果仅是内部反冲能量网格上的固定速度诊断。
 - AFH default Xe-131 README：`research/afh_default_density_xe131/README.md`
@@ -1505,7 +1619,7 @@ Green benchmark 在其他网格锚点的当前 AFH-7 速率为：
 
 ## 附录导航与独立文件
 
-主报告后文保留完整附录 A–G。为便于检索、单独引用和维护，七份附录还分别保存为独立 Markdown 文件；主报告正文与七份独立副本保持同步：
+主报告后文保留完整附录 A–I。附录 A–G 与 I 分别保存为独立 Markdown 文件；正式附录 H 仍嵌入主报告。独立副本与主报告正文保持同步：
 
 | 附录 | 内容 | 文件 |
 |---|---|---|
@@ -1516,12 +1630,14 @@ Green benchmark 在其他网格锚点的当前 AFH-7 速率为：
 | E | 实验室系速度分布、三体最小速度与 halo folding | [09E_halo_velocity_vmin_folding.md](appendices/09E_halo_velocity_vmin_folding.md) |
 | F | 计算程序、数据文件、收敛验收和复现命令 | [09F_numerical_validation_reproduction.md](appendices/09F_numerical_validation_reproduction.md) |
 | G | AFH 空间动量转移、精确质量壳关系与 NR 近似审计 | [09G_recoil_momentum_convention_audit.md](appendices/09G_recoil_momentum_convention_audit.md) |
+| H | 完整 Eq. (6) 微分截面的 Mathematica–Python 对照 | 嵌入本报告附录 H |
+| I | 三体 VV 核子流、Dirac–Pauli 匹配与 AFH 非 (M) 响应 | [09I_three_body_vv_nucleon_current_afh_responses.md](appendices/09I_three_body_vv_nucleon_current_afh_responses.md) |
 
 ### 独立研究记录（不属于主报告附录）
 
 - [研究决定登记](supplements/research_decision_register.md)：记录讨论中的候选处理、当前采用的约定和适用边界。
 
-七项主要文档内容分别由附录 A–G 承担。公式交叉引用索引是导航文件，不是新增正式附录；研究决定登记用于专项追溯，也不改变主报告 A–G 的正式结构。
+附录 A–G 承担运动学、AFH (M) 响应、归一化、同位素、halo、数值验收和动量约定；附录 H 记录完整 Eq. (6) 截面对照；附录 I 记录完整 VV 核子流匹配与 AFH 非 (M) 响应。公式交叉引用索引是导航文件，不是新增正式附录；研究决定登记用于专项追溯。
 
 附录与主报告使用同一研究分支维护。程序、CSV 和机器可读结果仍保存在各自计算目录中；附录负责解释其定义、调用方式和验证边界，不复制大体积数据。
 
@@ -1683,6 +1799,7 @@ N_{\rm sig}^{\rm ROI}
 2. **AFH 归一化约定已经固定。** AFH 原始 isoscalar response 的零动量归一化为 \(A^2/4\)，而论文前因子显式提出物理单核子耦合 \(g_{VN}^2\) 时，使用的物理相干响应应满足 \(R_A^{\rm phys}(0)=A^2\)。因子 4 只计入一次。
 3. **AFH 响应使用空间动量。** 默认输入为 \(q_{\rm exact}=\sqrt{2m_AE_R+E_R^2}\)，而传播子使用不变量 \(t=-2m_AE_R\)。\(q_{\rm NR}=\sqrt{2m_AE_R}\) 只作为小反冲近似对照，不与 \(t\) 混淆。
 4. **AFH Xe-131 response-level 数值验证已完成。** 2401 个 \(q\) 节点的 60 位精度 mpmath 有限和检查与 Wolfram 14.0.0 原生 Mathematica/Python 逐点比较均通过；原生比较的最大相对差异为 \(3.59\times10^{-9}\)，q 网格完全一致。该结果只验证 Xe-131 AFH 核响应及其归一化，不代表完整 AFH 天然氙连续谱。
+5. **(M)-only 是当前领先阶基准，不是完整 VV 核流的已验证结论。** (J_N^0) 的 (F_1+2F_2) 自旋—轨道项可能映射到 (Phi'')，并与 (M) 产生 (MPhi'') 干涉；空间对流和磁化流分别要求 (Delta)、(Sigma') 等响应。它们的实际贡献必须由完整三体张量和核矩阵元共同确定。
 
 ### 12.2 当前结果覆盖范围
 
@@ -1693,6 +1810,7 @@ N_{\rm sig}^{\rm ROI}
 | AFH 天然氙 | 七种可用同位素的 selected-point halo fold | 已得到连续 AFH 天然氙反冲谱，或已包含 Xe-124/Xe-126 |
 | GCN/JJ55 天然氙 | 四组 benchmark 的连续反冲谱 | 这些核响应等同于 LZ 合作组的修改后 WimPyDD 输入 |
 | LZ rate-level interface | 一维效率曲线、灰色系统包络和 2.84 tonne-year exposure 折叠 | 已构造二维信号 PDF、背景 likelihood 或实验排除 |
+| 完整 VV 核流 | (F_1/F_2) Dirac–Pauli 算符结构与 AFH 响应映射已整理；PR #53 有四分量暗物质张量/点核流分支级诊断 | 已计算 (Phi'')、(MPhi'')、完整 AFH 核内流收缩或完整 VV 天然氙谱 |
 
 AFH-7 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失的 Xe-124 与 Xe-126 丰度没有重新分配给其他同位素。AFH-7/Hybrid-9 的 84 点谱已归档；GCN/JJ55 也有 84 点谱，但使用不同的相空间积分方案。下表的 LZ efficiency-weighted yields 仍只使用 GCN/JJ55 核响应。
 
@@ -1729,7 +1847,10 @@ AFH-7 可用的七种同位素覆盖天然氙原子丰度的 0.998158；缺失�
 4. 不能把 248 keV 单个候选事件当作信号计数进行拟合；
 5. 不能把 Xe-131 response-level mpmath/Mathematica 高精度交叉检查描述为完整 Mathematica–Python \(d\sigma_A/dE_R\) 验证；
 6. 不能把 AFH-7 或 Hybrid-9 称为完整九同位素 AFH-9；Xe-124/Xe-126 仍缺官方 AFH default-density matrices；
-7. 不能将 84 点 grid-sampled spectrum 描述为解析连续函数或 1 keV 等间隔网格。
+7. 不能将 84 点 grid-sampled spectrum 描述为解析连续函数或 1 keV 等间隔网格；
+8. 不能声称 (W_M^{00}) 已经完整描述三体 VV 核子流，或据暗物质空间流小就排除时间分量的 (Phi'')；
+9. 不能把 PR #53 的核质心点电荷 ppm 修正当作核内 (Sigma')、(Delta) 或 (Phi'') 的上限；
+10. 不能把 PR #51 分支的初步 (Sigma') selected-(q) 比值当作 native AFH 验证或截面修正；(Delta) parity blocker 也尚未解决。
 
 后续物理工作仍取决于完整 AFH 同位素响应输入，以及 LZ 的二维 NEST 响应、校准协方差、背景数据和 profile likelihood；Xe-131 原生 Mathematica 对照已完成。
 
@@ -1758,7 +1879,7 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 
 完整复现命令、输入质量方案、响应插值和限制分别记录在附录 F.7、固定速度曲线结果记录及 pointwise benchmark local-validation record 中。
 
-### 12.6 科学状态表（P0–P2，2026-11-16）
+### 12.6 科学状态表（P0–P2，2026-11-18）
 
 状态定义：**已验证**表示公式、程序与归档数值在明确适用范围内闭合；**条件性验证**表示核心实现和代表性测试通过，但仍受参数覆盖、独立推导或物理假设限制；**未完成**表示所需计算或物理输入尚不存在。
 
@@ -1776,13 +1897,21 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 | F10 天然氙 \(dR/dE_R\) | 已验证（限 AFH-7/Hybrid-9 84 点网格） | AFH-7/Hybrid-9 四 benchmark、84 点、1,344 行 baseline spectra；GCN/JJ55 亦有四 benchmark 84 点谱 | GCN/JJ55 使用不同的 legacy linear-\(W^2\) mapping，需统一 threshold-\(u^2\) 后重算；AFH-9 输入仍缺失 |
 | F11 LZ 效率加权事件数 | 条件性验证 | 一维 Fig. S2 efficiency、2.84 tonne-year、rate-level 折叠 | 二维 NEST、能量分辨、背景与 profile likelihood 未完成 |
 | F12 \(\chi_2\to\chi_1s\) pole width | 条件性验证 | 条件性 Dirac 纯标量单通道宽度公式和数值测试 | 非完整自能；未纳入所有可能开放衰变道 |
-| 三体相空间 Jacobian / \(256\pi^3\) 独立推导 | 已验证 | 从单粒子不变测度独立重建 \(d\Phi_3\)，并逐项核对 \(t\leftrightarrow E_R\)、\(z,\phi_*\)、通量与核电荷流 | 适用于未极化靶、相干且仅保留 \(J_A^0\) 的近似；完整数值积分收敛另行检查 |
+| F13 完整三体 VV 核流张量与 AFH 收缩 | **未完成** | 正式附录 I 固定了 \(L^{\mu\nu}\)、Dirac–Pauli \(F_1/F_2\) 与 AFH 响应的理论映射；PR #53 分支的四分量 DM 张量/点核流诊断 exact-source CI 为 8/8 tests PASS | 尚无 \(F_1/F_2\) 核内流与完整 \(L_{\mu\nu}W_A^{\mu\nu}\) 数值收缩；PR #53 点核流不含核内响应 |
+| 核子 \(F_1/F_2\) flavor-universal 匹配 | **解析结构已整理；有限 \(t\) 输入未完成** | \(q_A=p_N'-p_N\) 的 Dirac–Pauli 约定；采用 2017 年显式 flavor-separated 输入 \(F_2^V(0)=-0.552\)；与 HKS 2015 紧凑记号的差异保留待核 | 活动味道/阈值匹配、有限 \(t_A\) form factors、误差和自由核子 NR 数值对照仍待完成 |
+| Xe-129/Xe-131 \(\Phi''\) 与 \(M\Phi''\) | **未完成** | 已识别 \(J_N^0\) 中 \(F_1+2F_2\) 的自旋—轨道电荷结构 | 无 AFH \(\Phi''\)、\(M\Phi''\) 归档网格或完整三体收缩 |
+| Xe-129/Xe-131 \(\Sigma'\) | **初步 / 未独立验证** | PR #51 分支有 source-translated selected-\(q\) 输出和回归测试 | 尚无 native Wolfram 逐点对照；package normalization 尚未作为物理绝对响应验收；比值不是截面修正 |
+| AFH \(\Delta\)、\(W_{\Sigma'\Delta}\) | **Blocked / 未验证** | 已明确记录 DeltaJ wrapper 与内部 \(3j\) parity 条件冲突 | 不得把字面零当成物理预测；须先完成 native source/parity 核查 |
+| 完整三体 \(L^{\mu\nu}W_A^{\alpha\beta}\) 收缩 | **未完成** | PR #53 已完成 DM 侧 \(L^{\mu\nu}\) 和核质心点流诊断 | 尚未包含核内对流、磁化、自旋—轨道矩阵元、全部允许干涉和天然氙 halo fold |
+| 三体相空间 Jacobian / \(256\pi^3\) 独立推导 | 已验证 | 从单粒子不变测度独立重建 \(d\Phi_3\)，并逐项核对 \(t\leftrightarrow E_R\)、\(z,\phi_*\)、通量与核电荷流 | 适用于未极化靶、相干且只保留领先核电荷项的近似；不包含 (J_N^0) 的 (Phi'') 自旋—轨道修正，也不代表完整 (L_{mu
+u}W_A^{mu
+u}) 收缩 |
 | AFH 原生 Mathematica 全网格运行 | 已完成 PASS | Wolfram 14.0.0 Windows；2401 点；q 网格完全一致；四种响应量比较全部通过；最大相对差异 \(3.59\times10^{-9}\)；SHA-256 manifest 已归档 | 适用范围仅为 Xe-131 AFH response-level；不替代三体积分、天然氙连续谱或 LZ likelihood 验证 |
 | AFH-7/Hybrid-9 84 点 full-range grid | PASS_WITH_NOTES | 16,807 行七同位素响应网格；1,344 行 baseline spectra；高阶摘要最大 baseline-to-final spectrum difference \(6.47\times10^{-6}\) | 高阶 1,344 行 ZIP 仍为外部 checksum-only；AFH-7 非 AFH-9，Xe-124/Xe-126 尚缺官方矩阵 |
 | GCN/JJ55 84 点天然氙谱 | PASS_WITH_NOTES | 四 benchmark 的 84 点谱和 metadata 已归档；速度求积最大差异 \(1.60401\times10^{-6}\) | production 使用 legacy linear-\(W^2\)、\(8\times8\times4\)；最大 kernel-order difference \(2.18895\times10^{-4}\)；threshold-\(u^2\) 匹配重算待完成 |
 | 完整 LZ detector-level recast | 未完成 | GCN/JJ55 一维效率加权 rate-level yields | 需要二维信号 PDF、NEST nuisance、背景和 profile likelihood |
 
-**P0 判定：** 精确空间动量 Python 复算、60 位 mpmath 全网格检查、Wolfram 14.0.0 原生 Mathematica/Python 2401 点 response-level 比较、Wolfram 14.2.0 原生完整 Eq. (6) 652 行运行及独立 Python 逐点对照均已完成；full cross-code comparison 为 PASS（固定速度和条件性宽度范围）。**P1 判定：** AFH-7/Hybrid-9 84 点网格与高阶摘要已通过当前 10^-5 验收；GCN/JJ55 仍需统一 threshold-u^2 后重算，近极点宽度处方系统比较仍开放。**P2 判定：** AFH-9 缺失同位素输入和完整 LZ likelihood 仍未完成。
+**P0 判定：** 现有 (M) 电荷响应和固定速度 Eq. (6) 数值基线在所述范围内已通过验证；完整 VV 核流仍未完成，优先完成 (F_1/F_2) 匹配及 (Phi''/MPhi'')。**P1 判定：** 完成 (Sigma') native 对照、解决 (Delta J) parity blocker、进行完整三体张量收缩，并统一 GCN/JJ55 threshold-(u^2) 求积。**P2 判定：** AFH-9 缺失同位素输入、完整天然氙 VV 谱和完整 LZ likelihood 仍未完成。
 
 ## 13. 公式—符号—程序—结果交叉引用
 
@@ -1790,20 +1919,21 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 
 ### 13.1 核心公式导航
 
-| 索引 | 正文公式 / 物理对象 | 完整推导 | 主要程序 |
+| 索引 | 正文公式 / 物理对象 | 完整推导 | 主要程序与证据边界 |
 |---|---|---|---|
-| F1 | \(q^\mu\)、\(Q=|\mathbf q|\)、\(t\) 的关系 | [A.1](appendices/09A_three_body_kinematics_amplitude.md)、[G.1–G.5](appendices/09G_recoil_momentum_convention_audit.md) | `rate_kinematics.py`、`eq6_kernel.py` |
-| F2 | \(W_{\min}^2,W_{\max}^2\)、相空间开闭、\(m_{s,\max}\) 与最优 \(E_R^*\) | §2.4、§6.3 | [A.2–A.2.1](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.limits`、`rate_kinematics.wmax_squared` | 四 benchmark corrected CSV；逐速度阈值结果 | 固定同位素和入射速度；最优反冲能量最大化运动学质量上限，不是事件率峰值。 |
-| F3 | 三体 Lorentz-invariant 相空间、\((W^2,z,\phi_*)\) Jacobian 与 \(I_6\) | §2.5.1–2.5.9 | [A.3–A.4.2](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.py`：`build_point`、`reduced_kernel`；`phase_space_convergence.py`：独立变量映射和 raw-\(d\Phi_3\) 路径 | `phase_space_*_convergence.csv`；`phase_space_li_prefactor_crosscheck.csv`；六项回归测试；P1-PhaseSpace audit archive | \(I_6\) 为 GeV\(^2\)；代表点与阈值邻域的数值收敛已验证；近极点和完整连续反冲网格仍单独验收。 |
-| F4 | 两张辐射图、干涉项和 \(\mathcal L_{00}\) | [A.5–A.6](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.vertices`、`spin_trace` |
-| F5 | 单同位素固定速度截面 Eq. (6) | [A.4.1](appendices/09A_three_body_kinematics_amplitude.md) | joint_xe131.py、compute_four_benchmark_dsigma.py、run_user_dsigma_curve.py |
-| F6 | AFH \(b_A,y,W_M^{00},R_A^{\rm phys}\) | [B.2–B.4](appendices/09B_afh_v6_density_matrix_response.md)、[C](appendices/09C_afh_isoscalar_factor4_normalization.md)、[G](appendices/09G_recoil_momentum_convention_audit.md) | `run_afh_default_xe131.py`、`joint_xe131.py` |
-| F7 | \(m_A,x_A,N_T\) 天然氙靶归一化 | §6.2 | [D.1–D.5，特别是 D.3.1](appendices/09D_natural_xenon_isotope_target.md) | 两个天然氙 halo/spectrum runner | NIST 丰度质量表；natural-xenon metadata | \(N_T\) 使用完整九同位素平均原子质量；AFH 速率只求和七种可用响应且不重归一化。 |
-| F8 | 三体阈值速度 \(v_{\min,A}\) | [A.2](appendices/09A_three_body_kinematics_amplitude.md)、[E.2](appendices/09E_halo_velocity_vmin_folding.md) | `rate_kinematics.vmin_three_body_beta` |
-| F9 | 截断 SHM 与实验室系速度 PDF \(f_{\rm lab}(v)\) | §6.4 | [E.1–E.1.1](appendices/09E_halo_velocity_vmin_folding.md) | `shm_truncated_pdf`、`mb_untruncated_pdf` | halo PDF normalization CSV | 从银河系静止系三维截断 Maxwell 分布作 Galilean boost，再对速度方向积分；\(f_{\rm lab}\) 按速度模长归一化。 |
-| F10 | 天然氙 halo-folded 微分事件率 \(dR/dE_R\) | §2.2、§6.3、§7 | [D.3–D.4](appendices/09D_natural_xenon_isotope_target.md)；[E.2–E.3.2](appendices/09E_halo_velocity_vmin_folding.md) | AFH selected-point / GCN-JJ55 continuous-spectrum runners | natural-xenon rate CSV；isotope contribution CSV | 由数密度、速度通量、单核截面和每 kg 靶核数推导；逐同位素使用自己的阈值和 kernel。 |
-| F11 | LZ 一维效率加权预期事件数 \(N_{\rm sig}^{\rm ROI}\) | §11.1、§11.4、§11.6 | §11.6 的二维响应概率投影；附录 F.5 | `fold_lz_2026_rate_level.py` | efficiency CSV；rate-level yield CSV | 一维效率是二维重建响应在 ROI 上的概率投影；当前结果不是二维 likelihood 或 90% CL 排除。 |
-| F12 | 条件性 \(\chi_2\to\chi_1s\) pole width | §1.2、§5 | [A.5–A.6.1](appendices/09A_three_body_kinematics_amplitude.md) | `eq6_kernel.chi2_width_dirac_scalar` | benchmark metadata：`width_scheme`、`g2` | 从 Dirac 纯标量 Yukawa 振幅和二体相空间推导；仅适用于 Dirac、实标量、纯标量耦合及单一开放衰变道。 |
+| F1 | \(q^\mu\)、\(Q=|\mathbf q|\)、\(t\) 的关系 | [A.1](appendices/09A_three_body_kinematics_amplitude.md)、[G.1–G.5](appendices/09G_recoil_momentum_convention_audit.md) | rate_kinematics.py、eq6_kernel.py；AFH 使用 exact spatial \(Q\)，传播子使用 \(t\) |
+| F2 | \(W_{\min}^2,W_{\max}^2\)、相空间开闭、\(m_{s,\max}\) 与最优 \(E_R^*\) | §2.4、§6.3；[A.2–A.2.1](appendices/09A_three_body_kinematics_amplitude.md) | eq6_kernel.limits、rate_kinematics.wmax_squared；阈值结果不等于事件率峰值 |
+| F3 | 三体 Lorentz-invariant 相空间、\((W^2,z,\phi_*)\) Jacobian 与 \(I_6\) | §2.5.1–2.5.9；[A.3–A.4.2](appendices/09A_three_body_kinematics_amplitude.md) | eq6_kernel.py、phase_space_convergence.py；代表点和阈值邻域已验收，近极点/全连续谱另行检查 |
+| F4 | 两张辐射图、干涉项和 \(\mathcal L_{00}\) | [A.5–A.6](appendices/09A_three_body_kinematics_amplitude.md) | eq6_kernel.vertices、spin_trace；两图先相加再平方 |
+| F5 | 单同位素固定速度截面 Eq. (6) | [A.4.1](appendices/09A_three_body_kinematics_amplitude.md)；主报告附录 H | eq6_kernel.py、run_afh_eq6_full_dsigma.wls、compare_full_dsigma_mathematica.py；652 行固定速度 Xe-131 cross-code PASS，宽度假设仍条件性 |
+| F6 | AFH \(b_A,y,W_M^{00},R_A^{\rm phys}\) 与 factor-four | [B.2–B.4](appendices/09B_afh_v6_density_matrix_response.md)、[C](appendices/09C_afh_isoscalar_factor4_normalization.md)、[G](appendices/09G_recoil_momentum_convention_audit.md) | run_afh_default_xe131.py、joint_xe131.py；AFH-7 \(M\) 响应归档，不等于完整 VV 核流 |
+| F7 | \(m_A,x_A,N_T\) 天然氙靶归一化 | §6.2；[D.1–D.5](appendices/09D_natural_xenon_isotope_target.md) | 天然氙 halo/spectrum runners；AFH 仅七种可用响应，不重归一化 |
+| F8 | 三体阈值速度 \(v_{\min,A}\) | [A.2](appendices/09A_three_body_kinematics_amplitude.md)、[E.2](appendices/09E_halo_velocity_vmin_folding.md) | rate_kinematics.vmin_three_body_beta；适用当前三体运动学约定 |
+| F9 | 截断 SHM 与实验室系速度 PDF \(f_{\rm lab}(v)\) | §6.4；[E.1–E.1.1](appendices/09E_halo_velocity_vmin_folding.md) | shm_truncated_pdf、mb_untruncated_pdf；untruncated MB 仅作尾部诊断 |
+| F10 | 天然氙 halo-folded 微分速率 \(dR/dE_R\) | §2.2、§6.3、§7；[D.3–D.4](appendices/09D_natural_xenon_isotope_target.md)、[E.2–E.3](appendices/09E_halo_velocity_vmin_folding.md) | AFH-7/Hybrid-9 84 点 grid spectra；GCN/JJ55 尚需统一积分方案 |
+| F11 | LZ 一维效率加权事件数 \(N_{\rm sig}^{\rm ROI}\) | §11.1、§11.4、§11.6；[F.5](appendices/09F_numerical_validation_reproduction.md) | fold_lz_2026_rate_level.py；rate-level，不是 likelihood |
+| F12 | 条件性 \(\chi_2\to\chi_1s\) pole width | §1.2、§5；[A.5–A.6.1](appendices/09A_three_body_kinematics_amplitude.md) | eq6_kernel.chi2_width_dirac_scalar；Dirac/实标量/纯标量/单开放道条件性处方 |
+| F13 | 完整三体 VV 张量、Dirac–Pauli \(F_1/F_2\) 与 AFH \(M,\Phi'',M\Phi'',\Delta,\Sigma',\Sigma''\) 匹配 | §2.3、§3.6–§3.7；[附录 I.1–I.9](appendices/09I_three_body_vv_nucleon_current_afh_responses.md) | vector_current_response_audit.py 只给出 DM 侧 \(L^{\mu\nu}\)/点核流诊断；run_afh_spatial_response_audit.py 仅为初步 \(\Sigma'\) 源翻译并含 \(\Delta J\) parity blocker；完整核流收缩未完成 |
 
 ### 13.2 必须区分的符号和物理层级
 
@@ -1826,7 +1956,7 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 
 ### 13.4 复现与维护
 
-详细的逐公式输出文件、metadata、验证状态和复现命令见[独立交叉引用索引第 2–6 节](formula_symbol_code_cross_reference.md)。附录 F.3 是命令行复现入口；附录 F.4 区分软件测试、数值收敛和物理完整性。任何公式、变量或计算方案改变时，必须同步更新本节和独立索引，不得只更新正文显示公式。
+详细的逐公式输出文件、metadata、验证状态和复现命令见[独立交叉引用索引第 2–6 节](formula_symbol_code_cross_reference.md)。附录 F.3 是命令行复现入口；附录 F.4 区分软件测试、数值收敛和物理完整性。任何公式、变量或计算方案改变时，必须同步更新本节和独立索引，不得只更新正文显示公式。完整 VV 核流和 AFH 非 (M) 响应统一由新增 F13 及附录 I 追溯。
 
 ### 13.5 数值结果索引、物理公式审查与科学状态
 
@@ -1838,11 +1968,11 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 - [物理公式交叉审查](supplements/three_body_physics_formula_audit_2026-11-13.md)：从原始拉格朗日量、两张辐射图、Dirac trace、三体相空间、\(256\pi^3\)、AFH factor 4、三体 \(v_{\min}\) 到天然氙速率逐项对照主报告、附录和代码。
 - [科学结果状态表](supplements/three_body_scientific_status_2026-11-13.md)：将每项结果明确标记为已验证、部分验证、待补输入或尚未完成，并注明适用范围和剩余限制。
 
-这三份记录是本报告的复现与审查入口，不替代附录 A–G 中的正式推导，也不把 selected-point、fixed-speed 或 rate-level 结果升级表述为完整模型或完整 LZ likelihood 的验证。
+这三份记录是本报告的复现与审查入口，不替代附录 A–I 中的正式推导，也不把 selected-point、fixed-speed 或 rate-level 结果升级表述为完整模型或完整 LZ likelihood 的验证。
 
 # 技术附录（完整内容）
 
-以下 A–G 附录正文与目录 research/docs/appendices/ 中的七份独立文件保持同步。主报告保留完整附录，独立文件用于单独检索和引用。
+以下 A–I 附录正文与目录 research/docs/appendices/ 中的八份独立文件保持同步（H 为嵌入式附录，无独立副本）。主报告保留完整附录，独立文件用于单独检索和引用。
 
 ## 附录 A：三体运动学、相空间边界与 Dirac 振幅
 
@@ -4790,6 +4920,380 @@ l=>l.replace("1.33872","1.33857")
 原生输出、comparison JSON 和 SHA-256 文件位于 `research/afh_default_density_xe131/output/full_dsigma_mathematica/`。该结果只适用于 Xe-131、v=800 km/s fixed-speed、四组 benchmark、16×16×8 求积和条件性 pole-width 假设；代码间一致性不等同于求积收敛，也不构成天然氙 halo fold 或 LZ likelihood。
 
 
+# 附录 I：三体 VV 核子矢量流、Dirac–Pauli 匹配与 AFH 非 \(M\) 响应
+
+> **状态：** 理论匹配与算符映射已整理；完整三体核流收缩及 \(\Phi''\)、\(M\Phi''\)、\(\Delta\)、\(\Sigma'\) 的物理速率贡献尚未完成。  
+> **适用过程：** \(\chi_1+A\to\chi_1+A+s\)，其中标量 \(s\) 从暗物质线上辐射，媒介子 \(V\) 与核子的矢量流耦合。  
+> **数值边界：** 本附录不把 AFH \(M\) 响应的已验证结果升级为完整 VV 核流结果；所有初步空间响应和点核诊断均标明其证据等级。
+
+## I.1 变量、四动量方向与三体流的分工
+
+采用度规 \((+,-,-,-)\)，定义媒介子传给原子核的四动量为
+\[
+q_A^\mu=P_A'^\mu-P_A^\mu.
+\]
+在单核子冲量近似下，受击核子的动量变化满足
+\[
+q_N^\mu=p_N'^\mu-p_N^\mu\simeq q_A^\mu.
+\]
+若初态原子核静止，则
+\[
+q_A^0=E_R,\qquad
+Q_A^2\equiv |\mathbf q_A|^2=2m_AE_R+E_R^2,
+\qquad
+t_A=q_A^2=-2m_AE_R.
+\]
+这里 \(Q_A\) 是 AFH 核响应使用的空间动量模长，而 \(t_A\) 是核子 form factor 与媒介子传播子使用的 Minkowski 不变量；两者不能用同一个无区分的 \(q^2\) 表示。
+
+三体四动量守恒给出
+\[
+p_\chi+P_A=p_\chi'+P_A'+k_s,
+\]
+从而
+\[
+\boxed{q_A^\mu=-q_\chi^\mu-k_s^\mu,\qquad
+q_\chi^\mu=p_\chi'^\mu-p_\chi^\mu.}
+\]
+因此三体过程中一般 \(q_A\ne-q_\chi\)。AFH 的自变量始终是原子核实际获得的 \(\mathbf q_A\)，不是暗物质外线动量差，也不是末态标量动量。
+
+另定义受击核子的平均内部动量
+\[
+\mathbf K_N=\frac{\mathbf p_N'+\mathbf p_N}{2}.
+\]
+\(\mathbf K_N\) 不是三体相空间中暗物质—标量子系统的四动量 \(K^\mu=p_\chi-q_A\)。两者属于不同自由度，不能混用。
+
+## I.2 完整三体振幅与核流张量
+
+把暗物质侧两张标量辐射图相干相加，定义
+\[
+\mathcal T_3^\mu
+=\bar u_{\chi_1}(p_\chi')\Gamma_3^\mu u_{\chi_1}(p_\chi),
+\qquad
+\Gamma_3^\mu=\Gamma_{\rm before}^\mu+\Gamma_{\rm after}^\mu.
+\]
+其中
+\[
+\Gamma_{\rm before}^\mu
+=\frac{\gamma^\mu(\slashed p_\chi-\slashed k_s+m_{\chi_2})}
+{(p_\chi-k_s)^2-m_{\chi_2}^2},
+\]
+\[
+\Gamma_{\rm after}^\mu
+=\frac{(\slashed p_\chi'+\slashed k_s+m_{\chi_2})\gamma^\mu}
+{(p_\chi'+k_s)^2-m_{\chi_2}^2+i m_{\chi_2}\Gamma_{\chi_2}}.
+\]
+具体耦合常数和宽度处方以正文及附录 A 的振幅约定为准；两张图必须在振幅层面相加，不能把两张图的截面非相干相加。
+
+把核子 form factor 和核结构统一放入
+\[
+J_A^\nu(q_A)=\langle A(P_A')|J_V^\nu(q_A)|A(P_A)\rangle,
+\]
+则单次媒介子交换下的振幅结构为
+\[
+\boxed{
+\mathcal M_3=C_3\,\mathcal T_3^\mu
+D_{\mu\nu}(q_A)J_A^\nu(q_A),
+}
+\]
+其中 \(C_3\) 表示暗物质侧整体耦合；若把 \(g_{Vq}\) 或 \(g_{VN}\) 提到 \(C_3\) 外，核流定义中就不能再次包含同一个耦合。
+
+暗物质侧完整张量为
+\[
+L_3^{\mu\rho}
+=\frac12\operatorname{Tr}\!\left[
+(\slashed p_\chi'+m_{\chi_1})\Gamma_3^\mu
+(\slashed p_\chi+m_{\chi_1})\overline{\Gamma}_3^{\,\rho}
+\right],
+\qquad
+\overline{\Gamma}_3^{\,\rho}
+=\gamma^0(\Gamma_3^\rho)^\dagger\gamma^0.
+\]
+靶核的矢量流张量可写为
+\[
+W_A^{\nu\sigma}
+=\frac{1}{2J_A+1}
+\sum_{M_A,M_A'}
+J_A^\nu(M_A'\!,M_A)
+J_A^{\sigma *}(M_A'\!,M_A).
+\]
+于是自旋平均后的平方振幅具有结构
+\[
+\overline{|\mathcal M_3|^2}
+\propto
+L_3^{\mu\rho}
+D_{\mu\nu}D_{\rho\sigma}^{*}
+W_A^{\nu\sigma}.
+\]
+在媒介子传播子可约化为度规张量的相应极限下，这一表达式才简化为常写的 \(L_{\mu\nu}W_A^{\mu\nu}\)。
+
+当前 Eq. (6) benchmark 实际保留的是
+\[
+\mathcal L_{00}
+=\frac12\sum_{s,s'}
+|\bar u_{s'}(p')\Gamma_3^0u_s(p)|^2
+=\frac12\operatorname{Tr}\!\left[
+(\slashed p'+m_{\chi_1})\Gamma_3^0
+(\slashed p+m_{\chi_1})\overline\Gamma_3^{\,0}
+\right],
+\]
+并在核侧采用领先 \(M\) 电荷近似
+\[
+|\mathcal M_3|^2\simeq |\mathcal K_3|^2W_M^{00}.
+\]
+这不是已经完成的完整 \(L_3^{\mu\nu}W^A_{\mu\nu}\) 收缩。还必须区分两个不同截断：
+1. 只保留暗物质张量的 \(L^{00}\)；
+2. 在核子 \(J_N^0\) 中也只保留领先 \(F_1\) 电荷项，并将其映射为 AFH \(M\) 响应。
+
+第二项比第一项更强。即使暗物质侧只使用 \(L^{00}\)，核子时间分量本身仍含有次领先的自旋—轨道电荷结构；所以“只取时间分量”不自动等于“只取 \(M\)”。
+
+## I.3 从 flavor-universal 夸克流到核子 \(F_1/F_2\)
+
+对夸克味道 \(q\)，核子矩阵元采用 Dirac–Pauli 分解。定义当前三体核反冲方向
+\[
+q_N^\mu=p_N'^\mu-p_N^\mu\simeq q_A^\mu,
+\]
+则使用
+\[
+\boxed{
+\langle N(p_N')|J_V^\mu|N(p_N)\rangle
+=
+\bar u_N(p_N')
+\left[
+F_1^{V,N}(t_A)\gamma^\mu
++\frac{iF_2^{V,N}(t_A)}{2m_N}
+\sigma^{\mu\nu}q_{A,\nu}
+\right]
+u_N(p_N),
+}
+\]
+其中 \(\sigma^{\mu\nu}=i[\gamma^\mu,\gamma^\nu]/2\)。这里 Pauli 项前的正号对应 \(q_A=p_N'-p_N\)。Hoferichter–Klos–Schwenk 的文献约定使用 \(q=p_N-p_N'\)，因此其式中的 Pauli 项写成 \(-iF_2\sigma^{\mu\nu}q_\nu/(2m_N)\)；两种写法仅是动量方向不同，不能混用。
+
+对指定的低能活动味道集合，
+\[
+F_i^{V,N}(t)=\sum_q c_q^V F_i^{q,N}(t).
+\]
+当前 flavor-universal 三味 benchmark 取 \(q=u,d,s\) 且 \(c_u^V=c_d^V=c_s^V=1\)。零动量处的 Dirac 电荷为
+\[
+F_1^{u,N}(0)+F_1^{d,N}(0)+F_1^{s,N}(0)=3,
+\]
+故
+\[
+g_{Vp}=g_{Vn}=3g_{Vq}.
+\]
+这是等质子、等中子领先电荷耦合的来源；它不意味着有限 \(t\) 下所有质子、中子 form factor 都可用同一个常数替代。
+
+Bishara、Brod、Grinstein 和 Zupan 的显式 flavor-separated form-factor 分解（arXiv:1707.06998，附录 A.1）给出质子的零动量中心值
+\[
+F_2^{u/p}(0)=1.609,\qquad
+F_2^{d/p}(0)=-2.097,\qquad
+F_2^{s/p}(0)=-0.064,
+\]
+因此当前采用的 flavor-universal 三味 benchmark 输入为
+\[
+\boxed{F_2^{V,p}(0)=
+F_2^{u/p}(0)+F_2^{d/p}(0)+F_2^{s/p}(0)=-0.552.}
+\]
+在同位旋对称近似下，中子交换 \(u,d\) 分量，三味总和相同。与 \(F_1^V(0)=3\) 相比，中心值比例为
+\[
+F_2^V(0)/F_1^V(0)\simeq-0.184.
+\]
+输入 \(F_2^{s/p}(0)=-0.064(17)\) 的不确定度会同时进入 \(F_2^{u/p}\)、\(F_2^{d/p}\) 和三味总和；没有完整协方差时，不能把这些误差当作独立量简单平方相加。当前 benchmark 明确采用该 2017 年显式 flavor-separated 输入，而不把电磁 \(F_2^p\) 直接代入 universal quark current。
+
+Hoferichter–Klos–Schwenk 2015 年 Eq. (23) 使用 \(\kappa_N,\kappa_N^s\) 的紧凑三味记号；若只按该式的字面形式求和，会得到与上述 2017 年显式 flavor-separated 数值不同的结论。两种写法的 \(\kappa_N\)、strange-current 和 flavor-current 定义必须逐项对照，不能静默拼接。当前记录保留这一文献约定差异，并以 2017 年附录 A.1 的显式中心值作为 benchmark 输入；有限 \(t_A\) 的 \(F_1^{V,N}(t_A)\)、\(F_2^{V,N}(t_A)\) 及其误差/协方差仍待生产级匹配。
+
+这一非零 Pauli 输入会改变两个 NR 系数。以零动量中心值为例，
+\[
+F_1^V+2F_2^V=3-1.104=1.896,\qquad
+F_1^V+F_2^V=3-0.552=2.448.
+\]
+因此时间分量自旋—轨道电荷项和空间磁化项都必须使用同一套 flavor-separated form-factor 输入。
+
+参考：M. Hoferichter, P. Klos and A. Schwenk, *Chiral power counting of one- and two-body currents in direct detection of dark matter*, Phys. Lett. B 746 (2015) 410–416, arXiv:1503.04811，特别是矢量流分解和式 (19)–(26)。
+
+## I.4 Dirac–Pauli 核子流的非相对论展开
+
+在协变归一化 \(\bar u u=2m_N\) 下，令
+\[
+\mathbf K_N=\frac{\mathbf p_N'+\mathbf p_N}{2},
+\qquad
+\mathbf q_A=\mathbf p_N'-\mathbf p_N.
+\]
+对上面的 Dirac–Pauli 矩阵元作低动量展开，保留与当前响应匹配直接相关的结构，有
+\[
+\frac{J_N^0}{2m_N}
+=
+F_1^{V,N}
++\delta_{\rm SI}^{(0)}
++\frac{i\,[F_1^{V,N}+2F_2^{V,N}]}{4m_N^2}
+\boldsymbol\sigma_N\cdot
+(\mathbf q_A\times\mathbf K_N)
++\cdots,
+\]
+\[
+\frac{\mathbf J_N}{2m_N}
+=
+\frac{F_1^{V,N}}{m_N}\mathbf K_N
++\frac{i\,[F_1^{V,N}+F_2^{V,N}]}{2m_N}
+\boldsymbol\sigma_N\times\mathbf q_A
++\cdots.
+\]
+\(\delta_{\rm SI}^{(0)}\) 表示这里未逐项展开的自旋无关相对论修正；省略项还包括更高阶 \(Q_A^2/m_N^2\)、\(K_N^2/m_N^2\) 结构。上式给出的是匹配所需的算符结构和 form-factor 组合，不替代对实际 UV 味道组合、有限 \(t\) 输入和三体系数的逐项推导。
+
+以当前 2017 年 flavor-separated 零动量中心值 \(F_1^V=3\)、\(F_2^V=-0.552\) 为例，
+\[
+F_1^V+2F_2^V=1.896,\qquad F_1^V+F_2^V=2.448.
+\]
+这两行必须分别阅读：
+
+- 时间分量的自旋—轨道项正比于 \(F_1+2F_2\)，其核子算符含 \(\boldsymbol\sigma_N\cdot(\mathbf q_A\times\mathbf K_N)\)。因此即使 \(L^{ij}\) 很小，\(L^{00}\) 仍可与这个次领先核电荷项相乘。
+- 空间分量的对流项正比于 \(F_1\mathbf K_N/m_N\)。
+- 空间分量的磁化项正比于 \(F_1+F_2\)，而不是单独正比于 \(F_2\)。Pauli form factor 的具体值会改变磁化系数，但不能把磁化流简单等同于 Pauli 项本身。
+
+\(\mathbf K_N\) 是核内单核子平均动量。把核子内部速度 \(v_N\sim0.1\text{--}0.3\) 直接与暗物质 halo 速度 \(v_\chi\sim10^{-3}\) 比较，并不能判断相应核响应的大小；还需要三体暗物质张量系数、核矩阵元、角动量选择定则和干涉项。
+
+## I.5 从单核子算符到 AFH 响应的对应关系
+
+在单体冲量近似下，核流可示意写成
+\[
+\rho_V(\mathbf q_A)
+=\sum_a e^{i\mathbf q_A\cdot\mathbf r_a}
+\left[
+F_1^{V,N_a}
++\frac{i(F_1^{V,N_a}+2F_2^{V,N_a})}{4m_N^2}
+\boldsymbol\sigma_a\cdot(\mathbf q_A\times\mathbf K_a)
++\cdots
+\right],
+\]
+\[
+\mathbf J_V(\mathbf q_A)
+=\sum_a e^{i\mathbf q_A\cdot\mathbf r_a}
+\left[
+\frac{F_1^{V,N_a}}{m_N}\mathbf K_a
++\frac{i(F_1^{V,N_a}+F_2^{V,N_a})}{2m_N}
+\boldsymbol\sigma_a\times\mathbf q_A
++\cdots
+\right].
+\]
+这里 \(a\) 遍历核子；若质子和中子 form factor 不同，必须保留相应同位旋结构，不能直接把它们合并成一个等标量系数。
+
+| AFH 响应 | 单核子流的来源 | 当前 VV 匹配中的地位 |
+|---|---|---|
+| \(M\) | 领先矢量电荷密度 \(F_1\sum_a e^{i\mathbf q\cdot\mathbf r_a}\) | 已有七同位素数值基线；必须保留 |
+| \(\Phi''\) | 时间分量中的自旋—轨道电荷项 \(\boldsymbol\sigma\cdot(\mathbf q_A\times\mathbf K_N)\) | 第一优先级；不能由小 \(L^{ij}\) 排除 |
+| \(M\Phi''\) | 领先电荷与自旋—轨道电荷振幅的干涉 | 必须与 \(\Phi''\) 同时计算；干涉可正可负 |
+| \(\Delta\) | 空间流中的对流/轨道项 \(\mathbf K_N/m_N\)，经相应多极投影 | 由三体系数和 AFH 算符投影决定；当前源翻译存在 parity blocker |
+| \(\Sigma'\) | 空间流中的横向磁化自旋项 \(\boldsymbol\sigma_N\times\mathbf q_A\) | 需要完整匹配系数；已有初步选点源翻译，尚未完成 native cross-check |
+| \(\Sigma''\) | 完整投影中可能出现的纵向自旋结构 | 不因核自旋非零而自动加入；由实际流分解决定 |
+| \(\widetilde\Phi'\) | AFH 横向电/自旋—速度张量算符 | 当前不预设为非零；若完整 NR 投影产生相应算符再计算 |
+
+\(\Phi''\) 不是普通意义上只测量总核自旋的传统 SD 响应；它编码核子自旋与轨道运动的耦合，可具有半相干结构。AFH 的 \(M\Phi''\) 是允许的干涉响应，不是一个可直接当作正数“修正百分比”的独立通道。
+
+## I.6 完整收缩、流守恒与为什么点核 ppm 不能代替核内响应
+
+将核子流按时间、纵向和横向分量分解后，完整三体收缩包含
+\[
+L^{00}W_A^{00},\qquad
+L^{0i}W_A^{0i},\qquad
+L^{ij}W_A^{ij},
+\]
+以及各核多极响应之间的干涉。对当前矢量流，单核子 on-shell 矢量流满足
+\[
+q_{A,\mu}J_N^\mu=0.
+\]
+在核层面，连续性方程约束纵向电流与电荷密度；若采用相互作用核哈密顿量，严格守恒还要求核流与核力/交换流处方一致。流守恒并不消除横向磁化流，因此不能据此删掉 \(\Sigma'\)。
+
+需要特别区分两种完全不同的“空间流”：
+
+1. **核质心平动流：** \(J_A^\mu\propto(P_A+P_A')^\mu\)。它只反映整个原子核的 recoil convection。
+2. **核内部一体流：** \(\sum_a e^{i\mathbf q\cdot\mathbf r_a}\mathbf K_a\) 和 \(\sum_a e^{i\mathbf q\cdot\mathbf r_a}\boldsymbol\sigma_a\times\mathbf q\)。它依赖壳模型轨道、内部动量和核子自旋。
+
+核质心点电荷流只有 ppm 级修正，并不能约束第二类核内矩阵元。反过来，核响应比值 \(W_{\Sigma'}/W_M\) 或 \(W_{\Phi''}/W_M\) 在 \(W_M\) 深极小值附近变大，也不等于完整截面必然出现同样大小的修正；必须把实际三体 Wilson/运动学系数、响应归一化和干涉一起收缩。
+
+## I.7 当前数值证据与不可越过的状态边界
+
+### I.7.1 已归档的 \(M\) 响应
+
+AFH v6.0 七种可用 Xe 同位素的 \(M\) 电荷响应网格、因子 4 映射、零动量归一化和多极重构闭合已归档。Xe-131 的 rank-0/rank-2 分解属于同一个 \(M\) 电荷响应，不能误标为 \(\Phi''\)、\(\Delta\) 或自旋响应。AFH-7 仍不包含缺少官方 default density matrix 的 Xe-124/Xe-126。
+
+### I.7.2 \(\Sigma'\) 的初步源翻译结果
+
+PR #51 分支中的 run_afh_spatial_response_audit.py 已对 Xe-129 和 Xe-131 的若干选定 \(q_A\) 点作 AFH 源代码翻译，得到下列 package-normalized 响应比值：
+
+| 同位素 | \(q_A\) [GeV] | 初步 \(W_{\Sigma'}^{00}/W_M^{00}\) |
+|---|---:|---:|
+| Xe-129 | 0 | \(3.1431\times10^{-5}\) |
+| Xe-129 | 0.158 | \(4.0775\times10^{-4}\) |
+| Xe-129 | 0.256 | \(0.15792\) |
+| Xe-129 | 0.365 | \(0.03712\) |
+| Xe-131 | 0 | \(1.0771\times10^{-5}\) |
+| Xe-131 | 0.158 | \(0.06033\) |
+| Xe-131 | 0.256 | \(0.39793\) |
+| Xe-131 | 0.365 | \(1.51717\) |
+
+**这些数字是初步 source-translated selected-\(q\) 诊断，不是已通过 native Mathematica/Wolfram 逐点交叉检查的 AFH 结果，更不是截面修正。** 表中显示的是原始 package isoscalar 约定；尚未把绝对响应提升为物理核子耦合归一化。若一个共同的因子 4 同时作用于两列响应，比值不变，但绝对归一化仍必须逐算符核查。
+
+因此，这张表只能说明：在 \(M\) 响应受抑制的动量区域，初步的 \(\Sigma'\) 核矩阵元可能相对突出，值得进行独立 native 检查。不能将 \(1.517\) 解释为 Xe-131 截面被增强 151.7%，也不能据此宣称 \(\Sigma'\) 已经主导真实谱。
+
+### I.7.3 \(\Delta\) 的 parity blocker
+
+当前源翻译发现 AFH 源码中的 DeltaJ parity wrapper 要求
+\[
+(-1)^{\ell+\ell'+L+1}=+1,
+\]
+即 \(\ell+\ell'+L\) 为奇数；但内部相应 \(3j\) 符号的全零磁量子数选择定则要求该和为偶数。两者按字面实现相互冲突，导致当前翻译路径给出恒零的 \(\Delta\) 矩阵元。
+
+**这个零不能解释为物理上 \(W_\Delta=0\)。** 在完成 native AFH/Wolfram 对照、源版本追溯和 parity 约定核查前，\(W_\Delta\) 与 \(W_{\Sigma'\Delta}\) 均标记为 blocked / not validated，不得通过静默修改选择定则制造非零结果。
+
+### I.7.4 PR #53 的四分量暗物质流诊断
+
+相关的 [PR #53 — full three-body vector-current audit](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/pull/53) 已有一个可复现的分支级诊断：构造完整 \(L^{\mu\nu}\)，保留两张辐射图和干涉，并与守恒的核质心点电荷流收缩。其 exact-source workflow 记录为 8/8 tests passed、12 行结果重算与归档表完全一致；扫描中 target-rest-frame
+\[
+r_\chi=\sqrt{\frac{L^{11}+L^{22}+L^{33}}{L^{00}}}
+\simeq2.47\times10^{-3},
+\]
+点核完整流相对 charge-only 收缩的差异约为 4.3–5.1 ppm。
+
+该诊断只包含原子核质心对流，不包含核内 \(\mathbf K_N\)、磁化或自旋—轨道矩阵元；也没有进行 \(F_1/F_2\) 到 AFH 非 \(M\) 响应的匹配。它能说明当前扫描点的暗物质空间流相对时间流较小，**不能**证明 \(\Phi''\)、\(\Sigma'\) 或 \(\Delta\) 可忽略。PR #53 仍是独立开放的 draft PR，合并前不把其结果写成 main 上已归档的完整核流验证。
+
+此前讨论中报告过的其他点核 ppm 数值、单核子 \(\mathcal O_3/\mathcal O_1\) 百分比和未找回脚本的估算继续保留为历史诊断，不作为本附录的可复现结果。
+
+## I.8 实施顺序与验收条件
+
+建议按物理依赖关系推进：
+
+1. **固定 flavor 和 form-factor 输入。** 明确活动味道、UV 权重、重味阈值匹配、\(F_1^{V,p/n}(t_A)\)、\(F_2^{V,p/n}(t_A)\) 的来源、误差和 \(t\) 区间；验证零动量电荷和当前三味分解的 Pauli 常数项。
+2. **完成自由核子 Dirac–Pauli 对照。** 对选定 \(q_A\)、\(\mathbf K_N\) 和自旋态，将完整 Dirac 自旋量计算与上面的 NR 展开逐项比较；检查 \(J_N^\mu\) 的符号、\(F_1+2F_2\)、\(F_1+F_2\) 及 on-shell 流守恒。
+3. **优先计算 \(\Phi''\) 和 \(M\Phi''\)。** 从 \(J_N^0\) 的 spin-orbit charge term 开始，对 Xe-129、Xe-131 生成 AFH 多极矩阵元；特别在 Xe-131 的 \(q_A\simeq158,256,365\) MeV 附近做局部高分辨率扫描。
+4. **完成 AFH 空间响应的 source/native 对照。** 对 \(\Sigma'\) 做同网格 native Wolfram 比较；追查 \(\Delta J\) parity 冲突；必要时扩展 \(\Sigma''\)、\(\Delta\) 和允许的干涉项。每种响应都要单独检查归一化、相位、\(q/m_N\) 因子和选择定则。
+5. **进行完整三体张量收缩。** 在每个三体相空间点计算 \(L^{\mu\nu}\)，与含有正确 \(F_1/F_2\) 系数的核流多极响应收缩；分别输出 \(M\)、\(\Phi''\)、\(M\Phi''\)、空间对流和磁化项，保留所有允许干涉。
+6. **分别检查求积收敛。** 三体 \(W^2,z,\phi_*\) 求积、核响应 \(q_A\) 网格/插值和多极截断误差必须分别收敛；不能用一个积分收敛测试代替另一个。
+7. **最后再生成天然氙谱。** 对各同位素使用各自核质量和核响应，按原始天然丰度求和；保留 AFH-7 / Hybrid-9 的输入边界，不把缺失同位素静默补齐。
+
+最低验收集合包括：\(q_A\to0\) 电荷归一化、AFH factor-four 唯一放置、自由核子直接 Dirac 对照、\(q_\mu J_N^\mu=0\)、AFH native response 对照、parity/角动量选择定则、\(M\Phi''\) 干涉符号、两张暗物质辐射图干涉、\(L^{\mu\nu}\) Hermiticity/positivity、三体相空间和核响应插值的独立收敛，以及天然氙同位素加权检查。
+
+## I.9 本附录的最终适用范围
+
+当前可以严谨表述为
+\[
+\boxed{W_M^{00}\ \text{是已归档三体 VV benchmark 的领先阶核电荷响应。}}
+\]
+当前不能表述为
+\[
+W_M^{00}\ \text{已经完整描述了三体 VV 核子流。}
+\]
+要得到后一个结论，必须先完成
+\[
+\boxed{
+\mathcal T_3^\mu\otimes\Gamma_N^\nu(F_1,F_2)
+\longrightarrow
+\{M,\Phi'',M\Phi'',\Delta,\Sigma',\Sigma'',\ldots\}
+}
+\]
+并对 Xe-129、Xe-131 进行数值收缩和收敛审计。只有在完整一体流结果表明其余响应在目标精度内确实可忽略后，才能将 \(M\)-only 近似提升为经过验证的完整 VV 结果。
+
+本附录是主报告的正式理论补充；完整理论讨论档案仍保存在 [QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md](../../afh_isotope_response_equivalence/docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md)，用于追溯备选解释、历史估算和研究过程。
+
+
 ## 14. Phase II update: high-energy tail nuclear-model sensitivity (2026-11-14)
 
 The candidate-window study is now archived separately in
@@ -4817,3 +5321,4 @@ invented. The one-dimensional efficiency fold is not energy-resolution
 smearing, a NEST S1/S2 response, a background model, or a profile likelihood.
 
 **Historical note (2026-11-14):** At the time of this Phase II update, only the Xe-131 AFH response-level Mathematica/Python comparison (Wolfram 14.0.0) had completed and the native full Eq. (6) gate was still open. That gate has since been closed by the 2026-11-16 Wolfram 14.2.0 652-row execution and independent Python comparison recorded in Appendix H.7.
+

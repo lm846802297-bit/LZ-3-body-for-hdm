@@ -13,12 +13,13 @@ Read [WORKFLOW.md](WORKFLOW.md) before starting a new study. Use [_template/READ
 ## Directory map
 
 - [_template/](_template/README.md): starting point for a new study README; copy and fill it before adding a new research topic.
-- [docs/](docs/README.md): cross-topic model definitions, phenomenology notes, the AFH/natural-xenon main report, appendices A–G, formula cross-reference index, source audits, and research decisions.
+- [docs/](docs/README.md): cross-topic model definitions, phenomenology notes, the AFH/natural-xenon main report, appendices A–I, formula cross-reference index, source audits, and research decisions.
 - [three_body_kinematic_audit/](three_body_kinematic_audit/README.md): threshold conditions, maximum scalar mass, and phase-space checks.
 - [three_body_calculation_and_validation/](three_body_calculation_and_validation/README.md): Eq. (6) kernel, GCN/JJ55 natural-xenon halo-folded continuous spectra, fixed-speed Xe-131 diagnostics, the supplied 450-keV pointwise benchmark, tests, and numerical outputs. The 450-keV fixed-speed curve is a single-isotope zero-width diagnostic, not a halo or detector-level prediction.
 - [afh_default_density_xe131/](afh_default_density_xe131/README.md): AFH v6.0 Xe-131 response, normalization and momentum-convention audits, AME2020/CODATA-2022 mass diagnostics, and the historical I6 mapping/quadrature audit. The latter reproduces I6 only; it does not validate the full differential cross section.
 - [afh_default_density_natural_xenon_halo/](afh_default_density_natural_xenon_halo/README.md): 七同位素 AFH default-density 响应网格（16,807 行）、selected-q 60 位 mpmath 验证、插值审查，以及 AFH-7/Hybrid-9 的 84 点全范围反冲网格谱。最终高阶谱归档目前仅有外部 checksum；selected-point AME2020 fold 仍是独立质量方案记录。以上都不是 detector-level LZ likelihood。
 - [afh_isotope_response_equivalence/](afh_isotope_response_equivalence/README.md): AFH v6.0 七同位素 \(M\) 响应归一化/多极审计，以及完整 VV 夸克—核子匹配、三体流与 AFH 核响应讨论；后者明确区分已完成的电荷响应与待计算的 \(\Phi''\)、\(\Delta\)、\(\Sigma'\) 项。
+- [PR #53 — four-component vector-current diagnostic](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/pull/53): branch-level (L^{\mu\nu}) and coherent point-charge-current audit; it does not calculate internal nuclear currents.
 - [lz_detector_response/](lz_detector_response/README.md): LZ 2026 public-input and NEST provenance, NR/ER response audits, event-level and two-dimensional three-body response folds, paired Parametric/Full S1 ten-seed statistics and bootstrap, Fig. S2 rate-level folds, and selection-stage diagnostics. The [extended NR/ER archive index](lz_detector_response/lz_2026_extended_nr/README.md) distinguishes the reproducible intermediate NEST proxy from the missing official waveform-level selected PDF and likelihood.
 - [figure_packs/](figure_packs/README.md): curated scientific figure collections, indexes, manifests, checksums, and scope notes; metadata does not imply that every image binary is committed.
 ## Current result layers

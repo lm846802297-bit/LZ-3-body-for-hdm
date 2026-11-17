@@ -63,3 +63,14 @@
 - LZ 实验参数来自 LZ Collaboration 的公开论文 arXiv:2609.02823；不是从模型草稿推断。
 - 其他 LZ 理论解释只作为比较对象，不意味着这些模型已经被实验确认。
 - 参考文献的版本、页码、公式编号和数据表编号在正式论文引用前应再次核实。
+
+
+## E. 核子矢量流与非相对论核响应
+
+11. **M. Hoferichter, P. Klos and A. Schwenk**, “Chiral power counting of one- and two-body currents in direct detection of dark matter,” *Physics Letters B* **746** (2015) 410–416, arXiv:1503.04811.  
+    <https://arxiv.org/abs/1503.04811>  
+    本报告采用其核子矢量流 Dirac/Pauli form-factor 分解和 VV 单体流 NR 结构作为文献对照。本文的 \(q_A=p_N'-p_N\) 与该文采用的反向动量方向不同，Pauli 项符号必须相应翻转；其紧凑三味记号与当前采用的显式 flavor-separated 输入之间仍需逐项核查。
+
+12. **F. Bishara, J. Brod, B. Grinstein and J. Zupan**, “From quarks to nucleons in dark matter direct detection,” arXiv:1707.06998.  
+    <https://arxiv.org/abs/1707.06998>  
+    附录 A.1 给出显式 \(F_1^{q,N}(0)\)、\(F_2^{q,N}(0)\) flavor form factors。当前 flavor-universal 三味 benchmark 的中心值采用 \(F_2^{u/p}=1.609\)、\(F_2^{d/p}=-2.097\)、\(F_2^{s/p}=-0.064\)，即 \(F_2^{V,p}(0)=-0.552\)；不确定度相关性和有限 \(t\) 输入仍待处理。
