@@ -359,7 +359,7 @@ r_\chi=\sqrt{\frac{L^{11}+L^{22}+L^{33}}{L^{00}}}
 
 建议按物理依赖关系推进：
 
-1. **固定 flavor 和 form-factor 输入。** 明确活动味道、UV 权重、重味阈值匹配、\(F_1^{V,p/n}(t_A)\)、\(F_2^{V,p/n}(t_A)\) 的来源、误差和 \(t\) 区间；验证零动量电荷和当前三味分解的 Pauli 常数项。
+1. **固定 flavor 和 form-factor 输入。明确活动味道、UV 权重、重味阈值匹配、\(F_1^{V,p/n}(t_A)\)、\(F_2^{V,p/n}(t_A)\) 的来源、误差和 \(t\) 区间；验证当前三味 benchmark 的 \(F_1^V(0)=3\)、\(F_2^V(0)=-0.552\)，并检查同位旋关系。** 明确活动味道、UV 权重、重味阈值匹配、\(F_1^{V,p/n}(t_A)\)、\(F_2^{V,p/n}(t_A)\) 的来源、误差和 \(t\) 区间；验证零动量电荷和当前三味分解的 Pauli 常数项。
 2. **完成自由核子 Dirac–Pauli 对照。** 对选定 \(q_A\)、\(\mathbf K_N\) 和自旋态，将完整 Dirac 自旋量计算与上面的 NR 展开逐项比较；检查 \(J_N^\mu\) 的符号、\(F_1+2F_2\)、\(F_1+F_2\) 及 on-shell 流守恒。
 3. **执行已准备的 Xe-131 native \(M,\Phi'',M\Phi''\) 导出。** 先运行 PR #51 的 Wolfram exporter，完成 2,401 点输出、metadata/SHA-256 核对和 Python validator；通过后再扩展 Xe-129，并在 Xe-131 的 \(q_A\simeq158,256,365\) MeV 附近做局部高分辨率扫描。
 4. **完成 AFH 空间响应的 source/native 对照。** 使用 AFH 正确的 \(\Sigma'\)、\(\Delta J\)、\(\Sigma'\! -\! \Delta J\) 索引，对 Xe-129/Xe-131 的 native Wolfram 输出与 Python development translation 作逐点比较；\(\Delta J\) 已纠正为同阶 \(MJLDivQ\) 映射，不再沿用旧 parity-conflict 判断。每种响应都要单独检查归一化、相位、\(q/m_N\) 因子和选择定则。
