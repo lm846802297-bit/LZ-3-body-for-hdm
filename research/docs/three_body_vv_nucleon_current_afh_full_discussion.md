@@ -998,3 +998,720 @@ AFH v6.0 的核响应程序不会因为用户调用了 \(W_M\) 就自动把本�
 | 6 | \(\Delta\) | 轨道角动量响应 |
 | 7 | \(M\)-\(\Phi''\) | 质量与自旋—轨道干涉响应 |
 | 8 | \(\Sigma'\)-\(\Delta\) | 横向自旋与轨道响应的干涉 |
+
+---
+
+# 第三部分：从粒子物理到 AFH 核响应的逐步推导
+
+本部分把前 26 节的物理结论改写成可以逐式检查的推导链。统一采用度规 \(g^{\mu\nu}=\mathrm{diag}(1,-1,-1,-1)\)，
+\[
+\sigma^{\mu\nu}=\frac{i}{2}[\gamma^\mu,\gamma^\nu],
+\qquad
+q_A=P_A'-P_A,\qquad
+q_N=p_N'-p_N.
+\]
+除非特别说明，外部 \(\chi_1\) 与核子旋量采用协变归一化
+\[
+\bar u(p)u(p)=2m,\qquad \sum_s u(p,s)\bar u(p,s)=\slashed p+m.
+\]
+所有三维动量平方均写成 \(\mathbf q^2\ge0\)，Minkowski 不变量写成 \(t=q^2\le0\)。这样可以避免把 \(Q^2\) 与 \(t\) 混成同一个符号。
+
+## 27. 从 UV 拉格朗日量到完整三体振幅
+
+### 27.1 相互作用、质量本征态和过程
+
+本项目的粒子物理输入为
+\[
+\begin{aligned}
+\mathcal L_{\mathrm{int}}={}&
+g_1 A'_\mu\bar\chi_2\gamma^\mu\chi_1
++g_2s\bar\chi_2\chi_1+\mathrm{h.c.}\\
+&+g_q A'_\mu\sum_{q=u,d,s}\bar q\gamma^\mu q ,
+\end{aligned}
+\]
+其中
+\[
+m_{\chi_1}=m_\chi,\qquad m_{\chi_2}=m_\chi+\Delta.
+\]
+这里 \(A'\) 是矢量媒介子，\(s\) 是末态实标量。两个相互作用顶点都改变暗物质的质量本征态：
+\[
+\chi_1\leftrightarrow\chi_2+A',
+\qquad
+\chi_1\leftrightarrow\chi_2+s.
+\]
+因此，外部态虽然是 \(\chi_1\) 入射、\(\chi_1\) 出射，但树级振幅的暗物质线上必须经过一次虚 \(\chi_2\) 传播。
+
+过程为
+\[
+\chi_1(p)+A(P)\longrightarrow
+\chi_1(p')+A(P')+s(k).
+\]
+四动量守恒给出
+\[
+p+P=p'+P'+k.
+\]
+定义媒介子传给核的动量
+\[
+q_A=P'-P,
+\]
+便有
+\[
+\boxed{q_A=p-p'-k.}
+\]
+这条等式是后续全部运动学的起点：媒介子传播子和 AFH 核响应使用 \(q_A\)，而不能把 \(p'-p\) 直接当作核动量转移。
+
+### 27.2 两张辐射图的内部动量
+
+沿暗物质费米子线从入射态走向出射态，标量可以在矢量散射之前或之后发射。
+
+**图 a：先发射标量，再发生矢量散射。**
+
+虚 \(\chi_2\) 的四动量为
+\[
+r_1=p-k.
+\]
+在矢量顶点处，
+\[
+r_1-q_A=p-k-(p-p'-k)=p',
+\]
+所以内部动量流与外部四动量守恒一致。传播子分母为
+\[
+D_1=r_1^2-m_{\chi_2}^2
+=(p-k)^2-m_{\chi_2}^2.
+\]
+
+**图 b：先发生矢量散射，再发射标量。**
+
+虚 \(\chi_2\) 的四动量为
+\[
+r_2=p'+k.
+\]
+在矢量顶点处，
+\[
+p-r_2=p-p'-k=q_A.
+\]
+对应分母为
+\[
+D_2=r_2^2-m_{\chi_2}^2
+=(p'+k)^2-m_{\chi_2}^2.
+\]
+
+两图的费米子链顺序不同，因而不能把两张图简单视为同一个标量因子的重复。去掉整体耦合后，完整顶点矩阵为
+\[
+\boxed{
+\widehat\Gamma_3^\mu=
+\gamma^\mu
+\frac{\slashed r_1+m_{\chi_2}}{D_1+i m_{\chi_2}\Gamma_{\chi_2}}
++
+\frac{\slashed r_2+m_{\chi_2}}{D_2+i m_{\chi_2}\Gamma_{\chi_2}}
+\gamma^\mu .
+}
+\]
+这里写的是固定宽度形式；远离极点时可令 \(\Gamma_{\chi_2}\to0\)。整体振幅为
+\[
+\mathcal T_3^\mu
+=g_1g_2\,\bar u_{\chi_1}(p')\widehat\Gamma_3^\mu
+u_{\chi_1}(p).
+\]
+相对正号对应本项目拉格朗日量中两个实耦合及所选费米子线方向。程序实现时必须使用同一套 Feynman 规则，不能在其中一张图上人为改变相位。
+
+### 27.3 媒介子传播子与核流因子化
+
+在 Proca/幺正规范下，质量为 \(m_{A'}\) 的矢量传播子可写成
+\[
+D_{\mu\nu}^{A'}(q_A)=
+\frac{-i}{t_A-m_{A'}^2}
+\left(g_{\mu\nu}-\frac{q_{A\mu}q_{A\nu}}{m_{A'}^2}\right),
+\qquad t_A=q_A^2.
+\]
+令
+\[
+J_A^\nu(q_A)=
+\langle A(P')|J_V^\nu(q_A)|A(P)\rangle
+\]
+表示包含夸克—核子耦合后的核矢量流，则完整振幅是
+\[
+\boxed{
+\mathcal M_3=
+\mathcal T_3^\mu D_{\mu\nu}^{A'}(q_A)J_A^\nu(q_A).
+}
+\]
+若把 \(g_q\) 放在 \(J_A^\nu\) 中，就不能再在振幅前额外乘一次 \(g_q\)；若把 \(g_q\) 从核流中提出，则应在整体系数中显式保留。两种记账方式等价，但只能选一种。
+
+对弹性、守恒的核矢量流，
+\[
+q_{A\nu}J_A^\nu=0.
+\]
+因此传播子的纵向项满足
+\[
+\frac{q_{A\mu}q_{A\nu}}{m_{A'}^2}
+\mathcal T_3^\mu J_A^\nu=0,
+\]
+完整振幅在该条件下简化为
+\[
+\mathcal M_3=
+\frac{-i}{t_A-m_{A'}^2}\,
+\mathcal T_{3\mu}J_A^\mu.
+\]
+注意：这个简化使用的是**核侧**流守恒，并不要求暗物质三体流本身守恒。事实上，\(\chi_1\) 与 \(\chi_2\) 质量不同，三体暗物质流一般不守恒，见 §27.5。
+
+当 \(m_{A'}^2\gg |t_A|\) 时，
+\[
+\frac{1}{t_A-m_{A'}^2}
+=-\frac{1}{m_{A'}^2}
+\left[1+\frac{t_A}{m_{A'}^2}+\cdots\right].
+\]
+只有在该条件成立时才可将媒介子交换近似成局域接触相互作用；若 \(m_{A'}\) 与 \(|\mathbf q_A|\) 同量级，必须保留完整传播子。
+
+### 27.4 重质量、离壳极限下的两图相干因子
+
+为了理解论文中出现的因子 2，取
+\[
+m_{\chi_2}=m_\chi+\Delta,\qquad
+\Delta\gg E_s,\ |\mathbf q_A|v,\ \frac{\mathbf q_A^2}{2m_\chi}.
+\]
+在暗物质重粒子近似下，令 \(v^\mu\) 为暗物质四速度，
+\[
+P_+=\frac{1+\slashed v}{2}.
+\]
+内部传播子的分子在领先阶满足
+\[
+\slashed r_{1,2}+m_{\chi_2}
+\simeq 2m_\chi P_++\mathcal O(\Delta,k,\mathbf q_A),
+\]
+分母满足
+\[
+D_{1,2}\simeq -2m_\chi\Delta
++\mathcal O(m_\chi E_s,m_\chi v|\mathbf q_A|).
+\]
+再利用
+\[
+P_+\gamma^\mu P_+=v^\mu P_+,
+\]
+两张图在领先阶都约化到同一暗物质矢量流结构：
+\[
+\mathcal T_3^\mu
+\simeq
+-\frac{2g_1g_2}{\Delta}\,
+\bar u_{\chi_1}(p')v^\mu u_{\chi_1}(p)
++\mathcal O\!\left(\frac{E_s}{\Delta},
+\frac{|\mathbf q_A|}{m_\chi}\right).
+\]
+这里的整体符号取决于传播子和振幅约定；可观测的关键是两图在所选 benchmark 下相干相加，领先阶振幅出现因子 2。
+
+因此，与只含一条相应跃迁矢量流的二体参考振幅比较时，
+\[
+\frac{\overline{|\mathcal M_{2\to3}|^2}}
+{\overline{|\mathcal M_{2\to2}|^2}}
+\simeq \frac{4g_2^2}{\Delta^2},
+\]
+但这个量具有能量负二次量纲，**不是截面比**。真正的截面比还必须乘三体相空间因子，见 §28.4。
+
+该近似不能用于接近 \(\chi_2\) 极点的区域。靠近极点时，\(D_1,D_2\) 对 \(k\) 和角变量的依赖不同，两图的相对大小和干涉都可能改变，必须使用完整的 Breit–Wigner 分母逐点积分。
+
+### 27.5 \(\chi_2\) 宽度与三体流的 Ward 收缩
+
+若衰变通道 \(\chi_2\to\chi_1+s\) 开放，即
+\[
+m_{\chi_2}>m_{\chi_1}+m_s,
+\]
+且拉格朗日量中的标量顶点为 \(g_2s\bar\chi_2\chi_1+\mathrm{h.c.}\)，则仅考虑该衰变道时
+\[
+\boxed{
+\Gamma(\chi_2\to\chi_1s)=
+\frac{g_2^2}{16\pi m_{\chi_2}^3}
+\lambda^{1/2}(m_{\chi_2}^2,m_{\chi_1}^2,m_s^2)
+\left[(m_{\chi_2}+m_{\chi_1})^2-m_s^2\right],
+}
+\]
+其中
+\[
+\lambda(x,y,z)=x^2+y^2+z^2-2xy-2xz-2yz.
+\]
+若还存在其他衰变道，传播子中使用的总宽度应为所有开放道的部分宽度之和，而不是只使用上式。
+
+现在推导三体暗物质流的 Ward 收缩。定义
+\[
+q_A=p-p'-k=r_1-p'=p-r_2,
+\]
+并先取零宽度。利用外部 \(\chi_1\) 的 Dirac 方程
+\[
+(\slashed p-m_\chi)u(p)=0,\qquad
+\bar u(p')(\slashed p'-m_\chi)=0,
+\]
+第一张图有
+\[
+\begin{aligned}
+&\bar u(p')\slashed q_A
+(\slashed r_1+m_{\chi_2})u(p)\\
+&=\bar u(p')(\slashed r_1-m_\chi)
+(\slashed r_1+m_{\chi_2})u(p)\\
+&=\bar u(p')
+\left[D_1+(m_{\chi_2}-m_\chi)
+(\slashed r_1+m_{\chi_2})\right]u(p).
+\end{aligned}
+\]
+第二张图则为
+\[
+\begin{aligned}
+&\bar u(p')(\slashed r_2+m_{\chi_2})
+\slashed q_Au(p)\\
+&=\bar u(p')(\slashed r_2+m_{\chi_2})
+(m_\chi-\slashed r_2)u(p)\\
+&=\bar u(p')
+\left[-D_2-(m_{\chi_2}-m_\chi)
+(\slashed r_2+m_{\chi_2})\right]u(p).
+\end{aligned}
+\]
+两式除以各自的 \(D_i\) 后，常数项 \(+1\) 与 \(-1\) 抵消，得到
+\[
+\boxed{
+q_{A\mu}\mathcal T_3^\mu
+=(m_{\chi_2}-m_\chi)g_1g_2\,
+\bar u(p')
+\left[
+\frac{\slashed r_1+m_{\chi_2}}{D_1}
+-\frac{\slashed r_2+m_{\chi_2}}{D_2}
+\right]u(p).
+}
+\]
+因此：
+- 若 \(m_{\chi_2}=m_\chi\)，零宽度下两张图的 Ward 收缩相消；
+- 若 \(m_{\chi_2}\ne m_\chi\)，三体暗物质流一般不守恒；
+- 不能把弹性守恒矢量流的简化恒等式直接套到本模型。
+
+还要注意有限宽度的实现。若只把两个实分母替换成 \(D_i+i m_{\chi_2}\Gamma_{\chi_2}\)，而分子仍保留实质量，则上述代数中的 \(+1\) 和 \(-1\) 不再严格抵消，会留下与宽度成正比的残项。这不是新的物理顶点，而是固定宽度插入对 Ward 恒等式的影响。数值实现必须明确使用固定宽度、能量依赖自能还是复极点方案，并将方案差异纳入极点附近的误差审计。不能在一张图中加宽度、另一张图中不加，也不能把有限宽度下的零宽度 Ward 公式当成严格恒等式。
+
+## 28. 三体运动学、相空间和 \(I(D)\) 的推导
+
+### 28.1 核反冲的精确动量关系
+
+初始核静止：
+\[
+P^\mu=(m_A,\mathbf 0),\qquad
+P'^\mu=(m_A+E_R,\mathbf q_A).
+\]
+由 \(P'^2=P^2=m_A^2\)，
+\[
+(m_A+E_R)^2-\mathbf q_A^2=m_A^2,
+\]
+因此
+\[
+\boxed{
+Q_A^2\equiv|\mathbf q_A|^2=E_R(E_R+2m_A),
+\qquad t_A=q_A^2=-2m_AE_R.
+}
+\]
+非相对论近似为
+\[
+Q_A\simeq\sqrt{2m_AE_R}.
+\]
+论文中的 \(q=\sqrt{2m_AE_R}\) 正是这一近似；AFH 的 \(y_A\) 应优先使用精确的 \(Q_A\)，传播子则使用 \(t_A\)。
+
+### 28.2 \(\chi_1s\) 不变质量与内部动能
+
+定义末态暗物质—标量系统总四动量
+\[
+K^\mu=p'^\mu+k^\mu,\qquad W^2=K^2.
+\]
+将其不变质量参数化为
+\[
+W=m_\chi+m_s+\epsilon,\qquad \epsilon\ge0.
+\]
+这里 \(\epsilon\) 是 \(\chi_1s\) 在自身质心系中的内部运动能量，不是核反冲能量，也不是标量的总能量。
+
+初始暗物质动量记为 \(\mathbf p=m_\chi\mathbf v\)。在 \(m_\chi\gg m_s\)、\(E_R\ll m_A\) 的重粒子非相对论近似下，末态 \(\chi_1s\) 系统质心动量为
+\[
+\mathbf K=\mathbf p-\mathbf q_A.
+\]
+能量守恒写成
+\[
+m_\chi+\frac{\mathbf p^2}{2m_\chi}+m_A
+=
+m_\chi+m_s+\epsilon
++\frac{|\mathbf p-\mathbf q_A|^2}{2m_\chi}
++m_A+E_R.
+\]
+展开平方并使用
+\[
+E_R\simeq\frac{Q_A^2}{2m_A},
+\]
+得到
+\[
+\epsilon=
+\mathbf v\cdot\mathbf q_A
+-\frac{Q_A^2}{2m_\chi}
+-\frac{Q_A^2}{2m_A}
+-m_s.
+\]
+定义约化质量
+\[
+\mu=\frac{m_\chi m_A}{m_\chi+m_A},
+\]
+并令 \(\theta\) 为入射速度与核反冲动量之间的夹角，则
+\[
+\boxed{
+\epsilon=vQ_A\cos\theta-\frac{Q_A^2}{2\mu}-m_s.
+}
+\]
+在固定 \(E_R\) 和 \(v\) 下，最大内部能量出现在 \(\cos\theta=1\)：
+\[
+\boxed{
+D(E_R,v)=vQ_A-\frac{Q_A^2}{2\mu}-m_s
+=Q_A[v-v_{\min}(E_R)],
+}
+\]
+其中
+\[
+\boxed{
+v_{\min}(E_R)=\frac{Q_A}{2\mu}+\frac{m_s}{Q_A}.
+}
+\]
+因此允许的内部能量区间为
+\[
+0\le\epsilon\le D,
+\]
+且只有 \(D\ge0\) 时才存在物理相空间。
+
+这里的 \(m_s\) 来自末态必须产生一个真实标量的静质量；\(\epsilon\) 则描述在此阈值之上的额外内部运动能量。把两者混成一个“有效质量劈裂”会丢失三体末态的连续不变质量自由度。
+
+### 28.3 阈值、反冲端点和谱峰位置
+
+由
+\[
+D(Q_A,v)=vQ_A-\frac{Q_A^2}{2\mu}-m_s\ge0
+\]
+可知 \(D\) 是关于 \(Q_A\) 的开口向下二次函数。其最大值出现在
+\[
+\frac{\partial D}{\partial Q_A}
+=v-\frac{Q_A}{\mu}=0,
+\qquad Q_A^{\rm peak}=\mu v.
+\]
+最大内部能量为
+\[
+D_{\max}=\frac{\mu v^2}{2}-m_s.
+\]
+故存在可行反冲的阈值速度为
+\[
+\boxed{v_{\rm thr}=\sqrt{\frac{2m_s}{\mu}}.}
+\]
+在 \(D=0\) 处解出两根：
+\[
+Q_A^\pm=\mu\left(v\pm\sqrt{v^2-\frac{2m_s}{\mu}}\right).
+\]
+再用 \(E_R\simeq Q_A^2/(2m_A)\)，得到
+\[
+\boxed{
+E_R^\pm(v)=\frac{\mu^2}{2m_A}
+\left(v\pm\sqrt{v^2-\frac{2m_s}{\mu}}\right)^2.
+}
+\]
+二体非弹性散射若取质量劈裂 \(\delta=m_s\)，有相同的 \(v_{\min}\) 和相同的两个反冲端点；差别在于二体末态的不变质量固定，而三体末态还要积分 \(0\le\epsilon\le D\)。
+
+谱峰位置由 \(Q_A^{\rm peak}=\mu v\) 给出：
+\[
+\boxed{
+E_R^{\rm peak}(v)=\frac{\mu^2v^2}{2m_A}.
+}
+\]
+这是固定入射速度、常振幅近似下三体相空间核的峰位置，不应直接解释为 halo 平均后的实验谱峰；后者还要积分速度分布、乘核响应并进行同位素求和。
+
+### 28.4 三体相空间如何产生 \(I(D)\)
+
+三体相空间的关键是把末态 \(\chi_1s\) 看成一个总不变质量为 \(W\) 的复合系统。令 \(K=p'+k\)，有标准相空间恒等式
+\[
+d\Phi_3(P_i;P',p',k)
+=
+\frac{dW^2}{2\pi}\,
+d\Phi_2(P_i;P',K)\,
+d\Phi_2(K;p',k).
+\]
+右侧第一项描述初态到核加 \(\chi_1s\) 系统的外层二体运动学；第二项描述 \(\chi_1s\) 系统内部的二体衰变相空间。
+
+在 \(K\) 的质心系，内部相对动量大小为
+\[
+p_*=
+\frac{\lambda^{1/2}(W^2,m_\chi^2,m_s^2)}{2W}.
+\]
+积分内部两体角度后，
+\[
+\int d\Phi_2(K;p',k)=\frac{p_*}{4\pi W}.
+\]
+又因为
+\[
+W=m_\chi+m_s+\epsilon,\qquad dW^2=2W\,d\epsilon,
+\]
+故
+\[
+\frac{dW^2}{2\pi}\int d\Phi_2(K;p',k)
+=
+\frac{p_*}{4\pi^2}\,d\epsilon.
+\]
+这一步直接说明：在外层核反冲运动学固定后，剩余内部相空间自然带有 \(p_*d\epsilon/(4\pi^2)\)，而不是简单的 \(d\epsilon\)。
+
+对 \(m_\chi\gg m_s,\epsilon\)，Källén 函数可展开为
+\[
+p_*=
+\sqrt{\epsilon(\epsilon+2m_s)}
+\left[1+\mathcal O\!\left(\frac{m_s+\epsilon}{m_\chi}\right)\right].
+\]
+若进一步假设矩阵元在允许的内部不变质量和内部角度范围内变化缓慢，外层运动学因子也可在该区间近似提出积分，则内部相空间核为
+\[
+\boxed{
+I(D)=\int_0^D d\epsilon\,
+\sqrt{\epsilon(\epsilon+2m_s)},\qquad D>0,
+}
+\]
+而 \(D\le0\) 时 \(I(D)=0\)。
+
+这个积分可以解析完成。令 \(x=\epsilon+m_s\)，则
+\[
+I(D)=\int_{m_s}^{m_s+D}dx\,\sqrt{x^2-m_s^2}.
+\]
+使用
+\[
+\int dx\,\sqrt{x^2-a^2}
+=\frac12\left[x\sqrt{x^2-a^2}
+-a^2\ln\left(x+\sqrt{x^2-a^2}\right)\right],
+\]
+得到
+\[
+\boxed{
+I(D)=\frac12\left[
+(D+m_s)\sqrt{D(D+2m_s)}
+-m_s^2\ln\frac{D+m_s+\sqrt{D(D+2m_s)}}{m_s}
+\right].
+}
+\]
+因此 \(I(D)\) 的量纲是能量平方，恰好补偿振幅平方比 \(4g_2^2/\Delta^2\) 的能量负二次量纲。
+
+当 \(D\ll m_s\) 时，
+\[
+\sqrt{\epsilon(\epsilon+2m_s)}
+=\sqrt{2m_s\epsilon}
+\left[1+\frac{\epsilon}{4m_s}
++\mathcal O\!\left(\frac{\epsilon^2}{m_s^2}\right)\right],
+\]
+逐项积分可得
+\[
+\boxed{
+I(D)=\frac23\sqrt{2m_s}\,D^{3/2}
+\left[1+\frac{3D}{20m_s}
++\mathcal O\!\left(\frac{D^2}{m_s^2}\right)\right].
+}
+\]
+这说明三体微分谱在两个反冲端点附近按 \(D^{3/2}\) 关闭，而二体非弹性谱在相同运动学端点并没有这一个内部相空间幂次。
+
+**适用边界非常重要：** 如果 \(D_1,D_2\) 接近 \(\chi_2\) 极点，或者矩阵元明显依赖 \(k\) 的能量和角度，就不能把 \(\mathcal M_3\) 从内部积分中提出。此时必须使用
+\[
+\int_0^D d\epsilon\int d\Omega_*\,
+p_*(\epsilon)\,
+\overline{|\mathcal M_3(\epsilon,\Omega_*)|^2}
+\]
+及完整外层 Jacobian 做数值积分。\(I(D)\) 是常振幅、重粒子极限下的解析相空间核，不是对所有 Breit–Wigner 参数点都精确的完整三体截面。
+
+### 28.5 与二体非弹性散射的对照
+
+在 \(m_{A'}^2\gg Q_A^2\)、\(\Delta\gg E_s\) 且两张辐射图可用同一领先阶系数近似时，振幅平方比约为
+\[
+\frac{\overline{|\mathcal M_{2\to3}|^2}}
+{\overline{|\mathcal M_{2\to2}|^2}}
+\simeq\frac{4g_2^2}{\Delta^2}.
+\]
+再乘上 §28.4 得到的内部相空间，固定速度、固定反冲能量下有
+\[
+\boxed{
+\frac{d\sigma_{2\to3}/dE_R}
+{d\sigma_{2\to2}/dE_R}
+\simeq
+\frac{4g_2^2}{\Delta^2}\frac{I(D)}{4\pi^2},
+}
+\]
+这里两种过程采用相同核响应、相同矢量耦合归一化和相同外层运动学近似。若核响应或振幅具有显著 \(W\) 依赖，必须回到完整积分，不能使用该简式。
+
+等 \(v_{\min}\) 的两支反冲能量也可直接从运动学推导。由
+\[
+v_{\min}(Q_A)=\frac{Q_A}{2\mu}+\frac{m_s}{Q_A}
+\]
+可知在给定 \(v_{\min}\) 下，两根 \(Q_L,Q_H\) 满足
+\[
+Q_LQ_H=2\mu m_s.
+\]
+使用 \(E_R\simeq Q_A^2/(2m_A)\)，
+\[
+E_LE_H=\left(\frac{\mu m_s}{m_A}\right)^2.
+\]
+定义
+\[
+E_c=\frac{\mu m_s}{m_A},
+\]
+便有
+\[
+\boxed{E_LE_H=E_c^2,\qquad
+v_{\min}(E_L)=v_{\min}(E_H).}
+\]
+常振幅二体谱在这两个反冲点采样相同的 halo 积分；三体谱还乘 \(I[D]\)，而较高反冲支具有较大的 \(Q_A\)，在相同 \(v-v_{\min}>0\) 下有较大的 \(D=Q_A(v-v_{\min})\)，所以 \(I(D)\) 更大。
+
+若两个分支贡献速度都满足 \(D\ll m_s\)，则 \(I(D)\propto D^{3/2}\)。在相同 \(v_{\min}\) 的近阈值近似下，
+\[
+\frac{\widetilde R_{2\to3}(E_H)}
+{\widetilde R_{2\to3}(E_L)}
+\simeq
+\left(\frac{Q_H}{Q_L}\right)^{3/2}
+=
+\left(\frac{E_H}{E_L}\right)^{3/4}.
+\]
+这不是完整天然氙实验谱的普适恒等式；它只适用于单同位素、常振幅、相同 halo 输入且 \(D/m_s\) 足够小的近似情形。
+
+## 29. 从夸克矢量流到单核子 Dirac–Pauli form factors
+
+### 29.1 Lorentz 分解为什么只需要 \(F_1\) 和 \(F_2\)
+
+对同种、等质量的外部核子，矢量流矩阵元在 Lorentz 协变性、宇称和时间反演约束下可写成
+\[
+\boxed{
+\langle N(p_N')|J_V^\mu|N(p_N)\rangle
+=
+\bar u_N(p_N')
+\left[
+F_1^{V,N}(t_N)\gamma^\mu+
+\frac{iF_2^{V,N}(t_N)}{2m_N}
+\sigma^{\mu\nu}q_{N\nu}
+\right]
+u_N(p_N).
+}
+\]
+这里
+\[
+q_N=p_N'-p_N,\qquad t_N=q_N^2.
+\]
+\(F_1\) 是 Dirac form factor，控制矢量电荷；\(F_2\) 是 Pauli form factor，控制反常磁化结构。对本项目的 flavor-universal 低能流，
+\[
+J_{uds}^\mu=\bar u\gamma^\mu u+\bar d\gamma^\mu d+\bar s\gamma^\mu s,
+\]
+总 form factor 是各味道矩阵元的线性组合：
+\[
+F_i^{uds,N}(t_N)=
+F_i^{u,N}(t_N)+F_i^{d,N}(t_N)+F_i^{s,N}(t_N).
+\]
+如果 UV 耦合不是等权重，则必须保留
+\[
+F_i^{V,N}(t_N)=\sum_q c_q F_i^{q,N}(t_N),
+\]
+其中 \(c_q\) 由 UV 电荷赋值和重味阈值匹配决定。
+
+### 29.2 \(F_1(0)\) 从价夸克数得到
+
+在零动量转移下，矢量流积分就是对应味道的守恒净夸克数。因此对质子
+\[
+F_1^{u/p}(0)=2,\qquad
+F_1^{d/p}(0)=1,\qquad
+F_1^{s/p}(0)=0.
+\]
+同位旋对称下中子交换 \(u\leftrightarrow d\)：
+\[
+F_1^{u/n}(0)=1,\qquad
+F_1^{d/n}(0)=2,\qquad
+F_1^{s/n}(0)=0.
+\]
+所以
+\[
+\boxed{
+F_1^{uds,p}(0)=F_1^{uds,n}(0)=3.
+}
+\]
+若每个夸克味道的媒介子耦合为 \(g_q\)，则
+\[
+\boxed{g_{Vp}=g_{Vn}=3g_q.}
+\]
+这是当前 benchmark 的零动量等标量电荷匹配，不代表有限动量下完整核子流只是常数 \(3\gamma^\mu\)。
+
+### 29.3 \(F_2(0)\) 的显式 flavor 重构
+
+Pauli form factor 在零动量处给出各味道对核子反常磁矩的贡献。Bishara et al.，arXiv:1707.06998，Appendix A.1 的输入为
+\[
+a_p=1.793,\qquad a_n=-1.913,\qquad
+F_2^{s/p}(0)=-0.064(17).
+\]
+由电磁流的 flavor 分解和同位旋对称关系，
+\[
+\begin{aligned}
+F_2^{u/p}(0)&=2a_p+a_n+F_2^{s/p}(0)
+=1.609(17),\\
+F_2^{d/p}(0)&=a_p+2a_n+F_2^{s/p}(0)
+=-2.097(17).
+\end{aligned}
+\]
+于是
+\[
+\boxed{
+F_2^{uds,p}(0)
+=1.609-2.097-0.064=-0.552.
+}
+\]
+中子由 \(u\leftrightarrow d\) 得到相同的三味总和：
+\[
+\boxed{F_2^{uds,n}(0)\simeq-0.552.}
+\]
+所以当前零动量 benchmark 有
+\[
+\frac{F_2^{uds}}{F_1^{uds}}=-0.184,\qquad
+F_1^{uds}+2F_2^{uds}=1.896,\qquad
+F_1^{uds}+F_2^{uds}=2.448.
+\]
+这里不能把 \(F_2^{uds}(0)\) 设为零，也不能把质子和中子各自的电磁反常磁矩直接当成三味等权重流的 Pauli form factor。
+
+**文献编号校正：** HKS 1503.04811 的 Eq. (19) 给出夸克矢量流的 \(F_1,F_2\) 分解，Eq. (20) 给出同位旋关系，Eq. (21)–(24) 讨论 flavor 分解、矢量电荷和相关 form factor；该文 Eq. (23) 本身并不是“三味 Pauli 项相消为零”的恒等式。本文的 \(1.609,-2.097,-0.064\) 数值应直接追溯到 Bishara et al. 1707.06998 Appendix A.1 的 Eqs. (80)–(82)。因此，旧稿中把一个所谓 HKS Eq. (23) 紧凑式解释为三味 \(F_2\) 零和定理的文字不应保留为物理依据。
+
+### 29.4 Sachs form factors 与有限 \(t_N\)
+
+定义
+\[
+\tau_N=-\frac{t_N}{4m_N^2}
+=\frac{Q_N^2}{4m_N^2},
+\qquad Q_N^2=-t_N,
+\]
+则 Sachs 电、磁 form factors 为
+\[
+\boxed{
+G_E^N(t_N)=F_1^N(t_N)-\tau_NF_2^N(t_N),
+\qquad
+G_M^N(t_N)=F_1^N(t_N)+F_2^N(t_N).
+}
+\]
+因此
+\[
+F_1^N=\frac{G_E^N+\tau_NG_M^N}{1+\tau_N},
+\qquad
+F_2^N=\frac{G_M^N-G_E^N}{1+\tau_N}.
+\]
+这些关系可以用于把实验或格点给出的 Sachs 形状转成 Dirac–Pauli 输入。
+
+Bishara et al. Appendix A.1 还给出零动量处 \(F_1\) 的斜率中心值：
+\[
+F_1^{u/p\,\prime}(0)=5.57(9)\ {\rm GeV}^{-2},\quad
+F_1^{d/p\,\prime}(0)=2.84(5)\ {\rm GeV}^{-2},\quad
+F_1^{s/p\,\prime}(0)=-0.018(9)\ {\rm GeV}^{-2}.
+\]
+等权重三味和的中心斜率为
+\[
+F_1^{uds,p\,\prime}(0)\simeq8.392\ {\rm GeV}^{-2},
+\]
+中子在同位旋对称近似下相同。它只允许写出局部展开
+\[
+F_1^{uds,N}(t_N)
+=3+8.392\,t_N+\mathcal O(t_N^2),
+\]
+不能把这条线性展开无条件外推到本项目全部 \(Q_A\) 区间。尤其 \(Q_A\sim0.3\)–\(0.4\) GeV 时，高阶曲率和 flavor 相关形状可能重要；Bishara 的 \(F_2(0)\) 中心值也不等于已经给出了完整 \(F_2(t_N)\)。有限 \(t_N\) 的 \(F_1,F_2\) 及协方差仍需独立输入。
+
+### 29.5 \(t_A\) 与 \(t_N\) 的关系
+
+AFH 使用核整体三维动量 \(Q_A=|\mathbf q_A|\)，媒介子传播子使用 \(t_A=q_A^2\)，而单核子 form factor 使用 \(t_N=q_N^2\)。在严格的一体冲量近似中，若核子顶点携带完整外部四动量转移 \(q_N=q_A\)，则
+\[
+t_N=t_A=-2m_AE_R.
+\]
+若只做静态自由核子诊断并人为令 \(q_N^0=0\)，则
+\[
+t_N=-Q_A^2=t_A-E_R^2.
+\]
+这两个处方的差别不是符号问题，而是不同的核子能量转移近似。正式计算必须在 metadata 中记录所用处方；不能把 \(Q_A^2\)、\(t_A\)、\(t_N\) 混为一个 q2。
