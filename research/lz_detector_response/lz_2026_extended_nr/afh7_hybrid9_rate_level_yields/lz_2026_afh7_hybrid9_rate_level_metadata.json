@@ -2,13 +2,13 @@
   "status": "PASS",
   "calculation": "LZ 2026 final-WIMP-search-ROI efficiency fold of AFH-7 and Hybrid-9 natural-xenon spectra",
   "input_files": {
-    "spectrum_csv": "research\\afh_default_density_natural_xenon_halo\\results\\afh7_hybrid9_ame2020_exact_2026-11-17\\afh_hybrid9_natural_xenon_spectrum.csv",
+    "spectrum_csv": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_ame2020_exact_2026-11-17/afh_hybrid9_natural_xenon_spectrum.csv",
     "spectrum_csv_sha256": "05e96d48b630813579f7a02a69dd98d1193702d3adb7fc352eb4ea520ab97dbc",
-    "spectrum_metadata_json": "research\\afh_default_density_natural_xenon_halo\\results\\afh7_hybrid9_ame2020_exact_2026-11-17\\metadata.json",
+    "spectrum_metadata_json": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_ame2020_exact_2026-11-17/metadata.json",
     "spectrum_metadata_sha256": "f3530ad55606631f11c449c30a5acded144bad156238fb777fee91dbe5955c5b",
-    "efficiency_csv": "research\\lz_detector_response\\lz_2026_extended_nr\\lz_2026_nr_efficiency_digitized.csv",
+    "efficiency_csv": "research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv",
     "efficiency_csv_sha256": "a0917cd29eef20fbbdc9383b81012f4bd9a669859779e39a8b6ccf47dd8a47ed",
-    "efficiency_metadata_json": "research\\lz_detector_response\\lz_2026_extended_nr\\lz_2026_nr_efficiency_metadata.json",
+    "efficiency_metadata_json": "research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_metadata.json",
     "efficiency_metadata_sha256": "79cc439938dab45435cfa19f779f5856c2c7d28154f6a92a87d60c4cc7d94a24",
     "afh_source_file": "v6\\dmformfactor-V6.m",
     "afh_source_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
@@ -91,7 +91,7 @@
     "background_likelihood_applied": false,
     "is_exclusion_limit": false
   },
-  "source_commit": null,
-  "output_csv": "research\\lz_detector_response\\lz_2026_extended_nr\\afh7_hybrid9_rate_level_yields\\lz_2026_afh7_hybrid9_rate_level_event_yields.csv",
+  "source_commit": "b9c05433b8e7da04b4d1563551afb06e2de71211",
+  "output_csv": "/home/runner/work/_temp/afh7_hybrid9_rate_level/lz_2026_afh7_hybrid9_rate_level_event_yields.csv",
   "output_csv_sha256": "19ce0f413b3249cf0f57c035cd56868896b76c9b5350dddb1048d876d9cc3de7"
 }
