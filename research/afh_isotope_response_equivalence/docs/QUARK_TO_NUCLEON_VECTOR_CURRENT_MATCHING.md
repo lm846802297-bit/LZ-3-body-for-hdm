@@ -1245,6 +1245,256 @@ F_1^{V,N}(t)\gamma^\nu
 
 这一步会决定三体过程中 \(\Phi''\)、\(\Delta\)、\(\Sigma'\) 等响应的真实系数，而不是由普通弹性算符表直接决定。
 
+### 11.5 从 Dirac–Pauli 核子流得到电荷、对流与磁化分量
+
+This section fixes the nucleon momentum convention and makes the one-body
+current coefficients explicit. It is a free-nucleon Pauli reduction; the
+three-body dark-sector tensor is still to be contracted with these currents.
+
+#### 11.5.1 动量约定与协变核子流
+
+For a nucleon struck by the nuclear momentum transfer, define
+
+\[
+q_A^\mu=p_N'^\mu-p_N^\mu,\qquad
+K_N^\mu=\frac{p_N'^\mu+p_N^\mu}{2},\qquad
+t_A=q_A^2\leq0.
+\]
+
+The spatial part of \(q_A\) is the momentum transferred to that nucleon in
+the one-body impulse approximation. In the three-body process it is the
+nuclear transfer
+\(\mathbf q_A=\mathbf p_\chi-\mathbf p_\chi'-\mathbf k_s\), not
+\(\mathbf q_\chi=\mathbf p_\chi'-\mathbf p_\chi\).
+
+Use the standard Dirac-Pauli convention
+
+\[
+J_N^\mu
+=\bar u_N(p_N')
+\left[
+F_1^V(t_A)\gamma^\mu
++\frac{iF_2^V(t_A)}{2m_N}
+\sigma^{\mu\nu}q_{A,\nu}
+\right]u_N(p_N),
+\qquad
+\sigma^{\mu\nu}=\frac{i}{2}[\gamma^\mu,\gamma^\nu],
+\]
+
+with covariantly normalized spinors, \(\bar u u=2m_N\). The sign in front of
+the Pauli term is tied to the explicit choice \(q_A=p_N'-p_N\). Reversing the
+definition of \(q_A\) requires reversing that sign as well.
+
+The Gordon identity in this convention is
+
+\[
+\bar u_N(p_N')\,i\sigma^{\mu\nu}q_{A,\nu}\,u_N(p_N)
+=
+\bar u_N(p_N')
+\left[2m_N\gamma^\mu-2K_N^\mu\right]u_N(p_N).
+\]
+
+Therefore
+
+\[
+J_N^\mu
+=(F_1^V+F_2^V)\bar u_N'\gamma^\mu u_N
+-\frac{F_2^V}{m_N}K_N^\mu\bar u_N'u_N.
+\]
+
+This identity is useful because the Dirac and Pauli pieces can be reduced
+with the same external spinors and the same \(q_A\) convention.
+
+#### 11.5.2 Pauli 约化：自旋—轨道电荷、对流电流与磁化电流
+
+Write \(\mathbf K_N=(\mathbf p_N'+\mathbf p_N)/2\) and
+\(\mathbf q_A=\mathbf p_N'-\mathbf p_N\). To the order needed to identify
+the leading charge, the charge spin-orbit term, convection current, and
+magnetization current, the Pauli bilinears are
+
+\[
+\bar u_N'\gamma^0u_N
+=
+2m_N\left[
+1+\frac{\mathbf K_N^2}{2m_N^2}
++\frac{i}{4m_N^2}
+\boldsymbol\sigma_N\cdot(\mathbf q_A\times\mathbf K_N)
++\cdots
+\right],
+\]
+
+\[
+\bar u_N'u_N
+=
+2m_N\left[
+1+\frac{\mathbf q_A^2}{8m_N^2}
+-\frac{i}{4m_N^2}
+\boldsymbol\sigma_N\cdot(\mathbf q_A\times\mathbf K_N)
++\cdots
+\right],
+\]
+
+and
+
+\[
+\bar u_N'\boldsymbol\gamma u_N
+=
+2\mathbf K_N
++i\boldsymbol\sigma_N\times\mathbf q_A
++\cdots.
+\]
+
+Substitution into the Gordon-reduced current gives the charge spin-orbit
+coefficient
+
+\[
+\boxed{
+J_N^0
+=
+2m_N F_1^V(t_A)
++
+\frac{i\,[F_1^V(t_A)+2F_2^V(t_A)]}{2m_N}
+\boldsymbol\sigma_N\cdot
+(\mathbf q_A\times\mathbf K_N)
++\delta J_{N,\mathrm{scalar}}^0+\cdots
+}
+\]
+
+where \(\delta J_{N,\mathrm{scalar}}^0\) denotes the spin-independent
+Darwin/recoil corrections of the same subleading expansion. The terms
+displayed explicitly are the leading charge and the spin-orbit charge
+operator relevant to the \(\Phi''\) projection.
+
+The spatial current is
+
+\[
+\boxed{
+\mathbf J_N
+=
+2F_1^V(t_A)\mathbf K_N
++i[F_1^V(t_A)+F_2^V(t_A)]
+\boldsymbol\sigma_N\times\mathbf q_A
++\cdots.
+}
+\]
+
+If the one-nucleon current is normalized by dividing the covariant matrix
+element by \(2m_N\), the same statements become
+
+\[
+\rho_N
+=
+F_1^V
++\frac{i(F_1^V+2F_2^V)}{4m_N^2}
+\boldsymbol\sigma_N\cdot(\mathbf q_A\times\mathbf K_N)
++\delta\rho_{N,\mathrm{Darwin}}+\cdots,
+\]
+
+\[
+\mathbf j_N
+=
+\frac{F_1^V}{m_N}\mathbf K_N
++\frac{i(F_1^V+F_2^V)}{2m_N}
+\boldsymbol\sigma_N\times\mathbf q_A
++\cdots.
+\]
+
+The factor \(2m_N\) convention must be kept consistent between the
+single-nucleon current, the nuclear matrix element, and the overall
+cross-section normalization. The AFH response functions themselves do not
+supply this relativistic spinor normalization.
+
+#### 11.5.3 flavor-universal 三味匹配下的流系数
+
+For the provisional low-energy three-flavor benchmark with
+\(c_u=c_d=c_s=1\), the explicit flavor-separated central values recorded in
+Section 10.4 give
+
+\[
+F_1^V(0)=3,\qquad F_2^V(0)=-0.552.
+\]
+
+The corresponding coefficients in the free-nucleon current reduction are
+
+\[
+F_1^V(0)+2F_2^V(0)=1.896,
+\]
+
+\[
+F_1^V(0)+F_2^V(0)=2.448.
+\]
+
+Thus the current benchmark does **not** use \(F_2^V(0)=0\) as its central
+input. The values are provisional central values from the explicit
+flavor-separated form factors; their uncertainties and the finite-\(t_A\)
+dependence must be carried into the production matching.
+
+| Current structure | Form-factor combination | Explicit 2017 flavor-separated central input | If a reconciled convention instead gives \(F_2^V(0)=0\) |
+|---|---|---:|---:|
+| Leading charge | \(F_1^V\) | 3 | 3 |
+| Charge spin-orbit term | \(F_1^V+2F_2^V\) | 1.896 | 3 |
+| Convection current | \(F_1^V\) | 3 | 3 |
+| Magnetization current | \(F_1^V+F_2^V\) | 2.448 | 3 |
+
+The last column is shown only as a convention-comparison case, not as the
+current benchmark input. The compact 2015 HKS expression and the explicit
+2017 flavor-separated values must be reconciled at the level of their
+definitions before the final production coefficients are frozen. Until
+that audit is complete, the code should expose \(F_1^V(t_A)\) and
+\(F_2^V(t_A)\) as explicit inputs rather than hard-code either a vanishing
+or a constant Pauli term.
+
+A useful structural point survives either convention: even if a separately
+matched current happened to have \(F_2^V(0)=0\), the charge spin-orbit and
+magnetization coefficients in this Pauli reduction still contain the
+nonzero Dirac form factor \(F_1^V(0)=3\). A vanishing Pauli constant would
+remove only the Pauli contribution to those combinations; it would not
+remove the \(F_1\)-generated terms displayed in the free-nucleon current.
+
+#### 11.5.4 AFH 响应投影及其与三体张量的关系
+
+The displayed operators identify the nuclear responses that need to be
+tested:
+
+- \(F_1^V\) multiplying the scalar density gives the leading \(M\) response.
+- The \(J_N^0\) spin-orbit term proportional to
+  \(\boldsymbol\sigma_N\cdot(\mathbf q_A\times\mathbf K_N)\) is the
+  \(\Phi''\)-type charge correction; its interference with the leading
+  density gives \(M\Phi''\).
+- The convection term proportional to \(\mathbf K_N\) is the candidate
+  orbital \(\Delta\) contribution after the appropriate multipole
+  projection.
+- The magnetization term proportional to
+  \(\boldsymbol\sigma_N\times\mathbf q_A\) is transverse to \(\mathbf q_A\)
+  and is the candidate \(\Sigma'\) contribution. This particular term is
+  not a longitudinal \(\Sigma''\) current because
+  \(\mathbf q_A\cdot(\boldsymbol\sigma_N\times\mathbf q_A)=0\).
+
+The first two terms in this list enter the nuclear charge component.
+Therefore the three-body amplitude contains
+
+\[
+\mathcal T_3^0 J_A^0
+=
+\mathcal T_3^0
+\left(J_{A,M}^0+J_{A,\Phi''}^0+\cdots\right).
+\]
+
+A small dark-matter spatial component \(\mathcal T_3^i\) cannot by itself
+suppress the \(\Phi''\) charge correction: that correction multiplies
+\(\mathcal T_3^0\). By contrast, the convection and magnetization pieces of
+\(\mathbf J_A\) contract with the spatial components \(\mathcal T_3^i\) and
+must be evaluated with the actual three-body tensor.
+
+This is why the new AFH \(W_{\Phi''}\) and \(W_{M\Phi''}\) export is the
+first nuclear-structure calculation to run, while the \(\Delta\) and
+\(\Sigma'\) responses are retained as the next spatial-current stage. It
+also explains why the elastic two-body \(\mathbf v^\perp\) operator basis
+cannot be used to assign the three-body Wilson coefficients: the
+coefficients must be obtained by contracting this Dirac-Pauli current with
+the full \(\mathcal T_3^\mu(p,p',k_s)\), retaining both scalar-radiation
+orderings and their interference.
+
 ## 12. AFH 六种主要核响应及其在当前模型中的角色
 
 AFH 的六种主要核多极响应是
@@ -1843,21 +2093,53 @@ R_X^{\rm phys}=4R_X^{\rm raw}.
 
 因此，当前可以继续使用 \(W_M^{00}\) 作为领先阶基准，但不能宣称完整 VV 核流已经由 \(W_M^{00}\) 穷尽，也不能宣称其他响应已经被数值证明可以忽略。
 
-## 20. 讨论过程中形成的关键修正与不应再重复的推理
+## 20. 讨论中判断的演化：哪些直觉需要被精确化
 
-| 早期说法或容易出现的推理 | 更新后的处理 |
-|---|---|
-| AFH 的十五个算符可以直接作为三体振幅 | 标准 AFH 算符基底针对弹性二体核子运动学；三体必须保留 \(k_s\) 并重新匹配 |
-| \(q_A\) 就是暗物质初末态动量差 | 三体守恒给出 \(q_A=-q_\chi-k_s\)，必须区分 |
-| 只要核子矢量流是 \(J_N^0\)，完整矢量流就只有 \(M\) | \(J_N^i\) 含对流和磁化结构，且 \(J_N^0\) 也可能有次领先自旋—轨道项 |
-| 暗物质侧空间流小，所以 \(\Phi''\) 必然小 | \(\mathcal T_3^0\) 仍可与核子时间流中的自旋—轨道项收缩 |
-| 点核质心电流只有 ppm 修正，所以所有轨道响应都小 | 点核没有核内坐标、内部动量和自旋—轨道结构 |
-| 核自旋非零就必须加入 SD 响应 | 是否需要 \(\Sigma'\)、\(\Sigma''\) 取决于 UV 匹配是否产生核子自旋算符 |
-| 矢量相互作用一定只有 \(\mathcal O_1\) | 弹性 VV 匹配包含 \(F_1/F_2\) 及相应次领先结构；三体还需重新收缩 |
-| flavor-universal \(F_2^V(0)\) 必然为零 | 撤回该推断；采用明确 flavor-separated 输入，当前引用的 2017 数据给出非零和 |
-| \(M\) 的 rank-2 多极就是 \(\Phi''\) | rank-2 仍属于 \(M\) 电荷响应 |
-| \(W_M\) 可以再乘 Helm 因子修正有限核尺寸 | AFH \(W_M\) 已包含核密度有限尺寸效应，重复乘会双计 |
-| 所有 AFH 响应都应该立即计算 | 先从当前 UV 流匹配，优先完成 \(M,\Phi'',M\Phi''\)，再决定扩展 |
+### 20.1 从“点核振幅乘形状因子”到“同一个核矩阵元的两种组织方式”
+
+讨论最初的疑问是：为什么点核振幅乘 \(W_M\) 能与逐核子非相对论算符计算一致？如果只把两种公式并列，确实看不出它们之间的联系。真正的联系是两边都计算
+
+\[
+\left\langle A_f\left|
+\sum_i e^{i\mathbf q_A\cdot\mathbf r_i}
+\right|A_i\right\rangle.
+\]
+
+点核路线先把 \(q_A=0\) 时的相干耦合合并成 \(Ag_N\)，再用归一化 \(M\) 响应恢复有限核尺寸；逐核子路线则保留每个核子的坐标算符并直接计算核矩阵元。两种路线只有在相同单体密度算符、核态、动量转移和归一化下才等价。它们不是对任意核子流都能互换的两种写法。
+
+### 20.2 从一个 \(q\) 到 \(q_A,q_\chi,k_s,t_A,E_R\) 的变量分层
+
+普通弹性二体散射只有一个独立的三动量转移，容易让人把暗物质和核子的动量差用同一个符号表示。三体过程多出 \(k_s\)，于是
+
+\[
+q_A=-q_\chi-k_s.
+\]
+
+这不是记号上的偏好，而是四动量守恒的直接结果。AFH 核响应必须使用核子/原子核实际获得的 \(q_A\)；暗物质内部传播子则必须使用相应内部线的四动量。把两者混为一个 \(q\)，会同时污染核响应插值、传播子分母和三体相空间。
+
+### 20.3 从“AFH 有一组算符”到“当前模型只匹配实际产生的算符”
+
+AFH 的 NR EFT 是一个允许的弹性算符空间，不是要求每个模型都把所有算符作为自由参数加入。当前 UV 拉格朗日量只有暗物质跃迁矢量顶点、暗物质标量辐射顶点和夸克矢量流。它首先匹配到核子矢量流，而不是任意轴矢量、赝标量或张量流。
+
+但核子矢量流并不等于只有一个 \(J_N^0\) 常数。有限 \(F_1/F_2\)、对流电流和磁化电流都可能产生次领先结构。正确的筛选方法是从 UV 流开始做匹配，再判断哪些 AFH 响应实际出现，而不是先选一套完整响应清单再寻找理由。
+
+### 20.4 从“暗物质空间流很小”到“必须检查核子时间流和核内结构”
+
+此前的 \(\sum_iL^{ii}/L^{00}\) 诊断以及点状无自旋核质心电流的 ppm 检查，只分别约束暗物质侧空间流和核整体质心平动流。它们没有计算核内的 \(\boldsymbol\sigma_i\)、\(\mathbf l_i\) 或 \(\boldsymbol\sigma_i\cdot\mathbf l_i\) 结构。
+
+特别是，核子时间流中的自旋—轨道项可以与领先的 \(\mathcal T_3^0\) 收缩。因此不能用小的 \(\mathcal T_3^i\) 排除 \(\Phi''\)。同样，核内速度比晕速度大也不能直接推出轨道响应大；两种判断都必须经过完整张量收缩和核矩阵元计算。
+
+### 20.5 从“矢量相互作用只对应 SI”到“\(M\) 是领先项，但不是未经检验的完整答案”
+
+在零动量和等质子、等中子耦合下，矢量电荷确实给出相干 \(M\) 响应，且 AFH v6.0 的 factor-four 约定必须处理一次。但有限 \(t_A\) 的核子 form factors 会带来 Dirac 和 Pauli 结构，核子空间流又含对流和磁化分量。当前 \(M\)-only 结果因此是有明确依据的领先阶基准，不是完整 VV 核流已经被证明的结论。
+
+### 20.6 从“\(F_2\) 是否抵消”到“必须把文献定义和 flavor 权重逐项对齐”
+
+早期曾把 2015 年的紧凑三味表达式直接解释为 flavor-universal \(F_2^V(0)=0\)。随后对照 2017 年显式 flavor-separated 数值，得到中心值和 \(-0.552\)。两种写法不能在没有核对 \(\kappa_N\)、strange form factor 和 flavor-current 约定时静默地混用。因此本文保留这个文献约定核查点，并把显式 2017 数值作为暂定 benchmark，而不是把有限 \(t_A\) 的生产系数视为已经锁定。
+
+### 20.7 从“Xe-131 的 rank-2 项可能是新响应”到“先区分多极阶数和响应类型”
+
+Xe-131 的 \(J_A=3/2\) 允许 \(M\) 电荷响应包含 \(J=2\) 多极。这个 rank-2 项仍属于 \(M\)，不等于 \(\Phi''\) 或 SD 响应。真正的 \(\Phi''\) 需要从自旋—轨道核算符构造，并与 \(M\) 的矩阵元形成独立的干涉项 \(W_{M\Phi''}\)。这也是为什么已有 \(M\) 多极重构通过不能代替新的 \(\Phi''\) 导出。
 
 ## 21. 参考文献与仓库材料
 
@@ -1889,266 +2171,30 @@ R_X^{\rm phys}=4R_X^{\rm raw}.
 
 ---
 
-## 22. 本文档的最终使用边界
+## 22. 证据等级、可引用结论与进入论文的条件
 
-本文档保留并展开了讨论中的理论逻辑、公式、数值诊断、判断修正和计算计划。它不把不同证据等级混为一谈：
+### 22.1 已有 AFH 电荷响应可以支持的陈述
 
-- **解析结构**：由拉格朗日量、流矩阵元和运动学推导得到；
-- **文献输入**：由引用的 AFH、手征 EFT 和 flavor form-factor 文献提供；
-- **已归档数值结果**：由 PR #51 的 AFH 七同位素 \(M\) 响应计算及其测试支持；
-- **历史诊断**：此前报告的三体空间流比例和点核 ppm 结果，尚需恢复原始输入与收敛记录；
-- **启发式估算**：旧的单核子 O3-like 百分比，只能作为提出数值审计的动机；
-- **待完成结果**：\(\Phi''\)、\(M\Phi''\)、完整 \(\Sigma/\Delta\) 投影和三体 \(L_{\mu\nu}W_A^{\mu\nu}\) 尚未完成。
+PR #51 中七种氙同位素的 AFH \(M\) 响应网格、零动量归一化和多极重构结果已经归档。它们支持我们在所用 AFH v6.0 default-density 输入下，正确实现了 \(M\) 电荷响应的数值读取、factor-four 映射和内部多极重构。Xe-131 的 rank-2 项也已明确属于 \(M\) 响应。
 
-后续研究应以完整三体暗物质流和实际夸克—核子 form factors 为起点，逐项推导核子算符，再用 AFH 核响应计算核矩阵元。只有完成这条链条，才能判断当前 \(W_M^{00}\) 近似的精度，以及它是否足以用于天然氙三体反冲谱。
+这些结果可以作为后续三体核流计算的核结构基准。引用时应说明它们是 AFH package 的响应结果及其内部一致性审计，而不是独立的核结构模型比较。
 
+### 22.2 当前理论结构可以支持的陈述
 
-## 23. Explicit Dirac-Pauli reduction and the flavor-summed current coefficients
+从 UV 拉格朗日量可以明确写出两张标量辐射图组成的三体暗物质流，并将它与媒介子传播子和核子矢量流收缩。三体运动学严格要求区分 \(q_A\)、\(q_\chi\) 和 \(k_s\)。在单体矢量电荷领先阶、等质子等中子耦合的条件下，\(M\) 是合理的领先核响应。
 
-This section fixes the nucleon momentum convention and makes the one-body
-current coefficients explicit. It is a free-nucleon Pauli reduction; the
-three-body dark-sector tensor is still to be contracted with these currents.
+自由核子 Dirac–Pauli 流的 Pauli 约化还表明，电荷自旋—轨道项、对流项和磁化项具有不同的 \(F_1/F_2\) 组合。它们为 \(\Phi''\)、\(\Delta\) 和 \(\Sigma'\) 提供了明确的候选投影，但只有与完整 \(\mathcal T_3^\mu\) 收缩后，才能得到当前三体过程的最终系数。
 
-### 23.1 Convention and exact covariant current
+### 22.3 目前不能作为最终物理结果引用的陈述
 
-For a nucleon struck by the nuclear momentum transfer, define
+此前报告的暗物质空间流比值、点核 ppm 修正和旧 O3-like 百分比尚缺少完整原始输入、脚本和收敛证据，不能被写成全参数空间结论或 Xe-131 核截面修正。\(W_{\Phi''}\)、\(W_{M\Phi''}\)、\(\Delta\)、\(\Sigma'\)、\(\Sigma''\) 的数值响应以及完整三体 \(L_{\mu\nu}W_A^{\mu\nu}\) 收缩也尚未完成。
 
-\[
-q_A^\mu=p_N'^\mu-p_N^\mu,\qquad
-K_N^\mu=\frac{p_N'^\mu+p_N^\mu}{2},\qquad
-t_A=q_A^2\leq0.
-\]
+此外，flavor-universal 三味 \(F_2^V(t_A)\) 的有限动量输入尚未锁定。2015 年紧凑表达式与 2017 年显式 flavor-separated 输入的约定差异必须在生产代码冻结前解决。不能把零动量 form factor 中心值当成整个三体动量区间的常数。
 
-The spatial part of \(q_A\) is the momentum transferred to that nucleon in
-the one-body impulse approximation. In the three-body process it is the
-nuclear transfer
-\(\mathbf q_A=\mathbf p_\chi-\mathbf p_\chi'-\mathbf k_s\), not
-\(\mathbf q_\chi=\mathbf p_\chi'-\mathbf p_\chi\).
+### 22.4 从研究记录进入论文结果的最低门槛
 
-Use the standard Dirac-Pauli convention
+若要在论文中宣称 \(M\)-only 近似足够，需要先完成 Xe-131 的 \(\Phi''\) 与 \(M\Phi''\) 响应导出，并将它们与实际三体 Wilson 系数结合；随后检查 \(\Delta\)、\(\Sigma'\) 等空间核流投影是否受到可控抑制。比较必须同时报告相对变化、绝对截面和天然氙合并后的结果。
 
-\[
-J_N^\mu
-=\bar u_N(p_N')
-\left[
-F_1^V(t_A)\gamma^\mu
-+\frac{iF_2^V(t_A)}{2m_N}
-\sigma^{\mu\nu}q_{A,\nu}
-\right]u_N(p_N),
-\qquad
-\sigma^{\mu\nu}=\frac{i}{2}[\gamma^\mu,\gamma^\nu],
-\]
+若这些响应对最终可观测谱的影响确实低于目标精度，才能把 \(M\)-only 近似提升为经过验证的受控近似。若它们填平了 \(M\) 的局部深极小值，则应修正三体反冲谱，而不能仅保留旧的点核结果。
 
-with covariantly normalized spinors, \(\bar u u=2m_N\). The sign in front of
-the Pauli term is tied to the explicit choice \(q_A=p_N'-p_N\). Reversing the
-definition of \(q_A\) requires reversing that sign as well.
-
-The Gordon identity in this convention is
-
-\[
-\bar u_N(p_N')\,i\sigma^{\mu\nu}q_{A,\nu}\,u_N(p_N)
-=
-\bar u_N(p_N')
-\left[2m_N\gamma^\mu-2K_N^\mu\right]u_N(p_N).
-\]
-
-Therefore
-
-\[
-J_N^\mu
-=(F_1^V+F_2^V)\bar u_N'\gamma^\mu u_N
--\frac{F_2^V}{m_N}K_N^\mu\bar u_N'u_N.
-\]
-
-This identity is useful because the Dirac and Pauli pieces can be reduced
-with the same external spinors and the same \(q_A\) convention.
-
-### 23.2 Pauli reduction through the first spin-orbit and spatial-current terms
-
-Write \(\mathbf K_N=(\mathbf p_N'+\mathbf p_N)/2\) and
-\(\mathbf q_A=\mathbf p_N'-\mathbf p_N\). To the order needed to identify
-the leading charge, the charge spin-orbit term, convection current, and
-magnetization current, the Pauli bilinears are
-
-\[
-\bar u_N'\gamma^0u_N
-=
-2m_N\left[
-1+\frac{\mathbf K_N^2}{2m_N^2}
-+\frac{i}{4m_N^2}
-\boldsymbol\sigma_N\cdot(\mathbf q_A\times\mathbf K_N)
-+\cdots
-\right],
-\]
-
-\[
-\bar u_N'u_N
-=
-2m_N\left[
-1+\frac{\mathbf q_A^2}{8m_N^2}
--\frac{i}{4m_N^2}
-\boldsymbol\sigma_N\cdot(\mathbf q_A\times\mathbf K_N)
-+\cdots
-\right],
-\]
-
-and
-
-\[
-\bar u_N'\boldsymbol\gamma u_N
-=
-2\mathbf K_N
-+i\boldsymbol\sigma_N\times\mathbf q_A
-+\cdots.
-\]
-
-Substitution into the Gordon-reduced current gives the charge spin-orbit
-coefficient
-
-\[
-\boxed{
-J_N^0
-=
-2m_N F_1^V(t_A)
-+
-\frac{i\,[F_1^V(t_A)+2F_2^V(t_A)]}{2m_N}
-\boldsymbol\sigma_N\cdot
-(\mathbf q_A\times\mathbf K_N)
-+\delta J_{N,\mathrm{scalar}}^0+\cdots
-}
-\]
-
-where \(\delta J_{N,\mathrm{scalar}}^0\) denotes the spin-independent
-Darwin/recoil corrections of the same subleading expansion. The terms
-displayed explicitly are the leading charge and the spin-orbit charge
-operator relevant to the \(\Phi''\) projection.
-
-The spatial current is
-
-\[
-\boxed{
-\mathbf J_N
-=
-2F_1^V(t_A)\mathbf K_N
-+i[F_1^V(t_A)+F_2^V(t_A)]
-\boldsymbol\sigma_N\times\mathbf q_A
-+\cdots.
-}
-\]
-
-If the one-nucleon current is normalized by dividing the covariant matrix
-element by \(2m_N\), the same statements become
-
-\[
-\rho_N
-=
-F_1^V
-+\frac{i(F_1^V+2F_2^V)}{4m_N^2}
-\boldsymbol\sigma_N\cdot(\mathbf q_A\times\mathbf K_N)
-+\delta\rho_{N,\mathrm{Darwin}}+\cdots,
-\]
-
-\[
-\mathbf j_N
-=
-\frac{F_1^V}{m_N}\mathbf K_N
-+\frac{i(F_1^V+F_2^V)}{2m_N}
-\boldsymbol\sigma_N\times\mathbf q_A
-+\cdots.
-\]
-
-The factor \(2m_N\) convention must be kept consistent between the
-single-nucleon current, the nuclear matrix element, and the overall
-cross-section normalization. The AFH response functions themselves do not
-supply this relativistic spinor normalization.
-
-### 23.3 Consequence of the flavor-universal three-flavor matching
-
-For the provisional low-energy three-flavor benchmark with
-\(c_u=c_d=c_s=1\), the explicit flavor-separated central values recorded in
-Section 10.4 give
-
-\[
-F_1^V(0)=3,\qquad F_2^V(0)=-0.552.
-\]
-
-The corresponding coefficients in the free-nucleon current reduction are
-
-\[
-F_1^V(0)+2F_2^V(0)=1.896,
-\]
-
-\[
-F_1^V(0)+F_2^V(0)=2.448.
-\]
-
-Thus the current benchmark does **not** use \(F_2^V(0)=0\) as its central
-input. The values are provisional central values from the explicit
-flavor-separated form factors; their uncertainties and the finite-\(t_A\)
-dependence must be carried into the production matching.
-
-| Current structure | Form-factor combination | Explicit 2017 flavor-separated central input | If a reconciled convention instead gives \(F_2^V(0)=0\) |
-|---|---|---:|---:|
-| Leading charge | \(F_1^V\) | 3 | 3 |
-| Charge spin-orbit term | \(F_1^V+2F_2^V\) | 1.896 | 3 |
-| Convection current | \(F_1^V\) | 3 | 3 |
-| Magnetization current | \(F_1^V+F_2^V\) | 2.448 | 3 |
-
-The last column is shown only as a convention-comparison case, not as the
-current benchmark input. The compact 2015 HKS expression and the explicit
-2017 flavor-separated values must be reconciled at the level of their
-definitions before the final production coefficients are frozen. Until
-that audit is complete, the code should expose \(F_1^V(t_A)\) and
-\(F_2^V(t_A)\) as explicit inputs rather than hard-code either a vanishing
-or a constant Pauli term.
-
-A useful structural point survives either convention: even if a separately
-matched current happened to have \(F_2^V(0)=0\), the charge spin-orbit and
-magnetization coefficients in this Pauli reduction still contain the
-nonzero Dirac form factor \(F_1^V(0)=3\). A vanishing Pauli constant would
-remove only the Pauli contribution to those combinations; it would not
-remove the \(F_1\)-generated terms displayed in the free-nucleon current.
-
-### 23.4 Candidate AFH projections and their relation to the three-body tensor
-
-The displayed operators identify the nuclear responses that need to be
-tested:
-
-- \(F_1^V\) multiplying the scalar density gives the leading \(M\) response.
-- The \(J_N^0\) spin-orbit term proportional to
-  \(\boldsymbol\sigma_N\cdot(\mathbf q_A\times\mathbf K_N)\) is the
-  \(\Phi''\)-type charge correction; its interference with the leading
-  density gives \(M\Phi''\).
-- The convection term proportional to \(\mathbf K_N\) is the candidate
-  orbital \(\Delta\) contribution after the appropriate multipole
-  projection.
-- The magnetization term proportional to
-  \(\boldsymbol\sigma_N\times\mathbf q_A\) is transverse to \(\mathbf q_A\)
-  and is the candidate \(\Sigma'\) contribution. This particular term is
-  not a longitudinal \(\Sigma''\) current because
-  \(\mathbf q_A\cdot(\boldsymbol\sigma_N\times\mathbf q_A)=0\).
-
-The first two terms in this list enter the nuclear charge component.
-Therefore the three-body amplitude contains
-
-\[
-\mathcal T_3^0 J_A^0
-=
-\mathcal T_3^0
-\left(J_{A,M}^0+J_{A,\Phi''}^0+\cdots\right).
-\]
-
-A small dark-matter spatial component \(\mathcal T_3^i\) cannot by itself
-suppress the \(\Phi''\) charge correction: that correction multiplies
-\(\mathcal T_3^0\). By contrast, the convection and magnetization pieces of
-\(\mathbf J_A\) contract with the spatial components \(\mathcal T_3^i\) and
-must be evaluated with the actual three-body tensor.
-
-This is why the new AFH \(W_{\Phi''}\) and \(W_{M\Phi''}\) export is the
-first nuclear-structure calculation to run, while the \(\Delta\) and
-\(\Sigma'\) responses are retained as the next spatial-current stage. It
-also explains why the elastic two-body \(\mathbf v^\perp\) operator basis
-cannot be used to assign the three-body Wilson coefficients: the
-coefficients must be obtained by contracting this Dirac-Pauli current with
-the full \(\mathcal T_3^\mu(p,p',k_s)\), retaining both scalar-radiation
-orderings and their interference.
+因此，本记录是完整讨论和计算路线的理论底稿。它明确说明了哪些结论已由 AFH 电荷响应归档结果支持，哪些来自文献匹配，哪些只是历史诊断，哪些仍需原生计算。后续工作应沿着“UV 流—核子 form factors—完整三体张量—AFH 核响应—三体相空间—天然氙速率”的顺序推进。
