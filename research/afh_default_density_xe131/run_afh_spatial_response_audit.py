@@ -151,10 +151,10 @@ def amplitudes(A,q,rows):
 
 def response(A,q,rows):
     amp=amplitudes(A,q,rows)
-    wm=sum(v*v for v in amp["M"].values())/4
-    ws=sum(v*v for v in amp["SigmaPrime"].values())/4
-    wd=sum(v*v for v in amp["Delta"].values())/4
-    wsd=sum(amp["SigmaPrime"][L]*amp["Delta"][L] for L in amp["SigmaPrime"])/4
+    wm=sum(v*v for v in amp["M"].values())/8
+    ws=sum(v*v for v in amp["SigmaPrime"].values())/8
+    wd=sum(v*v for v in amp["Delta"].values())/8
+    wsd=sum(amp["SigmaPrime"][L]*amp["Delta"][L] for L in amp["SigmaPrime"])/8
     return wm,ws,wd,wsd,amp
 
 def parity_audit():
@@ -185,7 +185,7 @@ def main():
     meta={"source":"AFH DMFormFactor v6.0 operator definitions translated to Python",
           "isospin":"tau1=tau2=0 (AFH isoscalar package convention)",
           "responses":"W_M, W_SigmaPrime, W_Delta, W_SigmaPrimeDelta",
-          "normalization":"same AFH package normalization as ResponseNuclear[y,i,0,0]; factor four for physical equal-p/n response is not applied here",
+          "normalization":"same AFH package normalization as ResponseNuclear[y,i,0,0]; AFH package normalization derived from FF coefficient extraction; factor four for physical equal-p/n response is not applied here",
           "delta_operator_audit":parity_audit(),
           "limitations":["No native Wolfram cross-check has yet been run for SigmaPrime.",
           "AFH DeltaJ source wrapper and its internal 3j parity selection are mutually incompatible; literal Delta output is zero and must not be interpreted as a physical prediction.",
