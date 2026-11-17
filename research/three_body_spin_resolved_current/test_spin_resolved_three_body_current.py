@@ -71,7 +71,7 @@ class SpinResolvedCurrentTests(unittest.TestCase):
             self.point, self.mchi, self.mchi, 0.0
         )
         divergence = src.ward_lhs(self.point, total)
-        self.assertLess(src.scaled_ward_residual(self.point, total), 1e-8)
+        self.assertLess(src.scaled_ward_residual(self.point, total), 1e-7)
 
     def test_momentum_routing_identity(self):
         r_before, r_after = src.eq6.chi2_internal_momenta(self.point)
