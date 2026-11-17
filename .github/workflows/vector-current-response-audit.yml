@@ -1,0 +1,105 @@
+name: Three-body vector-current response audit
+
+on:
+  push:
+    branches:
+      - research/vector-current-response-audit-20261118
+  pull_request:
+    paths:
+      - "research/vector_current_response_audit/**"
+      - "research/three_body_calculation_and_validation/eq6_kernel.py"
+      - "research/three_body_calculation_and_validation/phase_space_convergence.py"
+      - ".github/workflows/vector-current-response-audit.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  current-tensor-and-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out exact source revision
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install numerical dependency
+        run: python -m pip install --upgrade pip numpy==2.3.5
+
+      - name: Compile audit code
+        run: |
+          python -m py_compile \
+            research/vector_current_response_audit/vector_current_response_audit.py \
+            research/vector_current_response_audit/test_vector_current_response_audit.py
+
+      - name: Run current-tensor and independent Eq. (6) regression tests
+        run: |
+          python -m unittest discover \
+            -s research/vector_current_response_audit \
+            -p 'test_*.py' -v
+
+      - name: Reproduce the 12-row width and current scan
+        run: |
+          python research/vector_current_response_audit/vector_current_response_audit.py \
+            --outdir /tmp/vector-current-response-audit
+
+      - name: Compare regenerated values with the archived numerical table
+        run: |
+          python - <<'PY'
+          import csv
+          import math
+          from pathlib import Path
+
+          archived = Path(
+              "research/vector_current_response_audit/results/2026-11-18/"
+              "vector_current_response_audit.csv"
+          )
+          regenerated = Path(
+              "/tmp/vector-current-response-audit/vector_current_response_audit.csv"
+          )
+          with archived.open(newline="", encoding="utf-8") as stream:
+              old = list(csv.DictReader(stream))
+          with regenerated.open(newline="", encoding="utf-8") as stream:
+              new = list(csv.DictReader(stream))
+
+          if len(old) != 12 or len(new) != 12:
+              raise SystemExit(f"Expected 12 rows; archived={len(old)}, regenerated={len(new)}")
+          if old[0].keys() != new[0].keys():
+              raise SystemExit("Archived and regenerated CSV schemas differ")
+
+          identity = ("benchmark", "width_scheme", "mapping", "phase_space_open")
+          numeric = [key for key in old[0] if key not in identity]
+          worst = (0.0, None, None)
+          for index, (a, b) in enumerate(zip(old, new)):
+              if any(a[key] != b[key] for key in identity):
+                  raise SystemExit(f"Row identity mismatch at row {index}: {a} vs {b}")
+              for key in numeric:
+                  av, bv = float(a[key]), float(b[key])
+                  if not math.isclose(av, bv, rel_tol=2e-8, abs_tol=1e-13):
+                      raise SystemExit(
+                          f"Archived/regenerated mismatch row={index} field={key}: "
+                          f"{av:.16g} vs {bv:.16g}"
+                      )
+                  scale = max(abs(av), abs(bv), 1e-300)
+                  rel = abs(av - bv) / scale
+                  if rel > worst[0]:
+                      worst = (rel, index, key)
+
+          print(
+              "Archived 12-row table agrees with fresh source run; "
+              f"largest relative difference={worst[0]:.3e} "
+              f"(row={worst[1]}, field={worst[2]})."
+          )
+          PY
+
+      - name: Archive freshly regenerated numerical output
+        uses: actions/upload-artifact@v4
+        with:
+          name: vector-current-response-audit
+          path: /tmp/vector-current-response-audit/
+          if-no-files-found: error
+          retention-days: 30
