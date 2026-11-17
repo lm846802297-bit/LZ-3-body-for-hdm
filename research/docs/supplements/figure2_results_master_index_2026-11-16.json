@@ -1010,13 +1010,13 @@
         },
         {
           "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/full_dsigma_sha256_manifest.json",
-          "sha256": "3f3bfdb0c722dfda7a0a00d2c2a34d0a7b1df42a2b417bf09044d1cf61ad3d84",
+          "sha256": "223da39028af24cc9f55bba6e7d6efddd272951934124813a4fccddb995723a8",
           "bytes": 11863,
           "role": "Full-run provenance and SHA-256 manifest"
         },
         {
           "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/SHA256SUMS.txt",
-          "sha256": "965d0ffff24a9ad5b6d8907637d9f8850019b50aa55fbf6750fd59628cbc618d",
+          "sha256": "67429882aa847fdaf8b2f02be795eba777773b5e3a30c66d10678a6f6f99a49b",
           "bytes": 2037,
           "role": "14 repository-relative SHA-256 checksums for source/input files and full-grid outputs"
         },
@@ -1602,13 +1602,13 @@
     },
     {
       "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/full_dsigma_sha256_manifest.json",
-      "sha256": "3f3bfdb0c722dfda7a0a00d2c2a34d0a7b1df42a2b417bf09044d1cf61ad3d84",
+      "sha256": "223da39028af24cc9f55bba6e7d6efddd272951934124813a4fccddb995723a8",
       "bytes": 11863,
       "role": "Full-run provenance and SHA-256 manifest"
     },
     {
       "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/SHA256SUMS.txt",
-      "sha256": "965d0ffff24a9ad5b6d8907637d9f8850019b50aa55fbf6750fd59628cbc618d",
+      "sha256": "67429882aa847fdaf8b2f02be795eba777773b5e3a30c66d10678a6f6f99a49b",
       "bytes": 2037,
       "role": "14 repository-relative SHA-256 checksums for source/input files and full-grid outputs"
     },
