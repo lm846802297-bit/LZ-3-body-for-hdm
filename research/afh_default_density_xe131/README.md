@@ -209,6 +209,19 @@ archive uses exact spatial q and is consistent with the exact three-body kinemat
 
 research/docs/appendices/09G_recoil_momentum_convention_audit.md.
 
+## Preliminary spatial-current response audit
+
+A first source-translated AFH audit for Xe-129 and Xe-131 is available in `run_afh_spatial_response_audit.py`, with selected-q numerical output generated under the requested output directory. The report is `audit/AFH_SPATIAL_RESPONSE_FIRST_AUDIT.md`. It computes the AFH isoscalar (W_{\Sigma'}) response and flags a source-level parity-selection conflict in the literal `DeltaJ` implementation. The literal zero from that path is **not** treated as a physical prediction. Native Wolfram cross-check and resolution of the `DeltaJ) parity issue are required before (W_\Delta) or (W_{\Sigma'\Delta}) can be considered validated.
+
+Reproduce the preliminary selected-q calculation with:
+
+```bash
+python research/afh_default_density_xe131/run_afh_spatial_response_audit.py --outdir /tmp/afh-spatial-audit
+python -m unittest research/afh_default_density_xe131/tests/test_afh_spatial_response_audit.py -v
+```
+
+This remains a nuclear-response-only calculation. It does not include the baryon-current Pauli form factors or the three-body (L_{\mu\nu}W_A^{\mu\nu}) contraction.
+
 ## Scope and connection to the three-body calculation
 
 The AFH default Xe-131 nuclear response is archived here. The four fixed-speed
