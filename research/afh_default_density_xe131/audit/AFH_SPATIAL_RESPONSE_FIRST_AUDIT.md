@@ -27,16 +27,44 @@ The density-matrix inputs in this repository contain 39 entries for Xe-129 and 6
 
 ## Numerical status
 
-No validated numerical values for (W_\Delta) or (W_{\Sigma'\Delta}) are claimed in this report. The earlier table of (W_M), (W_{\Sigma'}), and their ratios is withdrawn pending a point-by-point native Wolfram comparison.
+The native Xe-131 export of AFH indices 1, 4 and 7 now provides an independent
+anchor for the shared radial/multipole implementation. A Python translation
+of the source-defined \(\Phi''\) operator reproduces the native \(W_M\),
+\(W_{\Phi''}\), and signed \(W_{M\Phi''}\) at eight selected points
+\(q_A=0,0.05,0.10,0.158,0.25625,0.365,0.49925,0.60\) GeV. The maximum
+relative differences are:
 
-The Python translation is a development implementation. It must not be treated as an independent validated implementation until all of the following pass:
+| Response | Maximum relative difference |
+|---|---:|
+| \(W_M\) | \(2.96\times10^{-9}\) |
+| \(W_{\Phi''}\) | \(1.04\times10^{-12}\) |
+| \(W_{M\Phi''}\) | \(9.14\times10^{-11}\) |
 
-1. native AFH Wolfram export for response indices 1, 3, 6 and 8 at identical (q_A) values;
-2. point-by-point comparison of Python and Wolfram values, with documented tolerances;
-3. zero-momentum and finite-(q) checks, including all AFH normalization factors;
-4. a convergence test in the multipole sum and stable evaluation of the hypergeometric radial integrals.
+This comparison exposed and corrected a factor-of-two error in the Python
+response normalization: the AFH diagonal and interference response
+definitions both reduce to a \(1/4\) multipole-amplitude product in the
+\(\tau_1=\tau_2=0\) convention. The factor-four conversion to physical
+equal-p/n couplings is still applied only afterward, and is not included in
+these raw package-response comparisons.
 
-The factor-of-four conversion from AFH's raw isoscalar convention to the physical equal-(p/n) response must be applied exactly once, after the package-normalized response has been reproduced.
+This does **not** validate the \(\Sigma'\), \(\Delta\), or
+\(\Sigma'\Delta\) operators. No validated numerical values for
+\(W_\Delta\), \(W_{\Sigma'}\), or \(W_{\Sigma'\Delta}\) are claimed.
+The earlier Python selected-\(q\) spatial-response table remains withdrawn
+until native Wolfram exports for indices 3, 6 and 8 are compared point by
+point.
+
+The spatial Python translation is still a development implementation. It
+must not be treated as validated until all of the following pass:
+
+1. native AFH Wolfram export for response indices 1, 3, 6 and 8 at identical
+   \(q_A\) values for both Xe-129 and Xe-131;
+2. point-by-point comparison of Python and Wolfram values for the spatial
+   operators, with documented tolerances;
+3. zero-momentum and finite-\(q\) checks, including all AFH normalization
+   factors;
+4. convergence tests in the multipole sum and stable evaluation of the
+   hypergeometric radial integrals.
 
 ## Current physical interpretation
 

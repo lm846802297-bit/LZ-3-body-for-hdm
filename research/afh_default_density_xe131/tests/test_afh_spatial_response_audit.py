@@ -36,5 +36,16 @@ class AFHSpatialResponseTests(unittest.TestCase):
         self.assertFalse(audit["logical_conflict"])
         self.assertTrue(audit["delta_prime_is_not_delta_j"])
 
+    def test_native_xe131_m_phi_crosscheck_at_selected_q(self):
+        native_path=HERE/"output"/"phi_response_native"/"afh_default_xe131_M_PhiPP_native.csv"
+        with native_path.open(newline="",encoding="utf-8") as stream:
+            native={round(float(row["q_GeV"]),8):row for row in __import__("csv").DictReader(stream)}
+        for q in (0.0,0.05,0.10,0.158,0.25625,0.365,0.49925,0.60):
+            wm,wphi,wmphi,_=spatial.phi_response(131,q,self.rows[131])
+            row=native[round(q,8)]
+            for got,key in ((wm,"W_M00_AFH"),(wphi,"W_PhiPP00_AFH"),(wmphi,"W_MPhiPP00_AFH")):
+                self.assertTrue(math.isclose(got,float(row[key]),rel_tol=5e-9,abs_tol=2e-13),
+                                msg=f"q={q} {key}: Python={got} native={row[key]}")
+
 if __name__=="__main__":
     unittest.main()

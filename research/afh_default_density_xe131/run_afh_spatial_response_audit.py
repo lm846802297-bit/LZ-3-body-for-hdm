@@ -67,7 +67,9 @@ def bessel(y,np_,lp,n,l,L):
     return f1*f2*total
 
 def bessel_derivative(y,np_,lp,n,l,L,kind):
-    if L < 0 or y <= 0: return 0.0
+    # lcap=1 has a finite y->0 limit; lcap=0 terms vanish in the complete
+    # Phi'' combination at y=0 and are set to their limiting value.
+    if L < 0 or y < 0 or (y == 0 and L == 0): return 0.0
     f1=2.0**(L-1)/float(factorial2(2*L+1))*y**((L-1)/2)*math.exp(-y)*math.sqrt(math.factorial(np_-1)*math.factorial(n-1))
     f2=math.sqrt(math.gamma(np_+lp+0.5)*math.gamma(n+l+0.5))
     total=0.0
@@ -125,6 +127,46 @@ def delta_element(y,Np,tjp,N,tj,L):
     if not abnormal_allowed(Np,tjp,N,tj,L): return 0.0
     return delta_inner_element(y,Np,tjp,N,tj,L)
 
+def phi_pp_element(y,Np,tjp,N,tj,L):
+    """AFH PhiPPJ translated from the native v6.0 source, Eq. source lines 885-892."""
+    if not normal_allowed(Np,tjp,N,tj,L): return 0.0
+    nrp,lp=orbital(Np,tjp); nr,l=orbital(N,tj); jp=tjp/2; j=tj/2
+    overall=(-1)**int(round(lp+1))*6*qnorm(lp)*qnorm(jp)*qnorm(j)/math.sqrt(4*math.pi)
+
+    def nine(lcap):
+        return w9(lp,l,lcap,.5,.5,1,jp,j,L)
+
+    def summand1():
+        angular=0.0
+        for lc in (L,L+1):
+            angular += (-1)**(L-lc+1)*jnorm(lc)*w6(L+1,1,lc,1,L,1)*w6(L+1,1,lc,l,lp,l+1)*nine(lc)
+        return qnorm(l+1)*math.sqrt(l+1)*w3(lp,L+1,l+1)*bessel_derivative(y,nrp,lp,nr,l,L+1,"minus")*angular
+
+    def summand2():
+        if l==0: return 0.0
+        angular=0.0
+        for lc in (L,L+1):
+            angular += (-1)**(L-lc)*jnorm(lc)*w6(L+1,1,lc,1,L,1)*w6(L+1,1,lc,l,lp,l-1)*nine(lc)
+        return qnorm(l-1)*math.sqrt(l)*w3(lp,L+1,l-1)*bessel_derivative(y,nrp,lp,nr,l,L+1,"plus")*angular
+
+    def summand3():
+        if L==0: return 0.0
+        angular=0.0
+        for lc in (L-1,L):
+            angular += (-1)**(L-lc+1)*jnorm(lc)*w6(L-1,1,lc,1,L,1)*w6(L-1,1,lc,l,lp,l+1)*nine(lc)
+        return qnorm(l+1)*math.sqrt(l+1)*w3(lp,L-1,l+1)*bessel_derivative(y,nrp,lp,nr,l,L-1,"minus")*angular
+
+    def summand4():
+        if L==0 or l==0: return 0.0
+        angular=0.0
+        for lc in (L-1,L):
+            angular += (-1)**(L-lc)*jnorm(lc)*w6(L-1,1,lc,1,L,1)*w6(L-1,1,lc,l,lp,l-1)*nine(lc)
+        return qnorm(l-1)*math.sqrt(l)*w3(lp,L-1,l-1)*bessel_derivative(y,nrp,lp,nr,l,L-1,"plus")*angular
+
+    upper=qnorm(L+1)*math.sqrt(L+1)*(summand1()+summand2())
+    lower=0.0 if L==0 else qnorm(L-1)*math.sqrt(L)*(summand3()+summand4())
+    return overall*(upper+lower)
+
 def load_matrix(A):
     path=MATRIX_DIR/f"afh_default_xe{A}_density_matrix.csv"
     with path.open(newline="",encoding="utf-8") as f:
@@ -136,7 +178,7 @@ def amplitudes(A,q,rows):
     bfm=math.sqrt(41.467/(45*A**(-1/3)-25*A**(-2/3)))
     y=(q*bfm*FM_TO_GEV_INV/2)**2
     iso=math.sqrt(2/(2*T+1))
-    out={name:{} for name in ("M","SigmaPrime","Delta")}
+    out={name:{} for name in ("M","SigmaPrime","Delta","PhiPP")}
     for L in range(15):
         sums={name:0.0 for name in out}
         for r in rows:
@@ -146,16 +188,29 @@ def amplitudes(A,q,rows):
             sums["M"] += c*m_element(y,*args)
             sums["SigmaPrime"] += c*sigma_prime_element(y,*args)
             sums["Delta"] += c*delta_element(y,*args)
+            sums["PhiPP"] += c*phi_pp_element(y,*args)
         for name in out: out[name][L]=sums[name]
     return out
 
 def response(A,q,rows):
     amp=amplitudes(A,q,rows)
-    wm=sum(v*v for v in amp["M"].values())/8
-    ws=sum(v*v for v in amp["SigmaPrime"].values())/8
-    wd=sum(v*v for v in amp["Delta"].values())/8
-    wsd=sum(amp["SigmaPrime"][L]*amp["Delta"][L] for L in amp["SigmaPrime"])/8
+    # AFH ResponseNuclear uses 1/2 in the diagonal FF definition and no
+    # 1/2 in the interference FF definition. After the isoscalar 1/4
+    # combination, all four response outputs below carry the same /4 factor.
+    wm=sum(v*v for v in amp["M"].values())/4
+    ws=sum(v*v for v in amp["SigmaPrime"].values())/4
+    wd=sum(v*v for v in amp["Delta"].values())/4
+    wsd=sum(amp["SigmaPrime"][L]*amp["Delta"][L] for L in amp["SigmaPrime"])/4
     return wm,ws,wd,wsd,amp
+
+
+def phi_response(A,q,rows):
+    """Return native-convention W_M, W_PhiPP, W_MPhiPP for tau1=tau2=0."""
+    amp=amplitudes(A,q,rows)
+    wm=sum(v*v for v in amp["M"].values())/4
+    wphi=sum(v*v for v in amp["PhiPP"].values())/4
+    wmphi=sum(amp["M"][L]*amp["PhiPP"][L] for L in amp["M"])/4
+    return wm,wphi,wmphi,amp
 
 def parity_audit():
     # DeltaJ uses Deltaop with lcap=L; its 3j parity is consistent with abnormal parity.
@@ -174,7 +229,9 @@ def main():
         rows=load_matrix(A); isotope=[]
         for q in args.q:
             wm,ws,wd,wsd,amp=response(A,q,rows)
-            row={"A":A,"q_GeV":q,"W_M00_AFH":wm,"W_SigmaPrime00_AFH":ws,
+            wmp,wphi,wmphi,phi_amp=phi_response(A,q,rows)
+            row={"A":A,"q_GeV":q,"W_M00_AFH":wm,"W_PhiPP00_AFH":wphi,
+                 "W_MPhiPP00_AFH":wmphi,"W_SigmaPrime00_AFH":ws,
                  "W_Delta00_AFH_literal":wd,"W_SigmaPrimeDelta00_AFH_literal":wsd,
                  "SigmaPrime_over_M":ws/wm if wm else None}
             records.append(row); isotope.append(row)
@@ -184,11 +241,12 @@ def main():
         w=csv.DictWriter(f,fieldnames=list(records[0]));w.writeheader();w.writerows(records)
     meta={"source":"AFH DMFormFactor v6.0 operator definitions translated to Python",
           "isospin":"tau1=tau2=0 (AFH isoscalar package convention)",
-          "responses":"W_M, W_SigmaPrime, W_Delta, W_SigmaPrimeDelta",
-          "normalization":"same AFH package normalization as ResponseNuclear[y,i,0,0]; AFH package normalization derived from FF coefficient extraction; factor four for physical equal-p/n response is not applied here",
+          "responses":"W_M, W_PhiPP, W_MPhiPP, W_SigmaPrime, W_Delta, W_SigmaPrimeDelta",
+          "normalization":"native ResponseNuclear convention; diagonal and interference FF definitions both reduce to a /4 multipole-amplitude product after the tau1=tau2=0 combination; physical equal-p/n factor four is not applied here",
           "delta_operator_audit":parity_audit(),
-          "limitations":["No native Wolfram cross-check has yet been run for SigmaPrime.",
-          "DeltaJ is mapped to the same-rank MJLDivQ component called by the AFH source; the former parity-conflict diagnosis is withdrawn. Delta values remain provisional until native Wolfram pointwise comparison.",
+          "limitations":["The shared M/PhiPP/M-PhiPP radial and multipole implementation matches native Xe-131 AFH indices 1, 4 and 7 at eight q anchors; this does not validate SigmaPrime or Delta.",
+          "SigmaPrime and Delta remain development translations until native Wolfram pointwise comparison of indices 3 and 6; the SigmaPrimeDelta interference requires index 8 comparison.",
+          "DeltaJ is mapped to the same-rank MJLDivQ component called by the AFH source; the former parity-conflict diagnosis is withdrawn.",
           "No finite-Q2 baryon-current Pauli form factors or three-body L_mu_nu W_A^mu_nu contraction are included.",
           "No halo integration is included."],
           "isotopes":summaries}

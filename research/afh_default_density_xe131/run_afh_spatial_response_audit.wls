@@ -6,7 +6,7 @@ envPath = Environment["DMFormFactorPath"];
 packagePath = If[StringQ[envPath] && envPath =!= "", envPath, FileNameJoin[{repoRoot,"v6","dmformfactor-V6.m"}]];
 If[!FileExistsQ[packagePath], Print["ERROR: AFH source not found: ",packagePath]; Exit[2]];
 Get[packagePath];
-qGrid={0.,0.05,0.10,0.158,0.20,0.256,0.30,0.365,0.45,0.60};
+qGrid={0.,0.05,0.10,0.158,0.20,0.25625,0.30,0.365,0.45,0.49925,0.60};
 outDir=FileNameJoin[{scriptDir,"output","spatial_native"}];
 If[!DirectoryQ[outDir],CreateDirectory[outDir,CreateIntermediateDirectories->True]];
 Do[
