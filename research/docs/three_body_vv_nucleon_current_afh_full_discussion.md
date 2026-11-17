@@ -2155,16 +2155,19 @@ Y_{JM}(\widehat{\mathbf r}).
 AFH 的自旋—轨道多极可以写为
 \[
 \boxed{
-\Phi''_{JM}
+\Phi''_{JM;\tau}
 =
-i\left(\frac{1}{Q_A}\boldsymbol\nabla M_{JM}\right)
+i\sum_{i=1}^{A}
+\left(\frac{1}{Q_A}\boldsymbol\nabla_i
+M_{JM}(Q_A r_i)\right)
 \cdot
 \left(
-\boldsymbol\sigma\times\frac{1}{Q_A}\boldsymbol\nabla
-\right),
+\boldsymbol\sigma_i\times
+\frac{1}{Q_A}\boldsymbol\nabla_i
+\right)t^\tau(i).
 }
 \]
-其中右侧的梯度作用在单粒子核波函数上。它正是“外部动量转移 × 核内平均动量，再与核子自旋点乘”的多极化表达。长波极限下，AFH 给出
+其中右侧第二个梯度作用在第 \(i\) 个单粒子核波函数上，\(t^\tau(i)\) 为 AFH 的 isospin 插入。它正是“外部动量转移 × 核内平均动量，再与核子自旋点乘”的多极化表达。长波极限下，AFH 给出
 \[
 \sqrt{4\pi}\,\Phi''_{00}(0)
 =
