@@ -27,6 +27,23 @@ class AFHSpatialResponseTests(unittest.TestCase):
                 self.assertGreaterEqual(wd,0.0)
                 self.assertLessEqual(wsd*wsd,ws*wd+1e-13*max(1.0,ws*wd))
 
+    def test_response_bundle_reuses_consistent_channel_definitions(self):
+        bundle,_=spatial.response_bundle(131,0.158,self.rows[131])
+        wm,ws,wd,wsd,_=spatial.response(131,0.158,self.rows[131])
+        wm2,wphi,wmphi,_=spatial.phi_response(131,0.158,self.rows[131])
+        self.assertAlmostEqual(bundle["W_M00_AFH"],wm,places=13)
+        self.assertAlmostEqual(bundle["W_SigmaPrime00_AFH"],ws,places=13)
+        self.assertAlmostEqual(bundle["W_Delta00_AFH_literal"],wd,places=13)
+        self.assertAlmostEqual(bundle["W_SigmaPrimeDelta00_AFH_literal"],wsd,places=13)
+        self.assertAlmostEqual(bundle["W_M00_AFH"],wm2,places=13)
+        self.assertAlmostEqual(bundle["W_PhiPP00_AFH"],wphi,places=13)
+        self.assertAlmostEqual(bundle["W_MPhiPP00_AFH"],wmphi,places=13)
+
+    def test_default_q_anchors_match_native_grid(self):
+        self.assertEqual(len(spatial.Q_POINTS),11)
+        self.assertIn(0.25625,spatial.Q_POINTS)
+        self.assertIn(0.49925,spatial.Q_POINTS)
+
     def test_parity_audit_schema(self):
         audit=spatial.parity_audit()
         self.assertIn("delta_wrapper_requires",audit)

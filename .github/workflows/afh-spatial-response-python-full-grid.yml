@@ -1,0 +1,64 @@
+name: AFH spatial-response Python full-grid pre-audit
+
+on:
+  push:
+    paths:
+      - ".github/workflows/afh-spatial-response-python-full-grid.yml"
+      - "research/afh_default_density_xe131/run_afh_spatial_response_audit.py"
+      - "research/afh_default_density_xe131/validate_afh_spatial_python_grid.py"
+      - "research/afh_default_density_xe131/tests/test_afh_spatial_response_audit.py"
+      - "research/afh_default_density_xe131/tests/test_validate_afh_spatial_python_grid.py"
+      - "research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices/**"
+  pull_request:
+    paths:
+      - ".github/workflows/afh-spatial-response-python-full-grid.yml"
+      - "research/afh_default_density_xe131/run_afh_spatial_response_audit.py"
+      - "research/afh_default_density_xe131/validate_afh_spatial_python_grid.py"
+      - "research/afh_default_density_xe131/tests/test_afh_spatial_response_audit.py"
+      - "research/afh_default_density_xe131/tests/test_validate_afh_spatial_python_grid.py"
+      - "research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  spatial-full-grid:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install numerical dependencies
+        run: python -m pip install numpy scipy sympy
+      - name: Run spatial-response and validator regression tests
+        run: |
+          python -m unittest research.afh_default_density_xe131.tests.test_afh_spatial_response_audit -v
+          python -m unittest research.afh_default_density_xe131.tests.test_compare_afh_spatial_response -v
+          python -m unittest research.afh_default_density_xe131.tests.test_validate_afh_spatial_python_grid -v
+      - name: Compute provisional 2401-point q_A grid for Xe-129 and Xe-131
+        run: |
+          python research/afh_default_density_xe131/run_afh_spatial_response_audit.py \
+            --outdir "$RUNNER_TEMP/afh-spatial-full-grid" \
+            --grid-points 2401 --q-min 0 --q-max 0.6
+      - name: Validate q grid and response-matrix consistency
+        run: |
+          python research/afh_default_density_xe131/validate_afh_spatial_python_grid.py \
+            --csv "$RUNNER_TEMP/afh-spatial-full-grid/afh_spatial_response_full_grid.csv" \
+            --out-json "$RUNNER_TEMP/afh-spatial-full-grid/validation.json" \
+            --expected-points 2401 --q-min 0 --q-max 0.6
+      - name: Record output checksums and source identity
+        run: |
+          cd "$RUNNER_TEMP/afh-spatial-full-grid"
+          git -C "$GITHUB_WORKSPACE" rev-parse HEAD > source_commit.txt
+          sha256sum afh_spatial_response_full_grid.csv metadata.json validation.json source_commit.txt > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+      - name: Upload provisional full-grid Python archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: afh-spatial-python-full-grid-${{ github.run_id }}
+          path: ${{ runner.temp }}/afh-spatial-full-grid/
+          if-no-files-found: error
+          retention-days: 90
