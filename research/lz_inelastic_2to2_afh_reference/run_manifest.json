@@ -1,0 +1,105 @@
+{
+  "study": "LZ inelastic 2-to-2 O1 AFH reference-spectrum comparison",
+  "baseline_main_commit": "45922af23445961df167fb77fa947bdd9100a161",
+  "archived_snapshot_prepared": "2026-11-18",
+  "status": "existing local results archived; not rerun for this submission",
+  "run_provenance": {
+    "original_kernel_version": "not recorded with the supplied output files",
+    "original_run_command": "not recorded with the supplied output files",
+    "source_file_timestamps_are_run_evidence": false,
+    "submission_execution": "No Mathematica calculation was run while preparing this archive.",
+    "current_wolframscript_client": "1.12.0 for Microsoft Windows (64-bit); this does not identify the kernel that produced the saved outputs."
+  },
+  "reproduction_commands_from_repository_root": [
+    "wolframscript -file research/lz_inelastic_2to2_afh_reference/compute_lz_inelastic.wls",
+    "wolframscript -file research/lz_inelastic_2to2_afh_reference/compare_lz_digitized.wls"
+  ],
+  "archived_source_checksums": {
+    "LZ_inelastic_2to2_xenon_recoil.nb": "0cff9868cadf8e41ed187188d1d8b143f92e1973cb980e493a97cdac6cbe6b1c",
+    "compute_lz_inelastic.wls": "0d454110f9e71b65142a9da1928be50aa15e63f5076a2957bbbe947736ec4332",
+    "compare_lz_digitized.wls": "3de77c0d9c8af62ef381899b3d26bd052c7d2dc23b933eb430129d4c8555b4ae"
+  },
+  "calculation_inputs": {
+    "afh_package": {
+      "path": "v6/dmformfactor-V6.m",
+      "version": "DMFormFactor v6.0",
+      "sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372"
+    },
+    "digitized_lz_figure": {
+      "path": "research/lz_inelastic_2to2_afh_reference/lz_fig1_digitized_long.csv",
+      "source": "LZ Collaboration, arXiv:2609.02823v1, Figure 1 upper panel",
+      "data_release_doi": "10.17182/hepdata.182472.v1",
+      "method_and_uncertainty": "Values digitized from the plotted PDF curves; source pixel calibration/extraction log is not present in the supplied files. Points are approximate and are not HEPData table values.",
+      "sha256": "21747a8a5254504ab4531447a938e154a06667bd56037e1e4dba5cc36c643657"
+    }
+  },
+  "physics_settings": {
+    "process": "chi1 + A -> chi2 + A (inelastic 2-to-2 reference calculation; separate from the repository's three-body model)",
+    "nr_operator": "O1",
+    "m_chi_GeV": 1000.0,
+    "m_N_GeV": 0.938272,
+    "m_nu_GeV": 246.2,
+    "afh_isoscalar_input": 2.0,
+    "implied_c_p_equals_c_n": "1/m_nu^2",
+    "isotopes": [
+      128,
+      129,
+      130,
+      131,
+      132,
+      134,
+      136
+    ],
+    "isotope_abundance_fractions_normalized": true,
+    "rho_chi_GeV_cm3": 0.3,
+    "v0_km_s": 238.0,
+    "vE_fixed_year_average_km_s": 250.24,
+    "vesc_km_s": 544.0,
+    "recoil_energy_grid_keV": "Union[Range[5,350,5], Range[28,45,1]] (84 points)",
+    "splittings_keV": [
+      0,
+      200,
+      300
+    ],
+    "momentum_approximation": "q = sqrt(2 A m_N E_R); isotope-specific AME nuclear masses are not used in this reference comparison.",
+    "halo_correction": "For O1, replace AFH's smooth MBcutoff inverse-speed average by the sharp truncated-Maxwell average using an isotope-wise ratio."
+  },
+  "outputs": [
+    {
+      "path": "lz_inelastic_o1_spectra.csv",
+      "format": "CSV",
+      "records_including_header": 85,
+      "sha256": "f5766c8c2580eb363288be021ab8d78f6aac3a73d1cb94ccfecfa727c9c55390"
+    },
+    {
+      "path": "lz_overlay_benchmark_comparison.csv",
+      "format": "CSV",
+      "records_including_header": 18,
+      "sha256": "840f9034a515cba2aae39b86173482801b2caed72bfe9701dddab0c9d2b15545"
+    },
+    {
+      "path": "lz_fig1_digitized_long.csv",
+      "format": "CSV",
+      "records_including_header": 1296,
+      "sha256": "21747a8a5254504ab4531447a938e154a06667bd56037e1e4dba5cc36c643657"
+    },
+    {
+      "path": "lz_inelastic_o1_spectra.png",
+      "format": "PNG",
+      "bytes": 146531,
+      "sha256": "595b3acef8f3ec4db0cc76f62becae90d1039b5501e2a3c756cd310e1cb77364"
+    },
+    {
+      "path": "lz_fig1_vs_afh_overlay.png",
+      "format": "PNG",
+      "bytes": 252750,
+      "sha256": "f2b5e40da63207cfd1af941005bc711225f3b3d7cb5ce18a9ee9355b891e92b4"
+    }
+  ],
+  "validation_boundary": {
+    "calculation_rerun": false,
+    "independent_HepData_pointwise_check": false,
+    "LZ_digitization_uncertainty_quantified": false,
+    "claim": "The archive records the supplied AFH calculation and a visual/data-point comparison. It is not an exact reproduction of LZ, a detector-level likelihood, or a validation of the three-body model."
+  }
+}
