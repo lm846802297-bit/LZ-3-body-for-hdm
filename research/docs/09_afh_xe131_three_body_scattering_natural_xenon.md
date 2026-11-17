@@ -36,6 +36,8 @@
 
 - **2026-11-18：** 完整物理讨论记录已扩展为逐步推导版（§§27–35）：包括两张 \(\chi_2\) 辐射图、Breit–Wigner 分母和宽度、零宽度 Ward 收缩、三体相空间递归分解与 \(I(D)\)、夸克到核子的 flavor form factors、Dirac–Pauli 非相对论展开、\(M/\Phi''/\Delta/\Sigma\) 核算符来源、\(M\Phi''\) 干涉、完整 \(L^{\mu\nu}W_{\mu\nu}\) 收缩及天然氙 rate fold。并补充 HKS 1503.04811 Eq. (23) 与 Eq. (21)/Bishara 显式 flavor 数值之间的表示差异：Eq. (23) 的字面形式给出三味 \(F_2\) 零和，而显式重构给出 \(-0.552\)；该差异保留为待追溯问题，当前 benchmark 采用 Bishara 显式 flavor 输入。此次是解析推导和文献归属补全，不代表有限 \(t_N\) form factors、Xe-131 \(\Phi''\) 多体响应或完整三体谱已数值完成。
 
+- **2026-11-18：** 新增 AFH 全响应数据库与三体收缩引擎专题：明确可以独立预计算 AFH v6.0 八种标准响应，但物理截面必须由三体流与单核子 Dirac–Pauli 流匹配后按允许的对角/交叉响应收缩得到；补充 (t_A/t_N) 处方、归一化边界、结果精度层级和并行实施路线。该更新是理论架构与验收计划，不代表全响应数据库或完整三体截面已完成。
+
 ## 0. Current status update — 2026-11-16
 
 This update supersedes older selected-point-only statements in the report.
@@ -1168,6 +1170,22 @@ AFH v6.0 原始等标量响应的零动量归一化为 \(A^2/4\)，物理等质�
 
 PR #58 目前是 OPEN、DRAFT 的静态单核子 Dirac–Pauli 收缩诊断。它使用一个代表性三体相空间点、一个静态核子动量取向，并用 \(F_1=1\)、\(F_2=0,-0.15\) 作为结构测试场景。它尚未使用当前 \(u+d+s\) 物理 benchmark 的完整有限 \(t_N\) form factors，也没有给出 AFH 多体 \(\Phi''\)、\(M\Phi''\) 的归一化投影、三体相空间积分或绝对截面。因此它是匹配链的中间验证，不是 Xe-131 完整核响应结果。
 
+
+#### 3.6.8 完整 AFH 响应数据库与三体物理收缩必须分开
+
+本项目采用两条并行工作线：
+
+- **核结构数据线：** 可以先于三体核子流匹配，独立计算 AFH v6.0 的全部八种标准响应 \(M,\Sigma'',\Sigma',\Phi'',\widetilde\Phi',\Delta,M\Phi'',\Sigma'\Delta\)，并对每个可用同位素建立带有输入指纹、归一化、动量网格、插值误差和 provenance 的响应数据库。
+- **物理振幅线：** 必须从完整 \(\mathcal T_3^\mu\) 和 flavor-resolved Dirac–Pauli 核子流出发，确定各 AFH 算符系数及允许的干涉，再计算 \(\sum_{\alpha\beta}C_\alpha C_\beta^*W_{\alpha\beta}\) 并完成三体相空间积分。
+
+因此，计算全部 AFH 响应不需要先完成匹配；但判断某个响应是否进入当前 VV 截面、其权重和符号是多少，不能跳过匹配。不同 \(W_X\) 不是可以单位权重相加的同类量。
+
+核子 form factor 使用 \(t_N\)，AFH 使用空间动量 \(Q_A\)，媒介子传播子使用 \(t_A\)。在 impulse approximation 下 \(\mathbf q_N\simeq\mathbf q_A\)，但 \(q_N^0\) 的选取会改变 \(t_N\)，必须在 metadata 中记录，不能把 \(F_i(t_A)\) 当成无条件定义。当前零动量锚点仍为 \(F_1^{uds}(0)=3\)、\(F_2^{uds}(0)=-0.552\)；若 3 已包含在 \(g_{VN}=3g_{Vq}\) 中，不得重复乘入。
+
+AFH v6.0 的八种响应应分别归档。当前 \(A^2/4\to A^2\) 的因子 4 是已经审计的 \(M\) 通道 raw-to-physical 映射，不能未经独立验证就推广到其余七个通道。AFH-7 的同位素覆盖边界也保持不变：Xe-124/Xe-126 缺少当前可追溯的 AFH default density matrices，Hybrid-9 fallback 不等于 AFH-9。
+
+完整 AFH 响应库只代表指定 AFH 核结构模型中的响应数据。完整匹配的一体流三体截面还依赖有限 \(F_1/F_2\)、两张辐射图、宽度、完整 \(L^{\mu\nu}W_{\mu\nu}\) 收缩和三体相空间；即使完成这些，也仍需评估两核子流、核结构模型、halo、同位素覆盖和 detector response 等理论/实验不确定度。当前应将“全响应库已计划”与“全响应库已完成”严格区分。
+
 ## 4. AFH、GCN 与 JJ55 的对照
 
 三种核结构处方的极小值位置接近，但极小值深度存在模型依赖性：
@@ -1586,6 +1604,7 @@ Green benchmark 在其他网格锚点的当前 AFH-7 速率为：
 8. **有限 \(t_N\) 的单核子 form factors 尚未完成。** 当前 \(F_1^{uds}(0)=3\)、\(F_2^{uds}(0)=-0.552\) 是零动量锚点；有限动量 flavor-separated 输入、误差和协方差仍需明确。
 9. **Xe-131 的 \(W_{\Phi''}\) 与 \(W_{M\Phi''}\) 尚未完成。** 这是当前 VV 一体流匹配的第一优先级，尤其要检查 \(Q_A\simeq256,365\) MeV 的 \(W_M\) 深极小值附近。
 10. **AFH-9 尚未成立。** AFH default density matrices 当前覆盖七种天然氙同位素；Xe-124/Xe-126 的缺失输入不能由 Hybrid-9 Helm fallback 静默替代。
+11. **统一的 AFH 八响应数据库尚未作为一个完整交付物完成。** 现有 (M) 响应基准及其他专项输出应按各自 provenance 和验收状态引用；尚不能把它们合称为全同位素、全通道、统一归一化的 AFH 数据库。
 
 ### 8.3 数据修正记录
 
@@ -1624,6 +1643,8 @@ Green benchmark 在其他网格锚点的当前 AFH-7 速率为：
 
 
 **新增 P0 物理工作：** 在继续扩展天然氙谱之前，完成 flavor-universal Dirac–Pauli 单核子流与完整三体 \(\mathcal T_3^\mu\) 的一致匹配，并优先投影 Xe-131 的 \(M+\Phi''+M\Phi''\)。必须先固定 \(t_N\) 处方和 \(F_1/F_2\) 有限动量输入；PR #58 的静态示例参数不能直接作为物理 benchmark。该项完成后再根据匹配系数决定是否扩展 \(\Sigma'\)、\(\Sigma''\)、\(\Delta\)。
+
+**并行核结构工作线：** 不必等待上述匹配完成，即可独立启动 AFH v6.0 八种标准响应的统一数据库构建；先按 AFH default-density 可用同位素归档全部对角与交叉响应、各自的归一化和收敛证据。该数据库完成后仍不能直接将全部 (W_X) 相加；物理截面必须由后续匹配系数和允许的 (W_{XY}) 交叉项完成收缩。数据库线与三体匹配线并行推进，二者在完整三体截面模块汇合。
 
 1. **统一核模型相空间积分。** 将 GCN/JJ55 84 点谱从 legacy linear-\(W^2\) 改为 threshold-\(u^2\)，使用与 AFH-7 相同的速度积分和 \(10^{-5}\) 收敛标准；重算 GCN/JJ55 谱、225–269.9 keV 高能尾部比例和依赖它们的 rate-level event yields。
 2. **补齐高阶结果归档。** 将 AFH-7/Hybrid-9 \(24\times8\times8\times4\) 的完整 1,344 行高阶谱以及独立 Numba 实现作为 native files 或版本化 Release 提交；不要只保留外部 ZIP checksum。
