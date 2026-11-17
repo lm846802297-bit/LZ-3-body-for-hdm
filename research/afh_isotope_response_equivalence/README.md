@@ -52,4 +52,4 @@ See `docs/AFH_ISOTOPE_RESPONSE_EQUIVALENCE.md` for the physics derivation and nu
 
 ## Vector-current matching boundary
 
-See [三体 VV 核子流与 AFH 核响应——完整物理讨论记录](docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md) for the full derivation from the UV quark current through nucleon form factors and the three-body dark-sector tensor to AFH nuclear responses, including normalization, response-interference, and pending numerical-audit boundaries.
+See [三体 VV 核子流与 AFH 核响应——完整物理讨论记录（更新版）](docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md) for the expanded 22-section derivation from the UV quark current through nucleon form factors and the full three-body tensor to AFH nuclear responses. It replaces the earlier concise outline with the complete kinematic, EFT, nuclear-multipole, normalization, form-factor, numerical-evidence, and implementation discussion. The updated record also withdraws the earlier blanket claim that the flavor-universal three-flavor Pauli form factor must vanish; it records the explicit flavor-separated values used from arXiv:1707.06998 and marks the finite-t matching as unfinished.
