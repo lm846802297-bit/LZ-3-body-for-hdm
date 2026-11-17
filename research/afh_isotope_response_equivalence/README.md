@@ -52,4 +52,4 @@ See `docs/AFH_ISOTOPE_RESPONSE_EQUIVALENCE.md` for the physics derivation and nu
 
 ## Vector-current matching boundary
 
-See [quark-to-nucleon vector-current matching and spatial-current scope](docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md) for the derivation of the current flavor-universal benchmark `g_p=g_n=3 g_Vq`, the finite-`Q^2` form-factor caveat, and the explicit distinction between the completed charge-response audit and the still-pending `Delta`/`Sigma'` nuclear-current calculation.
+See [三体 VV 核子流与 AFH 核响应——完整物理讨论记录](docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md) for the full derivation from the UV quark current through nucleon form factors and the three-body dark-sector tensor to AFH nuclear responses, including normalization, response-interference, and pending numerical-audit boundaries.
