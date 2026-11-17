@@ -1652,6 +1652,7 @@ Green benchmark 在其他网格锚点的当前 AFH-7 速率为：
 - AFH v6.0 核响应源程序：仓库根目录的 v6/dmformfactor-V6.m；其中 ResponseNuclear 给出 AFH 核响应接口，OpRel[5] 与 OpRel[6] 分别提供 VV 与矢量—Pauli 型相对论算符模板。
 - 三体 VV 核子流与 AFH 核响应的完整讨论记录：保存在项目资料库的配套理论档案中；本主报告只收录影响正式计算方案、公式和证据边界的内容。
 
+- [三体 VV 核子流与 AFH 核响应——完整物理讨论记录](three_body_vv_nucleon_current_afh_full_discussion.md)：保存完整讨论、推导、历史数值证据等级及本轮校订；与本主报告 §3.6、附录 I 配套阅读。
 ### 外部参考
 
 - AFH nuclear response：Anand, Fitzpatrick and Haxton, *Weakly interacting massive particle-nucleus elastic scattering response*, Phys. Rev. C 89 (2014) 065501, [arXiv:1308.6288](https://arxiv.org/abs/1308.6288)。
