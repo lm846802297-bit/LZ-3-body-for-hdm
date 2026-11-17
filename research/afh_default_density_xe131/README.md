@@ -464,3 +464,31 @@ full Mathematica/Python \(d\sigma_A/dE_R\) comparison. See
 [the full mapping audit](output/HISTORICAL_I6_MAPPING_AUDIT.md) and the
 [archived CSV/metadata/checksums](output/historical_i6_mapping_audit/).
 
+
+
+## Xe-131 Phi'' and M-Phi'' response export (native run pending)
+
+The next AFH response target is the spin-orbit charge response
+\(W_{\Phi''}^{00}\) and its signed interference with the leading charge,
+\(W_{M\Phi''}^{00}\). The official AFH v6.0 package already exposes these as
+response indices 4 and 7; index 1 is exported alongside them as the
+normalization baseline.
+
+The native Wolfram exporter is
+run_afh_phi_response_xe131.wls. It evaluates the same 2,401-point
+\(q_A=0\)--0.6 GeV grid and AFH oscillator prescription as the existing
+\(W_M\) archive. Its output and the independent bookkeeping validator are
+documented in:
+
+- audit/AFH_PHI_RESPONSE_XE131_NATIVE_PLAN.md
+- output/phi_response_native/README.md
+- validate_afh_phi_response.py
+- tests/test_afh_phi_response.py
+
+The raw AFH isoscalar responses are retained. The physical equal-p/n mapping
+\(R^{\rm phys}=4R^{\rm raw}\) is applied once to each diagonal and
+interference response; no extra q=0 shape renormalization is applied.
+The native Wolfram run has not yet been executed in this update, so no
+\(W_{\Phi''}\) or \(W_{M\Phi''}\) numerical result is claimed. This remains a
+nuclear-response export only, not the three-body \(L_{\mu\nu}W_A^{\mu\nu}\)
+contraction.
