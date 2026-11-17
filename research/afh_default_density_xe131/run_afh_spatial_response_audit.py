@@ -193,25 +193,43 @@ def amplitudes(A,q,rows):
         for name in out: out[name][L]=sums[name]
     return out
 
-def response(A,q,rows):
+def response_bundle(A,q,rows):
+    """Evaluate all four nuclear multipole families once at one q_A."""
     amp=amplitudes(A,q,rows)
     # AFH ResponseNuclear uses 1/2 in the diagonal FF definition and no
     # 1/2 in the interference FF definition. After the isoscalar 1/4
-    # combination, all four response outputs below carry the same /4 factor.
+    # combination, all response outputs below carry the same /4 factor.
     wm=sum(v*v for v in amp["M"].values())/4
     ws=sum(v*v for v in amp["SigmaPrime"].values())/4
     wd=sum(v*v for v in amp["Delta"].values())/4
     wsd=sum(amp["SigmaPrime"][L]*amp["Delta"][L] for L in amp["SigmaPrime"])/4
-    return wm,ws,wd,wsd,amp
+    wphi=sum(v*v for v in amp["PhiPP"].values())/4
+    wmphi=sum(amp["M"][L]*amp["PhiPP"][L] for L in amp["M"])/4
+    return {
+        "W_M00_AFH":wm,
+        "W_PhiPP00_AFH":wphi,
+        "W_MPhiPP00_AFH":wmphi,
+        "W_SigmaPrime00_AFH":ws,
+        "W_Delta00_AFH_literal":wd,
+        "W_SigmaPrimeDelta00_AFH_literal":wsd,
+        "SigmaPrime_over_M":ws/wm if wm else None,
+        "Delta_over_M":wd/wm if wm else None,
+    },amp
+
+
+def response(A,q,rows):
+    bundle,amp=response_bundle(A,q,rows)
+    return (bundle["W_M00_AFH"],bundle["W_SigmaPrime00_AFH"],
+            bundle["W_Delta00_AFH_literal"],
+            bundle["W_SigmaPrimeDelta00_AFH_literal"],amp)
 
 
 def phi_response(A,q,rows):
     """Return native-convention W_M, W_PhiPP, W_MPhiPP for tau1=tau2=0."""
-    amp=amplitudes(A,q,rows)
-    wm=sum(v*v for v in amp["M"].values())/4
-    wphi=sum(v*v for v in amp["PhiPP"].values())/4
-    wmphi=sum(amp["M"][L]*amp["PhiPP"][L] for L in amp["M"])/4
-    return wm,wphi,wmphi,amp
+    bundle,amp=response_bundle(A,q,rows)
+    return (bundle["W_M00_AFH"],bundle["W_PhiPP00_AFH"],
+            bundle["W_MPhiPP00_AFH"],amp)
+
 
 def parity_audit():
     # DeltaJ uses Deltaop with lcap=L; its 3j parity is consistent with abnormal parity.
@@ -220,28 +238,59 @@ def parity_audit():
             "logical_conflict":False,
             "delta_prime_is_not_delta_j":True}
 
+
 def main():
     p=argparse.ArgumentParser()
     p.add_argument("--outdir",type=Path,required=True)
-    p.add_argument("--q",type=float,nargs="*",default=list(Q_POINTS),help="q_A values in GeV")
-    args=p.parse_args(); args.outdir.mkdir(parents=True,exist_ok=True)
+    group=p.add_mutually_exclusive_group()
+    group.add_argument("--q",type=float,nargs="*",help="explicit q_A values in GeV")
+    group.add_argument("--grid-points",type=int,help="uniform q_A grid point count")
+    p.add_argument("--q-min",type=float,default=0.0)
+    p.add_argument("--q-max",type=float,default=0.6)
+    args=p.parse_args()
+    if args.grid_points is not None:
+        if args.grid_points<2 or args.q_max<=args.q_min:
+            p.error("--grid-points must be >=2 and --q-max must exceed --q-min")
+        q_values=np.linspace(args.q_min,args.q_max,args.grid_points).tolist()
+        grid_mode="uniform"
+    else:
+        q_values=list(Q_POINTS) if args.q is None else list(args.q)
+        if not q_values:
+            p.error("at least one q_A value is required")
+        grid_mode="selected"
+    args.outdir.mkdir(parents=True,exist_ok=True)
     records=[]; summaries={}
     for A in ISOTOPES:
-        rows=load_matrix(A); isotope=[]
-        for q in args.q:
-            wm,ws,wd,wsd,amp=response(A,q,rows)
-            wmp,wphi,wmphi,phi_amp=phi_response(A,q,rows)
-            row={"A":A,"q_GeV":q,"W_M00_AFH":wm,"W_PhiPP00_AFH":wphi,
-                 "W_MPhiPP00_AFH":wmphi,"W_SigmaPrime00_AFH":ws,
-                 "W_Delta00_AFH_literal":wd,"W_SigmaPrimeDelta00_AFH_literal":wsd,
-                 "SigmaPrime_over_M":ws/wm if wm else None}
+        density_rows=load_matrix(A); isotope=[]
+        for q in q_values:
+            bundle,_=response_bundle(A,q,density_rows)
+            row={"A":A,"q_GeV":q,**bundle}
             records.append(row); isotope.append(row)
-        summaries[str(A)]={"density_matrix_entries":len(rows),"J_A":0.5 if A==129 else 1.5,
-            "points":isotope}
-    with (args.outdir/"afh_spatial_response_selected_q.csv").open("w",newline="",encoding="utf-8") as f:
+        response_ranges={}
+        for column in ("W_M00_AFH","W_PhiPP00_AFH","W_MPhiPP00_AFH",
+                       "W_SigmaPrime00_AFH","W_Delta00_AFH_literal",
+                       "W_SigmaPrimeDelta00_AFH_literal"):
+            vals=[float(row[column]) for row in isotope]
+            response_ranges[column]={"min":min(vals),"max":max(vals)}
+        summaries[str(A)]={
+            "density_matrix_entries":len(density_rows),
+            "J_A":0.5 if A==129 else 1.5,
+            "q_points":len(q_values),
+            "q_min_GeV":min(q_values),
+            "q_max_GeV":max(q_values),
+            "response_ranges":response_ranges,
+        }
+    csv_name=("afh_spatial_response_full_grid.csv" if grid_mode=="uniform"
+              else "afh_spatial_response_selected_q.csv")
+    with (args.outdir/csv_name).open("w",newline="",encoding="utf-8") as f:
         w=csv.DictWriter(f,fieldnames=list(records[0]));w.writeheader();w.writerows(records)
+    q_grid={"mode":grid_mode,"points":len(q_values),
+            "q_min_GeV":min(q_values),"q_max_GeV":max(q_values)}
+    if grid_mode=="uniform":
+        q_grid["step_GeV"]=(args.q_max-args.q_min)/(args.grid_points-1)
     meta={"source":"AFH DMFormFactor v6.0 operator definitions translated to Python",
           "isospin":"tau1=tau2=0 (AFH isoscalar package convention)",
+          "q_grid":q_grid,
           "responses":"W_M, W_PhiPP, W_MPhiPP, W_SigmaPrime, W_Delta, W_SigmaPrimeDelta",
           "normalization":"native ResponseNuclear convention; diagonal and interference FF definitions both reduce to a /4 multipole-amplitude product after the tau1=tau2=0 combination; physical equal-p/n factor four is not applied here",
           "delta_operator_audit":parity_audit(),
@@ -252,10 +301,8 @@ def main():
           "No halo integration is included."],
           "isotopes":summaries}
     (args.outdir/"metadata.json").write_text(json.dumps(meta,indent=2)+"\n",encoding="utf-8")
-    print(json.dumps({"outdir":str(args.outdir),"delta_parity_audit":meta["delta_operator_audit"],
-                      "summary":{A:[{"q_GeV":r["q_GeV"],"W_M":r["W_M00_AFH"],
-                                     "W_SigmaPrime":r["W_SigmaPrime00_AFH"],
-                                     "ratio":r["SigmaPrime_over_M"]} for r in v["points"]]
-                                for A,v in summaries.items()}},indent=2))
+    print(json.dumps({"outdir":str(args.outdir),"csv":csv_name,
+                      "delta_operator_audit":meta["delta_operator_audit"],
+                      "q_grid":q_grid,"isotopes":summaries},indent=2))
 
 if __name__=="__main__": main()
