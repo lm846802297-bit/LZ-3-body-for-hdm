@@ -2,7 +2,7 @@ name: P1 phase-space convergence
 
 on:
   pull_request:
-    types: [opened, reopened]
+    types: [opened, synchronize, reopened]
     branches:
       - main
     paths:

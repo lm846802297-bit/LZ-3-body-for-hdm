@@ -1,6 +1,12 @@
 import math
+import sys
 import unittest
+from pathlib import Path
+
 from scipy.integrate import quad
+
+HERE = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(HERE))
 
 from rate_kinematics import (
     C_KM_S,
