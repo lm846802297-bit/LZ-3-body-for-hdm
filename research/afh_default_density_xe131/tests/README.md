@@ -4,11 +4,15 @@ This folder contains the nine regression suites for the AFH default Xe-131 study
 
 | Test | Coverage |
 |---|---|
-| `test_afh_default_xe131.py` | AFH density-matrix inventory, oscillator length, factor-four convention, and response implementation |
-| `test_afh_four_benchmarks.py` | Four-benchmark AFH/GCN/JJ55 response substitution, exact-q convention, and shared Eq. (6) integral |
-| `test_ame2020_hybrid_natural_xenon.py` | Xe-131-only AME2020 replacement and rejection of inconsistent/missing baseline terms |
-| `test_ame2020_xe131_halo_partial.py` | AME2020 mass prescription, halo normalization, and exact-spatial versus NR-approximate response momentum |
-| `test_compute_four_benchmark_dsigma.py` | Corrected four-benchmark differential cross-section grid and response-column integrity |
+| test_afh_default_xe131.py | AFH density-matrix inventory, oscillator length, factor-four convention, and response implementation |
+| test_afh_four_benchmarks.py | Four-benchmark AFH/GCN/JJ55 response substitution, exact-q convention, and shared Eq. (6) integral |
+| test_afh_spatial_response_audit.py | Source-translated Sigma-prime/Delta response audit and explicit Delta parity blocker |
+| test_afh_phi_response.py | AFH M/Phi''/M-Phi'' response-index mapping, factor-four bookkeeping, positivity, and interference Cauchy-Schwarz validation |
+| test_ame2020_hybrid_natural_xenon.py | Xe-131-only AME2020 replacement and rejection of inconsistent/missing baseline terms |
+| test_ame2020_xe131_halo_partial.py | AME2020 mass prescription, halo normalization, and exact-spatial versus NR-approximate response momentum |
+| test_compare_full_dsigma_mathematica.py | Native Mathematica/Python full differential-cross-section comparison |
+| test_compute_four_benchmark_dsigma.py | Corrected four-benchmark differential cross-section grid and response-column integrity |
+| test_python_full_dsigma_xe131.py | Python full-grid Xe-131 differential-cross-section checks |
 
 Run all tests from the repository root:
 
