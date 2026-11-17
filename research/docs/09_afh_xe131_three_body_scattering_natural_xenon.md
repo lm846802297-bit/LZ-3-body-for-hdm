@@ -34,7 +34,7 @@
 - **2026-11-18：** 正式固定 VV 核子流与 AFH 核响应的分层约定：AFH DMFormFactor v6.0 是氙核有限动量核结构的唯一主线输入；不在 AFH 响应上叠加 Helm；单核子 Dirac–Pauli 的有限转移动量 form factor 作为独立匹配层；保留 \(M\) 领先阶并优先审计 \(\Phi''\) 与 \(M\Phi''\)；AFH raw \(A^2/4\) 到物理 \(A^2\) 的因子 4 只计入一次。新增正文 §3.6 和技术附录 I。该更新是物理约定与状态边界整理，不代表 \(\Phi''\) 多体响应或完整三体截面已经计算完成。
 
 
-- **2026-11-18：** 完整物理讨论记录已扩展为逐步推导版（§§27–35）：包括两张 \(\chi_2\) 辐射图、Breit–Wigner 分母和宽度、零宽度 Ward 收缩、三体相空间递归分解与 \(I(D)\)、夸克到核子的 flavor form factors、Dirac–Pauli 非相对论展开、\(M/\Phi''/\Delta/\Sigma\) 核算符来源、\(M\Phi''\) 干涉、完整 \(L^{\mu\nu}W_{\mu\nu}\) 收缩及天然氙 rate fold。并修正 HKS 1503.04811 Eq. (23) 的旧引用解释：该式是 strange Pauli form factor 的低动量关系，不是三味总 \(F_2\) 的零和恒等式。此次是解析推导和文献归属补全，不代表有限 \(t_N\) form factors、Xe-131 \(\Phi''\) 多体响应或完整三体谱已数值完成。
+- **2026-11-18：** 完整物理讨论记录已扩展为逐步推导版（§§27–35）：包括两张 \(\chi_2\) 辐射图、Breit–Wigner 分母和宽度、零宽度 Ward 收缩、三体相空间递归分解与 \(I(D)\)、夸克到核子的 flavor form factors、Dirac–Pauli 非相对论展开、\(M/\Phi''/\Delta/\Sigma\) 核算符来源、\(M\Phi''\) 干涉、完整 \(L^{\mu\nu}W_{\mu\nu}\) 收缩及天然氙 rate fold。并补充 HKS 1503.04811 Eq. (23) 与 Eq. (21)/Bishara 显式 flavor 数值之间的表示差异：Eq. (23) 的字面形式给出三味 \(F_2\) 零和，而显式重构给出 \(-0.552\)；该差异保留为待追溯问题，当前 benchmark 采用 Bishara 显式 flavor 输入。此次是解析推导和文献归属补全，不代表有限 \(t_N\) form factors、Xe-131 \(\Phi''\) 多体响应或完整三体谱已数值完成。
 
 ## 0. Current status update — 2026-11-16
 
