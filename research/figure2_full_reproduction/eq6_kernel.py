@@ -23,12 +23,42 @@ def _cached_leggauss(order: int):
 
 @dataclass(frozen=True)
 class Point:
+    """Three-body phase-space point in the target-rest frame.
+
+    The legacy field q stores the nuclear four-momentum transfer q_A.
+    Explicit properties expose q_A, q_chi and k_s without breaking callers.
+    """
     p: np.ndarray
     p_prime: np.ndarray
     k: np.ndarray
     K: np.ndarray
     q: np.ndarray
     W2: float
+
+    @property
+    def q_A(self):
+        """Nuclear four-momentum transfer P' - P (legacy storage: q)."""
+        return self.q
+
+    @property
+    def q_chi(self):
+        """Dark-matter four-momentum difference p - p'."""
+        return self.p - self.p_prime
+
+    @property
+    def k_s(self):
+        """On-shell scalar four-momentum (legacy storage: k)."""
+        return self.k
+
+    @property
+    def Q_A(self):
+        """Magnitude of the spatial nuclear transfer, |bold(q_A)|."""
+        return float(np.linalg.norm(self.q_A[1:]))
+
+    @property
+    def E_R(self):
+        """Nuclear recoil energy in the target-rest frame."""
+        return float(self.q_A[0])
 
 def dot(a, b):
     return float(a[0]*b[0] - np.dot(a[1:], b[1:]))
@@ -45,18 +75,18 @@ def boost(v, beta):
 def limits(mchi, ms, mA, ER, speed_kms):
     beta=speed_kms/C_KM_S; gamma=1/math.sqrt(1-beta*beta)
     E=mchi*gamma; p=mchi*gamma*beta
-    q=math.sqrt(2*mA*ER+ER*ER)
-    return (mchi+ms)**2, mchi*mchi+2*p*q-2*(E+mA)*ER
+    Q_A=math.sqrt(2*mA*ER+ER*ER)
+    return (mchi+ms)**2, mchi*mchi+2*p*Q_A-2*(E+mA)*ER
 
 def build_point(mchi, ms, mA, ER, speed_kms, W2, z, phi):
     beta=speed_kms/C_KM_S; gamma=1/math.sqrt(1-beta*beta)
     E=mchi*gamma; pz=mchi*gamma*beta
     p=np.array([E,0.,0.,pz])
-    qmag=math.sqrt(2*mA*ER+ER*ER)
-    cq=(W2-mchi*mchi+2*(E+mA)*ER)/(2*pz*qmag)
-    if abs(cq)>1+2e-8: raise ValueError(f"unphysical cos(theta_q)={cq}")
-    cq=min(1.,max(-1.,cq)); sq=math.sqrt(max(0.,1-cq*cq))
-    q=np.array([ER,qmag*sq,0.,qmag*cq]); K=p-q
+    Q_A=math.sqrt(2*mA*ER+ER*ER)
+    cos_theta_q=(W2-mchi*mchi+2*(E+mA)*ER)/(2*pz*Q_A)
+    if abs(cos_theta_q)>1+2e-8: raise ValueError(f"unphysical cos(theta_qA)={cos_theta_q}")
+    cos_theta_q=min(1.,max(-1.,cos_theta_q)); sin_theta_q=math.sqrt(max(0.,1-cos_theta_q*cos_theta_q))
+    q_A=np.array([ER,Q_A*sin_theta_q,0.,Q_A*cos_theta_q]); K=p-q_A
     if abs(dot(K,K)-W2)>2e-7*max(1.,W2): raise ArithmeticError("K^2 != W^2")
     W=math.sqrt(W2); betaK=K[1:]/K[0]
     pstar=boost(p,-betaK); e3=pstar[1:]/np.linalg.norm(pstar[1:])
@@ -71,7 +101,7 @@ def build_point(mchi, ms, mA, ER, speed_kms, W2, z, phi):
     n=z*e3+math.sqrt(max(0.,1-z*z))*(math.cos(phi)*e1+math.sin(phi)*e2)
     k=boost(np.r_[Ek,kabs*n],betaK)
     pp=boost(np.r_[Ep,-kabs*n],betaK)
-    return Point(p,pp,k,K,q,W2)
+    return Point(p,pp,k,K,q_A,W2)
 
 I2=np.eye(2,dtype=complex); Z2=np.zeros((2,2),complex)
 s1=np.array([[0,1],[1,0]],complex)
@@ -86,14 +116,20 @@ ID4=np.eye(4,dtype=complex)
 def slash(p):
     return GAMMA[0]*p[0]-GAMMA[1]*p[1]-GAMMA[2]*p[2]-GAMMA[3]*p[3]
 
+def chi2_internal_momenta(point):
+    """Return the two internal chi2 four-momenta: p-k_s and p'+k_s."""
+    return point.p-point.k_s, point.p_prime+point.k_s
+
+
 def vertices(point, mchi2, width=0., running_width=None):
-    p,pp,k=point.p,point.p_prime,point.k
-    d1=dot(p-k,p-k)-mchi2*mchi2
+    r_before,r_after=chi2_internal_momenta(point)
+    d1=dot(r_before,r_before)-mchi2*mchi2
     imag = mchi2*width if running_width is None else math.sqrt(point.W2)*running_width
+    # r_after = p' + k_s = K, so r_after^2 = W^2.
     d2=point.W2-mchi2*mchi2+1j*imag
     if abs(d1)<1e-30 or abs(d2)<1e-30: raise ZeroDivisionError("propagator pole")
-    before=GAMMA[0]@(slash(p-k)+mchi2*ID4)/d1
-    after=(slash(pp+k)+mchi2*ID4)@GAMMA[0]/d2
+    before=GAMMA[0]@(slash(r_before)+mchi2*ID4)/d1
+    after=(slash(r_after)+mchi2*ID4)@GAMMA[0]/d2
     return before,after
 
 def spin_trace(point,mchi,mchi2,width=0.,running_width=None):
@@ -193,11 +229,15 @@ def reduced_kernel(mchi,ms,delta_m,mA,ER,speed_kms,width=0.,nw=16,nz=16,nphi=8,
     return float(total)
 
 def residuals(pt,mchi,ms,mA):
-    P=np.array([mA,0.,0.,0.]); Pf=P+pt.q
-    closure=pt.p+P-pt.p_prime-pt.k-Pf
+    P=np.array([mA,0.,0.,0.]); Pf=P+pt.q_A
+    closure=pt.p+P-pt.p_prime-pt.k_s-Pf
+    transfer_closure=pt.q_chi-pt.q_A-pt.k_s
     return {"p2-mchi2":dot(pt.p,pt.p)-mchi*mchi,
             "pprime2-mchi2":dot(pt.p_prime,pt.p_prime)-mchi*mchi,
-            "k2-ms2":dot(pt.k,pt.k)-ms*ms,
+            "k2-ms2":dot(pt.k_s,pt.k_s)-ms*ms,
             "Pprime2-mA2":dot(Pf,Pf)-mA*mA,
             "four_momentum_max":float(np.max(np.abs(closure))),
+            "qchi-qA-kS_max":float(np.max(np.abs(transfer_closure))),
+            "qA_lorentz_shell":dot(pt.q_A,pt.q_A)+2*mA*pt.E_R,
+            "QA_spatial_recoil":pt.Q_A**2-pt.E_R*(pt.E_R+2*mA),
             "K2-W2":dot(pt.K,pt.K)-pt.W2}

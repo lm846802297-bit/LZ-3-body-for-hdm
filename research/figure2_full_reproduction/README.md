@@ -19,6 +19,7 @@ This directory contains the Eq. (6) particle-physics kernel and the numerical ru
 The kernel uses the interaction/current written in paper-source/main.tex and explicitly records the Dirac-spinor baseline. It does not silently assume a Majorana implementation or supply missing UV/gauge-sector information.
 
 - Exact reconstruction of \(p,p',k,q\) in the target-rest frame from \((v,E_R,W^2,z,\phi_*)\).
+- The explicit momentum-variable contract is documented in [MOMENTUM_VARIABLE_CONVENTION.md](MOMENTUM_VARIABLE_CONVENTION.md): nuclear transfer \(q_A\), dark-matter transfer \(q_\chi\), emitted-scalar momentum \(k_s\), recoil energy \(E_R\), and spatial recoil magnitude \(Q_A\).
 - Both manuscript scalar-emission diagrams are included coherently.
 - The initial-spin average and final-spin sum are obtained from the Dirac trace.
 - The before/after interference term is retained.

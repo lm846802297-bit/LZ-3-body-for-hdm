@@ -20,6 +20,24 @@ class Eq6Tests(unittest.TestCase):
         pt=eq6.build_point(self.M,self.ms,self.mA,self.ER,self.v,W,.23,1.17)
         for value in eq6.residuals(pt,self.M,self.ms,self.mA).values():
             self.assertLess(abs(value),3e-7)
+
+    def test_three_body_momentum_variables_and_internal_lines(self):
+        W=.5*(self.wmin+self.wmax)
+        pt=eq6.build_point(self.M,self.ms,self.mA,self.ER,self.v,W,.23,1.17)
+
+        # q_chi = p - p' = q_A + k_s; all entries are four-vectors.
+        self.assertLess(np.max(np.abs(pt.q_chi-pt.q_A-pt.k_s)),2e-8)
+        self.assertAlmostEqual(pt.E_R,self.ER,places=15)
+        self.assertAlmostEqual(pt.Q_A**2,self.ER*(self.ER+2*self.mA),delta=2e-10)
+        self.assertAlmostEqual(eq6.dot(pt.q_A,pt.q_A),-2*self.mA*self.ER,delta=2e-10)
+        # The old q/k attributes remain aliases for backwards compatibility.
+        self.assertTrue(np.array_equal(pt.q,pt.q_A))
+        self.assertTrue(np.array_equal(pt.k,pt.k_s))
+
+        r_before,r_after=eq6.chi2_internal_momenta(pt)
+        self.assertTrue(np.array_equal(r_before,pt.p-pt.k_s))
+        self.assertTrue(np.array_equal(r_after,pt.p_prime+pt.k_s))
+        self.assertAlmostEqual(eq6.dot(r_after,r_after),pt.W2,delta=2e-7)
     def test_trace_real_positive_and_decomposed(self):
         W=.5*(self.wmin+self.wmax)
         pt=eq6.build_point(self.M,self.ms,self.mA,self.ER,self.v,W,-.31,2.01)
