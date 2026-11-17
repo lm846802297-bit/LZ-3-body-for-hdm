@@ -19,70 +19,83 @@ the exact three-body current.
 
 ## 2. Quark-to-nucleon vector-current matching
 
-For a flavour-diagonal quark vector current, the nucleon matrix element is
-parameterized by Dirac and Pauli form factors. In the sign convention used in
-the Hoferichter--Klos--Schwenk discussion,
+For the momentum delivered to the target nucleon, define
 
 \[
-\langle N'|J_V^\mu|N\rangle
-=\bar u_N'\left[
-F_1^{V,N}(t)\gamma^\mu
--\frac{iF_2^{V,N}(t)}{2m_N}\sigma^{\mu\nu}q_\nu
-\right]u_N,
-\qquad t=q^2.
+q_A^\mu=k'^\mu-k^\mu,\qquad t_A=q_A^2=-|\boldsymbol q_A|^2.
 \]
 
-The sign of the Pauli term depends on the definition of the transfer
-four-vector. The implementation must use one convention consistently in the
-nucleon vertex, the three-body amplitude, and the nuclear multipoles.
+Use the Dirac--Pauli convention
+
+\[
+\boxed{
+J_N^\mu(q_A)=
+\bar u_N(k')
+\left[
+F_1^{V,N}(t_A)\gamma^\mu+
+\frac{iF_2^{V,N}(t_A)}{2m_N}
+\sigma^{\mu\nu}q_{A,\nu}
+\right]u_N(k).
+}
+\]
+
+The plus sign here is tied to \(q_A=k'-k\). Hoferichter, Menéndez,
+and Schwenk use \(q=k-k'=-q_A\) and write the equivalent vertex with
+\(-iF_2\sigma^{\mu\nu}q_\nu/(2m_N)\), see their Eq. (6). The sign must
+not be changed without also changing the transfer convention.
+
+For the AFH nuclear Fourier operators, the elastic-reference convention is
+\(\boldsymbol q_{\rm AFH}=-\boldsymbol q_A\). In the radiative process,
+do **not** identify this nuclear momentum with the full dark-matter
+momentum change:
+\[
+\boldsymbol p_\chi'-\boldsymbol p_\chi
+=-\boldsymbol q_A-\boldsymbol k_s.
+\]
+The AFH nuclear multipoles are evaluated at the momentum flowing through
+the nucleon current, \(|\boldsymbol q_{\rm AFH}|=|\boldsymbol q_A|\);
+the emitted scalar momentum belongs to the three-body dark-matter
+kinematics, not to the nuclear Fourier argument.
 
 For the universal light-flavour current
-
 \[
 J_V^\mu=\bar u\gamma^\mu u+\bar d\gamma^\mu d+\bar s\gamma^\mu s,
 \]
-
 isospin symmetry and quark number imply
-
 \[
 F_1^{V,p}(0)=F_1^{V,n}(0)=3.
 \]
-
 This justifies the equal proton/neutron charge benchmark
-\(g_{VN}=3g_{Vq}\) at zero momentum transfer. It does **not** imply that the
-Pauli form factor vanishes, nor does it determine its finite-\(t\) shape.
+\(g_{VN}=3g_{Vq}\) at zero momentum transfer. It does **not** imply that
+the Pauli form factor vanishes, nor does it determine either form factor's
+finite-\(t\) shape.
 
 ### 2.1 Zero-momentum flavour benchmark
 
 For the model's universal light-flavour current, use the flavour-separated
 zero-momentum inputs
-
 \[
 F_2^{u/p}(0)=1.609,\qquad
 F_2^{d/p}(0)=-2.097,\qquad
 F_2^{s/p}(0)=-0.064.
 \]
-
 Thus
-
 \[
 F_2^{V,p}(0)=F_2^{u/p}+F_2^{d/p}+F_2^{s/p}=-0.552,
 \qquad F_1^{V,p}(0)=3,
 \]
-
 and
-
 \[
 \boxed{F_2^{V,p}(0)/F_1^{V,p}(0)=-0.184.}
 \]
-
 In the isospin limit the same flavour sum gives the same neutron benchmark.
-These values are zero-momentum anchors, not finite-\(t\) form factors. At the
-Xe-131 response minima, \(|t|=q_A^2\) is not zero, so the quantitative
-three-body matching must use finite-momentum proton and neutron form factors
-with one fixed sign convention. The numerical AFH response calculation in
-this study computes nuclear matrix elements only; it does not insert a
-constant \(F_2/F_1\) into a three-body rate.
+
+These are zero-momentum anchors, not finite-\(t\) form factors. At the
+Xe-131 response minima, \(|t_A|=q_A^2\) is not zero. The final quantitative
+calculation therefore needs finite-momentum, flavour-separated
+\(F_1^{V,N}(t_A)\) and \(F_2^{V,N}(t_A)\) with the sign convention above.
+The numerical benchmark below holds the zero-momentum values fixed solely
+to isolate the effect of the AFH nuclear responses.
 
 Reference for the flavour-separated inputs: Bishara et al.,
 [arXiv:1707.06998](https://arxiv.org/abs/1707.06998).
@@ -240,89 +253,197 @@ The full-grid Cauchy--Schwarz check,
 passes at all 2401 points. The largest normalized correlation is
 0.9999998602 at \(q_A=470.75\) MeV.
 
-## 7. Critical EFT caveat: elastic and three-body matching are different
+## 7. Correct charge-sector matching for the radiative three-body current
 
 A previous wording in this note incorrectly suggested that the subleading
 elastic VV channel contains only \(\mathcal O_2\) and \(\mathcal O_5\),
-while \(\mathcal O_3\) belongs only to AV. That statement is not correct
-for the standard spin-1/2 WIMP--nucleon one-body matching.
+while \(\mathcal O_3\) belongs only to AV. That statement is withdrawn.
+The standard vector charge already contains the spin-orbit term that
+generates the AFH \(\Phi''\) response.
 
-In the VV reduction, Hoferichter, Klos, and Schwenk, Eq. (25), explicitly
-obtain a nucleon-spin term proportional to
-
+Hoferichter, Menéndez, and Schwenk, PRD 102, 074018 (2020), Eq. (41),
+give the nonrelativistic one-nucleon vector charge
 \[
-\frac{F_2^{V,N}(t)}{4m_N^2}
-\,\boldsymbol q\cdot(i\boldsymbol\sigma_N\times\boldsymbol P),
-\qquad \boldsymbol P=\boldsymbol p_N+\boldsymbol p_N'.
+J_N^0 =
+F_1^{V,N}(t_A)
++\frac{t_A}{8m_N^2}
+  \left[F_1^{V,N}(t_A)+2F_2^{V,N}(t_A)\right]
+-\frac{i}{4m_N^2}
+  \left[F_1^{V,N}(t_A)+2F_2^{V,N}(t_A)\right]
+  \boldsymbol S_N\cdot
+  (\boldsymbol q_{\rm AFH}\times\boldsymbol P_N),
 \]
+where \(\boldsymbol P_N=\boldsymbol k+\boldsymbol k'\),
+\(\boldsymbol S_N=\boldsymbol\sigma_N/2\), and
+\(\boldsymbol q_{\rm AFH}=-\boldsymbol q_A\).
+The same paper states immediately below Eq. (41) that the spacelike
+components do not contribute to its \(M\) and spin-orbit \(\Phi^{00}\)
+responses. The latter is the vector-charge spin-orbit response represented
+by AFH \(\Phi''\).
 
-With elastic two-body kinematics this is part of the \(\mathcal O_3\)
-spin-orbit structure. In the AFH basis, \(\mathcal O_3\) contributes to
-the \(\Phi''\) and \(M\Phi''\) responses. AFH's operator definition
-and WIMP coefficient decomposition are given in Eqs. (48) and (51) of
-Anand, Fitzpatrick, and Haxton, [arXiv:1308.6288](https://arxiv.org/abs/1308.6288).
-
-However, this does **not** license the shortcut
-
+Matching this charge expansion to the AFH definition
 \[
-F_2^V\longrightarrow c_3\longrightarrow W_{\Phi''}
+\Phi''_{JM;\tau}(q)=
+i\sum_i
+\left(\frac{\boldsymbol\nabla_i}{q}M_{JM}(q\boldsymbol x_i)\right)
+\cdot
+\left(\boldsymbol\sigma_i\times
+\frac{\boldsymbol\nabla_i}{q}\right)t^\tau(i)
 \]
+gives, up to the common single-nucleon state-normalization convention,
+\[
+\boxed{
+c_M(t_A)=F_1^V(t_A)
++\frac{t_A}{8m_N^2}
+ \left[F_1^V(t_A)+2F_2^V(t_A)\right],
+}
+\]
+\[
+\boxed{
+c_{\Phi''}(t_A)=
+\frac{q_A^2}{4m_N^2}
+\left[F_1^V(t_A)+2F_2^V(t_A)\right].
+}
+\]
+The sign shown is for the current and AFH momentum conventions fixed in
+Sec. 2. It must be regression-tested against the elastic charge-current
+reduction before it is used with a different convention.
 
-with an elastic coefficient copied unchanged into the present process.
-For our reaction,
-
+For the radiative process
 \[
 \chi_1(p)+N(k)\to\chi_1(p')+N(k')+s(k_s),
 \qquad q_A=k'-k=p-p'-k_s,
 \]
-
-so the DM momentum loss is \(p-p'=q_A+k_s\), not \(q_A\). In the
-nonrelativistic limit define
-
-\[
-\boldsymbol v_{\rm av}^{(3)}
-=\frac{\boldsymbol p+\boldsymbol p'}{2m_\chi}
--\frac{\boldsymbol k+\boldsymbol k'}{2m_N}.
-\]
-
-Energy-momentum conservation gives
-
+the \(M+\Phi''\) **charge sector** is therefore
 \[
 \boxed{
-\boldsymbol q_A\cdot\boldsymbol v_{\rm av}^{(3)}
-=E_s-\frac{(\boldsymbol p+\boldsymbol p')\cdot\boldsymbol k_s}
-{2m_\chi},
+\mathcal M_{M+\Phi''}^{(3)}
+=\mathcal T_3^0(p,p',k_s)
+\left[c_M(t_A)M+c_{\Phi''}(t_A)\Phi''\right].
 }
 \]
+This is a genuine three-body result: the exact two-diagram,
+finite-width \(\mathcal T_3^0\) is retained. Crucially, it multiplies both
+charge operators in the same way. The spin-averaged three-body phase-space
+factor
+\[
+I_{00}^{(3)}(E_R)=
+\int d\Phi_3\,
+\frac12\operatorname{Tr}
+\left[\mathcal T_3^0\mathcal T_3^{0\dagger}\right]
+\]
+therefore cancels from the relative \(M+\Phi''\) correction at fixed
+\(E_R\), provided the same isoscalar nucleon form factors are used for
+both operators.
 
-rather than the elastic identity \(\boldsymbol q\cdot\boldsymbol
-v^\perp=0\). Although the cross product in \(\mathcal O_3\) is
-insensitive to a component parallel to \(\boldsymbol q_A\), its
-transverse part and its coefficient still depend on the emitted scalar
-momentum and on the full off-shell \(\chi_2\) propagators.
+Define
+\[
+\eta(q_A)=\frac{c_{\Phi''}(t_A)}{c_M(t_A)}.
+\]
+The exact charge-sector ratio is
+\[
+\boxed{
+Q_{\Phi''}(q_A)=
+1+2\eta\frac{W_{M\Phi''}}{W_M}
++\eta^2\frac{W_{\Phi''}}{W_M}.
+}
+\]
+This result does **not** require another three-body phase-space integration
+for the relative correction. The absolute spectrum still requires the
+existing \(I_{00}^{(3)}(E_R)\), mediator propagator, halo fold, and
+detector treatment.
 
-The required matching is therefore:
+This factorization applies only to the \(M+\Phi''\) vector-charge sector.
+The spatial current \(\mathcal T_3^i J_{N,i}\) can generate other nuclear
+responses, including convection/orbital and magnetization/spin responses.
+It must be matched separately before calling the result a complete
+three-body nuclear calculation.
 
-1. retain both scalar-emission orderings coherently in the exact
-   \(\mathcal T_3^\mu(p,p',k_s)\);
-2. use the finite-width denominators and the same width prescription as the
-   recoil calculation;
-3. contract with the Dirac--Pauli nucleon current using finite-\(t\)
-   \(F_1^{V,N}(t)\) and \(F_2^{V,N}(t)\);
-4. perform the Pauli reduction and project the resulting coefficients onto
-   the AFH \(M\), \(\Phi''\), \(M\Phi''\), \(\Sigma'\), \(\Sigma''\), and
-   \(\Delta\) operators;
-5. integrate the coefficient products over the complete three-body phase
-   space before forming the recoil spectrum.
+The elastic identity
+\(\boldsymbol q\cdot\boldsymbol v^\perp=0\) must not be imposed on the
+radiative process. In particular, the DM momentum change is
+\(\boldsymbol q_\chi=\boldsymbol q_A+\boldsymbol k_s\), while the nuclear
+Fourier momentum remains \(\boldsymbol q_A\). The scalar momentum and the
+off-shell \(\chi_2\) propagators remain inside \(\mathcal T_3^\mu\).
 
-The nonzero finite-width Ward divergence is relevant to this reduction, but
-it must not be mistaken for a direct rate multiplier: the target vector
-current remains conserved, and only the complete contracted amplitude is
-physical. Until this generalized matching is completed, the present
-\(W_{\Phi''}\) result is a nuclear-structure input, not a numerical
-three-body rate correction. The \(W_M\)-only spectrum remains a baseline,
-not a demonstrated complete prediction.
-## 8. Two-body vector currents
+## 8. First numerical charge-sector correction: zero-momentum benchmark
+
+For a controlled first calculation, hold the flavour form factors at their
+zero-momentum anchors,
+\[
+F_1^V=3,\qquad F_2^V=-0.552,\qquad F_1^V+2F_2^V=1.896,
+\]
+and use \(m_N=0.938918\) GeV. This is a diagnostic benchmark, not a
+finite-\(t\) prediction.
+
+The new script
+\`research/afh_vv_phi_xe131/phi_charge_response_match.py\`
+evaluates \(c_M\), \(c_{\Phi''}\), \(Q_{\Phi''}\), and the combined response
+on the full 2401-point AFH grid and at the four exact selected minima.
+It checks the Cauchy--Schwarz inequality and positivity of the combined
+charge response at every point.
+
+At the second \(W_M\) minimum,
+\[
+q_A=256.271867617\ {\rm MeV},\qquad
+E_R=269.1038976\ {\rm keV},
+\]
+the zero-momentum benchmark gives
+\[
+c_M=2.98234390,\qquad
+c_{\Phi''}=0.03531221,\qquad
+\eta=0.01184042.
+\]
+Using the exact AFH selected-point responses,
+\[
+\frac{W_{\Phi''}}{W_M}=115.8894642,\qquad
+\frac{W_{M\Phi''}}{W_M}=-1.46248999,
+\]
+one obtains
+\[
+\boxed{Q_{\Phi''}=0.9816142,}
+\]
+i.e. a \(-1.839\%\) correction relative to the same relativistically
+corrected \(M\)-only charge response. The \(t_A/(8m_N^2)\) correction to
+the \(M\) coefficient itself is another \(-1.174\%\) in the rate relative
+to \(F_1^V(0)^2W_M\). Combining these two effects gives
+\[
+\boxed{
+\frac{c_M^2W_M+2c_Mc_{\Phi''}W_{M\Phi''}
++c_{\Phi''}^2W_{\Phi''}}{F_1^V(0)^2W_M}
+=0.9700939,
+}
+\]
+or \(-2.991\%\) relative to the leading point-charge \(F_1(0)^2W_M\)
+benchmark at this selected point.
+
+The full 0--0.6 GeV grid also shows a rapid local variation around the
+deep \(W_M\) cancellation: with the same zero-\(t\) form-factor anchors,
+the largest sampled negative and positive \(Q_{\Phi''}-1\) are about
+\(-13.61\%\) at \(q_A=255.75\) MeV and \(+11.50\%\) at
+\(q_A=256.75\) MeV. These are local ratios to a very small \(W_M\)
+baseline, not global event-rate changes. The absolute matched response
+remains nonnegative; the rapid sign change follows the signed
+\(M\)-\(\Phi''\) interference as the \(W_M\) amplitude passes through its
+deep minimum.
+
+The four exact selected-point results are:
+
+| \(q_A\) (MeV) | \(E_R\) (keV) | \(Q_{\Phi''}-1\) | Combined vs. \(F_1(0)^2W_M\) |
+|---:|---:|---:|---:|
+| 157.935778 | 102.206724 | +0.324% | -0.124% |
+| 256.271868 | 269.103898 | -1.839% | -2.991% |
+| 365.066569 | 546.086898 | +1.872% | -0.547% |
+| 499.371886 | 1021.797786 | -0.663% | -5.053% |
+
+These numbers answer the first charge-sector question, not the full
+natural-xenon question. Finite-\(t\) flavour-separated \(F_1^V(t_A)\) and
+\(F_2^V(t_A)\) are still required. In addition, the Xe-131 spatial-current
+responses and the corresponding responses of the other abundant xenon
+isotopes remain to be matched and calculated.
+
+
+## 9. Two-body vector currents
 
 The cited chiral EFT analysis finds that, through its \(\mathcal O(p^3)\)
 counting, the vector two-body current appears in the AV channel rather than
@@ -330,7 +451,7 @@ the VV channel. This supports not making a two-body VV calculation the first
 priority. It is not a statement that all higher-order or model-specific
 multi-nucleon effects vanish.
 
-## 9. Numerical status and limitations
+## 10. Numerical status and limitations
 
 - Python implementation and seven regression tests: run locally; PASS.
 - 2401-point Cauchy--Schwarz response check: PASS.
