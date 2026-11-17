@@ -1281,6 +1281,7 @@ Xe-131 的核自旋 \(J_A=3/2\)，弹性质量密度响应允许偶数多极 \(J
 | 157.94 | 102.21 | 0.168 | \(3.52\times10^{-3}\) |
 | 256.27 | 269.10 | 0.273 | \(2.52\times10^{-4}\) |
 | 365.07 | 546.09 | 0.389 | \(3.95\times10^{-4}\) |
+| 499.37 | 1021.80 | 0.532 | \(1.29\times10^{-4}\) |
 
 这里的响应归一化为
 
@@ -1529,6 +1530,7 @@ J_A^\mu=(P_A+P_A')^\mu.
 | 157.94 | 102.21 | 0.168 | \(3.52\times10^{-3}\) |
 | 256.27 | 269.10 | 0.273 | \(2.52\times10^{-4}\) |
 | 365.07 | 546.09 | 0.389 | \(3.95\times10^{-4}\) |
+| 499.37 | 1021.80 | 0.532 | \(1.29\times10^{-4}\) |
 
 这些位置显示 \(M\) 响应存在很强的有限动量抵消。它们值得作为 \(\Phi''\) 和 \(M\Phi''\) 的重点扫描位置。
 
@@ -1727,6 +1729,64 @@ PR #51 中的七同位素 AFH 电荷响应审计已经归档：
 七同位素 AFH archive 覆盖 Xe-128、Xe-129、Xe-130、Xe-131、Xe-132、Xe-134、Xe-136。Xe-124 和 Xe-126 没有本研究所用的 AFH v6.0 default-density matrix，不能把它们当作已计算的 AFH 同位素。
 
 ### 19.2 已完成与未完成项目的边界
+
+### 19.3 已准备的 Xe-131 原生 \(\Phi''\) 与 \(M\Phi''\) 响应导出
+
+在本次 PR 的同一研究分支上，已经进一步准备了 Xe-131 的 AFH v6.0 原生响应导出流程。它调用官方 package 已有的响应接口，不自行重写角动量代数：
+
+| AFH 响应索引 | package 内算符 | 输出 |
+|---:|---|---|
+| 1 | MJ | \(W_M^{00}\) |
+| 4 | PhiPPJ | \(W_{\Phi''}^{00}\) |
+| 7 | MJ--PhiPPJ | \(W_{M\Phi''}^{00}\) |
+
+准备的文件为：
+
+- research/afh_default_density_xe131/run_afh_phi_response_xe131.wls：原生 Wolfram 导出；
+- research/afh_default_density_xe131/validate_afh_phi_response.py：输入来源、网格、归一化、响应矩阵和输出指纹验证；
+- research/afh_default_density_xe131/tests/test_afh_phi_response.py：validator 的合成输入回归测试；
+- research/afh_default_density_xe131/audit/AFH_PHI_RESPONSE_XE131_NATIVE_PLAN.md：计算方案和验收边界。
+
+这次导出使用 Xe-131、\(A=131\)、\(Z=54\)、\(J_A=3/2\)，采用 AFH 内置 default density matrix（67 entries），并在
+
+\[
+q_A=0,0.25,0.50,\ldots,600~\mathrm{MeV}
+\]
+
+的 2,401 个节点上输出三个响应。这里的 \(q_A\) 是原子核获得的空间动量，不是 \(q_\chi\)，也不是 Minkowski 不变量 \(t_A\)。
+
+输入 provenance 已固定：
+
+- AFH/DMFormFactor v6.0 source SHA-256：dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372；
+- Xe-131 density-matrix CSV SHA-256：f656145ba2fb9da741b77faed4c01d0dc457c955fa340928b5dbf9cee9bc5d45。
+
+原始 package 响应统一定义为
+
+\[
+R_X^{\rm raw}(q_A)
+=
+\frac{4\pi}{2J_A+1}W_{X,\rm AFH}^{00}(q_A),
+\qquad
+X\in\{M,\Phi'',M\Phi''\},
+\]
+
+物理等质子、等中子耦合响应则对三个分量统一乘一次 factor four：
+
+\[
+R_X^{\rm phys}=4R_X^{\rm raw}.
+\]
+
+干涉项必须保留其符号，不能取绝对值后再与对角项组合。validator 还会检查
+
+\[
+|R_{M\Phi''}|^2\le R_M R_{\Phi''},
+\]
+
+以及对角响应非负、虚部残差、网格和 \(y_A\) 一致性、\(M\) 通道零动量 \(A^2/4\to A^2\) 归一化。Cauchy--Schwarz 检查是响应矩阵的一致性检查，不是独立核结构计算。
+
+**执行状态必须严格区分：** Wolfram 原生脚本已经准备，但尚未在 Windows/Wolfram 环境中执行；因此目前没有新的数值 \(W_{\Phi''}\) 或 \(W_{M\Phi''}\) 结果。也没有由这项导出得到完整三体截面或天然氙反冲谱。只有在原生运行完成、CSV 和 metadata 生成并通过 SHA-256 与 validator 验收后，才可以将这两个核响应标记为已计算。
+
+
 
 | 研究项目 | 状态 | 当前可以说什么 |
 |---|---|---|
