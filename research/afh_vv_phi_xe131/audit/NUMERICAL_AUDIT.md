@@ -39,7 +39,9 @@
 | Cauchy--Schwarz over all 2401 points | PASS |
 | 60-digit mpmath spot-check at four minima | PASS; max relative amplitude difference \(2.13\times10^{-15}\) |
 | Native Mathematica/Python pointwise comparison | PENDING |
-| Full three-body coefficient matching | NOT YET PERFORMED |
+| (M+Phi'') vector-charge coefficient matching | PASS as a zero-(t) benchmark |
+| Finite-(t) flavour-separated form factors | PENDING |
+| Spatial-current (Sigma'), (Sigma''), and (Delta) matching | PENDING |
 
 The full-grid Cauchy--Schwarz maximum is
 \(0.9999998601592628\), at \(q_A=470.75\) MeV. This is a normalized
@@ -59,6 +61,64 @@ Raw equal-p/n physical response divided by \(A^2\):
 The full numerical values and all 2401 grid points are in
 output/afh_vv_phi_xe131_full_grid.csv; the four minima are in
 output/afh_vv_phi_xe131_selected_points.csv.
+
+## First charge-sector matching result
+
+The separate script
+\`phi_charge_response_match.py\` applies the nonrelativistic vector-charge
+expansion of Hoferichter, Menéndez, and Schwenk, PRD 102, 074018 (2020),
+Eq. (41), and matches its spin-orbit term to the AFH \(\Phi''\) operator
+of Anand, Fitzpatrick, and Haxton, PRC 89, 065501 (2014), Eq. (51).
+
+With \(q_A=k'-k\), \(t_A=-q_A^2\), and the AFH Fourier convention
+\(\boldsymbol q_{\rm AFH}=-\boldsymbol q_A\), the coefficients are
+\[
+c_M=F_1^V(t_A)+\frac{t_A}{8m_N^2}
+       [F_1^V(t_A)+2F_2^V(t_A)],
+\]
+\[
+c_{\Phi''}=\frac{q_A^2}{4m_N^2}
+       [F_1^V(t_A)+2F_2^V(t_A)].
+\]
+The three-body charge amplitude factorizes as
+\[
+\mathcal M_{M+\Phi''}^{(3)}
+=\mathcal T_3^0[c_M M+c_{\Phi''}\Phi''].
+\]
+Thus the common spin-averaged three-body phase-space integral of
+\(\mathcal T_3^0\) cancels from the relative \(M+\Phi''\) correction.
+This is a charge-sector matching result; it does not include the spatial
+current or the \(\Sigma'\), \(\Sigma''\), and \(\Delta\) responses.
+
+For the diagnostic anchors \(F_1^V(0)=3\), \(F_2^V(0)=-0.552\), and
+\(m_N=0.938918\) GeV, at the second \(W_M\) minimum:
+\[
+q_A=256.271867617\ {\rm MeV},\quad
+E_R=269.1038976\ {\rm keV},\quad
+\eta=c_{\Phi''}/c_M=0.01184042.
+\]
+Using the exact selected-point AFH responses gives
+\[
+Q_{\Phi''}
+=1+2\eta\frac{W_{M\Phi''}}{W_M}
++\eta^2\frac{W_{\Phi''}}{W_M}
+=0.9816142.
+\]
+This is a \(-1.839\%\) change relative to the same relativistically
+corrected \(M\)-only charge response. Including the \(t_A/(8m_N^2)\)
+correction to \(c_M\), the combined result is \(-2.991\%\) relative to
+\(F_1^V(0)^2W_M\) at this selected point.
+
+Across the 2401-node grid, the sampled \(Q_{\Phi''}-1\) varies locally
+from \(-13.61\%\) at \(q_A=255.75\) MeV to \(+11.50\%\) at
+\(q_A=256.75\) MeV. These extrema occur in the deep \(W_M\) cancellation
+region and are ratios to a very small \(W_M\) denominator; they must not
+be described as a global rate change. The matched charge response is
+checked to remain nonnegative.
+
+The default \(F_1,F_2\) are held at their zero-momentum values in this
+diagnostic. Finite-\(t\) flavour-separated form factors are still required
+for a quantitative spectrum.
 
 ## Normalization audit
 
@@ -80,16 +140,20 @@ The \(\Phi''\) nuclear response does not share the deep suppression of the
 second \(W_M\) minimum. Therefore a response-level \(W_M\)-only audit is not
 sufficient to prove that spin-orbit nuclear structure is negligible.
 
-The table is **not** a three-body cross-section correction. The exact
-three-body coefficient multiplying each response is still unknown. In
-particular, the elastic VV NREFT mapping cannot be copied into the radiative
-three-body process without re-deriving the contraction with the off-shell
-\(\chi_2\) propagators and the scalar momentum.
+The new result is a matched **charge-sector** correction, not a complete
+three-body cross-section prediction. The common (mathcal T_3^0) factor
+cancels only in the relative (M+Phi'') charge-sector ratio. Finite-(t)
+form factors and the spatial-current (Sigma'), (Sigma''), and
+(Delta) sectors remain to be calculated.
 
 ## Reproduction commands
 
 ~~~bash
 python research/afh_vv_phi_xe131/afh_vv_phi_xe131.py
+python research/afh_vv_phi_xe131/phi_charge_response_match.py \
+  --grid research/afh_vv_phi_xe131/output/afh_vv_phi_xe131_full_grid.csv \
+  --selected research/afh_vv_phi_xe131/output/afh_vv_phi_xe131_selected_points.csv \
+  --outdir research/afh_vv_phi_xe131/output/
 python -m unittest discover -s research/afh_vv_phi_xe131/tests -v
 python research/afh_vv_phi_xe131/verify_phi_mpmath.py
 ~~~
