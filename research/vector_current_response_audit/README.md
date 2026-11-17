@@ -111,7 +111,7 @@ uses a separate \(n_W\) refinement at fixed \(n_z=16,n_\phi=8\).
 The initial numerical archive was assembled with a standalone mirror of the
 baseline Eq. (6) kernel API. The PR workflow subsequently reran the committed
 script against the exact repository source at commit
-0ebfb5245d0805b070c50bb4d00c8fb29721caf6: all 8 tests passed, the full
+28ff13722b7b33ba6145fb7caa3548c365f086e5: all 8 tests passed, the full
 12-row calculation completed, and the regenerated numerical table agreed
 exactly with the archived table (maximum relative difference 0; workflow
 run 44169485507). Software checks validate only the implemented current

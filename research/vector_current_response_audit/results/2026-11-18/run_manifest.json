@@ -34,12 +34,12 @@
     "vector_current_response_audit.csv": "1836fb8fdd6477534a9332a457aa8d45c43fe7750904fe4e48f9ad0971866c09",
     "quadrature_convergence.csv": "b9aee860c4ea2e137fcd396eaa83982818bf87ea9b49dddb000ec9759af6e5f4",
     "metadata.json": "af8abf4c9d79a1950443f6d3ae2e2e8d63d598fe4bc1b4387481aaaf81b7b007",
-    "RESULTS.md": "d90633071575ea9676be31e012628470490b3b4b34eaf1cd6dccf5403c7fb4cd"
+    "RESULTS.md": "4b564ea17ea8b8a01233b67909d3123250d13c9db86e0493dde72f7d33fbd487"
   },
   "runtime": {
     "python": "3.13.18",
     "numpy": "2.3.5",
-    "repository_source_ci": "workflow run 44169485507 passed at prior source revision 0ebfb5245d0805b070c50bb4d00c8fb29721caf6; current LF-normalized writer revision is pending rerun"
+    "repository_source_ci": "PASS: workflow run 44170287270 at source revision 28ff13722b7b33ba6145fb7caa3548c365f086e5; 8/8 tests passed; all 12 rows regenerated; archived-versus-regenerated maximum relative difference 0; artifact ID 14368350485"
   },
   "limitations": [
     "No AFH Sigma-prime, Sigma-double-prime, or Delta nuclear response has been numerically contracted with the three-body tensor.",

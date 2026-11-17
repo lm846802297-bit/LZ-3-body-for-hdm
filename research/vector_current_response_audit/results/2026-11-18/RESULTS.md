@@ -162,8 +162,8 @@ is \(W_M^{00}\)-only.
 
 ## 6. Exact-source reproduction evidence
 
-GitHub Actions workflow run 44169485507 executed the committed code at
-source revision 0ebfb5245d0805b070c50bb4d00c8fb29721caf6 using Python 3.13.18
+GitHub Actions workflow run 44170287270 executed the committed code at
+source revision 28ff13722b7b33ba6145fb7caa3548c365f086e5 using Python 3.13.18
 and NumPy 2.3.5.
 
 - Python compilation: passed.
