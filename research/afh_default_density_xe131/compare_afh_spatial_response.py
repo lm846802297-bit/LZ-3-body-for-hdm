@@ -103,7 +103,7 @@ def compare_records(
                 )
             lhs = mix * mix
             rhs = max(0.0, sigma) * max(0.0, delta)
-            cs_tol = max(atol, rtol * max(lhs, rhs, 1.0))
+            cs_tol = max(atol, rtol * max(lhs, rhs, 1e-300))
             if lhs > rhs + cs_tol:
                 failures.append(
                     f"{source} SigmaPrime-Delta Cauchy-Schwarz violation "

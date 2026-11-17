@@ -25,7 +25,7 @@ class AFHSpatialResponseTests(unittest.TestCase):
                 self.assertGreaterEqual(wm,0.0)
                 self.assertGreaterEqual(ws,0.0)
                 self.assertGreaterEqual(wd,0.0)
-                self.assertLessEqual(wsd*wsd,ws*wd+1e-13*max(1.0,ws*wd))
+                self.assertLessEqual(wsd*wsd,ws*wd+max(1e-24,1e-12*ws*wd))
 
     def test_response_bundle_reuses_consistent_channel_definitions(self):
         bundle,_=spatial.response_bundle(131,0.158,self.rows[131])

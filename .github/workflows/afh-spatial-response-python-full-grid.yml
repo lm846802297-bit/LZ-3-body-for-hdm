@@ -6,8 +6,11 @@ on:
       - ".github/workflows/afh-spatial-response-python-full-grid.yml"
       - "research/afh_default_density_xe131/run_afh_spatial_response_audit.py"
       - "research/afh_default_density_xe131/validate_afh_spatial_python_grid.py"
+      - "research/afh_default_density_xe131/compare_afh_spatial_response.py"
+      - "research/afh_default_density_xe131/tests/test_compare_afh_spatial_response.py"
       - "research/afh_default_density_xe131/tests/test_afh_spatial_response_audit.py"
       - "research/afh_default_density_xe131/tests/test_validate_afh_spatial_python_grid.py"
+      - "research/afh_default_density_xe131/tests/test_compare_afh_spatial_response.py"
       - "research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices/**"
   pull_request:
     paths:
