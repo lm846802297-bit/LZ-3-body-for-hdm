@@ -5117,3 +5117,173 @@ invented. The one-dimensional efficiency fold is not energy-resolution
 smearing, a NEST S1/S2 response, a background model, or a profile likelihood.
 
 **Historical note (2026-11-14):** At the time of this Phase II update, only the Xe-131 AFH response-level Mathematica/Python comparison (Wolfram 14.0.0) had completed and the native full Eq. (6) gate was still open. That gate has since been closed by the 2026-11-16 Wolfram 14.2.0 652-row execution and independent Python comparison recorded in Appendix H.7.
+
+## 15. Phase III update: 完整三体反冲率、AFH 响应矩阵与数值验收规范（2026-11-18）
+
+本节把完整三体反冲率从结构公式推进到可执行的归一化和验收规范。完整推导归档见 companion document 的 §§38–44。本节固定主研究报告中的计算口径，不把尚未完成的数值任务写成已完成结果。
+
+### 15.1 从 \(M\)-only 到完整三体反冲率
+
+当前 \(M\)-only 基准可示意写为
+
+\[
+\frac{dR_M}{dE_R}
+\propto
+\int d^3v\,f_{\rm lab}(\mathbf v)\,v
+\int d\Phi_3\,\delta_E\,
+R_M^{(3)}(\xi)W_M^A(Q_A).
+\]
+
+完整的一体核流结果应写成 AFH 响应矩阵收缩：
+
+\[
+\boxed{
+\frac{dR_{\rm Xe}}{dE_R}
+=
+\frac{\rho_\chi}{m_\chi}
+\sum_A\frac{X_A}{m_A}
+\int d^3v\,f_{\rm lab}(\mathbf v)\,v
+\frac{1}{\mathcal F_A}
+\int d\Phi_3\,\delta_E
+\sum_{\alpha,\beta}\sum_{\tau,\tau'}
+\mathcal R_{\alpha\beta}^{(3),\tau\tau'}(\xi)
+W_{\alpha\beta}^{A,\tau\tau'}(Q_A).
+}
+\]
+
+这里 \(\mathcal R_{\alpha\beta}^{(3)}\) 是完整三体暗物质振幅、媒介子传播子、单核子 Dirac–Pauli 流和多极投影给出的动力学系数；\(W_{\alpha\beta}^{A,\tau\tau'}\) 是 AFH 核结构响应；\(\xi\) 表示三体相空间变量。该式中的 \(X_A\) 是同位素质量分数，\(\mathcal F_A=4\sqrt{(p_\chi\cdot P_A)^2-m_\chi^2m_A^2}\) 是相对论初态通量。若输入采用原子数丰度 \(x_A\)，必须先用 \(X_A=x_A m_A/\sum_Bx_Bm_B\) 转换，不能重复乘同位素质量或丰度。
+
+### 15.2 固定反冲能量、精确运动学与相空间归一化
+
+采用相对论外线归一化：
+
+\[
+\frac{d\sigma_A}{dE_R}
+=
+\frac{1}{\mathcal F_A}
+\int d\Phi_3\,
+\overline{|\mathcal M_A|^2}
+\delta\!\left(E_R-(E_A'-m_A)\right).
+\]
+
+初始核静止时，
+
+\[
+Q_A^2=E_R(E_R+2m_A),\qquad
+t_A=-2m_AE_R.
+\]
+
+因此精确 recoil delta function 应使用
+\[
+\delta\!\left(E_R-\sqrt{m_A^2+Q_A^2}+m_A\right).
+\]
+只有在 \(E_R\ll m_A\) 时才可用 \(\delta(E_R-Q_A^2/(2m_A))\)。从 \(Q_A\) 变量转换时必须保留 Jacobian。完整 \(d\Phi_3\) 包含末态暗物质、核反冲和辐射标量；\((W^2,z,\phi_*)\) 的边界及 Jacobian 以正文 §28 和 companion document §41 为准。
+
+### 15.3 三体动力学系数与 AFH 核响应的分工
+
+不得把 \(R_i^{(3)}\) 与 \(W_i\) 混为一谈：
+
+- \(R_i^{(3)}\) 或 \(\mathcal R_{\alpha\beta}^{(3)}\)：由两张标量辐射图、\(\chi_2\) 传播子、矢量媒介子传播子、\(F_1/F_2\) 和三体多极投影决定；
+- \(W_{\alpha\beta}^{A,\tau\tau'}(Q_A)\)：由 AFH v6.0 核态、OBDME、核算符和同位旋定义决定；
+- \(d\Phi_3\)：保留三体末态的完整运动学，不由 AFH 核响应替代。
+
+AFH 响应矩阵必须区分对角项与干涉项，并保持 Hermiticity。对于只保存一次的交叉响应，按 AFH v6.0 的定义使用相应 \(2\operatorname{Re}\) 项；若有序矩阵求和已经包含两个方向，则不得再额外乘 2。等标量/等矢量 form factors 定义为
+\[
+F_i^{(0)}(t_N)=\frac{F_i^{V,p}(t_N)+F_i^{V,n}(t_N)}2,\qquad
+F_i^{(1)}(t_N)=\frac{F_i^{V,p}(t_N)-F_i^{V,n}(t_N)}2.
+\]
+这里使用 \(t_N\)，除非已明确采用 \(q_N^\mu=q_A^\mu\) 的 impulse-approximation 处方，否则不能把 \(t_N\) 无条件替换为 \(t_A\)。
+
+### 15.4 不能直接沿用弹性二体 NREFT 系数
+
+AFH v6.0 的核结构响应可以复用，但其标准弹性 \(2\to2\) NREFT 系数不能直接作为本三体过程的 \(R_i^{(3)}\)。本过程必须保留
+\[
+q_A^\mu=P_A'^\mu-P_A^\mu,\quad
+q_\chi^\mu=p_\chi'^\mu-p_\chi^\mu,\quad
+k_s^\mu,
+\]
+以及
+\[
+q_A^\mu+q_\chi^\mu+k_s^\mu=0.
+\]
+因此 \(q_A\ne-q_\chi\)（除非退化到 \(k_s=0\)）。两个 \(\chi_2\) 内部传播子和标量动量使三体动力学系数依赖 \(W^2,z,\phi_*\)，必须从完整 \(\mathcal T_3^\mu\) 与核子流重新投影。
+
+### 15.5 矢量传播子、Ward 收缩和有限宽度
+
+完整媒介子交换振幅为
+\[
+\mathcal M_A=\mathcal T_3^\mu D_{\mu\nu}^{V}(q_A)J_A^\nu,
+\qquad
+D_{\mu\nu}^{V}(q_A)=
+\frac{-i}{t_A-m_V^2+i\epsilon}
+\left(g_{\mu\nu}-\frac{q_{A,\mu}q_{A,\nu}}{m_V^2}\right)
+\]
+（具体符号按统一度规和 Feynman 规则执行）。只有在相关核流严格守恒时，才能据此删除传播子的纵向项。暗物质三体跃迁流一般不满足普通弹性流的 \(q_A\cdot\mathcal T_3=0\)；§27.5 已给出零宽度 Ward 收缩及固定宽度残项。有限宽度必须在两张图中一致实现，并明确常数宽度、能量依赖自能或复极点方案。
+
+定义
+\[
+r_1=p_\chi-k_s,\quad r_2=p_\chi'+k_s,\quad
+\mathcal D_i=r_i^2-m_{\chi_2}^2+i m_{\chi_2}\Gamma_{\chi_2}(r_i^2).
+\]
+总振幅必须先相加再平方：
+\[
+|\mathcal M_1+\mathcal M_2|^2
+=|\mathcal M_1|^2+|\mathcal M_2|^2
++2\operatorname{Re}(\mathcal M_1\mathcal M_2^*).
+\]
+\(\chi_2\) 的自能宽度与矢量媒介子传播子是不同的物理输入，不能混用。
+
+### 15.6 完整 \(L_{\mu\nu}^{(3)}W_A^{\mu\nu}\) 收缩
+
+若 \(\mathcal T_3^\mu\) 不包含媒介子传播子，定义
+\[
+L_{(3)}^{\mu\rho}
+=\frac12\sum_{\rm spins}
+\mathcal T_3^\mu\mathcal T_3^{\rho *},
+\]
+则
+\[
+\boxed{
+\overline{|\mathcal M_A|^2}
+=
+L_{(3)}^{\mu\rho}
+D_{\mu\nu}^{V}
+D_{\rho\sigma}^{V*}
+W_A^{\nu\sigma}.
+}
+\]
+若传播子已吸收到三体流定义中，则不能再乘一次 \(D D^*\)。AFH 投影后的表达式是
+\[
+\sum_{\alpha,\beta,\tau,\tau'}
+\mathcal R_{\alpha\beta}^{(3),\tau\tau'}(\xi)
+W_{\alpha\beta}^{A,\tau\tau'}(Q_A),
+\]
+其中只包含 AFH v6.0 实际定义且由当前核流匹配允许的对角和干涉结构。不能将全部 \(W_X\) 直接相加。
+
+### 15.7 因子 4、同位素和完整性边界
+
+当前已经审计的 \(M\) 通道 raw \(A^2/4\) 到 physical \(A^2\) 的因子 4 只执行一次；不得自动推广到 \(\Phi''\)、\(\Sigma\)、\(\Delta\) 或交叉响应。天然氙必须先逐同位素计算截面，再按质量分数 \(X_A\) 或等价的数丰度 \(x_A\) 组装。AFH-7 的 Xe-124/Xe-126 输入缺失边界不变。
+
+### 15.8 从 \(M\)-only 到完整响应的最低数值验收
+
+1. 关闭非 \(M\) 系数时，完整引擎逐点恢复已归档 \(M\)-only 基准；
+2. 两张辐射图的相干平方与两对角项加干涉项逐点一致；
+3. 自由核子 Dirac–Pauli 直接计算与 NR 展开通过符号、归一化和 Gordon identity 对照；
+4. 零宽度 Ward 收缩及有限宽度残项分别复现；
+5. \(q_A+q_\chi+k_s=0\)、质量壳、三体边界和 Jacobian 通过独立检查；
+6. 常振幅极限复现递归相空间和 \(I(D)\)，极点附近改用完整积分；
+7. AFH 对角/交叉响应、同位旋矩阵、Hermiticity 和 factor-four 位置分别验收；
+8. Xe-131 在 \(Q_A\simeq158,256,365\ {\rm MeV}\) 附近提高响应网格与插值分辨率；
+9. 三体求积收敛与 Mathematica/Python 交叉代码一致性分开验收；
+10. 逐同位素截面、天然氙组装、halo fold 和 detector fold 分层验收；
+11. 对 \(M\)-only 与 full matched one-body 同时报告绝对差、相对差和绝对事件率，不能只在 \(W_M\) 极小值处报告相对比值。
+
+### 15.9 理论误差和 LZ 接口
+
+完整 AFH 一体响应并不自动包含两核子交换流，也不消除 AFH 核结构、有限 \(t_N\) form factors、三体积分、\(\chi_2\) 自能、halo、同位素覆盖和探测器响应误差。理论核反冲谱 \(dR/dE_R\) 与重建能量谱必须分开。简单效率近似下
+\[
+N_{\rm pred}=MT\int dE_R\,\frac{dR}{dE_R}\epsilon(E_R),
+\]
+若需要能量分辨率或 S1/S2 响应，则还要卷积 \(P(E_{\rm obs}\mid E_R)\)，并进一步构造背景和 nuisance 参数模型。现有一维效率折叠不能称为完整 LZ likelihood。
+
+**状态声明：** 本节建立的是完整三体反冲率公式、响应矩阵、归一化和数值验收规范；它不代表全 AFH 响应数据库、所有三体系数、完整 UV 自能或最终天然氙/LZ 预测已经通过数值验收。
