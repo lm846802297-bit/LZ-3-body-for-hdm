@@ -1,5 +1,6 @@
 (* Independent kernel: patched FeynArts is kept inside this project. *)
 workDir=DirectoryName[$InputFileName];projectDir=DirectoryName[workDir];
+PrependTo[$Path,FileNameJoin[{workDir,"FeynCalc"}]];
 FeynCalc`$FeynArtsDirectory=FileNameJoin[{workDir,"FeynArtsPatched"}];
 sourceModel=FileNameJoin[{workDir,"ThreeBodyVV.fr"}];
 hashFile=FileNameJoin[{workDir,"generated_model_source_sha256.txt"}];

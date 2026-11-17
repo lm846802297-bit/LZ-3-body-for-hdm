@@ -29,4 +29,4 @@ wolframscript -file export_feynarts.wls
 wolframscript -file patch_exported_feynarts.wls
 ```
 
-两步都完成后才运行 `feynrules_feyncalc_2to3.wls` 或 notebook 五 B。导出和 patch 阶段均校验源文件 SHA-256。FeynCalc 是本机依赖，项目携带独立副本的 FeynArts；不覆盖系统 FeynArts。
+两步都完成后才运行 `feynrules_feyncalc_2to3.wls` 或 notebook 五 B。导出和 patch 阶段均校验源文件 SHA-256。FeynCalc、FeynRules 2.3.49 和 FeynArts 3.12 的源码副本位于本目录；相关脚本优先使用项目副本，不覆盖 Mathematica 系统目录。许可与文件校验见 `THIRD_PARTY_NOTICES.md`。

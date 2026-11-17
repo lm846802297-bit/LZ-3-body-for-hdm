@@ -499,6 +499,8 @@ Cell[CellGroupData[{
 Cell["\<\
 (* \:7b2c\:4e00\:6b65\:ff1a\:68c0\:67e5\:672c\:673a\:662f\:5426\:80fd\:627e\
 \:5230 FeynCalc\:3002 *)
+localFeynCalcDir = FileNameJoin[{NotebookDirectory[], "..", "three_body_calculation_and_validation", "mathematica_halo_notebook", "FeynRules_check", "FeynCalc"}];
+If[DirectoryQ[localFeynCalcDir], PrependTo[$Path, localFeynCalcDir]];
 feynCalcPath = FindFile[\"FeynCalc`\"];  (* \:67e5\:627e\:672c\:673a FeynCalc \
 \:5b89\:88c5\:8def\:5f84 *)
 Print[\"FeynCalc \:8def\:5f84\:ff1a\", feynCalcPath];  (* \:663e\:793a\:5f53\
