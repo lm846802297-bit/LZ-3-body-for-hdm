@@ -17,7 +17,7 @@ This directory contains the preserved original source and the current uploaded m
 
 ## Build
 
-Run `./build.sh`. The script writes `main_build.pdf` and does not overwrite either source TeX file. It first verifies every entry in `SHA256SUMS`. The 2026-11-17 upload still has an unresolved `PDG:2024kinematics` citation and a duplicate equation label; see `EDITORIAL_STATUS.md`.
+Run `./build.sh`. The script writes `main_build.pdf` and does not overwrite either source TeX file. It first verifies every entry in `SHA256SUMS`. The 2026-11-17 update includes a resolved PDG kinematics citation and unique equation labels. A full PDF build still requires a TeX installation with the `pdflatex.fmt` format; see `EDITORIAL_STATUS.md`.
 
 ## Preservation policy
 
