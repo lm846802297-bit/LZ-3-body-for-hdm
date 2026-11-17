@@ -117,6 +117,14 @@ def relative_matrix_residual(a: np.ndarray, b: np.ndarray) -> float:
     return float(np.linalg.norm(a - b) / max(np.linalg.norm(a), np.linalg.norm(b), 1.0))
 
 
+def scaled_ward_residual(point: eq6.Point, current: np.ndarray) -> float:
+    """Scale q.T by |q| ||T|| to avoid a misleading absolute cancellation test."""
+    q_norm = float(np.linalg.norm(np.asarray(point.q_A, dtype=float)))
+    current_norm = float(np.linalg.norm(current))
+    scale = max(q_norm * current_norm, 1.0)
+    return float(np.linalg.norm(ward_lhs(point, current)) / scale)
+
+
 def build_reference_point() -> eq6.Point:
     w_min, w_max = eq6.limits(
         MCHI_GEV, MS_GEV, M_A_GEV, ER_GEV, SPEED_KMS
@@ -157,6 +165,7 @@ def run_smoke_test() -> dict:
         "mass_split_GeV": mchi2 - MCHI_GEV,
         "nonconservation_norm_mass_split": float(np.linalg.norm(lhs)),
         "degenerate_mass_divergence_norm": float(np.linalg.norm(degenerate_divergence)),
+        "degenerate_mass_divergence_scaled_residual": scaled_ward_residual(point, degenerate),
         "coherent_interference_tensor_norm": float(
             np.linalg.norm(matrix_tensor - separate_tensor)
         ),
