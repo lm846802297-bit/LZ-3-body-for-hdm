@@ -405,7 +405,7 @@ def main() -> None:
     parser.add_argument("--five-kev-seeds", type=int, nargs=3, required=True)
     parser.add_argument("--events-per-keV", type=int, default=4000)
     parser.add_argument("--spectrum-dir", type=Path, default=Path(
-        "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum"
+        "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum"
     ))
     parser.add_argument("--nuclear-models", nargs="+", choices=NUCLEAR_MODELS, default=list(NUCLEAR_MODELS))
     parser.add_argument("--out-dir", type=Path, required=True)

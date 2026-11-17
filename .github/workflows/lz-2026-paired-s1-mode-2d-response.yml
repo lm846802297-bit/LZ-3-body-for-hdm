@@ -72,7 +72,7 @@ jobs:
         run: |
           python research/lz_detector_response/fold_lz_2026_paired_s1_mode_2d_response.py \
             --input-csv paired-s1-2d-output/paired_s1_mode_2d_events.csv \
-            --spectrum-dir research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum \
+            --spectrum-dir research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum \
             --events-per-bin 2000 \
             --out-dir paired-s1-2d-output/fold
           cat paired-s1-2d-output/fold/paired_s1_mode_2d_response_summary.csv

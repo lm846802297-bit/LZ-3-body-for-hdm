@@ -12,10 +12,10 @@
 - [研究文档索引](research/docs/README.md)：主报告、独立附录、公式索引和补充记录。
 - [公式—符号—正文—程序—结果交叉引用](research/docs/formula_symbol_code_cross_reference.md)：F1–F12 公式、单位、程序入口、输出和适用边界。
 - [研究目录索引](research/README.md)：各专题的内容和科学状态。
-- [Figure 2 数值结果总索引](research/docs/supplements/figure2_results_master_index_2026-11-16.md)：main 当前的 13 组结果、91 个已提交文件 SHA-256/大小记录及 1 个外部高阶谱归档校验项（共 92 项）；2026-11-13 旧索引保留为历史快照。
+- [Figure 2 数值结果总索引](research/docs/supplements/three_body_results_master_index_2026-11-16.md)：main 当前的 13 组结果、91 个已提交文件 SHA-256/大小记录及 1 个外部高阶谱归档校验项（共 92 项）；2026-11-13 旧索引保留为历史快照。
 - [Phase 1 科学内容审查](research/docs/supplements/scientific_content_audit_2026-11-16.md)：AFH-7 全网格、旧/新相空间积分差异、GCN/JJ55 数值精度边界。
-- [Figure 2 科学状态表](research/docs/supplements/figure2_scientific_status_2026-11-13.md)：明确各项验证的适用范围和未完成边界。
-- [Eq. (6) kernel 与 Figure 2 数值复现入口](research/figure2_full_reproduction/README.md)。
+- [Figure 2 科学状态表](research/docs/supplements/three_body_scientific_status_2026-11-13.md)：明确各项验证的适用范围和未完成边界。
+- [Eq. (6) kernel 与 Figure 2 数值复现入口](research/three_body_calculation_and_validation/README.md)。
 - [LZ detector-response 研究档案](research/lz_detector_response/README.md)，以及 [2026 NR/ER 响应、二维折叠与统计审计索引](research/lz_detector_response/lz_2026_extended_nr/README.md)。
 
 ## 论文源码

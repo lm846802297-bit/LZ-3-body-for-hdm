@@ -8,14 +8,14 @@
 
 ## Current audit and status registers
 
-- [Current Figure 2 results master index](supplements/figure2_results_master_index_2026-11-16.md): current main result map after PR #45: 13 groups, 91 committed SHA-256/size records plus one external high-order archive checksum (92 output records), including the full AFH-7 response grid and AFH-7/Hybrid-9 84-point spectra.
-- [Current machine-readable result manifest](supplements/figure2_results_master_index_2026-11-16.json): source commit, parameters, repository paths, SHA-256 digests, byte sizes, and explicit external-archive boundaries.
-- [Historical Figure 2 results index (2026-11-13)](supplements/figure2_results_master_index_2026-11-13.md): retained as the earlier nine-group/60-file snapshot.
-- [Physics formula cross-audit](supplements/figure2_physics_formula_audit_2026-11-13.md): original Lagrangian, two radiation diagrams, Dirac trace, three-body phase-space Jacobian, \(256\pi^3\), AFH factor four, \(v_{\min}\), and natural-xenon rate normalization.
+- [Current Figure 2 results master index](supplements/three_body_results_master_index_2026-11-16.md): current main result map after PR #45: 13 groups, 91 committed SHA-256/size records plus one external high-order archive checksum (92 output records), including the full AFH-7 response grid and AFH-7/Hybrid-9 84-point spectra.
+- [Current machine-readable result manifest](supplements/three_body_results_master_index_2026-11-16.json): source commit, parameters, repository paths, SHA-256 digests, byte sizes, and explicit external-archive boundaries.
+- [Historical Figure 2 results index (2026-11-13)](supplements/three_body_results_master_index_2026-11-13.md): retained as the earlier nine-group/60-file snapshot.
+- [Physics formula cross-audit](supplements/three_body_physics_formula_audit_2026-11-13.md): original Lagrangian, two radiation diagrams, Dirac trace, three-body phase-space Jacobian, \(256\pi^3\), AFH factor four, \(v_{\min}\), and natural-xenon rate normalization.
 - [P1-PhaseSpace numerical convergence audit](supplements/phase_space_convergence_audit_2026-11-14.md): independent (W^2/W/u^2) mappings, threshold-stable Källén evaluation, angular quadrature and raw-(d\Phi_3) prefactor checks. A 2026-11-16 addendum records the AFH-7/Hybrid-9 84-point threshold-(u^2) grid and high-order convergence. GCN/JJ55 remain on the legacy linear-(W^2) path and need a matched rerun; near-pole width-scheme systematics remain open.
-- [Scientific result status table](supplements/figure2_scientific_status_2026-11-13.md): current 2026-11-16 status update, separating verified, partially verified, missing-input, and not-yet-completed tasks.
+- [Scientific result status table](supplements/three_body_scientific_status_2026-11-13.md): current 2026-11-16 status update, separating verified, partially verified, missing-input, and not-yet-completed tasks.
 - [Scientific content audit — Phase 1](supplements/scientific_content_audit_2026-11-16.md): AFH-7 full-grid status, old/new kernel comparison, GCN/JJ55 quadrature mismatch, and remaining validation boundaries.
-- [Anand / AFH coherent-response audit](../figure2_full_reproduction/ANAND_WM_RESPONSE_AUDIT.md): source-level AFH isoscalar convention and the physical equal-\(p,n\) response mapping.
+- [Anand / AFH coherent-response audit](../three_body_calculation_and_validation/ANAND_WM_RESPONSE_AUDIT.md): source-level AFH isoscalar convention and the physical equal-\(p,n\) response mapping.
 
 ## Earlier project notes
 
@@ -46,9 +46,9 @@ The standalone files below are navigation/citation copies of the corresponding s
 
 These are deliberately separate diagnostics with different assumptions; neither should be conflated with the natural-xenon halo-folded spectra or the LZ rate-level yields.
 
-- [Supplied pointwise L00 benchmark and conditional pole-width comparison](../figure2_full_reproduction/results/USER_L00_BENCHMARK_G1_G2_GVN_1_DELTA_M_450KEV.md)
-- [Local acceptance record for the pointwise benchmark](../figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md)
-- [Fixed-speed Xe-131 differential curve and its limitations](../figure2_full_reproduction/results/USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md)
+- [Supplied pointwise L00 benchmark and conditional pole-width comparison](../three_body_calculation_and_validation/results/USER_L00_BENCHMARK_G1_G2_GVN_1_DELTA_M_450KEV.md)
+- [Local acceptance record for the pointwise benchmark](../three_body_calculation_and_validation/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md)
+- [Fixed-speed Xe-131 differential curve and its limitations](../three_body_calculation_and_validation/results/USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md)
 
 ## LZ detector-response documentation
 
@@ -66,7 +66,7 @@ These are deliberately separate diagnostics with different assumptions; neither 
 
 ## Figure 2 audit supplements
 
-- [Numerical-results master index](supplements/figure2_results_master_index_2026-11-16.md)
-- [Physics-formula cross-audit](supplements/figure2_physics_formula_audit_2026-11-13.md)
-- [Scientific-status table](supplements/figure2_scientific_status_2026-11-13.md)
+- [Numerical-results master index](supplements/three_body_results_master_index_2026-11-16.md)
+- [Physics-formula cross-audit](supplements/three_body_physics_formula_audit_2026-11-13.md)
+- [Scientific-status table](supplements/three_body_scientific_status_2026-11-13.md)
 - [Scientific content audit — Phase 1](supplements/scientific_content_audit_2026-11-16.md)

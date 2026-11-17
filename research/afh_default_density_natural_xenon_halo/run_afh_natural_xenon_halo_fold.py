@@ -7,7 +7,7 @@ import numpy as np
 from numpy.polynomial.legendre import leggauss
 
 HERE = Path(__file__).resolve().parent
-sys.path.insert(0, str(HERE.parent / "figure2_full_reproduction"))
+sys.path.insert(0, str(HERE.parent / "three_body_calculation_and_validation"))
 import eq6_kernel
 
 U_GEV = 0.93149410242

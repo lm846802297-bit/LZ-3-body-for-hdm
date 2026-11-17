@@ -218,11 +218,11 @@
                   },
                   {
                       "file":  "compare_full_dsigma_mathematica.py",
-                      "sha256":  "d4a0b42445127c4fedfdcb7555a9d417db2233d540a6d9daae54b5ff0b71c800"
+                      "sha256":  "1f542f4e613d10c3eaae5fcf2882f4e0b81c91c4f1f5bae0243f1f16a3e6c99b"
                   },
                   {
                       "file":  "run_native_full_dsigma_windows.ps1",
-                      "sha256":  "62351571e217cdaaab7cf4e940af9b4a186b5491a34bcd04b1c2354d937d7855"
+                      "sha256":  "09cd5de852a3593d34c7b2f2c338d1253ff82e9259a7f9bb0fe73cfc905581b2"
                   },
                   {
                       "file":  "eq6_kernel.py",

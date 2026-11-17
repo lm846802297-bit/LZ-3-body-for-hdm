@@ -14,7 +14,7 @@ on:
       - research/lz_detector_response/tests/test_lz_2026_nr_high_energy_half_kev.py
       - research/lz_detector_response/tests/test_lz_2026_three_body_event_weighted_fold.py
       - research/lz_detector_response/extract_lz_2026_nr_selection_efficiency_components.py
-      - research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/**
+      - research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/**
       - research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/lz_2026_rate_level_event_yields.csv
       - .github/workflows/lz-2026-selection-stage-rate-audit.yml
   workflow_dispatch:
@@ -63,7 +63,7 @@ jobs:
       - name: Integrate all benchmark selection stages and close rate-level yields
         run: |
           python research/lz_detector_response/summarize_lz_2026_selection_stage_rates.py \
-            --spectrum-dir research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum \
+            --spectrum-dir research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum \
             --efficiency-components selection-stage-output/lz_2026_nr_selection_efficiency_components.csv \
             --rate-level-counts research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/lz_2026_rate_level_event_yields.csv \
             --output-dir selection-stage-output \

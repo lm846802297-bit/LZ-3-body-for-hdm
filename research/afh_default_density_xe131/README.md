@@ -86,7 +86,7 @@ A fourth minimum appears at approximately 1.022 MeV recoil, outside the
 three-dip Figure 2 region.
 
 See `output/RESULTS.md`, `output/metadata.json`, `output/minima.csv`,
-`output/figure2_dip_check.csv`, and `output/afh_default_xe131_WM00.png`.
+`output/nuclear_response_dip_check.csv`, and `output/afh_default_xe131_WM00.png`.
 
 ## Reproduction
 
@@ -213,8 +213,8 @@ research/docs/appendices/09G_recoil_momentum_convention_audit.md.
 
 The AFH default Xe-131 nuclear response is archived here. The four fixed-speed
 benchmark response substitutions are archived in
-`output/figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv` and
-`output/figure2_four_benchmarks_AFH_GCN_JJ55_wide_audit.csv`. They use the
+`output/four_benchmarks_AFH_GCN_JJ55_corrected.csv` and
+`output/four_benchmarks_AFH_GCN_JJ55_wide_audit.csv`. They use the
 existing 5 keV-grid Eq. (6) integral and replace only the nuclear response;
 they are not a fresh independent recomputation of all 640 three-body
 integrals.

@@ -349,7 +349,7 @@ def main() -> None:
     )
     parser.add_argument("--nuclear-models", nargs="+", default=["GCN", "JJ55"])
     parser.add_argument("--spectrum-dir", type=Path, default=Path(
-        "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum"
+        "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum"
     ))
     parser.add_argument("--out-dir", type=Path, required=True)
     args = parser.parse_args()

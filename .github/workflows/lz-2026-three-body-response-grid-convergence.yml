@@ -17,7 +17,7 @@ on:
       - research/lz_detector_response/tests/test_lz_2026_selection_stage_rates.py
       - research/lz_detector_response/tests/test_lz_2026_three_body_event_weighted_fold.py
       - research/lz_detector_response/lz_2026_extended_nr/LZ_2026_THREE_BODY_RESPONSE_SELECTION_AUDIT.md
-      - research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/**
+      - research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/**
       - .github/workflows/lz-2026-three-body-response-grid-convergence.yml
   workflow_dispatch:
 
@@ -101,7 +101,7 @@ jobs:
         run: |
           python research/lz_detector_response/converge_lz_2026_three_body_energy_grid.py \
             --response-dir response-output \
-            --spectrum-dir research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum \
+            --spectrum-dir research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum \
             --out-dir convergence-output
           cp selection-audit-output/lz_2026_nr_selection_efficiency_components.csv convergence-output/
           cp selection-audit-output/lz_2026_nr_selection_efficiency_components_metadata.json convergence-output/
@@ -109,7 +109,7 @@ jobs:
       - name: Integrate Fig. S2 selection stages and build conditional bridge
         run: |
           RATE_LEVEL_COUNTS=research/lz_detector_response/lz_2026_extended_nr/rate_level_event_yields/lz_2026_rate_level_event_yields.csv
-          SPECTRUM_DIR=research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum
+          SPECTRUM_DIR=research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum
           python research/lz_detector_response/summarize_lz_2026_selection_stage_rates.py \
             --spectrum-dir "$SPECTRUM_DIR" \
             --efficiency-components selection-audit-output/lz_2026_nr_selection_efficiency_components.csv \

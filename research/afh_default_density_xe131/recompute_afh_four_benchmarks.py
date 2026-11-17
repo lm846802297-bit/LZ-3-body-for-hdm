@@ -186,9 +186,9 @@ def main() -> None:
     args.outdir.mkdir(parents=True, exist_ok=True)
 
     combined, wide = recompute(args.base_csv, args.afh_response_csv)
-    combined.to_csv(args.outdir / "figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv",
+    combined.to_csv(args.outdir / "four_benchmarks_AFH_GCN_JJ55_corrected.csv",
                     index=False, float_format="%.12g")
-    wide.to_csv(args.outdir / "figure2_four_benchmarks_AFH_GCN_JJ55_wide_audit.csv",
+    wide.to_csv(args.outdir / "four_benchmarks_AFH_GCN_JJ55_wide_audit.csv",
                 index=False, float_format="%.12g")
     selected = wide[wide["ER_keV"].isin([200, 265, 270, 540, 545, 800])].copy()
     selected["AFH_over_JJ55"] = selected["R_A_AFH"] / selected["R_A_JJ55"]

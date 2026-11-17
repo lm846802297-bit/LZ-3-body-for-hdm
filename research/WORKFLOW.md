@@ -289,8 +289,8 @@ Continue future work from a fresh branch created from the updated main.
 
 The current top-level research areas are:
 
-- research/figure2_kinematic_audit/
-- research/figure2_full_reproduction/
+- research/three_body_kinematic_audit/
+- research/three_body_calculation_and_validation/
 
 Cross-topic notes and references belong in research/docs/. New topics
 should be added as siblings under research/ and indexed in research/README.md.

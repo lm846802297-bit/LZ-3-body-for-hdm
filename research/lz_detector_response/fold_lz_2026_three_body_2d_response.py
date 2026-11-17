@@ -87,7 +87,7 @@ def read_response(path: Path):
 def main():
     ap=argparse.ArgumentParser()
     ap.add_argument("--response-dir",type=Path,required=True)
-    ap.add_argument("--spectrum-dir",type=Path,default=Path("research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum"))
+    ap.add_argument("--spectrum-dir",type=Path,default=Path("research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum"))
     ap.add_argument("--out-dir",type=Path,required=True)
     args=ap.parse_args()
     args.out_dir.mkdir(parents=True,exist_ok=True)
