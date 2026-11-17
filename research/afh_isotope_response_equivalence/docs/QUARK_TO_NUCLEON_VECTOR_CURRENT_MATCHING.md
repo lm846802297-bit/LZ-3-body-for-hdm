@@ -1,2200 +1,3604 @@
-# 三体 VV 核子流与 AFH 核响应——完整物理讨论记录（更新版）
+# 三体 VV 核子流与 AFH 核响应——完整物理讨论记录（逐字归档与物理校订版）
+
+**归档原则：** 下方“用户提供的完整讨论原文”按上传文本逐字保留，不删节、不改写、不以总结替代。物理上需要修正的内容统一放在原文之后的“物理校订与补充”中；校订条目指出原文位置、问题、修正后的表述及其对计算的影响。后续引用原文时，若与校订条目冲突，以校订条目为准。
 
 **研究对象：** \(\chi_1+A\rightarrow\chi_1+A+s\) 的 vector–vector（VV）基准模型  
-**讨论范围：** 非相对论 EFT、点状核近似、AFH 核响应、夸克—核子矢量流匹配、完整三体张量、空间核流与自旋—轨道响应  
-**记录日期：** 2026-11-18  
 **关联仓库：** lm846802297-bit/LZ-3-body-for-hdm  
 **关联分支：** research/afh-isotope-response-equivalence-20261118  
-**关联 PR：** #51（AFH 七种氙同位素核响应审计）  
-**文档性质：** 完整讨论的理论记录与后续计算依据；不是已完成的全核流数值结果报告。
+**关联 PR：** #51（AFH 七种氙同位素核响应审计）
 
 ---
 
-## 1. 讨论从哪里开始：两个看起来不同的计算为什么会给出同一个结果？
+## 第一部分：用户提供的完整讨论原文（逐字保留）
 
-本记录从一个具体问题开始：
+> 本部分来自用户上传的原始讨论文本。保留原有文字、公式、表格、引用、重复论述、阶段性判断及原始排版；不将其压缩成摘要。原文中可能存在的物理错误或过时判断，不在本部分静默改写，而在第二部分逐项校订。
 
-AFH（Anand–Fitzpatrick–Haxton）把暗物质与核子的相互作用写成一组非相对论有效算符，再把这些算符嵌入原子核，最后得到若干核响应函数。另一方面，我们的三体计算先写出暗物质与一个点状原子核之间的散射振幅，再乘上有限尺寸核响应，例如
+---
 
-\[
-R_A(E_R)=\frac{4\pi}{2J_A+1}W_M^{00}(y_A).
-\]
+AFH（Anand–Fitzpatrick–Haxton）文章之所以能够把暗物质与核子的相互作用展开成一组**非相对论有效算符（Non-relativistic EFT operators）**，核心原因是：
 
-为什么这两条计算路线会得到相同的核结构结果？这个等价关系究竟是数学恒等式，还是额外引入了某种近似？\(R_A\) 中究竟包含哪些核物理效应？它又遗漏了什么？
 
-讨论进一步发展出一组相互关联、但必须分开回答的问题：
 
-1. 为什么低能暗物质—核子散射可以展开成非相对论有效算符？
-2. AFH 的算符基底与 AFH 的六种核响应分别是什么？二者不能混为一谈。
-3. 点状核振幅乘以 \(W_M\)，何时等价于先对单核子做非相对论展开、再计算完整核矩阵元？
-4. 三体末态标量 \(s\) 是否会自动要求新的核响应？
-5. 三体过程中的核动量转移 \(q_A\) 与暗物质外线动量差 \(q_\chi\) 为什么不同？
-6. 当前 VV 模型的核子流是否真的只有时间分量？空间矢量流包含哪些物理结构？
-7. 核子内部速度比暗物质晕速度大得多，是否意味着轨道响应必然重要？
-8. 暗物质侧空间流很小，是否足以排除核子自旋—轨道响应？
-9. 夸克矢量流匹配到核子时，\(F_1\) 与 \(F_2\) 各自带来什么？此前关于 flavor-universal \(F_2\) 的判断是否可靠？
-10. 为什么当前应优先检查 \(\Phi''\) 和 \(W_{M\Phi''}\)，而不是一开始就把 AFH 的全部响应都计算一遍？
-11. 已有的三体流数值诊断、点核 ppm 检查和 Xe-131 深极小值分别证明了什么、没有证明什么？
-12. 怎样把这些理论问题落实为可复现的数值审计？
+**在直接探测实验所涉及的低能、低动量转移条件下，暗物质和原子核内部核子的运动都可以近似看作非相对论运动。因此，完整的相对论散射振幅可以按照低能运动学变量进行系统展开，并用一组满足对称性要求的非相对论算符表示。\\[**\
+**R_A(E_R)**\
+**=**\
+**\frac{4\pi}{2J_A+1}**\
+**W_M^{00}(y_A),**\
+**\\]到底包含了什么效应，为什么我们使用点状原子核得到的散射振幅乘上核响应函数得到的结果和把暗物质与核子展开为有效非相对论性相互作用得到的结果是一致的？我看不出来这之间是如何联系的**
 
-以下正文按上述问题的物理依赖关系展开。讨论过程中出现过的初步估计、后续修正和仍未完成的事项均保留，但不把估计写成已验证结论。
 
-## 2. 当前模型、费曼图与振幅的张量结构
 
-### 2.1 当前 VV benchmark 的相互作用结构
+这不是一种额外的相互作用假设，而是一种有效场论展开方法。
 
-当前主线模型的相关相互作用可写为
 
-\[
-\begin{aligned}
-\mathcal L_{\rm int}={}&
-g_1 V_\mu\bar\chi_2\gamma^\mu\chi_1
-+g_2s\bar\chi_2\chi_1+\mathrm{h.c.}\\
-&+g_{Vq}V_\mu\sum_q\bar q\gamma^\mu q .
-\end{aligned}
-\]
 
-这里需要区分三个不同的顶点：
+不过，这里有一个对我们目前的 LZ 三体散射计算特别重要的问题：
 
-- \(V_\mu\bar\chi_2\gamma^\mu\chi_1\)：暗物质内部态之间的矢量跃迁顶点；
-- \(s\bar\chi_2\chi_1\)：暗物质内部态之间的标量跃迁顶点；
-- \(V_\mu\bar q\gamma^\mu q\)：媒介子与夸克矢量流的耦合。
+> AFH 的非相对论算符基底主要针对暗物质与核子的 \\(2\to2\\) 弹性散射。我们的过程是\
+> \\[\
+> \chi_1+A\longrightarrow \chi_1+A+s,\
+> \\]\
+> 不能不加区分地把整个三体振幅直接写成 AFH 的 15 个算符。
 
-当前 benchmark 中，标量 \(s\) 是从暗物质线上辐射出来的。模型没有因此自动增加一个 \(s\bar NN\) 核子标量顶点，也没有自动增加一个核子轴矢量顶点。
+需要区分两个层次：
 
-所以，三体末态中的 \(s\) 会改变暗物质侧的传播子、有效流和三体相空间，但核子侧首先仍然是媒介子 \(V\) 所耦合的矢量流。是否出现其他核响应，必须由这个矢量流经过核子匹配后的实际算符结构决定，不能只根据末态粒子中出现了一个标量就判断。
+1. **核子相互作用顶点的非相对论展开**：可以借鉴 AFH。
+2. **完整的三体散射振幅的非相对论展开**：必须额外保留末态标量的动量和三体运动学。
 
-### 2.2 两张辐射图必须作为一个完整振幅处理
+下面从理论基础开始解释。
 
-过程为
+## **一、为什么可以进行非相对论展开？**
 
-\[
-\chi_1(p_\chi)+A(P_A)
-\longrightarrow
-\chi_1(p_\chi')+A(P_A')+s(k_s).
-\]
+直接探测实验中，银河系晕暗物质的典型速度约为
 
-在暗物质线上，标量可以在矢量相互作用顶点之前或之后辐射。因而有效三体顶点具有两张图的和：
+\\[ v\_\chi\sim 10^{-3}c. \\]
 
-\[
-\Gamma_3^\mu
-=
-\Gamma_{(a)}^\mu+\Gamma_{(b)}^\mu .
-\]
+原子核反冲能量通常在 keV 量级，而暗物质质量通常远大于其动能。
 
-在省略整体耦合、费曼规则相位和具体宽度方案后，其传播子结构可示意写为
 
-\[
-\Gamma_{(a)}^\mu
-\sim
-\gamma^\mu
-\frac{\slashed p_\chi-\slashed k_s+m_2}
-{(p_\chi-k_s)^2-m_2^2+i\,m_2\Gamma_2},
-\]
-
-\[
-\Gamma_{(b)}^\mu
-\sim
-\frac{\slashed p_\chi'+\slashed k_s+m_2}
-{(p_\chi'+k_s)^2-m_2^2+i\,m_2\Gamma_2}
-\gamma^\mu .
-\]
-
-这里的示意式只用来显示内部动量和顶点次序。正式实现必须以仓库中固定的费曼规则、动量流向、传播子宽度处方和振幅约定为准，不能仅凭示意式重写代码中的符号。
-
-完整暗物质侧流为
-
-\[
-\mathcal T_3^\mu
-=
-\bar u_{\chi_1}(p_\chi')
-\Gamma_3^\mu
-u_{\chi_1}(p_\chi).
-\]
-
-两张图相加后再做自旋求和，才会得到完整的三体张量。平方振幅中包含
-
-\[
-|\mathcal M_{(a)}|^2,\qquad
-|\mathcal M_{(b)}|^2,\qquad
-2\operatorname{Re}
-\left(\mathcal M_{(a)}\mathcal M_{(b)}^*\right).
-\]
-
-最后一项是两张辐射图之间的干涉。不能把两张图分别平方后简单相加，也不能在接近 \(\chi_2\) pole 时先把传播子替换成一个常数。
-
-### 2.3 完整振幅为什么可以写成暗物质流与核流的收缩？
-
-在单次媒介子交换、核流线性耦合的近似下，完整振幅可以组织成
-
-\[
-\boxed{
-\mathcal M_3
-=
-\mathcal T_3^\mu
-D_{\mu\nu}(q_A)
-J_A^\nu(q_A)
-}
-\]
-
-其中
-
-\[
-J_A^\nu(q_A)
-=
-\langle A(P_A')|J_V^\nu(q_A)|A(P_A)\rangle
-\]
-
-是原子核矢量流矩阵元，\(D_{\mu\nu}\) 是媒介子传播子。
-
-这个写法不是说原子核可以被任意替换成点粒子，而是把两个不同层次的计算分开：
-
-- 暗物质侧：两张辐射图、\(\chi_2\) 传播子、标量发射和三体运动学；
-- 核子/原子核侧：夸克矢量流如何匹配到核子，以及核子流如何在束缚核态中形成核矩阵元。
-
-更一般地，平方振幅具有张量结构：
-
-\[
-\overline{|\mathcal M_3|^2}
-\propto
-L^{\mu\nu}
-D_{\mu\alpha}(q_A)
-D_{\nu\beta}^{*}(q_A)
-W_A^{\alpha\beta},
-\]
-
-其中
-
-\[
-L^{\mu\nu}
-=
-\frac12\sum_{\text{DM spins}}
-\mathcal T_3^\mu\mathcal T_3^{\nu *}
-\]
-
-是暗物质侧张量，而 \(W_A^{\alpha\beta}\) 是核流的响应张量。只有当核电荷分量确实占主导、其他分量及其干涉可忽略时，才可以把它简化成一个标量粒子物理因子乘以 \(M\) 型核响应。
-
-还需要保留一个传播子层面的边界：不能在没有检查流守恒和完整模型规范结构的情况下，先验把 \(D_{\mu\nu}\) 直接替换成纯 \(-g_{\mu\nu}\) 项。核子矢量流的守恒性质可以约束核侧纵向分量，但暗物质侧是非对角 \(\chi_2\)-\(\chi_1\) 流，并带有标量辐射；其散度需要由完整顶点和模型的规范完成方式来检查。
-
-## 3. 三体运动学中的四个变量不能混用
-
-### 3.1 定义与动量守恒
-
-全文采用度规 \((+,-,-,-)\)，定义
-
-\[
-q_A^\mu=P_A'^\mu-P_A^\mu,
-\]
-
-\[
-q_\chi^\mu=p_\chi'^\mu-p_\chi^\mu,
-\]
-
-以及末态标量四动量 \(k_s^\mu\)。
-
-四动量守恒给出
-
-\[
-p_\chi+P_A=p_\chi'+P_A'+k_s,
-\]
-
-因此
-
-\[
-\boxed{
-q_A^\mu=-q_\chi^\mu-k_s^\mu.
-}
-\]
-
-空间分量为
-
-\[
-\boxed{
-\mathbf q_A
-=
-\mathbf p_\chi-\mathbf p_\chi'-\mathbf k_s.
-}
-\]
-
-所以
-
-\[
-\mathbf q_A\ne-\mathbf q_\chi
-\]
-
-是三体过程的一般性质，而不是一个小修正。
-
-| 变量 | 定义 | 物理含义 | 在计算中的用途 |
-|---|---|---|---|
-| \(\mathbf q_A\) | \(\mathbf P_A'-\mathbf P_A\) | 原子核实际获得的三动量 | AFH 核响应、多极展开、核子流匹配 |
-| \(\mathbf q_\chi\) | \(\mathbf p_\chi'-\mathbf p_\chi\) | 暗物质外线初末态动量差 | 暗物质运动学和外线自旋量 |
-| \(\mathbf k_s\) | 末态标量三动量 | 标量辐射的动量 | 三体相空间和 \(\chi_2\) 传播子 |
-| \(E_R\) | 核反冲能量 | 实验可观测的核反冲 | 微分反冲谱和探测器响应 |
-
-AFH 核响应的动量变量必须是 \(\mathbf q_A\)，而不是 \(\mathbf q_\chi\)。三体暗物质传播子的内部动量则必须根据相应内部线计算，不能一律用 \(q_A\) 或 \(q_\chi\) 代替。
-
-### 3.2 核反冲能量与 \(q_A\) 的关系
-
-若初始原子核在实验室系静止，且核反冲末态仍在核基态，则
-
-\[
-P_A^\mu=(m_A,\mathbf 0),
-\qquad
-P_A'^\mu=(m_A+E_R,\mathbf q_A).
-\]
-
-由末态原子核在壳条件得到
-
-\[
-|\mathbf q_A|^2=E_R(E_R+2m_A).
-\]
-
-因此
-
-\[
-\boxed{
-|\mathbf q_A|
-=
-\sqrt{E_R(E_R+2m_A)}
-\simeq\sqrt{2m_AE_R}.
-}
-\]
-
-最后一个表达式是核反冲区间内的非相对论近似。四动量不变量为
-
-\[
-t_A=q_A^2
-=(q_A^0)^2-|\mathbf q_A|^2
-=-2m_AE_R.
-\]
-
-这也说明代码中必须区分：
-
-- 三维动量平方 \(q_{A,\mathrm{3D}}^2=|\mathbf q_A|^2>0\)；
-- Minkowski 不变量 \(t_A=q_A^2<0\)；
-- 正的类空间动量变量 \(Q_A^2=-t_A>0\)。
-
-不要在同一个变量名 q2 下混用这三种量。
-
-### 3.3 为什么三体过程不能直接沿用标准弹性 \(v^\perp\)
-
-在标准弹性二体散射
-
-\[
-\chi+N\longrightarrow\chi+N
-\]
-
-中，若采用 AFH 的标准动量转移约定，能量守恒给出
-
-\[
-\mathbf v\cdot\mathbf q+\frac{\mathbf q^2}{2\mu_N}=0,
-\qquad
-\mu_N=\frac{m_\chi m_N}{m_\chi+m_N}.
-\]
-
-于是可以定义
-
-\[
-\mathbf v^\perp
-=
-\mathbf v+\frac{\mathbf q}{2\mu_N},
-\]
-
-并得到
-
-\[
-\mathbf v^\perp\cdot\mathbf q=0.
-\]
-
-这个正交关系依赖弹性 \(2\to2\) 运动学。三体过程的能量守恒则为
-
-\[
-E_\chi+E_A=E_\chi'+E_A'+\omega_s.
-\]
-
-右侧多出末态标量能量 \(\omega_s\)。所以标准弹性 \(v^\perp\) 的定义及其正交关系不能未经推导地直接套到完整三体振幅。
-
-这并不意味着核子侧不能进行非相对论约化，而是意味着必须：
-
-1. 保留 \(k_s\)；
-2. 从完整 \(\Gamma_3^\mu\) 出发；
-3. 将完整暗物质流与核子矢量流收缩；
-4. 根据三体能量、动量守恒重新组织运动学变量；
-5. 不预先假设标准弹性 AFH 算符基底已经是三体过程的完整基底。
-
-## 4. 为什么低能散射可以使用非相对论有效算符
-
-### 4.1 “非相对论”是低能自由度的描述，不是说 QCD 内部也是非相对论的
-
-直接探测中的暗物质晕速度典型为
-
-\[
-v_\chi\sim10^{-3}c.
-\]
-
-暗物质的动能相对于静质量很小，因此外线暗物质可以进行非相对论展开。
-
-核子也可以作为低能有效自由度处理。但必须区分两个层次：
-
-- 核子内部的夸克、胶子动力学仍然是 QCD 的强相互作用问题；
-- 在核尺度上，把核子作为有效自由度，可以用非相对论核子场和核波函数描述其束缚运动。
-
-因此，非相对论 EFT 并不是对夸克和胶子直接做速度展开，而是先把高能 QCD 自由度包含进核子 form factors 和 Wilson 系数，再对低能暗物质—核子散射振幅展开。
-
-### 4.2 为什么算符基底是有限的
-
-对自旋 \(1/2\) 暗物质和自旋 \(1/2\) 核子，低能振幅由以下基本量构造：
-
-\[
-\mathbf S_\chi,\qquad
-\mathbf S_N,\qquad
-\mathbf q,\qquad
-\mathbf v^\perp.
-\]
-
-允许的算符必须满足：
-
-- Galilean 不变性；
-- 三维旋转不变性；
-- 所需的宇称和时间反演变换性质；
-- 厄米性；
-- 给定动量和速度阶数的截断要求。
-
-不能任意使用绝对速度，而应使用相对速度。动量转移在交换初末态时改变符号，因此某些算符需要伴随 \(i\mathbf q\) 才具有正确的厄米性质。
-
-在标准弹性 \(2\to2\) 运动学中，\(\mathbf q\) 与 \(\mathbf v^\perp\) 是满足正交关系的两个独立方向。利用它们和两个粒子的自旋，可以构造有限个 Galilean 不变算符。
-
-### 4.3 常用算符的物理含义
-
-下面列出与本讨论最相关的算符。不同文献对 \(i\)、动量转移方向和自旋归一化可能采用不同约定；正式匹配时必须统一约定。
-
-| 算符 | 典型结构 | 主要物理含义 |
-|---|---|---|
-| \(\mathcal O_1\) | \(1_\chi 1_N\) | 核子密度，通常的 SI 领先结构 |
-| \(\mathcal O_3\) | \(i\mathbf S_N\cdot(\mathbf q/m_N\times\mathbf v^\perp)\) | 核子自旋与相对速度/动量耦合；可产生自旋—轨道核响应 |
-| \(\mathcal O_4\) | \(\mathbf S_\chi\cdot\mathbf S_N\) | 自旋—自旋相互作用 |
-| \(\mathcal O_5\) | \(i\mathbf S_\chi\cdot(\mathbf q/m_N\times\mathbf v^\perp)\) | 暗物质自旋与速度—动量结构 |
-| \(\mathcal O_6\) | \((\mathbf S_\chi\cdot\mathbf q/m_N)(\mathbf S_N\cdot\mathbf q/m_N)\) | 双自旋、双动量耦合 |
-| \(\mathcal O_7\) | \(\mathbf S_N\cdot\mathbf v^\perp\) | 核子自旋—速度耦合 |
-| \(\mathcal O_8\) | \(\mathbf S_\chi\cdot\mathbf v^\perp\) | 暗物质自旋—速度耦合 |
-| \(\mathcal O_9\) | \(i\mathbf S_\chi\cdot(\mathbf S_N\times\mathbf q/m_N)\) | 自旋与动量耦合 |
-| \(\mathcal O_{10}\) | \(i\mathbf S_N\cdot\mathbf q/m_N\) | 核子自旋—动量耦合 |
-| \(\mathcal O_{11}\) | \(i\mathbf S_\chi\cdot\mathbf q/m_N\) | 暗物质自旋—动量耦合 |
-
-完整的常用弹性 NR EFT 基底还包括其他算符及更高阶项。这里列出的不是一套要无条件全部加入当前模型的自由参数。
-
-尤其需要区分：
-
-- **NR 核子算符基底**：描述暗物质与一个自由核子的低能相互作用；
-- **AFH 核响应**：描述这些单核子算符嵌入复合原子核后形成的不同多极矩阵元；
-- **三体暗物质流**：本项目还包含 \(k_s\) 和 \(\chi_2\) 内部传播子，不能直接等同于标准弹性 NR 算符振幅。
-
-AFH 的贡献不是“列出十五个核响应”，也不是把所有 NR 算符都加到模型中，而是把实际出现的核子算符系统地投影到核多极响应上。
-
-## 5. 从单核子算符到原子核矩阵元：\(M\) 响应的来源
-
-### 5.1 单核子矢量电荷在非相对论极限下对应什么？
-
-先考虑核子矢量流的领先时间分量。忽略核子内部 form factor 的高阶修正时，
-
-\[
-J_N^0=\bar u_N(p_N')\gamma^0u_N(p_N)
-\simeq 2m_N\,\xi_N'^\dagger\xi_N.
-\]
-
-去掉协变外线归一化后，它对应核子数密度算符
-
-\[
-\mathcal O_1=1_\chi 1_N.
-\]
-
-若暗物质对每个核子的耦合相同，核子层面的相互作用嵌入原子核后就是对所有核子的求和：
-
-\[
-\boxed{
-\hat{\mathcal O}_A(\mathbf q_A)
-=
-g_N\sum_{i=1}^{A}
-e^{i\mathbf q_A\cdot\mathbf r_i}.
-}
-\]
-
-其中：
-
-- \(i\) 是核子编号；
-- \(\mathbf r_i\) 是第 \(i\) 个核子相对原子核质心的坐标；
-- \(\mathbf q_A\) 是原子核实际获得的动量转移；
-- \(g_N\) 是单核子的有效矢量电荷耦合。
-
-指数因子 \(e^{i\mathbf q_A\cdot\mathbf r_i}\) 不能随意删除。它记录了动量转移在核内不同位置发生时的相位差。
-
-核矩阵元为
-
-\[
-\mathcal A_M(\mathbf q_A)
-=
-g_N
-\left\langle A_f\left|
-\sum_{i=1}^{A}e^{i\mathbf q_A\cdot\mathbf r_i}
-\right|A_i\right\rangle.
-\]
-
-这就是从单核子算符走到原子核相互作用的基本步骤。
-
-### 5.2 点核极限为什么出现 \(A^2\)
-
-若动量转移足够小，使
-
-\[
-|\mathbf q_A\cdot\mathbf r_i|\ll1,
-\]
-
-则
-
-\[
-e^{i\mathbf q_A\cdot\mathbf r_i}\simeq1.
-\]
-
-于是
-
-\[
-\hat{\mathcal O}_A(0)
-\simeq g_N\sum_{i=1}^{A}1
-=Ag_N.
-\]
-
-振幅正比于 \(A\)，平方后得到
-
-\[
-\boxed{
-|\mathcal M_A(0)|^2
-\propto A^2g_N^2.
-}
-\]
-
-这就是等质子、等中子耦合下的相干增强。
-
-这里不是把 \(A\) 个核子的散射截面直接相加：
-
-\[
-\sigma_A\ne A\sigma_N.
-\]
-
-正确顺序是先将所有核子的振幅相加，再平方：
-
-\[
-\left|\sum_{i=1}^{A}\mathcal M_i\right|^2.
-\]
-
-在长波长、相同耦合的密度相互作用下，所有核子近似同相，因此产生 \(A^2\) 增强。
-
-### 5.3 有限动量转移为什么破坏完全相干
-
-当 \(|\mathbf q_A|\) 增大时，不同核子位置带来的相位不同：
-
-\[
-e^{i\mathbf q_A\cdot\mathbf r_i}
-=
-1+i\mathbf q_A\cdot\mathbf r_i
--\frac12(\mathbf q_A\cdot\mathbf r_i)^2+\cdots.
-\]
-
-不同核子不再完全同相，核子密度矩阵元会随动量转移发生振荡和抵消。
-
-因此可以定义一个归一化质量响应形状因子
-
-\[
-F_M^2(q_A)
-=
-\frac{R_M^{\rm phys}(q_A)}{A^2},
-\qquad
-F_M^2(0)=1.
-\]
-
-对简单的自旋零核，\(F_M\) 可以直观理解为核密度形状因子。对非零自旋原子核，AFH 的 \(M\) 响应还包含允许的更高偶数多极贡献，不能总是用单一球形形状因子代替。
-
-### 5.4 AFH 怎样把密度算符组织成 \(W_M\)
-
-平面波可以作多极展开：
-
-\[
-e^{i\mathbf q\cdot\mathbf r}
-=
-4\pi\sum_{JM}i^Jj_J(qr)
-Y_{JM}^{*}(\hat{\mathbf q})
-Y_{JM}(\hat{\mathbf r}).
-\]
-
-据此定义核子的质量密度多极算符
-
-\[
-M_{JM;\tau}(q)
-=
-\sum_{i=1}^{A}
-j_J(qr_i)Y_{JM}(\hat{\mathbf r}_i)t^\tau(i).
-\]
-
-其中：
-
-- \(j_J(qr_i)\) 是球贝塞尔函数；
-- \(Y_{JM}\) 是球谐函数；
-- \(t^\tau(i)\) 是同位旋算符；
-- \(\tau=0,1\) 分别表示等标量和等矢量通道。
-
-在常见 AFH 约定下，\(t^0=1\)、\(t^1=\tau_3\)，但 package 的归一化因子必须以实际版本为准。
-
-弹性质量密度响应由约化矩阵元构造：
-
-\[
-W_M^{\tau\tau'}(y_A)
-=
-\sum_{J=0,2,\ldots}
-\langle J_A\|M_{J;\tau}(q_A)\|J_A\rangle
-\langle J_A\|M_{J;\tau'}(q_A)\|J_A\rangle^*.
-\]
-
-这里的偶数 \(J\) 来自弹性核态相应的宇称和角动量选择定则。
-
-AFH 的 \(W_M\) 因而不是一个额外的相互作用，而是同一个核子密度算符在复合核态上的矩阵元平方、自旋平均以及多极组织。
-
-### 5.5 \(y_A\) 的定义
-
-AFH 使用
-
-\[
-y_A=\left(\frac{q_Ab_A}{2}\right)^2.
-\]
-
-对初始静止的弹性核反冲，
-
-\[
-q_A^2\simeq2m_AE_R,
-\]
-
-所以
-
-\[
-\boxed{
-y_A=\frac{b_A^2m_AE_R}{2}.
-}
-\]
-
-这里的 \(b_A\) 是 AFH 核结构计算所用的谐振子长度参数，不是为了拟合当前三体谱而自由调整的形状参数。核响应必须使用各同位素对应的 \(b_A\) 和核结构输入。
-
-## 6. 点状原子核振幅乘以 AFH 响应，为什么等价于逐核子计算？
-
-### 6.1 两种路线实际计算的是同一个核矩阵元
-
-现在把两种计算方法明确写出来。
-
-**路线 A：先构造点状原子核振幅，再乘有限尺寸响应**
-
-若点核振幅已经把单核子耦合相干相加为
-
-\[
-\mathcal M_{3,\mathrm{pt}}
-\propto
-Ag_N\,\mathcal K_3,
-\]
-
-其中 \(\mathcal K_3\) 收集暗物质三体流、媒介子传播子及三体运动学，则有限核尺寸修正应写为
-
-\[
-\overline{|\mathcal M_3(q_A)|^2}
-=
-\overline{|\mathcal M_{3,\mathrm{pt}}|^2}
-\frac{R_M^{\rm phys}(q_A)}
-{R_M^{\rm phys}(0)}.
-\]
-
-由于 \(R_M^{\rm phys}(0)=A^2\)，这个比值只描述有限动量转移下相干密度矩阵元相对零动量值的变化。
-
-**路线 B：先构造单核子非相对论算符，再嵌入原子核**
-
-从
-
-\[
-\mathcal O_1=1_\chi1_N
-\]
-
-出发，逐核子求和：
-
-\[
-1_\chi1_N
-\longrightarrow
-\sum_{i=1}^{A}e^{i\mathbf q_A\cdot\mathbf r_i}.
-\]
-
-再用核波函数计算矩阵元，最后自旋求和和平均，得到
-
-\[
-\overline{|\mathcal M_A|^2}
-\propto
-R_M^{\rm phys}(q_A).
-\]
-
-两条路线的共同核心是
-
-\[
-\boxed{
-\left|
-\left\langle A_f\left|
-\sum_i e^{i\mathbf q_A\cdot\mathbf r_i}
-\right|A_i\right\rangle
-\right|^2.
-}
-\]
-
-路线 A 把零动量时的相干核子耦合先合并成点核耦合，再乘以归一化核形状；路线 B 则从一开始就保留每个核子的位置算符。只要两边使用同一个核子流、同一个核态、同一个动量转移和同一个归一化约定，它们计算的就是同一个矩阵元。
-
-### 6.2 等价关系成立的条件
-
-这不是任意相互作用下都成立的普遍公式。它要求：
-
-1. 两种方法采用相同的单核子相互作用；
-2. 核子耦合相同，或已经正确分解成等标量和等矢量通道；
-3. 两边使用同一个核动量转移 \(q_A\)；
-4. 使用相同的核波函数和核态；
-5. 使用相同的单体流近似；
-6. 只保留同一个核算符结构，例如领先的核子密度；
-7. 点核振幅中的 \(A\) 因子与 AFH 响应的归一化只计算一次；
-8. 如果核子 form factors 的动量依赖已经放进粒子物理系数，就不能再把同一依赖重复乘入核响应。
-
-如果点核振幅只把单核子耦合替换成 \(Ag_N\)，却没有乘有限核尺寸响应，那么它只在 \(q_A\to0\) 长波极限成立。
-
-### 6.3 为什么普通 Helm 形状因子不能替代所有 AFH 响应
-
-对于纯 \(M\) 响应，简单形状因子可以作为某些近似下的直观描述。但 AFH 还包含核子自旋、轨道和自旋—轨道算符。它们在核内的矩阵元不同，不能通过给同一个点核振幅乘一个普通球形密度形状因子来恢复。
 
 因此：
 
-- 对 \(M\) 响应，AFH 的 \(W_M\) 已经包含核子空间分布造成的有限尺寸效应；
-- 对 \(\Phi''\)、\(\Delta\)、\(\Sigma'\) 等响应，必须计算对应的核算符矩阵元；
-- 若已使用 AFH \(W_M\)，不应再对整个核响应额外乘一个 Helm 核尺寸因子，否则会重复计入有限核尺寸；
-- 核子自身的 \(F_1^N(t)\)、\(F_2^N(t)\) 与原子核整体的 \(W_M(q_A)\) 是两个不同层次，不能混为一谈。
+\\[ \frac{|\mathbf p\_\chi|}{m\_\chi}\sim 10^{-3}, \\]
 
-## 7. \(R_A\) 和 \(W_M^{00}\) 到底包含什么、不包含什么？
+暗物质处于非相对论区域。
 
-### 7.1 核响应中包含的物理信息
 
-对于纯等标量核子密度响应，\(W_M^{00}\) 包含：
 
-| 物理内容 | 是否包含 | 具体含义 |
-|---|---|---|
-| 核子相干求和 | 是 | 长波极限下振幅正比于 \(A\)，响应正比于 \(A^2\) |
-| 核子位置相位 | 是 | 不同核子位置导致的有限 \(q_A\) 相位差 |
-| 核子径向密度分布 | 是 | 由核波函数和单体密度矩阵决定 |
-| 允许的质量密度多极 | 是 | 弹性 \(M\) 响应的 \(J=0,2,\ldots\) 项 |
-| 核态自旋平均 | 是 | 响应定义中包含相应的核自旋平均 |
-| 壳模型核结构 | 是 | 取决于 AFH 输入的核波函数和 OBDMEs |
+对于核子，虽然核子内部存在强相互作用和相对论性的夸克、胶子动力学，但在核子自由度层面，低能核子之间的相互作用也可以采用非相对论有效理论描述。
 
-### 7.2 核响应不自动包含的物理信息
 
-| 物理内容 | 是否包含 | 应在哪一层计算 |
-|---|---|---|
-| 暗物质 \(\chi_2\) Breit–Wigner 共振 | 否 | 完整三体暗物质流 |
-| 标量 \(s\) 的三体相空间 | 否 | 三体运动学积分 |
-| 暗物质速度分布 | 否 | halo fold |
-| 探测器效率、能量分辨率和 LZ likelihood | 否 | 探测器与统计层 |
-| 核子 Dirac form factor \(F_1^N(t)\) | 不自动包含 | 夸克—核子匹配 |
-| 核子 Pauli form factor \(F_2^N(t)\) | 不自动包含 | 夸克—核子匹配及磁化/自旋—轨道项 |
-| 核子自旋分布 | 不由 \(M\) 单独包含 | \(\Sigma'\)、\(\Sigma''\) 等响应 |
-| 核子轨道和自旋—轨道结构 | 不由 \(M\) 单独包含 | \(\Delta\)、\(\Phi''\)、\(\widetilde\Phi'\) 等响应 |
-| 两核子交换流 | 不自动包含 | 手征 EFT 多体核流 |
-| 多次媒介子交换 | 不自动包含 | 相应多体振幅 |
 
-因此，\(R_A\) 不是整个三体过程的全部物理信息，而是一个核结构模块。它不会自动包含传播子、标量发射、halo 模型或探测器效应。
+这里要特别注意：
 
-## 8. AFH v6.0 的 factor-of-four 归一化必须单独处理
 
-### 8.1 原始等标量 package 响应与物理等核子耦合响应
 
-当前仓库采用的 AFH v6.0 原始 package 约定中，等标量响应满足
+**非相对论展开并不意味着核子内部的 QCD 动力学是非相对论的。** 我们是把核子作为低能有效自由度，而不是直接对夸克和胶子做速度展开。
 
-\[
-R_{M,\mathrm{raw}}(q_A)
-=
-\frac{4\pi}{2J_A+1}W_{M,\mathrm{AFH}}^{00}(y_A),
-\]
 
-其零动量极限为
 
-\[
-R_{M,\mathrm{raw}}(0)=\frac{A^2}{4}.
-\]
+因此，暗物质与核子的散射振幅可以写成
 
-但物理上若质子和中子具有相同的单核子耦合
-
-\[
-g_p=g_n=g_N,
-\]
-
-零动量时每个核子都应贡献相同的电荷，故物理响应必须满足
-
-\[
-\boxed{
-R_M^{\rm phys}(0)=A^2.
-}
-\]
-
-在本项目所用 package 约定下，
-
-\[
-\boxed{
-R_M^{\rm phys}(q_A)=4R_{M,\mathrm{raw}}(q_A).
-}
-\]
-
-等价地，也可以定义归一化形状
-
-\[
-R_M^{\rm phys}(q_A)
-=
-A^2
-\frac{R_{M,\mathrm{raw}}(q_A)}
-{R_{M,\mathrm{raw}}(0)}.
-\]
-
-两种实现只能选一种。不能在耦合、振幅和响应中重复乘入 factor four。
-
-### 8.2 与点核振幅组合时怎样避免重复计算 \(A^2\)
-
-如果点核振幅已经使用
-
-\[
-g_A=Ag_N,
-\]
-
-那么它已经包含零动量时的 \(A\) 倍振幅。此时只能再乘归一化形状
-
-\[
-\boxed{
-\frac{R_M^{\rm phys}(q_A)}{R_M^{\rm phys}(0)}
-}
-\]
-
-而不能再乘未经归一化的完整 \(A^2\) 响应。
-
-反过来，如果粒子物理振幅只使用单核子的耦合 \(g_N\)，尚未做核子相干求和，那么就必须使用完整物理响应，并确保 factor four 只出现一次。
-
-### 8.3 当前七同位素审计已经完成的内容
-
-PR #51 中的 AFH 七同位素电荷响应审计采用了上述约定：
-
-- AFH v6.0 原始等标量响应的零动量归一化为 \(A^2/4\)；
-- 物理等质子、等中子耦合响应通过一次 factor-four 映射得到 \(A^2\)；
-- 七种同位素的响应网格、零动量归一化和多极重构已经归档；
-- Xe-131 的 rank-2 项仍然是 \(M\) 电荷响应的一部分，不是 \(\Sigma'\)、\(\Sigma''\) 或 \(\Phi''\)。
-
-这项数值审计验证的是 AFH 电荷响应模块的归一化和内部重构，不等于完整三体 VV 核流已经计算完成。
-
-## 9. 什么时候只用 \(W_M^{00}\) 不再充分？
-
-### 9.1 质子和中子的耦合不相同
-
-若
-
-\[
-g_p\ne g_n,
-\]
-
-即使核子相互作用仍然只是密度耦合，核电荷算符也不再是纯等标量密度：
-
-\[
-\hat J_A^0
-=
-g_p\sum_{i\in p}e^{i\mathbf q_A\cdot\mathbf r_i}
-+
-g_n\sum_{i\in n}e^{i\mathbf q_A\cdot\mathbf r_i}.
-\]
-
-定义
-
-\[
-g_0=\frac{g_p+g_n}{2},
-\qquad
-g_1=\frac{g_p-g_n}{2},
-\]
-
-则
-
-\[
-\hat J_A^0=g_0\hat M_0+g_1\hat M_1.
-\]
-
-平方后响应具有
-
-\[
-R_M
-=
-g_0^2W_M^{00}
-+2g_0g_1W_M^{01}
-+g_1^2W_M^{11}
-\]
-
-的结构。具体因子仍须与 AFH package 的同位旋归一化统一。
-
-因此，不能只凭核子算符是 \(\mathcal O_1\) 就断定只需要 \(W_M^{00}\)；还必须看质子和中子的耦合是否相同。
-
-### 9.2 出现核子自旋相互作用
-
-若核子流含有轴矢量结构
-
-\[
-J_N^\mu=\bar N\gamma^\mu\gamma^5N,
-\]
-
-其空间分量在领先阶含核子自旋：
-
-\[
-\mathbf J_N^A\sim 2m_N\boldsymbol\sigma_N.
-\]
-
-嵌入原子核后会出现
-
-\[
-\sum_i
-\boldsymbol\sigma_i e^{i\mathbf q_A\cdot\mathbf r_i}.
-\]
-
-这时需要核自旋的纵向和横向响应：
-
-\[
-W_{\Sigma''},\qquad W_{\Sigma'}.
-\]
-
-但“氙核具有非零核自旋”并不等于当前 VV 模型自动存在轴矢量相互作用。只有当 UV 拉格朗日量经过匹配后真正产生相应的核子自旋算符，才应加入这些响应。
-
-### 9.3 出现核子内部速度、对流电流或轨道角动量
-
-核子在束缚核中的速度可以分解为
-
-\[
-\mathbf v_N(i)=\mathbf V_A+\mathbf v_N^{\rm int}(i),
-\]
-
-其中 \(\mathbf V_A\) 是核质心速度，\(\mathbf v_N^{\rm int}\) 是核子内部运动。
-
-典型内部速度可以达到
-
-\[
-v_N^{\rm int}\sim0.1\text{--}0.3,
-\]
-
-而暗物质晕速度约为 \(10^{-3}\)。但这个比较本身不能决定响应大小：还要看暗物质流如何与核子流收缩、相应的动量因子、Wilson 系数和核矩阵元。
-
-AFH 中与轨道角动量相关的 \(\Delta\) 响应，以及与自旋—轨道结构相关的 \(\Phi''\)，正是点核近似可能遗漏的核内结构。
-
-### 9.4 出现不同的核子 Lorentz 结构
-
-不同的相对论流在非相对论约化后对应不同的核子算符：
-
-| 相对论核子流 | 典型领先结构 | 主要核响应 |
-|---|---|---|
-| \(\bar N\gamma^0N\) | 核子矢量电荷密度 | \(M\) |
-| \(\bar N\boldsymbol\gamma N\) | 对流与磁化电流 | 视暗物质流收缩而定，可能涉及 \(\Delta,\Sigma'\) 等 |
-| \(\bar N\gamma^\mu\gamma^5N\) | 核子自旋与诱导赝标量结构 | \(\Sigma',\Sigma''\) 等 |
-| \(\bar N i\gamma^5N\) | 自旋—动量结构 | 重新匹配的自旋—动量响应 |
-| \(\bar N\sigma^{\mu\nu}N\) | 张量与磁化结构 | 由实际匹配决定 |
-
-表格只说明主要结构，不能理解为每种 Lorentz 流严格只对应一个响应。
-
-### 9.5 非弹性核跃迁、多体流和非线性相互作用
-
-如果核初末态不同，弹性核响应不足以描述跃迁矩阵元；如果相互作用包含两核子交换流或多次媒介子交换，简单的 \(\sum_iJ_i\) 单体流也不再充分。
-
-这些情形需要相应的跃迁密度矩阵、手征 EFT 多体核流或直接的多体振幅计算。
-
-## 10. 当前 VV 模型的夸克—核子矢量流匹配
-
-### 10.1 为什么不能在所有动量转移下把核子看成点状 Dirac 粒子
-
-UV 拉格朗日量写的是夸克流
-
-\[
-J_q^\mu=\sum_q g_q\bar q\gamma^\mu q.
-\]
-
-从夸克到核子必须计算核子矩阵元。一般矢量流矩阵元应写为
-
-\[
-\boxed{
-\langle N(p_N')|J_V^\mu|N(p_N)\rangle
-=
-\bar u_N(p_N')
-\left[
-F_1^{V,N}(t)\gamma^\mu
-+\frac{iF_2^{V,N}(t)}{2m_N}
-\sigma^{\mu\nu}q_{N,\nu}
-\right]u_N(p_N).
-}
-\]
-
-本节固定 \(q_N=p_N'-p_N\)。若改用相反方向，Pauli 项的整体符号必须同步反转。全文中的 \(F_1,F_2\) 都应和同一个动量约定配套。
-
-- \(F_1^{V,N}\) 是 Dirac 形状因子，控制矢量电荷和部分对流结构；
-- \(F_2^{V,N}\) 是 Pauli 形状因子，控制磁化流及其进入完整振幅后的自旋—动量项；
-- 二者都可能依赖 \(t=q_N^2\)。
-
-所以
-
-\[
-g_{VN}=3g_{Vq}
-\]
-
-只能说明 flavor-universal 轻夸克流在零动量转移下的矢量电荷归一化，不能代替有限 \(t\) 的完整核子流。
-
-### 10.2 一般 \(u,d\) 耦合的零动量核子电荷
-
-若先只考虑 \(u,d\) 夸克流，
-
-\[
-J_q^\mu
-=
-g_u\bar u\gamma^\mu u
-+
-g_d\bar d\gamma^\mu d,
-\]
-
-由质子和中子的净价夸克数得到
-
-\[
-g_{Vp}=2g_u+g_d,
-\qquad
-g_{Vn}=g_u+2g_d.
-\]
-
-定义
-
-\[
-g_0=\frac{g_{Vp}+g_{Vn}}{2},
-\qquad
-g_1=\frac{g_{Vp}-g_{Vn}}{2},
-\]
-
-则
-
-\[
-g_0=\frac32(g_u+g_d),
-\qquad
-g_1=\frac12(g_u-g_d).
-\]
-
-若 \(g_u=g_d=g_{Vq}\)，则
-
-\[
-\boxed{
-g_{Vp}=g_{Vn}=3g_{Vq}.
-}
-\]
-
-加入 strange flavor 时，零动量净 strange quark number 对普通质子和中子电荷归一化不增加价夸克数，但其有限动量 form factor 仍可能参与。
-
-### 10.3 flavor-universal \(u,d,s\) 流的 \(F_1\) 归一化
-
-在低能三味匹配中，若三个轻夸克具有相同耦合，则质子的 Dirac form factors 在零动量转移下满足
-
-\[
-F_1^{u/p}(0)=2,\qquad
-F_1^{d/p}(0)=1,\qquad
-F_1^{s/p}(0)=0.
-\]
-
-所以
-
-\[
-\boxed{
-F_1^{u/p}(0)+F_1^{d/p}(0)+F_1^{s/p}(0)=3.
-}
-\]
-
-这正是当前 benchmark 的 \(g_{Vp}=3g_{Vq}\) 的 form-factor 版本。中子在同位旋对称近似下交换 \(u,d\)，同样得到总矢量电荷 3。
-
-### 10.4 必须修正此前关于 flavor-universal \(F_2^V(0)\) 的判断
-
-讨论早期曾根据 2015 年的三味 form-factor 记号，推断
-
-\[
-F_2^{u,N}(0)+F_2^{d,N}(0)+F_2^{s,N}(0)=0.
-\]
-
-这个推断不能继续作为当前模型的结论。原因是：不能只从一个简写的三味参数化式推断当前 UV 流的 flavor-universal Pauli form factor；必须把同一套 \(F_2^{q,N}\) 与电磁质子、中子和 strange 磁矩的定义逐项对应。
-
-该文先用电磁质子和中子的 Pauli form factors 定义
-
-\[
-a_p=\frac23F_2^{u/p}(0)-\frac13F_2^{d/p}(0)-\frac13F_2^{s/p}(0),
-\]
-
-\[
-a_n=\frac23F_2^{u/n}(0)-\frac13F_2^{d/n}(0)-\frac13F_2^{s/n}(0),
-\]
-
-再利用同位旋关系
-
-\[
-F_2^{u/n}=F_2^{d/p},\qquad
-F_2^{d/n}=F_2^{u/p},\qquad
-F_2^{s/n}=F_2^{s/p}
-\]
-
-以及 strange magnetic moment 输入，得到
-
-\[
-F_2^{u/p}(0)=2a_p+a_n+F_2^{s/p}(0),
-\]
-
-\[
-F_2^{d/p}(0)=a_p+2a_n+F_2^{s/p}(0).
-\]
-
-取 \(a_p=1.793\)、\(a_n=-1.913\)、\(F_2^{s/p}(0)=-0.064\)，就得到下面列出的三个 flavor form factors。三者的和为
-
-\[
-F_2^{u/p}+F_2^{d/p}+F_2^{s/p}
-=3\big(a_p+a_n+F_2^{s/p}\big).
-\]
-
-这一步说明，当前非零结果来自明确的 flavor-separated 电磁磁矩约束和 strange form factor 输入，而不是把电磁 \(F_2^p\) 直接当成 flavor-universal \(F_2^V\)。
-
-Bishara、Brod、Grinstein 和 Zupan 的显式 flavor form-factor 分解（arXiv:1707.06998，附录 A.1）给出质子在 \(q^2=0\) 的中心值：
-
-\[
-F_2^{u/p}(0)=1.609,
-\]
-
-\[
-F_2^{d/p}(0)=-2.097,
-\]
-
-\[
-F_2^{s/p}(0)=-0.064.
-\]
-
-因此在其采用的输入下，
-
-\[
-\boxed{
-F_2^{u/p}(0)+F_2^{d/p}(0)+F_2^{s/p}(0)
-=-0.552.
-}
-\]
-
-对应的 flavor-universal 三味 Pauli form factor 并不为零。与 \(F_1^V(0)=3\) 相比，其中心值比例约为
-
-\[
-\frac{F_2^V(0)}{F_1^V(0)}
-\simeq-0.184.
-\]
-
-这里的数值依赖所采用的 strange 磁矩和 flavor form-factor 输入；正式计算应记录这些输入及其误差。三个输入值的误差存在共同来源，不能在没有协方差矩阵的情况下把它们当作独立误差简单平方相加。也不能把这个零动量中心值当成整个 \(t\) 区间的常数，更不能把电磁 form factor 不加 flavor 分解地直接代入当前重子数型流。
-
-需要特别保留一个文献约定核查点：Hoferichter–Klos–Schwenk 2015 年文章的 Eq. (23) 使用 \(\kappa_N\) 与 \(\kappa_N^s\) 写出一个紧凑的三味表达式；若只按该式的字面形式求和，会得到与上述 2017 年显式 flavor-separated 数值不同的结论。这里不把两种写法静默地拼接，也不把这种差异解释成一个已经解决的恒等式。当前记录采用 2017 年附录 A 中明确列出的 flavor-separated 数值作为 benchmark 输入；在把它们写入生产代码之前，仍应将两篇文献的 \(\kappa_N\)、strange-current 和 flavor-current 约定逐项对照，并在 provenance 中固定最终选择。
-
-因此，本记录明确撤回“当前 universal \(u,d,s\) 矢量流的 \(F_2^V(0)\) 必然抵消为零”的旧判断。后续应使用明确的 flavor-separated \(F_1^{q,N}(t)\)、\(F_2^{q,N}(t)\) 和当前模型的 \(g_q\) 做加权求和。
-
-### 10.5 重味和 active-flavor 的边界
-
-当前低能核子匹配通常先以 \(u,d,s\) 为 active flavors。若 UV 拉格朗日量中的 \(\sum_q\) 实际包含 \(c,b,t\)，必须明确重夸克在低能理论中的处理方式。
-
-不能把六个 flavor 的求和简单理解成核子具有六种价夸克电荷。重夸克在核子中的净重味数为零；有限动量下可能存在的重味贡献需要按相应匹配阶数处理。最终代码必须记录：
-
-- UV 耦合的 flavor 范围；
-- 低能 matching scale；
-- heavy-flavor threshold 的处理；
-- \(F_1^{q,N}(t)\)、\(F_2^{q,N}(t)\) 的输入来源；
-- 各 flavor 的耦合权重 \(g_q\)。
-
-## 11. VV 弹性 NR 匹配为什么会出现 \(\mathcal O_3\)，以及为什么不能直接搬到三体过程
-
-### 11.1 2015 年手征 EFT 工作给出的弹性 VV 基准
-
-Hoferichter、Klos 和 Schwenk 对普通弹性 \(\chi N\to\chi N\) 的 VV 单体流给出了非相对论约化。按该文的自旋量归一化和动量约定，其结构为
-
-\[
-\begin{aligned}
-\mathcal M_{1,\mathrm{NR}}^{VV}
-={}&
-\chi_{r'}^\dagger\chi_r\,
-\chi_{s'}^\dagger
-\left[
-f_1^{V,N}(t)
--\frac{\mathbf q}{4m_N^2}\cdot
-\left(\mathbf q-i\boldsymbol\sigma_N\times\mathbf P\right)
-f_2^{V,N}(t)
-\right]\chi_s\\
-&+
-\frac{1}{2m_\chi}
-\chi_{r'}^\dagger
-\left[\mathbf K+i\boldsymbol\sigma_\chi\times\mathbf q\right]
-\chi_r
-\cdot
-\frac{1}{2m_N}
-\chi_{s'}^\dagger
-i\boldsymbol\sigma_N\times\mathbf q\,
-f_2^{V,N}(t)\chi_s.
-\end{aligned}
-\]
-
-其中
-
-\[
-f_i^{V,N}(t)
-=
-\frac{1}{\Lambda^2}
-\sum_{q=u,d,s}c_q^{VV}F_i^{q,N}(t).
-\]
-
-该文的动量约定为
-
-\[
-\mathbf q=\mathbf k_\chi'-\mathbf k_\chi
-=\mathbf p_N-\mathbf p_N',
-\]
-
-\[
-\mathbf P=\mathbf p_N+\mathbf p_N',
-\qquad
-\mathbf K=\mathbf k_\chi+\mathbf k_\chi'.
-\]
-
-换用相反动量方向时，所有含 \(i\mathbf q\) 的项必须一起改变符号。
-
-### 11.2 从完整弹性 VV 振幅看 \(\mathcal O_3\)
-
-第一行中的自旋—动量项包含
-
-\[
-i\,\boldsymbol\sigma_N\cdot(\mathbf P\times\mathbf q)
-\]
-
-型结构。第二行的暗物质空间矢量流与核子磁化流收缩则包含 \(\mathbf K\) 与 \(\boldsymbol\sigma_N\times\mathbf q\) 的组合。
-
-把两部分合并后，弹性运动学会把它们组织成相对速度与动量的组合，对应标准弹性 NR 算符
-
-\[
-\boxed{
-\mathcal O_3
-=
-i\mathbf S_N\cdot
-\left(
-\frac{\mathbf q}{m_N}\times\mathbf v^\perp
-\right).
-}
-\]
-
-因此，普通弹性 VV 振幅并不总是只有 \(\mathcal O_1\)。\(F_2^{V,N}(t)\) 可以产生与 \(\mathcal O_3\) 相关的结构；暗物质空间流与核子磁化流的组合还会产生其他自旋—动量项。
-
-在 AFH 核结构层面，\(\mathcal O_3\) 主要关联自旋—轨道响应 \(\Phi''\)，并与质量响应 \(M\) 产生干涉 \(W_{M\Phi''}\)。因此不能把 \(\mathcal O_3\) 简单等同于通常只依赖未成对核子总自旋的 SD 响应。
-
-### 11.3 核子单独的 \(J_N^0\) 与完整 VV 振幅不是同一个对象
-
-对孤立的 Dirac–Pauli 核子流单独作 Pauli 自旋量展开时，时间分量可以出现与
-
-\[
-i\boldsymbol\sigma_N\cdot
-(\mathbf q_A\times\mathbf P_N)
-\]
-
-有关的自旋—轨道运动学项。其具体系数取决于外线归一化、\(q_A\) 方向和 Pauli 项符号。
-
-但在普通弹性 VV 振幅中，核子时间分量、暗物质时间分量和空间分量必须一起收缩。此时部分由 Dirac \(F_1\) 产生的纯运动学项会与其他分量组合；不能只把孤立 \(J_N^0\) 的展开结果当作最终的 NR Wilson 系数。
-
-因此必须区分：
-
-1. **核子单独的 Dirac–Pauli 流展开；**
-2. **普通弹性 VV 的完整 \(\chi N\) 振幅约化；**
-3. **当前三体过程 \(\mathcal T_3^\mu D_{\mu\nu}J_N^\nu\) 的完整约化。**
-
-这三者不能互相替代。
-
-### 11.4 为什么三体过程必须重新做完整匹配
-
-本项目的暗物质流不是普通弹性矢量流
-
-\[
-\bar u_\chi(p_\chi')\gamma^\mu u_\chi(p_\chi),
-\]
-
-而是
-
-\[
-\mathcal T_3^\mu
-=
-\bar u_{\chi_1}(p_\chi')
-\Gamma_3^\mu(p_\chi,p_\chi',k_s)
-u_{\chi_1}(p_\chi).
-\]
-
-它含有两个 \(\chi_2\) 传播子、标量发射和两图干涉。标准弹性 \(\mathbf v^\perp\) 的定义依赖 \(2\to2\) 能量守恒；三体中多出 \(k_s\)，所以不能直接把 HKS 的弹性 \(\mathcal O_3\) 系数搬过来。
-
-正确计算应从
-
-\[
-\mathcal T_3^\mu
-D_{\mu\nu}(q_A)
-\bar u_N(p_N')
-\left[
-F_1^{V,N}(t)\gamma^\nu
-+\frac{iF_2^{V,N}(t)}{2m_N}
-\sigma^{\nu\alpha}q_{A,\alpha}
-\right]u_N(p_N)
-\]
-
-开始，采用固定的动量和自旋量约定做完整 NR 展开，再将所得核子算符投影到 AFH 多极算符。
-
-这一步会决定三体过程中 \(\Phi''\)、\(\Delta\)、\(\Sigma'\) 等响应的真实系数，而不是由普通弹性算符表直接决定。
-
-### 11.5 从 Dirac–Pauli 核子流得到电荷、对流与磁化分量
-
-This section fixes the nucleon momentum convention and makes the one-body
-current coefficients explicit. It is a free-nucleon Pauli reduction; the
-three-body dark-sector tensor is still to be contracted with these currents.
-
-#### 11.5.1 动量约定与协变核子流
-
-For a nucleon struck by the nuclear momentum transfer, define
-
-\[
-q_A^\mu=p_N'^\mu-p_N^\mu,\qquad
-K_N^\mu=\frac{p_N'^\mu+p_N^\mu}{2},\qquad
-t_A=q_A^2\leq0.
-\]
-
-The spatial part of \(q_A\) is the momentum transferred to that nucleon in
-the one-body impulse approximation. In the three-body process it is the
-nuclear transfer
-\(\mathbf q_A=\mathbf p_\chi-\mathbf p_\chi'-\mathbf k_s\), not
-\(\mathbf q_\chi=\mathbf p_\chi'-\mathbf p_\chi\).
-
-Use the standard Dirac-Pauli convention
-
-\[
-J_N^\mu
-=\bar u_N(p_N')
-\left[
-F_1^V(t_A)\gamma^\mu
-+\frac{iF_2^V(t_A)}{2m_N}
-\sigma^{\mu\nu}q_{A,\nu}
-\right]u_N(p_N),
-\qquad
-\sigma^{\mu\nu}=\frac{i}{2}[\gamma^\mu,\gamma^\nu],
-\]
-
-with covariantly normalized spinors, \(\bar u u=2m_N\). The sign in front of
-the Pauli term is tied to the explicit choice \(q_A=p_N'-p_N\). Reversing the
-definition of \(q_A\) requires reversing that sign as well.
-
-The Gordon identity in this convention is
-
-\[
-\bar u_N(p_N')\,i\sigma^{\mu\nu}q_{A,\nu}\,u_N(p_N)
-=
-\bar u_N(p_N')
-\left[2m_N\gamma^\mu-2K_N^\mu\right]u_N(p_N).
-\]
-
-Therefore
-
-\[
-J_N^\mu
-=(F_1^V+F_2^V)\bar u_N'\gamma^\mu u_N
--\frac{F_2^V}{m_N}K_N^\mu\bar u_N'u_N.
-\]
-
-This identity is useful because the Dirac and Pauli pieces can be reduced
-with the same external spinors and the same \(q_A\) convention.
-
-#### 11.5.2 Pauli 约化：自旋—轨道电荷、对流电流与磁化电流
-
-Write \(\mathbf K_N=(\mathbf p_N'+\mathbf p_N)/2\) and
-\(\mathbf q_A=\mathbf p_N'-\mathbf p_N\). To the order needed to identify
-the leading charge, the charge spin-orbit term, convection current, and
-magnetization current, the Pauli bilinears are
-
-\[
-\bar u_N'\gamma^0u_N
-=
-2m_N\left[
-1+\frac{\mathbf K_N^2}{2m_N^2}
-+\frac{i}{4m_N^2}
-\boldsymbol\sigma_N\cdot(\mathbf q_A\times\mathbf K_N)
-+\cdots
-\right],
-\]
-
-\[
-\bar u_N'u_N
-=
-2m_N\left[
-1+\frac{\mathbf q_A^2}{8m_N^2}
--\frac{i}{4m_N^2}
-\boldsymbol\sigma_N\cdot(\mathbf q_A\times\mathbf K_N)
-+\cdots
-\right],
-\]
-
-and
-
-\[
-\bar u_N'\boldsymbol\gamma u_N
-=
-2\mathbf K_N
-+i\boldsymbol\sigma_N\times\mathbf q_A
-+\cdots.
-\]
-
-Substitution into the Gordon-reduced current gives the charge spin-orbit
-coefficient
-
-\[
-\boxed{
-J_N^0
-=
-2m_N F_1^V(t_A)
-+
-\frac{i\,[F_1^V(t_A)+2F_2^V(t_A)]}{2m_N}
-\boldsymbol\sigma_N\cdot
-(\mathbf q_A\times\mathbf K_N)
-+\delta J_{N,\mathrm{scalar}}^0+\cdots
-}
-\]
-
-where \(\delta J_{N,\mathrm{scalar}}^0\) denotes the spin-independent
-Darwin/recoil corrections of the same subleading expansion. The terms
-displayed explicitly are the leading charge and the spin-orbit charge
-operator relevant to the \(\Phi''\) projection.
-
-The spatial current is
-
-\[
-\boxed{
-\mathbf J_N
-=
-2F_1^V(t_A)\mathbf K_N
-+i[F_1^V(t_A)+F_2^V(t_A)]
-\boldsymbol\sigma_N\times\mathbf q_A
-+\cdots.
-}
-\]
-
-If the one-nucleon current is normalized by dividing the covariant matrix
-element by \(2m_N\), the same statements become
-
-\[
-\rho_N
-=
-F_1^V
-+\frac{i(F_1^V+2F_2^V)}{4m_N^2}
-\boldsymbol\sigma_N\cdot(\mathbf q_A\times\mathbf K_N)
-+\delta\rho_{N,\mathrm{Darwin}}+\cdots,
-\]
-
-\[
-\mathbf j_N
-=
-\frac{F_1^V}{m_N}\mathbf K_N
-+\frac{i(F_1^V+F_2^V)}{2m_N}
-\boldsymbol\sigma_N\times\mathbf q_A
-+\cdots.
-\]
-
-The factor \(2m_N\) convention must be kept consistent between the
-single-nucleon current, the nuclear matrix element, and the overall
-cross-section normalization. The AFH response functions themselves do not
-supply this relativistic spinor normalization.
-
-#### 11.5.3 flavor-universal 三味匹配下的流系数
-
-For the provisional low-energy three-flavor benchmark with
-\(c_u=c_d=c_s=1\), the explicit flavor-separated central values recorded in
-Section 10.4 give
-
-\[
-F_1^V(0)=3,\qquad F_2^V(0)=-0.552.
-\]
-
-The corresponding coefficients in the free-nucleon current reduction are
-
-\[
-F_1^V(0)+2F_2^V(0)=1.896,
-\]
-
-\[
-F_1^V(0)+F_2^V(0)=2.448.
-\]
-
-Thus the current benchmark does **not** use \(F_2^V(0)=0\) as its central
-input. The values are provisional central values from the explicit
-flavor-separated form factors; their uncertainties and the finite-\(t_A\)
-dependence must be carried into the production matching.
-
-| Current structure | Form-factor combination | Explicit 2017 flavor-separated central input | If a reconciled convention instead gives \(F_2^V(0)=0\) |
-|---|---|---:|---:|
-| Leading charge | \(F_1^V\) | 3 | 3 |
-| Charge spin-orbit term | \(F_1^V+2F_2^V\) | 1.896 | 3 |
-| Convection current | \(F_1^V\) | 3 | 3 |
-| Magnetization current | \(F_1^V+F_2^V\) | 2.448 | 3 |
-
-The last column is shown only as a convention-comparison case, not as the
-current benchmark input. The compact 2015 HKS expression and the explicit
-2017 flavor-separated values must be reconciled at the level of their
-definitions before the final production coefficients are frozen. Until
-that audit is complete, the code should expose \(F_1^V(t_A)\) and
-\(F_2^V(t_A)\) as explicit inputs rather than hard-code either a vanishing
-or a constant Pauli term.
-
-A useful structural point survives either convention: even if a separately
-matched current happened to have \(F_2^V(0)=0\), the charge spin-orbit and
-magnetization coefficients in this Pauli reduction still contain the
-nonzero Dirac form factor \(F_1^V(0)=3\). A vanishing Pauli constant would
-remove only the Pauli contribution to those combinations; it would not
-remove the \(F_1\)-generated terms displayed in the free-nucleon current.
-
-#### 11.5.4 AFH 响应投影及其与三体张量的关系
-
-The displayed operators identify the nuclear responses that need to be
-tested:
-
-- \(F_1^V\) multiplying the scalar density gives the leading \(M\) response.
-- The \(J_N^0\) spin-orbit term proportional to
-  \(\boldsymbol\sigma_N\cdot(\mathbf q_A\times\mathbf K_N)\) is the
-  \(\Phi''\)-type charge correction; its interference with the leading
-  density gives \(M\Phi''\).
-- The convection term proportional to \(\mathbf K_N\) is the candidate
-  orbital \(\Delta\) contribution after the appropriate multipole
-  projection.
-- The magnetization term proportional to
-  \(\boldsymbol\sigma_N\times\mathbf q_A\) is transverse to \(\mathbf q_A\)
-  and is the candidate \(\Sigma'\) contribution. This particular term is
-  not a longitudinal \(\Sigma''\) current because
-  \(\mathbf q_A\cdot(\boldsymbol\sigma_N\times\mathbf q_A)=0\).
-
-The first two terms in this list enter the nuclear charge component.
-Therefore the three-body amplitude contains
-
-\[
-\mathcal T_3^0 J_A^0
-=
-\mathcal T_3^0
-\left(J_{A,M}^0+J_{A,\Phi''}^0+\cdots\right).
-\]
-
-A small dark-matter spatial component \(\mathcal T_3^i\) cannot by itself
-suppress the \(\Phi''\) charge correction: that correction multiplies
-\(\mathcal T_3^0\). By contrast, the convection and magnetization pieces of
-\(\mathbf J_A\) contract with the spatial components \(\mathcal T_3^i\) and
-must be evaluated with the actual three-body tensor.
-
-This is why the new AFH \(W_{\Phi''}\) and \(W_{M\Phi''}\) export is the
-first nuclear-structure calculation to run, while the \(\Delta\) and
-\(\Sigma'\) responses are retained as the next spatial-current stage. It
-also explains why the elastic two-body \(\mathbf v^\perp\) operator basis
-cannot be used to assign the three-body Wilson coefficients: the
-coefficients must be obtained by contracting this Dirac-Pauli current with
-the full \(\mathcal T_3^\mu(p,p',k_s)\), retaining both scalar-radiation
-orderings and their interference.
-
-## 12. AFH 六种主要核响应及其在当前模型中的角色
-
-AFH 的六种主要核多极响应是
-
-\[
-\boxed{
-M,\quad
-\Sigma',\quad
-\Sigma'',\quad
-\Delta,\quad
-\Phi'',\quad
-\widetilde\Phi'.
-}
-\]
-
-注意最后一个标准记号是 \(\widetilde\Phi'\)，不是 \(\widetilde\Phi''\)。
-
-| 核响应 | 核算符的物理内容 | 在当前 VV 模型中的判断 |
-|---|---|---|
-| \(M\) | 核子矢量电荷/质量密度 | 领先阶，必须保留 |
-| \(\Sigma'\) | 横向核自旋响应 | 由磁化流和暗物质空间流的实际收缩决定 |
-| \(\Sigma''\) | 纵向核自旋响应 | 由完整纵向投影决定 |
-| \(\Delta\) | 与核子轨道角动量相关的矢量流响应 | 对流电流和暗物质空间流收缩后可能出现 |
-| \(\Phi''\) | 核子自旋—轨道结构，包含 \(\boldsymbol\sigma\cdot\mathbf l\) 型内容 | 当前优先审计 |
-| \(\widetilde\Phi'\) | 与自旋和速度导数结构有关的横向响应 | 不是当前领先候选，需由匹配决定 |
-
-### 12.1 为什么 \(\Phi''\) 不等同于普通 SD 响应
-
-\(\Sigma'\) 和 \(\Sigma''\) 反映核子自旋的横向、纵向投影。传统 SD 散射主要通过这些自旋响应体现。
-
-\(\Phi''\) 则与核子自旋和轨道角动量耦合有关，可在核算符中出现
-
-\[
-\boldsymbol\sigma_i\cdot\mathbf l_i
-\]
-
-型结构。它并不只是总核自旋的另一个记号。即使核的未成对核子总自旋较小，也不能由此直接断言 \(\Phi''\) 必然很小。
-
-### 12.2 为什么 rank-2 \(M\) 多极不是 \(\Phi''\)
-
-Xe-131 的核自旋 \(J_A=3/2\)，弹性质量密度响应允许偶数多极 \(J=0,2\)。因此其 \(M\) 响应中出现 rank-2 项。
-
-这个 rank-2 项仍然属于核子矢量电荷密度响应 \(M\)，并不是核自旋响应，也不是 \(\Phi''\) 自旋—轨道响应。讨论中必须区分：
-
-- \(M\) 响应内部的 \(J=2\) 多极；
-- 不同 AFH 响应之间的 \(\Phi''\)、\(\Delta\)、\(\Sigma'\) 等。
-
-## 13. 为什么当前优先审计 \(\Phi''\) 与 \(W_{M\Phi''}\)
-
-### 13.1 当前模型的候选响应排序
-
-当前 VV benchmark 的 UV 核子流首先是矢量流。没有 UV 轴矢量、赝标量或张量顶点，就不应人为加入相应独立 Wilson 系数。
-
-但“没有独立轴矢量顶点”并不等于“完整矢量流只有 \(M\)”。核子矢量流包含对流和磁化结构，经过三体暗物质张量收缩后可能产生其他核算符。
-
-因此目前的排序是：
-
-1. \(M\)：领先阶基准，必须保留；
-2. \(\Phi''\)：优先审计，特别是 \(M\)-\(\Phi''\) 干涉；
-3. \(\Sigma'\)、\(\Sigma''\)：根据磁化流和完整暗物质空间流的系数决定；
-4. \(\Delta\)：根据对流电流与暗物质空间流的收缩决定；
-5. \(\widetilde\Phi'\)：只有在完整匹配出现相应结构时才计算；
-6. 两核子流：在一体流匹配完成后按手征阶数和精度预算评估。
-
-### 13.2 \(M\) 深极小值附近为什么需要特别小心
-
-此前 Xe-131 的 \(M\) 响应记录了三个值得重点检查的位置：
-
-| \(q_A\) (MeV) | 对应 \(E_R\) (keV) | \(q_A/m_N\) | \(\sqrt{R_M(q_A)/R_M(0)}\) |
-|---:|---:|---:|---:|
-| 157.94 | 102.21 | 0.168 | \(3.52\times10^{-3}\) |
-| 256.27 | 269.10 | 0.273 | \(2.52\times10^{-4}\) |
-| 365.07 | 546.09 | 0.389 | \(3.95\times10^{-4}\) |
-| 499.37 | 1021.80 | 0.532 | \(1.29\times10^{-4}\) |
-
-这里的响应归一化为
-
-\[
-\frac{R_M(q_A)}{R_M(0)}.
-\]
-
-这些点附近 \(M\) 振幅受到很强抑制。若另一个响应在相同 \(q_A\) 处没有相同的抵消，那么即使它在一般动量处较小，也可能改变局部谱形。
-
-但必须同时报告绝对量：
-
-- \(M\) 响应的绝对大小；
-- \(\Phi''\) 响应的绝对大小；
-- \(M\Phi''\) 干涉项；
-- 总响应；
-- 完整三体相空间积分后的绝对率。
-
-不能只报告 \(W_{\Phi''}/W_M\) 在 \(W_M\) 接近零时变得很大，就把它解释成事件率一定大幅增加。
-
-### 13.3 旧的单核子百分比估算不等于 Xe-131 核响应修正
-
-讨论中曾使用
-
-\[
-|F_2/F_1|\sim0.1,
-\qquad
-v_N^{\rm int}\sim0.1\text{--}0.3
-\]
-
-作过单核子量级估算，并得到大致 \(0.2\%\) 到 \(1.4\%\) 的 O3-like 振幅量级。
-
-这些数值不能作为当前模型的 Xe-131 截面修正，原因是：
-
-1. 旧估算采用的是启发式 form-factor 比例，不是当前 UV flavor 权重下的有限 \(t\) form factor；
-2. 核子内部速度不是独立于核矩阵元的一个通用乘数；
-3. \(W_{\Phi''}\) 与 \(W_M\) 的核结构不同；
-4. 必须包含 \(W_{M\Phi''}\) 干涉；
-5. 当前暗物质流是三体 \(\mathcal T_3^\mu\)，不能用普通弹性 \(\mathbf v^\perp\) 直接替代。
-
-因此这些百分比只能作为历史估算记录，不能进入论文结论。
-
-## 14. 暗物质空间流、核质心流与核内流必须分开
-
-### 14.1 完整三体张量的分量
-
-定义
-
-\[
-L^{\mu\nu}
-=
-\frac12\sum_{\rm spins}
-\mathcal T_3^\mu\mathcal T_3^{\nu *}.
-\]
-
-它包含：
-
-- \(L^{00}\)：暗物质时间分量平方；
-- \(L^{0i}\)、\(L^{i0}\)：时间—空间干涉；
-- \(L^{ij}\)：空间分量张量。
-
-只比较
-
-\[
-\frac{\sum_iL^{ii}}{L^{00}}
-\]
-
-并不能自动证明 \(L^{0i}\) 干涉项可忽略。完整截面必须将 \(L^{\mu\nu}\)、传播子和核响应张量一起收缩。
-
-### 14.2 三个不同的物理问题
-
-必须分别检查：
-
-1. **暗物质空间流：** \(\mathcal T_3^i\) 相对于 \(\mathcal T_3^0\) 有多大？\(\chi_2\) 共振和两图干涉会不会改变这个比例？
-2. **核子空间流：** 核子对流电流和磁化电流在核内是否产生不可忽略的响应？
-3. **核子时间流的次领先结构：** 即使 \(\mathcal T_3^i\) 很小，核子时间流中的自旋—轨道电荷项是否仍与 \(\mathcal T_3^0\) 收缩？
-
-第三项尤其容易被遗漏。暗物质侧空间流小，不能排除核子时间流中的 \(\Phi''\) 型贡献。
-
-### 14.3 对流电流和磁化电流的量化指标
-
-单核子矢量流的空间分量可分成两类结构：
-
-\[
-\mathbf J_N
-=
-\mathbf J_{\rm conv}
-+
-\mathbf J_{\rm mag}.
-\]
+\\[ \mathcal M\_{\chi N} = \mathcal M\_{\chi N} \left( \mathbf q,\mathbf v,\mathbf S\_\chi,\mathbf S_N \right), \\]
 
 其中：
 
-- \(\mathbf J_{\rm conv}\)：与核子动量和对流运动有关；
-- \(\mathbf J_{\rm mag}\)：与核子自旋和磁化结构有关。
+- \\(\mathbf q\\)：核子的三维动量转移；
+- \\(\mathbf v\\)：相对速度；
+- \\(\mathbf S\_\chi\\)：暗物质自旋；
+- \\(\mathbf S_N\\)：核子自旋。
 
-可以先定义诊断量
+然后按照动量和速度的阶数展开。
 
-\[
-\epsilon_{\rm conv}
-=
-\frac{
-|\boldsymbol{\mathcal T}_3\cdot\mathbf J_{\rm conv}|
-}{
-|\mathcal T_3^0J_A^0|
-},
-\]
+## **二、为什么最后只需要有限个算符？**
 
-\[
-\epsilon_{\rm mag}
-=
-\frac{
-|\boldsymbol{\mathcal T}_3\cdot\mathbf J_{\rm mag}|
-}{
-|\mathcal T_3^0J_A^0|
-}.
-\]
+关键在于：并不是任意函数都可以出现在散射振幅中。振幅必须满足一系列对称性条件。
 
-但正式验收不能只比较振幅模长。最终应比较初态平均、末态自旋求和后的完整振幅平方及其干涉项。
+### **1. Galilean 不变性**
 
-### 14.4 核子内部速度大不代表响应必然大
+在非相对论极限下，低能散射过程应当满足 Galilean 变换不变性。
 
-氙核内核子速度可达到 \(0.1\text{--}0.3\)，比暗物质晕速度 \(10^{-3}\) 大很多。但内部速度大并不自动意味着轨道响应大，因为：
 
-- 它必须与暗物质流的相应 Lorentz 分量收缩；
-- 有些项带有 \(q_A/m_N\) 或 \(1/m_\chi\) 抑制；
-- 核波函数和多极选择定则可能进一步抑制；
-- 不同响应之间可能发生干涉；
-- 某些响应的核矩阵元可能在特定 \(q_A\) 处增强或抵消。
 
-因此应以完整流收缩和核矩阵元为判断依据，而不是只比较 \(v_N^{\rm int}\) 与 \(v_\chi\)。
+因此，不能随意使用绝对速度，而应该使用暗物质与核子的相对速度：
 
-## 15. 讨论中已有的数值诊断及其证据边界
+\\[ \mathbf v=\mathbf v\_\chi-\mathbf v_N. \\]
 
-本节完整保留此前讨论中报告过的代表性数值，同时明确它们没有完成哪些验收。
+同时引入动量转移：
 
-### 15.1 暗物质侧空间流的代表性诊断
+\\[ \mathbf q. \\]
 
-此前报告的代表性 benchmark 为
+对于弹性 \\(2\to2\\) 散射，能量守恒给出
 
-\[
-m_\chi=1~{\rm TeV},
-\qquad
-v=800~{\rm km/s},
-\]
+\\[ \mathbf v\cdot\mathbf q + \frac{q^2}{2\mu_N}=0, \\]
 
-\[
-\Delta m=1~{\rm MeV},
-\qquad
-m_s=200\text{--}360~{\rm keV}.
-\]
+其中
 
-在采用当时的条件性 \(\chi_2\) pole-width 处理和有限阶求积时，曾报告
+\\[ \mu_N=\frac{m\_\chi m_N}{m\_\chi+m_N} \\]
 
-\[
-\boxed{
-\frac{\sum_iL^{ii}}{L^{00}}
-\simeq(6.1\text{--}6.9)\times10^{-6}.
-}
-\]
+是暗物质与核子的约化质量。
 
-对应的分量振幅尺度为
 
-\[
-\boxed{
-\frac{\sqrt{\sum_iL^{ii}}}{\sqrt{L^{00}}}
-\simeq(2.5\text{--}2.6)\times10^{-3}.
-}
-\]
 
-另一个 \(m_s=300~{\rm keV}\) 的历史单点报告给出
+于是定义垂直速度：
 
-\[
-\frac{L_{LL}+L_{TT}}{L_{00}}
-=
-6.276\text{--}6.571\times10^{-6},
-\]
+\\[ \boxed{ \mathbf v^\perp = \mathbf v+\frac{\mathbf q}{2\mu_N} } \\]
 
-并报告采用 \(8^3\) 有限求积。
+这里采用的动量转移约定是 \\(\mathbf q=\mathbf p\_\chi'-\mathbf p\_\chi\\)。如果采用相反的动量转移约定，公式中的正负号也相应改变。
 
-这些数字支持的有限结论是：在此前所检查的代表性运动学点，暗物质侧空间流相对时间流较小，\(L^{00}\) 主导是合理的工作假设。
 
-这些数字没有证明：
 
-- 全参数空间的空间流都同样小；
-- \(L^{0i}\) 干涉项可以忽略；
-- 核子空间流可以忽略；
-- 核子时间流中的 \(\Phi''\) 型项可以忽略；
-- 完整氙核截面与 \(L^{00}W_M\) 的差异已经数值验证。
+它满足：
 
-原始脚本、逐点完整输入、两图分项输出和收敛日志尚未在本次文档更新中重新找回。因此这些结果标记为历史报告的代表性诊断，不标记为本次独立复现的 PASS。
+\\[ \boxed{ \mathbf v^\perp\cdot\mathbf q=0 } \\]
 
-### 15.2 点状、无自旋原子核的完整矢量流检查
+这非常重要：\\(\mathbf v^\perp\\) 和 \\(\mathbf q\\) 是两个独立的运动学方向。
 
-此前还做过一个点核 sanity check。把原子核近似为点状、无自旋复合粒子，其弹性矢量流为
+### **2. 旋转不变性**
 
-\[
-J_A^\mu=(P_A+P_A')^\mu.
-\]
+散射振幅必须是旋转标量。
 
-于是
 
-\[
-\frac{|\mathbf J_A|}{J_A^0}
-\sim\frac{q_A}{2m_A}.
-\]
 
-将完整暗物质流与这个点核流收缩，再与只保留时间分量的 \(L^{00}\) 基准比较，曾报告：
+对于自旋为 \\(1/2\\) 的暗物质和核子，可以使用：
 
-| \(E_R\) (keV) | 完整点核流相对纯 \(L^{00}\) 基准的截面变化 |
-|---:|---:|
-| 101 | \(-3.0\) ppm |
-| 200 | \(-4.1\) ppm |
-| 267 | \(-4.8\) ppm |
-| 360 | \(-5.6\) ppm |
-| 542 | \(-6.9\) ppm |
+\\[ \mathbf S\_\chi,\qquad \mathbf S_N,\qquad \mathbf q,\qquad \mathbf v^\perp. \\]
 
-这说明在所报告的点核模型中，核质心平动电流的修正非常小。
+通过这些量构造点乘、叉乘和张量组合，就可以得到旋转不变的算符。
 
-但点核流没有核内坐标 \(\mathbf r_i\)、核子内部动量、单核子自旋和磁化电流。因此它没有计算
+### **3. 宇称、时间反演与厄米性**
 
-\[
-\sum_i e^{i\mathbf q_A\cdot\mathbf r_i}\mathbf p_i,
-\]
+还必须要求算符满足相应的宇称、时间反演和厄米性条件。
 
-\[
-\sum_i e^{i\mathbf q_A\cdot\mathbf r_i}\boldsymbol\sigma_i,
-\]
 
-\[
-\sum_i e^{i\mathbf q_A\cdot\mathbf r_i}
-\boldsymbol\sigma_i\cdot\mathbf l_i
-\]
 
-等核内算符。
+例如，单独的 \\(\mathbf q\\) 在交换初末态时改变符号，因此常常需要引入 \\(i\mathbf q\\)，使相应的动量空间算符具有正确的厄米性质。
 
-所以 ppm 级点核修正只能说明核质心对流项小，不能排除核内 \(\Delta\)、\(\Sigma'\) 或 \(\Phi''\) 响应。
 
-这些 ppm 数值同样是历史报告值；在找回原始输出和完整输入之前，不应把它们当作新的独立可复现验收结果。
 
-### 15.3 Xe-131 的 \(M\) 深极小值
+这些条件共同限制了允许出现的算符。
 
-此前讨论中报告的三个重点位置为：
+### **4. 按动量和速度阶数截断**
 
-| \(q_A\) (MeV) | \(E_R\) (keV) | \(q_A/m_N\) | \(\sqrt{R_M(q_A)/R_M(0)}\) |
-|---:|---:|---:|---:|
-| 157.94 | 102.21 | 0.168 | \(3.52\times10^{-3}\) |
-| 256.27 | 269.10 | 0.273 | \(2.52\times10^{-4}\) |
-| 365.07 | 546.09 | 0.389 | \(3.95\times10^{-4}\) |
-| 499.37 | 1021.80 | 0.532 | \(1.29\times10^{-4}\) |
+最后，按照
 
-这些位置显示 \(M\) 响应存在很强的有限动量抵消。它们值得作为 \(\Phi''\) 和 \(M\Phi''\) 的重点扫描位置。
+\\[ \frac{|\mathbf q|}{m_N}\ll1, \qquad v\ll1 \\]
 
-但应区分：
+进行展开，保留指定阶数的项。
 
-- 0.25 MeV 网格上的局部最小值；
-- 在局部加密网格或连续插值后精化的最小值；
-- 由完整核响应计算得到的总振幅最小值。
 
-三者不是同一个数值对象。正式计算应记录网格步长、插值方式和局部精化误差。
 
-### 15.4 深极小值附近的旧 O3-like 单核子估算
+在通常的自旋 \\(1/2\\) 暗物质框架下，就得到大家熟悉的非相对论算符基底。
 
-讨论早期曾报告以下单核子层面量级：
+## **三、AFH 的非相对论算符具体是什么？**
 
-| \(q_A\) (MeV) | 旧记录中的 \(\mathcal O_3/\mathcal O_1\) 振幅量级 |
-|---:|---:|
-| 158 | \(0.2\text{--}0.6\%\) |
-| 256 | \(0.3\text{--}1.0\%\) |
-| 365 | \(0.5\text{--}1.4\%\) |
+常用的算符基底由以下结构组成。
 
-这些百分比使用了启发式 \(F_2/F_1\) 比例和内部速度量级。它们既不是 AFH 的 \(W_{\Phi''}/W_M\)，也不是 \(W_{M\Phi''}\)，更不是三体截面修正。
+|   |
+| - |
 
-本次对 flavor form factors 的重新核对也说明，不能再把旧的 \(|F_2/F_1|\sim0.1\) 当作当前模型的固定输入。应使用明确的 flavor-separated form factors、当前 UV 权重和有限 \(t\) 依赖重新计算。
+算符
 
-## 16. 两核子流为什么不是第一步，但仍应保留在精度预算中
+|   |
+| - |
 
-Hoferichter、Klos 和 Schwenk 的手征 EFT 工作对矢量、轴矢量、标量和赝标量流进行了统一计数，并计算了相应的一体和两体流。
+数学表达式
 
-对当前 VV 模型，首先要完成一体矢量流的 form-factor 匹配和完整三体张量收缩。2015 年该文的手征计数中，VV 一体矢量电荷是最低阶；VV 两体矢量流在更高阶出现，而该文在相应工作中只保留到 \(\mathcal O(p^3)\)。该文指出到 \(\mathcal O(p^3)\) 的矢量两体流主要出现在 AV 通道，而不是当前 VV 主线。
+|   |
+| - |
 
-这意味着当前第一轮不必自动加入两核子 VV 流，但也不能据此宣称所有更高阶核流严格为零。
+主要物理含义
 
-尤其当前关注的动量转移可达到数百 MeV，\(q_A/m_N\) 在上述三个极小值附近约为 \(0.17\)、\(0.27\)、\(0.39\)。手征展开的收敛性、form-factor 高阶项和两体流误差需要在一体流结果完成后评估。
+|   |
+| - |
 
-推荐顺序：
+\\(\mathcal O_1\\)
 
-1. 完成一体 Dirac–Pauli 流匹配；
-2. 计算 \(M\)、\(\Phi''\)、\(M\Phi''\) 及必要的空间流响应；
-3. 与当前 \(L^{00}W_M\) 基准比较；
-4. 再根据误差预算和手征计数判断两核子流是否必须加入。
+|   |
+| - |
 
-## 17. 当前模型是否需要 AFH 的全部响应？
+\\(1\_\chi 1_N\\)
 
-当前模型不需要把 AFH 六种响应无差别地全部加入，也不能先验只保留 \(M\) 而不做检查。
+|   |
+| - |
 
-更精确的筛选逻辑如下：
+自旋无关相互作用
 
-| AFH 响应 | 当前判断 | 理由 |
-|---|---|---|
-| \(M\) | 必须保留 | 核子矢量电荷的领先响应 |
-| \(\Phi''\) | 第一优先级审计 | VV 一体流的自旋—轨道结构及其三体收缩 |
-| \(W_{M\Phi''}\) | 与 \(\Phi''\) 同步计算 | 可能改变 \(M\) 深极小值附近的总振幅 |
-| \(\Sigma'\) | 条件性审计 | 由磁化流和暗物质空间流的横向收缩决定 |
-| \(\Sigma''\) | 条件性审计 | 由完整纵向流匹配决定 |
-| \(\Delta\) | 条件性审计 | 由对流/轨道流与暗物质空间流的收缩决定 |
-| \(\widetilde\Phi'\) | 当前不优先 | 只有完整匹配产生相应张量结构时才计算 |
-| 两核子流 | 后续精度项 | 在一体流完成后按手征阶数和误差预算判断 |
+|   |
+| - |
 
-没有 UV 轴矢量、赝标量或张量耦合，就不应人为增加相应的独立相互作用系数。另一方面，当前核子流是矢量流，矢量流本身包含对流、磁化和有限 form-factor 结构，不能简单等同于纯 \(M\) 响应。
+\\(\mathcal O_4\\)
 
-## 18. 从当前研究状态到可执行的数值审计
+|   |
+| - |
 
-### 18.1 P0：固定 UV flavor 结构和归一化
+\\(\mathbf S\_\chi\cdot\mathbf S_N\\)
 
-首先锁定：
+|   |
+| - |
 
-1. \(\sum_q\) 的 active flavors；
-2. 每个 flavor 的 \(g_q\)；
-3. 重夸克阈值和低能匹配方案；
-4. \(F_1^{q,N}(t)\)、\(F_2^{q,N}(t)\) 的输入及误差；
-5. \(q_A\)、\(q_\chi\)、\(k_s\)、\(t_A\) 的定义；
-6. AFH v6.0 factor-four 的唯一实现位置。
+自旋－自旋相互作用
 
-必须通过：
+|   |
+| - |
 
-\[
-F_1^{V,p}(0)=F_1^{V,n}(0)=3
-\]
+\\(\mathcal O_5\\)
 
-（单位 flavor-universal 耦合的三味约定）和
+|   |
+| - |
 
-\[
-R_M^{\rm phys}(0)=A^2
-\]
+\\(i\mathbf S\_\chi\cdot(\frac{\mathbf q}{m_N}\times\mathbf v^\perp)\\)
 
-的零动量测试。
+|   |
+| - |
 
-### 18.2 P1：完整一体 VV 流匹配
+动量与速度耦合
 
-从
+|   |
+| - |
 
-\[
-\mathcal T_3^\mu D_{\mu\nu}(q_A)J_N^\nu
-\]
+\\(\mathcal O_6\\)
 
-开始，统一完成：
+|   |
+| - |
 
-- 两张标量辐射图；
-- 两图干涉；
-- \(\chi_2\) 内部传播子和宽度；
-- 核子 \(F_1/F_2\)；
-- 核子时间流和空间流；
-- 三体运动学下的 NR 展开；
-- 纵向与横向投影；
-- 与 AFH 多极算符的匹配。
+\\((\mathbf S\_\chi\cdot\frac{\mathbf q}{m_N})(\mathbf S_N\cdot\frac{\mathbf q}{m_N})\\)
 
-首先实现 Xe-131 的 \(M+\Phi''+M\Phi''\)，再根据实际匹配系数扩展 \(\Sigma'\)、\(\Sigma''\)、\(\Delta\)。
+|   |
+| - |
 
-### 18.3 P2：完整三体张量与核响应的数值对照
+双自旋动量耦合
 
-对每个三体相空间点输出：
+|   |
+| - |
 
-\[
-L^{00},\qquad
-L^{0i},\qquad
-L^{ij}.
-\]
+\\(\mathcal O_7\\)
 
-核侧输出：
+|   |
+| - |
 
-\[
-W_M,\qquad
-W_{\Phi''},\qquad
-W_{M\Phi''}
-\]
+\\(\mathbf S_N\cdot\mathbf v^\perp\\)
 
-以及匹配后确实出现的其他响应。
+|   |
+| - |
 
-比较
+核子自旋－速度耦合
 
-\[
-\frac{d\sigma_3}{dE_R}\bigg|_{M\text{-only}}
-\]
+|   |
+| - |
 
-与
+\\(\mathcal O_8\\)
 
-\[
-\frac{d\sigma_3}{dE_R}\bigg|_{\rm full\ one\mbox{-}body\ current}.
-\]
+|   |
+| - |
 
-在 Xe-131 的三个 \(M\) 深极小值附近进行局部高分辨率扫描。必须同时报告相对变化和绝对截面，不能只报告比值。
+\\(\mathbf S\_\chi\cdot\mathbf v^\perp\\)
 
-### 18.4 P3：天然氙与高阶核结构
+|   |
+| - |
 
-在单同位素核响应稳定后，再进行：
+暗物质自旋－速度耦合
 
-- Xe-129 与 Xe-131 的响应比较；
-- 七种 AFH 同位素的逐同位素三体核响应；
-- 天然氙丰度加权；
-- halo fold；
-- 两核子流和更高阶 form-factor 误差；
-- 探测器效率、分辨率及最终 LZ 统计量。
+|   |
+| - |
 
-天然氙总率不能简单理解为把某一个同位素的 \(W_M\) 乘一个总丰度。不同同位素具有不同的质量、\(q_A(E_R)\)、核响应和运动学阈值，必须逐同位素计算后再按丰度合并。
+\\(\mathcal O_9\\)
 
-### 18.5 最低验收条件
+|   |
+| - |
 
-| 检查 | 必须验证的内容 |
-|---|---|
-| 零动量核响应 | 物理等核子耦合恢复 \(A^2\)，factor four 只计一次 |
-| 核子 form factors | flavor 权重、\(F_1(0)\)、\(F_2(0)\) 和有限 \(t\) 输入一致 |
-| 动量守恒 | 每个相空间点满足 \(q_A=-q_\chi-k_s\) |
-| 核反冲关系 | \(q_A^2=E_R(E_R+2m_A)\)，四动量不变量 \(t_A=-2m_AE_R\) |
-| 三体辐射图 | 两张图及其交叉干涉均保留 |
-| 完整张量 | 检查 \(L^{00}\)、\(L^{0i}\)、\(L^{ij}\)，不能只看 \(L^{ii}/L^{00}\) |
-| 流守恒 | 对适用的核子矢量流检查 Ward identity，并区分纵向和横向分量 |
-| 核多极选择定则 | \(M,\Phi'',\Delta,\Sigma'\) 等与核态角动量、宇称相容 |
-| AFH 归一化 | 原始 package 与物理耦合的映射一致 |
-| 网格收敛 | 核响应插值和局部极小值分别做收敛 |
-| 相空间收敛 | 三体积分独立做求积收敛 |
-| 率的层级 | 核截面、halo-folded rate、探测器事件率分别报告 |
+\\(i\mathbf S\_\chi\cdot(\mathbf S_N\times\frac{\mathbf q}{m_N})\\)
 
-## 19. 当前已经完成的研究内容与尚未完成的内容
+|   |
+| - |
 
-### 19.1 已归档的 AFH 电荷响应结果
+自旋与动量耦合
 
-PR #51 中的七同位素 AFH 电荷响应审计已经归档：
+|   |
+| - |
 
-- 七种氙同位素；
-- 每种 2,401 个响应节点；
-- 总计 16,807 个节点；
-- AFH v6.0 原始等标量归一化和 factor-four 映射；
-- 存储多极振幅的逐点重构；
-- Xe-131 rank-2 对 \(M\) 电荷响应的贡献；
-- 同位素间有限动量响应差异。
+\\(\mathcal O\_{10}\\)
 
-已有记录中的最大多极重构相对残差约为
+|   |
+| - |
 
-\[
-2.2204\times10^{-16}.
-\]
+\\(i\mathbf S_N\cdot\frac{\mathbf q}{m_N}\\)
 
-这个残差说明归档多极振幅的代数重构闭合，不是独立核结构模型之间的比较。
+|   |
+| - |
 
-七同位素 AFH archive 覆盖 Xe-128、Xe-129、Xe-130、Xe-131、Xe-132、Xe-134、Xe-136。Xe-124 和 Xe-126 没有本研究所用的 AFH v6.0 default-density matrix，不能把它们当作已计算的 AFH 同位素。
+核子自旋－动量耦合
 
-### 19.2 已完成与未完成项目的边界
+|   |
+| - |
 
-| 研究项目 | 状态 | 当前可以说什么 |
-|---|---|---|
-| AFH 七同位素 \(M\) 响应网格 | 已归档 | 七种同位素的电荷响应数据可复现 |
-| AFH factor-four 和零动量归一化 | 已归档 | 物理等核子耦合响应满足 \(A^2\) |
-| AFH 多极重构闭合 | 已归档 | 内部代数重构通过 |
-| Xe-131 rank-2 \(M\) 多极 | 已归档 | 它属于 \(M\) 电荷响应，不是 SD 或 \(\Phi''\) |
-| flavor-universal 零动量电荷 | 解析匹配 | \(g_p=g_n=3g_{Vq}\) |
-| flavor-universal \(F_1/F_2\) 有限 \(t\) | 未完成 | 需要固定输入和 flavor 权重 |
-| 三体 \(\Gamma_3^\mu\) 全能区收敛 | 未完成 | 历史代表性诊断不能代替全区收敛 |
-| 点核 ppm 结果独立复现 | 未完成 | 历史报告值待恢复原始输入和脚本 |
-| Xe-131 \(\Phi''\) 响应 | 未完成 | 优先数值工作 |
-| Xe-131 \(M\Phi''\) 干涉 | 未完成 | 与 \(\Phi''\) 同步计算 |
-| \(\Sigma'\)、\(\Sigma''\)、\(\Delta\) | 未完成 | 由完整流匹配决定 |
-| VV 两核子流 | 未完成/后续 | 由手征计数和精度预算决定 |
-| 完整三体 \(L_{\mu\nu}W_A^{\mu\nu}\) | 未完成 | 尚不能宣称完整核流已验证 |
-| 天然氙完整三体 halo-folded rate | 未完成 | 需在核流匹配完成后进行 |
+\\(\mathcal O\_{11}\\)
 
-### 19.3 已准备的 Xe-131 原生 \(\Phi''\) 与 \(M\Phi''\) 响应导出
+|   |
+| - |
 
-在本次 PR 的同一研究分支上，已经进一步准备了 Xe-131 的 AFH v6.0 原生响应导出流程。它调用官方 package 已有的响应接口，不自行重写角动量代数：
+\\(i\mathbf S\_\chi\cdot\frac{\mathbf q}{m_N}\\)
 
-| AFH 响应索引 | package 内算符 | 输出 |
-|---:|---|---|
-| 1 | MJ | \(W_M^{00}\) |
-| 4 | PhiPPJ | \(W_{\Phi''}^{00}\) |
-| 7 | MJ--PhiPPJ | \(W_{M\Phi''}^{00}\) |
+|   |
+| - |
 
-准备的文件为：
+暗物质自旋－动量耦合
 
-- research/afh_default_density_xe131/run_afh_phi_response_xe131.wls：原生 Wolfram 导出；
-- research/afh_default_density_xe131/validate_afh_phi_response.py：输入来源、网格、归一化、响应矩阵和输出指纹验证；
-- research/afh_default_density_xe131/tests/test_afh_phi_response.py：validator 的合成输入回归测试；
-- research/afh_default_density_xe131/audit/AFH_PHI_RESPONSE_XE131_NATIVE_PLAN.md：计算方案和验收边界。
+这只是列出一些有代表性的算符，并不是完整列表。
 
-这次导出使用 Xe-131、\(A=131\)、\(Z=54\)、\(J_A=3/2\)，采用 AFH 内置 default density matrix（67 entries），并在
 
-\[
-q_A=0,0.25,0.50,\ldots,600~\mathrm{MeV}
-\]
 
-的 2,401 个节点上输出三个响应。这里的 \(q_A\) 是原子核获得的空间动量，不是 \(q_\chi\)，也不是 Minkowski 不变量 \(t_A\)。
+完整的常用基底还包含其他自旋、动量和速度的组合。
 
-输入 provenance 已固定：
 
-- AFH/DMFormFactor v6.0 source SHA-256：dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372；
-- Xe-131 density-matrix CSV SHA-256：f656145ba2fb9da741b77faed4c01d0dc457c955fa340928b5dbf9cee9bc5d45。
 
-原始 package 响应统一定义为
+因此，暗物质与核子的相互作用可以写成
 
-\[
-R_X^{\rm raw}(q_A)
-=
-\frac{4\pi}{2J_A+1}W_{X,\rm AFH}^{00}(q_A),
-\qquad
-X\in\{M,\Phi'',M\Phi''\},
-\]
+\\[ \boxed{ \mathcal M\_{\chi N} = \sum_i c_i^N(q^2)\\, \langle\mathcal O_i\rangle } \\]
 
-物理等质子、等中子耦合响应则对三个分量统一乘一次 factor four：
+这里：
 
-\[
-R_X^{\rm phys}=4R_X^{\rm raw}.
-\]
+- \\(\mathcal O_i\\) 是非相对论算符；
+- \\(c_i^N\\) 是对应的 Wilson 系数；
+- \\(q^2\\) 表示动量转移依赖。
 
-干涉项必须保留其符号，不能取绝对值后再与对角项组合。validator 还会检查
+注意，系数不一定是常数。例如轻媒介子的传播子可以保留在 \\(c_i^N(q^2)\\) 中。
 
-\[
-|R_{M\Phi''}|^2\le R_M R_{\Phi''},
-\]
 
-以及对角响应非负、虚部残差、网格和 \(y_A\) 一致性、\(M\) 通道零动量 \(A^2/4\to A^2\) 归一化。Cauchy--Schwarz 检查是响应矩阵的一致性检查，不是独立核结构计算。
 
-**执行状态必须严格区分：** Wolfram 原生脚本已经准备，但尚未在 Windows/Wolfram 环境中执行；因此目前没有新的数值 \(W_{\Phi''}\) 或 \(W_{M\Phi''}\) 结果。也没有由这项导出得到完整三体截面或天然氙反冲谱。只有在原生运行完成、CSV 和 metadata 生成并通过 SHA-256 与 validator 验收后，才可以将这两个核响应标记为已计算。
+也就是说，非相对论展开不等于一定要把媒介子传播子近似为常数。
 
+## **四、AFH 是如何从核子算符走到原子核响应的？**
 
-因此，当前可以继续使用 \(W_M^{00}\) 作为领先阶基准，但不能宣称完整 VV 核流已经由 \(W_M^{00}\) 穷尽，也不能宣称其他响应已经被数值证明可以忽略。
+这是 AFH 工作最重要的部分之一。
 
-## 20. 讨论中判断的演化：哪些直觉需要被精确化
 
-### 20.1 从“点核振幅乘形状因子”到“同一个核矩阵元的两种组织方式”
 
-讨论最初的疑问是：为什么点核振幅乘 \(W_M\) 能与逐核子非相对论算符计算一致？如果只把两种公式并列，确实看不出它们之间的联系。真正的联系是两边都计算
+暗物质实际上并不是与一个自由核子散射，而是与一个包含 \\(A\\) 个核子的原子核散射。
 
-\[
-\left\langle A_f\left|
-\sum_i e^{i\mathbf q_A\cdot\mathbf r_i}
-\right|A_i\right\rangle.
-\]
 
-点核路线先把 \(q_A=0\) 时的相干耦合合并成 \(Ag_N\)，再用归一化 \(M\) 响应恢复有限核尺寸；逐核子路线则保留每个核子的坐标算符并直接计算核矩阵元。两种路线只有在相同单体密度算符、核态、动量转移和归一化下才等价。它们不是对任意核子流都能互换的两种写法。
 
-### 20.2 从一个 \(q\) 到 \(q_A,q_\chi,k_s,t_A,E_R\) 的变量分层
+AFH 采用单体流近似，将暗物质－原子核相互作用写成对所有核子的求和：
 
-普通弹性二体散射只有一个独立的三动量转移，容易让人把暗物质和核子的动量差用同一个符号表示。三体过程多出 \(k_s\)，于是
+\\[ \boxed{ \hat H\_{\chi A} = \sum\_{i=1}^{A} \sum\_{\tau=0,1} \sum_j c_j^\tau \mathcal O_j^{(i)} t_i^\tau } \\]
 
-\[
-q_A=-q_\chi-k_s.
-\]
+其中：
 
-这不是记号上的偏好，而是四动量守恒的直接结果。AFH 核响应必须使用核子/原子核实际获得的 \(q_A\)；暗物质内部传播子则必须使用相应内部线的四动量。把两者混为一个 \(q\)，会同时污染核响应插值、传播子分母和三体相空间。
+- \\(i\\) 表示第 \\(i\\) 个核子；
+- \\(j\\) 表示不同的非相对论算符；
+- \\(\tau=0,1\\) 表示同位旋的等标量和等矢量分量；
+- \\(t_i^\tau\\) 是对应的同位旋算符。
 
-### 20.3 从“AFH 有一组算符”到“当前模型只匹配实际产生的算符”
+然后计算核矩阵元：
 
-AFH 的 NR EFT 是一个允许的弹性算符空间，不是要求每个模型都把所有算符作为自由参数加入。当前 UV 拉格朗日量只有暗物质跃迁矢量顶点、暗物质标量辐射顶点和夸克矢量流。它首先匹配到核子矢量流，而不是任意轴矢量、赝标量或张量流。
+\\[ \langle J_A'| \hat H\_{\chi A} |J_A\rangle. \\]
 
-但核子矢量流并不等于只有一个 \(J_N^0\) 常数。有限 \(F_1/F_2\)、对流电流和磁化电流都可能产生次领先结构。正确的筛选方法是从 UV 流开始做匹配，再判断哪些 AFH 响应实际出现，而不是先选一套完整响应清单再寻找理由。
+通过多极展开和核结构计算，可以把核子层面的算符组织成有限种核响应函数。
 
-### 20.4 从“暗物质空间流很小”到“必须检查核子时间流和核内结构”
 
-此前的 \(\sum_iL^{ii}/L^{00}\) 诊断以及点状无自旋核质心电流的 ppm 检查，只分别约束暗物质侧空间流和核整体质心平动流。它们没有计算核内的 \(\boldsymbol\sigma_i\)、\(\mathbf l_i\) 或 \(\boldsymbol\sigma_i\cdot\mathbf l_i\) 结构。
 
-特别是，核子时间流中的自旋—轨道项可以与领先的 \(\mathcal T_3^0\) 收缩。因此不能用小的 \(\mathcal T_3^i\) 排除 \(\Phi''\)。同样，核内速度比晕速度大也不能直接推出轨道响应大；两种判断都必须经过完整张量收缩和核矩阵元计算。
+AFH 得到的主要核响应包括：
 
-### 20.5 从“矢量相互作用只对应 SI”到“\(M\) 是领先项，但不是未经检验的完整答案”
+\\[ \boxed{ M,\quad \Sigma',\quad \Sigma'',\quad \Delta,\quad \Phi'',\quad \widetilde\Phi'' } \\]
 
-在零动量和等质子、等中子耦合下，矢量电荷确实给出相干 \(M\) 响应，且 AFH v6.0 的 factor-four 约定必须处理一次。但有限 \(t_A\) 的核子 form factors 会带来 Dirac 和 Pauli 结构，核子空间流又含对流和磁化分量。当前 \(M\)-only 结果因此是有明确依据的领先阶基准，不是完整 VV 核流已经被证明的结论。
+它们分别反映不同的核结构：
 
-### 20.6 从“\(F_2\) 是否抵消”到“必须把文献定义和 flavor 权重逐项对齐”
+|   |
+| - |
 
-早期曾把 2015 年的紧凑三味表达式直接解释为 flavor-universal \(F_2^V(0)=0\)。随后对照 2017 年显式 flavor-separated 数值，得到中心值和 \(-0.552\)。两种写法不能在没有核对 \(\kappa_N\)、strange form factor 和 flavor-current 约定时静默地混用。因此本文保留这个文献约定核查点，并把显式 2017 数值作为暂定 benchmark，而不是把有限 \(t_A\) 的生产系数视为已经锁定。
+核响应
 
-### 20.7 从“Xe-131 的 rank-2 项可能是新响应”到“先区分多极阶数和响应类型”
+|   |
+| - |
 
-Xe-131 的 \(J_A=3/2\) 允许 \(M\) 电荷响应包含 \(J=2\) 多极。这个 rank-2 项仍属于 \(M\)，不等于 \(\Phi''\) 或 SD 响应。真正的 \(\Phi''\) 需要从自旋—轨道核算符构造，并与 \(M\) 的矩阵元形成独立的干涉项 \(W_{M\Phi''}\)。这也是为什么已有 \(M\) 多极重构通过不能代替新的 \(\Phi''\) 导出。
+主要物理内容
 
-## 21. 参考文献与仓库材料
+|   |
+| - |
 
-### 21.1 非相对论 EFT 与 AFH 核响应
+\\(M\\)
 
-1. A. L. Fitzpatrick, W. Haxton, E. Katz, N. Lubbers, Y. Xu, “The Effective Field Theory of Dark Matter Direct Detection,” *JCAP* 02 (2013) 004, [arXiv:1203.3542](https://arxiv.org/abs/1203.3542)。讨论非相对论算符基底、Galilean 不变性、核子算符嵌入和核响应。
-2. N. Anand, A. L. Fitzpatrick, W. C. Haxton, “Model-independent Analyses of Dark-Matter Particle Interactions,” *Phys. Rev. C* 89, 065501 (2014), [arXiv:1308.6288](https://arxiv.org/abs/1308.6288)。讨论 AFH 六种核响应、核多极展开、点核近似的局限和响应干涉。
-3. N. Anand, A. L. Fitzpatrick, W. C. Haxton, “Model-independent Analyses of Dark-Matter Particle Interactions,” [arXiv:1405.6690](https://arxiv.org/abs/1405.6690)。讨论弹性核响应、点核极限与核内速度、轨道角动量响应。
+|   |
+| - |
 
-### 21.2 夸克—核子矢量流匹配
+核子的相干质量或电荷密度响应
 
-4. M. Hoferichter, P. Klos, A. Schwenk, “Chiral power counting of one- and two-body currents in direct detection of dark matter,” *Phys. Lett. B* 746 (2015) 410–416, [arXiv:1503.04811](https://arxiv.org/abs/1503.04811), [DOI:10.1016/j.physletb.2015.05.041](https://doi.org/10.1016/j.physletb.2015.05.041)。给出 \(F_1/F_2\) flavor form factors、VV 弹性 NR 匹配和一体/两体流手征计数。
-5. F. Bishara, J. Brod, B. Grinstein, J. Zupan, “From quarks to nucleons in dark matter direct detection,” [arXiv:1707.06998](https://arxiv.org/abs/1707.06998)。附录 A 给出显式 flavor form factors，包括 \(F_1^{u,d,s}\) 与 \(F_2^{u,d,s}\) 的零动量输入；本记录对 flavor-universal Pauli 项的修正采用其显式数值分解。
+|   |
+| - |
 
-### 21.3 一般核结构因子与两体流
+\\(\Sigma'\\)
 
-6. M. Hoferichter, P. Klos, J. Menéndez, A. Schwenk, “Analysis strategies for general spin-independent WIMP-nucleus scattering,” *Phys. Rev. D* 94, 063505 (2016), [arXiv:1605.08043](https://arxiv.org/abs/1605.08043)。
-7. M. Hoferichter, P. Klos, J. Menéndez, A. Schwenk, “Nuclear structure factors for general spin-independent WIMP-nucleus scattering,” *Phys. Rev. D* 99, 055031 (2019), [arXiv:1812.05617](https://arxiv.org/abs/1812.05617)。
+|   |
+| - |
 
-### 21.4 仓库内对应材料
+横向自旋响应
 
-- research/afh_isotope_response_equivalence/README.md
-- research/afh_isotope_response_equivalence/docs/AFH_ISOTOPE_RESPONSE_EQUIVALENCE.md
-- research/afh_isotope_response_equivalence/results/
-- research/afh_default_density_xe131/output/minima.csv
-- research/docs/01_model_and_amplitude.md
-- research/docs/appendices/09A_three_body_kinematics_amplitude.md
-- v6/dmformfactor-V6.m（包括 OpRel[5]、OpRel[6] 的相对论算符定义）
+|   |
+| - |
+
+\\(\Sigma''\\)
+
+|   |
+| - |
+
+纵向自旋响应
+
+|   |
+| - |
+
+\\(\Delta\\)
+
+|   |
+| - |
+
+核子的轨道角动量响应
+
+|   |
+| - |
+
+\\(\Phi''\\)
+
+|   |
+| - |
+
+自旋－轨道相关响应
+
+|   |
+| - |
+
+\\(\widetilde\Phi''\\)
+
+|   |
+| - |
+
+与自旋－轨道结构相关的另一种响应
+
+因此，AFH 实际上完成了两个步骤：
+
+\\[ \boxed{ \text{暗物质－核子相互作用} \longrightarrow \text{非相对论算符} \longrightarrow \text{原子核响应函数} } \\]
+
+这使得粒子物理部分和核结构部分能够相对独立地处理。
+
+
+
+AFH 2014 年的文章正是通过这种方式，把一般的弹性 WIMP－核子相互作用嵌入原子核，并构造因子化的 WIMP 和核响应函数。
+
+APS Journals+1
+
+
+
+## **五、这和我们目前研究的三体散射有什么关系？**
+
+现在回到我们的过程：
+
+\\[ \boxed{ \chi_1+A\longrightarrow\chi_1+A+s } \\]
+
+这里必须区分两件事。
+
+### **1. 核子顶点仍然可以使用非相对论展开**
+
+假设媒介子 \\(V\\) 与原子核之间通过矢量流相互作用。
+
+
+
+那么振幅可以示意性地写成
+
+\\[ \boxed{ \mathcal M_3 = J_A^\mu(q_A) D\_{\mu\nu}(q_A) \mathcal T\_{\chi,s}^{\nu} (p\_\chi,p\_\chi',k_s) } \\]
+
+其中：
+
+- \\(J_A^\mu(q_A)\\)：原子核的矢量流；
+- \\(D\_{\mu\nu}(q_A)\\)：媒介子传播子；
+- \\(\mathcal T\_{\chi,s}^{\nu}\\)：暗物质发射标量后的有效流；
+- \\(k_s\\)：末态标量的四动量。
+
+注意，虽然暗物质发射了一个标量，但是原子核仍然只通过媒介子与暗物质发生相互作用。
+
+
+
+因此，原子核一侧的流仍然可以进行非相对论展开。
+
+
+
+例如矢量流的时间分量在非相对论极限下主要对应核子密度：
+
+\\[ J_N^0 \simeq 2m_N\\,\xi_N'^\dagger\xi_N. \\]
+
+把它嵌入原子核之后，就得到相干的核子密度响应。
+
+
+
+这正是 AFH 中 \\(M\\) 型核响应的主要来源。
+
+
+
+所以，对于我们的矢量相互作用，如果领先阶由核子矢量电荷主导，那么可以使用 AFH 的质量响应：
+
+\\[ W_M^{\tau\tau'}(q_A^2). \\]
+
+这里需要强调：使用的是核子的非相对论流及其对应的核响应，而不是直接假定整个三体振幅就是某个 AFH 算符。
+
+### **2. 但是，完整的三体振幅不能直接使用标准 AFH 算符基底**
+
+这是最重要的区别。
+
+
+
+对于普通弹性散射：
+
+\\[ \chi+N\longrightarrow\chi+N, \\]
+
+动量守恒为
+
+\\[ p\_\chi+p_N=p\_\chi'+p_N'. \\]
+
+只有一个独立的动量转移。
+
+
+
+但是我们的三体过程满足：
+
+\\[ p\_\chi+P_A = p\_\chi'+P_A'+k_s. \\]
+
+因此定义原子核动量转移：
+
+\\[ \boxed{ \mathbf q_A = \mathbf P_A'-\mathbf P_A = \mathbf p\_\chi-\mathbf p\_\chi'-\mathbf k_s } \\]
+
+这意味着：
+
+\\[ \boxed{ \mathbf q_A\neq \mathbf p\_\chi-\mathbf p\_\chi' } \\]
+
+一般情况下，两者相差末态标量的动量。
+
+
+
+这就是为什么我们之前专门区分：
+
+|   |
+| - |
+
+变量
+
+|   |
+| - |
+
+物理意义
+
+|   |
+| - |
+
+主要用途
+
+|   |
+| - |
+
+\\(\mathbf q_A\\)
+
+|   |
+| - |
+
+原子核初末态动量差
+
+|   |
+| - |
+
+AFH 核响应
+
+|   |
+| - |
+
+\\(\mathbf q\_\chi\\)
+
+|   |
+| - |
+
+暗物质初末态动量差
+
+|   |
+| - |
+
+暗物质运动学
+
+|   |
+| - |
+
+\\(\mathbf k_s\\)
+
+|   |
+| - |
+
+末态标量动量
+
+|   |
+| - |
+
+三体相空间、传播子
+
+|   |
+| - |
+
+\\(E_R\\)
+
+|   |
+| - |
+
+原子核反冲能量
+
+|   |
+| - |
+
+实验可观测量
+
+对于初始静止的原子核：
+
+\\[ \boxed{ q_A=\sqrt{2m_AE_R} } \\]
+
+这个关系在三体散射中依然成立，因为它来自原子核自身的非相对论反冲运动。
+
+
+
+但是不能因此把 \\(q_A\\) 替换成暗物质的初末态动量差。
+
+### **3. 三体过程中的&#x20;**\\(\mathbf v^\perp\\)**&#x20;也需要重新处理**
+
+AFH 标准定义：
+
+\\[ \mathbf v^\perp = \mathbf v+\frac{\mathbf q}{2\mu_N} \\]
+
+依赖于弹性 \\(2\to2\\) 散射的能量守恒。
+
+
+
+现在有一个额外的末态标量：
+
+\\[ E\_\chi+E_A = E\_\chi'+E_A'+\omega_s. \\]
+
+因此，原来用于推导
+
+\\[ \mathbf v^\perp\cdot\mathbf q=0 \\]
+
+的两体运动学关系不再直接成立。
+
+
+
+如果仍然使用标准的 AFH \\(\mathbf v^\perp\\)，就可能遗漏标量发射带来的运动学贡献。
+
+
+
+正确的做法是：
+
+- 保留 \\(k_s\\)；
+- 从完整三体振幅出发；
+- 对暗物质外线自旋结构进行非相对论约化；
+- 根据三体能量、动量守恒构造相应的运动学变量；
+- 不预先假设标准 AFH 算符基底已经完备。
+
+此外，我们的中间态 \\(\chi_2\\) 存在接近共振的可能性，因此内部传播子也必须保留相应的 Breit–Wigner 结构，不能简单地用低阶多项式替代。
+
+## **六、对我们 LZ 计算，究竟应该如何使用 AFH？**
+
+我建议采用下面的理论路线。
+
+## **我们的三体散射计算框架**
+
+**第一步：完整相对论三体振幅**
+
+
+
+\\(\mathcal M_3(\chi_1,A\to\chi_1,A,s)\\)
+
+
+
+保留 χ₂ 内部传播子、标量发射顶点和媒介子传播子
+
+**第二步：分离暗物质流与核子流**
+
+
+
+\\(\mathcal M_3=J_A^\mu D\_{\mu\nu}\mathcal T\_{\chi,s}^\nu\\)
+
+
+
+明确区分 qA、qχ 和 ks
+
+**第三步：核子流非相对论约化**
+
+
+
+\\(J_N^\mu\longrightarrow\text{核子非相对论算符}\\)
+
+
+
+利用 AFH 的核子流与核结构框架
+
+**第四步：AFH 核响应**
+
+
+
+\\(W_M(q_A^2),\ W\_{\Sigma'}(q_A^2),\ldots\\)
+
+
+
+根据实际耦合结构选取所需核响应
+
+**第五步：完整三体相空间积分**
+
+
+
+\\(\displaystyle \frac{d\sigma_3}{dE_R}\\)
+
+
+
+保留标量的三体相空间和能量守恒条件
+
+这里还有一个重要的技术区别：
+
+
+
+**AFH 的核响应函数可以继续作为核结构模块使用，但 AFH 原来的完整弹性散射截面公式不能不经推导就直接套到三体过程。**
+
+
+
+特别是我们的 \\(W_M\\) 响应：
+
+\\[ R_A(E_R) = \frac{4\pi}{2J_A+1} W_M^{00}(y_A), \\]
+
+其中
+
+\\[ y_A=\frac{b_A^2m_AE_R}{2} =\frac{b_A^2q_A^2}{4}, \\]
+
+仍然可以用于描述相应的核子密度响应，但三体振幅中的粒子物理部分必须重新计算。
+
+
+
+另外，AFH 的 \\(W_M(y_A)\\) 是有限动量转移下的核结构结果，不能再随意对整个核响应做 \\(q_A\to0\\) 的展开。对于氙核，这一点尤其重要。
+
+arXiv+2
+
+## **七、最终结论：二体和三体应该怎么区分？**
+
+|   |
+| - |
+
+比较项目
+
+|   |
+| - |
+
+AFH 标准二体散射
+
+|   |
+| - |
+
+我们的三体散射
+
+|   |
+| - |
+
+散射过程
+
+|   |
+| - |
+
+\\(\chi+N\to\chi+N\\)
+
+|   |
+| - |
+
+\\(\chi_1+A\to\chi_1+A+s\\)
+
+|   |
+| - |
+
+动量转移
+
+|   |
+| - |
+
+一个独立的两体转移量
+
+|   |
+| - |
+
+核反冲与暗物质动量差不同
+
+|   |
+| - |
+
+末态粒子
+
+|   |
+| - |
+
+暗物质、核子
+
+|   |
+| - |
+
+暗物质、原子核、标量
+
+|   |
+| - |
+
+\\(\mathbf v^\perp\\)
+
+|   |
+| - |
+
+标准弹性定义
+
+|   |
+| - |
+
+需要重新推导
+
+|   |
+| - |
+
+非相对论算符
+
+|   |
+| - |
+
+标准 AFH 基底
+
+|   |
+| - |
+
+可能需要包含 \\(k_s\\) 的扩展结构
+
+|   |
+| - |
+
+核响应
+
+|   |
+| - |
+
+AFH 核响应
+
+|   |
+| - |
+
+满足相同核流条件时可以沿用
+
+|   |
+| - |
+
+相空间
+
+|   |
+| - |
+
+二体相空间
+
+|   |
+| - |
+
+三体相空间
+
+**我认为我们目前最合理的选择是：保留完整的三体粒子物理振幅，只把 AFH 用于原子核结构部分。**
+
+
+
+这样既不会丢失标量发射和 \\(\chi_2\\) 共振带来的物理信息，也能充分利用 AFH 已经计算好的氙核响应函数。
+
+
+
+这也是我们需要坚持区分 \\(q_A\\)、\\(q\_\chi\\) 和 \\(k_s\\) 的根本原因。你这个问题实际上问到了 AFH 方法最核心的地方：**为什么一个在原子核层面直接写出的散射振幅，可以和先在单个核子层面构造非相对论有效相互作用、再把它嵌入原子核的计算方法得到相同结果？**
+
+
+
+关键不是两种方法碰巧给出了相同数值，而是：
+
+
+
+**在相同的单核子相互作用、相同的单体流近似和相同的核态下，它们计算的是同一个矩阵元，只是把计算分成了不同的步骤。**
+
+
+
+我先给出最重要的对应关系：
+
+\\[ \boxed{ \underbrace{\text{点状原子核的粒子物理振幅}}\_{\text{粒子物理}} \times \underbrace{\text{核密度响应}}\_{\text{核结构}} = \underbrace{\text{单核子相互作用嵌入原子核后的矩阵元}}\_{\text{AFH方法}} } \\]
+
+这个等式有适用条件，特别是对于我们目前考虑的矢量电荷主导的相互作用，它成立得非常直接。但它不是对任意非相对论算符都成立的普遍等式。
+
+
+
+下面我从最简单的一个核子开始，一直推导到 AFH 的 \\(W_M^{00}\\)，再解释它和我们的三体振幅如何对应。
+
+## **一、先不考虑 AFH：假设暗物质只与一个核子发生散射**
+
+考虑一个简单的自旋无关相互作用：
+
+\\[ \mathcal L\_{\rm int} = C\\,\bar\chi\gamma^\mu\chi\\, \bar N\gamma\_\mu N. \\]
+
+这里 \\(C\\) 可以包含耦合常数和媒介子传播子的相关因子。
+
+
+
+在非相对论极限下，矢量流的时间分量占主导：
+
+\\[ \bar u\_\chi'\gamma^0u\_\chi \simeq 2m\_\chi, \\]
+
+\\[ \bar u_N'\gamma^0u_N \simeq 2m_N. \\]
+
+因此振幅的领先阶是
+
+\\[ \mathcal M\_{\chi N} \simeq 4C m\_\chi m_N. \\]
+
+如果采用非相对论归一化，去掉相应的外线归一化因子，就得到
+
+\\[ \boxed{ \mathcal O_1=1\_\chi 1_N } \\]
+
+这就是 AFH 非相对论算符中的自旋无关算符。
+
+
+
+现在问题来了：
+
+
+
+如果靶标不是一个核子，而是一个包含 \\(A\\) 个核子的原子核，该怎么办？
+
+
+
+答案就是：把单核子算符作用到原子核的每一个核子上，然后求和。
+
+\\[ \boxed{ \hat{\mathcal O}\_A = c_1\sum\_{i=1}^{A} e^{i\mathbf q_A\cdot\mathbf r_i} } \\]
+
+这里：
+
+- \\(c_1\\) 是单核子的有效耦合；
+- \\(\mathbf r_i\\) 是第 \\(i\\) 个核子相对于原子核质心的坐标；
+- \\(\mathbf q_A\\) 是原子核获得的动量转移。
+
+注意这个指数因子是非常关键的。
+
+
+
+它表示暗物质把动量 \\(\mathbf q_A\\) 传递给原子核时，究竟是由哪个位置的核子参与相互作用。
+
+
+
+因此，原子核的散射矩阵元是
+
+\\[ \boxed{ \mathcal M_A = c_1 \left\langle A_f\left| \sum\_{i=1}^{A} e^{i\mathbf q_A\cdot\mathbf r_i} \right|A_i\right\rangle } \\]
+
+这就是从单核子相互作用走到原子核相互作用的最基本公式。
+
+
+
+它还没有使用 AFH 的任何特殊技巧。
+
+## **二、先把原子核看成一个点：为什么会得到&#x20;**\\(A^2\\)**？**
+
+假设原子核有 \\(A\\) 个核子，并且暗物质对质子和中子的耦合完全相同。
+
+
+
+如果动量转移足够小，使得
+
+\\[ |\mathbf q_A\cdot\mathbf r_i|\ll1, \\]
+
+那么可以展开：
+
+\\[ e^{i\mathbf q_A\cdot\mathbf r_i} \simeq 1. \\]
+
+因此：
+
+\\[ \hat{\mathcal O}\_A \simeq c_1\sum\_{i=1}^{A}1 =Ac_1. \\]
+
+原子核散射振幅：
+
+\\[ \boxed{ \mathcal M_A= A\mathcal M\_{\chi N} } \\]
+
+散射概率正比于振幅平方：
+
+\\[ \boxed{ |\mathcal M_A|^2 =A^2|\mathcal M\_{\chi N}|^2 } \\]
+
+这就是自旋无关散射中的相干增强（coherent enhancement）。
+
+
+
+注意，这里不是把 \\(A\\) 个核子的散射截面直接相加：
+
+\\[ \sigma_A\neq A\sigma_N. \\]
+
+而是先将所有核子的散射振幅相加，再平方：
+
+\\[ \left|\sum\_{i=1}^A\mathcal M_i\right|^2. \\]
+
+这两者的区别非常重要。
+
+**两种不同的求和方式**
+
+相干散射
+\\[ \left|\sum_i\mathcal M_i\right|^2 \\]
+
+# \\(A^2\\)
+
+振幅相加后平方
+
+非相干散射
+
+\\[ \sum_i|\mathcal M_i|^2 \\]
+
+# \\(A\\)
+
+概率直接相加
+
+对于长波长、相同耦合的核子密度相互作用，前者是正确的领先阶描述。
+
+因此，当我们把原子核近似成一个点状粒子时，实际上已经把所有核子的相干贡献包含进了原子核的有效耦合：
+
+\\[ g_A=Ag_N. \\]
+
+这就是点状原子核振幅中出现 \\(A\\) 的原因。
+
+
+
+但是，这个近似有一个问题：它假设所有核子都处于同一个相位。
+
+
+
+实际并非如此。
+
+## **三、如果动量转移不够小，怎么办？**
+
+现在恢复之前忽略的指数因子：
+
+\\[ \mathcal M_A = c_1 \left\langle A\left| \sum\_{i=1}^{A} e^{i\mathbf q_A\cdot\mathbf r_i} \right|A\right\rangle. \\]
+
+把指数展开：
+
+\\[ e^{i\mathbf q_A\cdot\mathbf r_i} = 1+i\mathbf q_A\cdot\mathbf r_i -\frac{1}{2} (\mathbf q_A\cdot\mathbf r_i)^2+\cdots. \\]
+
+你可以看到：
+
+- 不同核子的位置 \\(\mathbf r_i\\) 不一样；
+- 不同位置对应不同的散射相位；
+- 核子之间的振幅不再完全同相；
+- 相干增强会随着动量转移增大而受到抑制。
+
+因此，我们定义一个原子核形状因子：
+
+\\[ \boxed{ F_A(\mathbf q_A) = \frac{1}{A} \left\langle A\left| \sum\_{i=1}^{A} e^{i\mathbf q_A\cdot\mathbf r_i} \right|A\right\rangle } \\]
+
+这里假设所有核子的耦合相同。
+
+
+
+显然：
+
+\\[ F_A(0)=1. \\]
+
+于是：
+
+\\[ \boxed{ \mathcal M_A = Ac_1F_A(q_A) } \\]
+
+平方后：
+
+\\[ \boxed{ |\mathcal M_A|^2 = A^2|c_1|^2|F_A(q_A)|^2 } \\]
+
+这就是通常所说的有限核尺寸修正。
+
+[PPT - ###  Understanding Nuclear Sizes and Scattering: A Comprehensive Analysis  ### PowerPoint Presentation - ID:6629766](https://images.openai.com/static-rsc-4/g0LLS-_Ya7-Vhl06gYT4-D6-1NfozIQ9Xta0boiyTyS8dgTaTuTliOG25CK2eQvBMmUkQCqTOlTuzxQ3xvT5xKuRXQR92azWjhIn1KtJz7hJZ2T_AZdoEJVPimtLXDQORkWdekBE6097tyqjofnaUpK6gwAxSR0VkTic2MR8r6E?purpose=inline)
+
+[slideserve.com](https://www.slideserve.com/savannah-gomez/sizes?utm_source=chatgpt.com)
+
+这里需要注意：
+
+
+
+\\(F_A(q)\\) 不是额外引入的一种新相互作用，而是原子核内部核子空间分布造成的结果。
+
+
+
+换句话说：
+
+
+
+**点状原子核近似忽略了核子的空间分布，而核响应函数恰好把这个空间分布重新放回计算中。**
+
+
+
+但是，AFH 的 \\(W_M\\) 比通常简单使用的一个球形核密度形状因子更一般。
+
+## **四、AFH 是怎样把这个形状因子变成&#x20;**\\(W_M^{00}\\)**&#x20;的？**
+
+这一步是整个问题的关键。
+
+
+
+我们刚才得到：
+
+\\[ \hat{\mathcal O}\_A(\mathbf q_A) = \sum\_{i=1}^{A} e^{i\mathbf q_A\cdot\mathbf r_i}. \\]
+
+直接计算这个指数算符的原子核矩阵元并不方便。
+
+
+
+AFH 使用球谐函数和球贝塞尔函数进行多极展开：
+
+\\[ e^{i\mathbf q\cdot\mathbf r} = 4\pi\sum\_{JM} i^J j_J(qr) Y\_{JM}^{\*}(\hat{\mathbf q}) Y\_{JM}(\hat{\mathbf r}). \\]
+
+于是定义原子核的质量密度多极算符：
+
+\\[ \boxed{ M\_{JM;\tau}(q) = \sum\_{i=1}^{A} j_J(qr_i) Y\_{JM}(\hat{\mathbf r}\_i) t^\tau(i) } \\]
+
+其中：
+
+- \\(j_J(qr_i)\\)：球贝塞尔函数；
+- \\(Y\_{JM}\\)：球谐函数；
+- \\(t^\tau\\)：核子的同位旋算符；
+- \\(\tau=0\\)：等标量通道；
+- \\(\tau=1\\)：等矢量通道。
+
+在 AFH 常用约定下：
+
+\\[ t^0=1,\qquad t^1=\tau_3. \\]
+
+现在就可以定义核响应：
+
+\\[ \boxed{ W_M^{\tau\tau'}(y_A) = \sum\_{J=0,2,\ldots} \langle J_A\\|M\_{J;\tau}(q_A)\\|J_A\rangle \langle J_A\\|M\_{J;\tau'}(q_A)\\|J_A\rangle^\* } \\]
+
+这里的多极求和是针对弹性核态、具有相应宇称的质量密度响应。
+
+
+
+这就是 AFH 的 \\(W_M\\) 的物理来源。
+
+
+
+因此，你给出的：
+
+\\[ \boxed{ R_A(E_R) = \frac{4\pi}{2J_A+1} W_M^{00}(y_A) } \\]
+
+实际上就是把原子核的等标量质量密度矩阵元平方，并进行初始核自旋平均、末态自旋求和之后得到的响应。
+
+
+
+其中：
+
+\\[ y_A=\left(\frac{q_Ab_A}{2}\right)^2 =\frac{b_A^2m_AE_R}{2}. \\]
+
+### **这个公式到底包含什么？**
+
+我们可以逐项拆开：
+
+|   |
+| - |
+
+物理效应
+
+|   |
+| - |
+
+是否包含在 \\(R_A\\) 中
+
+|   |
+| - |
+
+具体表现
+
+|   |
+| - |
+
+核子相干增强
+
+|   |
+| - |
+
+
+
+包含
+
+
+
+|   |
+| - |
+
+长波极限下 \\(A^2\\)
+
+|   |
+| - |
+
+有限核尺寸
+
+|   |
+| - |
+
+
+
+包含
+
+
+
+|   |
+| - |
+
+不同核子位置导致相位差
+
+|   |
+| - |
+
+核子空间分布
+
+|   |
+| - |
+
+
+
+包含
+
+
+
+|   |
+| - |
+
+核子密度及其径向分布
+
+|   |
+| - |
+
+核多极结构
+
+|   |
+| - |
+
+
+
+包含
+
+
+
+|   |
+| - |
+
+\\(J=0,2,\ldots\\) 的贡献
+
+|   |
+| - |
+
+核自旋平均
+
+|   |
+| - |
+
+
+
+包含
+
+
+
+|   |
+| - |
+
+\\(2J_A+1\\) 的归一化
+
+|   |
+| - |
+
+壳模型核结构
+
+|   |
+| - |
+
+
+
+包含
+
+
+
+|   |
+| - |
+
+取决于所采用的核波函数和单体密度矩阵
+
+|   |
+| - |
+
+暗物质传播子
+
+|   |
+| - |
+
+
+
+不包含
+
+
+
+|   |
+| - |
+
+需要在粒子物理振幅中计算
+
+|   |
+| - |
+
+\\(\chi_2\\) 共振
+
+|   |
+| - |
+
+
+
+不包含
+
+
+
+|   |
+| - |
+
+需要单独计算 Breit–Wigner 传播子
+
+|   |
+| - |
+
+标量发射相空间
+
+|   |
+| - |
+
+
+
+不包含
+
+
+
+|   |
+| - |
+
+属于三体运动学
+
+|   |
+| - |
+
+暗物质速度分布
+
+|   |
+| - |
+
+
+
+不包含
+
+
+
+|   |
+| - |
+
+属于晕模型积分
+
+这里还有一个重要的细节：
+
+
+
+\\(W_M^{00}\\) 是核子单体质量密度算符对应的响应。在 AFH 默认的单体流处理下，它不会自动包含所有可能的双核子流、介子交换流等多体电流修正。
+
+### **一个非常有用的极限检查**
+
+在零动量转移时：
+
+\\[ q_A\rightarrow0. \\]
+
+因为：
+
+\\[ j_0(0)=1,\qquad j\_{J>0}(0)=0, \\]
+
+只剩下 \\(J=0\\) 项。
+
+
+
+在 \\(t^0=1\\) 的等标量约定下：
+
+\\[ M\_{00;0}(0) = \frac{A}{\sqrt{4\pi}}. \\]
+
+经过约化矩阵元和自旋平均，可以得到：
+
+\\[ \boxed{ R_A(0)=A^2 } \\]
+
+所以：
+
+\\[ \boxed{ R_A(q_A) = A^2 F_M^2(q_A) } \\]
+
+这里定义了一个归一化的有效质量响应形状因子：
+
+\\[ F_M^2(q_A) \equiv\frac{R_A(q_A)}{A^2}. \\]
+
+对于自旋为零的原子核，这可以直接理解为普通的质量密度形状因子平方。对于具有非零自旋的核，AFH 的多极求和还可能包含高阶偶数多极贡献，因此不一定等于简单的单一球形形状因子。
+
+## **五、现在看到了吗？两种计算方法实际上是同一个矩阵元**
+
+我们把刚才的两种方法放在一起。
+
+**方法 A：点状原子核振幅乘有限尺寸修正**
+
+\\[ \mathcal M\_{\rm pt}=A\mathcal M\_{\chi N}^{(1)} \\]
+
+\\[ \overline{|\mathcal M_A|^2} = \overline{|\mathcal M\_{\rm pt}|^2} F_M^2(q_A) \\]
+
+**方法 B：AFH 单核子非相对论算符嵌入原子核**
+
+\\[ \hat{\mathcal O}\_1 \longrightarrow \sum\_{i=1}^{A} e^{i\mathbf q_A\cdot\mathbf r_i} \\]
+
+\\[ \overline{|\mathcal M_A|^2} \propto \frac{4\pi}{2J_A+1}W_M^{00}(y_A) \\]
+
+相同物理结果
+
+\\[ \boxed{ \overline{|\mathcal M_A|^2} = \overline{|\mathcal M\_{\rm pt}|^2} \frac{R_A(q_A)}{R_A(0)} } \\]
+
+这里假设点状振幅已经包含了零动量转移时的完整相干核子耦合。
+
+所以：
+
+- 方法 A：先把核子相干求和近似为一个整体，再恢复有限核尺寸。
+- 方法 B：先保留每一个核子的算符，再通过核波函数计算整个原子核的矩阵元。
+
+数学上：
+
+\\[ \boxed{ \left| \left\langle A\left| \sum_i e^{i\mathbf q_A\cdot\mathbf r_i} \right|A\right\rangle \right|^2 } \\]
+
+无论你采用哪一种方法，最终计算的都是同一个量。
+
+
+
+AFH 做的是把这个量组织成适合一般相互作用使用的核响应函数。
+
+
+
+这也是 AFH 文章强调的粒子物理响应和核结构响应因子化的来源。
+
+arXiv+1
+
+
+
+## **六、但是，为什么 AFH 还需要那么多其他核响应？**
+
+你可能会继续问：
+
+
+
+既然一个核响应函数就可以处理有限核尺寸，为什么 AFH 还要引入
+
+\\[ \Sigma',\quad \Sigma'',\quad \Delta,\quad \Phi'',\quad \widetilde\Phi''? \\]
+
+原因是刚才我们选择的相互作用非常特殊：
+
+\\[ \mathcal O_1=1\_\chi1_N. \\]
+
+它只探测核子的密度。
+
+
+
+但考虑另一个相互作用：
+
+\\[ \mathcal O_4 = \mathbf S\_\chi\cdot\mathbf S_N. \\]
+
+此时核子算符变成：
+
+\\[ \hat{\mathcal O}\_{4,A} = \sum_i \mathbf S\_\chi\cdot\mathbf S_N^{(i)} e^{i\mathbf q_A\cdot\mathbf r_i}. \\]
+
+它探测的就不是核子密度，而是核子自旋分布。
+
+
+
+因此需要：
+
+\\[ W\_{\Sigma'}(q_A),\qquad W\_{\Sigma''}(q_A). \\]
+
+再例如：
+
+\\[ \mathcal O_3 = i\mathbf S_N\cdot \left( \frac{\mathbf q}{m_N}\times\mathbf v^\perp \right). \\]
+
+把这个算符嵌入原子核时，核子内部的速度和轨道角动量也会参与相互作用，因此会出现与 \\(\Phi''\\)、\\(\Delta\\) 等有关的核结构。
+
+
+
+这就是为什么：
+
+
+
+**一个普通的有限尺寸形状因子不能替代 AFH 的全部核响应。**
+
+
+
+AFH 的真正贡献不仅仅是给传统的自旋无关和自旋相关散射增加形状因子，而是系统地考虑了不同非相对论相互作用在复合原子核内部产生的不同核算符。
+
+
+
+原文也明确指出，直接采用点状核近似可能丢失这些复合核算符的贡献。
+
+arXiv+1
+
+
+
+## **七、回到我们的 LZ 三体散射：为什么依然可以使用&#x20;**\\(W_M^{00}\\)**？**
+
+现在最重要的是把以上推导放回我们的模型。
+
+
+
+我们研究的过程：
+
+\\[ \chi_1+A\rightarrow\chi_1+A+s. \\]
+
+假设媒介子 \\(V\\) 与核子通过矢量流耦合，暗物质在散射过程中辐射标量 \\(s\\)。
+
+
+
+完整振幅可以写成：
+
+\\[ \boxed{ \mathcal M_3 = \mathcal T\_{\chi,s}^{\mu} D\_{\mu\nu}(q_A) J_A^\nu(q_A) } \\]
+
+这里：
+
+\\[ J_A^\nu(q_A) = \langle A'|J_A^\nu(q_A)|A\rangle. \\]
+
+注意，这里我们可以把整个三体振幅分成两部分：
+
+\\[ \underbrace{ \mathcal T\_{\chi,s}^{\mu} D\_{\mu\nu}(q_A) }\_{\text{暗物质与标量的粒子物理部分}} \qquad \underbrace{ J_A^\nu(q_A) }\_{\text{原子核部分}}. \\]
+
+对于领先阶的矢量电荷相互作用：
+
+\\[ J_A^0(q_A) \simeq 2m_N \left\langle A'\left| \sum\_{i=1}^{A}g\_{N_i} e^{i\mathbf q_A\cdot\mathbf r_i} \right|A\right\rangle. \\]
+
+于是：
+
+\\[ \mathcal M_3 \simeq \mathcal K_3 \left\langle A'\left| \sum\_{i=1}^{A}g\_{N_i} e^{i\mathbf q_A\cdot\mathbf r_i} \right|A\right\rangle, \\]
+
+其中 \\(\mathcal K_3\\) 收集暗物质流、标量发射顶点、媒介子传播子及相关运动学因子。
+
+
+
+这时候就和前面的 AFH 推导完全接上了！
+
+
+
+因此：
+
+\\[ \boxed{ \overline{|\mathcal M_3|^2} \propto |\mathcal K_3|^2 R_A(E_R) } \\]
+
+这里暂时假设纯等标量耦合，并省略了与振幅归一化有关的常数。
+
+
+
+而三体散射的特殊信息仍然全部留在：
+
+\\[ \mathcal K_3 = \mathcal K_3(q_A,q\_\chi,k_s). \\]
+
+这意味着：
+
+- \\(\chi_2\\) 传播子的 Breit–Wigner 共振结构仍然保留；
+- 标量 \\(s\\) 的动量和质量仍然保留；
+- 三体相空间仍然需要完整积分；
+- 原子核只通过 \\(q_A\\) 对应的核响应进入。
+
+这正是我们目前计算框架能够成立的理论基础。
+
+### **特别注意：**\\(R_A\\)**&#x20;不能重复乘上相干增强**
+
+如果你的点状原子核振幅已经使用了：
+
+\\[ g_A=Ag_N, \\]
+
+那么它已经包含了零动量转移时的 \\(A\\) 倍振幅。
+
+
+
+这时正确的有限尺寸修正是：
+
+\\[ \boxed{ |\mathcal M_3|^2 = |\mathcal M\_{3,\rm pt}|^2 \frac{R_A(q_A)}{R_A(0)} } \\]
+
+而不是直接再乘一个未经归一化的 \\(R_A(q_A)\\)。
+
+
+
+否则会重复计算 \\(A^2\\)。
+
+
+
+反过来，如果你的粒子物理振幅只使用了单核子的耦合 \\(g_N\\)，还没有包含核子相干求和，那么就应该使用完整的 \\(R_A(q_A)\\)，并保持 AFH 的归一化约定一致。
+
+
+
+这两种计算方法的数值比较，必须先确认这一点。
+
+## **八、对我们目前的计算，我建议做一个严格的等价性验证**
+
+我们可以直接做一个不涉及暗物质速度积分、不涉及标量相空间的测试。
+
+
+
+只验证原子核部分。
+
+## **AFH 核响应与点状核振幅等价性测试**
+
+1. **构造单核子振幅**
+
+   取纯矢量电荷相互作用，求出单核子领先阶非相对论振幅。
+2. **点状原子核计算**
+
+   将单核子耦合替换为等标量核耦合：
+
+   \\[ g_A=Ag_N. \\]
+3. **AFH 核响应计算**
+
+   使用 Xe-131 的核结构输入计算：
+
+   \\[ R_A(q_A)= \frac{4\pi}{2J_A+1}W_M^{00}(y_A). \\]
+4. **逐点比较**
+
+   比较：
+
+   \\[ \frac{|\mathcal M_A(q_A)|^2} {|\mathcal M_A(0)|^2} \quad\text{与}\quad \frac{R_A(q_A)}{R_A(0)}. \\]
+5. **零动量极限检查**
+
+   验证：
+
+   \\[ R_A(0)=A^2 \\]
+
+   （纯等标量、\\(t^0=1\\) 的约定）。
+
+如果两者一致，就证明了我们对 \\(M\\) 响应的使用是正确的。
+
+
+
+然后再把同一个核响应嵌入完整的三体振幅中。
+
+## **九、最值得记住的三个公式**
+
+我把整个理论逻辑压缩成三个公式：
+
+
+
+**第一：微观核子相互作用。**
+
+\\[ \boxed{ \mathcal O_1 \longrightarrow \sum\_{i=1}^{A}e^{i\mathbf q_A\cdot\mathbf r_i} } \\]
+
+这一步是从单核子到复合原子核。
+
+
+
+**第二：核响应函数。**
+
+\\[ \boxed{ R_A(q_A) = \frac{4\pi}{2J_A+1}W_M^{00}(y_A) } \\]
+
+这一步是把原子核矩阵元平方、自旋平均并组织成 AFH 的核响应。
+
+
+
+**第三：我们的三体振幅。**
+
+\\[ \boxed{ \overline{|\mathcal M_3|^2} \propto |\mathcal K_3(q_A,q\_\chi,k_s)|^2 R_A(q_A) } \\]
+
+这一步是把三体粒子物理与核结构分离。
+
+
+
+**我的判断是：我们目前采用的 AFH&#x20;**\\(W_M^{00}\\)**&#x20;核响应路线，在矢量电荷主导、单体流近似下是有明确理论依据的。** 但要证明当前代码实现也完全正确，还需要检查相干因子、响应函数归一化和三体动量转移是否一致。
+
+
+
+参考原文：
+
+- [Anand, Fitzpatrick & Haxton, arXiv:1308.6288](https://arxiv.org/abs/1308.6288?utm_source=chatgpt.com)：第 2 节讲单核子非相对论展开，第 3 节讲如何嵌入原子核。
+- [Anand, Fitzpatrick & Haxton, arXiv:1405.6690](https://arxiv.org/abs/1405.6690?utm_source=chatgpt.com)：进一步讨论一般相互作用与六种独立核响应。
+
+这两个部分值得结合起来阅读，因为它们恰好解释了我们从粒子物理振幅走到氙核响应的全过程。什么情况下不能等价，另外我们的模型不需要考虑其他有效相互作用吗这个问题非常关键，因为它决定了我们是否可以放心地使用 AFH 的 \\(W_M^{00}\\)，还是必须重新构造一套适用于我们三体过程的核响应。
+
+
+
+我先给出结论：
+
+1. **点状原子核振幅乘以&#x20;**\\(W_M^{00}\\)**，并不总是等价于完整的非相对论有效理论计算。** 它只在一定的相互作用结构和近似条件下成立。
+2. 如果暗物质与核子的相互作用包含自旋、速度、动量等不同结构，那么一般需要 AFH 的其他核响应，而不能只使用 \\(W_M^{00}\\)。
+3. 对于我们目前的模型，不能因为存在三体末态标量 \\(s\\)，就认为必须引入全部 AFH 算符。是否需要其他算符，取决于**媒介子&#x20;**\\(V\\)**&#x20;与核子的耦合结构，以及非相对论约化后哪些核子流分量实际出现**。
+
+这里尤其要区分两个问题：
+
+- 三体过程是否需要新的暗物质运动学结构？
+- 原子核是否需要新的核响应？
+
+这两件事不是一回事。即使三体振幅非常复杂，原子核一侧仍然可能只需要 \\(M\\) 响应；反过来，即使暗物质散射过程是简单的二体过程，也可能同时需要多个核响应。
+
+## **一、什么情况下两种方法不再等价？**
+
+先明确我们讨论的两种方法。
+
+
+
+**方法 A：点状核近似加核响应**
+
+\\[ |\mathcal M_A|^2 = |\mathcal M\_{\mathrm{pt}}|^2 \frac{R_M(q_A)}{A^2}. \\]
+
+这里假设点状振幅已经包含 \\(A\\) 个核子的相干耦合。
+
+
+
+**方法 B：先做单核子非相对论展开，再计算核矩阵元**
+
+\\[ \mathcal M_A = \left\langle A'\left| \sum\_{i=1}^{A} \sum_j c_j^N\mathcal O_j^{(i)} \right|A\right\rangle. \\]
+
+两者等价的实质条件是：方法 A 的点状振幅和核响应，必须能够完整重构方法 B 中实际出现的核子算符矩阵元。
+
+
+
+以下几种情况会破坏这种简单的等价关系。
+
+## **情况 1：核子相互作用不再只是密度耦合**
+
+这是最重要的一种情况。
+
+
+
+我们之前讨论的是：
+
+\\[ \mathcal O_1=1\_\chi 1_N. \\]
+
+它对应核子数密度。
+
+
+
+在原子核中：
+
+\\[ \hat{\mathcal O}\_1 = \sum_i e^{i\mathbf q_A\cdot\mathbf r_i}. \\]
+
+所以对应 \\(M\\) 型核响应：
+
+\\[ W_M^{\tau\tau'}. \\]
+
+但是，如果微观相互作用是：
+
+\\[ \mathcal O_4 = \mathbf S\_\chi\cdot\mathbf S_N, \\]
+
+那么嵌入原子核后得到：
+
+\\[ \hat{\mathcal O}\_4 = \sum_i e^{i\mathbf q_A\cdot\mathbf r_i} \mathbf S\_\chi\cdot\mathbf S_N^{(i)}. \\]
+
+这时候，探测的已经不是核子密度，而是核子自旋分布。
+
+
+
+需要使用：
+
+\\[ W\_{\Sigma'},\qquad W\_{\Sigma''}. \\]
+
+如果仍然使用 \\(W_M\\)，就会遗漏自旋相关贡献。
+
+
+
+类似地：
+
+|   |
+| - |
+
+核子层面的 NR 算符
+
+|   |
+| - |
+
+对应的主要核响应
+
+|   |
+| - |
+
+\\(\mathcal O_1\\)
+
+|   |
+| - |
+
+\\(M\\)
+
+|   |
+| - |
+
+\\(\mathcal O_4\\)
+
+|   |
+| - |
+
+\\(\Sigma',\Sigma''\\)
+
+|   |
+| - |
+
+\\(\mathcal O_3\\)
+
+|   |
+| - |
+
+\\(\Phi'',\widetilde\Phi''\\) 等
+
+|   |
+| - |
+
+\\(\mathcal O_5,\mathcal O_8\\)
+
+|   |
+| - |
+
+\\(M,\Delta\\) 等
+
+|   |
+| - |
+
+\\(\mathcal O_6\\)
+
+|   |
+| - |
+
+\\(\Sigma''\\)
+
+|   |
+| - |
+
+\\(\mathcal O_9\\)
+
+|   |
+| - |
+
+\\(\Sigma',\Sigma''\\)
+
+这里列的是主要响应对应关系，完整的响应矩阵还包含不同算符之间的干涉项，不能简单地理解成每个算符只对应一个响应。
+
+
+
+这里需要结合我们模型的实际拉格朗日量来判断，而不能只根据 AFH 的一般理论来决定。
+
+
+
+我重新对照了我们 LZ 三体模型的相互作用结构。我们目前的主计算采用的是 **vector–vector benchmark**：
+
+\\[ \begin{aligned} \mathcal L\_{\rm int} ={}& g_1V^\mu\bar\chi_2\gamma\_\mu\chi_1 + g_2s\bar\chi_2\chi_1 +\mathrm{h.c.}\\\ &+ g\_{Vq}V^\mu\sum_q\bar q\gamma\_\mu q. \end{aligned} \\]
+
+在核子层面，我们采用：
+
+\\[ \boxed{ \mathcal L\_{VN} = g\_{VN}V\_\mu\bar N\gamma^\mu N, \qquad N=p,n } \\]
+
+其中当前 benchmark 采用：
+
+\\[ g\_{Vp}=g\_{Vn}=g\_{VN}=3g\_{Vq}. \\]
+
+这几个结构非常重要：
+
+- \\(V\\) 与核子通过矢量流相互作用；
+- \\(\chi_1,\chi_2\\) 通过矢量顶点与 \\(V\\) 相互作用；
+- 标量 \\(s\\) 通过暗物质内部的 \\(\chi_2\to\chi_1+s\\) 过程产生；
+- \\(s\\) 并没有直接耦合到核子的标量密度或核子自旋。
+
+因此，我们的三体过程虽然有一个标量末态，但核子侧并不是标量相互作用。
+
+
+
+**这是判断我们需不需要其他 AFH 核响应的第一条依据。**
+
+## **一、先看哪些情况会使&#x20;**\\(W_M\\)**&#x20;不够用**
+
+### **1. 出现核子自旋相互作用**
+
+假设核子侧不是矢量流，而是轴矢量流：
+
+\\[ J_N^\mu=\bar N\gamma^\mu\gamma^5N. \\]
+
+它的非相对论约化与矢量流不同。
+
+
+
+轴矢量流的空间分量在领先阶包含：
+
+\\[ \mathbf J_N^A \simeq 2m_N\boldsymbol\sigma_N. \\]
+
+于是原子核上的相互作用变成：
+
+\\[ \hat{\mathbf J}\_A^A \sim \sum_i \boldsymbol\sigma_i e^{i\mathbf q_A\cdot\mathbf r_i}. \\]
+
+这时探测的是核子的自旋分布，而不是核子数密度。
+
+
+
+必须考虑：
+
+\\[ W\_{\Sigma'}^{\tau\tau'}, \qquad W\_{\Sigma''}^{\tau\tau'}. \\]
+
+尤其对氙而言，这一点有实际意义。
+
+[4. Nuclear Spin & Moments — PHY303 Nuclear Physics](https://images.openai.com/static-rsc-4/PPwkmRdkSVgnHecvNXv8XgMUtWycvdzIuaAGRKpM9ia5PQGWRiDzhkUABPUupvlWu_UxFWyQUlP7SbUqMpMsR7pFNC-jMsaSMzqZKrm4sRoHFKWHiXEJJ23NDwgQfuyBUropzqi3NywXk7LeGw0bnT0_u2IzHCq4yQrsiHzxJH0?purpose=inline)
+
+[patrickstowell.github.io](https://patrickstowell.github.io/PHY303-Lectures-2024/unit4/phy303-unit4-parity-moments.html?utm_source=chatgpt.com)
+
+氙的主要天然同位素中：
+
+- \\(^{129}\mathrm{Xe}\\)：核自旋 \\(J=1/2\\)；
+- \\(^{131}\mathrm{Xe}\\)：核自旋 \\(J=3/2\\)。
+
+它们具有非零核自旋，因此可以产生自旋响应。
+
+
+
+但这不意味着我们的模型就必须使用自旋响应。是否使用取决于相互作用是否真的耦合到了核子自旋。
+
+### **2. 出现核子内部速度或轨道角动量相互作用**
+
+这是 AFH 相对于传统 SI/SD 处理特别重要的贡献。
+
+
+
+例如考虑：
+
+\\[ \mathcal O_8 = \mathbf S\_\chi\cdot\mathbf v^\perp. \\]
+
+在单个自由核子层面，它看起来只是暗物质自旋与相对速度的耦合。
+
+
+
+但把它嵌入原子核时，核子的速度不再只是原子核质心的速度。
+
+
+
+可以分解为：
+
+\\[ \mathbf v_N(i) = \mathbf V_A+\mathbf v_N^{\rm int}(i), \\]
+
+其中：
+
+- \\(\mathbf V_A\\)：原子核质心速度；
+- \\(\mathbf v_N^{\rm int}\\)：核子在原子核内部的运动速度。
+
+对于束缚核子：
+
+\\[ v_N^{\rm int}\sim 0.1-0.3 \\]
+
+是合理的典型量级。
+
+
+
+它远大于银河系暗物质的速度：
+
+\\[ v\_\chi\sim10^{-3}. \\]
+
+如果直接把整个原子核看成点粒子，就会把内部速度信息丢掉。
+
+
+
+AFH 证明，这类速度相关相互作用可以产生与核子轨道角动量有关的新响应，例如：
+
+\\[ W\_\Delta,\qquad W\_{\Phi''}. \\]
+
+因此，不能简单地认为所有相互作用都只需要一个 SI 形状因子。AFH 专门指出，点核近似对于一部分速度相关算符甚至会严重低估响应。
+
+arXiv+1
+
+
+
+### **3. 质子和中子的耦合不相同**
+
+假设：
+
+\\[ g_p\neq g_n. \\]
+
+这时即使相互作用仍然是最简单的核子数密度耦合，也不能只使用等标量响应 \\(W_M^{00}\\)。
+
+
+
+因为原子核的密度算符变成：
+
+\\[ \hat J_A^0 = g_p\sum\_{i\in p}e^{i\mathbf q_A\cdot\mathbf r_i} + g_n\sum\_{i\in n}e^{i\mathbf q_A\cdot\mathbf r_i}. \\]
+
+定义：
+
+\\[ g_0=\frac{g_p+g_n}{2}, \qquad g_1=\frac{g_p-g_n}{2}, \\]
+
+则：
+
+\\[ \hat J_A^0 = g_0\hat M_0+g_1\hat M_1. \\]
+
+平方之后：
+
+\\[ \boxed{ R_M = g_0^2W_M^{00} + 2g_0g_1W_M^{01} + g_1^2W_M^{11} } \\]
+
+这里采用 AFH 的等标量、等矢量归一化约定。
+
+
+
+所以，甚至同一个 \\(\mathcal O_1\\)，也可能需要多个核响应分量。
+
+### **4. 出现不同的核子 Lorentz 结构**
+
+不同的相对论相互作用，在非相对论极限下会生成不同的核子算符。
+
+
+
+例如：
+
+|   || - |
+
+相对论核子流
+
+|   |
+| - |
+
+非相对论领先结构
+
+|   |
+| - |
+
+主要核响应
+
+|   |
+| - |
+
+\\(\bar N N\\)
+
+|   |
+| - |
+
+核子密度
+
+|   |
+| - |
+
+\\(M\\)
+
+|   |
+| - |
+
+\\(\bar N\gamma^\mu N\\)
+
+|   |
+| - |
+
+矢量电荷密度
+
+|   |
+| - |
+
+\\(M\\)
+
+|   |
+| - |
+
+\\(\bar N\gamma^\mu\gamma^5N\\)
+
+|   |
+| - |
+
+核子自旋
+
+|   |
+| - |
+
+\\(\Sigma',\Sigma''\\)
+
+|   |
+| - |
+
+\\(\bar N i\gamma^5N\\)
+
+|   |
+| - |
+
+\\(\mathbf S_N\cdot\mathbf q_A/m_N\\)
+
+|   |
+| - |
+
+自旋－动量响应
+
+|   |
+| - |
+
+含核子导数的流
+
+|   |
+| - |
+
+核子内部速度、轨道结构
+
+|   |
+| - |
+
+\\(\Delta,\Phi''\\) 等
+
+这张表描述的是主要领先结构，不是说每一种相对论流严格只产生一个 AFH 响应。
+
+## **二、现在具体判断我们的 vector–vector 模型**
+
+这里需要真正做一次非相对论约化。
+
+
+
+我们的完整振幅可以示意性地写成：
+
+\\[ \mathcal M_3 = \frac{g_1g_2g\_{VN}}{t-m_V^2} \mathcal T_3^\mu J\_{A,\mu}. \\]
+
+其中：
+
+\\[ \mathcal T_3^\mu \\]
+
+包含两张标量辐射图、两个 \\(\chi_2\\) 内部传播子以及它们的干涉；
+
+\\[ J_A^\mu = \langle A'| J_A^\mu |A\rangle \\]
+
+是原子核的矢量流。
+
+
+
+这里先把注意力放在核子流上。
+
+
+
+对于单个核子：
+
+\\[ J_N^\mu=\bar u_N(p_N')\gamma^\mu u_N(p_N). \\]
+
+非相对论展开后：
+
+
+
+**时间分量：**
+
+\\[ \boxed{ J_N^0 = 2m_N\\,\xi_N'^\dagger\xi_N +\mathcal O(v_N^2,q_A^2/m_N^2) } \\]
+
+它是核子数密度。
+
+
+
+**空间分量：**
+
+\\[ \boxed{ \mathbf J_N = \xi_N'^\dagger \left[ (\mathbf p_N'+\mathbf p_N) + i\boldsymbol\sigma_N\times\mathbf q_A \right]\xi_N +\cdots } \\]
+
+这里的符号取决于动量转移约定；关键是空间流包含两种结构：
+
+1. 核子的对流电流（convection current）；
+2. 核子的自旋磁化电流（magnetization current）。
+
+所以，完整的矢量流并不只有 \\(J_N^0\\)。
+
+
+
+代入原子核后：
+
+\\[ \mathcal M_3 = \frac{g_1g_2g\_{VN}}{t-m_V^2} \left( \mathcal T_3^0J_A^0 - \boldsymbol{\mathcal T}\_3\cdot\mathbf J_A \right). \\]
+
+现在就可以清楚地看到两种贡献。
+
+## **我们模型中的核响应分解**
+
+领先阶
+
+**时间分量 × 时间分量**
+
+\\[ \mathcal M_3^{(0)} \propto \mathcal T_3^0J_A^0 \\]
+
+核子矢量电荷密度，产生 \\(M\\) 响应。
+
+\\[ W_M^{00} \\]
+
+等标量、相干核响应
+
+需要检查的次领先项
+
+**空间分量 × 空间分量**
+
+\\[ \mathcal M_3^{(1)} \propto -\boldsymbol{\mathcal T}\_3\cdot\mathbf J_A \\]
+
+核子对流电流、磁化电流。
+
+
+
+需要对完整振幅进行匹配，可能引入轨道及相关核响应。
+
+这意味着：
+
+
+
+**我们的 vector–vector 模型在领先阶只需要&#x20;**\\(W_M^{00}\\)**，但完整的矢量流原则上并不只包含&#x20;**\\(W_M^{00}\\)**。**
+
+
+
+这一点比简单地说“矢量相互作用只对应 SI”更加准确。
+
+## **三、我们的模型究竟需要哪些 AFH 响应？**
+
+现在可以给出一个比较明确的判断。
+
+|   |
+| - |
+
+相互作用结构
+
+|   |
+| - |
+
+我们当前模型是否存在
+
+|   |
+| - |
+
+是否需要考虑
+
+|   |
+| - |
+
+核子矢量电荷 \\(J_N^0\\)
+
+|   |
+| - |
+
+
+
+存在
+
+
+
+|   |
+| - |
+
+必须，\\(W_M^{00}\\)
+
+|   |
+| - |
+
+核子轴矢量流
+
+|   |
+| - |
+
+
+
+不存在
+
+
+
+|   |
+| - |
+
+不需要引入独立的轴矢量自旋耦合
+
+|   |
+| - |
+
+核子赝标量流
+
+|   |
+| - |
+
+
+
+不存在
+
+
+
+|   |
+| - |
+
+不需要
+
+|   |
+| - |
+
+核子张量流
+
+|   |
+| - |
+
+
+
+不存在
+
+
+
+|   |
+| - |
+
+不需要
+
+|   |
+| - |
+
+质子－中子非普适耦合
+
+|   |
+| - |
+
+
+
+当前不存在
+
+
+
+|   |
+| - |
+
+当前只需等标量通道
+
+|   |
+| - |
+
+核子矢量空间流
+
+|   |
+| - |
+
+
+
+存在
+
+
+
+|   |
+| - |
+
+需要评估次领先阶贡献
+
+|   |
+| - |
+
+核子两体交换流
+
+|   |
+| - |
+
+
+
+当前未纳入
+
+
+
+|   |
+| - |
+
+基准计算不需要自动加入
+
+所以，我的建议不是把 AFH 的六种响应全部计算一遍，而是按照我们实际的相互作用逐阶匹配。
+
+### **1. 领先阶：只保留&#x20;**\\(W_M^{00}\\)
+
+我们的模型中：
+
+\\[ g\_{Vp}=g\_{Vn}. \\]
+
+所以矢量电荷是等标量的：
+
+\\[ J_A^0 \propto \sum\_{i=1}^{A} e^{i\mathbf q_A\cdot\mathbf r_i}. \\]
+
+它对应：
+
+\\[ \mathcal O_1=1\_\chi1_N. \\]
+
+因此：
+
+\\[ \boxed{ R_A(E_R) = \frac{4\pi}{2J_A+1} W_M^{00}(y_A) } \\]
+
+在这一阶，我们没有理由额外引入：
+
+\\[ W\_{\Sigma'},\quad W\_{\Sigma''},\quad W\_\Delta,\quad W\_{\Phi''}. \\]
+
+因为当前领先阶的核子相互作用没有对应的自旋、轨道或自旋－轨道耦合。
+
+### **2. 次领先阶：检查空间矢量流**
+
+这里我认为应该做一个额外的理论验证。
+
+
+
+定义：
+
+\\[ \epsilon\_{\rm spatial} = \frac{ |\boldsymbol{\mathcal T}\_3\cdot\mathbf J_A| }{ |\mathcal T_3^0J_A^0| }. \\]
+
+它直接衡量空间流相对于领先阶电荷响应的贡献。
+
+
+
+如果：
+
+\\[ \epsilon\_{\rm spatial}\ll1, \\]
+
+那么只使用 \\(W_M^{00}\\) 就是受控的领先阶近似。
+
+
+
+如果空间流贡献不可忽略，则必须将其进行多极展开，并根据实际匹配结果加入相应的 AFH 核响应。
+
+
+
+这里不能仅仅因为 \\(\mathbf J_N\\) 中有一个 \\(\boldsymbol\sigma_N\\)，就直接添加 \\(\Sigma'\\) 和 \\(\Sigma''\\)。必须先计算暗物质空间流与核子磁化流的收缩，再判断最终产生什么核算符。
+
+
+
+尤其是我们的暗物质流不是简单的弹性顶点：
+
+\\[ \bar u\_{\chi_1}'\gamma^\mu u\_{\chi_1}, \\]
+
+而是包含两个 \\(\chi_2\\) 传播子和标量辐射的完整结构：
+
+\\[ \mathcal T_3^\mu = \bar u\_{\chi_1}(p') \Gamma_3^\mu(p,p',k_s) u\_{\chi_1}(p). \\]
+
+因此，必须对完整的 \\(\Gamma_3^\mu\\) 做非相对论展开，而不是直接套用普通弹性散射的结果。
+
+
+
+还要注意：\\(\chi_2\\) 接近共振时，两个传播图及其干涉必须保留。不能只根据一个裸顶点的速度阶数判断整个振幅的修正大小。
+
+## **四、为什么三体过程不意味着需要更多核响应？**
+
+这是另外一个容易混淆的地方。
+
+
+
+AFH 的标准非相对论 EFT 是针对弹性：
+
+\\[ \chi+N\longrightarrow\chi+N \\]
+
+构造的。
+
+
+
+它使用：
+
+\\[ \mathbf v^\perp\cdot\mathbf q=0. \\]
+
+但是我们的过程是：
+
+\\[ \chi_1+A\longrightarrow\chi_1+A+s. \\]
+
+能量守恒多出了：
+
+\\[ \omega_s. \\]
+
+因此，不能直接使用标准二体运动学推导出来的全部 \\(\mathcal O_i\\)，尤其不能直接把标准的 \\(\mathbf v^\perp\\) 定义套入完整三体振幅。
+
+
+
+但是，这不意味着核响应也必须改变。
+
+
+
+原因是：
+
+\\[ \boxed{ \text{三体结构主要发生在暗物质流一侧，而不是自动改变核子流的 Lorentz 结构。} } \\]
+
+我们可以将振幅写成：
+
+\\[ \mathcal M_3 = \underbrace{ \mathcal T_3^\mu(q_A,q\_\chi,k_s) D\_{\mu\nu}(q_A) }\_{\text{三体粒子物理}} \underbrace{ J_A^\nu(q_A) }\_{\text{核结构}}. \\]
+
+只要核子流仍然由矢量电荷密度主导，核响应就仍然是：
+
+\\[ W_M^{00}(q_A). \\]
+
+因此：
+
+- 三体相空间需要重新计算；
+- \\(\chi_2\\) 的 Breit–Wigner 结构需要保留；
+- 标量的动量 \\(k_s\\) 需要保留；
+- 核子密度响应仍然可以使用 AFH 的 \\(W_M^{00}\\)。
+
+AFH 的因子化思想正是把粒子物理响应和核结构响应分开处理。
+
+arXiv+1
+
+
+
+## **五、还有一个需要特别区分的模型**
+
+我们之前的研究中还讨论过另一种 scalar–pseudoscalar 结构：
+
+\\[ \mathcal L\_{\phi N} = ig\_{\phi N}\phi \bar N\gamma^5N. \\]
+
+这个模型和目前的 vector–vector benchmark 不一样。
+
+
+
+因为：
+
+\\[ \bar u_N'\gamma^5u_N \propto \boldsymbol\sigma_N\cdot\mathbf q_A \\]
+
+（忽略整体归一化和相位约定）。
+
+
+
+它在领先阶就具有动量抑制的自旋结构。
+
+
+
+因此，这种模型不能继续简单使用：
+
+\\[ W_M^{00} \\]
+
+来描述全部核响应，而应该重新构造自旋－动量相关的核矩阵元。
+
+
+
+**尤其不能因为两个模型都存在标量粒子，就把它们的核响应混在一起。**
+
+
+
+这里的区别是：
+
+- 当前模型：\\(V\\) 与核子矢量流耦合，\\(s\\) 在暗物质线上辐射。
+- 另一种模型：交换媒介子 \\(\phi\\) 直接通过赝标量流与核子耦合。
+
+它们是两种不同的核子相互作用。
+
+## **六、我建议我们对当前模型采用什么计算标准？**
+
+我建议明确分成三个层次。
+
+**Level 0：当前主线计算**
+
+必须完成
+
+\\[ \mathcal M_3^{(0)} = \mathcal K_3^{(0)} \times \sqrt{R_A(E_R)} \\]
+
+- 完整保留两张标量辐射图及干涉。
+- 保留 \\(\chi_2\\) 的共振传播子。
+- 使用 \\(q_A\\) 计算 AFH \\(W_M^{00}\\)。
+-
+
+**保留三体相空间。&#xA;**
+=================
+
+**Level 1：矢量流次领先阶审计**
+
+建议完成
+
+\\[\
+\mathcal M_3^{(1)}
+
+-\mathcal K_3^i J_A^i\
+\\]
+
+1. 展开完整暗物质流的空间分量。
+2. 计算核子的对流电流与磁化电流。
+3. 判断是否需要 \\(\Delta\\) 或其他响应。
+4. 给出相对于 Level 0 的数值修正。
+
+   **Level 2：更高精度核结构修正**
+
+   有需要再做
+5. 核子有限尺寸形状因子。
+6. 两核子交换流。
+7. 更高阶核子算符。
+8. 检查壳模型核结构的不确定性。
+
+这里还需要强调：AFH 的单体流近似本身并不是完整的 QCD 核结构理论。更高精度计算可能需要手征 EFT 中的两体流等修正，但这不是当前领先阶计算必须自动加入的内容。
+
+## **七、最终判断**
+
+我认为我们目前不需要把所有 AFH 有效相互作用都加入模型。
+
+
+
+原因是有效算符不是自由添加的参数，而是由我们的 UV 拉格朗日量匹配出来的。
+
+\\[ \boxed{ \text{UV 模型} \longrightarrow \text{核子流} \longrightarrow \text{非相对论核子算符} \longrightarrow \text{AFH 核响应} } \\]
+
+对我们当前的 vector–vector 模型：
+
+- 领先阶：\\(\mathcal O_1\\)，使用 \\(W_M^{00}\\)。
+- 次领先阶：检查完整矢量流的空间分量，不能先验宣称为零。
+- 轴矢量、赝标量、张量等其他相互作用：没有相应的 UV 顶点，就不应该人为加入。
+
+**我认为下一步最值得做的不是计算另外五种 AFH 响应，而是对我们已有的三体振幅&#x20;**\\(\mathcal T_3^\mu\\)**&#x20;做完整的非相对论展开，定量证明&#x20;**\\(W_M^{00}\\)**&#x20;单独使用的精度。**
+
+
+
+这样才能把目前的处理从一个合理的领先阶假设，提升为经过理论和数值检验的近似。
+
+我认为需要检查，但目前不能直接断定我们需要加入自旋响应和轨道响应。更准确的判断是：
+
+
+
+**我们的模型很可能仍然由&#x20;**\\(W_M^{00}\\)**&#x20;主导，但必须检查完整三体振幅的空间分量，才能证明其他核响应可以忽略。**
+
+
+
+这里有一个容易产生误判的地方：氙核内部核子的速度可以达到 \\(0.1\sim0.3\\)，远大于暗物质晕速度 \\(10^{-3}\\)，但这并不意味着轨道响应一定重要。
+
+
+
+因为核子内部速度大，并不等于它对散射振幅的贡献大。还必须看它如何与暗物质流收缩，以及相应核矩阵元是否受到其他运动学因子的抑制。
+
+
+
+我建议把这个问题分成三个独立的检查：
+
+1. **核自旋响应：** 矢量流的磁化电流是否产生不可忽略的自旋相关贡献？
+2. **轨道响应：** 矢量流的对流电流是否产生不可忽略的轨道角动量贡献？
+3. **三体共振效应：** \\(\chi_2\\) 传播子和标量发射是否改变了暗物质空间流与时间流的相对大小？
+
+第三项尤其重要。不能只使用普通弹性散射的速度阶数来判断我们的三体过程。
+
+## **一、先给出一个定量判断标准**
+
+我们的核子矢量流可以写成：
+
+\\[ J_N^\mu=\bar u_N(p_N')\gamma^\mu u_N(p_N). \\]
+
+非相对论展开后：
+
+\\[ J_N^0 \simeq 2m_N, \\]
+
+\\[ \mathbf J_N \simeq (\mathbf p_N'+\mathbf p_N) +i\boldsymbol\sigma_N\times\mathbf q_A. \\]
+
+因此原子核矢量流包含：
+
+\\[ \boxed{ \mathbf J_A = \mathbf J\_{\rm conv} + \mathbf J\_{\rm mag} } \\]
+
+其中：
+
+- \\(\mathbf J\_{\rm conv}\\)：对流电流，与核子内部运动及轨道结构有关；
+- \\(\mathbf J\_{\rm mag}\\)：磁化电流，与核子自旋有关。
+
+三体振幅为：
+
+\\[ \mathcal M_3 = \mathcal K_3 \left( \mathcal T_3^0J_A^0 - \boldsymbol{\mathcal T}\_3\cdot\mathbf J_A \right). \\]
+
+因此定义两个比值：
+
+\\[ \boxed{ \epsilon\_{\rm conv} = \frac{ |\boldsymbol{\mathcal T}\_3\cdot\mathbf J\_{\rm conv}| }{ |\mathcal T_3^0J_A^0| } } \\]
+
+\\[ \boxed{ \epsilon\_{\rm mag} = \frac{ |\boldsymbol{\mathcal T}\_3\cdot\mathbf J\_{\rm mag}| }{ |\mathcal T_3^0J_A^0| } } \\]
+
+它们分别衡量轨道电流和自旋电流相对于领先阶密度响应的大小。
+
+
+
+如果两者都足够小，我们就可以有依据地只使用 \\(W_M^{00}\\)。
+
+
+
+注意，这里最好最终比较的是自旋求和、初态平均后的振幅平方及其干涉项，而不只是振幅模长的比值。
+
+## **二、我检查了仓库中的实际三体振幅和数值实现**
+
+这里不再使用普通弹性散射的估计，而是直接检查了我们项目的真实模型。
+
+
+
+检查对象：
+
+- `research/docs/01_model_and_amplitude.md`
+- `research/docs/appendices/09A_three_body_kinematics_amplitude.md`
+- `research/figure2_full_reproduction/eq6_kernel.py`
+- `paper-source/main.tex`
+
+对应的拉格朗日量是：
+
+\\[ \begin{aligned} \mathcal L\_{\rm int}={}& g_1V\_\mu\bar\chi_2\gamma^\mu\chi_1 +g_2s\bar\chi_2\chi_1+\mathrm{h.c.}\\\ &+g\_{Vq}V\_\mu\sum_q\bar q\gamma^\mu q. \end{aligned} \\]
+
+这里有一个重要事实：
+
+
+
+**我们的暗物质不是直接通过一个普通的弹性矢量流与原子核散射，而是通过两个包含虚&#x20;**\\(\chi_2\\)**&#x20;传播子的辐射图形成有效三体流。**
+
+
+
+数值程序目前计算的是：
+
+\\[ \mathcal L\_{00} = \frac12\sum\_{\rm spins} \left|\bar u(p')\Gamma^0u(p)\right|^2. \\]
+
+也就是说，程序完整保留了两张标量辐射图及其干涉，但只取了暗物质流的时间分量。
+
+
+
+这和附录 A.4 中采用的核电荷领先阶近似是一致的，但**目前还没有通过完整的&#x20;**\\(\Gamma^i\\)**&#x20;计算证明空间分量可以忽略**。
+
+### **1. 我对完整三体暗物质流做了数值检查**
+
+我使用仓库中的四动量构造方法和 Dirac 矩阵实现，将顶点从
+
+\\[ \Gamma^0 \\]
+
+推广到
+
+\\[ \Gamma^\mu,\qquad \mu=0,1,2,3, \\]
+
+然后计算：
+
+\\[ L^{\mu\nu} = \frac12\operatorname{Tr} \left[ (\slashed p'+m\_\chi) \Gamma^\mu (\slashed p+m\_\chi) \overline{\Gamma}^{\\,\nu} \right]. \\]
+
+对于仓库中代表性的参数：
+
+\\[ m\_\chi=1\ {\rm TeV},\qquad v=800\ {\rm km/s}, \\]
+
+\\[ m_s=200\text{--}360\ {\rm keV}, \qquad \Delta m=1\ {\rm MeV}, \\]
+
+并使用条件性的 \\(\chi_2\\) pole width，我得到：
+
+\\[ \boxed{ \frac{\sum\_{i=1}^3 L^{ii}}{L^{00}} \simeq (6.1\text{--}6.9)\times10^{-6} } \\]
+
+也就是：
+
+\\[ \frac{\sqrt{\sum_iL^{ii}}}{\sqrt{L^{00}}} \simeq 2.5\text{--}2.6\times10^{-3}. \\]
+
+这是对三体暗物质流的数值诊断，不是完整氙核截面修正。积分采用代表性参数点和有限阶求积，尚不是全参数空间的收敛审计。
+
+
+
+这说明在目前的 benchmark 下，暗物质流的空间分量确实受到约 \\(10^{-3}\\) 量级的振幅抑制。
+
+### **2. 点状原子核的完整矢量流检查**
+
+进一步，我将靶核近似为一个点状、无自旋的复合粒子，使用其完整弹性矢量流：
+
+\\[ J_A^\mu=(P+P')^\mu. \\]
+
+此时：
+
+\\[ \frac{|\mathbf J_A|}{J_A^0} \simeq \frac{q_A}{2m_A}. \\]
+
+用完整 \\(\Gamma^\mu\\) 与这个核流收缩，而不是只取 \\(J_A^0\\)，得到：
+
+|   |
+| - |
+
+\\(E_R\\)
+
+|   |
+| - |
+
+完整点状核流相对于纯 \\(L^{00}\\) 的截面变化
+
+|   |
+| - |
+
+101 keV
+
+|   |
+| - |
+
+\\(-3.0\times10^{-6}\\)
+
+|   |
+| - |
+
+200 keV
+
+|   |
+| - |
+
+\\(-4.1\times10^{-6}\\)
+
+|   |
+| - |
+
+267 keV
+
+|   |
+| - |
+
+\\(-4.8\times10^{-6}\\)
+
+|   |
+| - |
+
+360 keV
+
+|   |
+| - |
+
+\\(-5.6\times10^{-6}\\)
+
+|   |
+| - |
+
+542 keV
+
+|   |
+| - |
+
+\\(-6.9\times10^{-6}\\)
+
+点状核质心电流修正很小
+
+但是，这个结果只验证了原子核质心的对流电流。
+
+
+
+它没有验证 AFH 中与核子内部轨道、自旋结构相关的响应。
+
+
+
+因此，不能直接据此宣布 \\(W\_\Delta\\) 和自旋响应都不重要。
+
+## **三、真正需要注意的是：我们的夸克矢量流并不等于点状核子的 Dirac 矢量流**
+
+这是我进一步检查后认为最重要的地方。
+
+
+
+我们的 UV 拉格朗日量实际上写的是：
+
+\\[ \mathcal L\supset g\_{Vq}V\_\mu\sum_q\bar q\gamma^\mu q. \\]
+
+但从夸克层面到核子层面，不能在所有动量转移下都简单地写成：
+
+\\[ J_N^\mu=3\bar N\gamma^\mu N. \\]
+
+更完整的核子矩阵元应该是：
+
+\\[ \boxed{ \langle N'|J_V^\mu|N\rangle = \bar u_N' \left[ F_1^{V,N}(t)\gamma^\mu -\frac{iF_2^{V,N}(t)}{2m_N} \sigma^{\mu\nu}q\_{A\nu} \right]u_N } \\]
+
+这里：
+
+- \\(F_1^{V,N}\\)：Dirac 形状因子；
+- \\(F_2^{V,N}\\)：Pauli 形状因子；
+- \\(t=q_A^2\\)，这里的 \\(q_A\\) 是四动量转移，满足 \\(t\simeq-|\mathbf q_A|^2\\)。
+
+在零动量转移下：
+
+\\[ F_1^{V,p}(0)=F_1^{V,n}(0)=3. \\]
+
+这正是我们目前使用
+
+\\[ g\_{VN}=3g\_{Vq} \\]
+
+的来源。
+
+
+
+但是：
+
+\\[ \boxed{F_2^{V,N}(t)\neq0} \\]
+
+而且 \\(F_1\\)、\\(F_2\\) 都有动量转移依赖。
+
+
+
+Hoferichter、Klos 和 Schwenk 对矢量流的夸克－核子匹配正是采用了这两个形状因子，并进一步进行了非相对论展开。
+
+arxiv.org+1
+
+
+
+### **1. Pauli 形状因子会产生什么？**
+
+非相对论匹配后，矢量－矢量相互作用不再只有最简单的：
+
+\\[ \mathcal O_1=1\_\chi1_N. \\]
+
+还会出现与 Pauli 形状因子有关的结构：
+
+\\[ \boxed{ \mathcal M\_{VV}^{NR} = c_1(t)\mathcal O_1 +c_3(t)\mathcal O_3 +c_4(t)\mathcal O_4 +c_6(t)\mathcal O_6+\cdots } \\]
+
+其中主要有：
+
+\\[ \mathcal O_3 = i\mathbf S_N\cdot \left( \frac{\mathbf q_A}{m_N} \times\mathbf v^\perp \right), \\]
+
+\\[ \mathcal O_4 = \mathbf S\_\chi\cdot\mathbf S_N, \\]
+
+\\[ \mathcal O_6 = \left(\mathbf S\_\chi\cdot\frac{\mathbf q_A}{m_N}\right) \left(\mathbf S_N\cdot\frac{\mathbf q_A}{m_N}\right). \\]
+
+这里采用 AFH 的标准弹性算符定义来说明核子流匹配；在我们的三体过程中，\\(\mathbf v^\perp\\) 必须根据三体运动学重新定义，不能直接使用弹性散射的运动学关系。
+
+
+
+这三个算符的系数并不一样：
+
+- \\(c_1\\)：由 \\(F_1\\) 主导；
+- \\(c_3\\)：由 \\(F_2\\) 产生，主要包含核子内部速度；
+- \\(c_4,c_6\\)：也与 \\(F_2\\) 有关，但含有额外的 \\(1/m\_\chi\\) 抑制。
+
+这也是为什么不能简单地认为矢量相互作用一定只有 SI 响应。
+
+indico.global+1
+
+
+
+## **四、对我们来说，最值得检查的是&#x20;**\\(\mathcal O_3\\)**，而不是之前举例的&#x20;**\\(\mathcal O_8\\)
+
+这里需要修正前面讨论中的一个重点。
+
+
+
+之前举例：
+
+\\[ \mathcal O_8 = \mathbf S\_\chi\cdot\mathbf v^\perp. \\]
+
+这是一个能够探测核子内部速度的算符，但它不是我们当前 vector–vector 模型在领先阶自然产生的算符。
+
+
+
+对于我们的模型，应该优先检查的是：
+
+\\[ \boxed{ \mathcal O_3 = i\mathbf S_N\cdot \left( \frac{\mathbf q_A}{m_N} \times\mathbf v^\perp \right) } \\]
+
+它对应的核响应是：
+
+\\[ \boxed{ \mathcal O_3 \longrightarrow W\_{\Phi''} } \\]
+
+并且与标准质量响应存在干涉：
+
+\\[ \boxed{ W\_{M\Phi''} } \\]
+
+这两个响应非常值得注意。
+
+
+
+AFH 的核结构分析表明，\\(\Phi''\\) 是与核子自旋－轨道结构有关的准相干响应（quasi-coherent response），而不是普通的 SD 响应。对氙而言，它可以涉及相当数量的核子。
+
+archive.int.washington.edu+1
+
+
+
+这意味着：
+
+
+
+**即使我们没有轴矢量耦合，也可能存在与核子内部轨道运动有关的次领先贡献。**
+
+
+
+它不应该和 \\(^{129}\mathrm{Xe}\\)、\\(^{131}\mathrm{Xe}\\) 的总核自旋简单等同起来。
+
+## **五、为什么我认为这个修正对我们尤其值得检查？**
+
+这里有一个非常重要的数值原因。
+
+
+
+我们之前计算的 Xe-131 的 \\(W_M^{00}\\) 存在三个非常深的极小值。
+
+
+
+数据来自仓库 `research/afh_default_density_xe131/output/minima.csv`。
+
+|   |
+| - |
+
+\\(q_A\\) (MeV)
+
+|   |
+| - |
+
+\\(E_R\\) (keV)
+
+|   |
+| - |
+
+\\(q_A/m_N\\)
+
+|   |
+| - |
+
+\\(\sqrt{R_M(q_A)/A^2}\\)
+
+|   |
+| - |
+
+157.94
+
+|   |
+| - |
+
+102.21
+
+|   |
+| - |
+
+0.168
+
+|   |
+| - |
+
+\\(3.52\times10^{-3}\\)
+
+|   |
+| - |
+
+256.27
+
+|   |
+| - |
+
+269.10
+
+|   |
+| - |
+
+0.273
+
+|   |
+| - |
+
+\\(2.52\times10^{-4}\\)
+
+|   |
+| - |
+
+365.07
+|   |
+| - |
+
+546.09
+
+|   |
+| - |
+
+0.389
+
+|   |
+| - |
+
+\\(3.95\times10^{-4}\\)
+
+这几个极小值意味着：
+
+\\[ \mathcal M_M \propto AF_M(q_A) \\]
+
+在这些位置受到非常强的抑制。
+
+
+
+而 \\(\Phi''\\) 响应不一定在相同位置发生相同的抵消。
+
+
+
+因此，即使 \\(\mathcal O_3\\) 的 Wilson 系数比较小，也有可能在这些位置改变总振幅：
+
+\\[ \begin{aligned} |\mathcal M_A|^2 \sim{}& |c_1|^2W_M\\\ &+2\operatorname{Re}(c_1c_3^\*)W\_{M\Phi''}\\\ &+|c_3|^2W\_{\Phi''} +\cdots. \end{aligned} \\]
+
+这里省略了 AFH 的具体归一化系数，重点是展示干涉结构。
+
+### **一个量级估算**
+
+用一个仅供判断的低动量估计：
+
+\\[ \left|\frac{F_2^V}{F_1^V}\right|\sim0.1, \\]
+
+并取：
+
+\\[ v_N^{\rm int}\sim0.1-0.3. \\]
+
+那么：
+
+\\[ \frac{|c_3\mathcal O_3|} {|c_1\mathcal O_1|} \sim \frac{F_2^V}{F_1^V} \frac{q_A}{m_N}v_N^{\rm int}. \\]
+
+三个极小值附近对应的单核子算符量级大致为：
+
+|   |
+| - |
+
+\\(q_A\\)
+
+|   |
+| - |
+
+\\(\mathcal O_3/\mathcal O_1\\) 量级
+
+|   |
+| - |
+
+158 MeV
+
+|   |
+| - |
+
+\\(0.2\\%-0.6\\%\\)
+
+|   |
+| - |
+
+256 MeV
+
+|   |
+| - |
+
+\\(0.3\\%-1.0\\%\\)
+
+|   |
+| - |
+
+365 MeV
+
+|   |
+| - |
+
+\\(0.5\\%-1.4\\%\\)
+
+这还不是完整的原子核响应比值。
+
+
+
+真正的原子核振幅还要乘以 \\(W\_{\Phi''}\\) 对应的核矩阵元，并考虑与 \\(W_M\\) 的干涉。
+
+
+
+但是，比较一下前面表格中的 \\(F_M\\)，就能看出为什么值得认真检查：
+
+
+
+在第二、第三个极小值附近，\\(M\\) 响应本身已经被压低到 \\(10^{-4}\\) 量级的振幅。
+
+
+
+所以我不认为可以仅凭一般的速度幂次估算，就把 \\(\Phi''\\) 排除。
+
+需要进行核响应数值审计
+
+注意：上面的百分比是单核子层面的量级估算，不是我们已经算出的 Xe-131 截面修正。不能将其直接作为论文结果。
+
+## **六、哪些其他响应可以暂时不考虑？**
+
+现在可以更有针对性地筛选。
+
+|   |
+| - |
+
+AFH 核响应
+
+|   |
+| - |
+
+对应结构
+
+|   |
+| - |
+
+我们当前的判断
+
+|   |
+| - |
+
+\\(M\\)
+
+|   |
+| - |
+
+\\(\mathcal O_1\\)
+
+|   |
+| - |
+
+
+
+必须保留
+
+
+
+|   |
+| - |
+
+\\(\Phi''\\)
+
+|   |
+| - |
+
+\\(\mathcal O_3\\)
+
+|   |
+| - |
+
+
+
+优先检查
+
+
+
+|   |
+| - |
+
+\\(\Sigma'\\)
+
+|   |
+| - |
+
+\\(\mathcal O_4,\mathcal O_6\\) 等
+
+|   |
+| - |
+
+次要，检查系数抑制
+
+|   |
+| - |
+
+\\(\Sigma''\\)
+
+|   |
+| - |
+
+\\(\mathcal O_4,\mathcal O_6\\) 等
+
+|   |
+| - |
+
+次要，检查系数抑制
+
+|   |
+| - |
+
+\\(\Delta\\)
+
+|   |
+| - |
+
+与 \\(\mathcal O_8\\) 等有关
+
+|   |
+| - |
+
+当前领先阶不需要
+
+|   |
+| - |
+
+\\(\widetilde\Phi''\\)
+
+|   |
+| - |
+
+其他速度、自旋结构
+
+|   |
+| - |
+
+当前领先阶不需要
+
+对于自旋响应，最重要的是暗物质质量很大：
+
+\\[ m\_\chi=1\ {\rm TeV}. \\]
+
+相应的次领先系数含有：
+
+\\[ \frac{q_A^2}{m_Nm\_\chi}. \\]
+
+在三个极小值附近：
+
+\\[ \frac{q_A^2}{m_Nm\_\chi} \simeq \begin{cases} 2.7\times10^{-5},\\\ 7.0\times10^{-5},\\\ 1.4\times10^{-4}. \end{cases} \\]
+
+因此，相比 \\(\mathcal O_3\\)，\\(\mathcal O_4,\mathcal O_6\\) 的系数受到更强的质量抑制。
+
+
+
+我的判断是：不需要在主线中优先展开完整的自旋响应计算，但应该在匹配阶段检查它们的实际系数。
+
+
+
+另外，Hoferichter 等人的手征 EFT 计算表明，在他们考虑的 \\(p^3\\) 阶，矢量两体流首先出现在暗物质轴矢量－核子矢量（AV）通道，而不是我们目前的 VV 通道。因此，两核子矢量流不需要成为我们当前第一轮审计的内容。
+
+arxiv.org+1
+
+
+
+## **七、我建议如何修改我们目前的计算框架？**
+
+不需要推翻已经完成的三体计算。
+
+
+
+只需要在现有框架中增加一个核子流匹配层。
+
+## **建议的计算路线**
+
+**第一层：完整三体暗物质流**
+
+\\[ \mathcal T_3^\mu(p,p',k_s) \\]
+
+保留两张辐射图、干涉和 \\(\chi_2\\) 传播子。
+
+**第二层：夸克－核子矢量流匹配**
+
+\\[ J_N^\mu = F_1^V(t)\gamma^\mu -\frac{iF_2^V(t)}{2m_N}\sigma^{\mu\nu}q\_{A\nu} \\]
+
+不再把核子当作完全点状的 Dirac 粒子。
+
+**第三层：AFH 核响应**
+
+\\[ W_M,\quad W\_{\Phi''},\quad W\_{M\Phi''} \\]
+
+再根据匹配系数检查 \\(\Sigma'\\)、\\(\Sigma''\\)。
+
+**第四层：三体相空间积分**
+
+\\[ \frac{d\sigma_3}{dE_R} \\]
+
+保留原有的 \\(W^2,z,\phi\_\*\\) 积分。
+
+### **在现有 DMFormFactor-v6 中如何实现？**
+
+我检查了仓库里的：
+
+
+
+[dmformfactor-V6.m](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/blob/main/v6/dmformfactor-V6.m?utm_source=chatgpt.com)
+
+
+
+其中已经定义了相应的相对论算符：
+
+- `OpRel[5]`：矢量－矢量流；
+- `OpRel[6]`：暗物质矢量流－核子张量流。
+
+这恰好可以用来组织：
+
+\\[ F_1^V(t)\times\mathrm{OpRel}[5] + F_2^V(t)\times\mathrm{OpRel}[6], \\]
+
+其中必须按照相同的动量转移、符号和归一化约定完成匹配。
+
+
+
+这样可以继续使用现有 Xe-131 的单体密度矩阵，而不必重新开发一套核结构程序。
+
+## **八、最终检查结论**
+
+我把目前的判断分成三个层次：
+
+|   |
+| - |
+
+问题
+
+|   |
+| - |
+
+结论
+
+|   |
+| - |
+
+氙核非零自旋是否迫使我们使用 SD 响应？
+
+|   |
+| - |
+
+否
+
+|   |
+| - |
+
+是否需要加入 \\(\mathcal O_8\\)、\\(W\_\Delta\\)？
+
+|   |
+| - |
+
+当前 VV 模型领先阶不需要
+
+|   |
+| - |
+
+是否需要检查核子内部速度和轨道结构？
+
+|   |
+| - |
+
+**需要，优先检查&#x20;**\\(\mathcal O_3\\)**&#x20;与&#x20;**\\(W\_{\Phi''}\\)
+
+|   |
+| - |
+
+是否需要检查 \\(\Sigma'\\)、\\(\Sigma''\\)？
+
+|   |
+| - |
+
+需要匹配，但预计受到较强质量抑制
+
+|   |
+| - |
+
+是否需要马上计算两核子矢量流？
+
+|   |
+| - |
+
+暂时不需要
+
+还有一个特别重要的区别：
+
+
+
+我刚才计算的暗物质空间流约 \\(2.5\times10^{-3}\\)，以及点状核质心电流的 ppm 级修正，**不能用来排除&#x20;**\\(\Phi''\\)。因为 \\(\mathcal O_3\\) 还可以通过核子 Pauli 形状因子进入核子时间流，并耦合到暗物质的领先阶时间分量。
+
+
+
+因此，之前的数值检查只完成了一部分。
+
+
+
+**我的最终建议是：保留目前&#x20;**\\(W_M^{00}\\)**&#x20;作为主基准，但在正式定稿之前，增加一次 Xe-131 的&#x20;**\\(W\_{\Phi''}\\)**&#x20;和&#x20;**\\(W\_{M\Phi''}\\)**&#x20;计算。** 特别检查 \\(q_A\simeq256\\) MeV 和 \\(365\\) MeV 附近的两个深极小值。
+
+
+
+如果这些响应确实很小，我们就可以有依据地继续使用目前的简化公式；如果它们填平了原来的谱形极小值，就必须修正天然氙的三体反冲谱。
+
+
+
+这项工作比现在就把 AFH 的六种响应全部计算一遍更有针对性。
+
+
+
+我建议下一步直接在 `LZ-3-body-for-hdm` 中建立 **VV 核子流的&#x20;**\\(F_1/F_2\\)**&#x20;匹配与 Xe-131&#x20;**\\(\Phi''\\)**&#x20;响应审计**，先计算干涉项，再决定是否需要扩展完整三体截面。
+
+
+
+参考文献：
+
+1. [Anand, Fitzpatrick & Haxton, arXiv:1308.6288](https://arxiv.org/abs/1308.6288?utm_source=chatgpt.com)。
+2. [Hoferichter, Klos & Schwenk, arXiv:1503.04811](https://arxiv.org/abs/1503.04811?utm_source=chatgpt.com)。
+3. [Hoferichter, Chiral EFT matching to nonrelativistic operators](https://indico.global/event/6060/contributions/49525/attachments/24815/42475/Hoferichter.pdf?utm_source=chatgpt.com)。讨论的物理对话我已经复制给你了，你可以自行完善并扩充，写入到文档中
 
 ---
 
-## 22. 证据等级、可引用结论与进入论文的条件
+## 第二部分：物理校订与补充（不覆盖、不删改原文）
 
-### 22.1 已有 AFH 电荷响应可以支持的陈述
+### A. 校订原则与优先级
 
-PR #51 中七种氙同位素的 AFH \(M\) 响应网格、零动量归一化和多极重构结果已经归档。它们支持我们在所用 AFH v6.0 default-density 输入下，正确实现了 \(M\) 电荷响应的数值读取、factor-four 映射和内部多极重构。Xe-131 的 rank-2 项也已明确属于 \(M\) 响应。
+第一部分是不可变更的讨论档案，记录了问题如何提出、推导如何展开、判断如何演进。它不是经过最终校验的论文正文。为避免读者把历史判断误认为最终结论，本节将原文中的物理问题单独列出。这里的修正不删除原文，也不改变原文历史记录；它们为后续代码、数值结果和论文表述提供当前应采用的约定。
 
-这些结果可以作为后续三体核流计算的核结构基准。引用时应说明它们是 AFH package 的响应结果及其内部一致性审计，而不是独立的核结构模型比较。
+优先级如下：
+1. 精确运动学与 Lorentz 流定义优先于弹性散射类比；
+2. 明确的夸克—核子 form factor 输入优先于点状核子近似；
+3. AFH package 的原始归一化约定优先于未经核对的 (A^2) 口头判断；
+4. 完整三体振幅与核流的收缩优先于仅凭算符名称推断核响应；
+5. 未完成的核响应计算、历史诊断和数量级估算不得表述为已验证的截面结果。
 
-### 22.2 当前理论结构可以支持的陈述
+### B. Flavor-universal (u,d,s) 矢量流的 (F_2) 不为零
 
-从 UV 拉格朗日量可以明确写出两张标量辐射图组成的三体暗物质流，并将它与媒介子传播子和核子矢量流收缩。三体运动学严格要求区分 \(q_A\)、\(q_\chi\) 和 \(k_s\)。在单体矢量电荷领先阶、等质子等中子耦合的条件下，\(M\) 是合理的领先核响应。
+原文中“不能把 Pauli 项直接删掉”的修正方向是正确的，但必须把所讨论的流定义写清楚。
 
-自由核子 Dirac–Pauli 流的 Pauli 约化还表明，电荷自旋—轨道项、对流项和磁化项具有不同的 \(F_1/F_2\) 组合。它们为 \(\Phi''\)、\(\Delta\) 和 \(\Sigma'\) 提供了明确的候选投影，但只有与完整 \(\mathcal T_3^\mu\) 收缩后，才能得到当前三体过程的最终系数。
+当前 UV benchmark 的夸克矢量流为
+[
+J^mu_{uds}=ar ugamma^mu u+ar dgamma^mu d+ar sgamma^mu s,
+]
+即三个轻味的等权重之和，不是电磁流
+[
+J^mu_{m em}=rac23ar ugamma^mu u-rac13ar dgamma^mu d-rac13ar sgamma^mu s.
+]
+对质子，按 Bishara et al.（arXiv:1707.06998）附录 A 给出的中心值，
+[
+F_2^{u/p}(0)=1.609,quad F_2^{d/p}(0)=-2.097,quad F_2^{s/p}(0)=-0.064,
+]
+因此等权重 flavor-universal 流的 Pauli form factor 为
+[
+F_2^{uds/p}(0)=1.609-2.097-0.064=-0.552.
+]
+在近似同位旋对称下，中子给出相同的等权重和。因此在这组输入下
+[
+F_1^{uds/p}(0)=F_1^{uds/n}(0)=3,qquad
+F_2^{uds/p}(0)simeq F_2^{uds/n}(0)simeq-0.552.
+]
+这否定了“等权重 (u+d+s) 流的 (F_2(0)) 必然为零”。(-0.552) 是所引用输入的中心值，不能当成无误差的精确常数，也不能把零动量值直接当成整个 (q_A) 区间的 form factor。
 
-### 22.3 目前不能作为最终物理结果引用的陈述
+电磁 Pauli form factor 是带电荷权重的组合，并由质子/中子反常磁矩约束；等权重 (u+d+s) 流则是不同的 flavor 线性组合。两者不能混用。引用数值时必须同时注明流的 flavor 权重、form factor 定义、动量转移符号和输入文献。
 
-此前报告的暗物质空间流比值、点核 ppm 修正和旧 O3-like 百分比尚缺少完整原始输入、脚本和收敛证据，不能被写成全参数空间结论或 Xe-131 核截面修正。\(W_{\Phi''}\)、\(W_{M\Phi''}\)、\(\Delta\)、\(\Sigma'\)、\(\Sigma''\) 的数值响应以及完整三体 \(L_{\mu\nu}W_A^{\mu\nu}\) 收缩也尚未完成。
+参考：Bishara et al., *DirectDM: a tool for dark matter direct detection*, arXiv:1707.06998，附录 A，式 (A1)–(A5)：https://arxiv.org/abs/1707.06998 。
 
-此外，flavor-universal 三味 \(F_2^V(t_A)\) 的有限动量输入尚未锁定。2015 年紧凑表达式与 2017 年显式 flavor-separated 输入的约定差异必须在生产代码冻结前解决。不能把零动量 form factor 中心值当成整个三体动量区间的常数。
+### C. Dirac–Pauli 参数化中的符号与动量转移约定
 
-### 22.4 从研究记录进入论文结果的最低门槛
+核子矢量流可写为
+[
+langle N(p')|J^mu|N(p)angle
+=ar u_N(p')left[
+F_1(t)gamma^mu+
+rac{iF_2(t)}{2m_N}sigma^{mu
+u}Q_
+u
+ight]u_N(p),qquad Q^mu=p'^mu-p^mu .
+]
+这是 Bishara et al. 附录 A 式 (A9) 所采用的一种常见约定。若改用 (Q=p-p')，或采用不同的 (sigma^{mu
+u})、度规和 Fourier 约定，Pauli 项前的符号会相应变化。原文中出现的负号形式并非在任何约定下都错误，但不能与上述 (Q=p'-p) 的定义混用。
 
-若要在论文中宣称 \(M\)-only 近似足够，需要先完成 Xe-131 的 \(\Phi''\) 与 \(M\Phi''\) 响应导出，并将它们与实际三体 Wilson 系数结合；随后检查 \(\Delta\)、\(\Sigma'\) 等空间核流投影是否受到可控抑制。比较必须同时报告相对变化、绝对截面和天然氙合并后的结果。
+本项目必须区分：
+- (mathbf q_A=mathbf P_A'-mathbf P_A)：核三动量转移；
+- (Q_A^mu=P_A'^mu-P_A^mu)：核四动量转移；
+- (t_A=Q_A^2simeq-|mathbf q_A|^2)：Lorentz 不变量；
+- (mathbf q_chi=mathbf p_chi'-mathbf p_chi)：暗物质外线三动量差；
+- (k_s^mu)：末态标量四动量。
 
-若这些响应对最终可观测谱的影响确实低于目标精度，才能把 \(M\)-only 近似提升为经过验证的受控近似。若它们填平了 \(M\) 的局部深极小值，则应修正三体反冲谱，而不能仅保留旧的点核结果。
+因此，不应在全文中用同一个 (q_A) 符号同时表示三动量和四动量。
 
-因此，本记录是完整讨论和计算路线的理论底稿。它明确说明了哪些结论已由 AFH 电荷响应归档结果支持，哪些来自文献匹配，哪些只是历史诊断，哪些仍需原生计算。后续工作应沿着“UV 流—核子 form factors—完整三体张量—AFH 核响应—三体相空间—天然氙速率”的顺序推进。
+### D. (F_2) 项产生哪些非相对论结构：候选投影不等于已完成匹配
+
+Pauli 项在非相对论约化后不仅修正磁化空间流，也会在时间分量中产生自旋—轨道型项。示意地说，单核子矢量流包含：
+- (J_N^0) 的领先电荷密度项；
+- (J_N^0) 中依赖 (oldsymbolsigma_Ncdot(mathbf q_A	imesmathbf K_N)) 的自旋—轨道修正；
+- (mathbf J_N) 中的对流电流；
+- (mathbf J_N) 中的磁化电流 (oldsymbolsigma_N	imesmathbf q_A)。
+
+其中 (mathbf K_N) 是核子初末态平均动量，具体系数和符号取决于流定义、外线归一化及动量转移约定。不能只保留空间磁化项，也不能只凭“矢量流”断言核子流只有密度项。
+
+在标准弹性 NREFT 约定下，(mathcal O_3) 的核子自旋—轨道结构与 (Phi'') 核响应相关，并可与 (M) 响应产生 (M)-(Phi'') 干涉。但对本项目的 (2	o3) 过程，标准弹性关系 (mathbf v^perpcdotmathbf q=0) 并不自动成立；因此不能把标准弹性 (mathcal O_3) 系数原封不动地搬入三体振幅。正确步骤是先对完整 (mathcal T_3^mu(p,p',k_s)) 做约定一致的非相对论约化，再将核子侧出现的密度、对流、自旋磁化及自旋—轨道多极结构投影到 AFH 响应。
+
+原文中的 (mathcal O_3	o W_{Phi''})、(M)-(Phi''	o W_{MPhi''}) 应理解为候选核结构通道及审计目标，而不是已经完成三体 Wilson 系数匹配的结论。类似地，(mathcal O_4,mathcal O_6,Sigma',Sigma'') 是否出现及其系数大小，必须从完整暗物质张量与核子流收缩中判定。
+
+### E. AFH (W_M^{00}) 的零动量归一化：原始等标量响应与物理等耦合响应必须区分
+
+原文多次写出 (R_A(0)=A^2)，但这只有在明确等标量算符归一化后才成立。当前项目采用的 AFH v6.0 package 约定为：原始等标量响应零动量归一化
+[
+R_{M,mathrm{raw}}^{00}(0)=rac{4pi}{2J_A+1}W_{M,mathrm{raw}}^{00}(0)=rac{A^2}{4}.
+]
+物理上等质子、等中子耦合 (g_p=g_n=g_N) 的核子数密度振幅则为 (A g_N)，平方归一化是 (A^2)。从上述原始 AFH 等标量响应转换到物理等耦合响应时，需要整体因子 4：
+[
+R_{mathrm{phys}}(q_A)=4R_{M,mathrm{raw}}^{00}(q_A),
+]
+前提是输入确实采用这一原始约定。若代码已在响应导出或耦合系数定义中吸收该因子，就不得再次乘 4。
+
+因此，原文中以 (t^0=1) 推出 (A^2) 的推导，不能同时被解释为 AFH package 的原始 (00) 输出约定；二者属于不同归一化。任何 (R_A)、(W_M^{00})、点核振幅或 (g_0,g_1) 的比较，都必须在同一约定下进行。因子 4 必须且只能计入一次。
+
+### F. 点状核振幅乘核响应的等价性：适用条件需要收紧
+
+点核振幅乘核响应与单核子算符嵌入核态后计算矩阵元，并非对任意相互作用都等价。严格等价需要：
+1. 两边使用同一个单核子流及相同 form factor；
+2. 使用相同的单体流近似、核态和同位旋约定；
+3. 点核振幅的零动量相干耦合与响应函数归一化完全一致；
+4. 粒子物理系数不引入核子内部坐标/动量依赖，因而可从核矩阵元中因子化；
+5. 若存在多个 Lorentz 分量或多个核子算符，必须使用相应响应矩阵及干涉项，而不是只乘一个 (W_M)。
+
+因此，对本 VV benchmark，只有在核子矢量电荷 (J_A^0) 主导且等质子等中子耦合的领先阶，才可把点核三体粒子物理因子与 (M) 响应因子化。若 Pauli 自旋—轨道项、对流流或磁化流需要保留，则必须扩展为多个核响应及其干涉结构。(W_M) 不是所有核流效应的通用有限尺寸形状因子。
+
+### G. 三体过程的运动学：弹性 (v^perp) 不能直接套用
+
+本过程满足
+[
+p_chi^mu+P_A^mu=p_chi'^mu+P_A'^mu+k_s^mu,
+]
+故
+[
+mathbf q_A=mathbf P_A'-mathbf P_A
+=mathbf p_chi-mathbf p_chi'-mathbf k_s.
+]
+核反冲能量仍给出非相对论靶核关系
+[
+|mathbf q_A|simeqsqrt{2m_AE_R},
+]
+但这不意味着它等于暗物质外线动量差。三体能量守恒含有标量能量 (omega_s)，故 AFH 弹性散射中的 (mathbf v^perp) 定义及标准弹性算符基底不可不经推导地直接用于完整 (mathcal T_3^mu)。
+
+### H. 高动量转移下的非相对论展开需要重新评估
+
+Xe-131 深极小值涉及 (|mathbf q_A|simeq158,256,365 mathrm{MeV})，对应
+[
+|mathbf q_A|/m_Nsimeq0.17, 0.27, 0.39.
+]
+在更高反冲动量区域，该比值还可能接近 (0.5)。因此，把核子流只展开到最低阶并不自动构成全动量区间内的高精度近似。特别是 (q_A/m_Nsim0.4) 时，平方阶运动学修正参数量级约为 (0.15)，应检查被省略的相对论修正、form factor 的 (t_A) 依赖及核子有限尺寸效应。
+
+这不意味着必须放弃 AFH 核响应，而是要求核子流匹配精度与 AFH 多极矩阵元精度相匹配。建议保留完整 Dirac–Pauli 核子流，先在单核子层面数值验证约化，再决定需要多少阶的解析 NR 展开。
+
+### I. 当前可保留的结论与不可越级的数值结论
+
+**可以保留：**
+- UV 模型在核子侧给出矢量流；标量 (s) 从暗物质线辐射，不因此自动产生核子标量流或轴矢量流。
+- 等质子等中子耦合的矢量电荷密度在领先阶产生相干 (M) 响应。
+- 三体末态本身不自动要求新增核响应；是否需要新增响应由核子流的 Lorentz/NR 结构决定。
+- Pauli form factor 不为零，原则上会带来密度以外的核流结构；(Phi'') 与 (MPhi'') 是值得优先审计的候选通道。
+
+**目前不能宣称已经证明：**
+- 完整三体截面只由 (W_M^{00}) 决定；
+- (Phi'')、(MPhi'')、(Delta)、(Sigma')、(Sigma'') 对天然氙谱的修正已经数值确定；
+- 历史上报告的暗物质空间流比值或点状核质心 ppm 修正可以排除核子内部自旋—轨道流；
+- (F_2^{uds}(0)) 的中心值可以代表 (t_A
+e0) 的整个核反冲区间；
+- 未经归一化核对的 (A^2) 与 AFH 原始 (A^2/4) 响应可以直接相乘。
+
+### J. 生产计算的强制审计顺序
+
+1. 冻结 flavor current：明确是否为 (u+d+s) 等权重流，固定 (F_1^{uds}(t_A))、(F_2^{uds}(t_A)) 的输入和不确定度。
+2. 冻结符号约定：明确 (Q_A=P_A'-P_A)、(sigma^{mu
+u}) 定义、度规、(t_A=Q_A^2) 及 Pauli 项符号。
+3. 对完整三体暗物质流计算 (mathcal T_3^mu)，保留两张辐射图、(chi_2) 传播子及其干涉。
+4. 将完整 Dirac–Pauli 核子流与 (mathcal T_3^mu) 收缩；不能仅用 (L^{00}) 结果推断所有空间/Pauli 贡献均可忽略。
+5. 把核子算符分解投影到 (M,Phi'',MPhi'') 等 AFH 响应；按匹配结果再判断是否需要 (Delta,Sigma',Sigma'')。
+6. 用 Xe-131 在 (q_Asimeq158,256,365 mathrm{MeV}) 附近优先检查 (M) 深极小值是否被干涉项填平；同时报告绝对响应、相对修正及误差。
+7. 最后扩展到 Xe-129、其他天然氙同位素和天然丰度加权结果。
+8. 每项输出保留输入文件、脚本、归一化、版本、网格、收敛检查和 SHA-256 provenance；未执行的步骤明确标记为 pending。
+
+### K. 参考文献与可核对来源
+
+1. Anand, Fitzpatrick, Haxton, *Model-independent WIMP Scattering Responses and Event Rates: A Mathematica Package for Experimental Analysis*, arXiv:1308.6288：https://arxiv.org/abs/1308.6288 。
+2. Fitzpatrick et al., *The Effective Field Theory of Dark Matter Direct Detection*, arXiv:1203.3542：https://arxiv.org/abs/1203.3542 。
+3. Hoferichter, Klos, Schwenk, *Chiral power counting of one- and two-body currents in direct detection of dark matter*, arXiv:1503.04811：https://arxiv.org/abs/1503.04811 。
+4. Bishara et al., *DirectDM: a tool for dark matter direct detection*, arXiv:1707.06998，附录 A：https://arxiv.org/abs/1707.06998 。
+
+---
+
+## 第三部分：文档维护约定
+
+- 第一部分是用户原始讨论的逐字档案，后续编辑不得删减或静默改写。
+- 新发现的物理错误以第二部分新增校订条目的方式处理；若需修订校订内容，也保留旧条目并注明版本。
+- 新的推导、代码审计和数值结果应追加到独立扩充章节或关联计算报告，并明确标记“推导”“估算”“已验证数值”或“待验证”。
+- 不得将尚未完成的 (Phi'')、(MPhi'') 或完整三体核流计算写成 PASS。
