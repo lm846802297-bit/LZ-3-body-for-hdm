@@ -62,7 +62,7 @@ def validate_records(rows, *, expected_points=2401, q_min=0.0, q_max=0.6,
                 a,b,c=numeric[left],numeric[right],numeric[cross]
                 if all(math.isfinite(v) for v in (a,b,c)):
                     lhs=c*c; rhs=max(0.0,a)*max(0.0,b)
-                    tol=max(atol,rtol*max(lhs,rhs,1e-300))
+                    tol=max(1e-28,rtol*max(lhs,rhs,1e-300))
                     if lhs>rhs+tol:
                         failures.append(f"Xe-{A} q={q:.10g}: {label} Cauchy-Schwarz violation (lhs={lhs:.8g}, rhs={rhs:.8g})")
         def minima(column):
