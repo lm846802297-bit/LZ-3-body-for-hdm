@@ -19,3 +19,8 @@ The audit programs write to explicit `--outdir` / `--out-dir` destinations. They
 - AFH_PHI_RESPONSE_XE131_NATIVE_PLAN.md: completed Xe-131 native AFH
   \(M\), \(\Phi''\), and \(M\Phi''\) export, response-level validator result,
   numerical minima, and scientific scope boundary.
+
+- `AFH_SPATIAL_RESPONSE_FIRST_AUDIT.md`: corrected `DeltaJ` source mapping,
+  provisional Python/native comparator, 2,401-point Python spatial-response
+  grid for Xe-129/Xe-131, internal-consistency checks, and pending native
+  Wolfram validation boundary.
