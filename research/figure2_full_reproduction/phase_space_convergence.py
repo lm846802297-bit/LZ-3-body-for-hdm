@@ -41,18 +41,18 @@ def _stable_build_point(
     Echi = mchi * gamma
     pchi = mchi * gamma * beta
     p = np.array([Echi, 0.0, 0.0, pchi])
-    qmag = math.sqrt(2.0 * mA * ER + ER * ER)
+    Q_A = math.sqrt(2.0 * mA * ER + ER * ER)
     numerator = (
         2.0 * mchi * ms + ms * ms + delta_W2
         + 2.0 * (Echi + mA) * ER
     )
-    cos_q = numerator / (2.0 * pchi * qmag)
-    if abs(cos_q) > 1.0 + 2e-8:
-        raise ValueError(f"unphysical cos(theta_q)={cos_q}")
-    cos_q = min(1.0, max(-1.0, cos_q))
-    sin_q = math.sqrt(max(0.0, 1.0 - cos_q * cos_q))
-    q = np.array([ER, qmag * sin_q, 0.0, qmag * cos_q])
-    K = p - q
+    cos_theta_qA = numerator / (2.0 * pchi * Q_A)
+    if abs(cos_theta_qA) > 1.0 + 2e-8:
+        raise ValueError(f"unphysical cos(theta_qA)={cos_theta_qA}")
+    cos_theta_qA = min(1.0, max(-1.0, cos_theta_qA))
+    sin_theta_qA = math.sqrt(max(0.0, 1.0 - cos_theta_qA * cos_theta_qA))
+    q_A = np.array([ER, Q_A * sin_theta_qA, 0.0, Q_A * cos_theta_qA])
+    K = p - q_A
     W2 = (mchi + ms) ** 2 + delta_W2
     W = math.sqrt(W2)
     betaK = K[1:] / K[0]
@@ -77,7 +77,7 @@ def _stable_build_point(
     )
     k = eq6.boost(np.r_[Ek, kabs * direction], betaK)
     p_prime = eq6.boost(np.r_[Ep, -kabs * direction], betaK)
-    return eq6.Point(p, p_prime, k, K, q, W2)
+    return eq6.Point(p, p_prime, k, K, q_A, W2)
 
 
 def _trace(
