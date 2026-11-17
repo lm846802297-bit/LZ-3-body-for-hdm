@@ -48,3 +48,8 @@ Outputs are written to `research/afh_isotope_response_equivalence/results/`:
 5. A local minimum found on the 0.25 MeV grid is a grid-local minimum, not a continuously optimized zero. Do not interpret large ratios near a deep diffraction minimum as large absolute rates.
 
 See `docs/AFH_ISOTOPE_RESPONSE_EQUIVALENCE.md` for the physics derivation and numerical results.
+
+
+## Vector-current matching boundary
+
+See [quark-to-nucleon vector-current matching and spatial-current scope](docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md) for the derivation of the current flavor-universal benchmark `g_p=g_n=3 g_Vq`, the finite-`Q^2` form-factor caveat, and the explicit distinction between the completed charge-response audit and the still-pending `Delta`/`Sigma'` nuclear-current calculation.
