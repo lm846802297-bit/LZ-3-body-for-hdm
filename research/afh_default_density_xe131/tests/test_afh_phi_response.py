@@ -82,6 +82,7 @@ class AFHPhiResponseValidationTests(unittest.TestCase):
         rows, metadata = fixture()
         rows[2]["R_MPhiPP_raw"] = "1000.0"
         rows[2]["R_MPhiPP_physical_equal_pn"] = "4000.0"
+        rows[2]["W_MPhiPP00_AFH"] = str(1000.0 / math.pi)
         with self.assertRaisesRegex(ValueError, "Cauchy-Schwarz"):
             validator.validate_rows(rows, metadata, require_full_grid=False)
 
@@ -95,6 +96,7 @@ class AFHPhiResponseValidationTests(unittest.TestCase):
         rows, metadata = fixture()
         rows[0]["R_M_raw"] = "4000.0"
         rows[0]["R_M_physical_equal_pn"] = "16000.0"
+        rows[0]["W_M00_AFH"] = str(4000.0 / math.pi)
         with self.assertRaisesRegex(ValueError, "q=0 M normalization"):
             validator.validate_rows(rows, metadata, require_full_grid=False)
 
