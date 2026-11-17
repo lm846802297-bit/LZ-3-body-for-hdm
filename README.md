@@ -54,7 +54,7 @@
 - [原始源码审计](research/docs/06_original_source_audit.md)
 - [构建与图像审计](research/docs/07_source_build_and_figure_audit.md)
 - [\(\chi_2\to\chi_1s\) pole width 推导与验证](research/docs/08_chi2_decay_width.md)
-- [AFH v6.0、Eq. (6)、天然氙与 LZ rate-level 主报告](research/docs/09_afh_xe131_three_body_scattering_natural_xenon.md)
+- [AFH v6.0、Eq. (6)、天然氙与 LZ rate-level 主报告](research/docs/09_afh_xe131_three_body_scattering_natural_xenon.md)- [VV 核子流匹配与 Xe-131 \(W_{\Phi''}\) 响应审计](research/afh_vv_phi_xe131/README.md)：AFH 自旋—轨道响应、质量—轨道干涉、2401 点数值结果及三体振幅匹配边界。
 
 ## 当前科学状态（2026-11-16）
 
