@@ -3949,6 +3949,343 @@ R_M^{\rm phys}(0)=17159.583822859968,\quad A^2=17161.
 因此，\(M,\Phi'',M\Phi''\) 的 AFH response archive 已完成，但它们对实际三体事件率的贡献仍待完整系数收缩后才能判定。
 
 <!-- END UPDATE: L -->
+
+
+<!-- BEGIN UPDATE: M -->
+<a id="corr-m"></a>
+## M. 有限动量 AFH 核响应与有限 \(t_A\) 核子 form factor：生产级匹配补充（2026-11-18）
+
+本节明确区分一个重要事实：**现有计算已经采用有限空间动量转移下的 AFH 氙核响应；尚未完成的是核子内部有限 \(t_A\) 的 Dirac–Pauli form factor 匹配。** 因此，不能把现有计算笼统描述成“使用了零动量 form factor”或“把整个氙核当成点核”。真正尚未纳入完整计算的是另一层级的核子 form factor。
+
+本节是对前面讨论的扩充，不删除或改写第一部分的原始讨论，也不撤销已经完成的 AFH 有限动量数值结果。
+
+### M.1 现有三体计算已经使用有限 \(Q_A\) 的 AFH 核响应
+
+当前计算中至少有两个不同的 form factor 概念：
+
+1. **核结构响应 / nuclear form factor：** 描述核内有限空间分布、壳模型轨道和多极矩阵元对实际空间动量转移 \(Q_A=|\mathbf q_A|\) 的响应。当前 AFH 计算已经完整保留这一有限动量依赖。
+2. **单核子 form factors：** 描述夸克矢量流在单个质子或中子内部的结构，写成 \(F_1^{uds,N}(t_A)\) 与 \(F_2^{uds,N}(t_A)\)。当前三体速率主线尚未将这两个函数作为有限 \(t_A\) 的动态输入纳入完整核流。
+
+这两层不能互相替代，也不能因为第一层已经使用有限 \(Q_A\)，就认为第二层的有限 \(t_A\) 依赖已经自动包含在 AFH 响应中。
+
+靶核初态静止、末态在质量壳上时，
+\[
+Q_A\equiv |\mathbf q_A|
+=\sqrt{2m_AE_R+E_R^2},
+\qquad
+t_A=q_A^\mu q_{A,\mu}=-2m_AE_R.
+\]
+因此 AFH 响应使用 \(Q_A\)，核子 Dirac–Pauli form factors 使用 \(t_A\)。在非相对论重靶极限才有 \(t_A\simeq-Q_A^2\)；代码和文档必须继续保留这两个变量的不同定义。
+
+**现有程序已经使用有限 \(Q_A\) 的直接证据：**
+
+- 文件 research/historical_three_body_calculations/three_body_cross_section_and_rate/three_body_rate_engine.wl 中，LoadResponses 调用 AFH ResponseNuclear[y,1,0,0]，并保存其 \(q_A=0\) 值作为归一化分母。
+- 同一文件中的 response[a_,er_,mA_] 将
+  \[
+  y=\left[\frac{b_A}{2}\sqrt{2m_AE_R+E_R^2}\right]^2
+  \]
+  代入 AFH 响应，再以 \(A^2\) 归一化。这里的 \(q_A=0\) 只用于固定归一化，不是用零动量响应代替整个反冲区间。
+- NuclearResponse[a,recoilKeV] 将实际反冲能量传入上述函数；fixedSpeedCrossSection 再把这个有限动量核响应乘入三体相空间积分。
+- 文件 research/afh_default_density_xe131/run_afh_default_xe131.py 直接以 \(y=(q_Ab_A/2)^2\) 计算 AFH 有限和；对应 Xe-131 网格覆盖 \(q_A=0\)–\(0.6\ \mathrm{GeV}\)，共 2,401 个节点。
+- 七同位素 AFH 响应程序同样逐个 \(q_A\) 网格点计算有限动量响应，而不是把 \(R_A(q_A)\) 固定为 \(R_A(0)=A^2\)。
+
+所以，现有结果中的有限核尺寸效应、同位素形状差异和衍射极小值均来自有限动量核结构计算。特别是 Xe-131 的 \(q_A\simeq158,\ 256,\ 365\ \mathrm{MeV}\) 等极小值，正是有限动量核响应的结果。
+
+### M.2 尚未完成的是核子内部 \(F_1(t_A)\)、\(F_2(t_A)\)，不是 AFH 的有限 \(Q_A\)
+
+单核子矢量流为
+\[
+J_N^\mu(t_A)=
+\bar u_N(p_N')
+\left[
+F_1^{uds,N}(t_A)\gamma^\mu
++\frac{iF_2^{uds,N}(t_A)}{2m_N}
+\sigma^{\mu\nu}Q_{A,\nu}
+\right]u_N(p_N),
+\qquad Q_A=p_N'-p_N.
+\]
+
+目前采用的零动量 benchmark 是
+\[
+F_1^{uds,p/n}(0)=3,\qquad
+F_2^{uds,p/n}(0)\simeq-0.552
+\]
+（中子结果使用同位旋对称近似）。这两个数是核子流的 \(t_A=0\) 边界输入，不是 AFH 核响应的有限动量计算方法。
+
+对现有三体速率代码的审计表明：
+
+- Mathematica 速率引擎中的 I6 计算暗物质侧两张辐射图的自旋迹和三体相空间积分；
+- AFH NuclearResponse 作为单独的有限 \(Q_A\) 核结构因子传入；
+- fixedSpeedCrossSection 使用一个外部传入的 couplingSquared，没有逐个反冲点调用 \(F_1^{uds,N}(t_A)\) 或 \(F_2^{uds,N}(t_A)\)；
+- Python eq6_kernel.py 的 reduced_kernel 也负责 Eq. (6) 的暗物质侧积分，不负责核子 Dirac–Pauli form factor。
+
+因此，当前已归档的 \(M\)-only 三体基准可准确描述为：
+
+> **有限 \(Q_A\) 的 AFH 核结构响应 × 当前采用的常数单核子矢量电荷耦合 × 暗物质侧完整三体相空间核。**
+
+它不是“零动量 AFH 核响应近似”；但它也还不是包含完整有限 \(t_A\) 核子 \(F_1/F_2\) 的生产级 VV 核流计算。当前 \(F_2(0)\) 的文献中心值用于理论匹配和 NR 结构判断，尚未作为 \(F_2(t_A)\) 插入完整三体截面。
+
+### M.3 HKS 有限 \(t\) flavor 重构与 Bishara 零动量输入的使用边界
+
+HKS 的矢量流 flavor 重构式（Eq. (19)–(21)）可用于构造有限 \(t\) 的单味 form factor。在同位旋对称近似下，
+\[
+F_i^{u,p}(t)=F_i^{d,n}(t)
+=2F_i^{\mathrm{EM},p}(t)
++F_i^{\mathrm{EM},n}(t)
++F_i^{s,N}(t),
+\]
+\[
+F_i^{d,p}(t)=F_i^{u,n}(t)
+=F_i^{\mathrm{EM},p}(t)
++2F_i^{\mathrm{EM},n}(t)
++F_i^{s,N}(t),
+\]
+\[
+F_i^{s,p}(t)=F_i^{s,n}(t)=F_i^{s,N}(t),
+\qquad i=1,2.
+\]
+于是当前等权重三味流满足
+\[
+\boxed{
+F_i^{uds,p}(t)=F_i^{uds,n}(t)
+=3\left[
+F_i^{\mathrm{EM},p}(t)
++F_i^{\mathrm{EM},n}(t)
++F_i^{s,N}(t)
+\right]
+}
+\]
+其中最后一个等号使用了同位旋对称。该关系说明有限 \(t\) 的 flavor-universal form factor 应由质子、中子电磁 form factors 和 strange form factor 一起重构，而不是只把 \(t=0\) 的常数机械地延伸到整个反冲区间。
+
+对 Sachs form factors，采用
+\[
+G_E^N(t)=F_1^N(t)+\frac{t}{4m_N^2}F_2^N(t),
+\qquad
+G_M^N(t)=F_1^N(t)+F_2^N(t).
+\]
+定义 \(\tau=-t/(4m_N^2)\ge0\)，则
+\[
+F_1^N(t)=\frac{G_E^N(t)+\tau G_M^N(t)}{1+\tau},
+\qquad
+F_2^N(t)=\frac{G_M^N(t)-G_E^N(t)}{1+\tau}.
+\]
+生产级输入可以从经过验证的质子、中子 \(G_E,G_M\) 参数化重构，再加入 strange electric/magnetic form factor；必须记录拟合来源、\(t\) 区间、误差和参数协方差。若使用 z-expansion、dispersion-based fit 或其他经验参数化，必须明确它们的适用区间和外推边界。
+
+Bishara et al. Appendix A.1 提供的 \(F_1\) 零动量斜率可作为低 \(t\) 边界检查：
+\[
+\begin{aligned}
+\left.\frac{dF_1^{u/p}}{dt}\right|_{0}
+&=5.57(9)\ \mathrm{GeV}^{-2},\\
+\left.\frac{dF_1^{d/p}}{dt}\right|_{0}
+&=2.84(5)\ \mathrm{GeV}^{-2},\\
+\left.\frac{dF_1^{s/p}}{dt}\right|_{0}
+&=-0.018(9)\ \mathrm{GeV}^{-2}.
+\end{aligned}
+\]
+所以等权重三味流的中心斜率为
+\[
+\boxed{
+\left.\frac{dF_1^{uds,p}}{dt}\right|_0
+=8.392\ \mathrm{GeV}^{-2}
+}
+\]
+在同位旋对称近似下，中子得到相同的三味总和。由此可以写出局部展开
+\[
+F_1^{uds,N}(t)=3+8.392\,t+\mathcal O(t^2).
+\]
+**这个一阶展开只用于 \(t=0\) 附近的斜率检查，不能不经验证就外推到 \(q_A=0.2\)–\(0.6\ \mathrm{GeV}\) 的全部核反冲区间。** 它也不能替代完整的有限 \(t\) 质子、中子电磁 form factor 和 strange form factor 参数化。
+
+对 \(F_2^{uds,N}(t)\)，Bishara 的 \(-0.552\) 是零动量中心值；不能据此断言 \(F_2(t)\) 在整个区间为常数。有限 \(t\) 的 Pauli form factor 应通过上面的 flavor 重构和 Sachs 参数化独立建立。当前不人为指定未经来源验证的 \(F_2\) 斜率或 dipole mass。
+
+### M.4 \(F_2(0)\) 的误差相关性：不能把三个 flavor 当作独立输入
+
+Bishara Appendix A.1 的零动量输入为
+\[
+F_2^{u/p}=2\kappa_p+\kappa_n+\kappa_s=1.609(17),
+\]
+\[
+F_2^{d/p}=\kappa_p+2\kappa_n+\kappa_s=-2.097(17),
+\qquad
+F_2^{s/p}=\kappa_s=-0.064(17).
+\]
+这里三个 flavor 的误差并非三个独立的 \(0.017\)：在上述重构中，它们共同包含同一个 strange Pauli 输入 \(\kappa_s\)。
+
+只传播文献明确给出的 \(\sigma_s=0.017\)，并暂时把 \(\kappa_p,\kappa_n\) 的误差忽略时，
+\[
+\frac{\partial(F_2^u,F_2^d,F_2^s)}
+{\partial\kappa_s}=(1,1,1),
+\]
+所以该来源贡献的协方差为
+\[
+C_s=\sigma_s^2
+\begin{pmatrix}
+1&1&1\\
+1&1&1\\
+1&1&1
+\end{pmatrix}.
+\]
+等权重三味总和因此满足
+\[
+F_2^{uds,p}(0)=3(\kappa_p+\kappa_n+\kappa_s)
+=-0.552,
+\qquad
+\boxed{\sigma(F_2^{uds})\big|_{\kappa_s}=0.051}.
+\]
+相应地，在把 \(F_1(0)=3\) 视为精确电荷归一化的条件下，
+\[
+F_1+2F_2=1.896\pm0.102,
+\qquad
+F_1+F_2=2.448\pm0.051.
+\]
+这里的误差明确只是 strange Pauli 输入传递来的条件性误差，不是完整误差预算；它尚未包含质子/中子磁矩输入误差、isospin-breaking、有限 \(t\) 参数拟合误差及其相关性。生产级协方差必须从原始输入的联合参数协方差传播，不能把三个 \(0.017\) 当作独立误差平方相加。
+
+**HKS Eq. (21) 与 Eq. (23) 的处理约定：** Eq. (21) 是显式的 flavor 重构关系；Bishara Appendix A.1 给出的中心值与该显式重构一致。若把 HKS Eq. (23) 中的 \(\kappa_N\) 直接解释为 Eq. (24) 的物理核子反常磁矩，则其紧凑写法形式上给出 \(F_2^{u,N}+F_2^{d,N}+F_2^{s,N}=0\)，并不等同于 Eq. (21) 加上 Bishara 显式 flavor 输入得到的 \(-0.552\)。在没有进一步澄清该紧凑式的定义、适用近似或勘误之前，本项目采用 Eq. (21) 的显式 flavor 重构和 Bishara 数值作为 benchmark；不得把 Eq. (23) 单独提升为三味 Pauli form factor 必然相消的恒等式。
+
+### M.5 自由核子 Dirac–Pauli 流的精确检查与 NR 约化
+
+生产代码必须先固定
+\[
+g_{\mu\nu}=\operatorname{diag}(+1,-1,-1,-1),
+\quad
+Q_A=p_N'-p_N,
+\quad
+\sigma^{\mu\nu}=\frac{i}{2}[\gamma^\mu,\gamma^\nu],
+\]
+以及
+\[
+J_N^\mu=
+\bar u_N(p_N')
+\left[
+F_1(t_A)\gamma^\mu
++\frac{iF_2(t_A)}{2m_N}\sigma^{\mu\nu}Q_{A,\nu}
+\right]u_N(p_N).
+\]
+Gordon identity 在这一动量方向下为
+\[
+\bar u_N'
+\frac{i\sigma^{\mu\nu}Q_{A,\nu}}{2m_N}
+u_N
+=
+\bar u_N'
+\left[
+\gamma^\mu-\frac{(p_N'+p_N)^\mu}{2m_N}
+\right]u_N.
+\]
+它可用于检查 Pauli 项的符号和与 Dirac 项的组合，但不能替代完整自旋子数值对照。
+
+必须检查的精确性质是
+\[
+Q_{A,\mu}J_N^\mu=0.
+\]
+对等质量、on-shell 的自由核子，Dirac 项由 Dirac 方程保证守恒，Pauli 项则因 \(Q_{A,\mu}\sigma^{\mu\nu}Q_{A,\nu}=0\) 自动横向。该检查应逐个测试自旋态、若干有限 \(Q_A\) 和不同 \(F_1,F_2\) 输入。
+
+NR 约化应同时对照以下结构：
+- \(J_N^0\) 的领先电荷密度；
+- \(J_N^0\) 中正比于 \(F_1+2F_2\) 的自旋—轨道电荷项；
+- \(\mathbf J_N\) 中正比于 \(F_1\) 的对流流；
+- \(\mathbf J_N\) 中正比于 \(F_1+F_2\) 的磁化流；
+- Darwin 等自旋无关相对论修正和更高阶 \(Q_A/m_N\)、\(K_N/m_N\) 项。
+
+验收时应直接用完整 Dirac 自旋子计算与同一归一化下的 NR 展开比较，而不是从不同文献中拼接单个分量。尤其不能把 \(F_1+2F_2\) 直接当成完整三体 \(\mathcal O_3\) 的 Wilson coefficient：它首先是核子时间流自旋—轨道项的 form-factor 组合；最终 \(\mathcal O_3\) 或 AFH \(\Phi''\) 的系数必须在暗物质三体流与核子完整四流收缩后确定。
+
+### M.6 弹性 \(2\to2\) VV 匹配不能直接代替本项目的 \(2\to3\) 匹配
+
+标准弹性散射可写为
+\[
+\mathcal M_2=J_{\chi,\mu}J_N^\mu,
+\]
+其中暗物质侧是单一的弹性矢量流。HKS 的 NR 单体矩阵元可用来检查自由核子 form factor、符号和算符基底。
+
+当前过程则为
+\[
+\chi_1+A\longrightarrow\chi_1+A+s,
+\]
+暗物质侧是两张标量辐射图之和
+\[
+\mathcal T_3^\mu
+=\mathcal T_{\rm before}^\mu+\mathcal T_{\rm after}^\mu,
+\]
+并包含虚中间态 \(\chi_2\) 传播子、两图干涉以及三体末态运动学。总振幅必须从
+\[
+\mathcal M_3\propto
+\mathcal T_{3,\mu}\,D^{\mu\nu}(Q_A)\,J_{A,\nu}
+\]
+开始，其中 \(J_A^\nu\) 是把完整单核子 Dirac–Pauli 流嵌入核后的核流。
+
+三体守恒关系为
+\[
+q_\chi^\mu=p_\chi'^\mu-p_\chi^\mu,
+\qquad
+Q_A^\mu=-q_\chi^\mu-k_s^\mu.
+\]
+因此 \(Q_A\) 一般不等于 \(-q_\chi\)，而且弹性散射中常用的 \(\mathbf v^\perp\) 不能直接套用。对于固定 \(E_R\)，\(t_A=-2m_AE_R\) 已由靶核质量壳条件固定；若单核子 form factors 只依赖 \(t_A\)，它们在该 \(E_R\) 对应的内部 \(W^2,z,\phi_*\) 求积中是固定系数。但三体流的 Lorentz 分量、角变量和干涉结构仍然需要在积分内完整保留。
+
+因此，正确顺序是：先在相同 \(Q_A,t_A\) 和传播子约定下计算 \(\mathcal T_3^\mu J_{N,\mu}\)，再投影到 AFH 多极响应。不能先把弹性 \(2\to2\) 的 NR 系数搬入三体过程，再把它们乘上有限 \(Q_A\) 的 AFH 响应。
+
+### M.7 手征 EFT 的两体流结论必须结合本项目的高动量区间使用
+
+HKS 在其给定的手征计数中推导到 \(\mathcal O(p^3)\)，并指出该阶的两体矢量流出现在 AV 通道；这为当前 VV 一体流优先级提供了依据。但这不是“任何动量下 VV 两体流严格为零”的结论。
+
+本项目 Xe-131 深极小值达到
+\[
+Q_A\simeq0.158,\ 0.256,\ 0.365\ \mathrm{GeV},
+\]
+而 HKS 对手征 EFT 的 breakdown scale 讨论约为 \(0.5\ \mathrm{GeV}\)。第三个极小值处 \(Q_A/\Lambda_\chi\) 已约为 \(0.7\)，不宜把低阶计数当作高精度数值误差估计。Bishara 文章引言中用于说明典型直接探测动量范围的约 \(200\ \mathrm{MeV}\) 也不是适用于所有反冲过程的硬截止。
+
+当前执行策略仍然是先完成一体 VV 核流的有限 \(t_A\) 匹配和完整三体收缩；两体矢量流暂不作为第一轮必算项，但在高 \(Q_A\) 精度预算中必须保留为理论误差/后续审计项。不得仅凭“某一阶未出现”就将其写成所有动量区间的严格零贡献。
+
+### M.8 对现有计算的正确升级方式：保留有限 \(Q_A\) AFH，增加有限 \(t_A\) 核子流层
+
+现有 AFH 核响应网格、同位素密度矩阵、\(q_A\) 插值和已归档的 \(M,\Phi'',M\Phi''\) native 输出均应保留，不应为了加入 nucleon form factor 而退回零动量核响应，也不应重算成点核。
+
+下一步应增加一个独立的 nucleon-form-factor/matching layer：
+
+1. 对每个反冲能量计算 \(Q_A=\sqrt{2m_AE_R+E_R^2}\) 和 \(t_A=-2m_AE_R\)，两者分开保存。
+2. 由质子、中子电磁 \(G_E,G_M\) 和 strange vector form factor 的选定参数化，重构 \(F_1^{uds,p/n}(t_A)\)、\(F_2^{uds,p/n}(t_A)\)。
+3. 在 exact isospin benchmark 下先验证 \(F_i^{uds,p}(t_A)=F_i^{uds,n}(t_A)\)；若放开 isospin-breaking 或 proton/neutron form factor 差异，则必须保留 isoscalar/isovector 两组核流，不能继续只用一个等标量响应。
+4. 将 \(F_1(t_A)\) 乘入相应的电荷密度系数；将 Pauli 流产生的时间分量自旋—轨道项、空间对流项和磁化项分别匹配到相应 AFH 多极响应。\(M,\Phi'',M\Phi''\) 必须保持振幅级干涉，不能只相加响应平方。
+5. 把完整三体暗物质张量和上述核流在同一 \(Q_A,t_A\) 约定下收缩，再进入原有三体相空间积分。对固定 \(E_R\)，只允许将纯 \(t_A\)-依赖的 form factor 从内部相空间积分中提出。
+6. 最后才生成包含有限 \(Q_A\) 核结构与有限 \(t_A\) 单核子结构的 Xe-131、Xe-129 和天然氙反冲谱。
+
+### M.9 生产计算的分层验收条件与当前状态
+
+| 检查项 | 正确的验收内容 | 当前状态 |
+|---|---|---|
+| AFH 有限动量核响应 | \(y=(Q_Ab_A/2)^2\)，使用实际 \(Q_A\) 网格 | 已完成并归档 |
+| AFH 零动量归一化 | \(q_A=0\) 只用于核响应归一化；raw \(A^2/4\) 与物理 \(A^2\) 的因子 4 只计一次 | 已完成，按各归档版本的归一化约定使用 |
+| 三体动量变量 | 分开保存 \(q_\chi,k_s,Q_A,t_A,E_R\) | 已有统一约定和运动学审计 |
+| 核子 \(F_1^{uds,N}(0)\)、\(F_2^{uds,N}(0)\) | 电荷计数、显式 flavor 分解和中心值 | 已有文献 benchmark |
+| 核子有限 \(t_A\) form factors | EM/strange 参数化、适用区间和协方差 | 待完成；当前主速率代码未显式调用 |
+| 自由核子精确 Dirac–Pauli 检查 | Gordon identity、\(Q_{A,\mu}J_N^\mu=0\)、完整自旋子与 NR 逐项对照 | 待完成 |
+| 三体完整收缩 | 两张辐射图、\(\chi_2\) 传播子、图间干涉和 \(L_3^{\mu\nu}W_{\mu\nu}\) | 待完成 |
+| AFH 多极投影 | \(M,\Phi'',M\Phi''\) 与实际三体系数联合收缩 | 核响应已归档；三体系数收缩待完成 |
+| 空间核流 | \(\Delta,\Sigma',\Sigma''\) 的 native 输出和系数审计 | 待完成 |
+| 高 \(Q_A\) 理论误差 | 单体 NR 截断、有限 \(t_A\) 输入、ChEFT 两体流适用性 | 待完成 |
+
+最低限度的自动化测试必须包含：
+
+- \(Q_A\to0\) 时 \(F_1^{uds,N}\to3\)、\(F_2^{uds,N}\to-0.552\) 的输入边界；
+- AFH 核响应有限 \(Q_A\) 网格与现有归档逐点一致，不因增加 nucleon form factor 而改变；
+- \(t_A=-2m_AE_R\) 与 \(Q_A^2=2m_AE_R+E_R^2\) 分别满足质量壳关系；
+- 质子、中子 flavor 重构及其同位旋极限；
+- \(F_2\) 共同 strange 输入的协方差传播；
+- 自由核子 \(Q_{A,\mu}J_N^\mu=0\)；
+- 完整 Dirac–Pauli 流与 NR 展开的逐分量对照；
+- 三体两张辐射图的相干求和与 \(L_3^{\mu\nu}W_{\mu\nu}\) 的 Hermiticity/positivity；
+- AFH \(M\)-\(\Phi''\) 有符号干涉、factor-four 唯一放置和深极小值局部网格收敛；
+- 最终天然氙同位素加权前，逐同位素核响应与有限 \(t_A\) nucleon coefficient 的 provenance 可追溯。
+
+**本节的核心结论：** 现有计算已经是有限 \(Q_A\) 的 AFH 核结构计算；接下来不是“把零动量核 form factor 改成有限动量”，而是在不破坏现有 AFH 有限动量基线的前提下，补上尚未显式实现的有限 \(t_A\) 核子 \(F_1/F_2\) 匹配，并完成它与三体暗物质流、AFH 多极响应的联合收缩。
+
+参考来源：
+
+1. M. Hoferichter, P. Klos and A. Schwenk, arXiv:1503.04811，尤其是 Eq. (19)–(26)、矢量两体流的 \(\mathcal O(p^3)\) 讨论。https://arxiv.org/abs/1503.04811
+2. F. Bishara, J. Brod, B. Grinstein and J. Zupan, arXiv:1707.06998，Appendix A.1 的 flavor-separated vector form factors、零动量 Pauli 输入及 \(F_1\) 斜率。https://arxiv.org/abs/1707.06998
+3. 当前仓库 research/historical_three_body_calculations/three_body_cross_section_and_rate/three_body_rate_engine.wl：AFH 有限 \(Q_A\) 响应与三体相空间核的因子化实现。
+4. 当前仓库 research/afh_default_density_xe131/run_afh_default_xe131.py 与 research/afh_default_density_natural_xenon_halo/run_afh_default_xenon_responses.py：有限 \(Q_A\) AFH 核响应网格的直接计算。
+5. 当前仓库 research/three_body_calculation_and_validation/eq6_kernel.py：Eq. (6) 暗物质侧三体相空间核实现；该模块本身不执行核子 \(F_1/F_2(t_A)\) 匹配。
+
+<!-- END UPDATE: M -->
 ---
 
 
@@ -3969,6 +4306,7 @@ R_M^{\rm phys}(0)=17159.583822859968,\quad A^2=17161.
 10. [J. 生产计算审计顺序与验收条件](#corr-j)
 11. [K. 参考文献与可核对来源](#corr-k)
 12. [L. 2026-11-18 Xe-131 native AFH 响应归档](#corr-l)
+13. [M. 有限动量 AFH 核响应与有限 \(t_A\) 核子 form factor 的区分及生产级匹配补充](#corr-m)
 
 **阅读约定：** 原始讨论用于追溯问题提出和研究判断的演进；紧随其后的校订块用于当前物理解释和实现；尚未完成的核流匹配、AFH 响应与完整三体收缩仍标记为待验证。
 
@@ -3979,4 +4317,4 @@ R_M^{\rm phys}(0)=17159.583822859968,\quad A^2=17161.
 - 若后续发现校订块本身有物理错误，应保留变更记录并注明新旧约定，不得静默改写历史结论。
 - 新推导、代码审计和数值结果必须区分“解析推导”“数量级估算”“已验证数值”和“待验证”。
 - 不得将尚未完成的 \(\Phi''\)、\(M\Phi''\)、\(\Delta\)、\(\Sigma'\) 或完整三体核流收缩写成 PASS。
-- AFH 原始 \(A^2/4\) 与物理等耦合 \(A^2\) 的因子 4 必须且只能计入一次；有限 \(t_A\) form factor 不得由零动量中心值替代。
+- AFH 原始 \(A^2/4\) 与物理等耦合 \(A^2\) 的因子 4 必须且只能计入一次；有限 \(Q_A\) 的 AFH 核响应与有限 \(t_A\) 的单核子 \(F_1/F_2\) 必须分层记录，不得把前者误称为零动量近似，也不得用前者替代后者。
