@@ -1117,8 +1117,8 @@ F_1^V+F_2^V=2.448.
 | AFH 响应 | 主要单核子流来源 | 当前处理 |
 |---|---|---|
 | \(M\) | \(F_1\) 领先电荷密度 | 已有 AFH 七同位素数值基线 |
-| \(\Phi''\) | \(J_N^0\) 中的 \(\boldsymbol\sigma_N\cdot(\mathbf q_A\times\mathbf K_N)\) 自旋—轨道电荷项 | 第一优先级，尚未数值计算 |
-| \(M\Phi''\) | \(M\) 与 \(\Phi''\) 的干涉 | 必须与 \(\Phi''\) 同步计算，尚未数值计算 |
+| \(\Phi''\) | \(J_N^0\) 中的 \(\boldsymbol\sigma_N\cdot(\mathbf q_A\times\mathbf K_N)\) 自旋—轨道电荷项 | Xe-131 的 AFH v6.0 native Wolfram exporter（2,401 个 \(q_A\) 节点）和 Python validator 已准备；尚无 native 输出 |
+| \(M\Phi''\) | \(M\) 与 \(\Phi''\) 的干涉 | 与 \(\Phi''\) 共用 native export；尚无数值结果 |
 | \(\Delta\) | 空间流的对流/轨道项 | AFH DeltaJ 已纠正为同阶 MJLDivQ 映射；native Wolfram 输出和逐点对照待完成 |
 | \(\Sigma'\) | 空间流的横向磁化自旋项 | 先前 selected-\(q\) 数值表已撤回；native Wolfram 输出和逐点对照待完成 |
 | \(\Sigma''\) | 完整投影中可能出现的纵向自旋结构 | 尚未完成匹配和收缩 |
