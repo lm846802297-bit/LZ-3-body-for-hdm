@@ -1,12 +1,13 @@
 # Xe-131 AFH regression tests
 
-This folder contains the nine regression suites for the AFH default Xe-131 study.
+This folder contains the ten regression suites for the AFH default Xe-131 study.
 
 | Test | Coverage |
 |---|---|
 | test_afh_default_xe131.py | AFH density-matrix inventory, oscillator length, factor-four convention, and response implementation |
 | test_afh_four_benchmarks.py | Four-benchmark AFH/GCN/JJ55 response substitution, exact-q convention, and shared Eq. (6) integral |
 | test_afh_spatial_response_audit.py | Python M/Phi baseline cross-check, Sigma-prime/Delta smoke tests, DeltaJ same-rank mapping and Sigma-prime–Delta Cauchy–Schwarz consistency |
+| test_compare_afh_spatial_response.py | Pointwise Python/native AFH spatial-response comparison, q-grid identity, and interference Cauchy–Schwarz checks |
 | test_afh_phi_response.py | AFH M/Phi''/M-Phi'' response-index mapping, factor-four bookkeeping, positivity, and interference Cauchy-Schwarz validation |
 | test_ame2020_hybrid_natural_xenon.py | Xe-131-only AME2020 replacement and rejection of inconsistent/missing baseline terms |
 | test_ame2020_xe131_halo_partial.py | AME2020 mass prescription, halo normalization, and exact-spatial versus NR-approximate response momentum |
