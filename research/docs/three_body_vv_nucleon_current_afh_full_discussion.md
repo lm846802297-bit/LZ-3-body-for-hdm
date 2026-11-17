@@ -1275,7 +1275,18 @@ q_{A\mu}\mathcal T_3^\mu
 - 若 \(m_{\chi_2}\ne m_\chi\)，三体暗物质流一般不守恒；
 - 不能把弹性守恒矢量流的简化恒等式直接套到本模型。
 
-还要注意有限宽度的实现。若只把两个实分母替换成 \(D_i+i m_{\chi_2}\Gamma_{\chi_2}\)，而分子仍保留实质量，则上述代数中的 \(+1\) 和 \(-1\) 不再严格抵消，会留下与宽度成正比的残项。这不是新的物理顶点，而是固定宽度插入对 Ward 恒等式的影响。数值实现必须明确使用固定宽度、能量依赖自能还是复极点方案，并将方案差异纳入极点附近的误差审计。不能在一张图中加宽度、另一张图中不加，也不能把有限宽度下的零宽度 Ward 公式当成严格恒等式。
+还要注意有限宽度的实现。令 \(a=m_{\chi_2}\Gamma_{\chi_2}\)、\(\mathcal D_i=D_i+ia\)。若只把两个实分母替换成 \(\mathcal D_i\)，而分子仍保留实质量，则直接重复上面的代数得到
+\[
+q_{A\mu}\mathcal T_{3,\Gamma}^\mu
+=(m_{\chi_2}-m_\chi)g_1g_2\bar u'
+\left[
+\frac{\slashed r_1+m_{\chi_2}}{\mathcal D_1}
+-\frac{\slashed r_2+m_{\chi_2}}{\mathcal D_2}
+\right]u
++iag_1g_2\bar u'u
+\left(\frac{1}{\mathcal D_2}-\frac{1}{\mathcal D_1}\right).
+\]
+最后一项正是两个常数项不再严格抵消留下的固定宽度残项。它不是新的物理顶点，而是固定宽度插入对 Ward 恒等式的影响。数值实现必须明确使用固定宽度、能量依赖自能还是复极点方案，并将方案差异纳入极点附近的误差审计。不能在一张图中加宽度、另一张图中不加，也不能把有限宽度下的零宽度 Ward 公式当成严格恒等式。
 
 ## 28. 三体运动学、相空间和 \(I(D)\) 的推导
 
@@ -2499,9 +2510,19 @@ R_M^{\rm phys}(Q_A\to0)=A^2.
 \]
 对 \(\Phi''\)，检查 \(J=0\) 长波矩阵元与
 \[
-\frac13\sum_i\boldsymbol\sigma_i\cdot\mathbf l_i
+\sqrt{4\pi}\Phi''_{00}(0)
+=\frac13\sum_i\boldsymbol\sigma_i\cdot\mathbf l_i
 \]
-的对应关系，并检查允许的 \(J=2\) 分量。Xe-131 的 \(M\) rank-2 多极仍然属于 \(M\) 响应，不能因为 \(J=2\) 就把它记成 \(\Phi''\) 或 SD 响应。
+的对应关系；同时检查 \(J=2\) 的张量长波分量
+\[
+\sqrt{4\pi}\Phi''_{2M}(0)
+=-\frac{1}{\sqrt5}\sum_i
+\left[
+\mathbf r_i\otimes
+\left(\boldsymbol\sigma_i\times\frac{1}{i}\boldsymbol\nabla_i\right)_1
+\right]_{2M}t^\tau(i).
+\]
+Xe-131 的 \(M\) rank-2 多极仍然属于 \(M\) 响应，不能因为 \(J=2\) 就把它记成 \(\Phi''\) 或 SD 响应。
 
 ### 34.4 必须保持的物理状态边界
 
@@ -2574,17 +2595,18 @@ AFH 的输入不是一个经验 Helm 半径，而是核态的一体密度矩阵�
 \]
 这里 \(a,b\) 表示单粒子轨道，\(\rho_{ab}^{(\tau)}\) 是相应同位旋通道的一体密度矩阵（OBDME），而单粒子约化矩阵元包含球贝塞尔函数、球谐函数、轨道角动量和自旋耦合。
 
-核响应是这些约化矩阵元的双线性组合：
+核响应是这些约化矩阵元的双线性组合。其标准结构为
 \[
 W_{XY}^{\tau\tau'}(Q_A)
-\propto
+=
+\frac{4\pi}{2J_A+1}
 \sum_J
 \langle J_A\Vert\widehat{\mathcal O}_{X,J}^{\,\tau}
 \Vert J_A\rangle
 \langle J_A\Vert\widehat{\mathcal O}_{Y,J}^{\,\tau'}
-\Vert J_A\rangle^*.
+\Vert J_A\rangle^*,
 \]
-比例中的角动量和归一化因子采用 AFH v6.0 的正式约定，由仓库中的 ResponseNuclear 接口统一处理。不能在外部代码中既使用已经归一化的 AFH 输出，又手动重复乘相同的多极归一化因子。
+其中 \(X,Y\) 取 AFH 的允许核算符，具体允许的 \(J\) 奇偶性由算符的宇称决定。实际使用时还必须遵循 AFH v6.0 的 isospin 和 package 输出归一化约定；当前 raw \(A^2/4\) 到 physical \(A^2\) 的 factor-four 映射另按 §32.4 处理。不能在外部代码中既使用已经归一化的 AFH 输出，又手动重复乘相同的多极归一化因子。
 
 对 \(X=Y=M\)，得到 \(W_M\)；对 \(X=Y=\Phi''\)，得到 \(W_{\Phi''}\)；对 \(X=M,Y=\Phi''\)，得到 \(W_{M\Phi''}\)。最后一个是两个不同核算符的交叉双线性项，不是 \(W_M\) 和 \(W_{\Phi''}\) 的几何平均，也不能由两个对角响应单独恢复其符号。
 
