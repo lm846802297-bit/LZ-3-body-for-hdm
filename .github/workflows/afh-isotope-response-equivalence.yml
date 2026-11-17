@@ -1,0 +1,32 @@
+name: AFH isotope response equivalence
+
+on:
+  push:
+    paths:
+      - "research/afh_isotope_response_equivalence/**"
+      - "research/afh_default_density_natural_xenon_halo/results/full_afh_v6_default_7_isotope_response/**"
+      - "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/afh_hybrid9_response_model_comparison.csv"
+      - ".github/workflows/afh-isotope-response-equivalence.yml"
+  pull_request:
+    paths:
+      - "research/afh_isotope_response_equivalence/**"
+      - "research/afh_default_density_natural_xenon_halo/results/full_afh_v6_default_7_isotope_response/**"
+      - "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/afh_hybrid9_response_model_comparison.csv"
+      - ".github/workflows/afh-isotope-response-equivalence.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Run unit tests
+        run: python -m unittest discover -s research/afh_isotope_response_equivalence/tests -p 'test_*.py' -v
+      - name: Reproduce isotope response audit
+        run: python research/afh_isotope_response_equivalence/run_afh_isotope_response_equivalence.py
