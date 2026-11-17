@@ -1,148 +1,30 @@
-# Xenon isotope mass-scheme sensitivity audit
+# 氙同位素精确核质量计算状态
 
-Date: 2026-11-11
+## 采用方案
 
-## Scope
+同位素反冲运动学统一使用 AME2020 的 Xe 同位素中性原子质量，并按
 
-The existing joint response and three-body calculation uses
-\[
-m_A=A\,u,\qquad u=0.93149410242~\mathrm{GeV}.
-\]
-This audit compares that historical mass-number approximation with an
-isotope-specific nuclear mass reconstructed from NIST relative atomic masses:
-\[
-m_A^{\rm nuc}\simeq
-\left[M_{\rm atom}(A)-54m_e\right]u.
-\]
-The total electronic binding energy (order 0.1 MeV for xenon) is neglected;
-its relative correction to a 120 GeV nuclear mass is below \(10^{-6}\).
-The detector-mass normalization continues to use the NIST standard atomic
-weight 131.293 g/mol, which is an atomic—not nuclear—mass quantity.
+`M_nucleus = (M_atom - 54 m_e) u + B_e(54)`
 
-NIST source:
-https://physics.nist.gov/cgi-bin/Compositions/stand_alone.pl?ascii=ascii&ele=Xe
+转换为裸核质量。`u` 和电子质量比采用 CODATA 2022；`B_e` 采用 AME2020 电子总结合能近似。Xe-131 的输入值为 `121.90992244721734 GeV`。天然氙核素数密度则使用丰度加权平均原子摩尔质量 `131.29276127759823 g/mol`，二者分开处理。
 
-## 1. Mass and momentum shifts
+## 已按同一质量方案重算
 
-Across the nine naturally occurring isotopes, the NIST nuclear-mass
-prescription is about 0.093–0.100% below \(A u\). Consequently,
-\[
-q_{\rm response}=\sqrt{2m_AE_R}
-\]
-decreases by about half that relative amount. The absolute shift is small,
-but the response can be steep near a diffraction minimum.
+| 计算 | 当前输出 | 结论 |
+| --- | --- | --- |
+| 主 Mathematica 笔记本的质量函数和核素映射 | `research/three_body_natural_xenon/矢量耦合暗物质三体散射与天然氙反冲率.nb` | 已改为同位素精确裸核质量；旧缓存结果已清除，63 个输入单元保留 |
+| Mathematica `NIntegrate`、Gauss 阶数对照及点状靶独立 Python 积分 | `research/three_body_natural_xenon/独立验证/methods_comparison.csv`、`mma_i6_convergence.csv`、`point_target_convergence.csv` | 六个开放点的 Python 与 Mathematica `NIntegrate` 相对差小于 `1.6e-7`；阈值外检查点返回零 |
+| 天然氙速度平均阶数对照 | `research/three_body_natural_xenon/convergence_halo.csv` | {6,6,4}/v6 至 {16,16,8}/v16 在 110、200、267、542 keV 的对照已更新 |
+| AFH-7、Hybrid-9、AFH-7+A² ceiling、Helm-9 的 84 点连续谱 | `research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_ame2020_exact_2026-11-17/` | 元数据 `PASS`；32 个速度节点、{8,8,4} 三体求积；速度与积分阶数交叉检查均通过 |
+| 相空间映射、角度、阈值、Eq. (6) 前因子、800 km/s 与近极点检查 | `research/three_body_calculation_and_validation/results/phase_space_convergence_ame2020_exact_2026-11-17/` | 所有选定 Xe-131 运动学点已用 AME2020 裸核质量重新计算 |
+| 参数缩放与速度阈值 | `mathematica_halo_notebook/独立验证/model_limits.wls` | `couplingSq` ×4 时截面 ×4；400 km/s 检查点闭合 |
 
-The abundance-weighted response-only sums over the seven isotopes with
-available GCN/JJ55 density matrices change as follows:
+同一 AFH-7 精确谱在 `ER=200 keV`、`coupling_product_squared=1e-8` 下得到：红色 benchmark `1.5320145e-9`、绿色 `1.8132011e-11`、黑色 `0`、蓝色 `1.4811075e-13 events/(kg day keV)`。对应 benchmark 定义和所有能点在该谱目录的 CSV 与 `metadata.json` 中。
 
-| \(E_R\) [keV] | GCN: \(R_{\rm NIST}/R_{Au}\) | JJ55: \(R_{\rm NIST}/R_{Au}\) |
-|---:|---:|---:|
-| 101 | 0.99785 | 0.99010 |
-| 200 | 1.00646 | 1.00641 |
-| 267 | 1.01309 | 1.01723 |
-| 542 | 1.03562 | 1.04152 |
+## 尚未能重算的链条
 
-These are response-only sums \(\sum_A x_A\mathcal R_A\), not event rates.
-The isotope-specific response ratios can differ more strongly near an
-individual shell-model minimum.
+FeynRules→FeynArts→FeynCalc 的模型振幅脚本已改用 AME2020 Xe-131 质量输入，但本机 Mathematica 搜索路径没有 FeynArtsPatched，FeynCalc 因而不能载入 FeynArts，也不能产生新图和振幅数值。该链条不标为通过；恢复依赖后再运行。主 notebook 的旧缓存输出已清除，避免把旧质量方案的数值混进当前结果。
 
-## 2. Three-body threshold shift
+## 已清理的过期结果
 
-For \(m_{\chi_1}=1\) TeV and \(m_s=0.3\) MeV, the threshold is obtained from
-\[
-W_{\max}^2(E_R,v_{\min})=(m_{\chi_1}+m_s)^2.
-\]
-
-For Xe-136 at the first dip point:
-
-| Mass prescription | \(m_A\) [GeV] | \(q_{\rm response}\) [MeV] | \(v_{\min}\) [km/s] |
-|---|---:|---:|---:|
-| \(A u\) | 126.683198 | 159.969 | 775.478 |
-| NIST nuclear | 126.569175 | 159.897 | 775.806 |
-
-The allowed interval below the \(v_{\rm esc}+v_E=776\) km/s cutoff therefore
-shrinks from 0.522 km/s to 0.194 km/s. This is a 63% reduction in interval
-width. Since both the halo PDF and the three-body phase space vanish toward
-their respective endpoints, the 101 keV halo-folded rate can be much more
-sensitive than the 0.09% mass shift might suggest.
-
-The qualitative cutoff classification is unchanged: among the seven
-available response isotopes, only Xe-136 is open at 101 keV for either mass
-prescription. At 200, 267 and 542 keV, all seven available isotopes are open.
-
-A direct halo-folded 101 keV cross-check was then performed for the only open
-isotope, Xe-136, using the truncated SHM, \(m_V=0.1\) GeV,
-\(\rho_\chi=0.3\) GeV/cm\(^3\), and the zero-width kernel:
-
-| Mass prescription | GCN rate | JJ55 rate |
-|---|---:|---:|
-| \(A u\) | \(6.7922\times10^{-14}\) | \(7.0131\times10^{-14}\) |
-| NIST nuclear | \(2.0727\times10^{-15}\) | \(2.1410\times10^{-15}\) |
-
-Rates are in events/(kg day keV). Thus
-\[
-R_{\rm NIST}/R_{Au}=0.0305,
-\]
-a further suppression by a factor of about 32.8 relative to the \(A u\)
-baseline. The 16- versus 32-node speed-integral difference for the NIST
-prescription is \(6.62\times10^{-7}\). The \(A u\) result independently
-reproduces the archived halo-fold output, providing a cross-check of the
-local re-evaluation.
-
-## 3. Fixed Earth-speed sensitivity at 101 keV
-
-The NIST-mass halo fold was also repeated at three fixed lab speeds, keeping
-\(v_0=220\) km/s and \(v_{\rm esc}=544\) km/s. This is a sensitivity bracket,
-not a time-averaged annual-modulation calculation.
-
-| \(v_E\) [km/s] | \(v_{\max}\) [km/s] | Open available isotopes | GCN rate | JJ55 rate |
-|---:|---:|:---|---:|---:|
-| 217 | 761 | none | 0 | 0 |
-| 232 | 776 | Xe-136 | \(2.0727\times10^{-15}\) | \(2.1410\times10^{-15}\) |
-| 247 | 791 | Xe-131, Xe-132, Xe-134, Xe-136 | \(9.7715\times10^{-9}\) | \(1.0205\times10^{-8}\) |
-
-Rates are in events/(kg day keV), at \(m_V=0.1\) GeV and zero width.
-The 247 km/s result is the full sum over all open isotopes with available
-response data—not the Xe-136-only lower bound used in the initial diagnostic.
-Xe-124 and Xe-126 remain kinematically closed throughout this speed bracket.
-
-The rate changes by approximately
-\[
-\frac{R(v_E=247)}{R(v_E=232)}
-\simeq 4.71\times10^6\quad(\mathrm{GCN}),
-\qquad
-4.77\times10^6\quad(\mathrm{JJ55}).
-\]
-At \(v_E=217\) km/s the channel is closed for every isotope in the available
-set. The 16- versus 32-node speed-quadrature differences are below
-\(6.7\times10^{-7}\) for the nonzero points.
-
-This demonstrates that the 101 keV prediction under a hard escape-speed
-cutoff is exceptionally sensitive to the instantaneous lab speed. A fixed
-\(v_E=232\) value cannot be interpreted as an annual average near this
-kinematic endpoint.
-
-## 4. Interpretation and prescription
-
-- Retain the \(m_A=A u\) result as the historical baseline so existing response
-  and fixed-speed outputs remain reproducible.
-- Carry the NIST nuclear-mass result as a separate physical-mass sensitivity.
-- Do not infer that the mass uncertainty is negligible from its sub-per-mille
-  relative size: the 101 keV cutoff point is exceptionally close to the
-  maximum lab speed.
-- Do not alter \(b_A\) to compensate for mass effects. The AFH oscillator
-  length prescription remains unchanged.
-- Xe-124 and Xe-126 remain absent from the shell-model response archive.
-  Their thresholds are included in this audit, but their response/event-rate
-  contributions are not inferred.
-
-## 5. Reproducibility
-
-- isotope_mass_schemes.py: explicit \(A u\) and NIST nuclear-mass functions.
-- run_isotope_mass_scheme_audit.py: response and \(v_{\min}\) comparison.
-- tests/test_isotope_mass_schemes.py: threshold and mass-shift regression.
-- results/isotope_mass_scheme_audit/isotope_mass_scheme_sensitivity.csv:
-  isotope-by-isotope numerical output.
-
-CI:
-https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/42954180933
+由新精确质量结果替代的 2026-11-14 AFH-7/Hybrid-9 连续谱与高阶结果目录已删除；独立积分脚本生成的重复 CSV 也已移除，只保留主 notebook 读取的精确质量结果表。其他与本次核质量无关的模型源文件和核响应数据没有改动。

@@ -57,7 +57,10 @@ NIST_XE_ATOMIC_MASS_U = {
 
 
 def isotope_mass_GeV(A: int, scheme: str = "A_u") -> float:
-    """Return the isotope nuclear mass in GeV for an explicit mass scheme."""
+    """Return a mass in GeV; omit scheme only when reproducing the legacy A*u baseline.
+
+    Use scheme="ame2020_nuclear" for the AME2020/CODATA-2022 bare-nucleus mass.
+    """
     if A not in NIST_XE_ATOMIC_MASS_U:
         raise ValueError(f"NIST xenon isotope mass unavailable for A={A}")
     if scheme == "A_u":

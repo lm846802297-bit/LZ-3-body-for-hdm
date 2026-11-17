@@ -88,7 +88,7 @@ The full seven-isotope AFH response grid and the corresponding natural-xenon rec
   - combined 16,807-row response table;
   - metadata and SHA-256 manifest.
 - Spectrum runner: `run_afh7_hybrid9_continuous_spectrum.py`.
-- Spectrum archive: `results/afh7_hybrid9_continuous_2026-11-14/`
+- Spectrum archive: `results/afh7_hybrid9_ame2020_exact_2026-11-17/`
   - 84 recoil-energy points from 5 to 800 keV;
   - four particle benchmarks and four response scenarios (1,344 spectrum rows);
   - isotope-level kernel integrals, response-model comparison, quadrature checks, metadata and checksums.

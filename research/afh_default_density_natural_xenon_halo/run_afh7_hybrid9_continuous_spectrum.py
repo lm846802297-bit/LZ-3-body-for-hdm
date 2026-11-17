@@ -35,12 +35,13 @@ from generate_afh_default_xenon_response_grid import (  # noqa: E402
     read_natural_xenon_masses,
 )
 from rate_kinematics import momentum_transfer, vmin_three_body_km_s  # noqa: E402
+from isotope_mass_schemes import isotope_mass_GeV, AME2020_XE_ATOMIC_MASS_U  # noqa: E402
 
 C_KM_S = 299_792.458
 C_CM_S = 2.99792458e10
 GEV2_TO_CM2 = 0.3893793721e-27
 AVOGADRO = 6.02214076e23
-NIST_XE_STANDARD_ATOMIC_WEIGHT_G_MOL = 131.29276144779053
+AME2020_XE_MEAN_ATOMIC_WEIGHT_G_MOL = 131.29276127759823
 HBARC_GEV_FM = 0.1973269804
 V0_KM_S_DEFAULT = 220.0
 VE_KM_S_DEFAULT = 232.0
@@ -462,6 +463,9 @@ def run(args: argparse.Namespace) -> dict:
         args.fine_er_max_keV, args.high_er_step_keV,
     )
     masses = read_natural_xenon_masses(args.weights)
+    for A in ALL_ISOTOPES:
+        masses[A]["nuclear_mass_GeV"] = isotope_mass_GeV(A, "ame2020_nuclear")
+        masses[A]["atomic_mass_u_AME2020"] = AME2020_XE_ATOMIC_MASS_U[A]
     abundance_sum = sum(masses[A]["natural_atom_fraction"] for A in ALL_ISOTOPES)
     if not math.isclose(abundance_sum, 1.0, rel_tol=0.0, abs_tol=2.0e-6):
         raise ArithmeticError(f"natural isotope fractions sum to {abundance_sum}")
@@ -482,7 +486,7 @@ def run(args: argparse.Namespace) -> dict:
     rate_factor = (
         (args.rhoDM_GeV_cm3 / args.mchi_GeV)
         * C_CM_S
-        * (AVOGADRO * 1000.0 / NIST_XE_STANDARD_ATOMIC_WEIGHT_G_MOL)
+        * (AVOGADRO * 1000.0 / AME2020_XE_MEAN_ATOMIC_WEIGHT_G_MOL)
         * GEV2_TO_CM2 * 1.0e-6 * 86400.0
     )
     vmax = args.vesc_km_s + args.ve_km_s
@@ -574,7 +578,7 @@ def run(args: argparse.Namespace) -> dict:
                     "rhoDM_GeV_cm3": args.rhoDM_GeV_cm3,
                     "halo_model": "truncated SHM",
                     "vmax_km_s": vmax,
-                    "mass_scheme": "NIST nuclear masses",
+                    "mass_scheme": "AME2020/CODATA-2022 nuclear masses",
                     "response_q_convention": "exact spatial q",
                     "width_scheme": "conditional Dirac pure-scalar pole width",
                     "detector_response_applied": False,
@@ -695,7 +699,8 @@ def run(args: argparse.Namespace) -> dict:
         "natural_atom_fraction_missing": missing_fraction,
         "A2_weighted_AFH_coverage_at_q0": af_h_a2_fraction,
         "abundance_renormalization": "none",
-        "nuclear_mass_scheme": "NIST atomic isotope mass minus 54 electron masses, converted to GeV; electron binding energy neglected",
+        "nuclear_mass_scheme": "AME2020 neutral-atom isotope masses converted to bare nuclear masses using CODATA-2022 constants and the AME2020 total electron-binding-energy approximation",
+        "mean_atomic_weight_g_mol": AME2020_XE_MEAN_ATOMIC_WEIGHT_G_MOL,
         "spatial_momentum": "q=sqrt(2*m_A*E_R+E_R^2) for each isotope",
         "AFH_evaluation": "official v6.0 density matrices parsed from source and direct finite-sum evaluation at every recoil q",
         "AFH_PCHIP_comparison": {

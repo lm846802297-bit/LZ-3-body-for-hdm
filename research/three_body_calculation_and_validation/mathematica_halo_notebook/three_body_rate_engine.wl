@@ -7,11 +7,22 @@ I6::usage="I6[m,ms,dm,mA,er,v,{nw,nz,nphi},width] computes the coherent three-bo
 Chi2Width::usage="Chi2Width[m,ms,dm,g2] computes the Dirac pure-scalar chi2 -> chi1 s pole partial width in GeV.";
 NuclearResponse::usage="NuclearResponse[A, ERkeV] returns the normalized AFH response for an already loaded xenon isotope.";
 DifferentialCrossSection::usage="DifferentialCrossSection[A, ERkeV, speedKms, msGeV, deltaMGeV, parameters] returns d sigma/d ER in GeV^-3 at fixed speed.";
+XenonNuclearMassGeV::usage="XenonNuclearMassGeV[A] returns an AME2020/CODATA-2022 isotope-specific bare nuclear mass in GeV.";
 VMin::usage="VMin[m,ms,mA,er] is the threshold speed in km/s.";
 SpeedPDF::usage="SpeedPDF[v,v0,ve,vesc] is the normalized truncated lab speed PDF.";
 Rate::usage="Rate[erKeV,ms,dm,parameters] returns events/(tonne year keV).";
 MakeCurves::usage="MakeCurves[energies,benchmarks,parameters] evaluates every curve.";
 Begin["`Private`"];
+xeAME2020AtomicMassU = <|124->123.905885174,126->125.904297422,
+ 128->127.90353075341,129->128.90478085742,130->129.903509346,
+ 131->130.90508412808,132->131.90415508346,134->133.905393030,
+ 136->135.907214474|>;
+xeAtomicMassUnitGeV = 0.93149410372;
+xeElectronRelativeMassU = 0.0005485799090441;
+xeElectronBindingEnergyEV[z_Integer] := 14.4381 z^2.39 + 1.55468*10^-6 z^5.35;
+XenonNuclearMassGeV[a_Integer] := Module[{atomicMassU=xeAME2020AtomicMassU[a]},
+ (atomicMassU-54 xeElectronRelativeMassU) xeAtomicMassUnitGeV +
+ xeElectronBindingEnergyEV[54]*10^-9];
 cKm=299792.458; cCm=2.99792458*10^10; GeV2cm2=0.3893793721*10^-27;
 (* GL weights from Jacobi matrix. The angular phi weights sum to one. *)
 gl[n_Integer?Positive]:=gl[n]=Module[{b,vals,vec,order},
@@ -92,7 +103,7 @@ response[a_,er_,mA_]:=a^2 N[responseExpr[a]/.Global`y->((Sqrt[2 mA er+er^2] bInv
 NuclearResponse[a_Integer, recoilKeV_?NumericQ] := Module[{nuclearMass},
  If[!TrueQ[recoilKeV >= 0], Throw["Recoil energy must be nonnegative"]];
  If[!ValueQ[responseZero[a]], Throw["Load the requested isotope before evaluating its response"]];
- nuclearMass = a*0.93149410242;
+ nuclearMass = XenonNuclearMassGeV[a];
  response[a, recoilKeV*10^-6, nuclearMass]
 ];
 
@@ -126,7 +137,7 @@ DifferentialCrossSection[a_Integer, recoilKeV_?NumericQ, speedKms_?NumericQ,
    scalarMassGeV_?NumericQ, splittingGeV_?NumericQ, params_Association] :=
  Module[{nuclearMass, nuclearResponse, width},
   nuclearResponse = NuclearResponse[a, recoilKeV];
-  nuclearMass = a*0.93149410242;
+  nuclearMass = XenonNuclearMassGeV[a];
   width = widthForParameters[params["mchi"], scalarMassGeV, splittingGeV, params];
   fixedSpeedCrossSection[nuclearMass, recoilKeV*10^-6, speedKms,
    params["mchi"], scalarMassGeV, splittingGeV, params["mV"],
@@ -137,7 +148,7 @@ Rate[erKeV_?NumericQ,ms_?NumericQ,dm_?NumericQ,p_Association]:=Module[
  {er=erKeV 10^-6,m=p["mchi"],v0=p["v0"],ve=p["vEarth"],vesc=p["vEsc"],coupling=p["couplingSq"],mv=p["mV"],order=p["quad"],isotopes=p["isotopes"],weights=p["abundance"],nv=p["nv"],rho=p["rho"],sum=0.,mA,vmin,vmax,acc,v,w,conv,width,nuclearResponse},
  width=widthForParameters[m,ms,dm,p];
  vmax=ve+vesc;
- Do[mA=a 0.93149410242;vmin=VMin[m,ms,mA,er];
+ Do[mA=XenonNuclearMassGeV[a];vmin=VMin[m,ms,mA,er];
  If[vmin<vmax,
   acc=0.;nuclearResponse=NuclearResponse[a,erKeV];
   Do[v=(vmax+vmin)/2+(vmax-vmin)node[[1]]/2;w=node[[2]](vmax-vmin)/2;

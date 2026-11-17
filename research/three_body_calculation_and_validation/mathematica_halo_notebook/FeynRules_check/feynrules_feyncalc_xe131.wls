@@ -33,9 +33,9 @@ prec=50;args=Rest[$ScriptCommandLine];
 If[!MemberQ[{0,12},Length[args]],Print["Expected no arguments or exactly 12: m,ms,dm,mA,ER,v,mV,g1,g2,gN,A,widthMode."];Exit[2]];
 If[Length[args]==12,
  {m,ms,dm,ma,er,v,mv,cX,cS,cN}=N[Rationalize[ToExpression[#],0],prec]& /@ Take[args,10];iso=ToExpression[args[[11]]];widthMode=Last[args],
- {m,ms,dm,ma,er,v,mv,cX,cS,cN}=N[#,prec]& /@ {1000,3/10000,1/1000,131*93149410242/10^11,1/5000,776,10,1,1,1};iso=131;widthMode="pole"
+ {m,ms,dm,ma,er,v,mv,cX,cS,cN}=N[#,prec]& /@ {1000,3/10000,1/1000,Fig2`XenonNuclearMassGeV[131],1/5000,776,10,1,1,1};iso=131;widthMode="pole"
 ];
-If[!MemberQ[{128,129,130,131,132,134,136},iso]||!TrueQ[Abs[ma-iso*93149410242/10^11]<10^-8]||!MemberQ[{"pole","zero"},widthMode]||!TrueQ[m>0&&ms>=0&&dm>=0&&ma>0&&er>0&&0<v<299792458/1000&&mv>0&&cX!=0&&cS!=0&&cN!=0],Print["Invalid physical inputs."];Exit[2]];
+If[!MemberQ[{128,129,130,131,132,134,136},iso]||!TrueQ[Abs[ma-Fig2`XenonNuclearMassGeV[iso]]<10^-8]||!MemberQ[{"pole","zero"},widthMode]||!TrueQ[m>0&&ms>=0&&dm>=0&&ma>0&&er>0&&0<v<299792458/1000&&mv>0&&cX!=0&&cS!=0&&cN!=0],Print["Invalid physical inputs."];Exit[2]];
 widthGeV=If[widthMode==="pole",Fig2`Chi2Width[m,ms,dm,cS],0];
 kin=niKinematics[m,ms,ma,er,v,N[2/5,prec],N[1/4,prec],N[6/5,prec]];
 If[kin===$Failed,Print["Phase space closed."];Exit[2]];
@@ -60,7 +60,7 @@ incomingMomentum=m*(v/(299792458/1000))/Sqrt[1-(v/(299792458/1000))^2];
 Print["Integrating FeynCalc static-current amplitude; width mode=",widthMode];
 sigmaPoint=NIntegrate[fcStaticWeight[u,z,phi],{u,0,1},{z,-1,1},{phi,0,2Pi},WorkingPrecision->35,AccuracyGoal->5,PrecisionGoal->5,MaxRecursion->7,Method->{"GlobalAdaptive","SymbolicProcessing"->0}]/(1024 Pi^3 ma incomingMomentum^2);
 Fig2`LoadResponses[FileNameJoin[{projectDir,"dmformfactor-V6.m"}],{iso}];
-(* Use the same AFH isotope and A*u nuclear mass as the notebook. *)
+(* Use the same AFH isotope and AME2020 nuclear mass as the main calculation. *)
 response=Fig2`NuclearResponse[iso,N[er*10^6]];
 sigmaXe=sigmaPoint*response;
 Print["AFH isotope and response=",iso," ",response];

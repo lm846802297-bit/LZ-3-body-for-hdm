@@ -120,7 +120,7 @@ The seven-isotope AFH response grid and the AFH-7/Hybrid-9 recoil spectra were g
 5. reported both absolute rate changes and relative changes, especially near response minima and kinematic endpoints.
 
 The envelope in item 3 is a deliberately conservative coherent-response diagnostic, not an alternative nuclear calculation.
-The baseline outputs are under `research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/`. The separate high-order audit uses \(24\times8\times8\times4\) and reports a maximum baseline-to-final spectrum difference of \(6.46772\times10^{-6}\); its full 1,344-row ZIP remains external/checksum-only. AFH-7 is not AFH-9, and Hybrid-9 remains a labelled Helm fallback for the two missing isotopes.
+The baseline outputs are under `research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_ame2020_exact_2026-11-17/`. The separate high-order audit uses \(24\times8\times8\times4\) and reports a maximum baseline-to-final spectrum difference of \(6.46772\times10^{-6}\); its full 1,344-row ZIP remains external/checksum-only. AFH-7 is not AFH-9, and Hybrid-9 remains a labelled Helm fallback for the two missing isotopes.
 
 ## 7. Reporting vocabulary
 

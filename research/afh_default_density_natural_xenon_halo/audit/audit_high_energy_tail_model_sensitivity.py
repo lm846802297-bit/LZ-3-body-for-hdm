@@ -15,7 +15,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[3]
 HERE = Path(__file__).resolve().parents[1]
-AFH_DIR = HERE / "results" / "afh7_hybrid9_continuous_2026-11-14"
+AFH_DIR = HERE / "results" / "afh7_hybrid9_ame2020_exact_2026-11-17"
 GCN_DIR = ROOT / "research" / "three_body_calculation_and_validation" / "results" / "natural_xenon_continuous_spectrum"
 EFFICIENCY_CSV = ROOT / "research" / "lz_detector_response" / "lz_2026_extended_nr" / "lz_2026_nr_efficiency_digitized.csv"
 
@@ -176,9 +176,15 @@ def build_results(
             output.append(_make_output_row(benchmark, scenario, "AFH/Helm diagnostic", 7 if scenario == "AFH-7" else 9, tail, full, tail_raw, full_raw))
 
         gcn_benchmark_dir = gcn_root / benchmark
-        gcn_meta = json.loads((gcn_benchmark_dir / "metadata.json").read_text(encoding="utf-8"))
-        if gcn_meta.get("mass_scheme") != "nist_nuclear":
-            raise ValueError(f"{benchmark}: GCN/JJ55 metadata does not use NIST nuclear masses")
+        if gcn_benchmark_dir.is_dir():
+            gcn_meta_path = gcn_benchmark_dir / "metadata.json"
+            gcn_csv = gcn_benchmark_dir / "natural_xenon_continuous_spectrum.csv"
+        else:
+            gcn_meta_path = gcn_root / "metadata.json"
+            gcn_csv = gcn_root / "natural_xenon_continuous_spectrum.csv"
+        gcn_meta = json.loads(gcn_meta_path.read_text(encoding="utf-8"))
+        if gcn_meta.get("mass_scheme") != "ame2020_nuclear":
+            raise ValueError(f"{benchmark}: GCN/JJ55 metadata does not use AME2020/CODATA-2022 nuclear masses")
         if not str(gcn_meta.get("response_q_convention", "")).startswith("exact spatial q"):
             raise ValueError(f"{benchmark}: GCN/JJ55 metadata does not use exact spatial q")
         if gcn_meta.get("halo_model") != "truncated SHM":
@@ -187,11 +193,11 @@ def build_results(
             raise ValueError(f"{benchmark}: GCN/JJ55 isotope abundances were renormalized")
         if gcn_meta.get("available_isotopes") != [128, 129, 130, 131, 132, 134, 136]:
             raise ValueError(f"{benchmark}: unexpected GCN/JJ55 isotope coverage")
-        gcn_csv = gcn_benchmark_dir / "natural_xenon_continuous_spectrum.csv"
         gcn_rows = read_csv(gcn_csv)
         gcn_rows = [
             row for row in gcn_rows
-            if row.get("halo_model") == "shm_cutoff"
+            if row.get("benchmark", benchmark) == benchmark
+            and row.get("halo_model") in {"shm_cutoff", "truncated SHM"}
             and row.get("detector_response_applied") == "False"
         ]
         for model in ("GCN", "JJ55"):
@@ -234,7 +240,7 @@ def build_results(
             "g2_for_conditional_pole_width": 1.0,
             "rhoDM_GeV_cm3": 0.3,
             "halo": "truncated SHM, v0=220 km/s, vE=232 km/s, vesc=544 km/s, vmax_lab=776 km/s",
-            "mass_scheme": "NIST nuclear masses",
+            "mass_scheme": "AME2020/CODATA-2022 bare nuclear masses",
             "spatial_momentum": "exact q_A=sqrt(2*m_A*E_R+E_R^2)",
             "width": "conditional constant pole width for Dirac chi2 -> chi1 s, pure scalar coupling, only that decay open",
         },

@@ -248,8 +248,9 @@ def run(args: argparse.Namespace) -> dict:
         "nuclear_response_models": ["GCN", "JJ55"],
         "afh_default_response_used": False,
         "afh_comparison": (
-            "AFH v6.0 is retained separately at 28 selected isotope/recoil samples; "
-            "this continuous calculation uses the complete GCN/JJ55 isotope response grids."
+            "The companion AFH-7/Hybrid-9 continuous spectra are archived separately and "
+            "use the same AME2020/CODATA-2022 bare nuclear masses; this calculation "
+            "uses the complete GCN/JJ55 isotope response grids."
         ),
         "available_isotopes": list(AVAILABLE),
         "omitted_isotopes": [124, 126],
@@ -262,7 +263,10 @@ def run(args: argparse.Namespace) -> dict:
         "isotope_nuclear_mass_prescription": (
             "NIST atomic isotope mass minus 54 electron rest masses, multiplied by u; "
             "atomic electron binding energy neglected"
-            if args.mass_scheme == "nist_nuclear" else "A*u"
+            if args.mass_scheme == "nist_nuclear" else (
+                "AME2020 unrounded atomic masses minus 54 CODATA-2022 electron masses plus AME electron binding correction"
+                if args.mass_scheme == "ame2020_nuclear" else "A*u"
+            )
         ),
         "response_q_convention": "exact spatial q=sqrt(2*m_A*E_R+E_R^2)",
         "kinematic_q_convention": "exact spatial q=sqrt(2*m_A*E_R+E_R^2)",
@@ -342,7 +346,7 @@ def main() -> None:
     parser.add_argument("--out-dir", type=Path, required=True)
     parser.add_argument("--benchmarks", nargs="+", choices=tuple(BENCHMARKS),
                         default=list(BENCHMARKS))
-    parser.add_argument("--mass-scheme", choices=("A_u", "nist_nuclear"), default="nist_nuclear")
+    parser.add_argument("--mass-scheme", choices=("A_u", "nist_nuclear", "ame2020_nuclear"), default="nist_nuclear")
     parser.add_argument("--er-min-keV", type=float, default=5.0)
     parser.add_argument("--er-max-keV", type=float, default=800.0)
     parser.add_argument("--er-step-keV", type=float, default=5.0)

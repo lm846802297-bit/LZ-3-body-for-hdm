@@ -1,0 +1,54 @@
+{
+  "status": "PASS",
+  "calculation": "one-dimensional efficiency-weighted rate-level tail audit",
+  "source_commit": "ce4e500363778832c672117819dfd385f9346be7",
+  "afh_spectrum": "C:\\Users\\84680\\Documents\\ChatGPT\\3 body HDM\\main\\research\\afh_default_density_natural_xenon_halo\\results\\afh7_hybrid9_ame2020_exact_2026-11-17\\afh_hybrid9_natural_xenon_spectrum.csv",
+  "gcn_jj55_spectrum_root": "research\\three_body_calculation_and_validation\\results\\natural_xenon_continuous_spectrum_ame2020_exact",
+  "efficiency_curve": "C:\\Users\\84680\\Documents\\ChatGPT\\3 body HDM\\main\\research\\lz_detector_response\\lz_2026_extended_nr\\lz_2026_nr_efficiency_digitized.csv",
+  "candidate_energy_keV": 248.0,
+  "candidate_statistical_interval_keV": [
+    225.0,
+    271.0
+  ],
+  "integrated_tail_interval_keV": [
+    225.0,
+    269.9
+  ],
+  "full_efficiency_roi_keV": [
+    5.4,
+    269.9
+  ],
+  "exposure_tonne_year": 2.84,
+  "exposure_kg_day": 1037310.0,
+  "integration": "analytic integration of the product of piecewise-linear recoil rate and piecewise-linear efficiency on the union knot grid",
+  "central_efficiency": "digitized LZ 2026 Fig. S2 central final-ROI curve",
+  "efficiency_envelope": "digitized gray lower/upper envelope; not a confidence interval",
+  "common_physics_inputs": {
+    "mchi_GeV": 1000.0,
+    "mV_GeV": 10.0,
+    "coupling_product_squared": 1e-08,
+    "g2_for_conditional_pole_width": 1.0,
+    "rhoDM_GeV_cm3": 0.3,
+    "halo": "truncated SHM, v0=220 km/s, vE=232 km/s, vesc=544 km/s, vmax_lab=776 km/s",
+    "mass_scheme": "AME2020/CODATA-2022 bare nuclear masses",
+    "spatial_momentum": "exact q_A=sqrt(2*m_A*E_R+E_R^2)",
+    "width": "conditional constant pole width for Dirac chi2 -> chi1 s, pure scalar coupling, only that decay open"
+  },
+  "model_coverage": {
+    "AFH-7": "AFH v6.0 default density matrices for seven isotopes; no abundance renormalization",
+    "Hybrid-9 (AFH-7 + Helm-2)": "same seven AFH isotopes plus Helm only for Xe-124/Xe-126",
+    "AFH-7 + A2-2 ceiling": "diagnostic coherent A^2 ceiling for Xe-124/Xe-126; not a physical nuclear model",
+    "Helm-9": "independent Helm response for all nine naturally occurring isotopes; not AFH",
+    "GCN": "seven-isotope GCN shell-model response",
+    "JJ55": "seven-isotope JJ55 shell-model response"
+  },
+  "limitations": [
+    "The recoil spectra are pre-detector and are folded only with a one-dimensional efficiency curve.",
+    "No energy-resolution smearing, NEST S1/S2 PDFs, backgrounds, nuisance covariance, or profile likelihood is included.",
+    "The LZ Fig. S2 gray envelope is a digitization/systematic envelope without an assigned confidence level.",
+    "The candidate +/- statistical-energy interval is used only as a recoil-energy integration window; it is not a detector energy-resolution model.",
+    "Helm-9 is a separate all-isotope phenomenological model comparison; it must not be interpreted as the missing-isotope correction to AFH-7. Hybrid-9 is the corresponding AFH-7 plus Helm-2 fallback.",
+    "The AFH/GCN/JJ55 model differences include the nuclear response choice; they are not detector-level likelihood differences."
+  ],
+  "row_count": 24
+}

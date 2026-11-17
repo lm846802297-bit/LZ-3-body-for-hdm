@@ -7,11 +7,11 @@
 - `矢量耦合暗物质三体散射与天然氙反冲率.nb`：主计算及末尾分组的验证。
 - `dmformfactor-V6.m`：AFH v6 默认氙同位素核响应。
 - `使用说明.md`：输入、计算顺序、结果和近似说明。
-- `完整运行与数值对照.md`：此前完整运行的历史结果；不是本次结构整理后的全量重跑记录。
-- `convergence_halo.csv`、`独立验证/methods_comparison.csv`：笔记本验证章节读取的归档对照数据。
+- `完整运行与数值对照.md`：AME2020/CODATA-2022 精确核质量下的当前结果、积分对照和适用范围。
+- `convergence_halo.csv`、`独立验证/methods_comparison.csv`：已按精确裸核质量重算的速度积分和固定速度积分对照。
 
 ## 运行要求
 
-主计算需要 Mathematica 和本机安装的 FeynCalc；AFH 核响应数据与 notebook 同目录。笔记本末尾的 FeynRules/FeynArts 验证还需要相应软件包及模型导出环境。本仓库不打包第三方 Mathematica 软件；这些验证的已保存输出保留在 notebook 中，重新运行时需先配置本地软件。
+主计算需要 Mathematica 和本机安装的 FeynCalc；AFH 核响应数据与 notebook 同目录。笔记本末尾的 FeynRules/FeynArts 验证还需要相应软件包及模型导出环境。本仓库不打包第三方 Mathematica 软件；旧计算输出已从 notebook 清除，避免混用质量方案；FeynRules/FeynArts 验证需先配置本机软件包，运行后才会生成输出。
 
-从 notebook 最上方按顺序运行。更改物理输入或积分精度后，要重新运行后续依赖单元；嵌入的旧输出不会自动更新。天然氙事件率没有包含探测器效率、能量分辨率或曝光选择。
+从 notebook 最上方按顺序运行。旧的嵌入输出已清除，运行各输入单元后会重新显示与当前质量方案一致的结果。更改物理输入或积分精度后，要重新运行后续依赖单元。天然氙事件率没有包含探测器效率、能量分辨率或曝光选择。

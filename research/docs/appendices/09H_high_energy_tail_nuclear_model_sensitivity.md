@@ -8,9 +8,9 @@ AFH-7/Hybrid-9 的 baseline 84 点谱已提交；最终 \(24\times8\times8\times
 
 本报告原第 6 节的“Mathematica 尚未执行”只适用于当时状态。2026-11-16 已有 AFH Xe-131 response-level 原生 Mathematica/Python PASS；完整 Eq. (6) pole-width cross-section runner 仍未执行完成。
 
-**研究阶段：** Phase II — high-energy tail and native AFH validation  
-**日期：** 2026-11-14  
-**基准数据版本：** `main` at `ce4e500363778832c672117819dfd385f9346be7`  
+**研究阶段：** Phase II — high-energy tail and native AFH validation
+**日期：** 2026-11-14
+**基准数据版本：** `main` at `ce4e500363778832c672117819dfd385f9346be7`
 **状态：** 高能尾部积分结果已归档；本报告中的 GCN/JJ55 求积为 legacy linear-\(W^2\) 路径，跨模型精密比较需统一积分后重算。AFH Xe-131 response-level 原生 Mathematica 对照现已 PASS；完整 Eq. (6) Mathematica–Python 截面对照仍待完成。
 
 ## 1. 研究问题与积分区间
@@ -46,7 +46,8 @@ f_{\rm tail}^{(M)}=\frac{N_{\rm tail}^{(M)}}{N_{\rm ROI}^{(M)}}.
 所有模型比较保持相同的粒子物理和 halo 基准：
 
 - (m_{\chi_1}=1000\,\mathrm{GeV})，(m_V=10\,\mathrm{GeV})；
-- ((g_1g_2g_{VN})^2=10^{-8})，(g_2=1)，(ho_\chi=0.3\,\mathrm{GeV\,cm^{-3}})；
+- ((g_1g_2g_{VN})^2=10^{-8})，(g_2=1)，(
+ho_\chi=0.3\,\mathrm{GeV\,cm^{-3}})；
 - 截断 SHM：((v_0,v_E,v_{\rm esc})=(220,232,544)\,\mathrm{km\,s^{-1}})，(v_{\max,\rm lab}=776\,\mathrm{km\,s^{-1}})；
 - NIST nuclear masses；逐同位素采用 (q_A=\sqrt{2m_AE_R+E_R^2})；
 - 相同的条件性常数极点宽度假设：Dirac (\chi_2\)、实标量、纯 scalar off-diagonal Yukawa，且仅 (\chi_2\to\chi_1s) 开放。
@@ -191,6 +192,6 @@ wolframscript -file research/afh_default_density_xe131/validate_afh_mathematica_
 - 单元/回归测试：`research/afh_default_density_natural_xenon_halo/tests/test_high_energy_tail_model_sensitivity.py`
 - 输出 CSV：`research/afh_default_density_natural_xenon_halo/results/high_energy_tail_model_sensitivity_2026-11-14.csv`
 - 原生 Mathematica 验证：`research/afh_default_density_xe131/validate_afh_mathematica_vs_python.wls`
-- AFH-7/Hybrid-9 原始谱与 metadata：`research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/`
+- AFH-7/Hybrid-9 原始谱与 metadata：`research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_ame2020_exact_2026-11-17/`
 - GCN/JJ55 原始谱：`research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/`
 - LZ 效率曲线：`research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv`

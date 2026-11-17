@@ -1,9 +1,9 @@
 # Figure 2 and natural-xenon results master index
 
-**Source integration:** PR #45 merged into `main` via merge commit `15eb3a24e5295868ca208166a94c078fbc1747a7` (201 research/audit commits preserved)
+**Source integration:** PR #45 merged into `main` via merge commit `15eb3a24e5295868ca208166a94c078fbc1747a7` (index updated locally for exact-mass recalculation)
 **Follow-up:** PR #46, branch `docs/scientific-content-audit-20261116`, targeting `main`
-**Updated:** 2026-11-16 (native full-grid and higher-order comparisons synchronized)
-**Coverage:** 13 result groups; 98 file entries with SHA-256 and byte sizes.
+**Updated:** 2026-11-17 (current exact-mass spectra and downstream LZ fold synchronized)
+**Coverage:** 12 result groups; manifest contains the current files and checksums.
 
 The [2026-11-13 index](three_body_results_master_index_2026-11-13.md) is retained as a historical snapshot. This index supersedes its statement that the full 16,807-row AFH seven-isotope response grid is checksum-only and not committed.
 
@@ -19,23 +19,22 @@ Path: `research/afh_default_density_natural_xenon_halo/results/full_afh_v6_defau
 - Exact spatial (q_A=\sqrt{2m_AE_R+E_R^2}); no PCHIP evaluation is used as the source of the new full-grid response.
 - AFH-7 natural atom-fraction coverage: 0.998158; Xe-124/Xe-126 remain missing and are not renormalized away.
 
-### 2. AFH-7 / Hybrid-9 84-point full-range spectra
+### 2. AFH-7 / Hybrid-9 84-point spectra with exact isotope masses
 
-Path: `research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/`
+Path: `research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_ame2020_exact_2026-11-17/`
 
-- 84 recoil points from 5 to 800 keV, four benchmarks and four response scenarios; 1,344 spectrum rows.
-- Direct finite-sum AFH response at each exact isotope-specific spatial momentum.
-- Threshold-(u^2) phase-space mapping, 24 speed nodes and (6\times6\times3) internal quadrature.
-- Pre-detector theory rates. “Continuous” means a full-range sampled recoil grid, not an analytic continuum or a 1-keV grid.
+- Four benchmarks, four response scenarios and 84 recoil-energy points (1,344 rows).
+- AME2020 atomic isotope masses converted to bare nuclear masses with CODATA-2022 constants and the AME electron-binding correction.
+- Direct finite-sum AFH response at each exact isotope-specific spatial momentum; threshold-\(u^2\) mapping, 32 speed nodes and \(8\times8\times4\) internal quadrature.
+- AFH-7 covers natural atom fraction 0.998158 without renormalization. Xe-124/Xe-126 are unavailable in AFH v6.0; Hybrid-9 uses labelled Helm fallback for those isotopes.
+- Metadata and checksums are stored beside the spectra. The former approximate-mass spectra and detached high-order output directories have been removed.
 
-### 3. AFH-7 / Hybrid-9 high-order convergence audit
+### 3. Exact-mass convergence and derived LZ rate-level fold
 
-Path: `research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full_grid_highorder_2026-11-14/`
-
-- 1,726 kinematically open and 1,298 closed isotope/benchmark/recoil points.
-- (24\times8\times8\times4) final quadrature.
-- Maximum baseline-to-final spectrum difference (6.46772\times10^{-6}), below (10^{-5}).
-- The full 1,344-row high-order output is a 736,245-byte external ZIP with SHA-256 `e55442d3ad4289dfd6c16e8e6cdb43d669561df074beddefcf87e8d1024f3471`. The ZIP contents are not committed; only the audit report, metadata and summary CSVs are included in this manifest.
+- Mathematica Gauss, Mathematica `NIntegrate`, and independent Python phase-space comparisons use the exact Xe-131 mass; maximum Python vs `NIntegrate` relative difference is below \(1.6\times10^{-7}\) on open sample points.
+- The fixed-speed and natural-xenon halo convergence CSVs are in `research/three_body_natural_xenon/独立验证/` and `research/three_body_calculation_and_validation/mathematica_halo_notebook/`.
+- GCN/JJ55 four-benchmark natural-xenon spectra were recalculated using the same AME2020/CODATA-2022 nuclear masses. Their 84-point output and convergence checks are in `research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum_ame2020_exact/`.
+- LZ 2026 one-dimensional NR-efficiency folding and AFH/GCN/JJ55 high-energy tail comparisons were rerun from the exact-mass spectra. They remain rate-level diagnostics, not detector likelihoods or exclusion limits.
 
 ### 4. Python-only full Xe-131 Eq. (6) and AFH factor-four audit
 
@@ -71,3 +70,13 @@ The historical selected-point AFH rates are retained and reproducible, but their
 ## Historical index
 
 The original nine-group, 60-file index is preserved in [three_body_results_master_index_2026-11-13.md](three_body_results_master_index_2026-11-13.md) and its JSON companion. It remains useful for tracing the earlier selected-point and response-level milestones, but its external-input table is superseded for the AFH-7 response grid.
+
+
+## Exact isotope mass update (2026-11-17)
+
+All current natural-xenon spectra and dependent rate-level folds listed here use AME2020 isotope atomic masses converted to bare nuclear masses with CODATA-2022 constants and the AME electron-binding correction. The 2026-11-14 A*u spectrum and high-order output directories were removed; their exact-mass replacement is in
+esearch/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_ame2020_exact_2026-11-17/. The LZ efficiency fold was rerun from that input and is under
+esearch/lz_detector_response/lz_2026_extended_nr/afh7_hybrid9_rate_level_yields/. The cross-model GCN/JJ55 spectra are being recomputed under the same AME2020 mass scheme.
+
+
+Historical A*u AFH full-grid outputs were removed on 2026-11-17 after the exact-mass AFH and GCN/JJ55 spectra and LZ rate-level folds were recomputed. The current outputs, rather than earlier numerical rows in older appendices, are authoritative for the AME2020/CODATA-2022 mass scheme.

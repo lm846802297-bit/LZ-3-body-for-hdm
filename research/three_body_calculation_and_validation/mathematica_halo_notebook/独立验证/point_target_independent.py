@@ -1,7 +1,9 @@
 import numpy as np, math
 from numpy.polynomial.legendre import leggauss
 from pathlib import Path
-import csv, json
+import csv, json, sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+from isotope_mass_schemes import isotope_mass_GeV
 # Independent pointlike scalar target: Feynman current (P+P')^mu/(2 mA).
 I2=np.eye(2,dtype=complex); Z=np.zeros((2,2),complex)
 sigmas=[np.array([[0,1],[1,0]],complex),np.array([[0,-1j],[1j,0]],complex),np.diag([1,-1]).astype(complex)]
@@ -13,7 +15,7 @@ def width(m,ms,dm,g=1.):
  m2=m+dm
  return g*g*math.sqrt(dm*dm-ms*ms)*(((2*m+dm)**2-ms*ms)**1.5)/(16*math.pi*m2**3) if dm>ms else 0.
 def integrate(erkev,vkms,order,include_recoil):
- m=1000.; ma=131*.93149410242; ms=.0003; dm=.001; mv=10.; gamma2=width(m,ms,dm); er=erkev*1e-6
+ m=1000.; ma=isotope_mass_GeV(131,"ame2020_nuclear"); ms=.0003; dm=.001; mv=10.; gamma2=width(m,ms,dm); er=erkev*1e-6
  beta=vkms/299792.458; E=m/math.sqrt(1-beta*beta); p=E*beta;q=math.sqrt(er*(2*ma+er));lo=(m+ms)**2;hi=m*m+2*p*q-2*(E+ma)*er
  if hi<=lo:return 0.,0.
  if hi >= (m+dm)**2:raise ValueError('on-shell region requires separate treatment')
@@ -48,6 +50,6 @@ for er in [101.,109.16,110.,150.,200.,267.,300.,542.,654.94,700.]:
   _,full=integrate(er,776.,(n,n,max(8,n//2)),True)
   rows.append(dict(ER_keV=er,n=n,nphi=max(8,n//2),I6=a,dsigma_static=ds,dsigma_scalar_current=full,full_over_static=(full/ds if ds else 'closed')))
   print('ER',er,'n',n,'I6',a,'static',ds,'full/static',full/ds if ds else 'closed',flush=True)
-out=Path(__file__).parent/'point_target_convergence.csv'
+out=Path(__file__).resolve().parents[3]/'three_body_natural_xenon'/'独立验证'/'point_target_convergence.csv'
 with out.open('w',newline='',encoding='utf-8') as f:
  writer=csv.DictWriter(f,fieldnames=rows[0].keys());writer.writeheader();writer.writerows(rows)

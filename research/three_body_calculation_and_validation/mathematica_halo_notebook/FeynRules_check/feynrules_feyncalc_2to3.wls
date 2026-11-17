@@ -28,7 +28,7 @@ prec=50;
 args=Rest[$ScriptCommandLine];
 If[Length[args]==10,
  {m,ms,dm,ma,er,v,mv,cX,cS,cN}=N[Rationalize[ToExpression[#],0],prec]& /@ args,
- {m,ms,dm,ma,er,v,mv,cX,cS,cN}=N[#,prec]& /@ {1000,3/10000,1/1000,131*93149410242/10^11,1/5000,776,10,1,1,1}
+ {m,ms,dm,ma,er,v,mv,cX,cS,cN}=N[#,prec]& /@ {1000,3/10000,1/1000,12190992244721734/10^14,1/5000,776,10,1,1,1}
 ];
 If[!TrueQ[m>0&&ms>=0&&dm>=0&&ma>0&&er>0&&0<v<299792458/1000&&mv>0&&cX!=0&&cS!=0&&cN!=0],Print["Invalid input or zero coupling; comparison aborted."];Exit[2]];
 Print["Inputs m,ms,dm,mA,ER,v,mV,g1,g2,gN: ",N[{m,ms,dm,ma,er,v,mv,cX,cS,cN},10]];

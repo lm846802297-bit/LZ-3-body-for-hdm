@@ -1,0 +1,87 @@
+{
+  "calculation": "P1 independent three-body phase-space quadrature convergence",
+  "date": "2026-11-17",
+  "target_mass_scheme": "AME2020 atomic masses converted to bare nuclei with CODATA-2022 constants and AME electron-binding correction",
+  "units": {
+    "mass_energy_momentum": "GeV",
+    "speed": "km/s",
+    "I6": "GeV^2"
+  },
+  "matrix_element": "reuses the committed Dirac spin_trace in eq6_kernel.py; independent part is phase-space mapping and measure",
+  "width_scheme": "pole",
+  "g2": 1.0,
+  "reference_quadrature": {
+    "mapping": "W2 = Wmin2 + (Wmax2-Wmin2)*u^2",
+    "orders": {
+      "u": 48,
+      "z": 24,
+      "phi": 16
+    },
+    "azimuth": "normalized average for I6; raw dphi for the direct LI prefactor check"
+  },
+  "near_pole_scan": {
+    "ER_keV": 267.0,
+    "speed_km_s": 776.0,
+    "Delta_m_keV": [
+      362.0,
+      365.0,
+      370.0,
+      400.0
+    ],
+    "width_schemes": [
+      "zero",
+      "pole",
+      "running"
+    ],
+    "g2_values_for_finite_width": [
+      0.1,
+      1.0
+    ],
+    "pole_is_outside_phase_space": true,
+    "reference_quadrature": {
+      "mapping": "sine2",
+      "nW": 256,
+      "nz": 8,
+      "nphi": 8,
+      "running_g2_1_nW": 4096,
+      "running_g2_1_closest_gap_nW": 8192
+    },
+    "running_width_note": "diagnostic Breit-Wigner prescription; not a full self-energy"
+  },
+  "stable_threshold_kinematics": "delta = W2-Wmin2 is carried explicitly; lambda_dim = delta*(4*mchi*ms+delta)/W2^2",
+  "cross_section_prefactor_test": {
+    "mV_GeV": 10.0,
+    "coupling_product_squared": 1.0,
+    "RA": 1.0,
+    "comparison": "Eq. (6) normalized-phi result versus direct raw-dphi Lorentz-invariant dPhi3 measure"
+  },
+  "scope": "four selected fixed-speed 776-km/s benchmark points, five vmin-offset threshold checks, one AME2020 800-km/s green benchmark anchor, and an off-shell near-pole convergence scan; not a halo fold, full model scan, or detector likelihood",
+  "matrix_element_source": "eq6_kernel.py committed Dirac trace and spinor amplitude; unchanged by this audit",
+  "audit_script_sha256": "159e722ec24f5023d3b5dfc26fec00a813d72ec61473b8df2a9e69769eb29683",
+  "outputs": {
+    "phase_space_mapping_convergence.csv": {
+      "sha256": "048c532a630c56b90e9784c0fb7c04846d33b70de742243adebd70b784fd7d7f",
+      "bytes": 3881
+    },
+    "phase_space_angular_convergence.csv": {
+      "sha256": "cf9f50e607259f9e86cfed4a4b752879fd6de32c6c3a90bfa656aa1d41d12233",
+      "bytes": 757
+    },
+    "phase_space_threshold_convergence.csv": {
+      "sha256": "bb65868386abc5113bc42ab88dc114023b236af5788b7a277d19cadab1f78084",
+      "bytes": 4237
+    },
+    "phase_space_li_prefactor_crosscheck.csv": {
+      "sha256": "b2771b05d4bb5fb9a4073d9ad326268875bfe92619daa6e0ae566177f938c1c3",
+      "bytes": 214
+    },
+    "phase_space_exact_mass_800_anchor.csv": {
+      "sha256": "fd04af59041f56e979c742d0eb32ed89a65ca4d45e627fe1b81d32c02adb6245",
+      "bytes": 1178
+    },
+    "phase_space_near_pole_convergence.csv": {
+      "sha256": "7abad76547d9acc155bf733ed5732f20d127bfe23a79585eaaeaf3181095b95d",
+      "bytes": 51218
+    }
+  }
+}

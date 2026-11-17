@@ -1,9 +1,9 @@
 {
   "schema_version": "1.0",
-  "created_on": "2026-11-16",
+  "created_on": "2026-11-17",
   "repository": "lm846802297-bit/LZ-3-body-for-hdm",
   "branch": "main",
-  "purpose": "Current unified provenance index for Figure 2 and natural-xenon results, including the seven-isotope AFH response grid, AFH-7/Hybrid-9 spectra, native Xe-131 response validation, and the completed native Mathematica/Python full Eq. (6) cross-code archive.",
+  "purpose": "Current result manifest using AME2020/CODATA-2022 exact xenon nuclear masses; approximate-mass AFH output archives removed.",
   "sha256_method": "For committed text files listed here, SHA-256 was recomputed from exact repository file bytes returned in base64 form. For artifacts covered by existing committed SHA256SUMS, the recorded per-file digest was cross-checked against that manifest. External/uncommitted inputs are explicitly listed as checksum-only provenance, not as locally available files.",
   "external_or_checksum_only_inputs": [
     {
@@ -80,7 +80,7 @@
       "parameters": {
         "m_chi1_GeV": 1000,
         "m_V_GeV": 10,
-        "coupling_product_squared": 1e-8,
+        "coupling_product_squared": 1e-08,
         "g2": 1,
         "speed_km_s": 800,
         "target_mass_scheme": "M_A=131 u",
@@ -143,7 +143,7 @@
       "parameters": {
         "m_chi1_GeV": 1000,
         "m_V_GeV": 10,
-        "coupling_product_squared": 1e-8,
+        "coupling_product_squared": 1e-08,
         "g2": 1,
         "rho_chi_GeV_cm3": 0.3,
         "benchmarks": {
@@ -362,7 +362,7 @@
     },
     {
       "id": "gcn-jj55-natural-xenon-continuous-spectra",
-      "description": "Continuous pre-detector natural-xenon spectra for GCN/JJ55. These are not AFH continuous spectra.",
+      "description": "Four benchmark GCN/JJ55 natural-xenon spectra recalculated with AME2020/CODATA-2022 bare nuclear masses; 672 total natural-spectrum rows and isotope-level spectra with quadrature checks.",
       "parameters": {
         "benchmarks": [
           "red_ms200_dm1",
@@ -386,76 +386,24 @@
       },
       "files": [
         {
-          "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/red_ms200_dm1/natural_xenon_continuous_spectrum.csv",
-          "sha256": "accca3714a2026b8fefdee4dcdf5b800e3d73b4165c15db6ff21596ffbceebd6",
-          "bytes": 24704,
-          "role": "Red GCN/JJ55 continuous natural-xenon pre-detector spectrum"
+          "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum_ame2020_exact/isotope_continuous_spectrum.csv",
+          "sha256": "1093052b8324e75459153fcbc021d18da870a3afee28f59c4cc2c4b11cd8e760"
         },
         {
-          "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/red_ms200_dm1/metadata.json",
-          "sha256": "5061414350f7479728884cd815f01d1a9151ef05323a8f2597fdd578771f8f59",
-          "bytes": 3035,
-          "role": "Red continuous-spectrum metadata"
+          "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum_ame2020_exact/metadata.json",
+          "sha256": "bcdaf83d8561bd8b0c3fc4e575d648956f5f0662120080a77ce0be60028be072"
         },
         {
-          "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/red_ms200_dm1/quadrature_crosschecks.csv",
-          "sha256": "e844078b03c77a8a32af710801e22b205e55cb00816ae633efe83f43fe5fa1ac",
-          "bytes": 5460,
-          "role": "Red continuous-spectrum quadrature crosschecks"
+          "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum_ame2020_exact/natural_xenon_continuous_spectrum.csv",
+          "sha256": "80d53c126902b7089989024b0e1907000f1d2940486a8072aa3f71706f9f7356"
         },
         {
-          "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/green_ms300_dm1/natural_xenon_continuous_spectrum.csv",
-          "sha256": "6be7a54d8f0f642344e78b8b1610e045c112efbb290f7dd3e3580375780f542f",
-          "bytes": 23634,
-          "role": "Green GCN/JJ55 continuous natural-xenon pre-detector spectrum"
+          "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum_ame2020_exact/quadrature_crosschecks.csv",
+          "sha256": "7bf54fede7c5b2530b942dbcfed8508f037f13f2ab1784de79c9790e3c044b27"
         },
         {
-          "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/green_ms300_dm1/metadata.json",
-          "sha256": "4b91c67c39c35e064ddb6be996545ae71c4719902c5aab7e88ca45672897ccdc",
-          "bytes": 3033,
-          "role": "Green continuous-spectrum metadata"
-        },
-        {
-          "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/green_ms300_dm1/quadrature_crosschecks.csv",
-          "sha256": "60b9e7537069c71551a29102d92019021a37a1d6e3b65f2b0fab30aa81d6e96c",
-          "bytes": 5091,
-          "role": "Green continuous-spectrum quadrature crosschecks"
-        },
-        {
-          "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/blue_ms300_dm10/natural_xenon_continuous_spectrum.csv",
-          "sha256": "c0daaa19cc0a4ef9008bee9317cd3f2be0e6e84d1a3a71cca0d2dd60e7c40674",
-          "bytes": 23792,
-          "role": "Blue GCN/JJ55 continuous natural-xenon pre-detector spectrum"
-        },
-        {
-          "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/blue_ms300_dm10/metadata.json",
-          "sha256": "514ed11b617668f42de89a2e86a767fa13fad3b7eb1e2a3f44ab60d3c5a82b94",
-          "bytes": 3034,
-          "role": "Blue continuous-spectrum metadata"
-        },
-        {
-          "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/blue_ms300_dm10/quadrature_crosschecks.csv",
-          "sha256": "26cacc276820807bb9d330e303288c0d4f5213490256642852b2d9e6d8156653",
-          "bytes": 5096,
-          "role": "Blue continuous-spectrum quadrature crosschecks"
-        },
-        {
-          "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/black_ms360_dm1/natural_xenon_continuous_spectrum.csv",
-          "sha256": "03d6250f85cfb218c0649791fc654b79c9927dc44e63440560ca105e6508df28",
-          "bytes": 21279,
-          "role": "Black GCN/JJ55 continuous natural-xenon pre-detector spectrum"
-        },
-        {
-          "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/black_ms360_dm1/metadata.json",
-          "sha256": "01781095f1e46b48acbfe320342dda19ef32c22811826d565fe509d006c59c5d",
-          "bytes": 3034,
-          "role": "Black continuous-spectrum metadata"
-        },
-        {
-          "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/black_ms360_dm1/quadrature_crosschecks.csv",
-          "sha256": "354b500bad368943f72c2faf54bfaf0c28b6db9f42f5609bb6f01ad41e1d16e1",
-          "bytes": 3774,
-          "role": "Black continuous-spectrum quadrature crosschecks"
+          "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum_ame2020_exact/SHA256SUMS.txt",
+          "sha256": "e483d980ddac12efbc04f684b5c8090139a308fd3e8ad97c6bcc2133067694c4"
         }
       ]
     },
@@ -604,9 +552,9 @@
         ],
         "q_step_GeV": 0.00025,
         "q_nodes": 2401,
-        "relative_tolerance": 2e-8,
+        "relative_tolerance": 2e-08,
         "absolute_tolerance": 2e-10,
-        "max_relative_difference": 3.5908703199989993e-9
+        "max_relative_difference": 3.5908703199989993e-09
       },
       "files": [
         {
@@ -802,109 +750,42 @@
     },
     {
       "id": "afh7-hybrid9-84-point-natural-xenon-spectra",
-      "description": "Grid-sampled full-range AFH-7/Hybrid-9 natural-xenon spectra, generated with direct exact-q AFH finite sums and threshold-u^2 phase-space integration. Pre-detector theory rates, not an analytic continuum or LZ likelihood.",
+      "description": "Four benchmark natural-xenon spectra recomputed with AME2020/CODATA-2022 bare nuclear masses, direct AFH finite-sum responses, 84 recoil points, 32 speed nodes and {8,8,4} phase-space quadrature.",
       "parameters": {
-        "benchmarks": [
-          "red_ms200_dm1",
-          "green_ms300_dm1",
-          "black_ms360_dm1",
-          "blue_ms300_dm10"
+        "mass_scheme": "AME2020/CODATA-2022 bare nuclear masses",
+        "recoil_points": 84,
+        "speed_nodes": 32,
+        "phase_space_quadrature": [
+          8,
+          8,
+          4
         ],
-        "recoil_energy_points": 84,
-        "recoil_range_keV": [
-          5,
-          800
-        ],
-        "spectrum_rows": 1344,
-        "scenarios": [
-          "AFH-7",
-          "Hybrid-9 (AFH-7 + Helm-2)",
-          "Helm-9",
-          "AFH-7 + A2-2 ceiling"
-        ],
-        "speed_nodes": 24,
-        "internal_quadrature": "6x6x3",
-        "mapping": "threshold-u^2",
-        "detector_response_applied": false
+        "AFH_coverage": 0.998158
       },
       "files": [
         {
-          "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/afh_hybrid9_response_model_comparison.csv",
-          "sha256": "4889b2756b29cc6208823c8300f866e2a75a07d729af1a13851c724b70d48c04",
-          "bytes": 145161,
-          "role": "response-model comparison outputs"
+          "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_ame2020_exact_2026-11-17/afh_hybrid9_response_model_comparison.csv",
+          "sha256": "a4757a35af68c3cb0d09e0f4793f63c4e00c2301c9e928ead9d1d2ea2e09459a"
         },
         {
-          "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/afh_hybrid9_isotope_kernel_integrals.csv",
-          "sha256": "ec257f8d402a2f5757910703be4dc6470065a88517a36b2edad9681a1f21ed02",
-          "bytes": 640118,
-          "role": "isotope-level halo/kernel integrals"
+          "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_ame2020_exact_2026-11-17/afh_hybrid9_isotope_kernel_integrals.csv",
+          "sha256": "559b4933680af0f0fd0249538bcc0673f7b7f969b01b51a626c36ef834a742d9"
         },
         {
-          "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/afh_hybrid9_natural_xenon_spectrum.csv",
-          "sha256": "12508b7710fafa006f4a9748370b697d6be622f7ee58f2f4e14e69c47df4f4ad",
-          "bytes": 359511,
-          "role": "84-point AFH-7/Hybrid-9 natural-xenon recoil spectra"
+          "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_ame2020_exact_2026-11-17/afh_hybrid9_natural_xenon_spectrum.csv",
+          "sha256": "05e96d48b630813579f7a02a69dd98d1193702d3adb7fc352eb4ea520ab97dbc"
         },
         {
-          "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/afh_hybrid9_quadrature_crosschecks.csv",
-          "sha256": "a2021e91158a56cb8a051529c818ba662bc2de18ba80c611a62e508e20d0d492",
-          "bytes": 11358,
-          "role": "quadrature cross-checks"
+          "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_ame2020_exact_2026-11-17/afh_hybrid9_quadrature_crosschecks.csv",
+          "sha256": "e4729954648038e5409d768b7ce856ce4eb58041f12286be6cbb13d31a90ba5e"
         },
         {
-          "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/metadata.json",
-          "sha256": "05bd6ed2a9126f7d0c477d601064dd15a1047bb952b79183c414fb809cfbc991",
-          "bytes": 5330,
-          "role": "spectrum run metadata"
-        }
-      ]
-    },
-    {
-      "id": "afh7-hybrid9-highorder-full-grid-audit",
-      "description": "High-order convergence summary for all 84 recoil points and four benchmarks. The full 1344-row 24x8x8x4 spectrum archive is external and checksum-only; committed files are audit and summary outputs.",
-      "parameters": {
-        "recoil_energy_points": 84,
-        "isotope_kernel_rows": 3024,
-        "kinematically_open_points": 1726,
-        "kinematically_closed_points": 1298,
-        "final_quadrature": "24x8x8x4",
-        "acceptance_tolerance": 1e-05,
-        "max_baseline_to_final_spectrum_difference": 6.467719031455488e-06,
-        "max_speed_24_to48_worst32_points": 2.2174949521058807e-07,
-        "independent_numba_python_12_point_difference": 5.329070518200751e-15,
-        "detector_response_applied": false
-      },
-      "files": [
-        {
-          "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full_grid_highorder_2026-11-14/P1-AFH-Natural-global-quadrature-audit-2026-11-14.md",
-          "sha256": "503c2dfb16d169b2c50299ac62457dd90b15e388829d0b86efa0cf6aa443883d",
-          "bytes": 4306,
-          "role": "high-order quadrature audit report"
+          "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_ame2020_exact_2026-11-17/metadata.json",
+          "sha256": "f3530ad55606631f11c449c30a5acded144bad156238fb777fee91dbe5955c5b"
         },
         {
-          "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full_grid_highorder_2026-11-14/benchmark_quadrature_summary.csv",
-          "sha256": "5f93da232a0adf6b5a73735741d9af0146080cbeec603f8003d7f46000b30f8e",
-          "bytes": 573,
-          "role": "benchmark high-order quadrature summary"
-        },
-        {
-          "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full_grid_highorder_2026-11-14/isotope_quadrature_summary.csv",
-          "sha256": "08bc4924622e0751fc6d45482a1ea25b3ce2080c6a38dec0550a2e2e757c5380",
-          "bytes": 774,
-          "role": "isotope high-order quadrature summary"
-        },
-        {
-          "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full_grid_highorder_2026-11-14/metadata_full_grid_highorder.json",
-          "sha256": "385132e0029a38d276e1f47d92a4f7ada8679f4b1c4048851c37e7e010b71b48",
-          "bytes": 1601,
-          "role": "high-order run metadata"
-        },
-        {
-          "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full_grid_highorder_2026-11-14/speed48_refinement_summary.csv",
-          "sha256": "f81273fba1e46ce1ca1b45e926bf0804011d889af351f756b90c3f385f12db29",
-          "bytes": 131,
-          "role": "speed 24-to-48 refinement summary"
+          "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_ame2020_exact_2026-11-17/SHA256SUMS.txt",
+          "sha256": "68b36eb76c92e596559c54838b963ba8dd22cf53b0f1380d1a27fa646eb4eb07"
         }
       ]
     },
@@ -1517,66 +1398,6 @@
       "role": "response provenance metadata"
     },
     {
-      "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/afh_hybrid9_response_model_comparison.csv",
-      "sha256": "4889b2756b29cc6208823c8300f866e2a75a07d729af1a13851c724b70d48c04",
-      "bytes": 145161,
-      "role": "response-model comparison outputs"
-    },
-    {
-      "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/afh_hybrid9_isotope_kernel_integrals.csv",
-      "sha256": "ec257f8d402a2f5757910703be4dc6470065a88517a36b2edad9681a1f21ed02",
-      "bytes": 640118,
-      "role": "isotope-level halo/kernel integrals"
-    },
-    {
-      "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/afh_hybrid9_natural_xenon_spectrum.csv",
-      "sha256": "12508b7710fafa006f4a9748370b697d6be622f7ee58f2f4e14e69c47df4f4ad",
-      "bytes": 359511,
-      "role": "84-point AFH-7/Hybrid-9 natural-xenon recoil spectra"
-    },
-    {
-      "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/afh_hybrid9_quadrature_crosschecks.csv",
-      "sha256": "a2021e91158a56cb8a051529c818ba662bc2de18ba80c611a62e508e20d0d492",
-      "bytes": 11358,
-      "role": "quadrature cross-checks"
-    },
-    {
-      "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/metadata.json",
-      "sha256": "05bd6ed2a9126f7d0c477d601064dd15a1047bb952b79183c414fb809cfbc991",
-      "bytes": 5330,
-      "role": "spectrum run metadata"
-    },
-    {
-      "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full_grid_highorder_2026-11-14/P1-AFH-Natural-global-quadrature-audit-2026-11-14.md",
-      "sha256": "503c2dfb16d169b2c50299ac62457dd90b15e388829d0b86efa0cf6aa443883d",
-      "bytes": 4306,
-      "role": "high-order quadrature audit report"
-    },
-    {
-      "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full_grid_highorder_2026-11-14/benchmark_quadrature_summary.csv",
-      "sha256": "5f93da232a0adf6b5a73735741d9af0146080cbeec603f8003d7f46000b30f8e",
-      "bytes": 573,
-      "role": "benchmark high-order quadrature summary"
-    },
-    {
-      "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full_grid_highorder_2026-11-14/isotope_quadrature_summary.csv",
-      "sha256": "08bc4924622e0751fc6d45482a1ea25b3ce2080c6a38dec0550a2e2e757c5380",
-      "bytes": 774,
-      "role": "isotope high-order quadrature summary"
-    },
-    {
-      "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full_grid_highorder_2026-11-14/metadata_full_grid_highorder.json",
-      "sha256": "385132e0029a38d276e1f47d92a4f7ada8679f4b1c4048851c37e7e010b71b48",
-      "bytes": 1601,
-      "role": "high-order run metadata"
-    },
-    {
-      "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_full_grid_highorder_2026-11-14/speed48_refinement_summary.csv",
-      "sha256": "f81273fba1e46ce1ca1b45e926bf0804011d889af351f756b90c3f385f12db29",
-      "bytes": 131,
-      "role": "speed 24-to-48 refinement summary"
-    },
-    {
       "path": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131.csv",
       "sha256": "585b806fd937760f085d07b9907718f45ca331708021addee618a8362e2c2cce",
       "bytes": 221014,
@@ -1641,6 +1462,150 @@
       "sha256": "0a58ba03bdee66ae1c6ff1e61912c2745a8a430ebc9aa5d1a192dce61a3d7dc6",
       "bytes": 645,
       "role": "Four repository-relative SHA-256 checksums for Green high-order artifacts"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_ame2020_exact_2026-11-17/afh_hybrid9_response_model_comparison.csv",
+      "sha256": "a4757a35af68c3cb0d09e0f4793f63c4e00c2301c9e928ead9d1d2ea2e09459a",
+      "bytes": 145127,
+      "role": "AFH-7/Hybrid-9 response-model comparison on exact isotope masses"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_ame2020_exact_2026-11-17/afh_hybrid9_isotope_kernel_integrals.csv",
+      "sha256": "559b4933680af0f0fd0249538bcc0673f7b7f969b01b51a626c36ef834a742d9",
+      "bytes": 654565,
+      "role": "Isotope-level kernel integrals on exact isotope masses"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_ame2020_exact_2026-11-17/afh_hybrid9_natural_xenon_spectrum.csv",
+      "sha256": "05e96d48b630813579f7a02a69dd98d1193702d3adb7fc352eb4ea520ab97dbc",
+      "bytes": 366222,
+      "role": "Natural-xenon recoil spectra on exact isotope masses"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_ame2020_exact_2026-11-17/afh_hybrid9_quadrature_crosschecks.csv",
+      "sha256": "e4729954648038e5409d768b7ce856ce4eb58041f12286be6cbb13d31a90ba5e",
+      "bytes": 11342,
+      "role": "Numerical quadrature crosschecks for exact-mass spectra"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_ame2020_exact_2026-11-17/metadata.json",
+      "sha256": "f3530ad55606631f11c449c30a5acded144bad156238fb777fee91dbe5955c5b",
+      "bytes": 5430,
+      "role": "AME2020/CODATA-2022 exact-mass AFH spectrum provenance"
+    },
+    {
+      "path": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_ame2020_exact_2026-11-17/SHA256SUMS.txt",
+      "sha256": "68b36eb76c92e596559c54838b963ba8dd22cf53b0f1380d1a27fa646eb4eb07",
+      "bytes": 736,
+      "role": "Checksums for exact-mass AFH spectrum outputs"
+    },
+    {
+      "path": "research/three_body_natural_xenon/独立验证/xenon_isotope_masses_ame2020_codata2022.csv",
+      "sha256": "659636b3237672c67d4372aac2acd633f0116dd33c528486b0801a6994530bc3",
+      "bytes": 585,
+      "role": "AME2020 isotope masses converted to bare nuclear masses"
+    },
+    {
+      "path": "research/three_body_natural_xenon/独立验证/point_target_convergence.csv",
+      "sha256": "0ac94cf02616f74f286eeb11e9c73432057883df39128f48c9833f8d09cc45f5",
+      "bytes": 2683,
+      "role": "Exact-mass point-target Python and Mathematica comparison"
+    },
+    {
+      "path": "research/three_body_natural_xenon/独立验证/mma_i6_convergence.csv",
+      "sha256": "eedf8b976605e2025b71131f4944c8d8a304deec527d1bca76bd8fa470e48e8a",
+      "bytes": 702,
+      "role": "Exact-mass Mathematica phase-space integration comparisons"
+    },
+    {
+      "path": "research/three_body_natural_xenon/独立验证/methods_comparison.csv",
+      "sha256": "cef716add35be945e46e2ea2ef64feb3d430f0cbd35a7cf574c0c56ec3553e08",
+      "bytes": 1105,
+      "role": "Exact-mass cross-method benchmark comparison"
+    },
+    {
+      "path": "research/three_body_calculation_and_validation/mathematica_halo_notebook/convergence_halo.csv",
+      "sha256": "79e584778fe10e4f3f20f4626fb04d5ca587741dec6895825b26eaa64e909c8d",
+      "bytes": 378,
+      "role": "Exact-mass halo-fold convergence results"
+    },
+    {
+      "path": "research/three_body_calculation_and_validation/results/phase_space_convergence_ame2020_exact_2026-11-17/phase_space_convergence_metadata.json",
+      "sha256": "e20832f371a86a094b4ed14936a27e1cfd4b0503cc679d0eecfd0e5ffee13115",
+      "bytes": 3104,
+      "role": "Exact-mass phase-space convergence metadata"
+    },
+    {
+      "path": "research/lz_detector_response/lz_2026_extended_nr/afh7_hybrid9_rate_level_yields/lz_2026_afh7_hybrid9_rate_level_event_yields.csv",
+      "sha256": "557b26c4b2564f633c2971f2e9c6f7a7a17bd8d653cc5bd59e92d6b60e11ccb5",
+      "bytes": 7704,
+      "role": "LZ efficiency fold derived from exact-mass spectra"
+    },
+    {
+      "path": "research/lz_detector_response/lz_2026_extended_nr/afh7_hybrid9_rate_level_yields/lz_2026_afh7_hybrid9_rate_level_metadata.json",
+      "sha256": "94f73dbaa2f1698c1a0dbce2d977f9f8edec82c2c84aa62e8988f169d466c3dc",
+      "bytes": 5388,
+      "role": "Exact-mass LZ rate-level fold metadata"
+    },
+    {
+      "path": "research/lz_detector_response/lz_2026_extended_nr/afh7_hybrid9_rate_level_yields/SHA256SUMS.txt",
+      "sha256": "5454f0f697df7692b1c34bc43ab31757c03d267c9b197210b9a50992f2aac93f",
+      "bytes": 227,
+      "role": "Checksums for exact-mass LZ rate-level fold"
+    },
+    {
+      "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum_ame2020_exact/isotope_continuous_spectrum.csv",
+      "sha256": "1093052b8324e75459153fcbc021d18da870a3afee28f59c4cc2c4b11cd8e760",
+      "bytes": 1011619,
+      "role": "AME2020 exact-mass GCN/JJ55 natural-xenon result"
+    },
+    {
+      "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum_ame2020_exact/metadata.json",
+      "sha256": "bcdaf83d8561bd8b0c3fc4e575d648956f5f0662120080a77ce0be60028be072",
+      "bytes": 3077,
+      "role": "AME2020 exact-mass GCN/JJ55 natural-xenon result"
+    },
+    {
+      "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum_ame2020_exact/natural_xenon_continuous_spectrum.csv",
+      "sha256": "80d53c126902b7089989024b0e1907000f1d2940486a8072aa3f71706f9f7356",
+      "bytes": 94013,
+      "role": "AME2020 exact-mass GCN/JJ55 natural-xenon result"
+    },
+    {
+      "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum_ame2020_exact/quadrature_crosschecks.csv",
+      "sha256": "7bf54fede7c5b2530b942dbcfed8508f037f13f2ab1784de79c9790e3c044b27",
+      "bytes": 18754,
+      "role": "AME2020 exact-mass GCN/JJ55 natural-xenon result"
+    },
+    {
+      "path": "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum_ame2020_exact/SHA256SUMS.txt",
+      "sha256": "e483d980ddac12efbc04f684b5c8090139a308fd3e8ad97c6bcc2133067694c4",
+      "bytes": 375,
+      "role": "AME2020 exact-mass GCN/JJ55 natural-xenon result"
+    },
+    {
+      "path": "research/three_body_calculation_and_validation/results/ame2020_exact_model_comparison_2026-11-17/high_energy_tail_model_sensitivity.csv",
+      "sha256": "256fad76441fc86d6298ed51bcf61fb6456ef08d1ce858842f388371bc8d15be",
+      "bytes": 6369,
+      "role": "AME2020 exact-mass LZ efficiency and nuclear-model comparison"
+    },
+    {
+      "path": "research/three_body_calculation_and_validation/results/ame2020_exact_model_comparison_2026-11-17/metadata.json",
+      "sha256": "dd7d9f1971ca7a113acfd13c81ccc0c953cb8178531baa6410a1fd6739234e21",
+      "bytes": 3187,
+      "role": "AME2020 exact-mass LZ efficiency and nuclear-model comparison"
+    },
+    {
+      "path": "research/three_body_calculation_and_validation/results/ame2020_exact_model_comparison_2026-11-17/SHA256SUMS.txt",
+      "sha256": "d5c9344adcc3e3a293fc5914efcf6a340d54f12321046be8bf1c894d3a897598",
+      "bytes": 185,
+      "role": "AME2020 exact-mass LZ efficiency and nuclear-model comparison"
+    },
+    {
+      "path": "research/three_body_natural_xenon/完整运行与数值对照.md",
+      "sha256": "b389f6830cfc167e370ed6df2815a49a350c0ac4b912dda95224087eea5c6e80",
+      "bytes": 8617,
+      "role": "Current exact-mass calculation and validation report"
     }
   ],
   "source_commit": "PR #45 head fdec6ffb4d58474e8ae1998472f2aa9c935a04a9; merged into main by merge commit 15eb3a24e5295868ca208166a94c078fbc1747a7."

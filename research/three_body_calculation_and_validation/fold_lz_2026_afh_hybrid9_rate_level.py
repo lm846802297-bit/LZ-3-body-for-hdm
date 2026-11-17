@@ -25,7 +25,7 @@ from fold_lz_2026_rate_level import (
 
 DEFAULT_SPECTRUM = Path(
     "research/afh_default_density_natural_xenon_halo/results/"
-    "afh7_hybrid9_continuous_2026-11-14/"
+    "afh7_hybrid9_ame2020_exact_2026-11-17/"
     "afh_hybrid9_natural_xenon_spectrum.csv"
 )
 DEFAULT_SPECTRUM_METADATA = DEFAULT_SPECTRUM.with_name("metadata.json")

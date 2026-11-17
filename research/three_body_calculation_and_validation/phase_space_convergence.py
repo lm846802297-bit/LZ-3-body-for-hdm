@@ -21,8 +21,10 @@ from numpy.polynomial.legendre import leggauss
 
 try:
     import eq6_kernel as eq6
+    from isotope_mass_schemes import isotope_mass_GeV
 except ImportError:  # pragma: no cover
     from . import eq6_kernel as eq6
+    from .isotope_mass_schemes import isotope_mass_GeV
 
 
 def _legendre(order: int):
@@ -237,11 +239,12 @@ def cross_section_direct_li(
 
 
 def benchmark_cases():
+    m_xe131 = isotope_mass_GeV(131, "ame2020_nuclear")
     return [
-        ("green_ER200_v776", 1000.0, 300e-6, 1e-3, 122.0, 200e-6, 776.0),
-        ("green_ER267_v776", 1000.0, 300e-6, 1e-3, 122.0, 267e-6, 776.0),
-        ("green_ER542_v776", 1000.0, 300e-6, 1e-3, 122.0, 542e-6, 776.0),
-        ("red_ER101_v776", 1000.0, 200e-6, 1e-3, 122.0, 101e-6, 776.0),
+        ("green_ER200_v776", 1000.0, 300e-6, 1e-3, m_xe131, 200e-6, 776.0),
+        ("green_ER267_v776", 1000.0, 300e-6, 1e-3, m_xe131, 267e-6, 776.0),
+        ("green_ER542_v776", 1000.0, 300e-6, 1e-3, m_xe131, 542e-6, 776.0),
+        ("red_ER101_v776", 1000.0, 200e-6, 1e-3, m_xe131, 101e-6, 776.0),
     ]
 
 
@@ -387,81 +390,66 @@ def run_prefactor_check(output_dir: Path):
 
 
 
-def run_historical_800_anchor(output_dir: Path):
-    """Separate coarse, rounded-A*u and NIST mass conventions from W2 quadrature error."""
+def run_exact_mass_800_anchor(output_dir: Path):
+    """Recompute the 800-km/s phase-space anchor with the active AME2020 mass."""
     mchi, ms, dm = 1000.0, 300e-6, 1e-3
     ER, speed = 200e-6, 800.0
-    archived_i6 = 1433678.0722867665
-    mass_schemes = (
-        ("coarse_mA_122_GeV_approx", 122.0),
-        ("rounded_u_0p9315", 131.0 * 0.9315),
-        ("NIST_Xe131_nuclear_mass", 131.0 * 0.93149410242),
-    )
+    mA = isotope_mass_GeV(131, "ame2020_nuclear")
     rows = []
-    summaries = []
-    for mass_scheme, mA in mass_schemes:
-        reference = integrate_i6(
+    reference = integrate_i6(
+        mchi, ms, dm, mA, ER, speed,
+        nW=48, nz=40, nphi=24, mapping="threshold_u2",
+    )
+    gauss_value = eq6.reduced_kernel(
+        mchi, ms, dm, mA, ER, speed,
+        nw=16, nz=16, nphi=8, width_scheme="pole", g2=1.0,
+    )
+    configs = (
+        ("legacy_eq6_linear_W2", "linear_w2", 16, 16, 8, gauss_value),
+        ("independent_linear_W2", "linear_w2", 16, 16, 8, integrate_i6(
             mchi, ms, dm, mA, ER, speed,
-            nW=48, nz=40, nphi=24, mapping="threshold_u2",
-        )
-        legacy = eq6.reduced_kernel(
+            nW=16, nz=16, nphi=8, mapping="linear_w2",
+        )),
+        ("threshold_u2", "threshold_u2", 8, 4, 4, integrate_i6(
             mchi, ms, dm, mA, ER, speed,
-            nw=16, nz=16, nphi=8, width_scheme="pole", g2=1.0,
-        )
-        configs = (
-            ("legacy_eq6_linear_W2", "linear_w2", 16, 16, 8, legacy),
-            ("independent_linear_W2", "linear_w2", 16, 16, 8, integrate_i6(
-                mchi, ms, dm, mA, ER, speed,
-                nW=16, nz=16, nphi=8, mapping="linear_w2",
-            )),
-            ("threshold_u2", "threshold_u2", 8, 8, 4, integrate_i6(
-                mchi, ms, dm, mA, ER, speed,
-                nW=8, nz=4, nphi=4, mapping="threshold_u2",
-            )),
-            ("threshold_u2", "threshold_u2", 16, 16, 8, integrate_i6(
-                mchi, ms, dm, mA, ER, speed,
-                nW=16, nz=16, nphi=8, mapping="threshold_u2",
-            )),
-            ("threshold_u2", "threshold_u2", 24, 24, 12, integrate_i6(
-                mchi, ms, dm, mA, ER, speed,
-                nW=24, nz=24, nphi=12, mapping="threshold_u2",
-            )),
-            ("threshold_u2_reference", "threshold_u2", 48, 40, 24, reference),
-        )
-        for label, mapping, nW, nz, nphi, value in configs:
-            rows.append({
-                "case": "green_ER200_v800",
-                "mass_scheme": mass_scheme,
-                "mchi_GeV": f"{mchi:.14g}",
-                "ms_keV": f"{ms*1e6:.14g}",
-                "Delta_m_MeV": f"{dm*1e3:.14g}",
-                "mA_GeV": f"{mA:.14g}",
-                "ER_keV": f"{ER*1e6:.14g}",
-                "speed_km_s": f"{speed:.14g}",
-                "implementation": label,
-                "mapping": mapping,
-                "nW": nW,
-                "nz": nz,
-                "nphi": nphi,
-                "I6_GeV2": f"{value:.14g}",
-                "archived_I6_GeV2": f"{archived_i6:.14g}",
-                "relative_to_archived": f"{value/archived_i6-1.0:.12e}",
-                "reference_I6_GeV2": f"{reference:.14g}",
-                "relative_to_high_order_reference": f"{value/reference-1.0:.12e}",
-            })
-        summaries.append({
-            "mass_scheme": mass_scheme,
-            "mA_GeV": mA,
-            "legacy_I6_GeV2": legacy,
-            "threshold_u2_reference_I6_GeV2": reference,
-            "legacy_relative_to_archive": legacy/archived_i6-1.0,
-            "legacy_relative_to_high_order": legacy/reference-1.0,
+            nW=8, nz=4, nphi=4, mapping="threshold_u2",
+        )),
+        ("threshold_u2", "threshold_u2", 16, 16, 8, integrate_i6(
+            mchi, ms, dm, mA, ER, speed,
+            nW=16, nz=16, nphi=8, mapping="threshold_u2",
+        )),
+        ("threshold_u2", "threshold_u2", 24, 24, 12, integrate_i6(
+            mchi, ms, dm, mA, ER, speed,
+            nW=24, nz=24, nphi=12, mapping="threshold_u2",
+        )),
+        ("threshold_u2_reference", "threshold_u2", 48, 40, 24, reference),
+    )
+    for label, mapping, nW, nz, nphi, value in configs:
+        rows.append({
+            "case": "green_ER200_v800",
+            "mass_scheme": "AME2020_CODATA2022_nuclear",
+            "mchi_GeV": f"{mchi:.14g}",
+            "ms_keV": f"{ms*1e6:.14g}",
+            "Delta_m_MeV": f"{dm*1e3:.14g}",
+            "mA_GeV": f"{mA:.14g}",
+            "ER_keV": f"{ER*1e6:.14g}",
+            "speed_km_s": f"{speed:.14g}",
+            "implementation": label,
+            "mapping": mapping,
+            "nW": nW,
+            "nz": nz,
+            "nphi": nphi,
+            "I6_GeV2": f"{value:.14g}",
+            "reference_I6_GeV2": f"{reference:.14g}",
+            "relative_to_high_order_reference": f"{value/reference-1.0:.12e}",
         })
-    _write_csv(output_dir / "phase_space_historical_800_anchor.csv", rows)
-    print("historical 800-km/s anchor:", json.dumps({
-        "archived_I6_GeV2": archived_i6,
-        "mass_scheme_comparison": summaries,
-        "interpretation": "coarse mA=122 GeV, rounded A*0.9315 GeV and NIST nuclear-mass inputs are separated from linear-W2 versus threshold-u2 quadrature."
+    _write_csv(output_dir / "phase_space_exact_mass_800_anchor.csv", rows)
+    print("AME2020 800-km/s anchor:", json.dumps({
+        "mass_scheme": "AME2020_CODATA2022_nuclear",
+        "mA_GeV": mA,
+        "threshold_u2_reference_I6_GeV2": reference,
+        "coarse_order_I6_GeV2": gauss_value,
+        "coarse_relative_to_reference": gauss_value/reference-1.0,
     }))
     return rows
 
@@ -469,7 +457,7 @@ def run_historical_800_anchor(output_dir: Path):
 def run_near_pole_scan(output_dir: Path):
     """Audit off-shell points just above the kinematic chi2-pole boundary."""
     mchi, ms = 1000.0, 300e-6
-    mA = 131.0 * 0.93149410242
+    mA = isotope_mass_GeV(131, "ame2020_nuclear")
     ER, speed = 267e-6, 776.0
     wmin2, wmax2 = eq6.limits(mchi, ms, mA, ER, speed)
     wmin, wmax = math.sqrt(wmin2), math.sqrt(wmax2)
@@ -589,8 +577,8 @@ def run_scan(
             results[mode] = run_threshold_scan(output_dir)
         elif mode == "prefactor":
             results[mode] = run_prefactor_check(output_dir)
-        elif mode == "historical_800":
-            results[mode] = run_historical_800_anchor(output_dir)
+        elif mode == "exact_mass_800":
+            results[mode] = run_exact_mass_800_anchor(output_dir)
         elif mode == "near_pole":
             results[mode] = run_near_pole_scan(output_dir)
         else:
@@ -601,7 +589,7 @@ def run_scan(
         "phase_space_angular_convergence.csv",
         "phase_space_threshold_convergence.csv",
         "phase_space_li_prefactor_crosscheck.csv",
-        "phase_space_historical_800_anchor.csv",
+        "phase_space_exact_mass_800_anchor.csv",
         "phase_space_near_pole_convergence.csv",
     ]
     output_records = {}
@@ -614,7 +602,8 @@ def run_scan(
             }
     metadata = {
         "calculation": "P1 independent three-body phase-space quadrature convergence",
-        "date": "2026-11-14",
+        "date": "2026-11-17",
+        "target_mass_scheme": "AME2020 atomic masses converted to bare nuclei with CODATA-2022 constants and AME electron-binding correction",
         "units": {"mass_energy_momentum": "GeV", "speed": "km/s", "I6": "GeV^2"},
         "matrix_element": "reuses the committed Dirac spin_trace in eq6_kernel.py; independent part is phase-space mapping and measure",
         "width_scheme": "pole",
@@ -642,7 +631,7 @@ def run_scan(
             "mV_GeV": 10.0, "coupling_product_squared": 1.0, "RA": 1.0,
             "comparison": "Eq. (6) normalized-phi result versus direct raw-dphi Lorentz-invariant dPhi3 measure",
         },
-        "scope": "four selected fixed-speed 776-km/s benchmark points, five vmin-offset threshold checks, one historical 800-km/s green benchmark anchor, and an off-shell near-pole convergence scan; not a halo fold, full model scan, or detector likelihood",
+        "scope": "four selected fixed-speed 776-km/s benchmark points, five vmin-offset threshold checks, one AME2020 800-km/s green benchmark anchor, and an off-shell near-pole convergence scan; not a halo fold, full model scan, or detector likelihood",
         "matrix_element_source": "eq6_kernel.py committed Dirac trace and spinor amplitude; unchanged by this audit",
         "audit_script_sha256": hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
         "outputs": output_records,
@@ -662,15 +651,15 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--output-dir", type=Path,
-        default=Path(__file__).resolve().parent / "results" / "phase_space_convergence_2026-11-14",
+        default=Path(__file__).resolve().parent / "results" / "phase_space_convergence_ame2020_exact_2026-11-17",
     )
     parser.add_argument("--reference-order", type=int, default=48)
     parser.add_argument(
-        "--mode", choices=("all", "mapping", "angular", "threshold", "prefactor", "historical_800", "near_pole"),
+        "--mode", choices=("all", "mapping", "angular", "threshold", "prefactor", "exact_mass_800", "near_pole"),
         default="all",
     )
     args = parser.parse_args()
-    modes = ("mapping", "angular", "threshold", "prefactor", "historical_800", "near_pole") if args.mode == "all" else (args.mode,)
+    modes = ("mapping", "angular", "threshold", "prefactor", "exact_mass_800", "near_pole") if args.mode == "all" else (args.mode,)
     results = run_scan(args.output_dir, args.reference_order, modes)
     print("completed:", ", ".join(results))
     for mode, rows in results.items():
