@@ -182,12 +182,12 @@ F1–F13 的逐项状态见第 2 节。当前 AFH-7/Hybrid-9 84 点 grid-sampled
 
 ## 9. 完整 VV 核流与 AFH 非 \(M\) 响应状态
 
-- **已归档：** AFH-7 七同位素 \(M\) 响应及 factor-four 归一化。
+- **已归档：** AFH-7 七同位素 \(M\) 响应及 factor-four 归一化；另有 PR #51 的 Xe-131 native \(M,\Phi'',M\Phi''\) 2,401 点响应及 response-level validator PASS（见主报告附录 I.7.4 和完整讨论记录 L 节）。
 - **分支级可复现诊断：** PR #53 的完整暗物质 \(L^{\mu\nu}\) 与核质心点电荷流收缩；它不包含核内单体流。
 - **当前 form-factor benchmark：** 采用 arXiv:1707.06998 Appendix A.1 的显式 flavor-separated 中心值，\(F_2^{V,p/n}(0)=-0.552\)（同位旋对称近似）；HKS 2015 紧凑记号差异待逐项核查，有限 \(t_A\) 输入和协方差未完成。
 - **已撤回：** 先前 Xe-129/Xe-131 \(\Sigma'\) selected-\(q\) Python 源翻译表因算符映射审查撤回，不作为数值证据。
 - **映射已纠正、native pending：** AFH \(\Delta J\) 应使用同阶 \(MJLDivQ\)，旧 parity-conflict 判断已撤回；native \(\Sigma'\)、\(\Delta\)、\(\Sigma'\Delta\) 输出和逐点比较待完成。
-- **export prepared：** Xe-131 \(M,\Phi'',M\Phi''\) 的 2,401 点 Wolfram exporter 和 Python validator 已准备，但 native 执行及输出归档待完成。
+- **已归档、仅限 response-level：** Xe-131 \(M,\Phi'',M\Phi''\) 的 2,401 点 native Wolfram 输出、metadata、Python validator summary 和 SHA-256 manifest 已提交 PR #51；完整三体 Wilson 系数收缩仍未完成。
 - **未完成：** 有限 \(t\) 的 \(F_1/F_2\) 数值匹配、完整 \(L^{\mu\nu}W_A^{\alpha\beta}\) 收缩和天然氙完整 VV 谱。
 
 F13 的定义、符号、程序入口和证据边界见第 2 节及正式附录 I。点核 ppm 结果不能代替核内 \(\Sigma'\)、\(\Delta\) 或 \(\Phi''\) 矩阵元。

@@ -3868,6 +3868,87 @@ PR #53 的四分量暗物质张量/点核流诊断只检查核质心对流，不
 6. 当前主报告正式附录 I：research/docs/appendices/09I_three_body_vv_nucleon_current_afh_responses.md，用于查看完整三体张量、Dirac–Pauli NR 展开、AFH 响应映射和当前证据边界。
 
 <!-- END INLINE CORRECTION: K -->
+
+<!-- BEGIN UPDATE: L -->
+<a id="corr-l"></a>
+### L. 2026-11-18 Xe-131 native AFH \(M,\Phi'',M\Phi''\) 响应归档
+
+本节记录 PR #51 中已经完成的 native Wolfram 计算，作为前面讨论中“优先计算 Xe-131 的 \(\Phi''\) 和 \(M\Phi''\)”这一计划的实际进展。原始讨论中的计划和阶段性判断仍保留为历史记录；当前数值状态以本节和主报告附录 I.7.4 为准。
+
+**计算对象与 provenance**
+
+- 核素：Xe-131，\((A,Z,J_A)=(131,54,3/2)\)。
+- AFH v6.0 原生 Wolfram ResponseNuclear 索引：\(1\to M\)、\(4\to\Phi''\)、\(7\to M\Phi''\)。
+- 密度矩阵：AFH 内置 sdgXe131，67 entries。
+- 网格：2,401 点，\(q_A=0\)–\(0.6\ \mathrm{GeV}\)，步长 \(0.00025\ \mathrm{GeV}=0.25\ \mathrm{MeV}\)。
+- 运行环境：Wolfram 14.2.0 for Windows x86-64；AFH source 和 density-matrix CSV 的 SHA-256 已写入 metadata。
+
+原生输出、metadata、Python validation summary 和 SHA-256 manifest 位于：
+
+research/afh_default_density_xe131/output/phi_response_native/
+
+**归一化约定**
+
+对 \(X\in\{M,\Phi'',M\Phi''\}\)，本次归档统一使用
+\[
+R_X^{\rm raw}(q_A)=\frac{4\pi}{2J_A+1}W_{X,\rm AFH}^{00}(q_A),
+\qquad
+R_X^{\rm phys}(q_A)=4R_X^{\rm raw}(q_A).
+\]
+AFH 原始等标量 convention 与物理等质子、等中子耦合之间的 factor four 对三个响应统一只应用一次。本次不再叠加旧 \(W_M\) 归档中的逐同位素 \(q=0\) shape renormalization；因此保留 native package 的原始有限精度和原始响应形状。
+
+**数值验收**
+
+专用 Python validator 报告 **PASS**，检查范围包括：
+
+1. 2,401 点 \(q_A\) 网格和 \(y=(q_Ab_A/2)^2\)；
+2. \(4\pi/(2J_A+1)\) 响应转换与 factor-four 唯一放置；
+3. 两个对角响应的非负性；
+4. 三个响应的虚部残差；
+5. \(M\)-\(\Phi''\) 响应矩阵的 Cauchy–Schwarz 上界；
+6. \(q_A=0\) 电荷归一化及 CSV/metadata provenance。
+
+零动量数值为
+\[
+R_M^{\rm raw}(0)=4289.895955714992,\quad A^2/4=4290.25,
+\]
+相对偏差 \(8.25230\times10^{-5}\)。乘一次 factor four 后
+\[
+R_M^{\rm phys}(0)=17159.583822859968,\quad A^2=17161.
+\]
+该小偏差来自 AFH 内置 density-matrix 系数的有限小数精度；本次不通过 shape renormalization 将其人为置零。
+
+**深极小值附近的响应**
+
+| \(q_A\) [GeV] | \(R_M^{\rm raw}\) | \(R_{\Phi''}^{\rm raw}\) | \(R_{M\Phi''}^{\rm raw}\) | \(R_{\Phi''}/R_M\) |
+|---:|---:|---:|---:|---:|
+| 0.15800 | \(5.31451\times10^{-2}\) | \(7.14832\times10^{-1}\) | \(2.62061\times10^{-2}\) | 13.45 |
+| 0.25625 | \(2.72531\times10^{-4}\) | \(3.15623\times10^{-2}\) | \(-5.24943\times10^{-4}\) | 115.81 |
+| 0.36500 | \(6.70326\times10^{-4}\) | \(1.51514\times10^{-3}\) | \(2.21762\times10^{-4}\) | 2.26 |
+| 0.49925 | \(7.16871\times10^{-5}\) | \(4.96083\times10^{-5}\) | \(-7.30759\times10^{-6}\) | 0.692 |
+
+在 \(q_A=0.25625\ \mathrm{GeV}\) 处，\(R_{\Phi''}^{\rm raw}/R_M^{\rm raw}=115.81\)，但该点 \(R_{\Phi''}^{\rm raw}\) 仅为 \(q_A=0\) 值的 \(2.1144\times10^{-4}\)。大比值主要来自 \(M\) 响应的深极小值，不能解释为三体散射率增强 115.81 倍。实际速率必须保留有符号的 \(M\)-\(\Phi''\) 干涉，并乘入由完整三体振幅导出的实际系数。
+
+从 CSV 直接计算得到的最大归一化干涉相关系数为
+\[
+\max_{q_A}\frac{|R_{M\Phi''}|}{\sqrt{R_MR_{\Phi''}}}
+=0.9999998602,
+\]
+且 2,401 个网格点上两个对角响应均非负。这里的 Cauchy–Schwarz 检查是响应矩阵的代数一致性检验，不是独立核结构模型的交叉验证。
+
+**明确的 scope boundary**
+
+本次完成的是 AFH 核响应层的 native numerical export 和 response-level validation。它没有完成：
+
+- 有限 \(t_A\) 下的核子 \(F_1/F_2\) 输入和误差传播；
+- 完整三体振幅对应的 NR Wilson coefficients；
+- \(\Delta\)、\(\Sigma'\)、\(\Sigma''\) 等空间流响应的 native 数值对照；
+- \(L_{\mu\nu}W_A^{\mu\nu}\) 的完整三体收缩；
+- 天然氙完整 VV 谱、halo fold 或 LZ likelihood。
+
+因此，\(M,\Phi'',M\Phi''\) 的 AFH response archive 已完成，但它们对实际三体事件率的贡献仍待完整系数收缩后才能判定。
+
+<!-- END UPDATE: L -->
 ---
 
 
