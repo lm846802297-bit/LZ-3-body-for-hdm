@@ -80,7 +80,7 @@
       "parameters": {
         "m_chi1_GeV": 1000,
         "m_V_GeV": 10,
-        "coupling_product_squared": 1e-08,
+        "coupling_product_squared": 1e-8,
         "g2": 1,
         "speed_km_s": 800,
         "target_mass_scheme": "M_A=131 u",
@@ -143,7 +143,7 @@
       "parameters": {
         "m_chi1_GeV": 1000,
         "m_V_GeV": 10,
-        "coupling_product_squared": 1e-08,
+        "coupling_product_squared": 1e-8,
         "g2": 1,
         "rho_chi_GeV_cm3": 0.3,
         "benchmarks": {
@@ -585,8 +585,8 @@
         },
         {
           "path": "research/three_body_calculation_and_validation/results/SHA256SUMS_user_dsigma_450kev.txt",
-          "sha256": "fa8d084539bd5c4023c705bc0ff5e94084769a4a96c449197f54124900feb88e",
-          "bytes": 1029,
+          "sha256": "1e00f6bfa4281c0dd34bfbdca5096dc674d4d1610d144a129273f8f3e83bba44",
+          "bytes": 1039,
           "role": "fixed-speed Xe-131 curve checksum manifest"
         }
       ]
@@ -604,9 +604,9 @@
         ],
         "q_step_GeV": 0.00025,
         "q_nodes": 2401,
-        "relative_tolerance": 2e-08,
+        "relative_tolerance": 2e-8,
         "absolute_tolerance": 2e-10,
-        "max_relative_difference": 3.5908703199989993e-09
+        "max_relative_difference": 3.5908703199989993e-9
       },
       "files": [
         {
@@ -1332,8 +1332,8 @@
     },
     {
       "path": "research/three_body_calculation_and_validation/results/SHA256SUMS_user_dsigma_450kev.txt",
-      "sha256": "fa8d084539bd5c4023c705bc0ff5e94084769a4a96c449197f54124900feb88e",
-      "bytes": 1029,
+      "sha256": "1e00f6bfa4281c0dd34bfbdca5096dc674d4d1610d144a129273f8f3e83bba44",
+      "bytes": 1039,
       "role": "fixed-speed Xe-131 curve checksum manifest"
     },
     {

@@ -581,8 +581,8 @@
         },
         {
           "path": "research/three_body_calculation_and_validation/results/SHA256SUMS_user_dsigma_450kev.txt",
-          "sha256": "fa8d084539bd5c4023c705bc0ff5e94084769a4a96c449197f54124900feb88e",
-          "bytes": 1029,
+          "sha256": "1e00f6bfa4281c0dd34bfbdca5096dc674d4d1610d144a129273f8f3e83bba44",
+          "bytes": 1039,
           "role": "fixed-speed Xe-131 curve checksum manifest"
         }
       ]
@@ -947,8 +947,8 @@
     },
     {
       "path": "research/three_body_calculation_and_validation/results/SHA256SUMS_user_dsigma_450kev.txt",
-      "sha256": "fa8d084539bd5c4023c705bc0ff5e94084769a4a96c449197f54124900feb88e",
-      "bytes": 1029,
+      "sha256": "1e00f6bfa4281c0dd34bfbdca5096dc674d4d1610d144a129273f8f3e83bba44",
+      "bytes": 1039,
       "role": "fixed-speed Xe-131 curve checksum manifest"
     },
     {
