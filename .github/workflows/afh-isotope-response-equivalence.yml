@@ -29,6 +29,9 @@ jobs:
       - name: Run unit tests
         run: python -m unittest discover -s research/afh_isotope_response_equivalence/tests -p 'test_*.py' -v
       - name: Reproduce isotope response audit
-        run: python research/afh_isotope_response_equivalence/run_afh_isotope_response_equivalence.py
-      - name: Verify committed outputs are reproducible
-        run: git diff --exit-code -- research/afh_isotope_response_equivalence/results
+        run: python research/afh_isotope_response_equivalence/run_afh_isotope_response_equivalence.py --outdir "$RUNNER_TEMP/afh-isotope-audit"
+      - name: Compare regenerated tables with committed archive
+        run: >-
+          python research/afh_isotope_response_equivalence/validate_archived_outputs.py
+          --generated-dir "$RUNNER_TEMP/afh-isotope-audit"
+          --archived-dir research/afh_isotope_response_equivalence/results
