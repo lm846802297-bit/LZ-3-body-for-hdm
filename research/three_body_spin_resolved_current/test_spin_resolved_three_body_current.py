@@ -60,7 +60,10 @@ class SpinResolvedCurrentTests(unittest.TestCase):
             rhs = src.ward_rhs_finite_width(
                 self.point, self.mchi, self.mchi2, imag
             )
-            self.assertLess(src.relative_matrix_residual(lhs, rhs), 2e-9)
+            self.assertLess(
+                src.scaled_ward_identity_residual(self.point, total, lhs, rhs),
+                2e-11,
+            )
             self.assertGreater(np.linalg.norm(lhs), 1e-8)
 
     def test_zero_width_ward_identity_is_recovered(self):
@@ -71,14 +74,17 @@ class SpinResolvedCurrentTests(unittest.TestCase):
         rhs = src.ward_rhs_finite_width(
             self.point, self.mchi, self.mchi2, 0.0
         )
-        self.assertLess(src.relative_matrix_residual(lhs, rhs), 2e-9)
+        self.assertLess(
+                src.scaled_ward_identity_residual(self.point, total, lhs, rhs),
+                2e-11,
+            )
 
     def test_degenerate_mass_zero_width_current_is_conserved(self):
         _, _, total = src.spin_resolved_diagram_currents(
             self.point, self.mchi, self.mchi, 0.0
         )
         divergence = src.ward_lhs(self.point, total)
-        self.assertLess(np.linalg.norm(divergence), 2e-7)
+        self.assertLess(src.scaled_ward_residual(self.point, total), 1e-7)
 
     def test_conserved_nuclear_current_annihilates_longitudinal_projection(self):
         q = self.point.q_A

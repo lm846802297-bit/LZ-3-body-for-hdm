@@ -149,6 +149,28 @@ def relative_matrix_residual(a: np.ndarray, b: np.ndarray) -> float:
     return float(np.linalg.norm(a - b) / scale)
 
 
+def scaled_ward_residual(point: eq6.Point, current: np.ndarray) -> float:
+    """Scale q.T by the componentwise contraction size, not an absolute norm."""
+    q = np.asarray(point.q_A, dtype=float)
+    scale = abs(q[0]) * float(np.linalg.norm(current[0]))
+    scale += sum(
+        abs(q[i]) * float(np.linalg.norm(current[i])) for i in range(1, 4)
+    )
+    return float(np.linalg.norm(ward_lhs(point, current)) / max(scale, 1.0))
+
+
+def scaled_ward_identity_residual(
+    point: eq6.Point, current: np.ndarray, lhs: np.ndarray, rhs: np.ndarray
+) -> float:
+    """Scale the identity residual to the size of the contracted current."""
+    q = np.asarray(point.q_A, dtype=float)
+    scale = abs(q[0]) * float(np.linalg.norm(current[0]))
+    scale += sum(
+        abs(q[i]) * float(np.linalg.norm(current[i])) for i in range(1, 4)
+    )
+    return float(np.linalg.norm(lhs - rhs) / max(scale, 1.0))
+
+
 def build_reference_point() -> eq6.Point:
     w_min, w_max = eq6.limits(
         MCHI_GEV, MS_GEV, M_A_GEV, ER_GEV, SPEED_KMS
