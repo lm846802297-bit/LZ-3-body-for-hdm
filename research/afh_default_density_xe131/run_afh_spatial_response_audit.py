@@ -251,7 +251,7 @@ def main():
           "No halo integration is included."],
           "isotopes":summaries}
     (args.outdir/"metadata.json").write_text(json.dumps(meta,indent=2)+"\n",encoding="utf-8")
-    print(json.dumps({"outdir":str(args.outdir),"delta_parity_audit":meta["delta_parity_audit"],
+    print(json.dumps({"outdir":str(args.outdir),"delta_parity_audit":meta["delta_operator_audit"],
                       "summary":{A:[{"q_GeV":r["q_GeV"],"W_M":r["W_M00_AFH"],
                                      "W_SigmaPrime":r["W_SigmaPrime00_AFH"],
                                      "ratio":r["SigmaPrime_over_M"]} for r in v["points"]]

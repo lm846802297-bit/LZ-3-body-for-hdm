@@ -26,6 +26,13 @@ class AFHSpatialResponseTests(unittest.TestCase):
                 self.assertGreaterEqual(ws,0.0)
                 self.assertGreaterEqual(wd,0.0)
 
+    def test_parity_audit_schema(self):
+        audit=spatial.parity_audit()
+        self.assertIn("delta_wrapper_requires",audit)
+        self.assertIn("deltaop_3j_requires",audit)
+        self.assertIn("logical_conflict",audit)
+        self.assertIn("delta_prime_is_not_delta_j",audit)
+
     def test_delta_uses_deltaop_not_deltaprime(self):
         source=spatial.delta_inner_element
         # The DeltaJ path must call the same-rank MJLDivQ component.
