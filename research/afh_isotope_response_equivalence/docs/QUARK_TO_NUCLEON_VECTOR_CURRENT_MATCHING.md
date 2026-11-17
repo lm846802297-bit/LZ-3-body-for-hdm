@@ -924,14 +924,14 @@ J_q^\mu=\sum_q g_q\bar q\gamma^\mu q.
 \bar u_N(p_N')
 \left[
 F_1^{V,N}(t)\gamma^\mu
--\frac{iF_2^{V,N}(t)}{2m_N}
++\frac{iF_2^{V,N}(t)}{2m_N}
 \sigma^{\mu\nu}q_{N,\nu}
 \right]
 u_N(p_N).
 }
 \]
 
-这里采用 \(q_N=p_N'-p_N\) 或其相反方向时，Pauli 项的整体符号必须同步改变。全文中的 \(F_1,F_2\) 都应和同一个动量约定配套。
+本节固定 \(q_N=p_N'-p_N\)。若改用相反方向，Pauli 项的整体符号必须同步反转。全文中的 \(F_1,F_2\) 都应和同一个动量约定配套。
 
 - \(F_1^{V,N}\) 是 Dirac 形状因子，控制矢量电荷和部分对流结构；
 - \(F_2^{V,N}\) 是 Pauli 形状因子，控制磁化流及其进入完整振幅后的自旋—动量项；
@@ -1237,7 +1237,7 @@ D_{\mu\nu}(q_A)
 \bar u_N(p_N')
 \left[
 F_1^{V,N}(t)\gamma^\nu
--\frac{iF_2^{V,N}(t)}{2m_N}
++\frac{iF_2^{V,N}(t)}{2m_N}
 \sigma^{\nu\alpha}q_{A,\alpha}
 \right]
 u_N(p_N)
