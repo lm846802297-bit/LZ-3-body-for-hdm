@@ -32,7 +32,7 @@ def synthetic_grid(step_keV: int) -> pd.DataFrame:
             rows.append({
                 "benchmark": benchmark,
                 "ER_keV": er,
-                "phase_space_open": 1,
+                "phase_space_open": True,
                 "R_A_physical_normalized": 131.0**2 * response_shape,
                 "C0": 1.0000825298069378,
                 "I6_GeV2": 1.0e-4 * (1.0 + 1.0e-4 * er),
@@ -51,6 +51,15 @@ def synthetic_grid(step_keV: int) -> pd.DataFrame:
 
 
 class TestERGridConvergence(unittest.TestCase):
+    def test_loader_normalizes_integer_phase_space_flags_to_boolean(self):
+        frame = synthetic_grid(5)
+        frame["phase_space_open"] = frame["phase_space_open"].astype(int)
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "integer_mask.csv"
+            frame.to_csv(path, index=False)
+            loaded = load_grid(path, 5)
+        self.assertEqual(loaded["phase_space_open"].dtype, bool)
+
     def test_exact_5kev_and_1kev_grids_pass_for_smooth_spectrum(self):
         coarse = synthetic_grid(5)
         fine = synthetic_grid(1)
