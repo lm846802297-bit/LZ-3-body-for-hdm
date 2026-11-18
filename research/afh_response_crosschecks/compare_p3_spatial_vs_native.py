@@ -159,7 +159,10 @@ def run(p3_csv: Path, p3_metadata: Path, native_dir: Path, native_metadata: Path
         "native_imaginary_tolerance": 2e-12,
         "P3_B_csv_sha256": sha256(p3_csv),
         "P3_B_metadata_sha256": sha256(p3_metadata),
-        "native_metadata": nmeta,\n        "native_source_commit": manifest.get("source_commit"),\n        "native_control_run_id": manifest.get("control_run_id"),\n        "native_control_run_attempt": manifest.get("control_run_attempt"),
+        "native_metadata": nmeta,
+        "native_source_commit": manifest.get("source_commit"),
+        "native_control_run_id": manifest.get("control_run_id"),
+        "native_control_run_attempt": manifest.get("control_run_attempt"),
         "raw_package_response_comparisons": raw,
         "physical_equal_pn_comparisons": physical,
         "acceptance_note": "A PASS validates these three P3-B spatial channels against the pinned AFH v6.0 Wolfram source. It does not by itself validate the full three-body tensor contraction or event rate."
