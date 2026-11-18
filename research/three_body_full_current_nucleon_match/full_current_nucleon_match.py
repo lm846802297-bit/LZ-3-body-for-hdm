@@ -190,13 +190,124 @@ def pauli_coefficients_as_pairs(amplitude: np.ndarray) -> list[list[list[float]]
     ]
 
 
-def build_reference_inputs():
+def build_reference_inputs(denominator_imaginary_part: float = 0.0):
     point = dm.build_reference_point()
     mchi2 = dm.MCHI_GEV + 362.0e-6
     _, _, current = dm.spin_resolved_diagram_currents(
-        point, dm.MCHI_GEV, mchi2, 0.0
+        point, dm.MCHI_GEV, mchi2, denominator_imaginary_part
     )
     return point, current
+
+
+def run_finite_width_scenarios(point, q_vec: np.ndarray) -> list[dict]:
+    """Repeat the full-current contraction with the project's finite-width T3.
+
+    The width is inserted only in the after-emission chi2 propagator, exactly
+    as in vector_current_response_audit.vector_current_vertices. We retain
+    zero, pole, and running-width controls and both benchmark g2 values.
+    """
+    mchi = dm.MCHI_GEV
+    delta_m = 362.0e-6
+    mchi2 = mchi + delta_m
+    ms = dm.MS_GEV
+    v_n = 0.10
+    f1, f2 = 1.0, -0.184
+    l_vec = M_N_GEV * v_n * perpendicular_unit(q_vec)
+    jn, _, (p_i, p_f) = nucleon_current_matrices(
+        q_vec, l_vec, f1, f2
+    )
+    jn_nr = jn * nonrel_state_normalization(p_i, p_f)
+    out = []
+    for g2 in (0.1, 1.0):
+        for scheme in ("zero", "pole", "running"):
+            imag = dm.vca.width_imaginary_part(
+                point, mchi, ms, delta_m, g2, scheme
+            )
+            before, after, current = dm.spin_resolved_diagram_currents(
+                point, mchi, mchi2, imag
+            )
+            full, charge, spatial = full_amplitude_operator(current, jn_nr)
+            coeff_spatial = pauli_product_coefficients(spatial)
+            ward_lhs = dm.ward_lhs(point, current)
+            ward_rhs = dm.ward_rhs_finite_width(
+                point, mchi, mchi2, imag
+            )
+            tensor_from_spin = dm.tensor_from_spin_matrices(current)
+            tensor_trace = dm.vca.dm_current_tensor(
+                point, mchi, mchi2, imag
+            )
+            proj_full = spin_orbit_odd_coefficient(
+                current, q_vec, v_n, f1, f2, "full",
+                nonrel_normalized=True
+            )
+            proj_charge = spin_orbit_odd_coefficient(
+                current, q_vec, v_n, f1, f2, "charge",
+                nonrel_normalized=True
+            )
+            proj_spatial = spin_orbit_odd_coefficient(
+                current, q_vec, v_n, f1, f2, "spatial",
+                nonrel_normalized=True
+            )
+            out.append({
+                "g2": g2,
+                "width_scheme": scheme,
+                "denominator_imaginary_part_GeV2": imag,
+                "Gamma_pole_keV": (
+                    dm.eq6.chi2_width_dirac_scalar(mchi, ms, delta_m, g2)
+                    * 1.0e6
+                ),
+                "Gamma_running_at_reference_W_keV": (
+                    dm.eq6.chi2_width_dirac_scalar_at_mass(
+                        math.sqrt(point.W2), mchi, ms, g2
+                    ) * 1.0e6
+                    if scheme == "running" else None
+                ),
+                "pole_clearance_keV": (
+                    mchi2 - math.sqrt(point.W2)
+                ) * 1.0e6,
+                "spin_trace_relative_residual": dm.relative_matrix_residual(
+                    tensor_from_spin, tensor_trace
+                ),
+                "finite_width_Ward_identity_relative_residual": (
+                    dm.scaled_ward_identity_residual(
+                        point, current, ward_lhs, ward_rhs
+                    )
+                ),
+                "DM_current_norm": float(np.linalg.norm(current)),
+                "charge_amplitude_norm": float(np.linalg.norm(charge)),
+                "spatial_amplitude_norm": float(np.linalg.norm(spatial)),
+                "spatial_over_charge_operator_norm": float(
+                    np.linalg.norm(spatial) / max(np.linalg.norm(charge), 1e-300)
+                ),
+                "selected_PhiPP_odd_projection_full_NR": [
+                    proj_full.real, proj_full.imag
+                ],
+                "selected_PhiPP_odd_projection_charge_NR": [
+                    proj_charge.real, proj_charge.imag
+                ],
+                "selected_PhiPP_odd_projection_spatial_NR": [
+                    proj_spatial.real, proj_spatial.imag
+                ],
+                "spatial_transverse_spin_coefficient_c02": [
+                    float(coeff_spatial[0, 2].real),
+                    float(coeff_spatial[0, 2].imag),
+                ],
+                "full_pauli_reconstruction_residual": (
+                    pauli_decomposition_residual(full)
+                ),
+                "charge_pauli_reconstruction_residual": (
+                    pauli_decomposition_residual(charge)
+                ),
+                "spatial_pauli_reconstruction_residual": (
+                    pauli_decomposition_residual(spatial)
+                ),
+                "coherent_two_diagram_interference_norm": float(np.linalg.norm(
+                    tensor_from_spin
+                    - dm.tensor_from_spin_matrices(before)
+                    - dm.tensor_from_spin_matrices(after)
+                )),
+            })
+    return out
 
 
 def run_diagnostic() -> dict:
@@ -286,6 +397,7 @@ def run_diagnostic() -> dict:
         ),
         "results": results,
         "complete_Pauli_decompositions_at_vN_0p10": pauli_decompositions,
+        "finite_width_scenarios": run_finite_width_scenarios(point, q_vec),
         "limitations": [
             "The nucleon is an on-shell static impulse-approximation point with q_N^0=0 and l perpendicular to q.",
             "The physical nuclear transfer has q_A^0=E_R != 0; the q_N^0=0 approximation is not exactly conserved with q_A and its residual is reported separately.",
