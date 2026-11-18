@@ -77,7 +77,7 @@ def run(p3_csv: Path, p3_metadata: Path, native_dir: Path, native_metadata: Path
     p3meta = json.loads(p3_metadata.read_text(encoding="utf-8-sig"))
     nmeta = parse_kv(native_metadata)
     manifest = json.loads(native_manifest.read_text(encoding="utf-8-sig"))
-    expected_commit = "dcefbeb7ad705b6c03f2b4689200eb1d9252e67b"
+    expected_commit = "e1e9c85530a7d609561b34e2c2df5ab36e5c5b89"
     if manifest.get("repository") != "lm846802297-bit/LZ-3-body-for-hdm":
         raise ValueError("native manifest repository mismatch")
     if manifest.get("source_commit") != expected_commit:
