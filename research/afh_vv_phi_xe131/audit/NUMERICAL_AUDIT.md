@@ -81,11 +81,11 @@ With \(q_A=k'-k\), \(t_A=-q_A^2\), and the AFH Fourier convention
 \(\boldsymbol q_{\rm AFH}=-\boldsymbol q_A\), the coefficients are
 \[
 c_M=F_1^V(t_A)+\frac{t_A}{8m_N^2}
-       [F_1^V(t_A)+2F_2^V(t_A)],
+       [F_1^V(t_N)+2F_2^V(t_N)],
 \]
 \[
 c_{\Phi''}=\frac{q_A^2}{4m_N^2}
-       [F_1^V(t_A)+2F_2^V(t_A)].
+       [F_1^V(t_N)+2F_2^V(t_N)].
 \]
 The three-body charge amplitude factorizes as
 \[
@@ -112,7 +112,7 @@ Q_{\Phi''}
 =0.9816142.
 \]
 This is a \(-1.839\%\) change relative to the same relativistically
-corrected \(M\)-only charge response. Including the \(t_A/(8m_N^2)\)
+corrected \(M\)-only charge response. Including the \(t_N/(8m_N^2)\)
 correction to \(c_M\), the combined result is \(-2.991\%\) relative to
 \(F_1^V(0)^2W_M\) at this selected point.
 
