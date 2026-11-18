@@ -1,315 +1,252 @@
-# Full three-body current × nucleon Dirac-Pauli matching diagnostic
+# Full three-body current × nucleon Dirac–Pauli matching
 
-**Status:** static one-nucleon spin-matrix matching diagnostic plus a phase-space-integrated q-aligned spin-resolved three-body DM tensor; AFH many-body operator matching remains open.
+**Status:** the static one-nucleon Dirac–Pauli diagnostic and the
+phase-space-integrated DM-side three-body tensor are validated. The
+component-wise quadrature scan passes at the reported stress benchmarks.
+The exact AFH spatial-multipole coefficient projection and isotope nuclear
+contraction remain open.
 
-## Purpose
+## 1. Purpose and amplitude
 
-This study takes the spin-resolved three-body current from PR #57 and
-contracts all four Lorentz components with an explicit one-nucleon
-Dirac-Pauli vector current:
+This study combines the spin-resolved three-body DM current with the
+one-nucleon vector current:
 \[
 \mathcal A=\mathcal T_3^0\otimes J_N^0
--\sum_i\mathcal T_3^i\otimes J_N^i.
+-\sum_{i=1}^3\mathcal T_3^i\otimes J_N^i.
 \]
-
-The 4x4 operator acts in external chi1 spin space tensor nucleon spin space.
-It is decomposed into the complete Pauli-product basis
+The one-point spinor diagnostic decomposes this \(4\times4\) operator into
+the complete Pauli-product basis
 \[
-\mathcal A=\sum_{a,b=0}^3 c_{ab}\,
+\mathcal A=\sum_{a,b=0}^{3}c_{ab}\,
 \sigma_\chi^a\otimes\sigma_N^b.
 \]
+The phase-space calculation separately retains the full four-vector
+\(\mathcal T_3^\mu\), both scalar-emission orderings, and their coherent
+interference.
 
-This is the first step that keeps the charge and spatial current terms
-together before identifying the spin-orbit coefficient.
+## 2. Momentum and nucleon-current conventions
 
-## Nucleon convention and static approximation
-
-The nucleon vertex uses
+The nuclear transfer and one-nucleon transfer are kept distinct:
 \[
-\Gamma_N^\mu=F_1\gamma^\mu+
-\frac{iF_2}{2m_N}\sigma^{\mu\nu}q_{N,\nu},
-\qquad q_N=P_N'-P_N.
+q_A^\mu=P_A'^\mu-P_A^\mu,\qquad
+q_N^\mu=k_N'^\mu-k_N^\mu.
 \]
-The sign is translated to the project convention q_A=P'-P.
-
-For this first diagnostic, the free nucleon is on shell in a static elastic
-impulse-approximation point:
+In the static one-body impulse diagnostic,
 \[
-\mathbf p_N=\boldsymbol\ell-\mathbf q_A/2,\qquad
-\mathbf p_N'=\boldsymbol\ell+\mathbf q_A/2,\qquad
-\boldsymbol\ell\cdot\mathbf q_A=0.
+q_N^0=0,\qquad
+\boldsymbol q_N=\boldsymbol q_A,\qquad
+t_N=-|\boldsymbol q_A|^2.
 \]
-Thus q_N^0=0. The small nuclear recoil energy q_A^0 is neglected in the
-one-nucleon current, as in the static AFH operator reduction. This is a
-controlled kinematic diagnostic, not a complete bound-nucleon treatment.
+The AFH Fourier convention used in the matching note is
+\(\boldsymbol q_{\rm AFH}=-\boldsymbol q_A\). The emitted scalar momentum
+is not part of the nuclear Fourier transfer:
+\[
+\boldsymbol p_\chi'-\boldsymbol p_\chi
+=-\boldsymbol q_A-\boldsymbol k_s.
+\]
+It remains inside the exact three-body DM current and its two \(\chi_2\)
+propagators.
 
-## Covariant versus AFH one-body normalization
+The nucleon vertex is
+\[
+\Gamma_N^\mu=
+F_1^{V,N}(t_N)\gamma^\mu+
+\frac{iF_2^{V,N}(t_N)}{2m_N}
+\sigma^{\mu\nu}q_{N,\nu},
+\]
+with the Pauli sign tied to \(q_N=k_N'-k_N\). Before identifying AFH
+one-body coefficients, the covariant spinor matrix element is divided by
+\(2\sqrt{E_NE_N'}\).
 
-The Dirac spinors in the exact contraction use covariant normalization.
-Before identifying coefficients of AFH one-body operators, the nucleon
-matrix element must be converted to nonrelativistic external-state
-normalization:
-[
-J^mu_{N,mathrm{NR}}=
-rac{ar u(p_N')Gamma_N^mu u(p_N)}
-     {2sqrt{E_NE_N'}}.
-]
-The diagnostic now reports both the raw covariant projection and this
-nonrelativistically normalized projection. The latter is the one to compare
-with the AFH operator coefficients. This conversion is especially important
-for the spin-independent (M) coefficient; the leading spin-orbit coefficient
-is also checked against the exact normalized spinor expression.
-
-The code uses \(m_N=0.938918\) GeV and the provisional zero-momentum
-benchmark \(F_2/F_1(0)=-0.184\), with \(F_1\) normalized to one. The
-\(F_2=0\) case is retained as a control. Neither is a finite-\(t_N\)
-form-factor model.
-
-## Static energy-transfer approximation
-
-The target nucleon is taken on shell with
-[
-mathbf p_N=oldsymbolell-mathbf q_A/2,qquad
-mathbf p_N'=oldsymbolell+mathbf q_A/2,qquad
-oldsymbolellcdotmathbf q_A=0,
-]
-so its free on-shell energy transfer is (q_N^0=0). The nuclear transfer
-has (q_A^0=E_R
-e0). The code therefore reports the Ward residual both
-with (q_N) (which must vanish) and with the physical (q_A) (which
-quantifies the static approximation). The latter is not a failure of the
-free-nucleon Ward test; it is a reminder that the static impulse point does
-not implement the full bound-nucleon continuity equation or the Proca
-longitudinal propagator contraction.
-
-## Leading spatial-current operator content
-
-With \(q_N=p_N'-p_N\), \(\boldsymbol K_N=(\boldsymbol p_N'+\boldsymbol p_N)/2\),
-and the same nonrelativistic external-state normalization, the leading
-spatial Dirac--Pauli current is
+The leading nonrelativistic current used by the diagnostic is
+\[
+J_N^0=c_M(t_N)M+c_{\Phi''}(t_N)\Phi''+\cdots,
+\]
 \[
 \boxed{
-\boldsymbol{\mathcal J}_N
-=\frac{F_1^V(t_N)}{m_N}\boldsymbol K_N
-+\frac{i[F_1^V(t_N)+F_2^V(t_N)]}{2m_N}
-  (\boldsymbol\sigma_N\times\boldsymbol q_N)
-+\mathcal O(p^3/m_N^3).
+\boldsymbol J_N=
+\frac{F_1^V(t_N)}{m_N}\boldsymbol K_N+
+\frac{i[F_1^V(t_N)+F_2^V(t_N)]}{2m_N}
+(\boldsymbol\sigma_N\times\boldsymbol q_N)
++\mathcal O(p^3/m_N^3),
 }
+\qquad
+\boldsymbol K_N=\frac{\boldsymbol k_N+\boldsymbol k_N'}{2}.
 \]
-The two terms are physically distinct:
+The convection and magnetization pieces are physically distinct. Their
+leading AFH multipole content is \(\Delta\) and \(\Sigma'\), respectively;
+their signed mixed response is \(W_{\Sigma'\Delta}\). The exact spherical
+projectors and their normalization are documented in
+SPATIAL_CURRENT_AFH_MULTIPOLE_MATCHING.md.
 
-- \(F_1\boldsymbol K_N/m_N\) is the convection current. Its transverse
-  multipole contributes to the AFH \(\Delta\) channel after the appropriate
-  vector-spherical-harmonic projection.
-- \(i(F_1+F_2)(\boldsymbol\sigma_N\times\boldsymbol q_N)/(2m_N)\) is the
-  magnetization current. It is transverse to \(\boldsymbol q_N\) and feeds
-  the transverse-spin sector; after the elastic parity/time-reversal
-  restrictions, \(\Sigma'\) is the relevant surviving AFH channel at this
-  order. The longitudinal \(\Sigma''\) projection is not generated by this
-  leading \(\boldsymbol\sigma\times\boldsymbol q_N\) structure because
-  \(\boldsymbol q_N\cdot(\boldsymbol\sigma_N\times\boldsymbol q_N)=0\).
-- Their interference is the AFH \(\Sigma'\)-\(\Delta\) mixed response.
+## 3. Static one-nucleon validation
 
-The three-body spatial contraction is therefore
+The one-point benchmark uses \(m_N=0.938918\) GeV,
+\(F_1/F_1(0)=1\), and the provisional zero-momentum anchor
+\(F_2/F_1(0)=-0.184\). These are diagnostic inputs, not a finite-\(t_N\)
+form-factor model.
+
+| Diagnostic | Result |
+|---|---:|
+| Free nucleon Ward residual using \(q_N\) | \(3.84\times10^{-18}\) |
+| Scaled residual when static current is tested with physical \(q_A\) | \(5.35\times10^{-4}\) |
+| \(q_A^0/Q_A\) | \(9.05\times10^{-4}\) |
+| DM-current spin-trace comparison with independent PR #53 tensor | \(4.46\times10^{-16}\) |
+
+The residual with \(q_A\) quantifies the static energy-transfer
+approximation; it is not a failure of the free-nucleon Ward identity using
+\(q_N\). The spatial-only Pauli coefficient is nonzero even though it does
+not modify the selected charge spin-orbit projection at the reference point.
+Therefore the spatial current cannot be discarded on the basis of that
+single projection.
+
+At the reference point, the nonrelativistically normalized coefficient
+of \(\boldsymbol\sigma_N\cdot(\boldsymbol q_A\times\boldsymbol\ell)\)
+for the charge piece is \(-8.41409\times10^6 i\) in the code's
+per-\((q_A\times\ell)\) convention. The spatial-only contribution to this
+same odd projection is about \(8.35\times10^{-12}i\), while a different
+transverse-spin Pauli coefficient is
 \[
--\boldsymbol{\mathcal T}_3\cdot\boldsymbol{\mathcal J}_N
-=-\frac{F_1}{m_N}\boldsymbol{\mathcal T}_3\cdot\boldsymbol K_N
--\frac{i(F_1+F_2)}{2m_N}
- \boldsymbol\sigma_N\cdot
- (\boldsymbol q_N\times\boldsymbol{\mathcal T}_3)+\cdots.
+c_{0,2}^{\rm spatial}=-3.75817\times10^3 i.
 \]
-The exact radiative \(\boldsymbol{\mathcal T}_3\) must be retained. In
-particular, do not replace it by an elastic \(\boldsymbol v^\perp\) or
-impose \(\boldsymbol q_N\cdot\boldsymbol v^\perp=0\) in this three-body
-process. The displayed \(\Delta\) and \(\Sigma'\) identifications describe
-the leading elastic multipole content; the actual three-body response
-coefficients still require projection of the full spin-resolved
-\(\mathcal T_3^i\) over phase space and the AFH nuclear multipoles.
+The latter is a \(\Sigma'\)-type candidate, not yet an AFH Wilson
+coefficient or nuclear response.
 
-A low-momentum regression test now checks the exact Dirac--Pauli spinor
-current against both the convection and magnetization terms above.
-This is separate from the one-point full-current contraction and from
-the AFH many-body response calculation.
+## 4. Phase-space-integrated spin-resolved DM tensor (P0-B1)
 
-## Extracting the spin-orbit component
-
-The coefficient of the nucleon-spin structure odd under
-\(\boldsymbol\ell\to-\boldsymbol\ell\) is projected along
-\(\mathbf q_A\times\boldsymbol\ell\). The code evaluates the full,
-charge-only, and spatial-only contributions separately, reports all 16
-Pauli-product coefficients for each piece, and verifies
+The Python module three_body_phase_space_tensor.py integrates the exact
+spin-resolved three-body current over the threshold-stable Eq. (6) phase
+space. It rotates the spatial components into a local right-handed frame
+\((e_1,e_2,\widehat{\boldsymbol q}_A)\), decomposes the DM \(2\times2\)
+matrices into Pauli components, and stores
 \[
-c_{\rm full}=c_{\rm charge}+c_{\rm spatial}.
+G_{\mu a,\nu b}^{(3)}
+=\int d\Phi_3\,c_a^\mu c_b^{\nu *},
+\qquad
+L_{\mu\nu}^{(3)}=\sum_aG_{\mu a,\nu a}^{(3)}.
 \]
+The before-emission, after-emission, and coherent interference Gram
+tensors are archived separately.
 
-The purpose is to determine how the spatial current modifies the
-charge-piece spin-orbit term before mapping the complete result to AFH
-\(\Phi''\), \(\Sigma'\), \(\Sigma''\), and \(\Delta\).
+Workflow run [44231019823](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44231019823)
+completed successfully. It generated 12 tensors (four fixed-speed
+benchmarks, each with zero, pole, and running widths) and passed the
+23-test full-current regression suite.
 
-## Results from the archived reference point
-
-The successful workflow run 44209893848 (commit
-`8a99ef3f0908053d60ae38881543826510c240fe`) used
-\(F_1/F_1(0)=1\), \(F_2/F_1(0)=-0.184\), and \(m_N=0.938918\) GeV.
-
-The free static nucleon-current Ward residual using \(q_N\) is
-\(3.84\times10^{-18}\), and the spin-resolved DM-current trace agrees with
-the independent PR #53 tensor to \(4.46\times10^{-16}\). The physical
-nuclear transfer has \(q_A^0=E_R\ne0\), however, so using it with the
-static \(q_N^0=0\) current gives a separate scaled residual
-\(5.35\times10^{-4}\). The ratio \(q_A^0/Q_A\) is
-\(9.05\times10^{-4}\). This quantifies the static energy-transfer
-approximation; it is not to be silently relabelled as exact conservation
-with \(q_A\).
-
-At \(v_N=0.10\), the nonrelativistically normalized coefficient of
-\(\boldsymbol\sigma_N\cdot(\boldsymbol q_A\times\boldsymbol\ell)\)
-for the charge piece is
-\[
-C_{\rm charge}^{\rm NR}
-=-\,8.41409\times10^6\,i
-\]
-in the code's per-\((q_A\times\ell)\) convention. The full result agrees
-with it at the displayed precision, while the spatial-only contribution
-to this *same odd spin-orbit projection* is about \(8.35\times10^{-12}i\).
-This is a one-point result, not a proof that the spatial current is
-irrelevant.
-
-The complete Pauli decomposition shows why that distinction matters. For
-the same \(F_2/F_1(0)=-0.184\) point, one spatial-only coefficient with
-nucleon spin perpendicular to \(\boldsymbol q_A\) is
-\[
-c_{0,2}^{\rm spatial}=-3.75817\times10^3\,i.
-\]
-This is a transverse-spin **candidate** for the AFH \(\Sigma'\) sector,
-not yet a computed \(\Sigma'\) Wilson coefficient or nuclear response.
-The artifact contains all \(4\times4\) Pauli-product coefficients for
-the full, charge-only, and spatial-only amplitudes. Their reconstruction
-residuals are below \(1.4\times10^{-16}\).
-
-The correct conclusion is therefore twofold:
-
-- At this reference point, the spatial current does not change the
-  selected \(\Phi''\)-type odd-in-\(\ell\) projection at detectable precision.
-- The spatial current does generate other nucleon-spin and DM-spin /
-  nucleon-spin structures. They must be projected onto AFH multipoles
-  before deciding their impact on the recoil rate.
-
-The output is a static one-nucleon matching diagnostic. It is not yet a
-phase-space-integrated \(\Sigma'\), \(\Delta\), or full natural-xenon result.
-
-## Finite-width scan added to the full-current contraction
-
-The reference point is now evaluated with the same denominator-only width
-prescription used by the parent three-body current audit. The imaginary part
-is inserted only in the after-emission \(\chi_2\) propagator; the modified
-finite-width Ward identity includes the corresponding additional term.
-For each \(g_2=0.1,1\), the script evaluates zero, pole, and running widths.
-
-At this one phase-space point, \(E_R=200\) keV and
-\(\Delta m=362\) keV, the pole clearance is \(44.438\) keV. The results are:
-
-| \(g_2\) | Width | \(\Gamma_{\rm pole}\) (keV) | \(\Gamma_{\rm run}(W)\) (keV) | \(\|\mathcal A_{\rm spatial}\|/\|\mathcal A_{\rm charge}\|\) |
-|---:|---|---:|---:|---:|
-| 0.1 | zero | 0.32244 | -- | \(8.08557\times10^{-5}\) |
-| 0.1 | pole | 0.32244 | -- | \(8.08557\times10^{-5}\) |
-| 0.1 | running | 0.32244 | 0.16575 | \(8.08557\times10^{-5}\) |
-| 1.0 | zero | 32.24369 | -- | \(8.08557\times10^{-5}\) |
-| 1.0 | pole | 32.24369 | -- | \(8.08557\times10^{-5}\) |
-| 1.0 | running | 32.24369 | 16.57487 | \(8.08557\times10^{-5}\) |
-
-The operator-norm ratio above is a one-point diagnostic in the selected
-static nucleon kinematics. It is **not** a cross-section correction or a
-bound on any AFH response. The finite width changes the full DM-current
-norm: for \(g_2=1\), it changes from \(6.78117\times10^7\) at zero width
-to \(6.37620\times10^7\) with pole width and \(6.66668\times10^7\) with
-running width. Thus the width is not being silently dropped.
-
-The selected \(\Phi''\)-type odd-in-\(\ell\) projection remains entirely
-charge-generated at this reference point: the spatial-only projection is
-of order \(10^{-11}\), compared with a charge coefficient of order
-\(8.4\times10^6\). This does **not** mean the spatial current vanishes.
-Its transverse-spin Pauli coefficient \(c_{0,2}^{\rm spatial}\) is
-nonzero and changes with the width prescription. For \(g_2=1\), it is
-approximately
-\[
-\begin{array}{ll}
-\text{zero width:}&-3.75817\times10^3 i,\\
-\text{pole width:}&1.13090\times10^3-3.34788\times10^3 i,\\
-\text{running width:}&6.35746\times10^2-3.63960\times10^3 i.
-\end{array}
-\]
-This is a transverse-spin **candidate**, not yet an AFH \(\Sigma'\)
-coefficient. The full Pauli-product decomposition and all six width
-scenarios are archived in the workflow artifact.
-
-The spin-trace comparison against the independent Dirac tensor remains
-below \(4.5\times10^{-16}\), and the finite-width Ward-identity residual
-is below \(3.7\times10^{-13}\) in all six cases.
-
-## Phase-space-integrated spin-resolved three-body tensor (P0-B1)
-
-The new `three_body_phase_space_tensor.py` extends the one-point
-spin-resolved current calculation to the complete three-body phase space.
-At every \((W^2,z,\phi)\) point it:
-
-1. constructs both scalar-emission orderings with the same finite-width
-   prescription as PR #53/#57;
-2. rotates the spatial Lorentz components into a local right-handed frame
-   \((e_1,e_2,\hat q_A)\), with the third axis parallel to the physical
-   nuclear momentum transfer;
-3. decomposes each \(2\times2\) DM-spin matrix into the Pauli basis
-   \(T_3^\mu=\sum_{a=0}^3 c_a^\mu\sigma_\chi^a\);
-4. integrates the spin-resolved Gram tensor
-   \(G_{\mu a,\nu b}^{(3)}=\int d\Phi_3\,c_a^\mu c_b^{\nu *}\), from which
-   \(L_{\mu\nu}^{(3)}=\sum_a G_{\mu a,\nu a}^{(3)}\) is reconstructed.
-
-The archive keeps the before-emission, after-emission, and coherent
-interference Gram tensors separately. It includes zero, pole, and running
-widths and uses the parent Eq. (6) threshold-stable \(W^2,z,\phi\)
-quadrature. The point-nucleus charge/convection contractions reconstructed
-from the q-aligned tensor are compared with the independent Dirac-trace
-integration in `vector_current_response_audit.integrate_current_components`.
-
-### Numerical acceptance
-
-Workflow run [44224510581](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44224510581)
-completed successfully at source commit
-`de33bfbc8dc1d322b6c0761c8df5d73f2dadf303`. It ran 23 regression tests
-and generated 12 integrated tensors: four established/near-pole benchmarks,
-each with zero, pole, and running widths.
-
-| Diagnostic | Result | Acceptance |
+| Integrated-tensor diagnostic | Result | Acceptance |
 |---|---:|---:|
-| Maximum integrated Dirac-trace contraction residual | \(1.59813\times10^{-9}\) | \(<2\times10^{-9}\) |
+| Maximum independent Dirac-trace contraction residual | \(1.59813\times10^{-9}\) | \(<2\times10^{-9}\) |
 | Maximum Gram/tensor Hermiticity residual | 0 | \(<10^{-12}\) |
 | Minimum Gram eigenvalue | \(-3.20\times10^{-14}\) | \(>-10^{-10}\) |
 | Minimum spin-averaged tensor eigenvalue | \(5.75\times10^{-4}\) | \(>-10^{-10}\) |
-| Maximum q-frame orthogonality/determinant residual | \(3.16\times10^{-16}\) | \(<10^{-12}\) |
+| Maximum q-frame rotation residual | \(3.16\times10^{-16}\) | \(<10^{-12}\) |
 
-The tiny negative minimum Gram eigenvalue is at roundoff level and remains
-inside the explicit PSD tolerance. The largest Dirac-trace residual occurs
-in the near-pole transverse-spatial subtraction; the individual charge,
-longitudinal, and full point-nucleus contractions agree more closely.
+The minimum negative Gram eigenvalue is roundoff-level and remains within
+the explicit PSD tolerance.
 
-The archived artifact is
-`full-three-body-current-nucleon-match-and-phase-space-tensor`
-(artifact ID 14392805297). It contains the static one-nucleon matching
-diagnostic and the full complex q-aligned \(L_{\mu\nu}^{(3)}\) and
-\(G_{\mu a,\nu b}^{(3)}\) tensors, including diagram-separated and
-interference pieces.
+- Integrated-tensor artifact: full-three-body-current-nucleon-match-and-phase-space-tensor
+- Artifact ID: 14394488484
+- Artifact SHA-256: 6e9a78fa3306eec4df24574bfc68863e0757a6971baf20bcdfc3958c0c38bf3a
 
-**Scope boundary:** this is the integrated DM-side dynamical tensor needed
-before AFH matching. It is not yet
-\(\mathcal R_{\alpha\beta}^{(3)}\), because the nucleon Dirac--Pauli
-current has not yet been projected onto the complete AFH one-body
-multipole basis and contracted with isotope OBDMEs. The dedicated
-quadrature-order convergence scan for every integrated Gram component
-also remains pending. No AFH \(\Delta\), \(\Sigma'\), \(\Sigma''\),
-\(\widetilde{\Phi}'\) three-body coefficient, halo fold, detector response,
-or likelihood is claimed.
+This is the DM-side tensor, not yet the AFH nuclear response
+\(\mathcal R_{\alpha\beta}^{(3)}\).
 
-## Reproduction
+## 5. Component-wise phase-space quadrature convergence (P0-B2)
+
+The Python module phase_space_tensor_convergence.py compares every complex
+component of the \(16\times16\) Gram tensor (256 entries), every complex
+component of the \(4\times4\) Lorentz tensor (16 entries), and the
+point-nucleus contractions. The stress scan covers three benchmark
+families, each with zero, pole, and running widths:
+
+| Benchmark | \(\Delta m\) | \(E_R\) | \(g_2\) | Mapping |
+|---|---:|---:|---:|---|
+| Near-pole narrow coupling | 362 keV | 267 keV | 0.1 | \(\sin^2\) endpoint |
+| Near-pole larger coupling | 362 keV | 267 keV | 1 | \(\sin^2\) endpoint |
+| Off-pole green benchmark | 450 keV | 200 keV | 1 | threshold \(u^2\) |
+
+The quadrature orders \((n_W,n_z,n_\phi)\) are:
+
+| Case family | Low | Medium | High |
+|---|---:|---:|---:|
+| Near pole | \(32\times16\times8\) | \(40\times24\times12\) | \(48\times32\times16\) |
+| Off pole | \(24\times16\times8\) | \(32\times24\times12\) | \(40\times32\times16\) |
+
+The total number of nodes across all nine scans and three orders is
+339,456. Acceptance compares medium against high order, with tolerances
+\(10^{-3}\) for Frobenius differences, \(10^{-2}\) for active-component
+relative differences, and \(10^{-3}\) for point-nucleus contractions.
+
+**Result: all nine medium-to-high comparisons PASS.**
+
+| Metric | Worst observed | Tolerance |
+|---|---:|---:|
+| Gram Frobenius relative difference | \(1.5013\times10^{-8}\) | \(10^{-3}\) |
+| Lorentz tensor Frobenius relative difference | \(1.5013\times10^{-8}\) | \(10^{-3}\) |
+| Active Gram component relative difference | \(1.5673\times10^{-5}\) | \(10^{-2}\) |
+| Active Lorentz component relative difference | \(1.5673\times10^{-5}\) | \(10^{-2}\) |
+| Point-nucleus contraction relative difference | \(1.5118\times10^{-8}\) | \(10^{-3}\) |
+
+- Convergence workflow run: [44231019823](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44231019823)
+- Convergence artifact ID: 14395277591
+- Convergence artifact SHA-256: f86c44548efc271c49f2e1e5846c6485280265ba28cd4f3223f896d9eba29e73
+- Detailed results: QUADRATURE_CONVERGENCE_RESULTS.md
+
+The PASS establishes numerical stability of the DM-side tensor at the
+reported fixed-speed stress benchmarks and quadrature orders. It does not
+establish convergence over the full recoil-energy or halo-velocity domain.
+
+### Transverse helicity-odd component
+
+For the 12 archived DM tensors, the normalized transverse antisymmetric
+component satisfies
+\[
+\max\frac{|-i(L^{12}-L^{21})|}{|L^{11}+L^{22}|}
+=7.39\times10^{-16}.
+\]
+This is consistent with zero at floating-point precision for the
+unpolarized pure-vector benchmarks. The standard transverse
+electric--magnetic multipole interference is proportional to the
+helicity-odd lepton-tensor component (Hoferichter--Menéndez--Schwenk,
+PRD 102, 074018 (2020), Appendix A, Eq. 111). This suggests that the
+coefficient multiplying \(W_{\Sigma'\Delta}\) vanishes for the current
+benchmarks. The exact AFH spherical projector must still confirm the
+normalization and phase before this term is removed from the general rate
+formula. The signed nuclear response remains in the formalism.
+
+## 6. Leading AFH response content and remaining work
+
+At leading static one-body vector-current order, the candidate response set
+is
+\[
+M,\quad \Phi'',\quad M\Phi'',\quad
+\Delta,\quad \Sigma',\quad \Sigma'\Delta.
+\]
+The AFH \(\Sigma''\) and \(\widetilde\Phi'\) channels remain in the complete
+eight-response database, but are not generated by the leading static
+convection and magnetization structures above. This is an order-by-order
+statement, not a claim that the nuclear responses vanish generally.
+
+The following are still required:
+
+1. derive and test the exact spherical projectors, AFH phases, and
+   normalizations for \(\Delta\) and \(\Sigma'\);
+2. contract the projected coefficients with the full complex
+   \(G_{\mu a,\nu b}^{(3)}\), preserving both scalar-emission diagrams and
+   their interference;
+3. recover the already matched \(M+\Phi''\) charge sector as a regression
+   limit;
+4. contract the resulting operators with isotope OBDMEs and the native AFH
+   response convention, applying the equal-\(p=n\) factor of four exactly
+   once;
+5. use finite-\(t_N\) model-specific \(F_1^V(t_N)\) and \(F_2^V(t_N)\);
+6. only after these steps, perform the natural-xenon isotope sum, halo fold,
+   and detector response.
+
+No AFH spatial-current rate, full natural-xenon three-body spectrum, or
+detector-level correction is claimed yet.
+
+## 7. Reproduction
 
 Python 3.12+ and NumPy are required.
 
@@ -323,22 +260,19 @@ python research/three_body_full_current_nucleon_match/full_current_nucleon_match
 
 python research/three_body_full_current_nucleon_match/three_body_phase_space_tensor.py \
   --out /tmp/three-body-phase-space-tensor.json
+
+python research/three_body_full_current_nucleon_match/phase_space_tensor_convergence.py \
+  --out /tmp/three-body-phase-space-convergence.json
 ~~~
 
-## Limitations
+## 8. References
 
-- The exact one-nucleon Dirac--Pauli-to-AFH projection remains a static
-  impulse-approximation diagnostic; the new integrated tensor is on the DM
-  side and is not yet a phase-space-integrated nuclear response.
-- q_N^0=0 is used for the on-shell static nucleon. A complete treatment must
-  include the appropriate bound-nucleon/current-conservation framework.
-- The finite-(t_N) (F_1) and (F_2) of the model-specific universal
-  vector current are not fixed; the code uses (F_1=1) and compares
-  (F_2/F_1=0) with the zero-momentum anchor (-0.184).
-- No AFH response coefficient is claimed yet. The complete Pauli-product
-  structures still need a multipole projection and nuclear OBDME contraction.
-- The spatial-only contribution to the selected spin-orbit projection is
-  negligible at the archived reference point; this does not imply that its
-  other Pauli structures or AFH responses vanish.
-- No absolute cross section, halo fold, isotope sum, detector response, or
-  likelihood is included.
+- Anand, Fitzpatrick, and Haxton, Phys. Rev. C 89, 065501 (2014),
+  https://arxiv.org/abs/1308.6288: AFH nuclear responses.
+- Hoferichter, Klos, Menéndez, and Schwenk, Phys. Rev. D 94, 063505 (2016),
+  https://arxiv.org/abs/1605.08043: coherent nuclear responses and
+  vector-current matching.
+- Hoferichter, Menéndez, and Schwenk, Phys. Rev. D 102, 074018 (2020),
+  https://arxiv.org/abs/2007.08529: vector charge and nuclear multipole
+  expansion.
+- Repository AFH source: v6/dmformfactor-V6.m.
