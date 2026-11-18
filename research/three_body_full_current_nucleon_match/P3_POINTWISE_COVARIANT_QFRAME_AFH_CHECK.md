@@ -1,6 +1,6 @@
 # P3-A: pointwise covariant and q-frame contraction check
 
-**Status:** <b>P3-A PASS</b> in full-current job of workflow [44295391452](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44295391452); P3-B remains open.  
+**Status:** <b>P3-A PASS</b>; the provisional response-level P3-C contraction also passes in workflow [44305980766](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44305980766). The P3-B many-body amplitude comparison remains open.  
 **Scope:** pointwise spinor-level check using the actual three-body DM current and
 an exact free on-shell one-nucleon Dirac--Pauli current. This is **P3-A only**;
 it is not the full nuclear OBDME contraction.
@@ -134,3 +134,37 @@ P3-A is therefore accepted as a pointwise spinor/frame and particle-side
 Eq. (107) consistency check. It does not validate the bound-nucleus AFH
 OBDME contraction and does not promote the provisional spatial response
 ratio to a physical natural-xenon rate.
+
+
+## 7. Later response-level contraction: P3-C (not a P3-B substitute)
+
+The seven-isotope spatial response grid and its rank-resolved archive were
+subsequently contracted with the 12 integrated three-body coefficient
+sets. Workflow 44305980766 passed 100 full-current regression tests and
+16 native charge-sector engine tests; all 84 benchmark/isotope kernels
+were positive. The rankwise spatial contraction reconstructs the total
+spatial contribution with maximum absolute residual
+\(1.11\times10^{-16}\).
+
+A normalization audit found that the charge responses needed the same
+common OBDME correction \(C_0(A)\) already present in the P3-B spatial
+responses. The corrected policy is
+\[
+R_{\rm charge}^{\rm consistent}=C_0(A)R_{\rm AFH8},
+\qquad
+R_{\rm spatial}^{\rm consistent}=R_{\rm P3-B}.
+\]
+The AFH equal-\(p=n\) factor four remains separate and is applied once.
+
+The resulting maximum spatial/charge ratio is
+\(7.0959581690\times10^{-9}\) over these 84 fixed-speed rows. The result
+is documented in
+[P3_C_C0_CONSISTENT_CONTRACTION.md](P3_C_C0_CONSISTENT_CONTRACTION.md)
+and remains labelled PROVISIONAL_AFH_CONTRACTION_PASS.
+
+This does not close the P3-B amplitude-level gate described in Section 4.
+The response-function grid and its rankwise sum do not independently
+prove that the direct bound-nucleus covariant amplitude, the q-frame
+amplitude, and the AFH spherical-multipole amplitude agree pointwise.
+Native Wolfram AFH validation and the selected-point many-body amplitude
+comparison are still required.
