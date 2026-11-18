@@ -85,6 +85,8 @@ def load_native_xe131_responses(path: Path) -> tuple[dict, dict]:
     }
     if manifest.get("status") != "COMPLETED":
         raise ValueError("native Xe-131 SHA-256 manifest is not completed")
+    if manifest.get("hash_policy") != "UTF-8 text normalized to LF before SHA-256":
+        raise ValueError("native Xe-131 manifest does not declare the canonical LF hash policy")
     for name, digest in actual_files.items():
         if expected_files.get(name) != digest:
             raise ValueError(
@@ -121,6 +123,8 @@ def load_native_xe131_responses(path: Path) -> tuple[dict, dict]:
         raise ValueError("native Xe-131 metadata CSV SHA-256 disagrees with canonical hash")
     if validation.get("status") != "PASS" or validation.get("rows") != 2401:
         raise ValueError("native Xe-131 response-level validation did not PASS")
+    if validation.get("metadata_sha256") != actual_files[metadata_path.name]:
+        raise ValueError("native Xe-131 validation does not pin the canonical metadata hash")
     if validation.get("csv_sha256") != NATIVE_CSV_SHA256:
         raise ValueError("native Xe-131 validation CSV SHA-256 disagrees with canonical hash")
     if float(validation.get("max_imaginary_residual", math.inf)) > 2.0e-12:
@@ -152,7 +156,8 @@ def load_native_xe131_responses(path: Path) -> tuple[dict, dict]:
         "sha256_raw_checkout": raw_digest,
         "metadata_sha256_canonical_lf": actual_files[metadata_path.name],
         "validation_sha256_canonical_lf": actual_files[validation_path.name],
-        "source_commit": NATIVE_SOURCE_COMMIT,
+        "native_archive_commit": NATIVE_ARCHIVE_COMMIT,
+        "original_export_commit": NATIVE_EXPORT_COMMIT,
         "rows": len(rows),
         "native_package": "AFH DMFormFactor v6.0 / Wolfram 14.2.0",
         "afh_source_sha256": metadata["afh_source_sha256"],
