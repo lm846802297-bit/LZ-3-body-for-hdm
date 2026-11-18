@@ -1,6 +1,6 @@
 # Three-body phase-space tensor quadrature convergence
 
-<badge>Numerical convergence: PASS</badge>
+**Status: numerical convergence PASS at the reported orders.**
 
 **Workflow run:** 44231019823  
 **Source commit:** \`06cf3086422a692fe6eb81715ef8315aba95d05c\`  
@@ -69,7 +69,7 @@ The acceptance thresholds were:
 - point-nucleus contraction relative difference:
   \(10^{-3}\).
 
-<badge color="success">All nine medium-to-high comparisons PASS</badge>
+**All nine medium-to-high comparisons PASS.**
 
 | Metric | Worst observed | Tolerance |
 |---|---:|---:|
