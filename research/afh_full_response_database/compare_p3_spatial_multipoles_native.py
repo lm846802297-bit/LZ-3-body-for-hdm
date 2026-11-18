@@ -167,10 +167,11 @@ def compare_rankwise_multipole_rows(
     rtol: float = RTOL,
     atol: float = ATOL,
     imag_atol: float = IMAG_ATOL,
+    expected_keys: set | None = None,
 ) -> dict:
     p3 = _index(p3_rows, _rank_key, "P3 rank-resolved")
     native = _index(native_rows, _rank_key, "native rank-resolved")
-    expected = {
+    expected = expected_keys if expected_keys is not None else {
         (A, round(i*0.00025, 10), J)
         for A, ranks in RANKS.items()
         for i in range(NQ)
