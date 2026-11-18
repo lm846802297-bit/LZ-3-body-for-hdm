@@ -742,4 +742,4 @@ This is a provisional fixed-speed result, not the final P3-C covariant
 equivalence test or a halo-folded prediction.
 
 Detailed normalization, rankwise contributions, provenance and limitations:
-[P3_C_C0_NORMALIZATION_AND_RANKWISE_CONTRACTION.md](results/2026-11-18/P3_C_C0_NORMALIZATION_AND_RANKWISE_CONTRACTION.md).
+[P3_C_C0_CONSISTENT_CONTRACTION.md](P3_C_C0_CONSISTENT_CONTRACTION.md).
