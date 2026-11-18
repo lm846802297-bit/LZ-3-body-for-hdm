@@ -58,13 +58,25 @@ class ChargeResponseTests(unittest.TestCase):
         out = pc.charge_response_terms(q, float(row["W_M00_AFH"]), float(row["W_PhiPP_AFH"]), float(row["W_MPhiPP_AFH"]), -0.15)
         self.assertAlmostEqual(out["R_charge_over_M"], 0.9688198375, places=8)
 
+
+    def test_model_zero_momentum_benchmark_at_exact_second_minimum(self):
+        row = min(self.selected, key=lambda x: abs(float(x["q_min_MeV"]) - 256.271867617))
+        q = float(row["q_min_MeV"]) / 1000.0
+        out = pc.charge_response_terms(
+            q, float(row["W_M00_AFH"]), float(row["W_PhiPP_AFH"]),
+            float(row["W_MPhiPP_AFH"]), -0.184
+        )
+        self.assertAlmostEqual(out["eta"], 0.01177073615, places=10)
+        self.assertAlmostEqual(out["R_charge_over_M"], 0.9700938740, places=9)
+        self.assertIn(-0.184, pc.R2_SCENARIOS)
+
     def test_width_changes_I00_but_not_fixed_q_charge_ratio(self):
         rows = [x for x in self.pr53 if x["benchmark"] == "near_pole_362keV_g2_1"]
         self.assertEqual(len(rows), 3)
         qs = [float(x["qA_GeV"]) for x in rows]
         self.assertLess(max(qs) - min(qs), 1e-14)
         resp = pc.interpolate_response(self.grid, qs[0], 8)
-        ratios = [pc.charge_response_terms(qs[0], resp["W_M00_AFH"], resp["W_PhiPP_AFH"], resp["W_MPhiPP_AFH"], -0.15)["R_charge_over_M"] for _ in rows]
+        ratios = [pc.charge_response_terms(qs[0], resp["W_M00_AFH"], resp["W_PhiPP_AFH"], resp["W_MPhiPP_AFH"], -0.184)["R_charge_over_M"] for _ in rows]
         self.assertEqual(len(set(ratios)), 1)
         i00 = [float(x["I00"]) for x in rows]
         self.assertGreater(max(i00) / min(i00), 10.0)
