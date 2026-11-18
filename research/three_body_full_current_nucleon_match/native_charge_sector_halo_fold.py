@@ -980,6 +980,14 @@ def fold(
                         (r.get("max_native_response_Cauchy_excess", 0.0) for r in isotope_rows),
                         default=0.0,
                     ),
+                    "max_native_charge_response_Cauchy_excess": max(
+                        (r.get("max_native_charge_response_Cauchy_excess", 0.0) for r in isotope_rows),
+                        default=0.0,
+                    ),
+                    "max_native_spatial_response_Cauchy_excess": max(
+                        (r.get("max_native_spatial_response_Cauchy_excess", 0.0) for r in isotope_rows),
+                        default=0.0,
+                    ),
                     "max_particle_Cauchy_identity_residual": max(
                         (r.get("max_particle_Cauchy_identity_residual", 0.0) for r in isotope_rows),
                         default=0.0,
