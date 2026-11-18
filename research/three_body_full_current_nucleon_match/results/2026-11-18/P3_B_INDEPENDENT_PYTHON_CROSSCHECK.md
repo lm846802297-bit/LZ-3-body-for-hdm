@@ -82,8 +82,8 @@ columns in the independent eight-response database:
 | W_SigmaPrimeDelta_AFH_package | W_SigmaPrimeDelta00_AFH | \(1.73\times10^{-17}\) | \(1.23\times10^{-13}\) | Xe-129, 0.37250 GeV |
 
 All 16,807 isotope/q rows matched, with zero failed points at
-\\(\\mathrm{rtol}=5\\times10^{-12}\\) and
-\\(\\mathrm{atol}=2\\times10^{-14}\\). The mixed response was compared with its
+\(\mathrm{rtol}=5\times10^{-12}\) and
+\(\mathrm{atol}=2\times10^{-14}\). The mixed response was compared with its
 sign intact; it was not replaced by its absolute value. The numeric comparison
 uses Python's standard-library CSV parser and float conversion; pandas' default
 fast float parser is deliberately avoided for this last-digit precision audit.
