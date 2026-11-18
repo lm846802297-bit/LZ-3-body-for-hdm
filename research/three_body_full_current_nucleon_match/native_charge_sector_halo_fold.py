@@ -1,23 +1,13 @@
 #!/usr/bin/env python3
-"""Native-AFH M+Phi'' charge-sector natural-xenon halo fold.
+"""Native-AFH charge-density-sector halo fold (not a complete vector-current rate).
 
-This module is the next-stage rate engine after PR #58.  It deliberately
-accepts only a pointwise-validated native AFH v6.0 eight-response archive.
-For each isotope and recoil it recomputes the exact three-body DM tensor with
-that isotope's nuclear mass, evaluates q_A exactly, interpolates the native
-M, Phi'', and signed M-Phi'' responses, and applies the finite-t_N charge
-coefficients.
-
-The engine is charge-sector only:
-    M + Phi'' + M-Phi''
-The Delta/Sigma'/Sigma'' sector is intentionally not inserted here because
-the current PR #58 result already bounds it separately and the native
-seven-isotope spatial-response promotion is a distinct acceptance gate.
-
-The output always contains the old pointlike M-only baseline, the finite-t
-M-only result, the M+Phi'' result, and interpolation diagnostics.  No
-single "full-spectrum correction" is reported unless all requested isotopes,
-recoil points, and halo quadrature evaluations complete.
+This module evaluates only M + Phi'' + M-Phi'' using the integrated L00
+weight. It does NOT perform the full L_mu_nu W_A^{mu nu} contraction:
+longitudinal L03/L33 and transverse Lij contributions are outside its scope.
+The output is therefore a controlled charge-density-sector diagnostic, not
+the final full-current three-body spectrum. A native AFH input PASS validates
+the nuclear response archive only; it does not validate the missing
+three-body multipole projection.
 """
 from __future__ import annotations
 
@@ -440,11 +430,14 @@ def fold(
             })
 
     return {
-        "status": "PASS_NATIVE_AFH_CHARGE_SECTOR_FOLD",
+        "status": "COMPUTED_WITHIN_CHARGE_DENSITY_APPROXIMATION",
+        "full_current_complete": False,
+        "omitted_tensor_components": ["L03", "L30", "L33", "Lij transverse current sector"],
+        "approximation": "M + Phi'' + M-Phi'' charge-density sector using integrated L00 only; not full L_mu_nu W_A^mu_nu",
         "scope": (
-            "seven-isotope natural-xenon charge-sector halo fold using native "
+            "seven-isotope natural-xenon charge-density-sector diagnostic using native "
             "AFH M/Phi''/M-Phi'' responses and finite-t_N diagnostics; "
-            "Delta/Sigma spatial sector intentionally excluded"
+            "longitudinal and transverse nuclear-current contractions excluded"
         ),
         "native_gate": native_gate["comparison"],
         "form_factor_prescription": form_factor_prescription,
@@ -522,6 +515,7 @@ def main() -> None:
     args.out.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     print(json.dumps({
         "status": result["status"],
+        "full_current_complete": result["full_current_complete"],
         "form_factor_prescription": result["form_factor_prescription"],
         "n_recoil_points": len(args.ER_keV),
         "output": str(args.out),
