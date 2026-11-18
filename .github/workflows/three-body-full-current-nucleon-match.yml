@@ -14,6 +14,7 @@ on:
 
 permissions:
   contents: read
+  actions: read
 
 concurrency:
   group: full-current-${{ github.head_ref || github.ref_name }}
@@ -40,7 +41,9 @@ jobs:
             research/three_body_full_current_nucleon_match/phase_space_tensor_convergence.py \
             research/three_body_full_current_nucleon_match/test_phase_space_tensor_convergence.py \
             research/three_body_full_current_nucleon_match/three_body_multipole_leptonic_weights.py \
-            research/three_body_full_current_nucleon_match/test_three_body_multipole_leptonic_weights.py
+            research/three_body_full_current_nucleon_match/test_three_body_multipole_leptonic_weights.py \
+            research/three_body_full_current_nucleon_match/contract_three_body_afh_responses.py \
+            research/three_body_full_current_nucleon_match/test_contract_three_body_afh_responses.py
       - name: Run full-current regression tests
         run: |
           python -m unittest discover \
@@ -54,12 +57,26 @@ jobs:
         run: |
           python research/three_body_full_current_nucleon_match/three_body_phase_space_tensor.py \
             --out /tmp/three-body-phase-space-tensor.json
-      - name: Extract q-aligned leptonic multipole weights
+      - name: Extract AFH response coefficients from Eq. (107)
         run: |
           python research/three_body_full_current_nucleon_match/three_body_multipole_leptonic_weights.py \
             --input /tmp/three-body-phase-space-tensor.json \
             --out /tmp/three-body-multipole-leptonic-weights.json \
             --f1 3.0 --f2 -0.552 --mN 0.938918
+      - name: Download provisional seven-isotope AFH response archive
+        uses: actions/download-artifact@v4
+        with:
+          name: afh-v6-seven-isotope-eight-response
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: 44222087512
+          path: /tmp/afh-full-response
+      - name: Contract three-body coefficients with seven-isotope AFH responses
+        run: |
+          python research/three_body_full_current_nucleon_match/contract_three_body_afh_responses.py \
+            --afh-dir /tmp/afh-full-response \
+            --weights-json /tmp/three-body-multipole-leptonic-weights.json \
+            --out /tmp/three-body-afh-response-contraction.json
       - name: Upload matching and integrated tensor diagnostics
         uses: actions/upload-artifact@v4
         with:
@@ -68,6 +85,7 @@ jobs:
             /tmp/full-current-nucleon-match.json
             /tmp/three-body-phase-space-tensor.json
             /tmp/three-body-multipole-leptonic-weights.json
+            /tmp/three-body-afh-response-contraction.json
           if-no-files-found: error
           retention-days: 90
 
