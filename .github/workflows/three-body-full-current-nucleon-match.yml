@@ -76,7 +76,8 @@ jobs:
           python research/three_body_full_current_nucleon_match/contract_three_body_afh_responses.py \
             --afh-dir /tmp/afh-full-response \
             --weights-json /tmp/three-body-multipole-leptonic-weights.json \
-            --out /tmp/three-body-afh-response-contraction.json
+            --out /tmp/three-body-afh-response-contraction.json \
+            --afh-artifact-run-id 44222087512 --afh-artifact-id 14391456283
       - name: Upload matching and integrated tensor diagnostics
         uses: actions/upload-artifact@v4
         with:
