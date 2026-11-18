@@ -215,10 +215,10 @@ l_5\cdot l_5^*
 C_{\Sigma'\Delta}=\frac{\boldsymbol q}{m_N}\cdot
 \operatorname{Re}[i l_M\times l_5^*].
 \]
-With \(q_{\rm AFH}=-q_A\), the static Dirac--Pauli matching gives
+With \(q_{\rm AFH}=-q_A\), the static Dirac--Pauli matching gives the candidate expressions
 \(l_M=-F_1^V\boldsymbol{\mathcal T}_3\) and
 \(l_5=i(F_1^V+F_2^V)(\boldsymbol q_{\rm AFH}\times
-\boldsymbol{\mathcal T}_3)/(2m_N)\). Consequently,
+\boldsymbol{\mathcal T}_3)/(2m_N)\). Under this candidate AFH multipole-phase assignment,
 \[
 C_\Delta^{(3)}
 =\frac{(F_1^V)^2Q_A^2}{2m_N^2}(L^{11}+L^{22}),
@@ -234,12 +234,12 @@ C_{\Sigma'\Delta}^{(3)}
 (L^{11}+L^{22}).
 }
 \]
-The mixed coefficient is therefore nonzero in general. The earlier
+Under the current candidate phase assignment, the mixed coefficient is nonzero in general. The AFH v6.0 source audit confirms the operator identities and ordered response bilinear, but does not validate the particle-side relative phase. The sign of \(C_{\Sigma'\Delta}^{(3)}\) and the resulting signed spatial-sector contractions remain provisional pending the direct P3 covariant-versus-AFH comparison of spherical-multipole phases. The Cauchy--Schwarz check bounds response magnitude; it does not validate this sign. The earlier
 inference that a tiny transverse antisymmetric component of \(L^{ij}\)
 would force \(C_{\Sigma'\Delta}^{(3)}=0\) was incorrect: AFH Eq. (107)
 shows that this coefficient depends on the transverse-even trace
 \(L^{11}+L^{22}\), because \(l_5\) is the q-rotated spin-current
-coefficient. The signed \(W_{\Sigma'\Delta}\) term must be retained.
+coefficient. The signed \(W_{\Sigma'\Delta}\) response must be retained in the candidate kernel, with its particle-side sign treated as provisional until P3 validation.
 
 For the provisional zero-momentum anchors \(F_1^V(0)=3\),
 \(F_2^V(0)=-0.552\), and \(m_N=0.938918\) GeV, the coefficient ratios
@@ -297,7 +297,7 @@ dcefbeb7ad705b6c03f2b4689200eb1d9252e67b. Its CSV SHA-256 is
 59ea25093137a05b8ebcc158e2fe6a74fe5927599dbb16766b067aa1ad8e3caa.
 The artifact has 2,401 q nodes for each of seven isotopes and 99.8158%
 natural-xenon atom-fraction coverage. Its native_afh_validated flag is
-false, so the contraction is explicitly provisional.
+false, so the contraction is explicitly provisional. The spatial-to-charge values below also use the candidate \(C_{\Sigma'\Delta}\) sign; treat them as provisional until P3 confirms the particle-side phase.
 
 The 12 three-body tensors times seven isotopes give 84 fixed-speed
 benchmark/isotope contractions. Using the provisional anchors
@@ -347,11 +347,11 @@ Bishara et al. give the proton flavor-separated Dirac slopes
 [
 F_1^{u/p\,\prime}(0)=5.57(9),quad
 F_1^{d/p\,\prime}(0)=2.84(5),quad
-F_1^{s/p\,\prime}(0)=-0.018(9) {m GeV}^{-2},
+F_1^{s/p\,\prime}(0)=-0.018(9) {\rm GeV}^{-2},
 ]
 so the universal light-flavor sum has the diagnostic slope
 [
-F_1^{V\,\prime}(0)=8.392(0.137) {m GeV}^{-2}.
+F_1^{V\,\prime}(0)=8.392(0.137) {\rm GeV}^{-2}.
 ]
 The same input gives (F_2^{s/p}(0)=-0.064(17)) and the total
 (F_2^V(0)=-0.552). These are low-(Q^2) matching inputs, not a complete
@@ -366,8 +366,8 @@ Borah--Hill--Lee--Tomalak, supplemented by the strange (F_1) slope and
 At Xe-131 (E_R=200) keV, the native AFH grid gives
 (q_A=0.220930602) GeV and
 [
-rac{W_{\Phi''}}{W_M}=0.0371914,qquad
-rac{W_{M\Phi''}}{W_M}=-0.191819.
+\frac{W_{\Phi''}}{W_M}=0.0371914,qquad
+\frac{W_{M\Phi''}}{W_M}=-0.191819.
 ]
 The central finite-(t_N) diagnostic gives
 [
@@ -375,20 +375,20 @@ F_1^V=2.66287,qquad F_2^V=-0.46800,
 ]
 and the charge-sector correction is
 [
-oxed{delta_{\Phi''}^{\rm finite-t_N}=-0.346\%},
+\boxed{delta_{\Phi''}^{\rm finite-t_N}=-0.346\%},
 qquad
-oxed{delta_{\rm charge}^{\rm pointlike}=-21.5\%}.
+\boxed{delta_{\rm charge}^{\rm pointlike}=-21.5\%}.
 ]
 
 At the Xe-131 (W_M) cancellation region around (E_R=267) keV,
 (q_A=0.255146957) GeV, the native AFH grid gives
 [
-rac{W_{\Phi''}}{W_M}=19.6361,qquad
-rac{W_{M\Phi''}}{W_M}=-4.23930.
+\frac{W_{\Phi''}}{W_M}=19.6361,qquad
+\frac{W_{M\Phi''}}{W_M}=-4.23930.
 ]
 The pointlike (M+\Phi'') charge correction is then
 [
-oxed{delta_{\Phi''}^{\rm pointlike}=-9.68\%}.
+\boxed{delta_{\Phi''}^{\rm pointlike}=-9.68\%}.
 ]
 With the central finite-(t_N) form-factor diagnostic,
 [
@@ -397,8 +397,10 @@ F_1^V=2.56389,qquad F_2^V=-0.44977,
 and the total charge-sector change relative to the old pointlike
 (F_1^V(0)^2W_M) baseline is
 [
-oxed{delta_{\rm charge}^{\rm pointlike}=-34.2\%}.
+\boxed{delta_{\rm charge}^{\rm pointlike}=-34.2\%}.
 ]
+
+The \(-21.5\%\) and \(-34.2\%\) total-charge figures above are legacy \(F_1^2\)-normalization diagnostics. The updated matched-\(c_M\) fixed-speed result in Section 8 supersedes them for the coherent-charge ratio: \(0.77830934\) \((-22.1691\%)\) at 200 keV and \(0.64921591\) \((-35.0784\%)\) at 267 keV, relative to pointlike \(9W_M\).
 
 The last number is **Xe-131 only**. It must not be promoted to a natural-xenon
 spectrum because the native Mathematica pointwise validation currently covers
@@ -419,9 +421,9 @@ The hierarchy established by the present calculations is therefore:
 Therefore the final natural-xenon spectrum must be built in the order
 [
 W_M^{\rm pointlike}
-;ightarrow;
+;\rightarrow;
 (M+\Phi'')^{\rm finite-t_N}
-;ightarrow;
+;\rightarrow;
 (\Delta,\Sigma',\Sigma'')^{\rm finite-t_N},
 ]
 with each isotope evaluated using its own exact (q_A), and without mixing
