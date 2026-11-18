@@ -1,5 +1,11 @@
 import math
+import sys
 import unittest
+from pathlib import Path
+
+HERE = Path(__file__).resolve().parent
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
 from xe131_fixed_benchmark_absolute_dsigma import (
     COUPLING_PRODUCT_SQUARED, DELTA_M_GEV, GEV_MINUS3_TO_CM2_PER_KEV,
     MA_XE131_GEV, MCHI_GEV, MV_GEV, SPEED_KM_S, exact_qA_GeV,

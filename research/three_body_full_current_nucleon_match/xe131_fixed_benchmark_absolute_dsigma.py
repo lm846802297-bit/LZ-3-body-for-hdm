@@ -13,18 +13,18 @@ import json
 import math
 import sys
 from pathlib import Path
-import matplotlib.pyplot as plt
 import numpy as np
 from scipy.optimize import brentq
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 CALC_DIR = ROOT / "research" / "three_body_calculation_and_validation"
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
 if str(CALC_DIR) not in sys.path:
     sys.path.insert(0, str(CALC_DIR))
 import eq6_kernel  # noqa: E402
 from nucleon_vector_form_factors import F1V0, charge_coefficients, isoscalar_zexp
-from paper_plot_style import apply_paper_style, save_paper_figure
 from three_body_phase_space_tensor import eq6, integrate_spin_resolved_tensor
 from xe131_fixed_speed_charge_dsigma import (
     G2, MA_XE131_GEV, MCHI_GEV, MN_GEV, MS_GEV, MV_GEV, SPEED_KM_S,
@@ -203,6 +203,9 @@ def calculate_row(ER_keV: float, response_bundle: dict,
     }
 
 def plot_absolute(rows: list[dict], outdir: Path) -> None:
+    import matplotlib.pyplot as plt
+    from paper_plot_style import apply_paper_style, save_paper_figure
+
     apply_paper_style()
     opened = [row for row in rows if row["phase_space_open"]]
     er = np.asarray([row["ER_keV"] for row in opened])
