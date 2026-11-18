@@ -240,3 +240,26 @@ maximum relative differences remain 3.20e-14 for Delta,
 
 This archive remains provisional Python output. It does not promote
 native_afh_validated and does not replace the queued native Wolfram gate.
+
+
+## 9. Native rank-amplitude gate prepared
+
+The private native-control workflow has been extended with a Wolfram v6.0
+export of the raw Xe-129/Xe-131 rank-resolved amplitudes. The WLS source is
+pinned to LZ repository commit
+e1e9c85530a7d609561b34e2c2df5ab36e5c5b89 and directly evaluates AFH DeltaJ
+and SigmaPJ for the isoscalar T=0 OBDME rows. It exports real and imaginary
+parts before the physical equal-p/n factor-four conversion and C0 response
+normalization.
+
+The corresponding pointwise comparator is
+[compare_p3_multipoles_vs_native.py](../../../afh_response_crosschecks/compare_p3_multipoles_vs_native.py).
+It requires the full seven-isotope native ResponseNuclear gate to pass,
+checks the source and artifact hashes, and compares all 9,604 Xe-129/Xe-131
+\((A,q_A,J)\) rows for both amplitudes.
+
+The control workflow remains manual-dispatch only. The latest queued native
+attempt has no assigned runner (runner_id=0) and requires the Windows
+self-hosted runner with labels self-hosted, Windows, X64, research-gpu to be
+online. No native multipole PASS is claimed until that job completes and the
+direct comparator returns PASS_NATIVE_AFH_MULTIPOLE_AMPLITUDE_CROSSCHECK.
