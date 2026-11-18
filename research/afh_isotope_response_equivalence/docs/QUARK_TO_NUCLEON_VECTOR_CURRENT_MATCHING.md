@@ -4370,7 +4370,7 @@ AFH 的工作是在给定单核子流和核态之后，将 \(W_A^{\nu\sigma}\) �
 |---|---|---|---|
 | Anand、Fitzpatrick 与 Haxton，AFH 核响应工作 | 弹性 \(\chi+A\to\chi+A\)，建立核响应函数及多极分解 | 提供核结构和响应函数的基础框架 | 没有推导本项目暗物质内部态标量辐射的 \(R_i^{(3)}\) |
 | Kouvaris 与 Pradler（2017） | \(\chi+A\to\chi+A+\gamma\)，研究核反冲伴随光子辐射，并使用软光子近似 | 说明辐射末态与核反冲可以构成真正的 \(2\to3\) 过程 | 光子辐射机制及软光子因子化不等于暗物质内部线的标量辐射 |
-| Bell 等（2020） | 在暗物质直接探测 EFT 中研究 Migdal 效应和光子 bremsstrahlung，并结合核响应方法 | 是“辐射过程 + AFH/Fitzpatrick 核响应”结合方式的重要方法先例 | 其光子 bremsstrahlung 处理包含软光子近似，不能代替本项目的完整 \(\chi_1\leftrightarrow\chi_2\) 标量辐射振幅 |
+| Bell 等（2020） | 在 EFT 框架下计算 Migdal 效应与核反冲伴随光子 bremsstrahlung；底层弹性 \(2\to2\) 振幅使用有限子集的核响应 | 说明可将 EFT 核响应用于辐射过程的弹性基准，并在软光子近似下因子化辐射率 | 不是完整的一般三体 AFH 张量收缩；其辐射率沿用软光子因子化，且只使用 \(M,\Sigma',\Sigma''\) 三个单粒子算符 |
 
 AFH 的弹性散射结构可概括为
 \[
@@ -4378,17 +4378,29 @@ AFH 的弹性散射结构可概括为
 =
 \sum_i R_i^{(2)}W_i.
 \]
-Kouvaris–Pradler 和 Bell 等工作的光子辐射部分则展示了如何在特定近似下将辐射过程与弹性散射基准联系。例如，软光子近似中会出现形如
+Kouvaris–Pradler 的式（3）以及 Bell 等人的式（4）–（5）给出的是**核反冲伴随光子辐射**的软光子近似。按本文的核质量记号，可写成
 \[
 \frac{d^2\sigma}{dE_R\,d\omega}
 \simeq
 \frac{4\alpha Z^2}{3\pi}
 \frac{E_R}{m_A\omega}
-\left(\frac{d\sigma}{dE_R}\right)_{2\to2}
+\left(\frac{d\sigma}{dE_R}\right)_{2\to2}.
 \]
-的因子化关系。这里的关系属于相应光子辐射机制和软光子近似的结果，不是任意 \(2\to3\) 过程的恒等式，更不是本项目标量辐射的通用公式。
+这里 \(\omega\) 是光子能量，\(m_A\) 是靶核质量；Bell 等人的原文使用 \(m_T\)。Kouvaris–Pradler 对其软光子条件给出的物理要求是
+\[
+|\delta\mathbf q|\ll|\mathbf q|,
+\qquad
+\omega\ll|\mathbf q|v,
+\]
+并且要远离最小动量转移的运动学端点。Bell 等人将其表述为 \(\omega/m_\chi\ll1\)，其附录运动学还使用 \(\omega\ll m_\chi v\) 的软光子、非相对论极限。该因子化关系依赖于光子从带电、发生核反冲的靶体系辐射以及相应的软光子近似；它不是任意 \(2\to3\) 过程的恒等式，更不是本项目内部态标量辐射的通用公式。
 
-Bell 等工作的核响应示例包括 \(W_M\)、\(W_{\Sigma'}\) 和 \(W_{\Sigma''}\)。这证明辐射过程并不妨碍使用核响应方法，但并没有因此自动给出本项目所有 AFH 通道的三体系数。
+需要进一步精确限定 Bell et al. 的“核响应”先例：该文 §III.A 在构造**底层弹性 WIMP–核子相互作用**时，沿用 Fitzpatrick/AFH 的多极方法；对他们所研究的 EFT 算符子集，只需要 \(M,\Sigma',\Sigma''\) 三种单粒子算符及相应的 \(W_M,W_{\Sigma'},W_{\Sigma''}\)。而 §II.B 的光子 bremsstrahlung 率通过软光子关系（式（4）–（5））乘在弹性核反冲率上。故其逻辑是
+\[
+\text{弹性 EFT 核响应}
+\quad+\quad
+\text{软光子辐射因子},
+\]
+而不是先构造任意三体辐射流 \(L_{\mu\nu}^{(3)}\)，再对完整 AFH 响应矩阵逐项投影。该文支持“辐射过程可与核响应框架结合”的方法论，但不构成本项目 \(R_i^{(3)}W_i\) 的现成推导。
 
 #### N.3 与本项目模型的逐项比较
 
@@ -4491,7 +4503,7 @@ Q_A^2\simeq2m_AE_R.
 为避免先增加核响应、后发现三体系数不匹配，执行顺序固定为：
 
 1. **完整三体振幅：** 从两张标量辐射图出发，统一 \(\chi_2\) 内部动量、宽度方案和图间相位。
-2. **核子流匹配：** 使用 flavor-resolved \(F_1^V(t_A)\)、\(F_2^V(t_A)\)，完成 Dirac–Pauli 流与核子 NR 算符的逐分量对照。
+2. **核子流匹配：** 使用 flavor-resolved \(F_1^V(t_N)\)、\(F_2^V(t_N)\)，完成 Dirac–Pauli 流与核子 NR 算符的逐分量对照。只有在明确采用冲量近似并令单核子四动量转移 \(q_N=q_A\) 时，才可写 \(t_N=t_A\)；若采用静态自由核子诊断 \(q_N^0=0\)，则 \(t_N=-Q_A^2=t_A-E_R^2\)。正式输入必须沿用 §§29.5、36.3 的处方记录，不得把 \(t_A\) 直接当作无条件的单核子 form-factor 变量。
 3. **完整 Lorentz 收缩：** 将三体暗物质流、媒介子传播子和核子完整四流相乘，检查 Ward 收缩及自旋平均。
 4. **AFH 多极投影：** 从实际核子算符构造 AFH 多极算符，确定允许的响应和干涉项。
 5. **三体响应系数：** 计算实际出现的 \(R_M^{(3)}\)、\(R_{\Phi''}^{(3)}\)、\(R_{\Delta}^{(3)}\)、\(R_{\Sigma'}^{(3)}\) 等，不预设其全部非零。
@@ -4515,20 +4527,149 @@ Q_A^2\simeq2m_AE_R.
 
 已有 AFH 响应框架、部分同位素响应归档或光子辐射文献先例，都不能单独证明本项目完整三体 AFH 计算已经完成。数值 PASS 必须对应明确的响应层级、同位素、动量区间、输入版本和独立验证。
 
-#### N.8 参考文献登记与引用核对说明
+#### N.8 参考文献登记：把 AFH、NR-EFT 与辐射先例分开引用
 
-本次补充涉及的文献入口如下：
+本节将此前混在同一条记录中的 arXiv 编号拆分为不同论文。核对结果如下。
 
-1. N. Anand、A. L. Fitzpatrick、W. C. Haxton，AFH 弹性 WIMP–核响应工作，Phys. Rev. C 89, 065501 (2014)，以及原补充文本列出的 arXiv:1405.6690。
-2. J. L. Fitzpatrick 等，原补充文本列出的非相对论 EFT 文献入口 arXiv:1203.3542。
-3. C. Kouvaris、J. Pradler，*Probing Sub-GeV Dark Matter with Conventional Detectors*，Phys. Rev. Lett. 118, 031803 (2017)，arXiv:1607.01789。
-4. N. F. Bell、J. B. Dent、J. L. Newstead、S. Sabharwal、T. J. Weiler，*Migdal effect and photon bremsstrahlung in effective field theories of dark matter direct detection and coherent elastic neutrino-nucleus scattering*，Phys. Rev. D 101, 015012 (2020)，arXiv:1905.00046。
+1. **AFH / DMFormFactor 核响应工作：** N. Anand, A. L. Fitzpatrick, W. C. Haxton, *Model-independent WIMP Scattering Responses and Event Rates: A Mathematica Package for Experimental Analysis*, Phys. Rev. C **89**, 065501 (2014), arXiv:[1308.6288](https://arxiv.org/abs/1308.6288), DOI [10.1103/PhysRevC.89.065501](https://doi.org/10.1103/PhysRevC.89.065501)。这是本文所称 AFH 核响应 / DMFormFactor package 的正确 arXiv 对应。
+2. **NR-DM EFT 基础：** A. L. Fitzpatrick, W. Haxton, E. Katz, N. Lubbers, Y. Xu, *The Effective Field Theory of Dark Matter Direct Detection*, JCAP **02** (2013) 004, arXiv:[1203.3542](https://arxiv.org/abs/1203.3542), DOI [10.1088/1475-7516/2013/02/004](https://doi.org/10.1088/1475-7516/2013/02/004)。它是 AFH package 所依据的 NR-EFT 构造文献，不是 arXiv:1308.6288 的同一篇论文。
+3. **Anand–Fitzpatrick–Haxton 的另一篇 2014 研究记录：** N. Anand, A. L. Fitzpatrick, W. C. Haxton, *Model-independent Analyses of Dark-Matter Particle Interactions*, arXiv:[1405.6690](https://arxiv.org/abs/1405.6690)。该编号对应独立的 2014 预印本 / TAUP2013 会议报告版本，后收入 *Physics Procedia* **61** (2015) 97–106, DOI [10.1016/j.phpro.2014.12.017](https://doi.org/10.1016/j.phpro.2014.12.017)；它**不是** Phys. Rev. C 89, 065501 (2014) 的 arXiv 编号。
+4. **靶核光子 bremsstrahlung：** C. Kouvaris, J. Pradler, *Probing Sub-GeV Dark Matter with Conventional Detectors*, Phys. Rev. Lett. **118**, 031803 (2017), arXiv:[1607.01789](https://arxiv.org/abs/1607.01789), DOI [10.1103/PhysRevLett.118.031803](https://doi.org/10.1103/PhysRevLett.118.031803)。
+5. **Migdal 与光子 bremsstrahlung 的 EFT 研究：** N. F. Bell, J. B. Dent, J. L. Newstead, S. Sabharwal, T. J. Weiler, *Migdal Effect and Photon Bremsstrahlung in Effective Field Theories of Dark Matter Direct Detection and Coherent Elastic Neutrino-Nucleus Scattering*, Phys. Rev. D **101**, 015012 (2020), arXiv:[1905.00046](https://arxiv.org/abs/1905.00046), DOI [10.1103/PhysRevD.101.015012](https://doi.org/10.1103/PhysRevD.101.015012)。
 
-**引用核对提醒：** 本次补充文本把 Fitzpatrick et al. 的 arXiv:1203.3542 与指向 1308.6288 的链接放在同一条引用中；同时把 AFH 2014 文献列为 arXiv:1405.6690。标识符与链接之间存在需要进一步核对的地方。本档案暂时保留原补充文本给出的标识符信息并显式标记此问题，不把未经核实的编号静默改写成另一条文献。正式论文参考文献冻结前，应逐项核对题名、作者、期刊信息和 arXiv 版本。
+**引用更正记录：** 原补充文本将 arXiv:1405.6690 与 Phys. Rev. C 89, 065501 (2014) 并列，属于编号错配；该期刊论文对应 arXiv:1308.6288。原文中 arXiv:1203.3542 与 1308.6288 的链接也曾被放在同一条引用中，现已拆分为 NR-EFT 基础论文和 AFH/DMFormFactor 核响应论文。上述更正只修正文献映射，不改变此前的物理推导或数值结果。
 
-**本节结论：** 已有文献给出了 AFH 核响应基础和若干“辐射过程 + 核响应”的先例，但没有因此替代本项目从两张暗物质内部标量辐射图出发的完整三体张量、Dirac–Pauli 核子流匹配、AFH 多极投影及 \(R_i^{(3)}\) 计算。我们的任务不是从零重建 AFH，而是在保持核结构部分约定一致的前提下，完成本模型特有的三体动力学响应与 AFH 核响应的严格匹配。
+#### N.9 引用能够支持的结论与不能支持的结论
+
+| 命题 | 文献支持情况 | 本项目应采用的表述 |
+|---|---|---|
+| AFH 可把单核子 NR 算符嵌入原子核并形成响应函数 | AFH / DMFormFactor 文献直接支持 | 可作为核结构方法基础 |
+| 辐射末态可以与核反冲一起计算 | Kouvaris–Pradler、Bell et al. 直接支持 | 可作为 \(2\to3\) 辐射过程的先例 |
+| 软光子辐射率可在指定极限下因子化为弹性截面乘辐射因子 | 两篇光子 bremsstrahlung 文献直接支持 | 仅在各自软光子与辐射体假设下使用 |
+| 任意三体辐射振幅都能写成标准弹性 \(R_i^{(2)}W_i\) | 文献不支持 | 不得这样表述 |
+| 本项目内部态标量辐射已由上述文献完成 AFH 全响应收缩 | 文献不支持 | 必须从本项目完整振幅重新推导 |
+| 本项目的 \(R_i^{(3)}\) 可直接由弹性 \(R_i^{(2)}\) 替换得到 | 文献不支持 | 必须计算三体动力学张量并做多极投影 |
+
+因此，文献先例的正确作用是提供核响应方法、EFT 算符和软光子辐射的各自理论基础；本项目仍须完成自身的三体振幅、单核子流匹配和 AFH 投影。
 
 <!-- END UPDATE: N -->
+
+<!-- BEGIN UPDATE: O -->
+
+<a id="corr-o"></a>
+### O. 三体振幅的精确核流因子化与软光子近似：两种不同层次
+
+本节进一步澄清一个容易混淆的术语：“三体振幅可以与 AFH 核响应因子化”与“光子 bremsstrahlung 可以软光子因子化”不是同一件事。前者是本项目单媒介子交换图的振幅结构；后者是特定光子辐射体和软光子极限下的近似结果。
+
+#### O.1 本项目的精确振幅分解来自单媒介子交换拓扑
+
+在当前模型中，末态标量 \(s\) 只从暗物质内部态跃迁线辐射，核子侧仍通过同一个矢量媒介子与核矢量流相互作用。若不存在 \(s\) 从核子、原子核或媒介子线辐射的额外图，振幅可按两侧流严格写为
+\[
+\boxed{
+\mathcal M_3
+=
+\mathcal T_3^\mu(p,p',k_s)\,
+D_{\mu\nu}(q_A)\,
+J_A^\nu(P_A',P_A).
+}
+\]
+这里的“严格”是指给定这一组单媒介子交换图后，振幅在粒子物理侧和核流侧的张量分解是精确的；它**不**要求标量是软的，也不要求采用光子 bremsstrahlung 的软辐射近似。
+
+三体暗物质流必须保留两张图的相干和：
+\[
+\mathcal T_3^\mu
+=
+\mathcal T_{s\text{-before-}A'}^\mu
++
+\mathcal T_{A'\text{-before-}s}^\mu.
+\]
+每一项都包含相应的内部 \(\chi_2\) 动量和传播子；有限宽度、两图干涉及其可能的近极点增强均属于 \(\mathcal T_3^\mu\)，不能移入 AFH 核响应或用一个弹性截面乘数替代。
+
+定义
+\[
+\mathcal H_3^\nu
+\equiv
+\mathcal T_3^\mu D_\mu{}^\nu(q_A),
+\qquad
+L_{\nu\sigma}^{(3)}
+=
+\overline{\mathcal H_{3,\nu}\mathcal H_{3,\sigma}^{*}},
+\]
+则在初末态核态、单核子流及自旋平均约定固定后，
+\[
+\overline{|\mathcal M_3|^2}
+=
+L_{\nu\sigma}^{(3)}W_A^{\nu\sigma}.
+\]
+这一步是完整振幅的 Lorentz 张量收缩，不是软标量近似。它为后续 AFH 多极投影提供入口。
+
+#### O.2 AFH 投影发生在核流一侧，三体信息留在动力学系数中
+
+在一体冲量近似下，将核流按 AFH 核算符基底展开：
+\[
+J_A^\nu(q_A)
+=
+\sum_\alpha C_\alpha^\nu(q_A;t_N)\,
+\mathcal O_\alpha^A(q_A).
+\]
+这里 \(C_\alpha^\nu\) 包含单核子 Dirac–Pauli form factor、同位旋系数及核子 NR 展开的算符系数；\(\mathcal O_\alpha^A\) 是嵌入核态的多极核算符。将其代入完整振幅平方，结构上得到
+\[
+\overline{|\mathcal M_3|^2}
+=
+\sum_{\alpha,\beta}
+\mathcal R_{\alpha\beta}^{(3)}
+(\xi_3;Q_A,t_N,\ldots)\,
+W_{\alpha\beta}^{A}(Q_A).
+\]
+其中 \(\xi_3\) 表示三体相空间变量。三体辐射改变 \(\mathcal T_3^\mu\)，所以 \(\mathcal R_{\alpha\beta}^{(3)}\) 一般依赖标量能量、内部传播子不变量、角变量和 \(q_A\)；AFH 的核响应仍由核态、核算符和 \(Q_A\) 决定。
+
+因此可以复用的是：在核态、单核子算符、同位旋和归一化约定完全相同的条件下，已经计算好的 AFH 核结构矩阵元或 \(W_{\alpha\beta}^A(Q_A)\)。不能直接复用的是弹性 \(2\to2\) 的动力学系数 \(R_i^{(2)}\)。本项目的 \(R_i^{(3)}\) 必须由 \(\mathcal T_3^\mu\) 和实际核子流重新收缩、投影得到。
+
+#### O.3 光子软辐射因子化是另一种近似
+
+Kouvaris–Pradler 与 Bell et al. 讨论的过程是靶核或原子在核反冲中发射光子。软光子极限下，其结果可写为
+\[
+\frac{d^2\sigma_\gamma}{dE_R\,d\omega}
+\simeq
+\frac{4\alpha Z^2}{3\pi}
+\frac{E_R}{m_A\omega}
+\left(\frac{d\sigma}{dE_R}\right)_{2\to2}.
+\]
+这里的辐射因子来自电磁带电辐射体和软光子近似，要求相应的光子能量足够小，并且额外光子动量对弹性散射动量转移的影响可以忽略。它把光子辐射过程近似联系到一个弹性 \(2\to2\) 基准截面。
+
+本项目的末态 \(s\) 则来自暗物质内部态跃迁：
+\[
+\chi_1\longleftrightarrow\chi_2+s.
+\]
+它不是从带电靶核辐射的光子，辐射顶点是模型特定的非对角标量 Yukawa 顶点；三体振幅还包含两个不同的 \(\chi_2\) 内部动量、传播子分母、有限宽度和图间干涉。因此，不能把光子公式中的
+\[
+\frac{4\alpha Z^2}{3\pi}\frac{E_R}{m_A\omega}
+\]
+替换成某个标量耦合常数，就当成本项目的 \(2\to3\) 截面。若希望研究某个额外的软标量极限，必须从本模型的完整振幅单独推导其极限形式，并检查标量质量、内部态质量劈裂和近极点区域；本档案当前不假定存在通用的光子式标量因子化。
+
+#### O.4 “可复用 AFH 核响应”的必要条件与失效条件
+
+| 条件 | 可以复用已有 AFH 核结构的情况 | 需要扩展或重新计算的情况 |
+|---|---|---|
+| 标量辐射位置 | \(s\) 仅从暗物质内部线辐射 | \(s\) 也从核子、原子核或媒介子线辐射 |
+| 核态 | 靶核保持弹性、同一核态 | 发生核激发、核退激或其他非弹性跃迁 |
+| 核子流 | 相同的一体矢量核流与 Dirac–Pauli 匹配 | 引入新的流结构、两体交换流或不同的耦合 |
+| 单核子 form factor | 相同 flavor 组合、\(t_N\) 处方和形状因子输入 | 改变 form factor 方案或单核子转移处方 |
+| AFH 约定 | 相同 v6.0 核态、OBDME、多极定义、同位旋及 factor-four 记账 | 核态、算符约定、归一化或多体截断改变 |
+
+这些条件说明：末态多出一个只从暗物质线辐射的标量，本身不会强迫重算相同核态、相同一体核流的 AFH 核矩阵元；但它一定要求重新计算三体动力学系数。若出现核侧辐射、非弹性核跃迁或两体核流，原有 AFH 响应数据就不再自动构成完整核流描述。
+
+#### O.5 对代码实现的直接约束
+
+1. **核响应缓存键：** 至少包含同位素、核态/OBDME 版本、AFH v6.0 版本、算符和多极约定、同位旋归一化、\(Q_A\) 网格及插值版本。
+2. **三体动力学缓存键：** 至少包含模型耦合、\(m_{\chi_1},m_{\chi_2},m_s,m_{A'}\)、\(\chi_2\) 宽度方案、\(q_A\)、\(k_s\) 和其余三体角变量。
+3. **form factor 处方：** 核响应数据库与三体动力学层必须显式共享 \(t_N\) 的选择；不得在一层使用 \(t_N=t_A\)，另一层却使用 \(q_N^0=0\) 而不标记。
+4. **逐层回归：** 先验证点核/自由核子振幅，再验证 \(M\)-only AFH 收缩；随后逐项加入实际出现的 \(\Phi''\)、\(\Delta\)、\(\Sigma'\) 及干涉项。每次新增响应都必须单独通过解析极限、长波极限、独立代码和求积收敛检查。
+5. **结果命名：** 只有完成上述三体系数与核响应收缩的通道，才可称为完整三体 AFH 通道；单独生成 \(W_i(Q_A)\) 只表示核结构数据库已计算，不等于该通道的三体反冲率已完成。
+
+**本节结论：** 本项目采用的是“完整三体暗物质流 × 矢量媒介子传播子 × AFH 核流”的精确振幅分解，再由 AFH 多极响应组织核结构。光子 bremsstrahlung 文献采用的软光子因子化只是有用的类比和方法先例，不是本项目标量辐射的动力学公式。二者必须在理论表述、代码模块和数值验收中分开。
+
+<!-- END UPDATE: O -->
 
 ---
 
@@ -4552,8 +4693,9 @@ Q_A^2\simeq2m_AE_R.
 12. [L. 2026-11-18 Xe-131 native AFH 响应归档](#corr-l)
 13. [M. 有限动量 AFH 核响应与有限 \(t_A\) 核子 form factor 的区分及生产级匹配补充](#corr-m)
 14. [N. 三体散射中 AFH 的文献先例、适用条件与本模型的重新推导范围](#corr-n)
+15. [O. 三体振幅的精确核流因子化与软光子近似：两种不同层次](#corr-o)
 
-15. [第四部分：从粒子物理到 AFH 核响应的逐步推导（§§27–35）](#part-iv-derivation-27-35)
+16. [第四部分：从粒子物理到 AFH 核响应的逐步推导（§§27–35）](#part-iv-derivation-27-35)
 16. [第五部分：完整 AFH 核响应数据库与三体收缩引擎（§§36–37）](#part-v-afh-response-database-36-37)
 17. [第六部分：完整三体反冲率、响应矩阵与数值验收规范（§§38–44）](#part-vi-three-body-rate-38-44)
 
@@ -4562,8 +4704,8 @@ Q_A^2\simeq2m_AE_R.
 ## 第三部分：文档维护约定
 
 - 第一部分中的原始讨论正文逐字保留；新增物理内容以有明确起止标记的就地校订块插入，不覆盖原文。
-- 对 A–N 校订之外的完整技术推导，按第四至第六部分连续编号（§§27–44）追加；不另建平行档案，并同步更新本索引、主报告和 README 导航。
-- 第二部分仅作为校订索引，不再重复正文；新增校订必须同时更新第一部分对应位置和索引。N 节专门记录三体 AFH 文献先例、复用条件和模型特定重推导边界。
+- 对 A–O 校订之外的完整技术推导，按第四至第六部分连续编号（§§27–44）追加；不另建平行档案，并同步更新本索引、主报告和 README 导航。
+- 第二部分仅作为校订索引，不再重复正文；新增校订必须同时更新第一部分对应位置和索引。N 节专门记录三体 AFH 文献先例、复用条件和模型特定重推导边界；O 节区分精确核流因子化与软光子辐射近似。
 - 若后续发现校订块本身有物理错误，应保留变更记录并注明新旧约定，不得静默改写历史结论。
 - 新推导、代码审计和数值结果必须区分“解析推导”“数量级估算”“已验证数值”和“待验证”。
 - 不得将尚未完成的 \(\Phi''\)、\(M\Phi''\)、\(\Delta\)、\(\Sigma'\) 或完整三体核流收缩写成 PASS。
