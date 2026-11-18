@@ -18,7 +18,7 @@ permissions:
 jobs:
   full-current:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -30,7 +30,9 @@ jobs:
         run: |
           python -m py_compile \
             research/three_body_full_current_nucleon_match/full_current_nucleon_match.py \
-            research/three_body_full_current_nucleon_match/test_full_current_nucleon_match.py
+            research/three_body_full_current_nucleon_match/three_body_phase_space_tensor.py \
+            research/three_body_full_current_nucleon_match/test_full_current_nucleon_match.py \
+            research/three_body_full_current_nucleon_match/test_three_body_phase_space_tensor.py
       - name: Run full-current regression tests
         run: |
           python -m unittest discover \
@@ -40,10 +42,16 @@ jobs:
         run: |
           python research/three_body_full_current_nucleon_match/full_current_nucleon_match.py \
             --out /tmp/full-current-nucleon-match.json
-      - name: Upload diagnostic
+      - name: Generate phase-space-integrated spin-resolved three-body tensor
+        run: |
+          python research/three_body_full_current_nucleon_match/three_body_phase_space_tensor.py \
+            --out /tmp/three-body-phase-space-tensor.json
+      - name: Upload matching and phase-space tensor diagnostics
         uses: actions/upload-artifact@v4
         with:
-          name: full-three-body-current-nucleon-match
-          path: /tmp/full-current-nucleon-match.json
+          name: full-three-body-current-nucleon-match-and-phase-space-tensor
+          path: |
+            /tmp/full-current-nucleon-match.json
+            /tmp/three-body-phase-space-tensor.json
           if-no-files-found: error
-          retention-days: 30
+          retention-days: 90
