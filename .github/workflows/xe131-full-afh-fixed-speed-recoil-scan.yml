@@ -1,0 +1,69 @@
+name: Xe-131 full AFH fixed-speed six-channel recoil scan
+
+on:
+  pull_request:
+    paths:
+      - "research/three_body_full_current_nucleon_match/xe131_full_afh_fixed_speed_recoil_scan.py"
+      - "research/three_body_full_current_nucleon_match/test_xe131_full_afh_fixed_speed_recoil_scan.py"
+      - "research/three_body_full_current_nucleon_match/afh_spatial_obdme_responses.py"
+      - "research/three_body_full_current_nucleon_match/three_body_phase_space_tensor.py"
+      - "research/three_body_full_current_nucleon_match/three_body_multipole_leptonic_weights.py"
+      - "research/three_body_full_current_nucleon_match/nucleon_vector_form_factors.py"
+      - "research/three_body_full_current_nucleon_match/xe131_fixed_speed_charge_dsigma.py"
+      - "research/three_body_spin_resolved_current/**"
+      - "research/vector_current_response_audit/**"
+      - "research/afh_default_density_xe131/**"
+      - "research/afh_default_density_natural_xenon_halo/results/full_afh_v6_default_7_isotope_response/**"
+      - ".github/workflows/xe131-full-afh-fixed-speed-recoil-scan.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: xe131-full-afh-fixed-speed-\${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  xe131-six-channel-recoil-scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout the provenance-pinned native Xe-131 charge response
+        uses: actions/checkout@v4
+        with:
+          repository: lm846802297-bit/LZ-3-body-for-hdm
+          ref: e6d9dee3527cab200ee6b21198d577b987282fac
+          path: afh-native
+          token: \${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install numerical dependencies
+        run: python -m pip install --upgrade numpy==2.3.5 scipy==1.17.0 sympy==1.14.0
+      - name: Compile the scan and AFH source-translated response implementation
+        run: |
+          python -m py_compile \
+            research/three_body_full_current_nucleon_match/xe131_full_afh_fixed_speed_recoil_scan.py \
+            research/three_body_full_current_nucleon_match/test_xe131_full_afh_fixed_speed_recoil_scan.py \
+            research/three_body_full_current_nucleon_match/afh_spatial_obdme_responses.py \
+            research/three_body_full_current_nucleon_match/three_body_phase_space_tensor.py \
+            research/three_body_full_current_nucleon_match/three_body_multipole_leptonic_weights.py
+      - name: Run six-channel kernel and benchmark-grid tests
+        run: |
+          python -m unittest discover \
+            -s research/three_body_full_current_nucleon_match \
+            -p 'test_xe131_full_afh_fixed_speed_recoil_scan.py' -v
+      - name: Compute Xe-131 native-charge plus six-channel AFH recoil scan
+        run: |
+          python research/three_body_full_current_nucleon_match/xe131_full_afh_fixed_speed_recoil_scan.py \
+            --native-charge-csv afh-native/research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_native.csv \
+            --outdir /tmp/xe131-full-afh-recoil-scan
+      - name: Upload response grid, pointwise kernels and summary
+        uses: actions/upload-artifact@v4
+        with:
+          name: xe131-full-afh-six-channel-fixed-speed-recoil-scan
+          path: /tmp/xe131-full-afh-recoil-scan
+          if-no-files-found: error
+          retention-days: 90
