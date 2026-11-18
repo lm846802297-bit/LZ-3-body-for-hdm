@@ -336,6 +336,76 @@ are zero-momentum anchors rather than finite-\(t_N\) functions. No
 recoil-grid scan, natural-abundance sum, halo fold, detector response, or
 likelihood is included.
 
+## 7. Finite-t_N form-factor effect: a separate and potentially larger correction
+
+The old (W_M)-only baseline effectively treats the universal light-quark
+nucleon current as pointlike when the reference nucleon coupling is written
+as (g_{VN}=3g_{Vq}). The complete Dirac--Pauli matching instead requires
+(F_1^V(t_N)) and (F_2^V(t_N)).
+
+Bishara et al. give the proton flavor-separated Dirac slopes
+[
+F_1^{u/p,\prime}(0)=5.57(9),quad
+F_1^{d/p,\prime}(0)=2.84(5),quad
+F_1^{s/p,\prime}(0)=-0.018(9) {m GeV}^{-2},
+]
+so the universal light-flavor sum has the diagnostic slope
+[
+F_1^{V,\prime}(0)=8.392(0.137) {m GeV}^{-2}.
+]
+The same input gives (F_2^{s/p}(0)=-0.064(17)) and the total
+(F_2^V(0)=-0.552). These are low-(Q^2) matching inputs, not a complete
+finite-(t_N) form-factor model.
+
+As a second diagnostic, `nucleon_vector_form_factors.py` reconstructs the
+universal light-flavor current from the isoscalar proton+neutron
+electromagnetic form factors using the Borah--Hill--Lee--Tomalak z expansion,
+with the strange (F_1) slope from Bishara and (F_2^s) held at its
+zero-momentum value. This is explicitly a central diagnostic, not the final
+model input.
+
+For the Xe-131 point (q_A=256.271868) MeV, the central finite-(t_N)
+diagnostic gives
+[
+F_1^V=2.5605,qquad F_2^V=-0.4492,
+]
+[
+c_M=2.5450,qquad c_{Phi''}=0.03096,qquad eta=0.01216.
+]
+Using the native-validated Xe-131 response ratios at this point gives
+[
+Q_{Phi''}-1simeq-1.84%
+]
+relative to the finite-(t_N) (M)-only charge response.
+
+However, relative to the old pointlike (F_1^V(0)^2W_M) baseline, the
+same central diagnostic gives
+[
+oxed{rac{R_{m charge}^{m finite-t}}
+{R_{M,m pointlike}}-1simeq-29.4%}.
+]
+
+Thus the finite-(t_N) Dirac form factor can be a much larger correction to
+the old (W_M)-only spectrum than the explicit (Phi'') term.
+
+This distinction is essential:
+
+- (Phi'') changes the charge-sector response by only percent level relative
+  to the finite-(t_N) (M) term at this selected point.
+- The finite-(t_N) normalization of the coherent charge itself can change
+  the pointlike (W_M)-only prediction by tens of percent.
+- The spatial-current (Delta,Sigma',Sigma'Delta) sector remains at the
+  (10^{-8})-level relative to the charge sector in the current fixed-speed
+  benchmarks.
+
+The finite-(t_N) result is still a diagnostic because the available inputs
+do not provide a single, fully validated finite-(Q^2) form-factor set for
+the universal (u+d+s) current, especially for (F_2^V(Q^2)). The natural
+xenon spectrum must therefore be reported in layers: pointlike (W_M)-only,
+finite-(t_N) charge benchmark, then (M+Phi''), and finally the spatial
+current sector.
+
+
 ## 7. Leading AFH response content and remaining work
 
 At leading static one-body vector-current order, the candidate response set
