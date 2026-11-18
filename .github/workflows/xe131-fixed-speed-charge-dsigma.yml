@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: lm846802297-bit/LZ-3-body-for-hdm
-          ref: cdbc0616d8ee5a087b40f552b59eac0cd77549c0
+          ref: 99176a748a24bd0fcf0eead5ebd66e8839b418cf
           path: afh-native
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-python@v5
