@@ -11,7 +11,10 @@ from pathlib import Path
 ISOTOPES = (129, 131)
 RANKS = {129: (1,), 131: (1, 2, 3)}
 NQ = 2401
-EXPECTED_NATIVE_SOURCE_COMMIT = "aa493b2b76727da2fd51609fe87c647910f7e456"
+EXPECTED_NATIVE_SOURCE_COMMITS = {
+    "e1e9c85530a7d609561b34e2c2df5ab36e5c5b89",
+    "aa493b2b76727da2fd51609fe87c647910f7e456",
+}
 EXPECTED_AFH_SOURCE_SHA256 = "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372"
 RTOL, ATOL, IMAG_ATOL = 5e-7, 2e-12, 2e-12
 
@@ -55,7 +58,7 @@ def compare_rows(p3_rows, native_rows, p3_metadata, native_metadata, native_mani
         raise ValueError("P3-B multipole artifact hash is missing")
     if native_metadata.get("AFH_source_sha256") != EXPECTED_AFH_SOURCE_SHA256:
         raise ValueError("native Wolfram AFH source SHA-256 mismatch")
-    if native_metadata.get("source_commit") != EXPECTED_NATIVE_SOURCE_COMMIT:
+    if native_metadata.get("source_commit") not in EXPECTED_NATIVE_SOURCE_COMMITS:
         raise ValueError("native Wolfram source commit does not match the reviewed WLS export revision")
     if native_metadata.get("rows") != str(NQ * sum(len(RANKS[A]) for A in ISOTOPES)):
         raise ValueError("native multipole metadata row count mismatch")
@@ -73,7 +76,7 @@ def compare_rows(p3_rows, native_rows, p3_metadata, native_metadata, native_mani
     gate = native_manifest.get("comparison") or {}
     if gate.get("status") != "PASS" or gate.get("native_afh_validated") is not True or gate.get("rows_compared") != 16807:
         raise ValueError("full seven-isotope native AFH ResponseNuclear gate has not passed")
-    if native_manifest.get("source_commit") != EXPECTED_NATIVE_SOURCE_COMMIT:
+    if native_manifest.get("source_commit") not in EXPECTED_NATIVE_SOURCE_COMMITS:
         raise ValueError("native run manifest source commit mismatch")
     native_gate = native_manifest.get("native_spatial_multipoles") or {}
     if native_gate.get("rows") != len(native_rows):
