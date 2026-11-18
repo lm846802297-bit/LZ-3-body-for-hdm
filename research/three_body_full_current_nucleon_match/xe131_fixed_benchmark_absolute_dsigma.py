@@ -250,9 +250,18 @@ def plot_absolute(rows: list[dict], outdir: Path) -> None:
 def write_csv(path: Path, rows: list[dict]) -> None:
     if not rows:
         raise ValueError("refusing to write empty absolute dSigma/dER table")
+    # Closed endpoint rows intentionally omit response/kernel quantities.
+    # Build a stable union schema so mixed open/closed rows serialize safely.
+    fieldnames: list[str] = []
+    seen: set[str] = set()
+    for row in rows:
+        for key in row:
+            if key not in seen:
+                seen.add(key)
+                fieldnames.append(key)
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", encoding="utf-8", newline="") as stream:
-        writer = csv.DictWriter(stream, fieldnames=list(rows[0]), lineterminator="\n")
+        writer = csv.DictWriter(stream, fieldnames=fieldnames, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 

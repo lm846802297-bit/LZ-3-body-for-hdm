@@ -1,5 +1,7 @@
+import csv
 import math
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
@@ -10,6 +12,7 @@ from xe131_fixed_benchmark_absolute_dsigma import (
     COUPLING_PRODUCT_SQUARED, DELTA_M_GEV, GEV_MINUS3_TO_CM2_PER_KEV,
     MA_XE131_GEV, MCHI_GEV, MV_GEV, SPEED_KM_S, exact_qA_GeV,
     incident_momentum_GeV, kinematic_prefactor_GeVminus5, find_open_interval,
+    write_csv,
 )
 
 class TestXe131FixedBenchmarkAbsoluteDsigmadER(unittest.TestCase):
@@ -36,6 +39,24 @@ class TestXe131FixedBenchmarkAbsoluteDsigmadER(unittest.TestCase):
         self.assertAlmostEqual(result["Q_A_squared_GeV2"], q*q, places=14)
         self.assertAlmostEqual(result["t_A_GeV2"], -minus_tA, places=14)
         self.assertNotAlmostEqual(result["mediator_denominator_GeV4"], (MV_GEV**2+q*q)**2, places=12)
+
+    def test_write_csv_unions_open_and_closed_row_fields(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "mixed.csv"
+            write_csv(path, [
+                {"ER_keV": 109.0, "phase_space_open": False},
+                {"ER_keV": 110.0, "phase_space_open": True, "full_charge_cm2_per_keV": 1.25},
+            ])
+            with path.open(newline="", encoding="utf-8") as stream:
+                reader = csv.DictReader(stream)
+                rows = list(reader)
+                fieldnames = reader.fieldnames
+            self.assertEqual(
+                fieldnames,
+                ["ER_keV", "phase_space_open", "full_charge_cm2_per_keV"],
+            )
+            self.assertEqual(rows[0]["full_charge_cm2_per_keV"], "")
+            self.assertEqual(rows[1]["full_charge_cm2_per_keV"], "1.25")
 
     def test_unit_conversion(self):
         self.assertAlmostEqual(GEV_MINUS3_TO_CM2_PER_KEV, 3.893793721e-34, places=45)
