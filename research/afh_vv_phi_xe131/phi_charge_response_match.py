@@ -29,20 +29,22 @@ def charge_coefficients(
     """Return AFH M and Phi'' charge coefficients.
 
     Conventions:
-      q_A = p_N' - p_N is the momentum delivered to the nucleus;
-      q_AFH = p_chi' - p_chi = -q_A in the elastic matching benchmark;
-      t = q_A^2 = -|q_A|^2.
+      q_N = p_N' - p_N is the one-nucleon current transfer;
+      in the static one-body impulse approximation, q_N^0=0 and
+      q_N spatial = q_A spatial;
+      t_N^static = -|q_A|^2, whereas the nuclear four-transfer is
+      t_A = -|q_A|^2 + E_R^2.
 
-    The coefficients follow the nonrelativistic vector-charge expansion
-    in Hoferichter, Menendez & Schwenk, PRD 102, 074018 (2020), Eq. (41),
-    mapped to the AFH Phi'' operator definition, Anand et al.,
+    The coefficients follow the nonrelativistically normalized vector-charge
+    expansion in Hoferichter, Menendez & Schwenk, PRD 102, 074018 (2020),
+    Eq. (41), mapped to the AFH Phi'' operator definition, Anand et al.,
     PRC 89, 065501 (2014), Eq. (51).
     """
     if q_gev < 0 or m_n <= 0:
         raise ValueError("q must be nonnegative and m_n must be positive")
-    t = -(q_gev * q_gev)
+    t_n_static = -(q_gev * q_gev)
     f1_plus_2f2 = f1 + 2.0 * f2
-    c_m = f1 + f1_plus_2f2 * t / (8.0 * m_n * m_n)
+    c_m = f1 + f1_plus_2f2 * t_n_static / (8.0 * m_n * m_n)
     c_phi = f1_plus_2f2 * q_gev * q_gev / (4.0 * m_n * m_n)
     return c_m, c_phi
 
@@ -115,10 +117,13 @@ def grid_record(row: dict[str, str], **form_factors: float) -> dict[str, float]:
     wphi = float(row["W_PhiPP_AFH"])
     wmp = float(row["W_MPhiPP_AFH"])
     result = matched_charge_response(q, wm, wphi, wmp, **form_factors)
+    er_gev = float(row["ER_keV"]) * 1.0e-6
     result.update({
         "q_GeV": q,
         "q_MeV": 1000.0 * q,
         "ER_keV": float(row["ER_keV"]),
+        "t_N_static_GeV2": -q * q,
+        "t_A_nuclear_GeV2": -q * q + er_gev * er_gev,
         "W_M": wm,
         "W_PhiPP": wphi,
         "W_MPhiPP": wmp,
@@ -134,10 +139,13 @@ def selected_record(row: dict[str, str], **form_factors: float) -> dict[str, flo
     wphi = float(row["W_PhiPP_AFH"])
     wmp = float(row["W_MPhiPP_AFH"])
     result = matched_charge_response(q, wm, wphi, wmp, **form_factors)
+    er_gev = float(row["ER_min_keV"]) * 1.0e-6
     result.update({
         "q_GeV": q,
         "q_MeV": 1000.0 * q,
         "ER_keV": float(row["ER_min_keV"]),
+        "t_N_static_GeV2": -q * q,
+        "t_A_nuclear_GeV2": -q * q + er_gev * er_gev,
         "W_M": wm,
         "W_PhiPP": wphi,
         "W_MPhiPP": wmp,
@@ -173,11 +181,16 @@ def summarize(rows: list[dict[str, float]]) -> dict:
         "grid_points": len(rows),
         "minimum_relative_Phi_correction": min_row,
         "maximum_relative_Phi_correction": max_row,
+        "transfer_prescription": (
+            "Static one-body impulse approximation: q_N^0=0, "
+            "t_N=-|q_A|^2; t_A=-|q_A|^2+E_R^2 is recorded separately."
+        ),
         "interpretation": (
-            "Q_Phi_over_Monly compares M+Phi'' with the same relativistically "
-            "corrected M-only charge response. Q_full_over_F1zero2_WM also "
-            "includes the t/(8 m_N^2) correction to the M coefficient. "
-            "Neither ratio includes spatial-current Sigma/Delta responses."
+            "Q_Phi_over_Monly compares M+Phi'' with the same nonrelativistically "
+            "normalized M-only charge response. Q_full_over_F1zero2_WM also "
+            "includes the t_N/(8 m_N^2) Darwin-Foldy correction to the M "
+            "coefficient. Neither ratio includes spatial-current Sigma/Delta "
+            "responses."
         ),
     }
 
