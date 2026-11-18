@@ -37,6 +37,7 @@ MCHI_GEV = 1000.0
 MS_GEV = 300.0e-6
 SPEED_KM_S = 776.0
 G2 = 1.0
+FORMAL_WIDTH_SCHEMES = ("pole",)
 EXPECTED_CHARGE_RATIOS = {
     ("off_pole_dm450", 200.0): 0.778309339441481,
     ("near_pole_dm362", 267.0): 0.649215910707624,
@@ -378,7 +379,7 @@ def run(native_charge_csv: Path, outdir: Path) -> dict:
     rows = []
     for case in recoil_cases():
         for ER_keV in case["energies_keV"]:
-            for width_scheme in ("pole", "running"):
+            for width_scheme in FORMAL_WIDTH_SCHEMES:
                 orders = tuple(case["orders"])
                 if case["name"] == "off_pole_dm450" and math.isclose(float(ER_keV), 200.0):
                     orders = (40, 32, 16)
@@ -448,7 +449,8 @@ def run(native_charge_csv: Path, outdir: Path) -> dict:
                 "mapping": "sine2",
             },
         ],
-        "width_schemes": ["pole", "running"],
+        "width_schemes": list(FORMAL_WIDTH_SCHEMES),
+        "formal_width_prescription": "Eq. (19) asymmetric: first p-k propagator remains zero-width (+i0+); second p'+k propagator uses the constant pole width evaluated at m_chi2. Running width is not a production input.",
         "response_metadata": response_bundle["metadata"],
         "anchor_checks_against_previous_finite_tN_charge_only": anchor_checks,
         "accepted_recoil_rows": len(accepted),
