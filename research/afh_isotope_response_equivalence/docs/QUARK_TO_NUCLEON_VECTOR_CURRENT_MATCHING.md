@@ -5596,6 +5596,121 @@ F_1+2F_2=1.896,\qquad F_1+F_2=2.448.
 \]
 这两个组合分别进入时间自旋—轨道项和空间磁化项。
 
+
+#### 30.6.1 非相对论外态归一化与 HKS Eq. (41)
+
+上面的 \(J_N^\mu/(2m_N)\) 是一个方便的中间表达式，但它还不是
+直接嵌入 AFH 单粒子波函数的最终归一化。AFH 的非相对论一体算符
+应使用非相对论归一化的核子矩阵元
+\[
+\boxed{
+\mathcal J_N^\mu
+=\frac{\bar u_N(p_N')\Gamma_N^\mu u_N(p_N)}
+       {2\sqrt{E_N'E_N}}.
+}
+\]
+因此
+\[
+\mathcal J_N^\mu
+=\frac{m_N}{\sqrt{E_N'E_N}}\,
+  \frac{J_N^\mu}{2m_N}.
+\]
+到二阶动量，
+\[
+\frac{m_N}{\sqrt{E_N'E_N}}
+=1-\frac{\mathbf p_N'^2+\mathbf p_N^2}{4m_N^2}
++\mathcal O(p^4/m_N^4).
+\]
+由于
+\[
+\mathbf p_N'^2+\mathbf p_N^2
+=2\mathbf K_N^2+\frac{Q_N^2}{2},
+\]
+这个外态归一化因子恰好消去 §30.6 中自旋无关项的
+\(\mathbf K_N^2\) 依赖，留下
+\[
+\boxed{
+\begin{aligned}
+\mathcal J_N^0
+={}&F_1^N(t_N)
++\frac{t_N}{8m_N^2}
+ \left[F_1^N(t_N)+2F_2^N(t_N)\right]\\
+&+\frac{i\left[F_1^N(t_N)+2F_2^N(t_N)\right]}
+        {4m_N^2}
+ \boldsymbol\sigma_N\cdot
+ (\mathbf q_N\times\mathbf K_N)
++\cdots .
+\end{aligned}
+}
+\]
+这里 \(t_N=-Q_N^2\) 是单核子顶点的四动量转移平方。这个结果的
+自旋无关部分正是 Hoferichter–Menéndez–Schwenk,
+PRD 102, 074018 (2020), Eq. (41) 的单核子电荷展开；其
+\(\Phi''\) 自旋—轨道部分在该文 Eq. (43) 中进入电荷形状因子。
+
+对当前静态自由核子诊断，取
+\[
+\mathbf p_N'=\boldsymbol\ell+\frac{\mathbf q_N}{2},\qquad
+\mathbf p_N=\boldsymbol\ell-\frac{\mathbf q_N}{2},\qquad
+\boldsymbol\ell\cdot\mathbf q_N=0,
+\]
+则 \(E_N'=E_N\)，并且 \(q_N^0=0\)。这时还可以用精确旋量结果检查
+数值实现：
+\[
+\boxed{
+\begin{aligned}
+\mathcal J_N^0={}&
+F_1\left[1-\frac{Q_N^2}{4E_N(E_N+m_N)}\right]
+-\frac{F_2Q_N^2}{4m_NE_N}\\
+&+i\left[
+\frac{F_1}{2E_N(E_N+m_N)}
++\frac{F_2}{2m_NE_N}
+\right]
+\boldsymbol\sigma_N\cdot(\mathbf q_N\times\boldsymbol\ell).
+\end{aligned}
+}
+\]
+展开到 \(Q_N,|\ell|\ll m_N\) 即恢复上面的 HKS 形式。
+
+因此，进入 AFH 的电荷系数应写成
+\[
+\boxed{
+c_M(t_N)=F_1^V(t_N)
++\frac{t_N}{8m_N^2}
+ [F_1^V(t_N)+2F_2^V(t_N)],
+}
+\]
+\[
+\boxed{
+c_{\Phi''}(t_N)=
+\frac{Q_N^2}{4m_N^2}
+ [F_1^V(t_N)+2F_2^V(t_N)].
+}
+\]
+第二式的正号采用本文固定的 AFH Fourier 动量
+\(\mathbf q_{\rm AFH}=-\mathbf q_N\) 和 §31.3 的
+\(\Phi''\) 定义。不能把未归一化的 \(J_N^0/(2m_N)\) 直接当作
+\(c_M\)；否则会留下一个不属于 AFH 非相对论单粒子算符的
+\(\mathbf K_N^2\) 项，并错配 Darwin–Foldy 修正。
+
+**与三体运动学的接口。** 标量辐射改变的是暗物质总动量差：
+\[
+\mathbf p_\chi'-\mathbf p_\chi
+=-\mathbf q_A-\mathbf k_s.
+\]
+核子顶点的转移仍是 \(q_N\)，AFH 多极的空间 Fourier 变量是
+\(\mathbf q_A\)（静态一体近似下 \(\mathbf q_N=\mathbf q_A\)）。
+若采用 \(q_N^0=0\)，则
+\[
+t_N=-Q_A^2=t_A-E_R^2,
+\qquad t_A=q_A^2=-Q_A^2+E_R^2.
+\]
+所以 PR #54 的 \(t=-Q_A^2\) 计算应明确解释为静态
+\(t_N\) 处方，而不是把它与精确的核整体 \(t_A\) 混为一谈。
+有限动量 form factors 必须按选定的 \(t_N\) 处方取值，并在
+metadata 中记录这个近似。
+
+
 ### 30.7 Gordon identity 与流守恒检查
 
 在相同质量、外部核子均在壳时，Gordon identity 为
