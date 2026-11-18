@@ -429,7 +429,7 @@ def interpolate_native_response(
         "linear_physical_equal_pn": linear,
         "pchip_linear_relative_difference": {
             name: abs(out[name] - linear[name]) / max(abs(out[name]), abs(linear[name]), 1.0e-300)
-            for name in RESPONSE_NAMES
+            for name in response_names
         },
     }
 
