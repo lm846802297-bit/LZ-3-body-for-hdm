@@ -4689,7 +4689,7 @@ b_{131}=2.2923417985218975\ {\rm fm},\qquad
 q_A\in[0,0.6]\ {\rm GeV},\quad
 \Delta q_A=0.00025\ {\rm GeV}.
 \]
-因此每种响应有 2,401 个原生 AFH 网格点。对应 AFH v6.0 响应索引为 \(M:1\)、\(\Phi'':4\)、\(M\Phi'':7\)，并采用 raw isoscalar package convention \(\tau_1=\tau_2=0\)。
+因此每种响应有 2,401 个原生 AFH 网格点。对应 AFH v6.0 响应索引为 \(M:1\)、\(\Phi'':4\)、\(M\Phi'':7\)，并采用 raw isoscalar package convention \(\tau_1=\tau_2=0\)。原生导出的 provenance 为：AFH v6.0 源文件 SHA-256 `dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372`；Xe-131 密度矩阵 SHA-256 `f656145ba2fb9da741b77faed4c01d0dc457c955fa340928b5dbf9cee9bc5d45`；native CSV SHA-256 `b1b65708cd103058c3bcaea50bf65550d5671a88e97000b94f2536fbc60a59ff`；Wolfram 版本 14.2.0。
 
 在 \(q_A=0\) 处，原生输出为：
 
@@ -4727,7 +4727,7 @@ AFH v6.0 default-density 数据覆盖
 \[
 A=128,129,130,131,132,134,136.
 \]
-每个同位素 2,401 点，总计 16,807 个 \(M\)-response 网格点；动量区间为 \(0\)–\(0.6\) GeV，步长 \(0.25\) MeV。该七同位素集合覆盖天然氙原子丰度 \(0.998158\)；Xe-124 和 Xe-126 没有纳入 AFH v6.0 default-density 结果，不能将 AFH-7 称为完整 AFH-9。
+每个同位素 2,401 点，总计 16,807 个 \(M\)-response 网格点；动量区间为 \(0\)–\(0.6\) GeV，步长 \(0.25\) MeV。该七同位素集合覆盖天然氙原子丰度 \(0.998158\)；Xe-124 和 Xe-126 没有纳入 AFH v6.0 default-density 结果，不能将 AFH-7 称为完整 AFH-9。原生 AFH v6.0 包源 SHA-256 为 `dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372`；七同位素网格与等价性审计的具体文件哈希见对应 results manifest。
 
 AFH raw isoscalar package 的 \(q=0\) 值与 \(A^2/4\) 的有限小数偏差如下。该等价性审计对每个同位素单独作 \(q=0\) 归一化，使物理等质子、等中子响应满足 \(R_A^{\rm phys}(0)=A^2\)；factor four 与小的有限精度归一化修正是两个不同步骤。
 
