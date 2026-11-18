@@ -105,6 +105,15 @@ Do[
   {isotope, isotopes}
 ];
 
+If[maxImaginaryResidual > 2*10^-12,
+  Print["ERROR: native spatial multipole imaginary residual exceeds tolerance: ", maxImaginaryResidual];
+  Exit[3]
+];
+maxImaginaryString = StringReplace[
+  ToString[N[maxImaginaryResidual, 16], InputForm],
+  "*^" -> "e"
+];
+
 csvPath = FileNameJoin[{
   outDir, "afh_v6_xe129_xe131_spatial_multipoles_native.csv"
 }];
@@ -133,7 +142,7 @@ metadata = StringRiffle[{
   "isospin=only T=0 OBDME rows; isoscalar factor Sqrt[2/(2 TIso+1)]",
   "normalization=raw AFH package amplitudes; no equal-p/n factor-four conversion",
   "imaginary_parts=exported separately for both amplitude channels",
-  "max_imaginary_residual=" <> ToString[N[maxImaginaryResidual, 16]],
+  "max_imaginary_residual=" <> maxImaginaryString,
   "rank_map=" <> StringRiffle[rankMap, ";"],
   "rows=" <> ToString[Length[allRows]]
 }, "\n"];
