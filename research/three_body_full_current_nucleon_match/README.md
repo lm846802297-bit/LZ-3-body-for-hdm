@@ -96,6 +96,58 @@ The purpose is to determine how the spatial current modifies the
 charge-piece spin-orbit term before mapping the complete result to AFH
 \(\Phi''\), \(\Sigma'\), \(\Sigma''\), and \(\Delta\).
 
+## Results from the archived reference point
+
+The successful workflow run 44209893848 (commit
+\`8a99ef3f0908053d60ae38881543826510c240fe\`) used
+\(F_1/F_1(0)=1\), \(F_2/F_1(0)=-0.184\), and \(m_N=0.938918\) GeV.
+
+The free static nucleon-current Ward residual using \(q_N\) is
+\(3.84\times10^{-18}\), and the spin-resolved DM-current trace agrees with
+the independent PR #53 tensor to \(4.46\times10^{-16}\). The physical
+nuclear transfer has \(q_A^0=E_R\ne0\), however, so using it with the
+static \(q_N^0=0\) current gives a separate scaled residual
+\(5.35\times10^{-4}\). The ratio \(q_A^0/Q_A\) is
+\(9.05\times10^{-4}\). This quantifies the static energy-transfer
+approximation; it is not to be silently relabelled as exact conservation
+with \(q_A\).
+
+At \(v_N=0.10\), the nonrelativistically normalized coefficient of
+\(\boldsymbol\sigma_N\cdot(\boldsymbol q_A\times\boldsymbol\ell)\)
+for the charge piece is
+\[
+C_{\rm charge}^{\rm NR}
+=-\,8.41409\times10^6\,i
+\]
+in the code's per-\((q_A\times\ell)\) convention. The full result agrees
+with it at the displayed precision, while the spatial-only contribution
+to this *same odd spin-orbit projection* is about \(8.35\times10^{-12}i\).
+This is a one-point result, not a proof that the spatial current is
+irrelevant.
+
+The complete Pauli decomposition shows why that distinction matters. For
+the same \(F_2/F_1(0)=-0.184\) point, one spatial-only coefficient with
+nucleon spin perpendicular to \(\boldsymbol q_A\) is
+\[
+c_{0,2}^{\rm spatial}=-3.75817\times10^3\,i.
+\]
+This is a transverse-spin **candidate** for the AFH \(\Sigma'\) sector,
+not yet a computed \(\Sigma'\) Wilson coefficient or nuclear response.
+The artifact contains all \(4\times4\) Pauli-product coefficients for
+the full, charge-only, and spatial-only amplitudes. Their reconstruction
+residuals are below \(1.4\times10^{-16}\).
+
+The correct conclusion is therefore twofold:
+
+- At this reference point, the spatial current does not change the
+  selected \(\Phi''\)-type odd-in-\(\ell\) projection at detectable precision.
+- The spatial current does generate other nucleon-spin and DM-spin /
+  nucleon-spin structures. They must be projected onto AFH multipoles
+  before deciding their impact on the recoil rate.
+
+The output is a static one-nucleon matching diagnostic. It is not yet a
+phase-space-integrated \(\Sigma'\), \(\Delta\), or full natural-xenon result.
+
 ## Reproduction
 
 Python 3.12+ and NumPy are required.
