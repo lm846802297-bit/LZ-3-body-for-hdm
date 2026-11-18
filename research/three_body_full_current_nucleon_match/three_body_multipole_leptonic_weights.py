@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 from pathlib import Path
 
 import numpy as np
@@ -246,6 +247,103 @@ def extract_afh_vector_coefficients(
     }
 
 
+def validate_nuclear_continuity_archive_entry(
+    benchmark: dict, L: np.ndarray, *, tolerance: float = 5.0e-12
+) -> dict:
+    """Check recoil kinematics and the stored direct-vs-continuity contraction.
+
+    The direct-vs-reduced identity is algebraic for a point nucleus whose
+    elastic current obeys q_A.mu J_A^mu=0. It checks tensor/index conventions
+    and archive consistency; it does not prove that a truncated many-body
+    one-body nuclear current is dynamically conserved.
+    """
+    try:
+        qA = float(benchmark["qA_magnitude_GeV"])
+        omega = float(
+            benchmark.get(
+                "ER_GeV",
+                float(benchmark.get("ER_keV", 0.0)) * 1.0e-6,
+            )
+        )
+        mA = float(benchmark["mA_GeV"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise ValueError(
+            "integrated tensor benchmark must contain qA_magnitude_GeV, "
+            "mA_GeV and ER_GeV (or ER_keV)"
+        ) from exc
+    if not all(np.isfinite(value) for value in (qA, omega, mA)):
+        raise ValueError("non-finite nuclear transfer kinematics")
+    if qA <= 0.0 or omega < 0.0 or mA <= 0.0:
+        raise ValueError("invalid nuclear transfer kinematics")
+
+    q2_mass_shell = 2.0 * mA * omega + omega * omega
+    q2_residual = abs(qA * qA - q2_mass_shell) / max(
+        abs(qA * qA), abs(q2_mass_shell), 1.0e-300
+    )
+    if q2_residual > tolerance:
+        raise ValueError(
+            "qA, ER and mA do not satisfy the elastic nuclear mass-shell "
+            f"relation: relative residual={q2_residual:.6g}"
+        )
+
+    contractions = benchmark.get("point_nucleus_contractions")
+    if not isinstance(contractions, dict):
+        raise ValueError("integrated tensor benchmark lacks point_nucleus_contractions")
+
+    eta = omega / qA
+    L00 = float(np.real(L[0, 0]))
+    L03sum = float(np.real(L[0, 3] + L[3, 0]))
+    L33 = float(np.real(L[3, 3]))
+    J0 = 2.0 * mA + omega
+    L_C = L00 - eta * L03sum + eta * eta * L33
+    direct = J0 * J0 * L00 + qA * qA * L33 - J0 * qA * L03sum
+    reduced = J0 * J0 * L_C
+    identity_residual = abs(reduced - direct) / max(
+        abs(reduced), abs(direct), 1.0
+    )
+    if identity_residual > tolerance:
+        raise ValueError(
+            "direct point-nucleus contraction disagrees with continuity "
+            f"reduction: relative residual={identity_residual:.6g}"
+        )
+
+    stored_residual = float(
+        contractions.get("continuity_reduced_relative_residual", math.inf)
+    )
+    if not np.isfinite(stored_residual) or stored_residual > tolerance:
+        raise ValueError(
+            "stored point-nucleus continuity identity residual exceeds "
+            f"{tolerance}: {stored_residual}"
+        )
+    stored_L00 = float(contractions.get("I00", math.nan))
+    stored_LC = float(
+        contractions.get("L_C_continuity_adjusted", math.nan)
+    )
+    stored_direct = float(contractions.get("Ifull", math.nan))
+    for name, stored, calculated in (
+        ("I00", stored_L00, L00),
+        ("L_C_continuity_adjusted", stored_LC, L_C),
+        ("Ifull", stored_direct, direct),
+    ):
+        if not np.isfinite(stored) or not math.isclose(
+            stored, calculated, rel_tol=2.0e-11, abs_tol=2.0e-12
+        ):
+            raise ValueError(
+                f"stored {name} disagrees with recomputed tensor contraction"
+            )
+    return {
+        "mA_GeV": mA,
+        "ER_GeV": omega,
+        "qA_GeV": qA,
+        "qA_mass_shell_relative_residual": q2_residual,
+        "nuclear_omega_over_Q": eta,
+        "direct_vs_continuity_relative_residual": identity_residual,
+        "continuity_reduction_assumption": (
+            "conditional on conservation of the complete nuclear vector current"
+        ),
+    }
+
+
 def analyze_tensor_archive(
     archive: dict,
     *,
@@ -263,9 +361,10 @@ def analyze_tensor_archive(
                 f"{benchmark.get('benchmark', 'unknown')}: L tensor shape {L.shape}"
             )
         qA = float(benchmark["qA_magnitude_GeV"])
-        omega = float(
-            benchmark.get("ER_GeV", float(benchmark.get("ER_keV", 0.0)) * 1.0e-6)
+        continuity_validation = validate_nuclear_continuity_archive_entry(
+            benchmark, L
         )
+        omega = continuity_validation["ER_GeV"]
         weights = extract_leptonic_weights(
             L, qA_GeV=qA, omega_GeV=omega
         )
@@ -278,6 +377,7 @@ def analyze_tensor_archive(
             "g2": benchmark.get("g2"),
             "ER_keV": benchmark.get("ER_keV"),
             "ER_GeV": omega,
+            "nuclear_continuity_validation": continuity_validation,
             "speed_kms": benchmark.get("speed_kms"),
             "quadrature": {
                 "nw": benchmark.get("nw"),
@@ -317,6 +417,18 @@ def analyze_tensor_archive(
             "max_abs_continuity_charge_relative_correction": max(
                 abs(row["afh_vector_coefficients"]["charge_continuity_relative_correction"])
                 for row in rows
+            ),
+            "max_qA_mass_shell_relative_residual": max(
+                row["nuclear_continuity_validation"]["qA_mass_shell_relative_residual"]
+                for row in rows
+            ),
+            "max_direct_vs_continuity_relative_residual": max(
+                row["nuclear_continuity_validation"]["direct_vs_continuity_relative_residual"]
+                for row in rows
+            ),
+            "continuity_reduction_scope": (
+                "conditional on conservation of the complete nuclear vector current; "
+                "the point-nucleus identity validates kinematics and tensor conventions only"
             ),
             "min_C_Delta_over_C_M": min(
                 row["afh_vector_coefficients"]["C_Delta_over_C_M"] for row in rows
