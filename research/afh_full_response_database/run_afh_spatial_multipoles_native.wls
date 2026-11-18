@@ -50,6 +50,11 @@ Do[
     ],
     n_Integer /; n > 0
   ];
+  expectedRanks = If[A == 129, {1}, {1, 2, 3}];
+  If[rankList =!= expectedRanks,
+    Print["ERROR: unexpected AFH isoscalar spatial ranks for Xe-", A, ": ", rankList];
+    Exit[4]
+  ];
   AppendTo[rankMap, ToString[A] <> "=" <> StringRiffle[ToString /@ rankList, ","]];
 
   isotopeRows = Table[
