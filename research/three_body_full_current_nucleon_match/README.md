@@ -729,3 +729,17 @@ gate passes. The corresponding WLS export is pinned to native source commit
 e1e9c85530a7d609561b34e2c2df5ab36e5c5b89. This is the P3-B2 amplitude-level
 acceptance gate; it remains pending until the private Windows Wolfram runner
 executes the native workflow.
+
+
+## 12. P3-C provisional C0-consistent response contraction
+
+Workflow 44305980766 passed the fixed-speed AFH response-basis contraction:
+84/84 positive kernels, with rankwise spatial contributions reconstructing
+the total spatial sector to a maximum absolute residual of 1.11e-16. The
+largest spatial/charge ratio in the selected benchmarks is
+7.10e-9 (Xe-131, 267 keV, 776 km/s, near-pole running-width benchmark).
+This is a provisional fixed-speed result, not the final P3-C covariant
+equivalence test or a halo-folded prediction.
+
+Detailed normalization, rankwise contributions, provenance and limitations:
+[P3_C_C0_NORMALIZATION_AND_RANKWISE_CONTRACTION.md](results/2026-11-18/P3_C_C0_NORMALIZATION_AND_RANKWISE_CONTRACTION.md).
