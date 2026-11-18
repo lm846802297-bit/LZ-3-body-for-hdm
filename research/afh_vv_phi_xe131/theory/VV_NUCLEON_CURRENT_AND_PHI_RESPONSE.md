@@ -105,12 +105,14 @@ and
 \]
 In the isospin limit the same flavour sum gives the same neutron benchmark.
 
-These are zero-momentum anchors, not finite-\(t\) form factors. At the
-Xe-131 response minima, \(|t_A|=q_A^2\) is not zero. The final quantitative
+These are zero-momentum anchors, not finite-\(t_N\) form factors. At the
+Xe-131 response minima, \(|t_N|=Q_A^2\) is not zero. The final quantitative
 calculation therefore needs finite-momentum, flavour-separated
-\(F_1^{V,N}(t_A)\) and \(F_2^{V,N}(t_A)\) with the sign convention above.
+\(F_1^{V,N}(t_N)\) and \(F_2^{V,N}(t_N)\) with the sign convention above.
 The numerical benchmark below holds the zero-momentum values fixed solely
-to isolate the effect of the AFH nuclear responses.
+to isolate the effect of the AFH nuclear responses. In the static prescription
+\(t_N=-Q_A^2\), while the exact nuclear invariant is
+\(t_A=t_N+E_R^2\).
 
 Reference for the flavour-separated inputs: Bishara et al.,
 [arXiv:1707.06998](https://arxiv.org/abs/1707.06998).
@@ -331,8 +333,8 @@ Sec. 2. The finite-\(t_N\) argument belongs to the one-nucleon vertex;
 
 For the radiative process
 \[
-\chi_1(p)+N(k)\to\chi_1(p')+N(k')+s(k_s),
-\qquad q_A=k'-k=p-p'-k_s,
+\chi_1(p)+A(P_A)\to\chi_1(p')+A(P_A')+s(k_s),
+\qquad q_A=P_A'-P_A=p-p'-k_s,
 \]
 the \(M+\Phi''\) **charge sector** is therefore
 \[
@@ -424,8 +426,8 @@ one obtains
 \[
 \boxed{Q_{\Phi''}=0.9816142,}
 \]
-i.e. a \(-1.839\%\) correction relative to the same relativistically
-corrected \(M\)-only charge response. The \(t_N/(8m_N^2)\) correction to
+i.e. a \(-1.839\%\) correction relative to the same
+nonrelativistically normalized \(M\)-only charge response. The \(t_N/(8m_N^2)\) Darwin--Foldy correction to
 the \(M\) coefficient itself is another \(-1.174\%\) in the rate relative
 to \(F_1^V(0)^2W_M\). Combining these two effects gives
 \[
