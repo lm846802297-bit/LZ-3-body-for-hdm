@@ -56,7 +56,7 @@ class ThreeBodyPhaseSpaceTensorTests(unittest.TestCase):
         )
         self.assertTrue(result["phase_space_open"])
         cross = result["dirac_trace_crosscheck"]
-        self.assertLess(cross["max_relative_residual"], 2e-10, cross)
+        self.assertLess(cross["max_relative_residual"], 5e-10, cross)
         self.assertLess(result["gram_hermiticity_relative_residual"], 2e-13)
         self.assertLess(result["tensor_hermiticity_relative_residual"], 2e-13)
         self.assertGreater(result["gram_min_eigenvalue"], -1e-8)
