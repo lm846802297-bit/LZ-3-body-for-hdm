@@ -77,12 +77,18 @@ columns in the independent eight-response database:
 
 | P3-B column | Independent database column | Max. absolute difference | Max. relative difference | Worst point |
 |---|---|---:|---:|---|
-| W_Delta_AFH_package | W_Delta00_AFH | \(1.04\times10^{-16}\) | \(1.19\times10^{-13}\) | Xe-129, 0.04125 GeV |
-| W_SigmaPrime_AFH_package | W_SigmaPrime00_AFH | \(1.01\times10^{-16}\) | \(5.67\times10^{-13}\) | Xe-131, 0.36000 GeV |
-| W_SigmaPrimeDelta_AFH_package | W_SigmaPrimeDelta00_AFH | \(1.01\times10^{-16}\) | \(3.18\times10^{-13}\) | Xe-131, 0.09700 GeV |
+| W_Delta_AFH_package | W_Delta00_AFH | \(2.78\times10^{-17}\) | \(3.20\times10^{-14}\) | Xe-129, 0.13350 GeV |
+| W_SigmaPrime_AFH_package | W_SigmaPrime00_AFH | \(1.73\times10^{-17}\) | \(2.45\times10^{-13}\) | Xe-129, 0.37250 GeV |
+| W_SigmaPrimeDelta_AFH_package | W_SigmaPrimeDelta00_AFH | \(1.73\times10^{-17}\) | \(1.23\times10^{-13}\) | Xe-129, 0.37250 GeV |
 
-All 16,807 isotope/q rows matched. The mixed response was compared with its
-sign intact; it was not replaced by its absolute value.
+All 16,807 isotope/q rows matched, with zero failed points at
+\\(\\mathrm{rtol}=5\\times10^{-12}\\) and
+\\(\\mathrm{atol}=2\\times10^{-14}\\). The mixed response was compared with its
+sign intact; it was not replaced by its absolute value. The numeric comparison
+uses Python's standard-library CSV parser and float conversion; pandas' default
+fast float parser is deliberately avoided for this last-digit precision audit.
+The reusable comparator is
+[compare_p3_spatial_vs_afh8.py](../../../afh_response_crosschecks/compare_p3_spatial_vs_afh8.py).
 
 ## 5. Physical equal-p/n normalization comparison
 
@@ -118,9 +124,9 @@ After this conversion, the maximum relative differences are:
 
 | Physical response | Max. absolute difference | Max. relative difference | Worst point |
 |---|---:|---:|---|
-| \(R_\Delta\) | \(3.33\times10^{-16}\) | \(7.50\times10^{-13}\) | Xe-131, 0.43650 GeV |
-| \(R_{\Sigma'}\) | \(5.00\times10^{-16}\) | \(9.01\times10^{-13}\) | Xe-129, 0.56025 GeV |
-| \(R_{\Sigma'\Delta}\) | \(2.22\times10^{-16}\) | \(9.03\times10^{-13}\) | Xe-131, 0.51525 GeV |
+| \(R_\Delta\) | \(3.33\times10^{-16}\) | \(3.20\times10^{-14}\) | Xe-129, 0.13350 GeV |
+| \(R_{\Sigma'}\) | \(4.44\times10^{-16}\) | \(2.45\times10^{-13}\) | Xe-129, 0.37250 GeV |
+| \(R_{\Sigma'\Delta}\) | \(2.22\times10^{-16}\) | \(1.23\times10^{-13}\) | Xe-129, 0.37250 GeV |
 
 The factor four is applied once. \(C_0\) is a separate, approximately
 \(10^{-4}\)-level finite-decimal correction and must not be described as
@@ -132,7 +138,7 @@ another isospin factor.
   spatial responses vanish exactly at all 2,401 nodes.
 - Xe-129 and Xe-131 have finite spatial responses.
 - The maximum Cauchy--Schwarz excess over the full grid is
-  \(2.06\times10^{-16}\), consistent with floating-point roundoff.
+  \(3.47\times10^{-18}\), consistent with floating-point roundoff.
 - The signed \(W_{\Sigma'\Delta}\) changes sign over the momentum grid:
   - Xe-129: approximately \([-4.95951\times10^{-3},\,
     1.04324\times10^{-4}]\);
