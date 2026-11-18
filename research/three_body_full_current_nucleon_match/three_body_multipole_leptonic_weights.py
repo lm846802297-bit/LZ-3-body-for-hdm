@@ -34,7 +34,11 @@ def complex_from_pairs(value) -> np.ndarray:
 def continuity_adjusted_coulomb_weight(
     L: np.ndarray, qA_GeV: float, omega_GeV: float
 ) -> tuple[float, float]:
-    """Reduce the nuclear longitudinal current using q_A_mu J_A^mu = 0.
+    """Conditionally reduce the nuclear longitudinal current using continuity.
+
+    This relation is valid only if the complete nuclear vector current obeys
+    q_A_mu J_A^mu = 0. The algebraic reduction does not establish that a
+    truncated many-body one-body current satisfies this dynamical identity.
 
     In the q-aligned frame q_A^mu=(omega,0,0,Q), nuclear-current
     conservation gives J_A^3=(omega/Q)J_A^0. Since the DM tensor is stored

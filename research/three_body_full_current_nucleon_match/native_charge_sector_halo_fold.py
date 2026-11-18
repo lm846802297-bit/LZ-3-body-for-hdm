@@ -2,10 +2,12 @@
 """Native-AFH Coulomb-sector halo fold (not a complete vector-current rate).
 
 This module evaluates M + Phi'' + M-Phi'' using the continuity-reduced
-Coulomb weight L_C = L00 - (omega/Q)(L03+L30) + (omega/Q)^2 L33.
-It therefore includes the nuclear longitudinal current through the conserved
-one-body nuclear vector-current relation, but omits transverse nuclear-current
-multipoles such as Delta and Sigma'. It is not the full
+Coulomb weight L_C = L00 - (omega/Q)(L03+L30) + (omega/Q)^2 L33,
+conditional on conservation of the complete nuclear vector current.
+It therefore eliminates the longitudinal multipole using the conserved-
+current relation, but omits transverse nuclear-current multipoles such as
+Delta and Sigma'. The algebraic point-nucleus identity does not establish
+dynamical continuity of the truncated many-body one-body current. It is not the full
 L_mu_nu W_A^{mu nu} contraction or the final three-body spectrum.
 A native AFH input PASS validates the nuclear response archive only; it does
 not validate the missing three-body transverse multipole projection.

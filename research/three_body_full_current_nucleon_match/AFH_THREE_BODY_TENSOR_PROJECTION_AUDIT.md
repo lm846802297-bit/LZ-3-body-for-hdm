@@ -254,3 +254,69 @@ Do not use:
 
 A native AFH database PASS validates the nuclear response input. It does not
 by itself validate the three-body particle-side multipole projection.
+
+
+## 7. Fixed-speed Xe-131 \(d\sigma/dE_R\) result and normalization correction
+
+Workflow 44262472992 completed the fixed-speed Xe-131 differential
+cross-section ratio calculation using the native AFH v6.0 \(M,\Phi''\),
+and signed \(M\Phi''\) response archive, the finite-\(t_N\) Dirac--Pauli
+charge coefficients, and the full \(2\to3\) phase-space integral.
+
+The benchmark is \(m_{\chi_1}=1000\) GeV, \(m_s=300\) keV,
+\(v_\chi=776\) km/s, \(g_2=1\), with the benchmark-specific mass splittings
+shown below. The ratio is
+\[
+\mathcal Q(E_R)=
+\frac{(d\sigma/dE_R)_{\rm finite-t_N,\ M+\Phi''}}
+     {(d\sigma/dE_R)_{\rm pointlike,\ M}},
+\]
+where the denominator is the original pointlike \(9W_M\) baseline.
+
+| \(E_R\) | \(\Delta m\) | \(\mathcal Q(E_R)\) | Relative change |
+|---:|---:|---:|---:|
+| 200 keV | 450 keV | 0.7783093394 | -22.1691% |
+| 267 keV | 362 keV | 0.6492159107 | -35.0784% |
+
+The width-scheme ratios agree to \(2.22\times10^{-16}\) (200 keV) and
+\(1.11\times10^{-16}\) (267 keV), because the same \(L_C^{(3)}\)
+phase-space factor multiplies numerator and denominator. The medium/high
+relative differences in \(L_C\) are \(1.90\)--\(1.98\times10^{-10}\) at
+200 keV and \(3.05\)--\(4.72\times10^{-10}\) at 267 keV.
+
+The decomposition of the dimensionless charge-sector ratio is:
+
+| Quantity | 200 keV | 267 keV |
+|---|---:|---:|
+| \(F_1^V(t_N)\) | 2.66316341 | 2.56388626 |
+| \(F_2^V(t_N)\) | -0.46805344 | -0.44977451 |
+| \(c_M\) | 2.65122188 | 2.54852325 |
+| \(c_{\Phi''}\) | 0.02388306 | 0.03072600 |
+| \(W_{\Phi''}/W_M\) | 0.03695594 | 19.84506258 |
+| \(W_{M\Phi''}/W_M\) | -0.19120930 | -4.28296439 |
+| \(Q_{\Phi''}\), relative to finite-\(t_N\) M-only | 0.99655805 | 0.89961039 |
+| finite-\(t_N\) M-only / pointlike M | 0.78099749 | 0.72166342 |
+| full coherent charge ratio | 0.77830934 | 0.64921591 |
+
+The earlier \(-21.48\%\) and \(-34.24\%\) numbers in §45.2--45.3 are
+consistent with the legacy \(F_1^2\) normalization audit, not the final
+matched \(c_M\) numerator. On the same updated q points, the legacy
+\(F_1^2\) ratios are \(-21.4664\%\) and \(-34.2933\%\). The updated full
+coherent charge-sector result uses the Darwin--Foldy term in \(c_M\) and
+retains the signed \(M\)-\(\Phi''\) interference. Small remaining
+differences between the historical percentages and the same-q legacy
+values also reflect the updated Xe-131 mass/q input.
+
+The adopted mass convention in this run is
+\(m_A=(m_{\rm atom}-Z m_e)u\), using the archived Xe-131 atomic mass
+\(130.90508406\,u\), which gives \(m_A=121.90971983538435\) GeV.
+The pointwise result is conditional on this bare-nucleus mass convention
+and the central isoscalar \(z\)-expansion form-factor prescription.
+
+Artifact 14408816831 (SHA-256
+3d63f0d4896946129e1692ee0915da9b6d791323f65da85d0ee242bc1ae498bd)
+contains the complete JSON, width comparisons, phase-space convergence
+checks and provenance. This remains a fixed-speed Xe-131 Coulomb-sector
+ratio; it is not an absolute \(d\sigma/dE_R\), a halo average, a
+natural-xenon spectrum, or the complete eight-response nuclear-current
+contraction.

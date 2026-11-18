@@ -497,3 +497,81 @@ python research/three_body_full_current_nucleon_match/contract_three_body_afh_re
   https://arxiv.org/abs/2007.08529: vector charge and nuclear multipole
   expansion.
 - Repository AFH source: v6/dmformfactor-V6.m.
+
+
+## 7. Nuclear-current continuity: conditional Coulomb reduction
+
+The charge/longitudinal DM weight used by the Coulomb-sector contraction is
+
+\[
+L_C^{(3)}=L_{00}^{(3)}
+-\frac{E_R}{Q_A}(L_{03}^{(3)}+L_{30}^{(3)})
++\left(\frac{E_R}{Q_A}\right)^2L_{33}^{(3)}.
+\]
+
+This reduction is **conditional on conservation of the complete nuclear
+vector current**. It does not impose a Ward identity on the inelastic DM
+transition current. The direct point-nucleus contraction and its
+continuity-reduced form are algebraically equivalent, but this identity
+checks the metric, kinematics and tensor-index conventions; it does not
+prove that a truncated many-body one-body current is dynamically conserved.
+The archive reader now checks the exact nuclear mass-shell relation
+\(Q_A^2=2m_AE_R+E_R^2\), recomputes the point-nucleus contraction, and
+compares it with the stored direct/reduced result.
+
+The static free-nucleon diagnostic has
+\(q_N^0=0\) when the internal momentum is perpendicular to \(q_A\), whereas
+the physical nuclear transfer has \(q_A^0=E_R\). Its free-nucleon Ward
+residual is tiny with \(q_N\), but nonzero when that static current is tested
+against \(q_A\). The bound-nucleon energy transfer, binding/off-shell
+prescription and interaction-current contributions therefore remain part
+of the P1 operator-level continuity audit.
+
+Latest integrated-tensor archive check (12 benchmark/width rows):
+- maximum \(Q_A^2-(2m_AE_R+E_R^2)\) relative residual:
+  \(1.42\times10^{-16}\);
+- maximum direct-vs-continuity point-nucleus contraction residual:
+  \(2.71\times10^{-16}\);
+- largest \(|L_C/L_{00}-1|\): \(5.13\times10^{-6}\).
+
+These are kinematic and algebraic checks, not a claim that the many-body
+continuity problem is closed.
+
+## 8. Fixed-speed Xe-131 differential cross-section ratio
+
+The dedicated fixed-speed Xe-131 calculation is archived in
+XE131_FIXED_SPEED_CHARGE_DSIGMA_RESULTS.md.
+
+It uses native AFH v6.0 Xe-131 \(M,\Phi'',M\Phi''\) responses, finite-\(t_N\)
+Dirac-Pauli charge coefficients \(c_M,c_{\Phi''}\), the signed
+\(M-\Phi''\) interference, and the full \(2\to3\) phase-space integral.
+For \(m_{\chi_1}=1000\) GeV, \(m_s=300\) keV, \(v_\chi=776\) km/s and
+\(g_2=1\), the fixed-speed ratios relative to the original pointlike
+\(9W_M\) baseline are:
+
+| \(E_R\) | \(\Delta m\) | Ratio |
+|---:|---:|---:|
+| 200 keV | 450 keV | 0.77830934 (-22.1691%) |
+| 267 keV | 362 keV | 0.64921591 (-35.0784%) |
+
+Pole/running widths give the same ratio to \(2.3\times10^{-16}\) or better:
+the common \(L_C^{(3)}\) phase-space factor cancels from this ratio. The
+medium-to-high phase-space differences are below \(4.8\times10^{-10}\) for
+both recoil points and both width prescriptions.
+
+The earlier \(-21.48\%\) and \(-34.24\%\) values are historical
+\(F_1^2\)-normalization diagnostics. The updated result uses the matched
+Darwin-Foldy charge coefficient
+\[
+c_M=F_1^V+\frac{t_N(F_1^V+2F_2^V)}{8m_N^2}
+\]
+and retains \(M,\Phi'',M\Phi''\) coherently. The result is still a
+**fixed-speed Xe-131 Coulomb-sector ratio**, not an absolute differential
+cross section, natural-xenon halo average, complete eight-response
+three-body contraction, or detector prediction.
+
+Workflow 44262472992 passed and uploaded artifact 14408816831 (SHA-256
+3d63f0d4896946129e1692ee0915da9b6d791323f65da85d0ee242bc1ae498bd.
+The native Xe-131 archive provenance is pinned to archive commit
+e6d9dee3527cab200ee6b21198d577b987282fac, with original Wolfram export
+commit 54e1ff10bba0cbffe7acc6af428014415c708475.
