@@ -415,7 +415,7 @@ def run_default_audit():
         "limitations": [
             "The q-aligned spin-resolved DM tensor is an intermediate dynamical object; AFH one-body operator coefficients are not yet projected.",
             "The nucleon convection and magnetization operators and their AFH multipole contractions are not included in this tensor archive.",
-            "A separate component-wise convergence scan is archived for nine selected benchmarks; it establishes medium-to-high-order convergence only at those benchmarks and stated tolerances, not globally across all kinematics.",
+            "The formal pole-only component-wise convergence scan covers three selected benchmarks and stated tolerances; it does not establish global convergence over all kinematics.",
             "No AFH isotope response, halo fold, detector response, or likelihood is included.",
             "Formal production is pole-width only; zero-width and running-width controls are excluded from the production tensor archive.",
         ],
