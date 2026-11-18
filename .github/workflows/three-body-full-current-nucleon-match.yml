@@ -3,9 +3,12 @@ name: Full three-body current and nucleon Dirac-Pauli contraction
 on:
   pull_request:
     paths:
-      - "research/three_body_full_current_nucleon_match/**"
-      - "research/three_body_spin_resolved_current/**"
-      - "research/vector_current_response_audit/**"
+      - "research/three_body_full_current_nucleon_match/*.py"
+      - "research/three_body_full_current_nucleon_match/**/*.py"
+      - "research/three_body_spin_resolved_current/*.py"
+      - "research/three_body_spin_resolved_current/**/*.py"
+      - "research/vector_current_response_audit/*.py"
+      - "research/vector_current_response_audit/**/*.py"
       - ".github/workflows/three-body-full-current-nucleon-match.yml"
   workflow_dispatch:
 
