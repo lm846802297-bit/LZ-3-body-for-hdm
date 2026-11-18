@@ -1,5 +1,5 @@
 (* Native AFH v6.0 export: seven xenon isotopes, all eight ResponseNuclear channels. *)
-ClearAll["Global\`*"];
+ClearAll["Global" <> FromCharacterCode[96] <> "*"];
 
 scriptDir = DirectoryName[$InputFileName];
 repoRoot = DirectoryName[DirectoryName[scriptDir]];
