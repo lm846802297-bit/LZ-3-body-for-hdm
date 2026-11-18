@@ -104,14 +104,13 @@ def validate_records(
                         f"Xe-{A} q={q:.10g}: non-finite {column}"
                     )
 
-            for name in DIAGONAL_FAMILIES:
-                column = RESPONSE_COLUMNS[name]
+            for name, column in RESPONSE_COLUMNS.items():
                 value = numeric[column]
-                if math.isfinite(value) and value < -atol:
+                ranges[column].append(value)
+                if name in DIAGONAL_FAMILIES and math.isfinite(value) and value < -atol:
                     failures.append(
                         f"Xe-{A} q={q:.10g}: negative diagonal {column}"
                     )
-                ranges[column].append(value)
 
             for name, column in RESPONSE_COLUMNS.items():
                 w_value = numeric[column]
