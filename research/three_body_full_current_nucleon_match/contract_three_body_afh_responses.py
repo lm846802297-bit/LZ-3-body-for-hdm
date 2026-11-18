@@ -525,8 +525,8 @@ def main():
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--afh-artifact-run-id", type=int, default=44222087512)
     parser.add_argument("--afh-artifact-id", type=int, default=14391456283)
-    parser.add_argument("--spatial-artifact-run-id", type=int, default=44303047483)
-    parser.add_argument("--spatial-artifact-id", type=int, default=14426558224)
+    parser.add_argument("--spatial-artifact-run-id", type=int, default=44305980766)
+    parser.add_argument("--spatial-artifact-id", type=int, default=14428386181)
     args = parser.parse_args()
 
     verified_afh = verify_afh_archive(args.afh_dir)
