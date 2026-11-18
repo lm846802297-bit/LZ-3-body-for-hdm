@@ -249,41 +249,65 @@ is below \(3.7\times10^{-13}\) in all six cases.
 
 ## Phase-space-integrated spin-resolved three-body tensor (P0-B1)
 
-The new `three_body_phase_space_tensor.py` extends the one-point
+The new \`three_body_phase_space_tensor.py\` extends the one-point
 spin-resolved current calculation to the complete three-body phase space.
-At every ((W^2,z,\phi)) point it:
+At every \((W^2,z,\phi)\) point it:
 
 1. constructs both scalar-emission orderings with the same finite-width
    prescription as PR #53/#57;
-2. rotates the spatial Lorentz components into a local frame
-   ((e_1,e_2,\hat q_A)), with the third axis parallel to the physical
+2. rotates the spatial Lorentz components into a local right-handed frame
+   \((e_1,e_2,\hat q_A)\), with the third axis parallel to the physical
    nuclear momentum transfer;
-3. decomposes each (2\times2) DM-spin matrix into the Pauli basis
-   (T_3^\mu=\sum_{a=0}^3 c_a^\mu\sigma_\chi^a);
-4. integrates the full spin-resolved Gram tensor
-   [
-   G_{\mu a,\nu b}^{(3)}
-   =\int d\Phi_3\,c_a^\mu c_b^{\nu *},
-   \qquad
-   L_{\mu\nu}^{(3)}=\sum_a G_{\mu a,\nu a}^{(3)}.
-   ]
+3. decomposes each \(2\times2\) DM-spin matrix into the Pauli basis
+   \(T_3^\mu=\sum_{a=0}^3 c_a^\mu\sigma_\chi^a\);
+4. integrates the spin-resolved Gram tensor
+   \(G_{\mu a,\nu b}^{(3)}=\int d\Phi_3\,c_a^\mu c_b^{\nu *}\), from which
+   \(L_{\mu\nu}^{(3)}=\sum_a G_{\mu a,\nu a}^{(3)}\) is reconstructed.
 
 The archive keeps the before-emission, after-emission, and coherent
 interference Gram tensors separately. It includes zero, pole, and running
-widths and uses the parent Eq. (6) threshold-stable (W^2,z,\phi)
+widths and uses the parent Eq. (6) threshold-stable \(W^2,z,\phi\)
 quadrature. The point-nucleus charge/convection contractions reconstructed
 from the q-aligned tensor are compared with the independent Dirac-trace
-integration in `vector_current_response_audit.integrate_current_components`.
-This is an independent integrated cross-check of the spin-resolved tensor
-representation, not a second AFH calculation.
+integration in \`vector_current_response_audit.integrate_current_components\`.
+
+### Numerical acceptance
+
+Workflow run [44224510581](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44224510581)
+completed successfully at source commit
+\`de33bfbc8dc1d322b6c0761c8df5d73f2dadf303\`. It ran 23 regression tests
+and generated 12 integrated tensors: four established/near-pole benchmarks,
+each with zero, pole, and running widths.
+
+| Diagnostic | Result | Acceptance |
+|---|---:|---:|
+| Maximum integrated Dirac-trace contraction residual | \(1.59813\times10^{-9}\) | \(<2\times10^{-9}\) |
+| Maximum Gram/tensor Hermiticity residual | 0 | \(<10^{-12}\) |
+| Minimum Gram eigenvalue | \(-3.20\times10^{-14}\) | \(>-10^{-10}\) |
+| Minimum spin-averaged tensor eigenvalue | \(5.75\times10^{-4}\) | \(>-10^{-10}\) |
+| Maximum q-frame orthogonality/determinant residual | \(3.16\times10^{-16}\) | \(<10^{-12}\) |
+
+The tiny negative minimum Gram eigenvalue is at roundoff level and remains
+inside the explicit PSD tolerance. The largest Dirac-trace residual occurs
+in the near-pole transverse-spatial subtraction; the individual charge,
+longitudinal, and full point-nucleus contractions agree more closely.
+
+The archived artifact is
+\`full-three-body-current-nucleon-match-and-phase-space-tensor\`
+(artifact ID 14392805297). It contains the static one-nucleon matching
+diagnostic and the full complex q-aligned \(L_{\mu\nu}^{(3)}\) and
+\(G_{\mu a,\nu b}^{(3)}\) tensors, including diagram-separated and
+interference pieces.
 
 **Scope boundary:** this is the integrated DM-side dynamical tensor needed
 before AFH matching. It is not yet
 \(\mathcal R_{\alpha\beta}^{(3)}\), because the nucleon Dirac--Pauli
 current has not yet been projected onto the complete AFH one-body
-multipole basis and contracted with the isotope OBDMEs. In particular,
-the new tensor does not by itself supply (\Delta), (\Sigma'),
-(\Sigma''), or their physical three-body response coefficients.
+multipole basis and contracted with isotope OBDMEs. The dedicated
+quadrature-order convergence scan for every integrated Gram component
+also remains pending. No AFH \(\Delta\), \(\Sigma'\), \(\Sigma''\),
+\(\widetilde{\Phi}'\) three-body coefficient, halo fold, detector response,
+or likelihood is claimed.
 
 ## Reproduction
 
