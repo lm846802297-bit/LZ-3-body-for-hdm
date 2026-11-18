@@ -16,7 +16,7 @@
 - [Scientific result status table](supplements/three_body_scientific_status_2026-11-13.md): current 2026-11-18 status update, separating verified, partially verified, missing-input, and not-yet-completed tasks.
 - [Scientific content audit — Phase 1](supplements/scientific_content_audit_2026-11-16.md): AFH-7 full-grid status, old/new kernel comparison, GCN/JJ55 quadrature mismatch, and remaining validation boundaries.
 - [Anand / AFH coherent-response audit](../three_body_calculation_and_validation/ANAND_WM_RESPONSE_AUDIT.md): source-level AFH isoscalar convention and the physical equal-\(p,n\) response mapping.
-- [三体 VV 核子流与 AFH 核响应——完整物理讨论记录](../afh_isotope_response_equivalence/docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md): UV flavor current、\(F_1/F_2\) 核子匹配、三体 \(\mathcal T_3^\mu\)、AFH \(M/\Phi''/\Delta/\Sigma'\) 响应、Xe-131 深极小值及后续数值验收边界。
+- [三体 VV 核子流与 AFH 核响应——唯一主讨论档案](../afh_isotope_response_equivalence/docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md): 保留原始讨论与 A–M 校订，并集中维护 §§27–35 的逐步推导、§§36–37 的 AFH 全响应数据库框架、§§38–44 的完整三体反冲率/响应矩阵及数值验收规范。
 
 ## Earlier project notes
 
