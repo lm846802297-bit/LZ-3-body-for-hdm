@@ -485,7 +485,7 @@ def main() -> None:
     parser.add_argument(
         "--form-factor",
         choices=("pointlike", "bishara_linear", "isoscalar_zexp"),
-        default="isoscalar_zexp",
+        required=True,
     )
     parser.add_argument(
         "--width-scheme",
