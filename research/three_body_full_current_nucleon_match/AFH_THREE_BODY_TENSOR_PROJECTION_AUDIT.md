@@ -404,3 +404,27 @@ checks and provenance. This remains a fixed-speed Xe-131 Coulomb-sector
 ratio; it is not an absolute \(d\sigma/dE_R\), a halo average, a
 natural-xenon spectrum, or the complete eight-response nuclear-current
 contraction.
+
+
+### P1 follow-up: free on-shell energy-transfer-matched slice
+
+The static \(q_N^0=0\) reference is now compared with a separate free
+on-shell kinematic slice in which \(E_N'-E_N=E_R\), so that
+\(q_N^\mu=q_A^\mu\). For \(p_i=\ell-q_A/2\) and
+\(p_f=\ell+q_A/2\), the longitudinal internal momentum is fixed
+analytically by
+\[
+\ell_\parallel=
+\frac{E_R\sqrt{m_N^2+\ell_\perp^2+(Q_A^2-E_R^2)/4}}
+{\sqrt{Q_A^2-E_R^2}}.
+\]
+At the Xe-131 200-keV point, \(\ell_\parallel=0.8562\)--0.8752 MeV for
+\(\ell_\perp=0\)--200 MeV; at 267 keV it is 0.9916--1.0134 MeV.
+The exact free Dirac--Pauli current is checked against both \(q_N^\mu\)
+and \(q_A^\mu\).
+
+This establishes that the static \(q_N^0=0\) mismatch is a consequence of
+that particular impulse kinematics, not a failure of the free Dirac--Pauli
+vertex. It does **not** identify the physical bound-nucleon energy sharing,
+off-shell prescription, or interaction currents. The many-body continuity
+equation and the consistency of the one-body AFH truncation remain open.
