@@ -4808,6 +4808,7 @@ q_A=\sqrt{2m_AE_R+E_R^2},
 | 545 | 0.00271219 | 0.00248349 | 0.00292685 | 1.09209 | 0.92666 |
 | 800 | 0.0501639 | 0.0570730 | 0.0653896 | 0.87894 | 0.76715 |
 
+**证据边界：** 这里四 benchmark 所用的 AFH 2,401 点 default-density \(M\)-response 表是 AFH v6.0 源定义的 Python source-derived 表，使用 exact spatial \(q_A\) 与 PCHIP 插值；对应四 benchmark 归档明确将 native Mathematica four-benchmark execution 标记为 pending。因此本表是 AFH/GCN/JJ55 的核响应模型对照，不是四组 benchmark 的 native Wolfram 重执行。它与 P.1 的 Xe-131 native \(M,\Phi'',M\Phi''\) 响应导出、P.4 的 native-\(M\) 响应接口 cross-code 检查属于不同证据层。
 270 keV 附近 AFH/JJ55 比值很大，主要因为 JJ55 的该点响应接近深极小值；这不是说总三体截面或事件率增强 27.9 倍。要得到截面比，还必须结合相同运动学条件下的公共 \(I_6\)、传播子与相应前因子；要得到完整三体 AFH 结果，还要加入当前尚未完成的核流响应矩阵收缩。
 
 #### P.4 四 benchmark 的 AFH \(M\)-only 响应接口交叉代码检查
