@@ -864,3 +864,42 @@ comparison suite:
 All new artifacts must report the width scheme, `g2`, pole width, recoil
 kinematics, AFH source hashes, and convergence checks. Historical
 zero/running-width outputs are not overwritten or relabelled as formal data.
+
+
+### Pole-only rerun — completed artifacts (PR #65)
+
+The PR-triggered full-current workflow
+[44336338072](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44336338072)
+completed successfully. Its artifact is
+[full-three-body-current-nucleon-match-and-phase-space-tensor, artifact 14441427374](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44336338072).
+
+- The phase-space-integrated tensor contains four benchmarks and pole width only.
+- Maximum independent Dirac-trace residual: 1.58784e-9 (acceptance: 2e-9).
+- Minimum Gram eigenvalue: -3.46081e-14 (PSD tolerance: -1e-10).
+- AFH Eq. (107) coefficient extraction: maximum spatial Cauchy-identity residual 1.71779e-16; direct-versus-continuity residual 1.50736e-16.
+- The AFH contraction contains 28 rows (four benchmarks x seven isotopes); all 28 total kernels are positive.
+- Maximum spatial/charge ratio in this provisional contraction: 7.03050e-9.
+- Rank-resolved spatial-response reconstruction residual: 1.11022e-16.
+
+The component-wise pole-only convergence gate also passed in the same workflow.
+Its artifact is
+[three-body-phase-space-component-convergence, artifact 14440069866](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44336338072).
+The worst final medium-to-high Frobenius difference is 1.45488e-8; the worst active-component relative difference is 1.53745e-5.
+
+The fixed-speed charge-sector ratio workflow
+[44336338146](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44336338146)
+also passed. Its artifact is
+[xe131-fixed-speed-charge-sector-dsigma-ratio, artifact 14441996611](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44336338146).
+The pole-only ratios are 0.77830934 at 200 keV (Delta m=450 keV) and
+0.64921591 at 267 keV (Delta m=362 keV). These normalized ratios are
+unchanged by the common pole-width phase-space factor, which cancels between
+numerator and denominator.
+
+**Status qualification:** the seven-isotope AFH-8 charge archive is marked
+PROVISIONAL_PYTHON, and the spatial P3-B archive is marked
+PROVISIONAL_SOURCE_TRANSLATED_AFH_SPATIAL_RESPONSES. The 28-row contraction
+is therefore PROVISIONAL_AFH_CONTRACTION_PASS, not native-Wolfram-validated
+or a final detector prediction. The separate one-point
+`full_current_nucleon_match.json` retains zero/pole/running width controls
+as a current-matching sensitivity diagnostic; those controls are not used
+in the formal pole-only phase-space tensor or AFH contraction.
