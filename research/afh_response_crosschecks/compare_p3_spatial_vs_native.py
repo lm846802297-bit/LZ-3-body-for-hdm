@@ -72,9 +72,27 @@ def compare(joined, p3_col, native_col, *, scale_native=False):
             "max_absolute_difference": max_abs, "max_relative_difference": max_rel,
             "worst_point": worst, "rtol": 5e-7, "atol": 2e-12}
 
-def run(p3_csv: Path, p3_metadata: Path, native_dir: Path, native_metadata: Path):
-    p3meta = json.loads(p3_metadata.read_text(encoding="utf-8"))
+def run(p3_csv: Path, p3_metadata: Path, native_dir: Path, native_metadata: Path, native_manifest: Path):
+    p3meta = json.loads(p3_metadata.read_text(encoding="utf-8-sig"))
     nmeta = parse_kv(native_metadata)
+    manifest = json.loads(native_manifest.read_text(encoding="utf-8-sig"))
+    expected_commit = "dcefbeb7ad705b6c03f2b4689200eb1d9252e67b"
+    if manifest.get("repository") != "lm846802297-bit/LZ-3-body-for-hdm":
+        raise ValueError("native manifest repository mismatch")
+    if manifest.get("source_commit") != expected_commit:
+        raise ValueError(f"native source commit mismatch: {manifest.get('source_commit')}")
+    if manifest.get("native_package") != "AFH DMFormFactor v6.0":
+        raise ValueError("native package identity mismatch")
+    if manifest.get("isotopes") != list(ISOTOPES):
+        raise ValueError("native manifest isotope set mismatch")
+    if manifest.get("q_grid") != {"points": 2401, "q_min_GeV": 0.0, "q_max_GeV": 0.6, "step_GeV": 0.00025}:
+        raise ValueError("native manifest q grid mismatch")
+    indices = manifest.get("response_indices", {})
+    if (indices.get("SigmaPrime"), indices.get("Delta"), indices.get("SigmaPrimeDelta")) != (3, 6, 8):
+        raise ValueError("native manifest AFH response-index mapping mismatch")
+    full_gate = manifest.get("comparison") or {}
+    if full_gate.get("status") != "PASS" or full_gate.get("native_afh_validated") is not True or full_gate.get("rows_compared") != 16807:
+        raise ValueError("full native eight-response AFH gate has not passed")
     source_match = p3meta["source_file_sha256"] == nmeta.get("AFH_source_sha256")
     if not source_match:
         raise ValueError("AFH source SHA-256 mismatch between P3 metadata and native export")
@@ -140,7 +158,7 @@ def run(p3_csv: Path, p3_metadata: Path, native_dir: Path, native_metadata: Path
         "native_imaginary_tolerance": 2e-12,
         "P3_B_csv_sha256": sha256(p3_csv),
         "P3_B_metadata_sha256": sha256(p3_metadata),
-        "native_metadata": nmeta,
+        "native_metadata": nmeta,\n        "native_source_commit": manifest.get("source_commit"),\n        "native_control_run_id": manifest.get("control_run_id"),\n        "native_control_run_attempt": manifest.get("control_run_attempt"),
         "raw_package_response_comparisons": raw,
         "physical_equal_pn_comparisons": physical,
         "acceptance_note": "A PASS validates these three P3-B spatial channels against the pinned AFH v6.0 Wolfram source. It does not by itself validate the full three-body tensor contraction or event rate."
@@ -152,9 +170,10 @@ def main():
     p.add_argument("--p3-metadata", type=Path, required=True)
     p.add_argument("--native-dir", type=Path, required=True)
     p.add_argument("--native-metadata", type=Path, required=True)
+    p.add_argument("--native-manifest", type=Path, required=True)
     p.add_argument("--out-json", type=Path, required=True)
     a = p.parse_args()
-    result = run(a.p3_csv, a.p3_metadata, a.native_dir, a.native_metadata)
+    result = run(a.p3_csv, a.p3_metadata, a.native_dir, a.native_metadata, a.native_manifest)
     a.out_json.parent.mkdir(parents=True, exist_ok=True)
     a.out_json.write_text(json.dumps(result, indent=2)+"\n", encoding="utf-8")
     print(json.dumps(result, indent=2))
