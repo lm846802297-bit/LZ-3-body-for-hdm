@@ -21,13 +21,13 @@ import numpy as np
 from scipy.interpolate import PchipInterpolator
 
 import afh_spatial_obdme_responses as spatial
-from nucleon_vector_form_factors import isoscalar_zexp
+from nucleon_vector_form_factors import charge_coefficients, isoscalar_zexp
 from three_body_multipole_leptonic_weights import (
     DEFAULT_MN_GEV,
     complex_from_pairs,
     extract_afh_vector_coefficients,
 )
-from three_body_phase_space_tensor import integrate_spin_resolved_tensor
+from three_body_phase_space_tensor import eq6, integrate_spin_resolved_tensor
 from xe131_fixed_speed_charge_dsigma import (
     MA_XE131_GEV,
     load_native_xe131_responses,
@@ -285,7 +285,7 @@ def integrate_point(
 ) -> dict:
     ER_GeV = ER_keV * 1.0e-6
     delta_m = float(case["delta_m_GeV"])
-    wmin, wmax = integrate_spin_resolved_tensor.__globals__["eq6"].limits(
+    wmin, wmax = eq6.limits(
         MCHI_GEV, MS_GEV, MA_XE131_GEV, ER_GeV, SPEED_KM_S
     )
     if wmax <= wmin:
@@ -328,6 +328,9 @@ def integrate_point(
     F1, F2 = isoscalar_zexp(qA * qA)
     contracted = contract_six_channels(L, qA, ER_GeV, responses, F1, F2)
     coeff = contracted["coefficients"]
+    cM, cPhiPP = charge_coefficients(
+        qA, F1=F1, F2=F2, mN_GeV=DEFAULT_MN_GEV
+    )
     return {
         "benchmark": case["name"],
         "delta_m_keV": delta_m * 1.0e6,
@@ -347,9 +350,9 @@ def integrate_point(
         "L_T": float(np.real(L[1, 1] + L[2, 2])),
         "F1V_finite_t": F1,
         "F2V_finite_t": F2,
-        "cM": float(coeff["c_M"]),
-        "cPhiPP": float(coeff["c_PhiPP"]),
-        "eta_cPhi_over_cM": float(coeff["c_PhiPP"] / coeff["c_M"]),
+        "cM": float(cM),
+        "cPhiPP": float(cPhiPP),
+        "eta_cPhi_over_cM": float(cPhiPP / cM),
         **{f"W_{name}": float(responses[name]) for name in RESPONSE_NAMES},
         **{f"pchip_linear_rel_{name}": float(interpolation[name]) for name in RESPONSE_NAMES},
         **{f"kernel_charge_{name}": float(value) for name, value in contracted["charge_terms"].items()},
@@ -498,11 +501,3 @@ def main() -> None:
         "accepted_recoil_rows": result["accepted_recoil_rows"],
         "all_rows": result["all_rows_including_closed_or_on_shell"],
         "max_abs_spatial_over_charge_candidate": result["maximum_absolute_spatial_over_charge_candidate"],
-        "max_pchip_linear_difference": result["maximum_PCHIP_vs_linear_response_difference"],
-        "anchor_checks": result["anchor_checks_against_previous_finite_tN_charge_only"],
-        "output": str(args.outdir),
-    }, indent=2))
-
-
-if __name__ == "__main__":
-    main()
