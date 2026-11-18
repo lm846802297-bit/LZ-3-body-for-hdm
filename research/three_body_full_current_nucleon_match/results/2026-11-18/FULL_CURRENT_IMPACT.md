@@ -1,131 +1,186 @@
 # Full-current impact on the old W_M-only baseline
 
-**Status:** fixed-speed three-body benchmark completed; natural-xenon halo-fold
-with finite-t form factors is still a diagnostic, not the final spectrum.
+**Status:** fixed-speed three-body current contraction completed; the final
+natural-xenon halo-fold with a validated finite-(t_N) universal quark
+current is still pending.
 
-## 1. What is now numerically established
+## 1. Three-body current validation
 
-Workflow run **44243258167** completed the full-current unit/Dirac-trace
+Workflow run **44243258167** completed the full-current Dirac/Pauli contraction
 job successfully. The independent phase-space component convergence job
-reported PASS at the selected 9 benchmarks:
+passed at the selected nine stress benchmarks:
+
 - final Gram Frobenius difference: (1.50\times10^{-8});
 - final Lorentz-tensor Frobenius difference: (1.50\times10^{-8});
 - active-component difference: (1.57\times10^{-5});
 - point-nucleus contraction difference: (1.51\times10^{-8}).
 
-The full-current artifact contains 84 isotope/width benchmark contractions
+The full-current artifact contains 84 isotope/width contractions
 (7 isotopes × 12 width benchmarks), all with positive total kernels.
 
-For the fixed-speed (E_R=200) keV, (v=776) km/s benchmarks, the
-(M+\Phi'') charge correction relative to the pointlike (M) term is
-about (-0.384\%). For the (E_R=267) keV near-pole benchmarks it is about
-(-0.606\%). These values use the zero-momentum (F_1^V=3),
-(F_2^V=-0.552) diagnostic.
-
-The spatial-current contribution is much smaller:
+The maximum spatial-current fraction in those contractions is
 [
+\boxed{
 \max |R_{\rm spatial}/R_{\rm charge}|
 =7.10\times10^{-9}
+}
 ]
-over the 84 contracted rows. The largest values occur in the near-pole
-(E_R=267) keV, (g_2=1) benchmark. At (E_R=200) keV the corresponding
-maximum is (6.95\times10^{-12}).
+and occurs in the near-pole (E_R=267) keV, (g_2=1) benchmark.
+At (E_R=200) keV the maximum is (6.95\times10^{-12}).
 
-Thus, **within the pointlike nucleon-current benchmark, adding
-(\Delta,\Sigma',\Sigma'') does not measurably change the rate.**
+Therefore, **for the tested pointlike nucleon-current benchmark, the
+(Delta,Sigma',Sigma'') sector is numerically negligible.**
 
-## 2. The larger correction is finite-(t_N) nucleon structure
+## 2. Do not mix the provisional seven-isotope result with native Xe-131
 
-The above statement does **not** mean that the old (W_M)-only spectrum is
-already complete. The old construction effectively uses
-(F_1^V(0)=3) as a pointlike nucleon charge.
+The fixed-speed seven-isotope contraction uses the Python AFH translation.
+Its pointlike (M+Phi'') charge correction is approximately
 
-Using the central diagnostic finite-(t_N) form-factor model implemented in
-`nucleon_vector_form_factors.py` gives a substantially different coherent
-charge normalization.
+- (-0.384%) at (E_R=200) keV;
+- (-0.606%) at (E_R=267) keV.
 
-For Xe-131 at (E_R=267) keV, with the AME2020/CODATA-2022 bare nuclear mass
-(m_A=121.9099224472) GeV,
+Those are regression outputs, not final natural-xenon predictions.
+
+For Xe-131, the AFH (M,Phi'',MPhi'') response grid has an independent
+native Mathematica pointwise validation over all 2401 (q)-nodes, with
+maximum scaled differences below (3.8\times10^{-9}),
+(9.1\times10^{-10}), and (3.6\times10^{-11}) for the three responses.
+
+The native grid varies rapidly near the (W_M) cancellation, so the exact
+(q_A) corresponding to each recoil energy must be used.
+
+## 3. Native Xe-131 charge-sector result
+
+Using the AME2020/CODATA-2022 bare Xe-131 nuclear mass
+(m_A=121.9099224472) GeV:
+
+### (E_R=200) keV
+
 [
-q_A=0.255146957\ {m GeV},\qquad Q_A^2=0.0651000\ {m GeV}^2.
+q_A=0.2208257435 {m GeV},qquad
+Q_A^2=0.0487640090 {m GeV}^2.
 ]
-The AFH 2401-node native-validated grid gives, after linear interpolation
-between its exact 0.25-MeV nodes,
+
+Native AFH interpolation gives
 [
-W_{\Phi''}/W_M=19.636056,\qquad
-W_{M\Phi''}/W_M=-4.239298.
+rac{W_{\Phi''}}{W_M}=0.0369557,qquad
+rac{W_{M\Phi''}}{W_M}=-0.1912071.
+]
+
+The central finite-(t_N) form-factor diagnostic gives
+[
+F_1^V=2.66316,qquad F_2^V=-0.46805,
+]
+[
+c_M=2.65122,qquad c_{\Phi''}=0.023883,qquad
+eta=0.0090083.
+]
+
+Hence
+[
+Q_{\Phi''}-1=-0.344%
+]
+relative to the finite-(t_N) (M)-only charge term, while the total charge
+sector relative to the old pointlike (F_1^V(0)^2W_M) baseline is
+[
+\boxed{-21.48\%}.
+]
+
+For the pointlike (F_1^V=3,F_2^V=-0.552) benchmark, the explicit
+(Phi'') correction alone is only
+[
+\boxed{-0.335\%}.
+]
+
+### (E_R=267) keV: (W_M) cancellation region
+
+[
+q_A=0.2551469574 {m GeV},qquad
+Q_A^2=0.0650999699 {m GeV}^2.
+]
+
+Native AFH interpolation gives
+[
+rac{W_{\Phi''}}{W_M}=19.6361,qquad
+rac{W_{M\Phi''}}{W_M}=-4.23930.
 ]
 
 The central finite-(t_N) diagnostic gives
 [
-F_1^V=2.56389,\qquad
-F_2^V=-0.44977,
+F_1^V=2.56389,qquad F_2^V=-0.44977,
 ]
 [
-c_M=2.54852,\qquad
-c_{\Phi''}=0.03073,\qquad
-\eta=0.012056.
+c_M=2.54852,qquad c_{\Phi''}=0.030726,qquad
+eta=0.0120564.
 ]
-Therefore
+
+Now
 [
-Q_{\Phi''}=1+2\eta\frac{W_{M\Phi''}}{W_M}
-+\eta^2\frac{W_{\Phi''}}{W_M}
-=0.900633,
+Q_{\Phi''}-1=-9.94\%
 ]
-so (\Phi'') changes the **finite-(t_N) (M)-only charge term** by
+relative to the finite-(t_N) (M)-only charge term.
+
+Even with the pointlike nucleon current, the explicit (Phi'') term is
+already
 [
-\boxed{-9.94\%}.
+\boxed{-9.68\%}
 ]
+relative to pointlike (M)-only.
 
-But relative to the old pointlike (F_1^V(0)^2W_M) baseline, the same
-central diagnostic changes the coherent charge sector by
+Including the central finite-(t_N) charge normalization, the total charge
+sector becomes
 [
-\boxed{-35.00\%}.
+\boxed{
+\frac{R_{\rm charge}^{\rm finite-t_N}}
+{R_{M,\rm pointlike}}-1
+=-34.24\%.
+}
 ]
 
-This is the important hierarchy:
+This is a **Xe-131 result at one exact recoil point**, not a natural-xenon
+spectrum.
+
+## 4. Physical hierarchy
+
+The calculation now establishes three separate effects:
+
+| Effect | Size in tested calculation | Status |
+|---|---:|---|
+| Spatial (Delta,Sigma',Sigma'') | (<7.1\times10^{-9}) of charge | Numerically negligible in fixed-speed benchmarks |
+| Pointlike (Phi'') | (-0.335%) at 200 keV; (-9.68%) at 267 keV for native Xe-131 | Strongly recoil-dependent near (W_M) minima |
+| Finite-(t_N) coherent charge | (-21.48%) at 200 keV; (-34.24%) at 267 keV in the central Xe-131 diagnostic | Potentially dominant correction |
+
+Thus the main correction to the old (W_M)-only construction is **not**
+the spatial nuclear current. The important corrections are the finite-(t_N)
+coherent charge and, near a deep (W_M) cancellation, the (Phi'') charge
+response.
+
+## 5. What is still required before quoting the final natural-xenon spectrum
+
+The following must still be kept separate:
+
+1. **Native AFH response:** Xe-131 (M,Phi'',MPhi'') is fully pointwise
+   validated; the other naturally abundant isotopes still need the same
+   native validation if their responses are to support a final spectrum.
+2. **Finite-(t_N) form factors:** the present central diagnostic combines
+   Bishara (F_1) slopes with the Borah--Hill--Lee--Tomalak isoscalar
+   electromagnetic z expansion and holds (F_2^s(Q^2)) at its zero-momentum
+   value. A single validated universal (u+d+s) finite-(Q^2) input is still
+   needed.
+3. **Halo folding:** the final (dR/dE_R) must integrate the exact
+   three-body phase-space tensor over the halo speed distribution for every
+   isotope.
+4. **No extrapolation from the deep minimum:** the native Xe-131
+   (-34.24%) point cannot be used as a global spectrum percentage.
+
+Therefore the final natural-xenon statement remains:
+
 [
-|\delta_{\rm spatial}|\ll
-|\delta_{\Phi''}|\ll
-|\delta_{F_1(t_N)}|
+oxed{
+\text{spatial-current correction is negligible, but the complete}
+\quad
+W_M\to\text{full natural-xenon spectrum}
+\quad
+\text{is not yet numerically closed.}
+}
 ]
-for the present benchmark.
-
-## 3. What this means for the natural-xenon spectrum
-
-We can now separate the calculation into three layers:
-
-| Layer | Physics | Current numerical status |
-|---|---|---|
-| A | pointlike (W_M)-only | Reproducible baseline |
-| B | pointlike (M+\Phi'') | Completed at fixed-speed benchmarks; sub-percent correction at 200--267 keV |
-| C | spatial (\Delta,\Sigma',\Sigma'') | Completed at fixed-speed benchmarks; (<7.1\times10^{-9}) of charge |
-| D | finite-(t_N) (F_1,F_2) charge | Central diagnostic gives roughly 22% suppression at 200 keV and 28% suppression near 267 keV |
-| E | full natural-xenon halo-fold with validated finite-(t_N) form factors | **Pending** |
-
-The dominant unresolved change to the original (W_M)-only spectrum is
-therefore **not** the spatial spin/orbital response. It is the finite-(t_N)
-nucleon form factor. Near a deep (W_M) cancellation, the native Xe-131
-(Phi'') term itself can also become an O(10%) charge-sector correction,
-so the provisional O(1%) seven-isotope number must not be extrapolated to
-natural xenon.
-
-## 4. Important boundary
-
-The finite-(t_N) numbers above are not yet the final prediction. Bishara
-et al. provide the flavor-separated (F_1) slopes and zero-momentum (F_2)
-inputs, while the central diagnostic combines these with the isoscalar
-electromagnetic z expansion of Borah et al. The strange (F_2(Q^2)) input is
-held at its zero-momentum value. A final spectrum therefore still requires
-a single validated finite-(Q^2) form-factor prescription for the universal
-(u+d+s) current.
-
-Likewise, the seven-isotope AFH spatial-response database used in the fixed
-speed contraction remains the Python AFH translation; native Mathematica
-pointwise validation is currently complete for the Xe-131
-(M,\Phi'',M\Phi'') grid, not for all seven isotopes.
-
-Accordingly, **the complete natural-xenon percentage change is not yet being
-declared as a final number**. What is already established is the hierarchy
-of corrections and the negligible size of the spatial-current sector in the
-tested three-body benchmarks.
