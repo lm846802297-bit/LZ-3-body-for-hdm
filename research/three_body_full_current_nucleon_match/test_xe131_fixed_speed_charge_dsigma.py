@@ -2,6 +2,7 @@ import unittest
 
 from xe131_fixed_speed_charge_dsigma import (
     MA_XE131_GEV,
+    WIDTH_SCHEMES,
     canonical_sha256,
     exact_qA_GeV,
     charge_sector_kernels,
@@ -9,6 +10,9 @@ from xe131_fixed_speed_charge_dsigma import (
 
 
 class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
+    def test_formal_fixed_speed_run_uses_pole_width_only(self):
+        self.assertEqual(WIDTH_SCHEMES, ("pole",))
+
     def test_exact_recoil_momenta(self):
         self.assertAlmostEqual(MA_XE131_GEV, 121.90971983538435, places=12)
         self.assertAlmostEqual(exact_qA_GeV(MA_XE131_GEV, 200.0), 0.22082555996567457, places=13)
