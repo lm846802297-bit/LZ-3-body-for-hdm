@@ -38,9 +38,9 @@ def main() -> None:
     )
     parser.add_argument("--mV-GeV", type=float, default=None)
     parser.add_argument(
-        "--width-scheme", choices=("zero", "pole", "running"), default="zero"
+        "--width-scheme", choices=("zero", "pole", "running"), default="pole"
     )
-    parser.add_argument("--g2", type=float, default=None)
+    parser.add_argument("--g2", type=float, default=1.0)
     parser.add_argument("--nw", type=int, default=16)
     parser.add_argument("--nz", type=int, default=16)
     parser.add_argument("--nphi", type=int, default=8)
@@ -115,9 +115,9 @@ def main() -> None:
         "width_scheme": args.width_scheme,
         "g2": args.g2,
         "width_caveat": (
-            "Pole/running widths are conditional on the Dirac pure-scalar "
-            "two-body width helper; the manuscript does not state the "
-            "Dirac/Majorana realization or a separate g2 benchmark."
+            "The formal pole-width result is conditional on Dirac chi2, a real "
+            "scalar, a pure-scalar off-diagonal Yukawa coupling, and no other "
+            "open chi2 decay channels. Running width is diagnostic only."
         ),
         "response_y_convention": "y=(b_A*q/2)^2 with q the exact spatial momentum transfer",
         "response_momentum": "q_response=q_kinematics=sqrt(2*m_A*E_R+E_R^2)",
