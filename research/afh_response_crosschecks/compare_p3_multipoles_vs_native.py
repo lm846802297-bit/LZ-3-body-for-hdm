@@ -11,7 +11,7 @@ from pathlib import Path
 ISOTOPES = (129, 131)
 RANKS = {129: (1,), 131: (1, 2, 3)}
 NQ = 2401
-EXPECTED_NATIVE_SOURCE_COMMIT = "e1e9c85530a7d609561b34e2c2df5ab36e5c5b89"
+EXPECTED_NATIVE_SOURCE_COMMIT = "aa493b2b76727da2fd51609fe87c647910f7e456"
 EXPECTED_AFH_SOURCE_SHA256 = "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372"
 RTOL, ATOL, IMAG_ATOL = 5e-7, 2e-12, 2e-12
 
@@ -63,6 +63,8 @@ def compare_rows(p3_rows, native_rows, p3_metadata, native_metadata, native_mani
         raise ValueError("native multipole isotope set mismatch")
     if native_metadata.get("q_grid") != "2401 uniform nodes from 0 to 0.6 GeV, step 0.00025 GeV":
         raise ValueError("native multipole q-grid metadata mismatch")
+    if native_metadata.get("rank_map") != "129=1;131=1,2,3":
+        raise ValueError("native multipole rank map mismatch")
     if native_metadata.get("normalization") != "raw AFH package amplitudes; no equal-p/n factor-four conversion":
         raise ValueError("native multipole normalization convention mismatch")
     if native_metadata.get("imaginary_parts") != "exported separately for both amplitude channels":
