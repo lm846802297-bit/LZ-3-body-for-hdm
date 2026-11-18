@@ -387,6 +387,46 @@ def isotope_spatial_response(
     }
 
 
+def multipole_records_for_response(
+    A: int, isotope: str, J_A: float, result: dict
+) -> list[dict]:
+    """Expand the total spatial responses into signed rank-by-rank records."""
+    delta = result["rank_amplitudes_Delta"]
+    sigma = result["rank_amplitudes_SigmaPrime"]
+    ranks = sorted({int(k) for k in delta} | {int(k) for k in sigma})
+    response_prefactor = 4.0 * math.pi / (2.0 * J_A + 1.0)
+    physical_factor = 4.0 * float(result["common_matrix_normalization"])
+    records = []
+    for J in ranks:
+        key = str(J)
+        amp_delta = float(delta.get(key, 0.0))
+        amp_sigma = float(sigma.get(key, 0.0))
+        w_delta = 0.25 * amp_delta * amp_delta
+        w_sigma = 0.25 * amp_sigma * amp_sigma
+        w_cross = 0.25 * amp_sigma * amp_delta
+        conversion = physical_factor * response_prefactor
+        records.append({
+            "A": A,
+            "isotope": isotope,
+            "J_A": J_A,
+            "q_GeV": float(result["q_GeV"]),
+            "y": float(result["y"]),
+            "multipole_J": J,
+            "M_Delta_J": amp_delta,
+            "M_SigmaPrime_J": amp_sigma,
+            "W_Delta_J_AFH_package": w_delta,
+            "W_SigmaPrime_J_AFH_package": w_sigma,
+            "W_SigmaPrimeDelta_J_AFH_package": w_cross,
+            "R_Delta_J_equal_pn": conversion * w_delta,
+            "R_SigmaPrime_J_equal_pn": conversion * w_sigma,
+            "R_SigmaPrimeDelta_J_equal_pn": conversion * w_cross,
+            "common_matrix_normalization": float(
+                result["common_matrix_normalization"]
+            ),
+        })
+    return records
+
+
 def generate_grid(
     matrix_dir: Path = MATRIX_ROOT,
     metadata_path: Path = META_PATH,
@@ -404,7 +444,17 @@ def generate_grid(
         raise ValueError("expected canonical 2401-point q grid from 0 to 0.6 GeV")
 
     rows_out = []
+    multipole_rows = []
     isotope_meta = []
+    max_multipole_reconstruction_abs = {
+        "W_Delta": 0.0,
+        "W_SigmaPrime": 0.0,
+        "W_SigmaPrimeDelta": 0.0,
+        "R_Delta": 0.0,
+        "R_SigmaPrime": 0.0,
+        "R_SigmaPrimeDelta": 0.0,
+    }
+    multipole_ranks_by_isotope = {}
     for isotope in metadata["isotopes"]:
         A = int(isotope["A"])
         matrix_path = matrix_dir / f"afh_default_xe{A}_density_matrix.csv"
@@ -413,6 +463,11 @@ def generate_grid(
         T_iso = float(isotope["T_iso"])
         b = float(isotope["b_A_GeV_inverse"])
         response_prefactor = 4.0 * math.pi / (2.0 * J_A + 1.0)
+        multipole_ranks = sorted({
+            int(row["rank"]) for row in rows
+            if row["isospin"] == 0 and row["rank"] >= 1
+        })
+        multipole_ranks_by_isotope[str(A)] = multipole_ranks
         w00, _ = package_w00(0.0, rows, b, T_iso)
         package_m_zero = response_prefactor * w00
         if package_m_zero <= 0.0:
@@ -438,6 +493,41 @@ def generate_grid(
                 "common_matrix_normalization": result["common_matrix_normalization"],
                 "Cauchy_excess": result["Cauchy_excess"],
             })
+            rank_records = multipole_records_for_response(
+                A, f"Xe-{A}", J_A, result
+            )
+            multipole_rows.extend(rank_records)
+            # Reconstruct all three raw and physical responses from the
+            # retained rank amplitudes; this is an archive-integrity check.
+            reconstructed = {
+                "W_Delta": math.fsum(x["W_Delta_J_AFH_package"] for x in rank_records),
+                "W_SigmaPrime": math.fsum(x["W_SigmaPrime_J_AFH_package"] for x in rank_records),
+                "W_SigmaPrimeDelta": math.fsum(x["W_SigmaPrimeDelta_J_AFH_package"] for x in rank_records),
+                "R_Delta": math.fsum(x["R_Delta_J_equal_pn"] for x in rank_records),
+                "R_SigmaPrime": math.fsum(x["R_SigmaPrime_J_equal_pn"] for x in rank_records),
+                "R_SigmaPrimeDelta": math.fsum(x["R_SigmaPrimeDelta_J_equal_pn"] for x in rank_records),
+            }
+            expected_responses = {
+                "W_Delta": result["W_Delta_AFH_package"],
+                "W_SigmaPrime": result["W_SigmaPrime_AFH_package"],
+                "W_SigmaPrimeDelta": result["W_SigmaPrimeDelta_AFH_package"],
+                "R_Delta": result["R_Delta_equal_pn"],
+                "R_SigmaPrime": result["R_SigmaPrime_equal_pn"],
+                "R_SigmaPrimeDelta": result["R_SigmaPrimeDelta_equal_pn"],
+            }
+            for name, reconstructed_value in reconstructed.items():
+                residual = abs(reconstructed_value - expected_responses[name])
+                max_multipole_reconstruction_abs[name] = max(
+                    max_multipole_reconstruction_abs[name], residual
+                )
+                tolerance = 2.0e-14 + 2.0e-12 * max(
+                    abs(reconstructed_value), abs(expected_responses[name])
+                )
+                if residual > tolerance:
+                    raise ArithmeticError(
+                        f"rank-summed {name} does not reconstruct total response "
+                        f"for Xe-{A} q={float(q):.8g}: residual={residual:.6e}"
+                    )
         isotope_meta.append({
             "A": A,
             "J_A": J_A,
@@ -471,8 +561,32 @@ def generate_grid(
             writer = csv.DictWriter(stream, fieldnames=list(rows_out[0]))
             writer.writeheader()
             writer.writerows(rows_out)
+        multipole_path = out_dir / "afh_spatial_obdme_multipoles_7isotope_2401.csv"
+        multipole_fields = [
+            "A", "isotope", "J_A", "q_GeV", "y", "multipole_J",
+            "M_Delta_J", "M_SigmaPrime_J",
+            "W_Delta_J_AFH_package", "W_SigmaPrime_J_AFH_package",
+            "W_SigmaPrimeDelta_J_AFH_package",
+            "R_Delta_J_equal_pn", "R_SigmaPrime_J_equal_pn",
+            "R_SigmaPrimeDelta_J_equal_pn", "common_matrix_normalization",
+        ]
+        with multipole_path.open("w", newline="", encoding="utf-8") as stream:
+            writer = csv.DictWriter(stream, fieldnames=multipole_fields)
+            writer.writeheader()
+            writer.writerows(multipole_rows)
         result_meta["response_file"] = csv_path.name
         result_meta["response_file_sha256"] = sha256_file(csv_path)
+        result_meta["multipole_file"] = multipole_path.name
+        result_meta["multipole_file_sha256"] = sha256_file(multipole_path)
+        result_meta["multipole_rows"] = len(multipole_rows)
+        result_meta["multipole_ranks_by_isotope"] = multipole_ranks_by_isotope
+        result_meta["multipole_reconstruction_max_absolute_residual"] = (
+            max_multipole_reconstruction_abs
+        )
+        result_meta["multipole_reconstruction_tolerance"] = (
+            "2e-14 + 2e-12 * max(abs(rank_sum), abs(total_response))"
+        )
+        result_meta["rankwise_amplitudes_and_signed_interference_saved"] = True
         (out_dir / "metadata.json").write_text(
             json.dumps(result_meta, indent=2) + "\n", encoding="utf-8"
         )
