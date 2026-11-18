@@ -217,6 +217,174 @@ def nonrel_state_normalization(
     return 1.0 / (2.0 * math.sqrt(e_i * e_f))
 
 
+def leading_nr_nucleon_current_matrices(
+    q_vec: np.ndarray,
+    l_vec: np.ndarray,
+    f1: float = 1.0,
+    f2: float = 0.0,
+    m_n: float = M_N_GEV,
+) -> np.ndarray:
+    """Leading Pauli-reduced Dirac--Pauli current in NR state normalization.
+
+    With q_N = p_N' - p_N and K_N = (p_N' + p_N)/2 = l_vec,
+    the retained terms are
+      J^0 = F1 + (F1+2F2) t_N/(8 m_N^2)
+            + i (F1+2F2) sigma.(q_N x K_N)/(4 m_N^2),
+      J  = F1 K_N/m_N + i (F1+F2) (sigma x q_N)/(2 m_N).
+    The charge is kept through O(p^2/m^2); the spatial current is kept
+    through O(p/m). The omitted terms are O(p^4/m^4) in J^0 and
+    O(p^3/m^3) in J. F1,F2 are held constant over this diagnostic point.
+    """
+    q_vec = np.asarray(q_vec, dtype=float)
+    l_vec = np.asarray(l_vec, dtype=float)
+    if q_vec.shape != (3,) or l_vec.shape != (3,):
+        raise ValueError("q_vec and l_vec must be three-vectors")
+    if not np.all(np.isfinite(q_vec)) or not np.all(np.isfinite(l_vec)):
+        raise ValueError("q_vec and l_vec must be finite")
+    if not all(math.isfinite(x) for x in (f1, f2, m_n)) or m_n <= 0.0:
+        raise ValueError("form factors must be finite and m_n positive")
+
+    p_i = l_vec - 0.5 * q_vec
+    p_f = l_vec + 0.5 * q_vec
+    e_i = math.sqrt(m_n * m_n + float(np.dot(p_i, p_i)))
+    e_f = math.sqrt(m_n * m_n + float(np.dot(p_f, p_f)))
+    q0 = e_f - e_i
+    t_n = q0 * q0 - float(np.dot(q_vec, q_vec))
+
+    result = np.zeros((4, 2, 2), dtype=complex)
+    spin_orbit = sum(
+        (np.cross(q_vec, l_vec)[j] * PAULI[j + 1] for j in range(3)),
+        start=np.zeros((2, 2), dtype=complex),
+    )
+    result[0] = (
+        f1 + (f1 + 2.0 * f2) * t_n / (8.0 * m_n * m_n)
+    ) * eq6.I2 + (
+        1j * (f1 + 2.0 * f2) / (4.0 * m_n * m_n)
+    ) * spin_orbit
+
+    for i in range(3):
+        # (sigma x q)_i = sum_j (q x e_i)_j sigma_j.
+        basis_i = np.eye(3)[i]
+        sigma_cross_q = sum(
+            (
+                np.cross(q_vec, basis_i)[j] * PAULI[j + 1]
+                for j in range(3)
+            ),
+            start=np.zeros((2, 2), dtype=complex),
+        )
+        result[i + 1] = (
+            f1 * l_vec[i] / m_n * eq6.I2
+            + 1j * (f1 + f2) / (2.0 * m_n) * sigma_cross_q
+        )
+    return result
+
+
+def _relative_matrix_residual(reference: np.ndarray, candidate: np.ndarray) -> float:
+    return float(
+        np.linalg.norm(reference - candidate)
+        / max(float(np.linalg.norm(reference)), 1.0e-300)
+    )
+
+
+def analyze_one_body_nr_matching_point(
+    q_vec: np.ndarray,
+    l_vec: np.ndarray,
+    *,
+    f1: float = 1.0,
+    f2: float = -0.184,
+    m_n: float = M_N_GEV,
+) -> dict:
+    """Compare exact free on-shell Dirac--Pauli current with its NR expansion."""
+    exact_covariant, q_n4, (p_i, p_f) = nucleon_current_matrices(
+        q_vec, l_vec, f1, f2, m_n
+    )
+    normalization = nonrel_state_normalization(p_i, p_f, m_n)
+    exact = normalization * exact_covariant
+    leading = leading_nr_nucleon_current_matrices(
+        q_vec, l_vec, f1, f2, m_n
+    )
+
+    q_magnitude = float(np.linalg.norm(q_vec))
+    if q_magnitude <= 0.0:
+        raise ValueError("q_vec must be nonzero for longitudinal/transverse split")
+    qhat = np.asarray(q_vec, dtype=float) / q_magnitude
+    exact_longitudinal = sum(
+        (qhat[i] * exact[i + 1] for i in range(3)),
+        start=np.zeros((2, 2), dtype=complex),
+    )
+    leading_longitudinal = sum(
+        (qhat[i] * leading[i + 1] for i in range(3)),
+        start=np.zeros((2, 2), dtype=complex),
+    )
+    exact_transverse = np.asarray([
+        exact[i + 1] - qhat[i] * exact_longitudinal for i in range(3)
+    ])
+    leading_transverse = np.asarray([
+        leading[i + 1] - qhat[i] * leading_longitudinal for i in range(3)
+    ])
+    continuity_longitudinal = (q_n4[0] / q_magnitude) * exact[0]
+
+    return {
+        "qN0_GeV": float(q_n4[0]),
+        "qN_magnitude_GeV": q_magnitude,
+        "tN_GeV2": float(q_n4[0] ** 2 - q_magnitude ** 2),
+        "K_N_GeV": np.asarray(l_vec, dtype=float).tolist(),
+        "normalization_1_over_2sqrt_EiEf_GeV_inverse": normalization,
+        "charge_relative_residual": _relative_matrix_residual(
+            exact[0], leading[0]
+        ),
+        "spatial_relative_residual": _relative_matrix_residual(
+            exact[1:], leading[1:]
+        ),
+        "transverse_spatial_relative_residual": _relative_matrix_residual(
+            exact_transverse, leading_transverse
+        ),
+        "longitudinal_spatial_relative_residual": _relative_matrix_residual(
+            exact_longitudinal, leading_longitudinal
+        ),
+        "full_four_current_relative_residual": _relative_matrix_residual(
+            exact, leading
+        ),
+        "exact_nucleon_ward_residual": nucleon_ward_residual(q_n4, exact_covariant),
+        "exact_longitudinal_continuity_residual": _relative_matrix_residual(
+            exact_longitudinal, continuity_longitudinal
+        ),
+        "leading_longitudinal_ward_residual": _relative_matrix_residual(
+            q_n4[0] * leading[0], q_magnitude * leading_longitudinal
+        ),
+    }
+
+
+def run_one_body_nr_matching_scan() -> list[dict]:
+    """Benchmark the leading NR expansion at the two Xe-131 recoil points.
+
+    The scan uses a free on-shell nucleon with q_N^0 = E_R = q_A^0.
+    Transverse internal momenta are 0, 50, 100 and 200 MeV. This is a
+    truncation diagnostic, not a bound-nucleon momentum distribution.
+    """
+    benchmarks = (
+        ("Xe131_200keV", 0.2209306022, 0.000200),
+        ("Xe131_267keV", 0.2552681134, 0.000267),
+    )
+    rows = []
+    for name, q_magnitude, omega in benchmarks:
+        q_vec = np.asarray([q_magnitude, 0.0, 0.0])
+        for p_perp in (0.0, 0.05, 0.10, 0.20):
+            l_vec, l_parallel = energy_transfer_matched_internal_momentum(
+                q_vec, omega, p_perp
+            )
+            row = analyze_one_body_nr_matching_point(q_vec, l_vec)
+            row.update({
+                "benchmark": name,
+                "E_R_GeV": omega,
+                "p_perp_GeV": p_perp,
+                "l_parallel_GeV": l_parallel,
+                "qN0_minus_qA0_GeV": row["qN0_GeV"] - omega,
+            })
+            rows.append(row)
+    return rows
+
+
 def spin_orbit_odd_coefficient(
     dm_current: np.ndarray,
     q_vec: np.ndarray,
@@ -574,12 +742,14 @@ def run_diagnostic() -> dict:
         "energy_transfer_matched_on_shell_scan": (
             run_energy_transfer_matched_on_shell_scan(q_vec, float(q_a4[0]))
         ),
+        "leading_NR_one_body_matching_scan": run_one_body_nr_matching_scan(),
         "limitations": [
             "The nucleon is an on-shell static impulse-approximation point with q_N^0=0 and l perpendicular to q.",
             "The physical nuclear transfer has q_A^0=E_R != 0; the q_N^0=0 approximation is not exactly conserved with q_A and its residual is reported separately.",
             "A separate free on-shell kinematic scan adjusts l_parallel so q_N^0=E_R; it is not a bound-nucleon momentum distribution or a many-body continuity calculation.",
             "AFH matching requires nonrelativistic one-nucleon state normalization 1/(2 sqrt(E_i E_f)); both covariant and normalized projections are reported.",
             "The finite-t F1 and F2 are not supplied; F2/F1=-0.184 is only the zero-momentum flavour-universal anchor.",
+            "The leading NR expansion scan quantifies O(p^3/m_N^3) spatial-current truncation at two Xe-131 recoil points; it is not a bound-nucleon calculation.",
             "This is one phase-space point and one nucleon-momentum orientation, not a nuclear many-body response calculation.",
             "No AFH response coefficient is claimed until the full operator structures are projected and normalized.",
             "The Proca propagator longitudinal term and the full bound-nucleon continuity equation are not included in this static diagnostic.",

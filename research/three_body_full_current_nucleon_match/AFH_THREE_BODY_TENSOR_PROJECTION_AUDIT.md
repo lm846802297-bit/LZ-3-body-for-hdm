@@ -464,3 +464,33 @@ Sigma'-Delta phase still requires the exact AFH spherical-multipole check,
 and the direct covariant, q-frame-rotated, and AFH multipole contractions
 must still agree. The 16,807-point native input gate is still queued.
 Use the label provisional_leading_static_vector_current_candidate only.
+
+
+## 8. P1 completion update — 2026-11-18
+
+P1 is now **complete within the free on-shell one-body impulse approximation**.
+The exact Dirac--Pauli current has been decomposed into the Darwin--Foldy
+and spin-orbit charge terms, longitudinal convection, transverse convection,
+and transverse magnetization. The exact longitudinal relation
+\[
+J_{N,\parallel}=(q_N^0/Q_N)J_N^0
+\]
+is retained for the on-shell free nucleon; it is not replaced by the leading
+\(F_1K_{N,\parallel}/m_N\) approximation when testing continuity.
+
+The exact spinor current is compared with its Pauli-reduced expansion at
+the Xe-131 200 and 267 keV transfers for four transverse internal momenta
+(0, 50, 100, 200 MeV). The largest relative errors are 0.0592% in the charge
+component, 3.1327% in the transverse spatial current, and 0.7846% in the
+full four-current. Exact free-nucleon Ward and longitudinal-continuity
+residuals are below \(2\times10^{-12}\).
+
+The dedicated derivation, benchmark table, and test are in
+P1_DIRAC_PAULI_CURRENT_DECOMPOSITION.md and
+test_one_body_nr_current_expansion.py.
+
+This does **not** close the bound-nucleus/off-shell current problem:
+energy sharing, binding, the nuclear Hamiltonian, and any required
+interaction currents remain outside the free on-shell diagnostic. P2
+therefore starts from the established one-body operators but must still
+derive their exact AFH spherical multipoles and signed interference phase.
