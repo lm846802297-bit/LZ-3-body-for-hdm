@@ -683,3 +683,11 @@ pending.
 
 Do not set native_afh_validated=true until the native Wolfram ResponseNuclear
 outputs for indices 3, 6 and 8 have been compared pointwise with the P3-B CSV.
+
+
+The refreshed P3-B artifact also includes the rank-resolved
+afh_spatial_obdme_multipoles_7isotope_2401.csv file. Its rankwise diagonal
+and signed interference contributions are checked to reconstruct the three
+total spatial responses at every isotope/q point. The CI job validates this
+archive before upload using
+[validate_afh_spatial_multipole_archive.py](validate_afh_spatial_multipole_archive.py).
