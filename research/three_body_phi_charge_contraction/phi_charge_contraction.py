@@ -13,10 +13,10 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 INPUT = HERE / "input"
 DEFAULT_OUT = HERE / "results" / "2026-11-18"
-M_N_GEV = 0.939
+M_N_GEV = 0.938918
 MASS_U_GEV = 0.93149410242
 M_A_GEV = 131.0 * MASS_U_GEV
-R2_SCENARIOS = (0.0, -0.14, -0.15, -0.17)
+R2_SCENARIOS = (0.0, -0.14, -0.15, -0.17, -0.184)
 
 
 def read_csv(path):
@@ -116,7 +116,9 @@ def validate_grid(grid):
 
 
 def scenario_tag(value):
-    return "r2_" + ("p" if value >= 0 else "m") + f"{abs(value):.2f}".replace(".", "p")
+    if abs(value) < 1e-15:
+        return "r2_zero"
+    return "r2_" + ("p" if value > 0 else "m") + f"{abs(value):.3f}".replace(".", "p")
 
 
 def make_grid_output(grid):
@@ -190,28 +192,28 @@ def make_exact_minima_output(selected):
 
 
 def build_summary(grid, benchmark, minima, grid_stats):
-    selected = [row for row in benchmark if row["F2_over_F1_scenario"] == -0.15]
+    selected = [row for row in benchmark if abs(row["F2_over_F1_scenario"] + 0.184) < 1e-12]
     qwindow = [row for row in make_grid_output(grid) if 0.2 <= row["q_GeV"] <= 0.3]
-    key = "r2_m0p15_R_charge_over_M"
+    key = "r2_m0p184_R_charge_over_M"
     qmin, qmax = min(qwindow, key=lambda x: x[key]), max(qwindow, key=lambda x: x[key])
     return {
-        "status": "charge_sector_diagnostic_full_spatial_current_contraction_pending",
+        "status": "charge_sector_matched_zero_momentum_form_factor_diagnostic",
         "grid_validation": grid_stats,
         "F2_over_F1_scenarios": list(R2_SCENARIOS),
-        "selected_three_body_benchmarks_r2_minus_0p15": [
+        "selected_three_body_benchmarks_r2_minus_0p184": [
             {"benchmark": row["benchmark"], "width_scheme": row["width_scheme"],
              "ER_keV": row["ER_keV"], "qA_MeV": row["qA_GeV"] * 1000.0,
              "R_charge_over_M": row["R_charge_over_M"],
              "delta_total_percent": 100.0 * (row["R_charge_over_M"] - 1.0)}
             for row in selected
         ],
-        "exact_AFH_minima_r2_minus_0p15": [
+        "exact_AFH_minima_r2_minus_0p184": [
             {"qA_MeV": row["q_GeV"] * 1000.0, "ER_keV": row["ER_keV"],
              "R_charge_over_M": row["R_charge_over_M"],
              "delta_total_percent": 100.0 * (row["R_charge_over_M"] - 1.0)}
             for row in minima if row["F2_over_F1_scenario"] == -0.15
         ],
-        "grid_sampled_q_0p2_to_0p3_GeV_r2_minus_0p15": {
+        "grid_sampled_q_0p2_to_0p3_GeV_r2_minus_0p184": {
             "q_grid_step_MeV": 0.25,
             "minimum": {"qA_MeV": qmin["q_GeV"] * 1000.0,
                         "ER_keV": qmin["ER_keV"],
@@ -228,11 +230,12 @@ def build_summary(grid, benchmark, minima, grid_stats):
             default=0.0,
         ),
         "interpretation_boundary": [
-            "Only the Coulomb/charge multipole T3^0 times (M,Phi'') is contracted.",
-            "Spatial T3^i terms and Sigma', Sigma'', Delta are not included.",
-            "Finite-t F2/F1 is not fixed; nonzero values are sensitivity benchmarks.",
+            "The M+Phi'' vector-charge coefficient is derived from the one-nucleon Dirac-Pauli charge expansion.",
+            "The exact PR53 T3^0 phase-space kernel is reused; it cancels from the relative charge correction at fixed q_A.",
+            "The default F2/F1=-0.184 is the ratio of the adopted zero-momentum flavour benchmark F2^V(0)=-0.552 and F1^V(0)=3; it is not a finite-t fit.",
+            "Spatial T3^i terms and the Delta, Sigma', Sigma'' responses remain outside this charge-sector calculation.",
             "Native Mathematica Phi'' cross-check in source PR #54 remains pending.",
-            "No absolute cross section, halo fold, isotope sum, detector response, or likelihood is produced.",
+            "No complete all-current natural-xenon spectrum, detector response, or likelihood is produced.",
         ],
     }
 
