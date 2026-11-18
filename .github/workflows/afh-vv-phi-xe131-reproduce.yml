@@ -41,6 +41,16 @@ jobs:
       - name: Reproduce 2401-point AFH response grid
         run: python research/afh_vv_phi_xe131/afh_vv_phi_xe131.py
 
+      - name: Compare native Mathematica AFH responses pointwise
+        run: |
+          python research/afh_vv_phi_xe131/compare_native_phi_xe131.py \
+            --python-csv research/afh_vv_phi_xe131/output/afh_vv_phi_xe131_full_grid.csv \
+            --mathematica-csv research/afh_vv_phi_xe131/output/native_mathematica/afh_vv_phi_xe131_native.csv \
+            --output research/afh_vv_phi_xe131/output/native_mathematica/comparison.json
+
+      - name: Refresh run manifest with native comparison result
+        run: python research/afh_vv_phi_xe131/afh_vv_phi_xe131.py
+
       - name: Compute M plus Phi-double-prime charge-sector benchmark
         run: |
           python research/afh_vv_phi_xe131/phi_charge_response_match.py \

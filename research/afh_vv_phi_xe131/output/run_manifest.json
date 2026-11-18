@@ -23,8 +23,10 @@
       "status": "PASS"
     },
     "native_Mathematica_Phi_crosscheck": {
-      "comparison_sha256": "2301067fef4cc5d0a3beeb4963738187c6d36ce8c2ce699a07090a2b5d781da5",
-      "status": "STALE_OR_FAILED"
+      "comparison_sha256": "5616a5a9973466a5b1acaab756affd8fde7ef83d8d10482fd30cf96c58e2b985",
+      "max_abs_q_grid_difference_GeV": 1.1102230246251565e-16,
+      "points": 2401,
+      "status": "PASS"
     }
   },
   "code": {
@@ -82,7 +84,7 @@
     },
     "native_mathematica/comparison.json": {
       "rows": 1,
-      "sha256": "2301067fef4cc5d0a3beeb4963738187c6d36ce8c2ce699a07090a2b5d781da5"
+      "sha256": "5616a5a9973466a5b1acaab756affd8fde7ef83d8d10482fd30cf96c58e2b985"
     },
     "native_mathematica/native_metadata.txt": {
       "sha256": "f9d2ab9ca3502404d006cf3777090b754bffcbd253a6ad1a59713af59c380f17"
@@ -99,5 +101,5 @@
     "note": "Raw physical response is reported. The separate 1.00008253 mass-response q=0 shape correction is not imposed on Phi or M-Phi."
   },
   "source_commit": "85288c100876d854edf9ab11ee5bdd2cbd84b5e1",
-  "status": "Python_AFH_v6_translation_reproducible_native_Mathematica_crosscheck_STALE_OR_FAILED"
+  "status": "Python_AFH_v6_translation_reproducible_native_Mathematica_crosscheck_PASS"
 }
