@@ -5,8 +5,9 @@ The DM-side L_C is obtained from the full phase-space-integrated tensor using
 the nuclear-current continuity relation, conditional on conservation of the
 complete nuclear vector current. Native AFH M/Phi''/M-Phi'' responses are
 contracted with finite-t_N charge coefficients and compared with the original
-pointlike 9 W_M baseline. Transverse nuclear-current multipoles are not
-included in this restricted Coulomb-sector ratio.
+pointlike 9 W_M baseline using the formal constant pole-width prescription.
+Transverse nuclear-current multipoles are not included in this restricted
+Coulomb-sector ratio.
 """
 from __future__ import annotations
 
