@@ -1,0 +1,28 @@
+{
+  "status": "PASS",
+  "isotopes": [
+    128,
+    129,
+    130,
+    131,
+    132,
+    134,
+    136
+  ],
+  "response_grid_points": 16807,
+  "natural_atom_fraction_covered": 0.9981580000000001,
+  "zero_momentum_max_abs_raw_error_ppm": 206.7830512000324,
+  "multipole_reconstruction_max_relative_residual": 2.2203715283677949e-16,
+  "first_minimum_search_interval_GeV": [
+    0.08,
+    0.22
+  ],
+  "outputs": [
+    "zero_momentum_normalization.csv",
+    "multipole_reconstruction.csv",
+    "selected_recoil_shape_comparison.csv",
+    "first_local_minima_grid.csv",
+    "xe131_rank2_fraction.csv"
+  ],
+  "scope": "nuclear-response audit only; no new three-body or detector calculation"
+}

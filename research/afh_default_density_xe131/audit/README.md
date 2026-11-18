@@ -14,3 +14,13 @@ This directory contains the source-level, normalization, momentum-convention, an
 - `audit_xe131_only_ame2020_hybrid.py`: replaces only the Xe-131 term in the archived NIST natural-xenon baseline; it is explicitly a hybrid diagnostic, not a full AME2020 natural-xenon prediction.
 
 The audit programs write to explicit `--outdir` / `--out-dir` destinations. They do not overwrite canonical response or cross-section tables.
+
+
+- AFH_PHI_RESPONSE_XE131_NATIVE_PLAN.md: completed Xe-131 native AFH
+  \(M\), \(\Phi''\), and \(M\Phi''\) export, response-level validator result,
+  numerical minima, and scientific scope boundary.
+
+- `AFH_SPATIAL_RESPONSE_FIRST_AUDIT.md`: corrected `DeltaJ` source mapping,
+  provisional Python/native comparator, 2,401-point Python spatial-response
+  grid for Xe-129/Xe-131, internal-consistency checks, and pending native
+  Wolfram validation boundary.
