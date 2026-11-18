@@ -224,6 +224,7 @@ def plot_absolute(rows: list[dict], outdir: Path) -> None:
     ax.set_xlim(float(er.min()), float(er.max()))
     ax.set_xlabel(r"Recoil energy, $E_R$ [keV]")
     ax.set_ylabel(r"$\mathrm{d}\sigma/\mathrm{d}E_R$ [cm$^2$ keV$^{-1}$]")
+    ax.set_title(r"Xe-131 fixed-benchmark differential cross section")
     ax.legend(loc="best", ncol=1)
     ax.tick_params(which="both", direction="in", top=True, right=True)
     ax.text(0.985, 0.965,
