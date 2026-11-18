@@ -247,7 +247,7 @@ native_afh_validated and does not replace the queued native Wolfram gate.
 The private native-control workflow has been extended with a Wolfram v6.0
 export of the raw Xe-129/Xe-131 rank-resolved amplitudes. The WLS source is
 pinned to LZ repository commit
-e1e9c85530a7d609561b34e2c2df5ab36e5c5b89 and directly evaluates AFH DeltaJ
+aa493b2b76727da2fd51609fe87c647910f7e456 and directly evaluates AFH DeltaJ
 and SigmaPJ for the isoscalar T=0 OBDME rows. It exports real and imaginary
 parts before the physical equal-p/n factor-four conversion and C0 response
 normalization.
