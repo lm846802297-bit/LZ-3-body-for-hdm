@@ -43,16 +43,14 @@ def nucleon_current_matrices(
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Return J_N^mu, q_N^mu, and the initial/final nucleon momenta.
 
-    q_N^0 is fixed by the on-shell free-nucleon energies. For l perpendicular
-    to q, q_N^0=0 up to floating-point roundoff.
+    q_N^0 is fixed by the on-shell free-nucleon energies. It vanishes only
+    when l is perpendicular to q; arbitrary internal-momentum directions
+    are supported.
     """
     q_vec = np.asarray(q_vec, dtype=float)
     l_vec = np.asarray(l_vec, dtype=float)
     if q_vec.shape != (3,) or l_vec.shape != (3,):
         raise ValueError("q_vec and l_vec must be three-vectors")
-    if abs(float(np.dot(q_vec, l_vec))) > 1e-10 * max(np.linalg.norm(q_vec)*np.linalg.norm(l_vec), 1.0):
-        raise ValueError("l_vec must be perpendicular to q_vec")
-
     p_i = l_vec - 0.5 * q_vec
     p_f = l_vec + 0.5 * q_vec
     e_i = math.sqrt(m_n * m_n + float(np.dot(p_i, p_i)))
@@ -229,6 +227,71 @@ def scaled_ward_identity_residual(point, current, lhs, rhs) -> float:
     return float(np.linalg.norm(lhs - rhs) / scale)
 
 
+def run_nucleon_orientation_scan(
+    point, q_vec: np.ndarray, dm_current: np.ndarray, g2: float, scheme: str
+) -> list[dict]:
+    """Probe internal nucleon momentum directions at one fixed DM phase point.
+
+    This is not a nuclear momentum-distribution average. It checks whether
+    the one-point spatial-current diagnostic is an artifact of choosing
+    l perpendicular to q_A.
+    """
+    qhat = q_vec / np.linalg.norm(q_vec)
+    e1 = perpendicular_unit(q_vec)
+    e2 = np.cross(qhat, e1)
+    directions = {
+        "parallel_q": qhat,
+        "perpendicular_e1": e1,
+        "perpendicular_e2": e2,
+        "mixed_45deg": (qhat + e1) / math.sqrt(2.0),
+    }
+    v_values = (0.10, 0.30)
+    rows = []
+    q_a4 = np.asarray(point.q_A, dtype=float)
+    for v_n in v_values:
+        for label, direction in directions.items():
+            l_vec = M_N_GEV * v_n * direction
+            jn, qn, (p_i, p_f) = nucleon_current_matrices(
+                q_vec, l_vec, 1.0, -0.184
+            )
+            jn_nr = jn * nonrel_state_normalization(p_i, p_f)
+            full, charge, spatial = full_amplitude_operator(
+                dm_current, jn_nr
+            )
+            coeff_spatial = pauli_product_coefficients(spatial)
+            rows.append({
+                "g2": g2,
+                "width_scheme": scheme,
+                "vN": v_n,
+                "internal_momentum_direction": label,
+                "qN0_GeV": float(qn[0]),
+                "qN0_over_QA": float(qn[0] / np.linalg.norm(q_vec)),
+                "nucleon_Ward_residual_qN": nucleon_ward_residual(qn, jn),
+                "static_qA_Ward_residual": nucleon_ward_residual(q_a4, jn),
+                "spatial_over_charge_operator_norm": float(
+                    np.linalg.norm(spatial) / max(np.linalg.norm(charge), 1e-300)
+                ),
+                "spatial_nucleon_spin_block_norm": float(
+                    np.linalg.norm(coeff_spatial[0, 1:])
+                ),
+                "spatial_DM_spin_dependent_block_norm": float(
+                    np.linalg.norm(coeff_spatial[1:, :])
+                ),
+                "spatial_identity_identity_coefficient": [
+                    float(coeff_spatial[0, 0].real),
+                    float(coeff_spatial[0, 0].imag),
+                ],
+                "spatial_nucleon_spin_coefficients": [
+                    [float(z.real), float(z.imag)]
+                    for z in coeff_spatial[0, 1:]
+                ],
+                "full_amplitude_norm": float(np.linalg.norm(full)),
+                "charge_amplitude_norm": float(np.linalg.norm(charge)),
+                "spatial_amplitude_norm": float(np.linalg.norm(spatial)),
+            })
+    return rows
+
+
 def run_finite_width_scenarios(point, q_vec: np.ndarray) -> list[dict]:
     """Repeat the full-current contraction with the project's finite-width T3.
 
@@ -334,6 +397,9 @@ def run_finite_width_scenarios(point, q_vec: np.ndarray) -> list[dict]:
                     - dm.tensor_from_spin_matrices(before)
                     - dm.tensor_from_spin_matrices(after)
                 )),
+                "internal_nucleon_orientation_scan": run_nucleon_orientation_scan(
+                    point, q_vec, current, g2, scheme
+                ),
             })
     return out
 
