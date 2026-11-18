@@ -60,9 +60,10 @@ with the AFH operator coefficients. This conversion is especially important
 for the spin-independent (M) coefficient; the leading spin-orbit coefficient
 is also checked against the exact normalized spinor expression.
 
-The code uses (m_N=0.938918) GeV and the provisional zero-momentum
-benchmark (F_2/F_1=-0.184), with (F_1) normalized to one. It does not
-pretend that this ratio is a finite-(t_N) form factor.
+The code uses \(m_N=0.938918\) GeV and the provisional zero-momentum
+benchmark \(F_2/F_1(0)=-0.184\), with \(F_1\) normalized to one. The
+\(F_2=0\) case is retained as a control. Neither is a finite-\(t_N\)
+form-factor model.
 
 ## Static energy-transfer approximation
 
@@ -197,6 +198,55 @@ The correct conclusion is therefore twofold:
 The output is a static one-nucleon matching diagnostic. It is not yet a
 phase-space-integrated \(\Sigma'\), \(\Delta\), or full natural-xenon result.
 
+## Finite-width scan added to the full-current contraction
+
+The reference point is now evaluated with the same denominator-only width
+prescription used by the parent three-body current audit. The imaginary part
+is inserted only in the after-emission \(\chi_2\) propagator; the modified
+finite-width Ward identity includes the corresponding additional term.
+For each \(g_2=0.1,1\), the script evaluates zero, pole, and running widths.
+
+At this one phase-space point, \(E_R=200\) keV and
+\(\Delta m=362\) keV, the pole clearance is \(44.438\) keV. The results are:
+
+| \(g_2\) | Width | \(\Gamma_{\rm pole}\) (keV) | \(\Gamma_{\rm run}(W)\) (keV) | \(\|\mathcal A_{\rm spatial}\|/\|\mathcal A_{\rm charge}\|\) |
+|---:|---|---:|---:|---:|
+| 0.1 | zero | 0.32244 | -- | \(8.08557\times10^{-5}\) |
+| 0.1 | pole | 0.32244 | -- | \(8.08557\times10^{-5}\) |
+| 0.1 | running | 0.32244 | 0.16575 | \(8.08557\times10^{-5}\) |
+| 1.0 | zero | 32.24369 | -- | \(8.08557\times10^{-5}\) |
+| 1.0 | pole | 32.24369 | -- | \(8.08557\times10^{-5}\) |
+| 1.0 | running | 32.24369 | 16.57487 | \(8.08557\times10^{-5}\) |
+
+The operator-norm ratio above is a one-point diagnostic in the selected
+static nucleon kinematics. It is **not** a cross-section correction or a
+bound on any AFH response. The finite width changes the full DM-current
+norm: for \(g_2=1\), it changes from \(6.78117\times10^7\) at zero width
+to \(6.37620\times10^7\) with pole width and \(6.66668\times10^7\) with
+running width. Thus the width is not being silently dropped.
+
+The selected \(\Phi''\)-type odd-in-\(\ell\) projection remains entirely
+charge-generated at this reference point: the spatial-only projection is
+of order \(10^{-11}\), compared with a charge coefficient of order
+\(8.4\times10^6\). This does **not** mean the spatial current vanishes.
+Its transverse-spin Pauli coefficient \(c_{0,2}^{\rm spatial}\) is
+nonzero and changes with the width prescription. For \(g_2=1\), it is
+approximately
+\[
+\begin{array}{ll}
+\text{zero width:}&-3.75817\times10^3 i,\\
+\text{pole width:}&1.13090\times10^3-3.34788\times10^3 i,\\
+\text{running width:}&6.35746\times10^2-3.63960\times10^3 i.
+\end{array}
+\]
+This is a transverse-spin **candidate**, not yet an AFH \(\Sigma'\)
+coefficient. The full Pauli-product decomposition and all six width
+scenarios are archived in the workflow artifact.
+
+The spin-trace comparison against the independent Dirac tensor remains
+below \(4.5\times10^{-16}\), and the finite-width Ward-identity residual
+is below \(3.7\times10^{-13}\) in all six cases.
+
 ## Reproduction
 
 Python 3.12+ and NumPy are required.
@@ -216,8 +266,9 @@ python research/three_body_full_current_nucleon_match/full_current_nucleon_match
   used; this is not a phase-space-integrated nuclear response.
 - q_N^0=0 is used for the on-shell static nucleon. A complete treatment must
   include the appropriate bound-nucleon/current-conservation framework.
-- The finite-t F1 and F2 of the model-specific universal vector current are
-  not fixed; the code uses F1=1 and compares F2=0 with -0.15.
+- The finite-(t_N) (F_1) and (F_2) of the model-specific universal
+  vector current are not fixed; the code uses (F_1=1) and compares
+  (F_2/F_1=0) with the zero-momentum anchor (-0.184).
 - No AFH response coefficient is claimed yet. The complete Pauli-product
   structures still need a multipole projection and nuclear OBDME contraction.
 - The spatial-only contribution to the selected spin-orbit projection is
