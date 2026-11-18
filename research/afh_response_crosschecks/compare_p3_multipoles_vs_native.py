@@ -171,9 +171,12 @@ def run(p3_multipole_csv: Path, p3_metadata_path: Path,
     if p3meta.get("multipole_file_sha256") != p3sha:
         raise ValueError("P3-B multipole CSV hash does not match P3-B metadata")
     native_sha = sha256(native_multipole_csv)
+    native_meta_sha = sha256(native_metadata_path)
     native_gate = native_manifest.get("native_spatial_multipoles") or {}
     if native_gate.get("csv_sha256") != native_sha:
         raise ValueError("native multipole CSV hash does not match native run manifest")
+    if native_gate.get("metadata_sha256") != native_meta_sha:
+        raise ValueError("native multipole metadata hash does not match native run manifest")
     rows = compare_rows(
         read_csv(p3_multipole_csv), read_csv(native_multipole_csv),
         p3meta, native_meta, native_manifest
