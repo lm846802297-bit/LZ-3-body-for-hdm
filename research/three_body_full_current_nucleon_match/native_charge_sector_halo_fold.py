@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Native-AFH charge-density-sector halo fold (not a complete vector-current rate).
+"""Native-AFH Coulomb-sector halo fold (not a complete vector-current rate).
 
-This module evaluates only M + Phi'' + M-Phi'' using the integrated L00
-weight. It does NOT perform the full L_mu_nu W_A^{mu nu} contraction:
-longitudinal L03/L33 and transverse Lij contributions are outside its scope.
-The output is therefore a controlled charge-density-sector diagnostic, not
-the final full-current three-body spectrum. A native AFH input PASS validates
-the nuclear response archive only; it does not validate the missing
-three-body multipole projection.
+This module evaluates M + Phi'' + M-Phi'' using the continuity-reduced
+Coulomb weight L_C = L00 - (omega/Q)(L03+L30) + (omega/Q)^2 L33.
+It therefore includes the nuclear longitudinal current through the conserved
+one-body nuclear vector-current relation, but omits transverse nuclear-current
+multipoles such as Delta and Sigma'. It is not the full
+L_mu_nu W_A^{mu nu} contraction or the final three-body spectrum.
+A native AFH input PASS validates the nuclear response archive only; it does
+not validate the missing three-body transverse multipole projection.
 """
 from __future__ import annotations
 
@@ -433,30 +434,34 @@ def form_factor_values(qA_GeV: float, prescription: str) -> tuple[float, float]:
     raise ValueError(f"unknown form-factor prescription: {prescription}")
 
 
-def charge_kernel_from_L00(
-    L00: float,
+def charge_kernel_from_coulomb_weight(
+    L_C: float,
     qA_GeV: float,
     responses: dict[str, float],
     form_factor_prescription: str,
 ) -> dict:
+    """Build M + Phi'' charge-multipole terms from the continuity-reduced L_C."""
+    if not math.isfinite(L_C) or L_C < 0.0:
+        raise ValueError(f"invalid continuity-adjusted Coulomb weight L_C={L_C}")
     F1, F2 = form_factor_values(qA_GeV, form_factor_prescription)
     cM, cPhi = charge_coefficients(qA_GeV, F1=F1, F2=F2)
-    C_M = cM * cM * L00
-    C_PhiPP = cPhi * cPhi * L00
-    C_MPhiPP = 2.0 * cM * cPhi * L00
+    C_M = cM * cM * L_C
+    C_PhiPP = cPhi * cPhi * L_C
+    C_MPhiPP = 2.0 * cM * cPhi * L_C
     terms = {
         "M": C_M * responses["M"],
         "PhiPP": C_PhiPP * responses["PhiPP"],
         "MPhiPP": C_MPhiPP * responses["MPhiPP"],
     }
     charge = sum(terms.values())
-    pointlike_M = (F1V0 * F1V0) * L00 * responses["M"]
-    finite_t_M = (cM * cM) * L00 * responses["M"]
+    pointlike_M = (F1V0 * F1V0) * L_C * responses["M"]
+    finite_t_M = (cM * cM) * L_C * responses["M"]
     return {
         "F1V": F1,
         "F2V": F2,
         "cM": cM,
         "cPhiPP": cPhi,
+        "L_C": float(L_C),
         "terms": terms,
         "charge_sector": charge,
         "pointlike_M": pointlike_M,
@@ -470,14 +475,35 @@ def charge_kernel_from_L00(
     }
 
 
-def _l00_from_result(result: dict) -> float:
-    value = result["point_nucleus_contractions"]["I00"]
-    if not math.isfinite(float(value)) or value < 0.0:
-        raise ValueError(f"invalid integrated L00={value}")
-    return float(value)
+def _coulomb_weights_from_result(result: dict) -> dict:
+    contractions = result["point_nucleus_contractions"]
+    L00 = float(contractions["I00"])
+    L_C = float(contractions["L_C_continuity_adjusted"])
+    residual = float(contractions["continuity_reduced_relative_residual"])
+    if not math.isfinite(L00) or L00 < 0.0:
+        raise ValueError(f"invalid integrated L00={L00}")
+    if not math.isfinite(L_C) or L_C < 0.0:
+        raise ValueError(f"invalid continuity-adjusted Coulomb weight L_C={L_C}")
+    if not math.isfinite(residual) or residual > 5.0e-12:
+        raise ValueError(
+            f"nuclear-continuity reduction fails point-nucleus identity: {residual}"
+        )
+    correction = (
+        L_C / L00 - 1.0
+        if L00 > 0.0
+        else (0.0 if L_C == 0.0 else math.inf)
+    )
+    if not math.isfinite(correction):
+        raise ValueError("non-finite continuity correction at vanishing L00")
+    return {
+        "L00": L00,
+        "L_C": L_C,
+        "charge_continuity_relative_correction": correction,
+        "continuity_reduced_relative_residual": residual,
+    }
 
 
-def integrate_l00(
+def integrate_coulomb_weight(
     *,
     mchi: float,
     ms: float,
@@ -508,9 +534,10 @@ def integrate_l00(
     )
     if not result.get("phase_space_open", False):
         return {"phase_space_open": False}
+    weights = _coulomb_weights_from_result(result)
     return {
         "phase_space_open": True,
-        "L00": _l00_from_result(result),
+        **weights,
         "qA_GeV": float(result["qA_magnitude_GeV"]),
         "quadrature_points": int(result["quadrature_points"]),
         "pole_clearance_keV": float(result["pole_clearance_keV"]),
@@ -584,26 +611,36 @@ def fold(
                 halo_pointlike = 0.0
                 halo_finite_t_M = 0.0
                 max_interp_difference = 0.0
+                max_abs_continuity_correction = 0.0
+                max_continuity_identity_residual = 0.0
                 for v, w in zip(vs, ws):
                     fv = pdf(float(v))
                     if fv == 0.0:
                         continue
                     beta = float(v) / C_KM_S
                     pchi = mchi * beta / math.sqrt(1.0 - beta * beta)
-                    l00_result = integrate_l00(
+                    coulomb_result = integrate_coulomb_weight(
                         mchi=mchi, ms=ms, delta_m=delta_m, mA=mA,
                         ER_keV=ER_keV, speed_kms=float(v), g2=g2,
                         width_scheme=width_scheme, nw=nw, nz=nz, nphi=nphi,
                     )
-                    if not l00_result["phase_space_open"]:
+                    if not coulomb_result["phase_space_open"]:
                         continue
+                    max_abs_continuity_correction = max(
+                        max_abs_continuity_correction,
+                        abs(coulomb_result["charge_continuity_relative_correction"]),
+                    )
+                    max_continuity_identity_residual = max(
+                        max_continuity_identity_residual,
+                        coulomb_result["continuity_reduced_relative_residual"],
+                    )
                     response = interpolate_native_response(native_bundle[A], qA)
                     max_interp_difference = max(
                         max_interp_difference,
                         max(response["pchip_linear_relative_difference"].values()),
                     )
-                    kernel = charge_kernel_from_L00(
-                        l00_result["L00"], qA,
+                    kernel = charge_kernel_from_coulomb_weight(
+                        coulomb_result["L_C"], qA,
                         response["physical_equal_pn"],
                         form_factor_prescription,
                     )
@@ -626,6 +663,8 @@ def fold(
                     "relative_finite_t_M_vs_pointlike_M": halo_finite_t_M / halo_pointlike - 1.0
                     if halo_pointlike else math.nan,
                     "max_pchip_linear_response_difference": max_interp_difference,
+                    "max_abs_charge_continuity_relative_correction": max_abs_continuity_correction,
+                    "max_continuity_identity_relative_residual": max_continuity_identity_residual,
                     "nv": nv, "nw": nw, "nz": nz, "nphi": nphi,
                 })
             total_charge = sum(r.get("abundance", 0.0) * r.get("charge_halo_integral", 0.0) for r in isotope_rows)
@@ -653,14 +692,22 @@ def fold(
             })
 
     return {
-        "status": "COMPUTED_WITHIN_CHARGE_DENSITY_APPROXIMATION",
+        "status": "COMPUTED_WITHIN_COULOMB_SECTOR_APPROXIMATION",
         "full_current_complete": False,
-        "omitted_tensor_components": ["L03", "L30", "L33", "Lij transverse current sector"],
-        "approximation": "M + Phi'' + M-Phi'' charge-density sector using integrated L00 only; not full L_mu_nu W_A^mu_nu",
+        "included_tensor_components": [
+            "L00", "L03", "L30", "L33 reduced using nuclear-current continuity"
+        ],
+        "omitted_tensor_components": [
+            "transverse nuclear-current multipoles (Delta, Sigma', and any additional allowed channels)"
+        ],
+        "approximation": (
+            "M + Phi'' + M-Phi'' Coulomb sector using continuity-reduced L_C; "
+            "transverse nuclear-current multipoles are not included"
+        ),
         "scope": (
-            "seven-isotope natural-xenon charge-density-sector diagnostic using native "
-            "AFH M/Phi''/M-Phi'' responses and finite-t_N diagnostics; "
-            "longitudinal and transverse nuclear-current contractions excluded"
+            "seven-isotope natural-xenon Coulomb-sector diagnostic using native "
+            "AFH M/Phi''/M-Phi'' responses, nuclear-current continuity, and "
+            "finite-t_N diagnostics; not the full L_mu_nu W_A^mu_nu contraction"
         ),
         "native_gate": native_gate["comparison"],
         "native_provenance": native_gate["provenance"],
@@ -680,6 +727,7 @@ def fold(
         ),
         "response_interpolation": "PCHIP on native 0.25 MeV absolute response values; linear interpolation retained as diagnostic",
         "recoil_momentum": "q_A=sqrt(2 m_A E_R + E_R^2), exact nuclear mass-shell relation",
+        "coulomb_weight": "L_C=L00-(E_R/q_A)(L03+L30)+(E_R/q_A)^2 L33 from nuclear-current continuity",
         "results": rows,
     }
 

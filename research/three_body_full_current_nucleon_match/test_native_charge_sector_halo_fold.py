@@ -25,7 +25,7 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
 
     def test_charge_kernel_decomposes_exactly(self):
         responses = {"M": 4.0, "PhiPP": 0.2, "MPhiPP": -0.3}
-        result = fold.charge_kernel_from_L00(
+        result = fold.charge_kernel_from_coulomb_weight(
             2.5, 0.22, responses, "pointlike"
         )
         expected = sum(result["terms"].values())
@@ -33,6 +33,40 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
         self.assertAlmostEqual(
             result["pointlike_M"], 9.0 * 2.5 * responses["M"], places=14
         )
+
+    def test_charge_kernel_uses_continuity_reduced_weight(self):
+        responses = {"M": 4.0, "PhiPP": 0.2, "MPhiPP": -0.3}
+        result = fold.charge_kernel_from_coulomb_weight(
+            2.4, 0.22, responses, "pointlike"
+        )
+        self.assertAlmostEqual(result["L_C"], 2.4)
+        self.assertAlmostEqual(result["pointlike_M"], 9.0 * 2.4 * 4.0)
+        self.assertAlmostEqual(
+            result["charge_sector"],
+            sum(result["terms"].values()),
+            places=14,
+        )
+
+    def test_coulomb_weight_is_read_from_continuity_reduced_tensor(self):
+        fake = {
+            "point_nucleus_contractions": {
+                "I00": 100.0,
+                "L_C_continuity_adjusted": 99.81,
+                "continuity_reduced_relative_residual": 1.0e-16,
+            }
+        }
+        result = fold._coulomb_weights_from_result(fake)
+        self.assertEqual(result["L00"], 100.0)
+        self.assertAlmostEqual(result["L_C"], 99.81)
+        self.assertAlmostEqual(result["charge_continuity_relative_correction"], -0.0019)
+        with self.assertRaises(ValueError):
+            fold._coulomb_weights_from_result({
+                "point_nucleus_contractions": {
+                    "I00": 100.0,
+                    "L_C_continuity_adjusted": 99.81,
+                    "continuity_reduced_relative_residual": 1.0e-3,
+                }
+            })
 
     def test_zero_momentum_form_factor_anchor(self):
         f1, f2 = fold.form_factor_values(0.0, "isoscalar_zexp")

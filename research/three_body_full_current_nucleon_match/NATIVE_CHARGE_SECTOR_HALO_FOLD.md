@@ -1,4 +1,4 @@
-# Native-AFH \(M+\Phi''\) charge-sector natural-xenon halo fold
+# Native-AFH \(M+\Phi''\) Coulomb-sector natural-xenon halo fold
 
 ## Status
 
@@ -68,11 +68,29 @@ been interpolated.
 
 ## 3. Charge-sector contraction
 
-The phase-space calculation supplies
+The phase-space calculation supplies the full q-aligned tensor. For a
+conserved one-body nuclear vector current, use
 
 \[
-L_{00}^{(3)}(v,E_R,A)=\int d\Phi_3\,L_{00}^{(3)}.
+q_A^\mu=(E_R,0,0,Q_A),\qquad
+J_A^3=\frac{E_R}{Q_A}J_A^0.
 \]
+
+The effective Coulomb weight is therefore
+
+\[
+\boxed{
+L_C^{(3)}
+=L_{00}^{(3)}
+-\frac{E_R}{Q_A}(L_{03}^{(3)}+L_{30}^{(3)})
++\left(\frac{E_R}{Q_A}\right)^2L_{33}^{(3)}.
+}
+\]
+
+This is nuclear-current continuity, not a Ward identity imposed on the
+inelastic DM transition current. The point-nucleus contraction independently
+checks that \((2m_A+E_R)^2L_C\) equals the direct charge plus longitudinal
+plus interference contraction.
 
 For the static Dirac-Pauli charge matching,
 
@@ -93,15 +111,15 @@ t_N=-Q_A^2.
 Therefore
 
 \[
-C_M=c_M^2L_{00}^{(3)},
+C_M=c_M^2L_C^{(3)},
 \]
 
 \[
-C_{\Phi''}=c_{\Phi''}^2L_{00}^{(3)},
+C_{\Phi''}=c_{\Phi''}^2L_C^{(3)},
 \]
 
 \[
-C_{M\Phi''}=2c_Mc_{\Phi''}L_{00}^{(3)}.
+C_{M\Phi''}=2c_Mc_{\Phi''}L_C^{(3)}.
 \]
 
 The nuclear charge-sector kernel is
@@ -121,7 +139,7 @@ of four applied once in the response conversion.
 
 ## 4. Four controlled spectra
 
-The engine records three nested charge-sector quantities:
+The engine records three nested Coulomb-sector quantities:
 
 \[
 R_0=W_M[F_1^V(0)]^2,
@@ -203,27 +221,24 @@ seven-isotope result can be promoted. Until then, the correct status is:
 \boxed{\text{engine ready; native AFH input gate open}}
 \]
 
-No natural-xenon percentage is inferred from the Xe-131 local
-\(200\) or \(267\) keV diagnostics.
+The present engine includes the charge/longitudinal sector through \(L_C\)
+but still omits the transverse \(\Delta\), \(\Sigma'\), and mixed
+\(\Sigma'\)-\(\Delta\) nuclear-current multipoles. It is not the full
+vector-current rate. No natural-xenon percentage is inferred from the
+Xe-131 local \(200\) or \(267\) keV diagnostics.
 
 
 ## Important scope clarification (2026-11-18)
 
-The implementation calls the full three-body phase-space integrator, but
-extracts only the integrated (L_{00}) component. It therefore computes a
-**charge-density-sector approximation**, not the full
-(L_{mu
-u}^{(3)}W_A^{mu
-u}) contraction.
+The engine now uses the continuity-reduced Coulomb weight L_C, which
+includes L00, L03, L30, and L33 under the conserved one-body nuclear
+vector-current relation. It therefore does not use L00 alone.
 
-The integrated tensor also contains (L_{03},L_{30},L_{33}) and transverse
-(L_{ij}). These must be projected onto the nuclear longitudinal and
-transverse multipoles before the result can be called a complete vector-current
-rate. The fixed-speed spatial-sector bound quoted above applies only to its
-tested 84 rows; it is not a global bound over the halo integral.
+The transverse nuclear-current multipoles, including Delta, Sigma', and
+their interference, remain outside this engine. The fixed-speed spatial
+sector bound quoted above applies only to its tested 84 rows; it is not a
+global bound over the halo integral.
 
-The code output now explicitly sets
-`full_current_complete=false` and labels its status
-`COMPUTED_WITHIN_CHARGE_DENSITY_APPROXIMATION`. This engine remains useful
-for the restricted charge-sector comparison, but must not be used as the
-final natural-xenon spectrum.
+The code output explicitly sets full_current_complete=false and labels its
+status COMPUTED_WITHIN_COULOMB_SECTOR_APPROXIMATION. It remains a restricted
+Coulomb-sector diagnostic, not the final natural-xenon spectrum.
