@@ -4848,7 +4848,7 @@ q_A=\sqrt{2m_AE_R+E_R^2},
 - [空间响应移植状态与证据边界](../../afh_default_density_xe131/audit/AFH_SPATIAL_RESPONSE_FIRST_AUDIT.md)。
 - [四 benchmark AFH/GCN/JJ55 核响应对照](../../afh_default_density_xe131/output/AFH_FOUR_BENCHMARKS_CORRECTED_RESULTS.md)。
 - [空间响应 Python full-grid workflow](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44214406965)（artifact 14388405076）。
-- [Mathematica/Python \(M\)-only response-interface cross-check](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44210674382)（artifact 14386067413）。
+- [Mathematica/Python \(M\)-only response-interface cross-check](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44215014519)（artifact 14387269933）。
 
 <!-- END UPDATE: P -->
 
