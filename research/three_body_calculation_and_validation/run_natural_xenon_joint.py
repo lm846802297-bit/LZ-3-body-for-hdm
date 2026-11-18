@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Isotope-by-isotope natural-xenon three-body cross-section diagnostic.
+"""Isotope-by-isotope natural-xenon three-body cross-section calculation.
 
 This computes each isotope's own AFH response and Eq. (6) kernel before
-abundance weighting. It is a fixed-speed, zero-width calculation. The vector
-mediator mass is not known from the Figure 2 caption, so a clearly labelled
-exploratory mV scan is used rather than selecting one value as the original.
+abundance weighting. Formal production uses the asymmetric Eq. (19) chi2
+propagator prescription with the constant pole width in the second diagram.
+The separate g2 width coupling defaults to the project's g2=1 benchmark.
+The vector mediator mass is not known from the Figure 2 caption, so a clearly
+labelled exploratory mV scan is used rather than selecting one value as original.
 """
 from __future__ import annotations
 
@@ -67,6 +69,8 @@ def main() -> None:
     parser.add_argument("--delta-m-MeV", type=float, default=1.0)
     parser.add_argument("--speed-km-s", type=float, default=776.0)
     parser.add_argument("--coupling-product-sq", type=float, default=1.0e-8)
+    parser.add_argument("--g2", type=float, default=1.0,
+                        help="Separate chi2-chi1-s coupling for the conditional pole width")
     parser.add_argument("--ER-keV", type=float, nargs="+",
                         default=[101.0, 200.0, 267.0, 542.0])
     parser.add_argument("--mV-scan-GeV", type=float, nargs="+",
@@ -106,7 +110,7 @@ def main() -> None:
             I6 = eq6_kernel.reduced_kernel(
                 args.mchi_GeV, ms, delta_m, mA, ER, args.speed_km_s,
                 nw=args.nw, nz=args.nz, nphi=args.nphi,
-                width_scheme="zero",
+                width_scheme="pole", g2=args.g2,
             )
             pole_gap_keV = (
                 1000.0 * (args.mchi_GeV + delta_m - math.sqrt(wmax2))
@@ -199,7 +203,9 @@ def main() -> None:
         "speed_km_s": args.speed_km_s,
         "speed_treatment": "single fixed incident speed; no halo integral",
         "coupling_product_sq": args.coupling_product_sq,
-        "width_scheme": "zero",
+        "g2_for_width": args.g2,
+        "width_scheme": "pole",
+        "width_interpretation": "conditional Dirac pole width for chi2 -> chi1 s; assumes Dirac fermions, real scalar, pure-scalar off-diagonal Yukawa, and no other open channels",
         "mV_scan_GeV": args.mV_scan_GeV,
         "mV_status": "exploratory parameter scan; no mV benchmark is specified in the Figure 2 caption",
         "quadrature": {"nw": args.nw, "nz": args.nz, "nphi": args.nphi},
@@ -213,7 +219,7 @@ def main() -> None:
             "Xe-124 and Xe-126 nuclear density matrices",
             "halo velocity integral",
             "detector efficiency and exposure",
-            "finite-width uncertainty from the unspecified separate g2",
+            "running-width sensitivity and additional chi2 decay channels",
         ],
     }
     (args.out_dir / "metadata.json").write_text(
