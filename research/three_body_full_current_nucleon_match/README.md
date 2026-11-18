@@ -338,73 +338,95 @@ likelihood is included.
 
 ## 7. Finite-t_N form-factor effect: a separate and potentially larger correction
 
-The old (W_M)-only baseline effectively treats the universal light-quark
-nucleon current as pointlike when the reference nucleon coupling is written
-as (g_{VN}=3g_{Vq}). The complete Dirac--Pauli matching instead requires
+The old (W_M)-only baseline treats the universal light-quark nucleon
+current as pointlike when the reference nucleon coupling is written as
+(g_{VN}=3g_{Vq}). The complete Dirac--Pauli matching instead requires
 (F_1^V(t_N)) and (F_2^V(t_N)).
 
 Bishara et al. give the proton flavor-separated Dirac slopes
 [
-F_1^{u/p,\prime}(0)=5.57(9),quad
-F_1^{d/p,\prime}(0)=2.84(5),quad
-F_1^{s/p,\prime}(0)=-0.018(9) {m GeV}^{-2},
+F_1^{u/p\,\prime}(0)=5.57(9),quad
+F_1^{d/p\,\prime}(0)=2.84(5),quad
+F_1^{s/p\,\prime}(0)=-0.018(9) {m GeV}^{-2},
 ]
 so the universal light-flavor sum has the diagnostic slope
 [
-F_1^{V,\prime}(0)=8.392(0.137) {m GeV}^{-2}.
+F_1^{V\,\prime}(0)=8.392(0.137) {m GeV}^{-2}.
 ]
 The same input gives (F_2^{s/p}(0)=-0.064(17)) and the total
 (F_2^V(0)=-0.552). These are low-(Q^2) matching inputs, not a complete
 finite-(t_N) form-factor model.
 
-As a second diagnostic, `nucleon_vector_form_factors.py` reconstructs the
-universal light-flavor current from the isoscalar proton+neutron
-electromagnetic form factors using the Borah--Hill--Lee--Tomalak z expansion,
-with the strange (F_1) slope from Bishara and (F_2^s) held at its
-zero-momentum value. This is explicitly a central diagnostic, not the final
-model input.
+The script `nucleon_vector_form_factors.py` provides two diagnostics:
+the Bishara linear (F_1) slope benchmark and a central reconstruction from
+the isoscalar proton+neutron electromagnetic z expansion of
+Borah--Hill--Lee--Tomalak, supplemented by the strange (F_1) slope and
+(F_2^s(0)). Neither is the final model-specific finite-(Q^2) input.
 
-For the Xe-131 point (q_A=256.271868) MeV, the central finite-(t_N)
-diagnostic gives
+At Xe-131 (E_R=200) keV, the native AFH grid gives
+(q_A=0.220930602) GeV and
 [
-F_1^V=2.5605,qquad F_2^V=-0.4492,
+rac{W_{\Phi''}}{W_M}=0.0371914,qquad
+rac{W_{M\Phi''}}{W_M}=-0.191819.
 ]
+The central finite-(t_N) diagnostic gives
 [
-c_M=2.5450,qquad c_{Phi''}=0.03096,qquad eta=0.01216.
+F_1^V=2.66287,qquad F_2^V=-0.46800,
 ]
-Using the native-validated Xe-131 response ratios at this point gives
+and the charge-sector correction is
 [
-Q_{Phi''}-1simeq-1.84%
-]
-relative to the finite-(t_N) (M)-only charge response.
-
-However, relative to the old pointlike (F_1^V(0)^2W_M) baseline, the
-same central diagnostic gives
-[
-oxed{rac{R_{m charge}^{m finite-t}}
-{R_{M,m pointlike}}-1simeq-29.4%}.
+oxed{delta_{\Phi''}^{\rm finite-t_N}=-0.346\%},
+qquad
+oxed{delta_{\rm charge}^{\rm pointlike}=-21.5\%}.
 ]
 
-Thus the finite-(t_N) Dirac form factor can be a much larger correction to
-the old (W_M)-only spectrum than the explicit (Phi'') term.
+At the Xe-131 (W_M) cancellation region around (E_R=267) keV,
+(q_A=0.255146957) GeV, the native AFH grid gives
+[
+rac{W_{\Phi''}}{W_M}=19.6361,qquad
+rac{W_{M\Phi''}}{W_M}=-4.23930.
+]
+The pointlike (M+\Phi'') charge correction is then
+[
+oxed{delta_{\Phi''}^{\rm pointlike}=-9.68\%}.
+]
+With the central finite-(t_N) form-factor diagnostic,
+[
+F_1^V=2.56389,qquad F_2^V=-0.44977,
+]
+and the total charge-sector change relative to the old pointlike
+(F_1^V(0)^2W_M) baseline is
+[
+oxed{delta_{\rm charge}^{\rm pointlike}=-34.2\%}.
+]
 
-This distinction is essential:
+The last number is **Xe-131 only**. It must not be promoted to a natural-xenon
+spectrum because the native Mathematica pointwise validation currently covers
+Xe-131 (M,Phi'',MPhi''), whereas the seven-isotope spatial-response
+translation is still a provisional Python AFH database.
 
-- (Phi'') changes the charge-sector response by only percent level relative
-  to the finite-(t_N) (M) term at this selected point.
-- The finite-(t_N) normalization of the coherent charge itself can change
-  the pointlike (W_M)-only prediction by tens of percent.
-- The spatial-current (Delta,Sigma',Sigma'Delta) sector remains at the
-  (10^{-8})-level relative to the charge sector in the current fixed-speed
-  benchmarks.
+The hierarchy established by the present calculations is therefore:
 
-The finite-(t_N) result is still a diagnostic because the available inputs
-do not provide a single, fully validated finite-(Q^2) form-factor set for
-the universal (u+d+s) current, especially for (F_2^V(Q^2)). The natural
-xenon spectrum must therefore be reported in layers: pointlike (W_M)-only,
-finite-(t_N) charge benchmark, then (M+Phi''), and finally the spatial
-current sector.
+1. The spatial (Delta,Sigma',Sigma'') sector is tiny:
+   (<7.1\times10^{-9}) of the charge sector in the tested fixed-speed
+   contractions.
+2. The explicit (Phi'') correction is normally small away from a deep
+   (W_M) cancellation, but can reach (mathcal O(10\%)) locally near
+   the Xe-131 cancellation.
+3. The finite-(t_N) coherent charge normalization can change the old
+   pointlike (W_M)-only prediction by tens of percent.
 
+Therefore the final natural-xenon spectrum must be built in the order
+[
+W_M^{\rm pointlike}
+;ightarrow;
+(M+\Phi'')^{\rm finite-t_N}
+;ightarrow;
+(\Delta,\Sigma',\Sigma'')^{\rm finite-t_N},
+]
+with each isotope evaluated using its own exact (q_A), and without mixing
+the native Xe-131 response grid with the provisional seven-isotope AFH
+translation.
 
 ## 8. Leading AFH response content and remaining work
 
