@@ -743,3 +743,15 @@ equivalence test or a halo-folded prediction.
 
 Detailed normalization, rankwise contributions, provenance and limitations:
 [P3_C_C0_CONSISTENT_CONTRACTION.md](P3_C_C0_CONSISTENT_CONTRACTION.md).
+
+## 12. Xe-131 full-recoil charge-sector kernel scan (2026-11-18)
+
+A 943-point scan has been added using the native Xe-131 AFH v6.0 \(W_M\), \(W_{\Phi''}\), and signed \(W_{M\Phi''}\) responses over the fixed-speed recoil window 109.64–652.94 keV. It compares the finite-\(Q^2\) matched \(M\)-only charge kernel with the coherent \(M+\Phi''\) charge kernel.
+
+- Detailed method, benchmark, numerical results and limitations: [XE131_FULL_RECOIL_CHARGE_KERNEL_SCAN.md](results/2026-11-18/XE131_FULL_RECOIL_CHARGE_KERNEL_SCAN.md)
+- 943-point native-grid data: [xe131_charge_kernel_full_recoil_scan.csv](results/2026-11-18/xe131_charge_kernel_full_recoil_scan.csv)
+- Normalized kernel curves: [xe131_charge_kernel_full_recoil_curves.svg](results/2026-11-18/xe131_charge_kernel_full_recoil_curves.svg)
+- Correction-ratio curves: [xe131_charge_kernel_full_recoil_ratios.svg](results/2026-11-18/xe131_charge_kernel_full_recoil_ratios.svg)
+- Regeneration script: [build_xe131_full_recoil_charge_scan.py](build_xe131_full_recoil_charge_scan.py)
+
+At the exact benchmark recoils, the full charge-sector kernel relative to the finite-\(Q^2\) \(M\)-only kernel is 0.99655805 at 200 keV and 0.89961039 at 267 keV. This is **not** the same observable as the fixed-speed three-body cross-section ratio in Section 8, whose denominator is the original pointlike \(9W_M\) baseline. The present scan is not an absolute \(d\sigma/dE_R\), a halo-folded natural-xenon spectrum, or a detector prediction. Spatial multipoles remain outside this charge-sector plot.
