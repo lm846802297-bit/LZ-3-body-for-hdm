@@ -501,3 +501,11 @@ def main() -> None:
         "accepted_recoil_rows": result["accepted_recoil_rows"],
         "all_rows": result["all_rows_including_closed_or_on_shell"],
         "max_abs_spatial_over_charge_candidate": result["maximum_absolute_spatial_over_charge_candidate"],
+        "max_pchip_linear_difference": result["maximum_PCHIP_vs_linear_response_difference"],
+        "anchor_checks": result["anchor_checks_against_previous_finite_tN_charge_only"],
+        "output": str(args.outdir),
+    }, indent=2))
+
+
+if __name__ == "__main__":
+    main()
