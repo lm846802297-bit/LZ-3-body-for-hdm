@@ -53,6 +53,9 @@ python research/afh_response_crosschecks/compare_p3_spatial_vs_native.py \
 
 The native artifact is produced by
 [research-compute-control run 44222502400](https://github.com/lm846802297-bit/research-compute-control/actions/runs/44222502400).
+The direct comparator also requires the manifest to certify the pinned source
+commit, AFH response-index mapping, 16,807-row native eight-response PASS,
+and exact q grid.
 A direct PASS is labelled PASS_NATIVE_AFH_SPATIAL_CROSSCHECK. It validates
 these three P3-B channels only; it does not validate the complete three-body
 tensor contraction or event rate.
