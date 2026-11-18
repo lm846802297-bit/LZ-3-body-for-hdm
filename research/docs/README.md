@@ -17,7 +17,7 @@
 - [Scientific content audit — Phase 1](supplements/scientific_content_audit_2026-11-16.md): AFH-7 full-grid status, old/new kernel comparison, GCN/JJ55 quadrature mismatch, and remaining validation boundaries.
 - [Anand / AFH coherent-response audit](../three_body_calculation_and_validation/ANAND_WM_RESPONSE_AUDIT.md): source-level AFH isoscalar convention and the physical equal-\(p,n\) response mapping.
 - [三体 VV 核子流与 AFH 核响应——唯一主讨论档案](../afh_isotope_response_equivalence/docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md)
-- [AFH 方法背景与三体散射推广说明](../afh_isotope_response_equivalence/docs/AFH_METHOD_BACKGROUND_AND_THREE_BODY_GENERALIZATION.md)：独立介绍 AFH 核响应方法、相关三体辐射文献先例，以及本项目标量辐射模型需要重新推导的三体张量和响应系数；作为唯一主讨论档案的配套背景文档，不替代原档案。: 保留原始讨论与 A–N 校订，并集中维护 §§27–35 的逐步推导、§§36–37 的 AFH 全响应数据库框架、§§38–44 的完整三体反冲率/响应矩阵及数值验收规范，以及 N 节的三体 AFH 文献先例和重推导边界。
+- [AFH 方法背景与三体散射推广说明](../afh_isotope_response_equivalence/docs/AFH_METHOD_BACKGROUND_AND_THREE_BODY_GENERALIZATION.md)：独立介绍 AFH 核响应方法、相关三体辐射文献先例，以及本项目标量辐射模型需要重新推导的三体张量和响应系数；作为唯一主讨论档案的配套背景文档，不替代原档案。: 保留原始讨论与 A–O 校订，并集中维护 §§27–35 的逐步推导、§§36–37 的 AFH 全响应数据库框架、§§38–44 的完整三体反冲率/响应矩阵及数值验收规范，以及 N 节的三体 AFH 文献先例与正确文献映射，以及 O 节对精确核流因子化和软光子近似的区分。
 
 ## Earlier project notes
 
