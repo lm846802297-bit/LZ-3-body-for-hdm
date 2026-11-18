@@ -76,6 +76,43 @@ class AFHSpatialOBDMEResponseTests(unittest.TestCase):
             result["W_SigmaPrimeDelta_AFH_package"], expected, places=13
         )
 
+    def test_rank_resolved_multipoles_reconstruct_all_three_spatial_responses(self):
+        result = spatial.isotope_spatial_response(
+            0.2551469574, 131, self.xe131, 1.5, 11.5, 11.61690053236942
+        )
+        records = spatial.multipole_records_for_response(131, "Xe-131", 1.5, result)
+        self.assertGreater(len(records), 0)
+        self.assertEqual(
+            {row["multipole_J"] for row in records},
+            {int(key) for key in result["rank_amplitudes_Delta"]},
+        )
+        for name, total_key, rank_key in (
+            ("Delta", "W_Delta_AFH_package", "W_Delta_J_AFH_package"),
+            ("SigmaPrime", "W_SigmaPrime_AFH_package", "W_SigmaPrime_J_AFH_package"),
+            ("SigmaPrimeDelta", "W_SigmaPrimeDelta_AFH_package", "W_SigmaPrimeDelta_J_AFH_package"),
+        ):
+            reconstructed = sum(row[rank_key] for row in records)
+            self.assertAlmostEqual(reconstructed, result[total_key], places=14, msg=name)
+        for name, total_key, rank_key in (
+            ("Delta", "R_Delta_equal_pn", "R_Delta_J_equal_pn"),
+            ("SigmaPrime", "R_SigmaPrime_equal_pn", "R_SigmaPrime_J_equal_pn"),
+            ("SigmaPrimeDelta", "R_SigmaPrimeDelta_equal_pn", "R_SigmaPrimeDelta_J_equal_pn"),
+        ):
+            reconstructed = sum(row[rank_key] for row in records)
+            self.assertAlmostEqual(reconstructed, result[total_key], places=13, msg=name)
+
+    def test_rankwise_interference_keeps_its_sign(self):
+        result = spatial.isotope_spatial_response(
+            0.2551469574, 131, self.xe131, 1.5, 11.5, 11.61690053236942
+        )
+        records = spatial.multipole_records_for_response(131, "Xe-131", 1.5, result)
+        rankwise = [row["W_SigmaPrimeDelta_J_AFH_package"] for row in records]
+        self.assertTrue(any(value < 0.0 for value in rankwise) or
+                        any(value > 0.0 for value in rankwise))
+        self.assertAlmostEqual(
+            sum(rankwise), result["W_SigmaPrimeDelta_AFH_package"], places=14
+        )
+
     def test_common_equal_pn_and_matrix_normalization_are_applied_once(self):
         result = spatial.isotope_spatial_response(
             0.22, 131, self.xe131, 1.5, 11.5, 11.61690053236942
