@@ -5665,7 +5665,7 @@ Q_N=|\mathbf q_N|.
 u(\mathbf p)=
 \sqrt{E_{\mathbf p}+m_N}
 \begin{pmatrix}
-\xi\[2pt]
+\xi\\[2pt]
 \dfrac{\boldsymbol\sigma\cdot\mathbf p}
 {E_{\mathbf p}+m_N}\xi
 \end{pmatrix},
@@ -5899,7 +5899,7 @@ J_N^0=2m_NG_E,\qquad
 i\frac{F_1+2F_2}{4m_N^2}
 \boldsymbol\sigma_N\cdot
 (\mathbf q_N\times\mathbf K_N)+\cdots ,
-\[4pt]
+\\[4pt]
 \frac{\mathbf J_N}{2m_N}
 ={}&
 \frac{F_1}{m_N}\mathbf K_N
