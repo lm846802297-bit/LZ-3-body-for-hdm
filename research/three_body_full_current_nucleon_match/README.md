@@ -662,3 +662,22 @@ This is a kinematic free-nucleon slice, not a bound-nucleon momentum
 distribution or a many-body continuity proof. It does **not** determine
 the energy-sharing distribution of a bound nucleon, off-shell/binding
 effects, or exchange currents from the nuclear Hamiltonian.
+
+
+## 11. P3-B independent Python spatial-response cross-check
+
+The seven-isotope P3-B spatial grid has been compared row by row against the
+independent AFH-8 Python implementation. All 16,807 rows pass the raw and
+physical-response comparisons at rtol=5e-12 and atol=2e-14. This is a
+Python-to-Python consistency PASS only; native Wolfram validation remains
+pending.
+
+- Detailed provenance and numerical results:
+  [P3_B_INDEPENDENT_PYTHON_CROSSCHECK.md](results/2026-11-18/P3_B_INDEPENDENT_PYTHON_CROSSCHECK.md)
+- Reproducible artifact comparator:
+  [compare_p3_spatial_vs_afh8.py](../afh_response_crosschecks/compare_p3_spatial_vs_afh8.py)
+- Native AFH workflow:
+  [research-compute-control run 44222502400](https://github.com/lm846802297-bit/research-compute-control/actions/runs/44222502400)
+
+Do not set native_afh_validated=true until the native Wolfram ResponseNuclear
+outputs for indices 3, 6 and 8 have been compared pointwise with the P3-B CSV.
