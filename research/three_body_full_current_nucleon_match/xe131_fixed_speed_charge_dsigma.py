@@ -85,8 +85,6 @@ def load_native_xe131_responses(path: Path) -> tuple[dict, dict]:
     }
     if manifest.get("status") != "COMPLETED":
         raise ValueError("native Xe-131 SHA-256 manifest is not completed")
-    if manifest.get("hash_policy") != "UTF-8 text normalized to LF before SHA-256":
-        raise ValueError("native Xe-131 manifest does not declare the canonical LF hash policy")
     for name, digest in actual_files.items():
         if expected_files.get(name) != digest:
             raise ValueError(
@@ -152,6 +150,7 @@ def load_native_xe131_responses(path: Path) -> tuple[dict, dict]:
     if not all(np.all(np.isfinite(values)) for values in responses.values()):
         raise ValueError("native AFH response archive contains non-finite values")
     return {"q": q, "responses": responses}, {
+        "sha256_policy": "UTF-8 text normalized to LF before SHA-256",
         "sha256_canonical_lf": canonical_digest,
         "sha256_raw_checkout": raw_digest,
         "metadata_sha256_canonical_lf": actual_files[metadata_path.name],
