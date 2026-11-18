@@ -934,15 +934,15 @@ def fold(
                         default=None,
                     ),
                     "max_native_response_Cauchy_excess": max(
-                        (r["max_native_response_Cauchy_excess"] for r in isotope_rows),
+                        (r.get("max_native_response_Cauchy_excess", 0.0) for r in isotope_rows),
                         default=0.0,
                     ),
                     "max_particle_Cauchy_identity_residual": max(
-                        (r["max_particle_Cauchy_identity_residual"] for r in isotope_rows),
+                        (r.get("max_particle_Cauchy_identity_residual", 0.0) for r in isotope_rows),
                         default=0.0,
                     ),
                     "max_charge_reconstruction_residual": max(
-                        (r["max_charge_reconstruction_residual"] for r in isotope_rows),
+                        (r.get("max_charge_reconstruction_residual", 0.0) for r in isotope_rows),
                         default=0.0,
                     ),
                 })
