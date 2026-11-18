@@ -196,3 +196,29 @@ The audit's status is deliberately limited to
 \`native_afh_validated\`, does not close the native spatial-response gate,
 and does not validate the bound-nucleus covariant/q-frame/AFH amplitude
 identity or a halo-integrated event rate.
+
+
+## 8. Dense native export implementation status
+
+The next calculation is now prepared in draft
+[PR #63](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/pull/63).
+It adds the Wolfram v6.0 exporter, metadata/hash validator, and unit tests.
+The private control workflow
+[xe131-afh-spatial-native.yml](https://github.com/lm846802297-bit/research-compute-control/blob/main/.github/workflows/xe131-afh-spatial-native.yml)
+has also been updated. Its default source commit is
+\`5afc500a3102b857dd16e29432db8e6e068d65d1\`, and its P3-B input is pinned
+to run 44317358790 / artifact 14431903885.
+
+The updated native workflow will:
+1. run the seven-isotope/eight-response native export;
+2. evaluate the 121-point dense Xe-131 \(M,\Phi'',M\Phi''\) grid;
+3. compare all 13 overlapping q nodes with the coarse native Xe-131 export;
+4. record the dense CSV, metadata, validation, and SHA-256 values in the
+   run manifest and uploaded artifact;
+5. continue with the Xe-129/Xe-131 native spatial multipole comparison.
+
+The previously queued control run 44306907993 was dispatched before this
+workflow update and therefore does **not** contain the dense export step.
+A fresh manual workflow dispatch is required. The Windows self-hosted
+runner with labels \`Windows\`, \`X64\`, and \`research-gpu\` must be online.
+No native dense-q PASS is claimed yet.
