@@ -100,6 +100,6 @@
     "factor_4pi_over_2Jplus1": 3.141592653589793,
     "note": "Raw physical response is reported. The separate 1.00008253 mass-response q=0 shape correction is not imposed on Phi or M-Phi."
   },
-  "source_commit": "e76f9ab7bfbc901731acb1785516bc59a4e1708b",
+  "source_commit": "d0e64c034bb2ff61178519a8a6c60d989c6e8f3e",
   "status": "Python_AFH_v6_translation_reproducible_native_Mathematica_crosscheck_PASS"
 }
