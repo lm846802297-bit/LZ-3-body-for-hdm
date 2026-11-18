@@ -773,3 +773,36 @@ The fixed-benchmark absolute charge-sector spectrum is calculated by the fixed-b
 
 Important: the absolute spectrum is charge-sector only. It is not labelled as the complete six-channel \(L_{\mu\nu}W_A^{\mu\nu}\) result while native spatial AFH response validation and P3-C matching remain open.
 
+
+
+## 13. Xe-131 six-channel fixed-speed recoil scan and interpolation audit
+
+The fixed-speed Xe-131 six-channel scan now compares the coherent charge
+responses \(M,\Phi'',M\Phi''\) with the leading-static spatial responses
+\(\Delta,\Sigma',\Sigma'\Delta\), at identical recoil points and with the
+full integrated three-body phase-space tensor. The scan contains 140
+accepted recoil/width rows across the \(\Delta m=450\) keV off-pole and
+\(\Delta m=362\) keV near-pole benchmarks.
+
+A separate interpolation audit was added after finding a diffraction
+minimum in \(W_M\) near \(q_A\simeq0.256\) GeV. It compares PCHIP with
+local degree-8 and degree-10 Chebyshev interpolation on the archived
+2,401-point AFH grid. The full charge-dominated kernel changes by at most
+1.6589% under this interpolation comparison; the normalized full /
+pointlike-\(M\) ratio changes by at most 0.1182%. The spatial kernel changes
+by less than 1 ppm. These are interpolation diagnostics, not a dense native
+AFH validation.
+
+- Full method and numerical audit:
+  [XE131_SIX_CHANNEL_INTERPOLATION_AUDIT.md](results/2026-11-18/XE131_SIX_CHANNEL_INTERPOLATION_AUDIT.md)
+- Reproducible interpolation audit:
+  [audit_xe131_six_channel_interpolation.py](audit_xe131_six_channel_interpolation.py)
+- Regression tests:
+  [test_audit_xe131_six_channel_interpolation.py](test_audit_xe131_six_channel_interpolation.py)
+
+The next required calculation is a direct native Wolfram Xe-131 export of
+AFH indices 1, 4, and 7 on \(0.2545\le q_A\le0.2575\) GeV with
+\(0.000025\) GeV spacing, followed by a rerun of the fixed-speed
+contraction. Until then, keep the result labelled
+\`PASS_LOCAL_INTERPOLATION_STABILITY_DIAGNOSTIC\`; do not promote
+\`native_afh_validated\` or claim a final continuous \(d\sigma/dE_R\).
