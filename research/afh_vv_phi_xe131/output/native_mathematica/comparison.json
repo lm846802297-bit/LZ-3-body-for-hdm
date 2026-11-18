@@ -4,7 +4,7 @@
   "mathematica_csv_sha256": "1c13d56ae1a8cb4abe7720ccb0f76d9a595d52e28b7f4e4b5179f72d65bbf254",
   "passed": true,
   "points": 2401,
-  "python_csv_sha256": "eeb29e778cc9976cd2fddab2f770eb169d6ee4345ac377179e8370a8b8b43929",
+  "python_csv_sha256": "e7f6d8addc89f928aa1ba1b6d2c34f58dc29052c13b57d21731dc82b0eab9e97",
   "q_grid_match": "exact node equality after rounding both grids to the Python CSV 8-decimal precision; no interpolation",
   "q_grid_max_abs_difference_GeV": 1.1102230246251565e-16,
   "responses": {

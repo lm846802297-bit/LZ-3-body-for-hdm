@@ -12,7 +12,7 @@
     "Cauchy_Schwarz_max": 0.9999998601592628,
     "Cauchy_Schwarz_max_q_GeV": 0.47075,
     "W_M_against_existing_AFH_grid": {
-      "max_relative_difference": 6.692986881717466e-16,
+      "max_relative_difference": 2.8418620300601274e-15,
       "points": 2401,
       "status": "PASS"
     },
@@ -23,7 +23,7 @@
       "status": "PASS"
     },
     "native_Mathematica_Phi_crosscheck": {
-      "comparison_sha256": "5616a5a9973466a5b1acaab756affd8fde7ef83d8d10482fd30cf96c58e2b985",
+      "comparison_sha256": "e6a87e78d6b44da088d16bdedda97070596ca38d75a23d1433552a031464196f",
       "max_abs_q_grid_difference_GeV": 1.1102230246251565e-16,
       "points": 2401,
       "status": "PASS"
@@ -72,7 +72,7 @@
   "outputs": {
     "afh_vv_phi_xe131_full_grid.csv": {
       "rows": 2401,
-      "sha256": "eeb29e778cc9976cd2fddab2f770eb169d6ee4345ac377179e8370a8b8b43929"
+      "sha256": "e7f6d8addc89f928aa1ba1b6d2c34f58dc29052c13b57d21731dc82b0eab9e97"
     },
     "afh_vv_phi_xe131_selected_points.csv": {
       "rows": 4,
@@ -84,7 +84,7 @@
     },
     "native_mathematica/comparison.json": {
       "rows": 1,
-      "sha256": "5616a5a9973466a5b1acaab756affd8fde7ef83d8d10482fd30cf96c58e2b985"
+      "sha256": "e6a87e78d6b44da088d16bdedda97070596ca38d75a23d1433552a031464196f"
     },
     "native_mathematica/native_metadata.txt": {
       "sha256": "f9d2ab9ca3502404d006cf3777090b754bffcbd253a6ad1a59713af59c380f17"
@@ -100,6 +100,6 @@
     "factor_4pi_over_2Jplus1": 3.141592653589793,
     "note": "Raw physical response is reported. The separate 1.00008253 mass-response q=0 shape correction is not imposed on Phi or M-Phi."
   },
-  "source_commit": "85288c100876d854edf9ab11ee5bdd2cbd84b5e1",
+  "source_commit": "c8e5ada2666a05c503760d1daeeac560897413ba",
   "status": "Python_AFH_v6_translation_reproducible_native_Mathematica_crosscheck_PASS"
 }
