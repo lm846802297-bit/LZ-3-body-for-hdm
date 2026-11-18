@@ -359,3 +359,114 @@ u b}^{(3)}), retaining the coherent
 - Repository source: `v6/dmformfactor-V6.m`, definitions of
   `SigmaPJ`, `SigmaPPJ`, `PhiTPJ`, and
   `DeltaJ`.
+
+
+## 8. P2 particle-side multipole projection and signed phase audit
+
+The AFH operator definitions are now matched at the operator level to the
+Pauli-reduced Dirac--Pauli current. In the AFH convention,
+\[
+\Delta_{JM}=\boldsymbol M_{JJM}\cdot\frac{\boldsymbol\nabla}{q},
+\qquad
+\Sigma'_{JM}=-i\left(
+\frac{\boldsymbol\nabla}{q}\times\boldsymbol M_{JJM}
+\right)\cdot\boldsymbol\sigma.
+\]
+The AFH v6.0 implementation makes the corresponding choices explicitly:
+\[
+\begin{aligned}
+\Delta_J&=\texttt{MJLDivQ}[\ldots,J,J],\\
+\Sigma'_J&=
+-\frac{\sqrt J}{\sqrt{2J+1}}\,
+\texttt{MJLSigma}[\ldots,J,J+1]
++\frac{\sqrt{J+1}}{\sqrt{2J+1}}\,
+\texttt{MJLSigma}[\ldots,J,J-1].
+\end{aligned}
+\]
+The ordered response index 8 is \((\Sigma'_J,\Delta_J)\), not the
+opposite ordering. These definitions are in v6/dmformfactor-V6.m around
+lines 903--917 and 981--1015. The vector-spherical-harmonic definitions
+are also given in Fitzpatrick et al., arXiv:1203.3542, Eq. (43).
+
+For the amplitude
+\[
+\mathcal M_{\rm spatial}
+=-\boldsymbol{\mathcal T}_3\cdot
+\left[
+\frac{F_1^V}{m_N}\boldsymbol K_N
++\frac{i(F_1^V+F_2^V)}{2m_N}
+(\boldsymbol\sigma_N\times\boldsymbol q_N)
+\right],
+\]
+use \(\boldsymbol q_{\rm AFH}=-\boldsymbol q_A=-\boldsymbol q_N\).
+The AFH particle-side vectors are
+\[
+\boldsymbol l_M=-F_1^V\boldsymbol{\mathcal T}_3,\qquad
+\boldsymbol l_5=
+\frac{i(F_1^V+F_2^V)}{2m_N}
+(\boldsymbol q_{\rm AFH}\times\boldsymbol{\mathcal T}_3).
+\]
+This follows from
+\[
+\boldsymbol{\mathcal T}_3\cdot
+(\boldsymbol\sigma_N\times\boldsymbol q_N)
+=\boldsymbol\sigma_N\cdot
+(\boldsymbol q_N\times\boldsymbol{\mathcal T}_3)
+\]
+and the overall minus sign in the spatial contraction with metric
+\((+---)\).
+
+Inserting these vectors into AFH Appendix A Eq. (107),
+\[
+\begin{aligned}
+C_\Delta&=\frac12\left[
+\frac{q^2}{m_N^2}\boldsymbol l_M\cdot\boldsymbol l_M^*
+-\left(\frac{\boldsymbol q}{m_N}\cdot\boldsymbol l_M\right)
+ \left(\frac{\boldsymbol q}{m_N}\cdot\boldsymbol l_M^*\right)
+\right],\\
+C_{\Sigma'}&=\frac12\left[
+\boldsymbol l_5\cdot\boldsymbol l_5^*
+-(\hat{\boldsymbol q}\cdot\boldsymbol l_5)
+ (\hat{\boldsymbol q}\cdot\boldsymbol l_5^*)
+\right],\\
+C_{\Sigma'\Delta}&=
+\frac{\boldsymbol q}{m_N}\cdot
+\operatorname{Re}\left[i\boldsymbol l_M\times\boldsymbol l_5^*\right],
+\end{aligned}
+\]
+gives
+\[
+\boxed{
+\begin{aligned}
+C_\Delta&=\frac{(F_1^V)^2Q_A^2}{2m_N^2}L_T,\\
+C_{\Sigma'}&=\frac{(F_1^V+F_2^V)^2Q_A^2}{8m_N^2}L_T,\\
+C_{\Sigma'\Delta}&=
+-\frac{F_1^V(F_1^V+F_2^V)Q_A^2}{2m_N^2}L_T,
+\end{aligned}
+\qquad L_T=L_{11}+L_{22}.
+}
+\]
+In particular, the negative sign is fixed by the simultaneous use of
+q_AFH=-q_A, q_N=+q_A, the spatial metric sign, and the AFH Eq. (107)
+cross-product order. For \(F_1^V(F_1^V+F_2^V)>0\),
+\[
+C_{\Sigma'\Delta}=-2\sqrt{C_\Delta C_{\Sigma'}}.
+\]
+This is a particle-side coefficient identity; it does not imply saturation
+of the nuclear-response Cauchy--Schwarz bound.
+
+An independent amplitude-level implementation now evaluates Eq. (107)
+before spin averaging, from arbitrary complex spin-channel vectors
+\(\mathcal T_3^i\), and compares it with the 4x4 Lorentz-tensor
+coefficient extractor. The regression tests:
+- the signed \(\Sigma'\)-\(\Delta\) coefficient and its factor of two;
+- invariance under rotations of the transverse axes;
+- independence from the longitudinal DM-current component;
+- distinction from the generic transverse helicity-odd tensor weight.
+
+This closes the **particle-side Eq. (107) algebra and relative phase** for
+the declared leading-static one-body current. It does not yet close the
+full many-body spherical-multipole contraction: the direct covariant,
+q-frame-rotated, and AFH OBDME contractions still have to agree pointwise
+in P3. The current 84-row contraction remains provisional until the native
+AFH response archive and P3 gates are tied to the same run and conventions.

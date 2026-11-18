@@ -494,3 +494,30 @@ energy sharing, binding, the nuclear Hamiltonian, and any required
 interaction currents remain outside the free on-shell diagnostic. P2
 therefore starts from the established one-body operators but must still
 derive their exact AFH spherical multipoles and signed interference phase.
+
+
+## 9. P0 scope clarification and P2 particle-side phase closure — 2026-11-18
+
+The project P0 in Section 5 is the **convention-fixing gate** (metric,
+momentum-transfer signs, q-aligned frame, state/current normalization,
+mediator transfer, and AFH response definitions). P0 is closed. It must not
+be relabeled as the separate native-AFH database/input gate.
+
+The native seven-isotope/eight-response archive and its 16,807-point
+validation are nuclear-input acceptance tasks for the later native-AFH
+folding stage; they are not the definition of P0.
+
+P1 is closed within the free on-shell one-body impulse approximation, as
+documented in P1_DIRAC_PAULI_CURRENT_DECOMPOSITION.md.
+
+The particle-side P2 phase is now independently checked by evaluating AFH
+Eq. (107) on complex spin-resolved three-body amplitudes before spin
+averaging, then comparing against the q-aligned Lorentz-tensor coefficient
+extractor. The regression fixes the negative sign of
+C_{Sigma' Delta}, verifies transverse-axis rotation invariance, and shows
+that this coefficient is not the generic helicity-odd L12-L21 weight.
+
+P2 is therefore **closed at the particle-side coefficient/phase level**.
+The full nuclear multipole/OBDME contraction and pointwise P3 tensor
+comparison remain open. Do not promote the 84-row provisional contraction
+to a full natural-xenon prediction.

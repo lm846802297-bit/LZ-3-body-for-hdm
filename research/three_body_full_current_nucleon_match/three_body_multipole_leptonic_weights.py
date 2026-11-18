@@ -141,6 +141,87 @@ def extract_leptonic_weights(
     return result
 
 
+def afh_eq107_spatial_coefficients_from_amplitudes(
+    T_amplitudes: np.ndarray,
+    qA_vec_GeV: np.ndarray,
+    *,
+    f1: float = DEFAULT_F1,
+    f2: float = DEFAULT_F2,
+    mN_GeV: float = DEFAULT_MN_GEV,
+) -> dict:
+    """Evaluate AFH Eq. (107) directly on complex spin-resolved amplitudes.
+
+    Each row of T_amplitudes is one spin channel of the three-body DM
+    transition current T_3^i in the q-aligned spatial basis. The function
+    constructs l_M=-F1*T_3 and
+    l_5=+i(F1+F2)/(2m_N) (q_AFH x T_3), with q_AFH=-q_A, then evaluates
+    the three vector expressions in AFH Eq. (107) before spin averaging.
+
+    This is an independent amplitude-level check of the scalar L_T formulas
+    used by extract_afh_vector_coefficients. It validates the particle-side
+    relative phase and normalization, not nuclear OBDME phases or the
+    full AFH nuclear multipole contraction.
+    """
+    amplitudes = np.asarray(T_amplitudes, dtype=complex)
+    qA = np.asarray(qA_vec_GeV, dtype=float)
+    if amplitudes.ndim != 2 or amplitudes.shape[1] != 3 or amplitudes.shape[0] == 0:
+        raise ValueError("T_amplitudes must have shape (n_spin_channels, 3)")
+    if not np.all(np.isfinite(amplitudes)):
+        raise ValueError("T_amplitudes contains non-finite values")
+    if qA.shape != (3,) or not np.all(np.isfinite(qA)):
+        raise ValueError("qA_vec_GeV must be a finite three-vector")
+    if not all(np.isfinite(x) for x in (f1, f2, mN_GeV)) or mN_GeV <= 0.0:
+        raise ValueError("form factors must be finite and mN_GeV positive")
+
+    Q = float(np.linalg.norm(qA))
+    if Q <= 0.0:
+        raise ValueError("qA_vec_GeV must be nonzero")
+    qAFH = -qA
+    qhat = qAFH / Q
+    q_over_m = qAFH / mN_GeV
+    lM = -f1 * amplitudes
+    l5 = 1j * (f1 + f2) / (2.0 * mN_GeV) * np.cross(
+        np.broadcast_to(qAFH, amplitudes.shape), amplitudes
+    )
+
+    c_delta = []
+    c_sigma = []
+    c_sigma_delta = []
+    for lm, l5_channel in zip(lM, l5):
+        q_lm = np.dot(q_over_m, lm)
+        q_l5 = np.dot(qhat, l5_channel)
+        c_delta.append(0.5 * (
+            (Q * Q / (mN_GeV * mN_GeV)) * np.vdot(lm, lm).real
+            - abs(q_lm) ** 2
+        ))
+        c_sigma.append(0.5 * (
+            np.vdot(l5_channel, l5_channel).real - abs(q_l5) ** 2
+        ))
+        c_sigma_delta.append(float(np.dot(
+            q_over_m,
+            np.real(1j * np.cross(lm, np.conjugate(l5_channel))),
+        )))
+
+    return {
+        "C_Delta": float(np.mean(c_delta)),
+        "C_SigmaPrime": float(np.mean(c_sigma)),
+        "C_SigmaPrimeDelta": float(np.mean(c_sigma_delta)),
+        "qA_GeV": qA.tolist(),
+        "q_AFH_GeV": qAFH.tolist(),
+        "spin_channel_count": int(amplitudes.shape[0]),
+        "spin_average": True,
+        "F1V": float(f1),
+        "F2V": float(f2),
+        "mN_GeV": float(mN_GeV),
+        "transverse_DM_norm_L_T": float(np.mean(
+            np.sum(np.abs(amplitudes) ** 2, axis=1)
+            - np.abs(amplitudes @ qhat) ** 2
+        )),
+        "AFH_q_convention": "q_AFH=-q_A; q_N=+q_A",
+        "source_formula": "AFH Appendix A Eq. (107), evaluated before spin averaging",
+    }
+
+
 def extract_afh_vector_coefficients(
     L: np.ndarray,
     qA_GeV: float,
