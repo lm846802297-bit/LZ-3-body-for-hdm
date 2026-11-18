@@ -1,8 +1,3 @@
-(* AME2020 xenon nuclear mass from atomic masses and CODATA-2022 constants. *)
-Global`ame2020XenonAtomicMassU=<|124->123905885174/10^9,126->125904297422/10^9,128->12790353075341/10^11,129->12890478085742/10^11,130->129903509346/10^9,131->13090508412808/10^11,132->13190415508346/10^11,134->133905393030/10^9,136->135907214474/10^9|>;
-Global`xenonZ=54; Global`xenonAtomicMassUnitGeV=93149410372/10^11; Global`electronMassU=5485799090441/10^16;
-Global`xenonElectronBindingEnergyGeV=N[(144381/10^4 Global`xenonZ^(239/100)+155468/10^11 Global`xenonZ^(535/100))10^-9,30];
-Global`xenonNuclearMassGeV[A_Integer]:=Module[{mAtom=Lookup[Global`ame2020XenonAtomicMassU,A,Null]},If[mAtom===Null,Return[$Failed]];N[(mAtom-Global`xenonZ Global`electronMassU)Global`xenonAtomicMassUnitGeV+Global`xenonElectronBindingEnergyGeV,20]];
 (* Native Wolfram Language evaluation of the complete Xe-131 Eq. (6) dSigma/dER.
    AFH response is read from the already archived native 2401-node table; I6 is recomputed here.
    Natural units, metric (+---), all masses and energies in GeV. *)
@@ -32,7 +27,7 @@ metaPath = getArg["--metadata", FileNameJoin[{outDir, "mathematica_full_dsigma_x
 If[!FileExistsQ[responsePath], Print["Missing native AFH response CSV: ", responsePath]; Exit[3]];
 
 A = 131; Z = 54; JA = 3/2.;
-mA = Global`xenonNuclearMassGeV[131]; (* AME2020 nuclear-mass convention *)
+mA = 131.*0.93149410242; (* A*u convention retained for direct comparison to archived benchmarks *)
 mchi = 1000.; mV = 10.; g2 = 1.; gProductSquared = 1.*10^-8;
 speedKms = 800.; cKms = 299792.458;
 betaChi = speedKms/cKms; gammaChi = 1./Sqrt[1. - betaChi^2];
