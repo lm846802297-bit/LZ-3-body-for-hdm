@@ -199,30 +199,28 @@ establish convergence over the full recoil-energy or halo-velocity domain.
 ### Leptonic multipole weights and transverse helicity-odd component
 
 For the 12 archived DM tensors, the transverse-even weight
-`w_T=(L11+L22)/2` is between (4.08	imes10^{-8}) and
-(2.26	imes10^{-7}) relative to (L00). This is a DM-side kinematic
+\(w_T=(L^{11}+L^{22})/2\) is between \(4.08\times10^{-8}\) and
+\(2.26\times10^{-7}\) relative to \(L^{00}\). This is a DM-side kinematic
 ratio only; it is not a nuclear rate correction because the nucleon current
 coefficients and AFH multipole normalization are not yet included.
 
-The longitudinal DM-side ratio (L33/L00) is between
-(5.73	imes10^{-6}) and (6.01	imes10^{-6}). In the static on-shell
+The longitudinal DM-side ratio \(L^{33}/L^{00}\) is between
+\(5.73\times10^{-6}\) and \(6.01\times10^{-6}\). In the static on-shell
 impulse approximation the nuclear longitudinal current vanishes; for a
-bound nucleus with (q_A^0=E_R), the continuity-equation correction must
+bound nucleus with \(q_A^0=E_R\), the continuity-equation correction must
 be treated separately.
 
 The transverse electric--magnetic multipole interference weight is
-`w_hel=-2i(L12-L21)`, as in HKS 2020 Appendix A, Eq. (111). For the 12
-archived tensors, the normalized transverse antisymmetric component satisfies
+\(w_{\rm hel}=-2i(L^{12}-L^{21})\), as in HKS 2020 Appendix A,
+Eq. (111). For the 12 archived tensors, the normalized transverse
+antisymmetric component satisfies
 \[
 \max\frac{|-i(L^{12}-L^{21})|}{|L^{11}+L^{22}|}
 =7.39\times10^{-16}.
 \]
-This is consistent with zero at floating-point precision for the
-unpolarized pure-vector benchmarks. The standard transverse
-electric--magnetic multipole interference is proportional to the
-helicity-odd lepton-tensor component (Hoferichter--Menéndez--Schwenk,
-PRD 102, 074018 (2020), Appendix A, Eq. 111). This suggests that the
-coefficient multiplying \(W_{\Sigma'\Delta}\) vanishes for the current
+Equivalently, the HKS interference weight normalized to
+\(L^{11}+L^{22}\) is at most \(1.48\times10^{-15}\). This is consistent
+with zero at floating-point precision for the unpolarized pure-vector
 benchmarks. The exact AFH spherical projector must still confirm the
 normalization and phase before this term is removed from the general rate
 formula. The signed nuclear response remains in the formalism.
