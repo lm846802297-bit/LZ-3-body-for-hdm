@@ -205,3 +205,25 @@ seven-isotope result can be promoted. Until then, the correct status is:
 
 No natural-xenon percentage is inferred from the Xe-131 local
 \(200\) or \(267\) keV diagnostics.
+
+
+## Important scope clarification (2026-11-18)
+
+The implementation calls the full three-body phase-space integrator, but
+extracts only the integrated (L_{00}) component. It therefore computes a
+**charge-density-sector approximation**, not the full
+(L_{mu
+u}^{(3)}W_A^{mu
+u}) contraction.
+
+The integrated tensor also contains (L_{03},L_{30},L_{33}) and transverse
+(L_{ij}). These must be projected onto the nuclear longitudinal and
+transverse multipoles before the result can be called a complete vector-current
+rate. The fixed-speed spatial-sector bound quoted above applies only to its
+tested 84 rows; it is not a global bound over the halo integral.
+
+The code output now explicitly sets
+`full_current_complete=false` and labels its status
+`COMPUTED_WITHIN_CHARGE_DENSITY_APPROXIMATION`. This engine remains useful
+for the restricted charge-sector comparison, but must not be used as the
+final natural-xenon spectrum.
