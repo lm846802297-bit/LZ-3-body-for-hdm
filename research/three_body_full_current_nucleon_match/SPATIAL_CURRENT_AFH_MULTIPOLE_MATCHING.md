@@ -210,33 +210,33 @@ weights follow from the vector-spherical-harmonic projection.
 The latest integrated tensor artifact (workflow run 44231019823, artifact
 14394488484) also permits a direct check of the transverse antisymmetric
 DM tensor component. In the q-aligned frame define
-[
-mathcal H_T=
+\[
+\mathcal H_T=
 \frac{\left|-i(L^{12}-L^{21})\right|}
  {|L^{11}+L^{22}|}.
-]
+\]
 Across the 12 archived combinations (four fixed-speed benchmarks and
 zero/pole/running widths),
-[
+\[
 \boxed{\max \mathcal H_T=7.39\times10^{-16}.}
-]
+\]
 This is consistent with zero at floating-point precision for the
 unpolarized pure-vector DM current used here.
 
 In the standard multipole expansion, the transverse electric--magnetic
 interference term is proportional to the helicity-odd factor
-((\boldsymbol l\times\boldsymbol l^*)_3); see
+\((\boldsymbol l\times\boldsymbol l^*)_3\); see
 Hoferichter--Menéndez--Schwenk, PRD 102, 074018 (2020), Appendix A,
 Eq. (111). The corresponding q-aligned tensor factor is proportional to
-(-i(L^{12}-L^{21})). Therefore the present numerical tensor strongly
-indicates that the leading (W_{\Sigma'\Delta}) coefficient vanishes
+\(-i(L^{12}-L^{21})\). Therefore the present numerical tensor strongly
+indicates that the leading \(W_{\Sigma'\Delta}\) coefficient vanishes
 for these pure-vector, unpolarized benchmark conditions, even though the
-nuclear response (W_{\Sigma'\Delta}) itself is not zero in general.
+nuclear response \(W_{\Sigma'\Delta}\) itself is not zero in general.
 
 This is an additional kinematic diagnostic, not yet a standalone AFH
 acceptance gate: the exact AFH spherical projector and its normalization
 must still be implemented before the mixed response is removed from any
-rate formula. Keep the signed (W_{\Sigma'\Delta}) response in the
+rate formula. Keep the signed \(W_{\Sigma'\Delta}\) response in the
 general expression until that projection is explicitly verified.
 
 ## 7. Mandatory next calculation
