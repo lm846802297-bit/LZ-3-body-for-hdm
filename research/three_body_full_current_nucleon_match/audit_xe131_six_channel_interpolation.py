@@ -37,7 +37,7 @@ def write_csv(path: Path, rows: list[dict]) -> None:
         raise ValueError("refusing to write empty interpolation audit")
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=list(rows[0]), lineterminator="\\n")
+        writer = csv.DictWriter(f, fieldnames=list(rows[0]), lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 
@@ -227,7 +227,7 @@ def run_audit(
         "required_next_gate": "Direct native Wolfram ResponseNuclear evaluation for Xe-131 charge indices 1, 4, 7 on q=0.2545--0.2575 GeV with 0.000025 GeV spacing, followed by the six-channel fixed-speed contraction using that dense response table.",
     }
     out_json.parent.mkdir(parents=True, exist_ok=True)
-    out_json.write_text(json.dumps(result, indent=2) + "\\n", encoding="utf-8")
+    out_json.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
     return result
 
 
