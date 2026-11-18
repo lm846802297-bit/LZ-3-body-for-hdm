@@ -19,8 +19,10 @@ if str(SPIN_DIR) not in sys.path:
 import spin_resolved_three_body_current as dm  # noqa: E402
 
 eq6 = dm.eq6
-M_N_GEV = 0.939
-F2_SCENARIOS = (0.0, -0.15)
+M_N_GEV = 0.938918
+# F1 is normalized to one in this diagnostic.  F2/F1=-0.184 is the
+# project's flavour-universal zero-momentum anchor; F2=0 is the control.
+F2_SCENARIOS = (0.0, -0.184)
 PAULI = (eq6.I2, eq6.s1, eq6.s2, eq6.s3)
 METRIC = np.diag([1.0, -1.0, -1.0, -1.0])
 
@@ -131,6 +133,15 @@ def perpendicular_unit(q_vec: np.ndarray) -> np.ndarray:
     return unit / np.linalg.norm(unit)
 
 
+def nonrel_state_normalization(
+    p_i: np.ndarray, p_f: np.ndarray, m_n: float = M_N_GEV
+) -> float:
+    """Return 1/(2 sqrt(E_i E_f)) for NR-normalized one-nucleon states."""
+    e_i = math.sqrt(m_n * m_n + float(np.dot(p_i, p_i)))
+    e_f = math.sqrt(m_n * m_n + float(np.dot(p_f, p_f)))
+    return 1.0 / (2.0 * math.sqrt(e_i * e_f))
+
+
 def spin_orbit_odd_coefficient(
     dm_current: np.ndarray,
     q_vec: np.ndarray,
@@ -138,10 +149,14 @@ def spin_orbit_odd_coefficient(
     f1: float = 1.0,
     f2: float = 0.0,
     part: str = "full",
+    nonrel_normalized: bool = False,
 ) -> complex:
     """Extract the DM-spin-independent nucleon-spin term odd in l.
 
-    The projected direction is q x l. The returned coefficient multiplies
+    The projected direction is q x l.  By default the coefficient is in
+    covariant spinor normalization.  Set nonrel_normalized=True to divide
+    the one-nucleon current by 2 sqrt(E_i E_f), as required before matching
+    to AFH one-body operators.  The returned coefficient multiplies
     sigma_N dot (q x l), before converting l=m_N*v_N.
     """
     q_vec = np.asarray(q_vec, dtype=float)
@@ -155,13 +170,24 @@ def spin_orbit_odd_coefficient(
     q_cross_l_reference = np.cross(q_vec, l_plus)
     direction = q_cross_l_reference / np.linalg.norm(q_cross_l_reference)
     for l_vec in (l_plus, -l_plus):
-        jn, _, _ = nucleon_current_matrices(q_vec, l_vec, f1, f2)
+        jn, _, (p_i, p_f) = nucleon_current_matrices(q_vec, l_vec, f1, f2)
+        if nonrel_normalized:
+            jn = jn * nonrel_state_normalization(p_i, p_f)
         full, charge, spatial = full_amplitude_operator(dm_current, jn)
         chosen = {"full": full, "charge": charge, "spatial": spatial}[part]
         coeff = pauli_product_coefficients(chosen)
         outputs.append(np.dot(coeff[0, 1:], direction))
     odd = 0.5 * (outputs[0] - outputs[1])
     return complex(odd / (qnorm * M_N_GEV * v_n))
+
+
+def pauli_coefficients_as_pairs(amplitude: np.ndarray) -> list[list[list[float]]]:
+    """JSON-safe [real, imag] entries for all 16 Pauli-product coefficients."""
+    coeff = pauli_product_coefficients(amplitude)
+    return [
+        [[float(value.real), float(value.imag)] for value in row]
+        for row in coeff
+    ]
 
 
 def build_reference_inputs():
@@ -176,40 +202,98 @@ def build_reference_inputs():
 def run_diagnostic() -> dict:
     point, t3 = build_reference_inputs()
     q_vec = np.asarray(point.q_A[1:], dtype=float)
+    q_a4 = np.asarray(point.q_A, dtype=float)
     results = []
+    pauli_decompositions = {}
     for f2 in F2_SCENARIOS:
         for v_n in (0.02, 0.05, 0.10, 0.20):
-            full = spin_orbit_odd_coefficient(t3, q_vec, v_n, 1.0, f2, "full")
-            charge = spin_orbit_odd_coefficient(t3, q_vec, v_n, 1.0, f2, "charge")
-            spatial = spin_orbit_odd_coefficient(t3, q_vec, v_n, 1.0, f2, "spatial")
+            projections = {}
+            for part in ("full", "charge", "spatial"):
+                cov = spin_orbit_odd_coefficient(
+                    t3, q_vec, v_n, 1.0, f2, part,
+                    nonrel_normalized=False,
+                )
+                nr = spin_orbit_odd_coefficient(
+                    t3, q_vec, v_n, 1.0, f2, part,
+                    nonrel_normalized=True,
+                )
+                projections[part] = {"covariant": cov, "nonrel": nr}
+            full = projections["full"]["nonrel"]
+            charge = projections["charge"]["nonrel"]
+            spatial = projections["spatial"]["nonrel"]
             results.append({
-                "F1": 1.0, "F2": f2, "vN": v_n,
-                "C_full_per_qcrossl": [full.real, full.imag],
-                "C_charge_per_qcrossl": [charge.real, charge.imag],
-                "C_spatial_per_qcrossl": [spatial.real, spatial.imag],
-                "full_minus_charge_equals_spatial_residual": [
+                "F1_over_F1zero": 1.0,
+                "F2_over_F1zero": f2,
+                "vN": v_n,
+                "C_full_per_qcrossl_covariant": [
+                    projections["full"]["covariant"].real,
+                    projections["full"]["covariant"].imag,
+                ],
+                "C_charge_per_qcrossl_covariant": [
+                    projections["charge"]["covariant"].real,
+                    projections["charge"]["covariant"].imag,
+                ],
+                "C_spatial_per_qcrossl_covariant": [
+                    projections["spatial"]["covariant"].real,
+                    projections["spatial"]["covariant"].imag,
+                ],
+                "C_full_per_qcrossl_NR": [full.real, full.imag],
+                "C_charge_per_qcrossl_NR": [charge.real, charge.imag],
+                "C_spatial_per_qcrossl_NR": [spatial.real, spatial.imag],
+                "full_minus_charge_equals_spatial_NR_residual": [
                     (full - charge - spatial).real,
                     (full - charge - spatial).imag,
                 ],
             })
-    jn, qn, _ = nucleon_current_matrices(
-        q_vec, 0.10 * M_N_GEV * perpendicular_unit(q_vec), 1.0, -0.15
-    )
+
+        # Preserve the complete Pauli-product decomposition at v_N=0.10.
+        v_n = 0.10
+        l_vec = M_N_GEV * v_n * perpendicular_unit(q_vec)
+        jn, qn, (p_i, p_f) = nucleon_current_matrices(q_vec, l_vec, 1.0, f2)
+        norm = nonrel_state_normalization(p_i, p_f)
+        jn_nr = norm * jn
+        full_nr, charge_nr, spatial_nr = full_amplitude_operator(t3, jn_nr)
+        pauli_decompositions[f"{f2:+.3f}"] = {
+            "normalization_1_over_2sqrt_EiEf_GeV_inverse": norm,
+            "full_4x4_Pauli_coefficients_a_chi_b_N": pauli_coefficients_as_pairs(full_nr),
+            "charge_4x4_Pauli_coefficients_a_chi_b_N": pauli_coefficients_as_pairs(charge_nr),
+            "spatial_4x4_Pauli_coefficients_a_chi_b_N": pauli_coefficients_as_pairs(spatial_nr),
+            "full_reconstruction_residual": pauli_decomposition_residual(full_nr),
+            "charge_reconstruction_residual": pauli_decomposition_residual(charge_nr),
+            "spatial_reconstruction_residual": pauli_decomposition_residual(spatial_nr),
+        }
+
+    l_ref = 0.10 * M_N_GEV * perpendicular_unit(q_vec)
+    jn, qn, _ = nucleon_current_matrices(q_vec, l_ref, 1.0, -0.184)
+    q_a_ward_residual = nucleon_ward_residual(q_a4, jn)
     return {
         "status": "static_one_nucleon_full_current_matching_diagnostic",
+        "form_factor_benchmark": {
+            "F1_over_F1zero": 1.0,
+            "F2_over_F1zero": -0.184,
+            "interpretation": "zero-momentum flavour-universal anchor; finite-t form factors are not supplied",
+        },
+        "nucleon_mass_GeV": M_N_GEV,
         "qA_GeV": point.q_A.tolist(),
+        "qN_static_GeV": qn.tolist(),
         "nucleon_static_q0_GeV": float(qn[0]),
-        "nucleon_current_ward_scaled_residual": nucleon_ward_residual(qn, jn),
+        "nucleon_current_ward_scaled_residual_qN": nucleon_ward_residual(qn, jn),
+        "nucleon_current_ward_scaled_residual_using_physical_qA": q_a_ward_residual,
+        "qA0_over_qA_magnitude": float(q_a4[0] / np.linalg.norm(q_a4[1:])),
         "DM_current_spin_trace_residual": dm.relative_matrix_residual(
             dm.tensor_from_spin_matrices(t3),
             dm.vca.dm_current_tensor(point, dm.MCHI_GEV, dm.MCHI_GEV + 362.0e-6, 0.0),
         ),
         "results": results,
+        "complete_Pauli_decompositions_at_vN_0p10": pauli_decompositions,
         "limitations": [
             "The nucleon is an on-shell static impulse-approximation point with q_N^0=0 and l perpendicular to q.",
-            "The nuclear recoil energy q_A^0 is neglected in the one-nucleon current, as in the static AFH operator reduction.",
+            "The physical nuclear transfer has q_A^0=E_R != 0; the q_N^0=0 approximation is not exactly conserved with q_A and its residual is reported separately.",
+            "AFH matching requires nonrelativistic one-nucleon state normalization 1/(2 sqrt(E_i E_f)); both covariant and normalized projections are reported.",
+            "The finite-t F1 and F2 are not supplied; F2/F1=-0.184 is only the zero-momentum flavour-universal anchor.",
             "This is one phase-space point and one nucleon-momentum orientation, not a nuclear many-body response calculation.",
             "No AFH response coefficient is claimed until the full operator structures are projected and normalized.",
+            "The Proca propagator longitudinal term and the full bound-nucleon continuity equation are not included in this static diagnostic.",
         ],
     }
 
