@@ -43,6 +43,7 @@ from nucleon_vector_form_factors import (  # noqa: E402
 )
 from three_body_phase_space_tensor import integrate_spin_resolved_tensor  # noqa: E402
 from three_body_multipole_leptonic_weights import (  # noqa: E402
+    DEFAULT_MN_GEV,
     extract_afh_vector_coefficients,
 )
 
@@ -511,7 +512,7 @@ def leading_static_vector_current_kernel_from_tensor(
         qA_GeV,
         f1=F1,
         f2=F2,
-        mN_GeV=MN_GEV,
+        mN_GeV=DEFAULT_MN_GEV,
         omega_GeV=omega_GeV,
     )
     charge_terms = {
