@@ -149,7 +149,7 @@ charge-piece spin-orbit term before mapping the complete result to AFH
 ## Results from the archived reference point
 
 The successful workflow run 44209893848 (commit
-\`8a99ef3f0908053d60ae38881543826510c240fe\`) used
+`8a99ef3f0908053d60ae38881543826510c240fe`) used
 \(F_1/F_1(0)=1\), \(F_2/F_1(0)=-0.184\), and \(m_N=0.938918\) GeV.
 
 The free static nucleon-current Ward residual using \(q_N\) is
@@ -249,7 +249,7 @@ is below \(3.7\times10^{-13}\) in all six cases.
 
 ## Phase-space-integrated spin-resolved three-body tensor (P0-B1)
 
-The new \`three_body_phase_space_tensor.py\` extends the one-point
+The new `three_body_phase_space_tensor.py` extends the one-point
 spin-resolved current calculation to the complete three-body phase space.
 At every \((W^2,z,\phi)\) point it:
 
@@ -269,13 +269,13 @@ interference Gram tensors separately. It includes zero, pole, and running
 widths and uses the parent Eq. (6) threshold-stable \(W^2,z,\phi\)
 quadrature. The point-nucleus charge/convection contractions reconstructed
 from the q-aligned tensor are compared with the independent Dirac-trace
-integration in \`vector_current_response_audit.integrate_current_components\`.
+integration in `vector_current_response_audit.integrate_current_components`.
 
 ### Numerical acceptance
 
 Workflow run [44224510581](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44224510581)
 completed successfully at source commit
-\`de33bfbc8dc1d322b6c0761c8df5d73f2dadf303\`. It ran 23 regression tests
+`de33bfbc8dc1d322b6c0761c8df5d73f2dadf303`. It ran 23 regression tests
 and generated 12 integrated tensors: four established/near-pole benchmarks,
 each with zero, pole, and running widths.
 
@@ -293,7 +293,7 @@ in the near-pole transverse-spatial subtraction; the individual charge,
 longitudinal, and full point-nucleus contractions agree more closely.
 
 The archived artifact is
-\`full-three-body-current-nucleon-match-and-phase-space-tensor\`
+`full-three-body-current-nucleon-match-and-phase-space-tensor`
 (artifact ID 14392805297). It contains the static one-nucleon matching
 diagnostic and the full complex q-aligned \(L_{\mu\nu}^{(3)}\) and
 \(G_{\mu a,\nu b}^{(3)}\) tensors, including diagram-separated and
