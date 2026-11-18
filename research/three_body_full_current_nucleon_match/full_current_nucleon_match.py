@@ -199,6 +199,36 @@ def build_reference_inputs(denominator_imaginary_part: float = 0.0):
     return point, current
 
 
+def finite_width_ward_rhs(point, mchi: float, mchi2: float, imag: float) -> np.ndarray:
+    """Finite-width Ward RHS for the denominator-only insertion used by PR #57.
+
+    The width is inserted only in the after-emission propagator D2+i*imag.
+    The additional i*imag/(D2+i*imag) external scalar bilinear is required.
+    """
+    r_before, r_after = eq6.chi2_internal_momenta(point)
+    d1 = eq6.dot(r_before, r_before) - mchi2 * mchi2
+    d2 = eq6.dot(r_after, r_after) - mchi2 * mchi2
+    d2_complex = d2 + 1j * imag
+    if abs(d1) < 1e-30 or abs(d2_complex) < 1e-30:
+        raise ZeroDivisionError("chi2 propagator pole in finite-width Ward RHS")
+    ubar_out, u_in = dm.external_spinor_pair(point, mchi)
+    operator = (
+        (eq6.slash(r_before) + mchi2 * eq6.ID4) / d1
+        - (eq6.slash(r_after) + mchi2 * eq6.ID4) / d2_complex
+    )
+    return (
+        (mchi2 - mchi) * ubar_out @ operator @ u_in
+        + (1j * imag / d2_complex) * (ubar_out @ u_in)
+    )
+
+
+def scaled_ward_identity_residual(point, current, lhs, rhs) -> float:
+    q_norm = float(np.linalg.norm(np.asarray(point.q_A, dtype=float)))
+    current_norm = float(np.linalg.norm(current))
+    scale = max(q_norm * current_norm, 1.0)
+    return float(np.linalg.norm(lhs - rhs) / scale)
+
+
 def run_finite_width_scenarios(point, q_vec: np.ndarray) -> list[dict]:
     """Repeat the full-current contraction with the project's finite-width T3.
 
@@ -229,9 +259,7 @@ def run_finite_width_scenarios(point, q_vec: np.ndarray) -> list[dict]:
             full, charge, spatial = full_amplitude_operator(current, jn_nr)
             coeff_spatial = pauli_product_coefficients(spatial)
             ward_lhs = dm.ward_lhs(point, current)
-            ward_rhs = dm.ward_rhs_finite_width(
-                point, mchi, mchi2, imag
-            )
+            ward_rhs = finite_width_ward_rhs(point, mchi, mchi2, imag)
             tensor_from_spin = dm.tensor_from_spin_matrices(current)
             tensor_trace = dm.vca.dm_current_tensor(
                 point, mchi, mchi2, imag
@@ -269,7 +297,7 @@ def run_finite_width_scenarios(point, q_vec: np.ndarray) -> list[dict]:
                     tensor_from_spin, tensor_trace
                 ),
                 "finite_width_Ward_identity_relative_residual": (
-                    dm.scaled_ward_identity_residual(
+                    scaled_ward_identity_residual(
                         point, current, ward_lhs, ward_rhs
                     )
                 ),
