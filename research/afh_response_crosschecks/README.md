@@ -32,3 +32,27 @@ differences in small response values.
 A PASS is explicitly PASS_INDEPENDENT_PYTHON_CROSSCHECK and keeps
 native_afh_validated=false. It is not a substitute for the private native
 Wolfram ResponseNuclear comparison.
+
+
+## Direct P3-B versus native Wolfram AFH comparison
+
+After the native workflow artifact is available, use
+**compare_p3_spatial_vs_native.py** to compare P3-B directly with the native
+Wolfram exports for AFH response indices 3, 6 and 8. The script verifies the
+AFH source SHA-256, all 16,807 rows, the three signed/diagonal response
+channels, physical equal-p/n conversion, and native imaginary residuals.
+
+~~~bash
+python research/afh_response_crosschecks/compare_p3_spatial_vs_native.py \
+  --p3-csv /path/to/afh_spatial_obdme_responses_7isotope_2401.csv \
+  --p3-metadata /path/to/p3_metadata.json \
+  --native-dir /path/to/native \
+  --native-metadata /path/to/native/native_metadata.txt \
+  --out-json /path/to/p3_b_native_spatial_crosscheck.json
+~~~
+
+The native artifact is produced by
+[research-compute-control run 44222502400](https://github.com/lm846802297-bit/research-compute-control/actions/runs/44222502400).
+A direct PASS is labelled PASS_NATIVE_AFH_SPATIAL_CROSSCHECK. It validates
+these three P3-B channels only; it does not validate the complete three-body
+tensor contraction or event rate.
