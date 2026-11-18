@@ -98,3 +98,5 @@ The signed \(M-\Phi''\) interference changes sign across the \(W_M\) cancellatio
 4. This is Xe-131 only: no natural-xenon isotope sum, halo velocity integral, detector response, or event prediction is claimed.
 
 The supported conclusion is specific: the full charge-sector correction is small around 200 keV but reaches about a 10% local suppression near the 267 keV \(W_M\)-cancellation region. It is not yet a detector-level or absolute-spectrum prediction.
+
+**Regeneration environment:** Python 3.12+, NumPy, pandas, and Matplotlib.
