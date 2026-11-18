@@ -14,7 +14,7 @@ The first charge-sector matching is now derived from the nonrelativistic
 Dirac--Pauli vector charge. In the explicitly labelled zero-momentum
 form-factor benchmark, the second \(W_M\) minimum receives a
 \(-1.839\%\) correction from adding \(\Phi''\), and a combined
-\(-2.991\%\) correction when the \(t_A/(8m_N^2)\) correction to the
+\(-2.991\%\) correction when the \(t_N/(8m_N^2)\) correction to the
 \(M\) coefficient is also included. These are local Xe-131 charge-sector
 benchmarks, not finite-\(t\) predictions or a complete natural-xenon rate.
 
@@ -25,28 +25,37 @@ form factors and spatial-current responses \(\Sigma'\), \(\Sigma''\), and
 
 ## 2. Quark-to-nucleon vector-current matching
 
-For the momentum delivered to the target nucleon, define
-
+Define the exact nuclear four-momentum transfer and the one-nucleon
+current transfer separately:
 \[
-q_A^\mu=k'^\mu-k^\mu,\qquad t_A=q_A^2=-|\boldsymbol q_A|^2.
+q_A^\mu=P_A'^\mu-P_A^\mu,\qquad t_A=q_A^2=E_R^2-Q_A^2=-2m_AE_R,
 \]
+\[
+q_N^\mu=k'^\mu-k^\mu,\qquad t_N=q_N^2.
+\]
+In the static one-body impulse approximation used for the first AFH
+benchmark,
+\[
+q_N^0=0,\qquad \boldsymbol q_N=\boldsymbol q_A,\qquad
+t_N=-Q_A^2=t_A-E_R^2.
+\]
+The equality of the spatial transfers is the impulse-approximation
+identification; it does not make the exact four-transfers identical.
 
 Use the Dirac--Pauli convention
-
 \[
 \boxed{
-J_N^\mu(q_A)=
+J_N^\mu(q_N)=
 \bar u_N(k')
 \left[
-F_1^{V,N}(t_A)\gamma^\mu+
-\frac{iF_2^{V,N}(t_A)}{2m_N}
-\sigma^{\mu\nu}q_{A,\nu}
+F_1^{V,N}(t_N)\gamma^\mu+
+\frac{iF_2^{V,N}(t_N)}{2m_N}
+\sigma^{\mu\nu}q_{N,\nu}
 \right]u_N(k).
 }
 \]
-
-The plus sign here is tied to \(q_A=k'-k\). Hoferichter, Menéndez,
-and Schwenk use \(q=k-k'=-q_A\) and write the equivalent vertex with
+The plus sign here is tied to \(q_N=k'-k\). Hoferichter, Menéndez,
+and Schwenk use \(q=k-k'=-q_N\) and write the equivalent vertex with
 \(-iF_2\sigma^{\mu\nu}q_\nu/(2m_N)\), see their Eq. (6). The sign must
 not be changed without also changing the transfer convention.
 
@@ -58,10 +67,10 @@ momentum change:
 \boldsymbol p_\chi'-\boldsymbol p_\chi
 =-\boldsymbol q_A-\boldsymbol k_s.
 \]
-The AFH nuclear multipoles are evaluated at the momentum flowing through
-the nucleon current, \(|\boldsymbol q_{\rm AFH}|=|\boldsymbol q_A|\);
-the emitted scalar momentum belongs to the three-body dark-matter
-kinematics, not to the nuclear Fourier argument.
+The AFH nuclear multipoles are evaluated at the spatial momentum flowing
+through the one-nucleon current, \(|\boldsymbol q_{\rm AFH}|=|\boldsymbol q_A|
+=|\boldsymbol q_N|\); the emitted scalar momentum belongs to the
+three-body dark-matter kinematics, not to the nuclear Fourier argument.
 
 For the universal light-flavour current
 \[
@@ -268,20 +277,25 @@ The standard vector charge already contains the spin-orbit term that
 generates the AFH \(\Phi''\) response.
 
 Hoferichter, Menéndez, and Schwenk, PRD 102, 074018 (2020), Eq. (41),
-give the nonrelativistic one-nucleon vector charge
-\[
-J_N^0 =
-F_1^{V,N}(t_A)
-+\frac{t_A}{8m_N^2}
-  \left[F_1^{V,N}(t_A)+2F_2^{V,N}(t_A)\right]
--\frac{i}{4m_N^2}
-  \left[F_1^{V,N}(t_A)+2F_2^{V,N}(t_A)\right]
-  \boldsymbol S_N\cdot
-  (\boldsymbol q_{\rm AFH}\times\boldsymbol P_N),
-\]
-where \(\boldsymbol P_N=\boldsymbol k+\boldsymbol k'\),
+give the nonrelativistically normalized one-nucleon vector charge. With
+\(\boldsymbol K_N=(\boldsymbol k+\boldsymbol k')/2\),
 \(\boldsymbol S_N=\boldsymbol\sigma_N/2\), and
-\(\boldsymbol q_{\rm AFH}=-\boldsymbol q_A\).
+\(\boldsymbol q_{\rm AFH}=-\boldsymbol q_N\), it can be written as
+\[
+\mathcal J_N^0 =
+F_1^{V,N}(t_N)
++\frac{t_N}{8m_N^2}
+  \left[F_1^{V,N}(t_N)+2F_2^{V,N}(t_N)\right]
++\frac{i}{2m_N^2}
+  \left[F_1^{V,N}(t_N)+2F_2^{V,N}(t_N)\right]
+  \boldsymbol S_N\cdot
+  (\boldsymbol q_N\times\boldsymbol K_N).
+\]
+The normalization is
+\(\mathcal J_N^\mu=\bar u_N(k')\Gamma_N^\mu u_N(k)/
+[2\sqrt{E_N'E_N}]\). The scalar \(M\) coefficient in the first two
+terms is HKS Eq. (41); the spin-orbit term is the one that generates
+the \(\Phi''\) contribution made explicit in their Eq. (43).
 The same paper states immediately below Eq. (41) that the spacelike
 components do not contribute to its \(M\) and spin-orbit \(\Phi^{00}\)
 responses. The latter is the vector-charge spin-orbit response represented
@@ -296,24 +310,24 @@ i\sum_i
 \left(\boldsymbol\sigma_i\times
 \frac{\boldsymbol\nabla_i}{q}\right)t^\tau(i)
 \]
-gives, up to the common single-nucleon state-normalization convention,
+gives, with the nonrelativistic external-state normalization fixed,
 \[
 \boxed{
-c_M(t_A)=F_1^V(t_A)
-+\frac{t_A}{8m_N^2}
- \left[F_1^V(t_A)+2F_2^V(t_A)\right],
+c_M(t_N)=F_1^V(t_N)
++\frac{t_N}{8m_N^2}
+ \left[F_1^V(t_N)+2F_2^V(t_N)\right],
 }
 \]
 \[
 \boxed{
-c_{\Phi''}(t_A)=
-\frac{q_A^2}{4m_N^2}
-\left[F_1^V(t_A)+2F_2^V(t_A)\right].
+c_{\Phi''}(t_N)=
+\frac{Q_A^2}{4m_N^2}
+\left[F_1^V(t_N)+2F_2^V(t_N)\right].
 }
 \]
 The sign shown is for the current and AFH momentum conventions fixed in
-Sec. 2. It must be regression-tested against the elastic charge-current
-reduction before it is used with a different convention.
+Sec. 2. The finite-\(t_N\) argument belongs to the one-nucleon vertex;
+\(Q_A=|\boldsymbol q_A|\) is the AFH spatial Fourier momentum.
 
 For the radiative process
 \[
@@ -325,7 +339,7 @@ the \(M+\Phi''\) **charge sector** is therefore
 \boxed{
 \mathcal M_{M+\Phi''}^{(3)}
 =\mathcal T_3^0(p,p',k_s)
-\left[c_M(t_A)M+c_{\Phi''}(t_A)\Phi''\right].
+\left[c_M(t_N)M+c_{\Phi''}(t_N)\Phi''\right].
 }
 \]
 This is a genuine three-body result: the exact two-diagram,
@@ -344,7 +358,7 @@ both operators.
 
 Define
 \[
-\eta(q_A)=\frac{c_{\Phi''}(t_A)}{c_M(t_A)}.
+\eta(q_A)=\frac{c_{\Phi''}(t_N)}{c_M(t_N)}.
 \]
 The exact charge-sector ratio is
 \[
@@ -411,7 +425,7 @@ one obtains
 \boxed{Q_{\Phi''}=0.9816142,}
 \]
 i.e. a \(-1.839\%\) correction relative to the same relativistically
-corrected \(M\)-only charge response. The \(t_A/(8m_N^2)\) correction to
+corrected \(M\)-only charge response. The \(t_N/(8m_N^2)\) correction to
 the \(M\) coefficient itself is another \(-1.174\%\) in the rate relative
 to \(F_1^V(0)^2W_M\). Combining these two effects gives
 \[
@@ -445,8 +459,8 @@ The four exact selected-point results are:
 | 499.371886 | 1022.768406 | -0.663% | -5.053% |
 
 These numbers answer the first charge-sector question, not the full
-natural-xenon question. Finite-\(t\) flavour-separated \(F_1^V(t_A)\) and
-\(F_2^V(t_A)\) are still required. In addition, the Xe-131 spatial-current
+natural-xenon question. Finite-\(t\) flavour-separated \(F_1^V(t_N)\) and
+\(F_2^V(t_N)\) are still required. In addition, the Xe-131 spatial-current
 responses and the corresponding responses of the other abundant xenon
 isotopes remain to be matched and calculated.
 
