@@ -38,22 +38,31 @@ This is the correct dynamical object to feed into the multipole projection.
 
 ## 2. What the current charge-sector halo engine does
 
-The module native_charge_sector_halo_fold.py currently calls
-integrate_spin_resolved_tensor, but extracts only
+The module native_charge_sector_halo_fold.py calls
+integrate_spin_resolved_tensor and reads the continuity-reduced Coulomb
+weight
 
 \[
-L_{00}=\texttt{point\_nucleus\_contractions["I00"]}.
+L_C=L_{00}-\frac{\omega}{Q_A}(L_{03}+L_{30})
++\left(\frac{\omega}{Q_A}\right)^2L_{33}.
 \]
 
-It then builds \(M,\Phi'',M\Phi''\) coefficients from this scalar weight.
-Consequently it is a **charge-density-sector approximation**. It is not the
-complete contraction \(L_{\mu\nu}^{(3)}W_A^{\mu\nu}\), and its output must not
-be described as the final full-current rate.
+It then builds the \(M,\Phi'',M\Phi''\) charge-multipole terms from this
+weight and the corresponding native AFH response functions. The input gate
+requires the complete seven-isotope/eight-response native AFH artifact,
+although this diagnostic uses only the three charge-sector response
+functions.
+
+This is a **Coulomb-sector approximation conditional on conservation of the
+complete nuclear vector current**. It is not the complete contraction
+\(L_{\mu\nu}^{(3)}W_A^{\mu\nu}\), because the transverse nuclear-current
+multipoles and their interference have not been projected and included.
+The point-nucleus direct-vs-continuity identity is an algebraic check of the
+four-vector and metric conventions; it does not prove that the truncated
+many-body one-body current is dynamically conserved.
 
 The finite-\(t_N\) charge matching can be studied within this restricted
-sector, provided its static/charge-density approximation is stated. It does
-not settle the longitudinal-current contribution or its interference with
-the charge multipoles.
+sector, with the continuity assumption and one-body approximation stated.
 
 ## 3. Why the point-nucleus check is not yet a full AFH projection
 
@@ -129,17 +138,24 @@ it is required by the conserved nuclear vector current.
 
 The particle-coefficient extractor now uses \(L_C^{(3)}\) for
 \(C_M,C_{\Phi''},C_{M\Phi''}\), while the transverse coefficients continue
-to use \(L_T=L_{11}+L_{22}\). This closes the charge/longitudinal reduction
-at the leptonic-weight level; it does not by itself complete the AFH
-many-body multipole validation.
+to use \(L_T=L_{11}+L_{22}\). The archive reader also checks
+\(Q_A^2=2m_A E_R+E_R^2\), recomputes the direct point-nucleus contraction,
+and verifies that the stored continuity-reduced contraction agrees.
+These checks close the kinematic/index-convention audit at the leptonic
+weight level. They do not establish dynamical current conservation for the
+truncated many-body one-body current or complete the AFH multipole
+validation.
 
 ## 4. Existing particle-coefficient extraction is an intermediate result
 
-The module contract_three_body_afh_responses.py currently forms leading static
-coefficients using \(L_{00}\) and \(L_T=L_{11}+L_{22}\). It includes
-diagnostics for the transverse helicity-odd combination, but the present
-coefficient table does not yet constitute a demonstrated complete projection
-of every component of \(L_{\mu\nu}\) onto all AFH multipole bilinears.
+The module three_body_multipole_leptonic_weights.py forms leading-static
+particle coefficients using \(L_C^{(3)}\) for the Coulomb sector and
+\(L_T=L_{11}+L_{22}\) for the transverse sector. The downstream
+contract_three_body_afh_responses.py contracts these coefficients with the
+provisional Python AFH response archive. It includes diagnostics for the
+transverse helicity-odd combination, but the present coefficient table does
+not yet constitute a demonstrated complete projection of every component
+of \(L_{\mu\nu}\) onto all AFH multipole bilinears.
 
 The coefficients labelled \(C_M,C_{\Phi''},C_{M\Phi''},
 C_\Delta,C_{\Sigma'},C_{\Sigma'\Delta}\) should therefore be treated as
@@ -167,6 +183,16 @@ Record explicitly:
 - the precise definition of each AFH response and interference response.
 
 ### P1 — Decompose the one-body nuclear vector current
+
+The current full_current_nucleon_match.py is an exact Dirac-Pauli spinor
+diagnostic for an on-shell impulse-approximation nucleon. Its reference
+configuration takes \(q_N^0=0\) with internal momentum perpendicular to
+\(\mathbf q\), and separately reports the residual obtained by contracting
+that same current with the physical nuclear \(q_A^\mu\). This does not yet
+supply the bound-nucleon energy transfer or the many-body continuity
+equation. The next derivation must keep \(q_N^\mu\), \(q_A^\mu\), and the
+internal nucleon momentum distinct, and state how off-shell/binding and
+interaction-current effects are treated.
 
 Starting from the same Dirac-Pauli current used by the code,
 
