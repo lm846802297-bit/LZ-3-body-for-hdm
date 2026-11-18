@@ -757,3 +757,19 @@ A 943-point scan has been added using the native Xe-131 AFH v6.0 \(W_M\), \(W_{\
 At the exact benchmark recoils, the full charge-sector kernel relative to the finite-\(Q^2\) \(M\)-only kernel is 0.99655805 at 200 keV and 0.89961039 at 267 keV. This is **not** the same observable as the fixed-speed three-body cross-section ratio in Section 8, whose denominator is the original pointlike \(9W_M\) baseline. The present scan is not an absolute \(d\sigma/dE_R\), a halo-folded natural-xenon spectrum, or a detector prediction. Spatial multipoles remain outside this charge-sector plot.
 
 The full-recoil scan regression is included in the standard unittest discovery: `test_xe131_full_recoil_charge_scan.py`. Rebuilding its CSV and SVG plots requires Python 3.12+, NumPy, pandas, and Matplotlib.
+
+## Xe-131 publication figures and fixed-benchmark absolute spectrum (2026-11-18)
+
+The 943-point native-grid charge-kernel figures are regenerated in a consistent serif/LaTeX-style publication format by the charge-scan plotting script. Both SVG and PDF versions are produced.
+
+The fixed-benchmark absolute charge-sector spectrum is calculated by the fixed-benchmark absolute-dsigma script, using one fixed \(\Delta m=450\) keV across the entire kinematic interval, the current bare-nucleus Xe-131 mass convention, the zero-width prescription, the exact \(Q_A^2=2m_AE_R+E_R^2\) mediator denominator, the relativistic incident momentum, and the public Eq. (6) prefactor. It includes the coherent native-AFH \(M+\Phi''+M\Phi''\) charge sector and outputs the full pointwise CSV, metadata, SVG and PDF.
+
+- Method and scope: [XE131_FIXED_BENCHMARK_ABSOLUTE_DSIGMA.md](XE131_FIXED_BENCHMARK_ABSOLUTE_DSIGMA.md)
+- Calculation: xe131_fixed_benchmark_absolute_dsigma.py
+- Shared plot style: paper_plot_style.py
+- Charge-figure plotting: build_xe131_full_recoil_charge_scan.py
+- Regression tests: test_xe131_fixed_benchmark_absolute_dsigma.py
+- CI workflow: [xe131-fixed-benchmark-absolute-dsigma.yml](../../.github/workflows/xe131-fixed-benchmark-absolute-dsigma.yml)
+
+Important: the absolute spectrum is charge-sector only. It is not labelled as the complete six-channel \(L_{\mu\nu}W_A^{\mu\nu}\) result while native spatial AFH response validation and P3-C matching remain open.
+
