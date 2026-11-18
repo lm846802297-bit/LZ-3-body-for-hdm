@@ -5,9 +5,11 @@ import math
 import tempfile
 import unittest
 from pathlib import Path
+import sys
 
 import numpy as np
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 import native_charge_sector_halo_fold as fold
 
 
