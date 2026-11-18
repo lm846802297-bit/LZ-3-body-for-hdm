@@ -21,7 +21,7 @@ permissions:
   contents: read
 
 concurrency:
-  group: xe131-full-afh-fixed-speed-\${{ github.head_ref || github.ref_name }}
+  group: xe131-full-afh-fixed-speed-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: false
 
 jobs:
@@ -36,7 +36,7 @@ jobs:
           repository: lm846802297-bit/LZ-3-body-for-hdm
           ref: e6d9dee3527cab200ee6b21198d577b987282fac
           path: afh-native
-          token: \${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
