@@ -4833,7 +4833,7 @@ q_A=\sqrt{2m_AE_R+E_R^2},
 | \(\Sigma'\)、\(\Delta\)、\(\Sigma'\Delta\) | Xe-129/Xe-131 Python 2,401 点开发网格；内部有限性、正定性与 Cauchy–Schwarz 检查通过 | 仅可称 provisional Python development outputs | 尚不能称为 native-AFH validated responses |
 | 三体 \(R_{\alpha\beta}^{(3)}W_{\alpha\beta}\) 完整收缩 | 理论分解和软件架构已写明，完整数值收缩未完成 | 可称为待实现的完整核流收缩目标 | 不得称为完整三体 AFH 预测已完成 |
 
-对最新 full-grid artifact（source commit **41b0218549fd4fcefe7a34c1f10070ace5be0e9c**）另作了独立本地数据审计：CSV SHA-256 为 **08dd97f5db1d9e17d396b992290c694cd09ee88d83ad68affc2ad3ddc794d255**；共 4,802 行，Xe-129 与 Xe-131 各有 2,401 个唯一 \(q_A\) 节点，最大网格步长偏差 \(8.35\times10^{-17}\) GeV，所有数值均有限且四个对角响应均非负。以
+对最新 full-grid artifact（source commit **7674dcd957e48f12d39f38dfcb0a750dbeac2cac**）另作了独立本地数据审计：CSV SHA-256 为 **08dd97f5db1d9e17d396b992290c694cd09ee88d83ad68affc2ad3ddc794d255**；共 4,802 行，Xe-129 与 Xe-131 各有 2,401 个唯一 \(q_A\) 节点，最大网格步长偏差 \(8.35\times10^{-17}\) GeV，所有数值均有限且四个对角响应均非负。以
 \[
 \frac{|W_{ab}|^2-W_{aa}W_{bb}}{W_{aa}W_{bb}}
 \]
@@ -4846,7 +4846,7 @@ q_A=\sqrt{2m_AE_R+E_R^2},
 - [Xe-131 native \(M,\Phi'',M\Phi''\) 导出](../../afh_default_density_xe131/output/phi_response_native/README.md)及其 native CSV、metadata、validation JSON。
 - [空间响应移植状态与证据边界](../../afh_default_density_xe131/audit/AFH_SPATIAL_RESPONSE_FIRST_AUDIT.md)。
 - [四 benchmark AFH/GCN/JJ55 核响应对照](../../afh_default_density_xe131/output/AFH_FOUR_BENCHMARKS_CORRECTED_RESULTS.md)。
-- [空间响应 Python full-grid workflow](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44213199490)（artifact 14387166996）。
+- [空间响应 Python full-grid workflow](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44214091816)（artifact 14387601994）。
 - [Mathematica/Python \(M\)-only response-interface cross-check](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44210674382)（artifact 14386067413）。
 
 <!-- END UPDATE: P -->
