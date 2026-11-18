@@ -129,33 +129,107 @@ The identity is independently checked by the point-nucleus current
 The implementation now reports the continuity-reduced contraction and its
 relative residual alongside the direct point-nucleus contraction.
 
-For the 12 integrated benchmark/width rows in workflow 44256878592,
-\(\omega/Q_A\) is \(9.0526\times10^{-4}\) at 200 keV and
-\(1.0460\times10^{-3}\) at 267 keV. The continuity-adjusted Coulomb weight
-differs from \(L_{00}\) by approximately \(-4.33\times10^{-6}\) to
-\(-5.13\times10^{-6}\). This is small numerically, but it is retained because
-it is required by the conserved nuclear vector current.
+For the 12 integrated benchmark/width rows in workflow 44262243726,
+\(\omega/Q_A\) is \(9.05692\times10^{-4}\) at 200 keV and
+\(1.04646\times10^{-3}\) at 267 keV, using the canonical Xe-131 bare-nucleus
+mass \(m_A=121.90971983538435\) GeV. The continuity-adjusted Coulomb weight
+differs from \(L_{00}\) by approximately \(-4.35\times10^{-6}\) at 200 keV
+and \(-5.03\times10^{-6}\) at 267 keV. The maximum absolute correction over
+the 12 rows is \(5.12783\times10^{-6}\).
+
+The latest extraction reports a maximum direct-versus-continuity residual
+\(2.70280\times10^{-16}\) and a maximum mass-shell residual
+\(1.42160\times10^{-16}\). These validate the kinematic and tensor-index
+implementation of the reduction. They do not prove that the truncated
+many-body one-body current is dynamically conserved.
 
 The particle-coefficient extractor now uses \(L_C^{(3)}\) for
 \(C_M,C_{\Phi''},C_{M\Phi''}\), while the transverse coefficients continue
-to use \(L_T=L_{11}+L_{22}\). The archive reader also checks
-\(Q_A^2=2m_A E_R+E_R^2\), recomputes the direct point-nucleus contraction,
-and verifies that the stored continuity-reduced contraction agrees.
-These checks close the kinematic/index-convention audit at the leptonic
-weight level. They do not establish dynamical current conservation for the
-truncated many-body one-body current or complete the AFH multipole
-validation.
+to use \(L_T=L_{11}+L_{22}\). The archive reader checks
+\(Q_A^2=2m_AE_R+E_R^2\), recomputes the direct point-nucleus contraction,
+and verifies the stored continuity-reduced contraction. These checks close
+the kinematic/index-convention audit at the leptonic-weight level only.
+
+## 3.2 Rotational structure and the leading static vector-current channels
+
+For the unpolarized, parity-even, time-reversal-invariant nuclear ensemble
+used in the AFH response calculation, the spin-averaged nuclear tensor is
+invariant under rotations about \(\hat{\boldsymbol q}_A\). In a q-aligned
+basis this removes mixed longitudinal/transverse components,
+\[
+W_A^{0a}=W_A^{3a}=0,\qquad a=1,2,
+\]
+and makes the symmetric transverse block proportional to
+\(\delta^{ab}\). The antisymmetric transverse response is absent under these
+assumptions. Consequently, the off-diagonal components of the DM tensor with
+one transverse index do not by themselves imply additional AFH nuclear
+responses. The independent leptonic weights relevant to this unpolarized
+vector-current problem reduce to
+\[
+L_C^{(3)},\qquad L_T^{(3)}=L_{11}^{(3)}+L_{22}^{(3)}.
+\]
+The helicity-odd diagnostic \(-2i(L_{12}-L_{21})\) is not the AFH
+\(\Sigma'\)-\(\Delta\) coefficient and must not be used in its place.
+
+At leading static one-body Dirac-Pauli order, the candidate AFH operator
+content is:
+
+| Nuclear-current piece | AFH channel | Particle-side weight |
+|---|---|---|
+| Coulomb charge | \(M\) | \(C_M=c_M^2L_C\) |
+| Charge spin-orbit correction | \(\Phi''\) | \(C_{\Phi''}=c_{\Phi''}^2L_C\) |
+| Charge interference | \(M\Phi''\) | \(C_{M\Phi''}=2c_Mc_{\Phi''}L_C\) |
+| Transverse convection | \(\Delta\) | \(C_\Delta\propto F_1^2Q_A^2L_T\) |
+| Transverse magnetization | \(\Sigma'\) | \(C_{\Sigma'}\propto(F_1+F_2)^2Q_A^2L_T\) |
+| Convection-magnetization interference | \(\Sigma'\Delta\) | \(C_{\Sigma'\Delta}\propto-F_1(F_1+F_2)Q_A^2L_T\) |
+
+The explicit leading-static coefficients in the current convention are
+\[
+\begin{aligned}
+C_\Delta&=\frac{(F_1^V)^2Q_A^2}{2m_N^2}L_T^{(3)},\\
+C_{\Sigma'}&=\frac{(F_1^V+F_2^V)^2Q_A^2}{8m_N^2}L_T^{(3)},\\
+C_{\Sigma'\Delta}&=-\frac{F_1^V(F_1^V+F_2^V)Q_A^2}{2m_N^2}L_T^{(3)}.
+\end{aligned}
+\]
+For \(F_1^V(F_1^V+F_2^V)>0\),
+\[
+C_{\Sigma'\Delta}=-2\sqrt{C_\Delta C_{\Sigma'}}.
+\]
+The latest 12-benchmark extraction satisfies this particle-side identity
+with maximum relative residual \(1.72121\times10^{-16}\).
+
+At this order, the magnetization current is transverse and gives no
+independent \(\Sigma''\) coefficient; the leading vector one-body current
+also gives no \(\widetilde\Phi'\) coefficient. These zeros are conditional
+on the stated current and NR truncation. They are not universal statements
+about higher-order operators, two-body currents, or other interactions.
+
+The resulting leading-static kernel candidate is
+\[
+\begin{aligned}
+{\cal K}_{\rm AFH}^{(3)}={}&
+C_MW_M+C_{\Phi''}W_{\Phi''}+C_{M\Phi''}W_{M\Phi''}\\
+&+C_\Delta W_\Delta+C_{\Sigma'}W_{\Sigma'}
++C_{\Sigma'\Delta}W_{\Sigma'\Delta}.
+\end{aligned}
+\]
+This is the structural particle-side projection to be validated. It is not
+yet promoted to a complete many-body result: the direct covariant
+one-body-current contraction and the AFH multipole contraction still need
+to agree at the tensor level, including the bound-nucleon/current-continuity
+assumptions described in P1 and P3.
 
 ## 4. Existing particle-coefficient extraction is an intermediate result
 
-The module three_body_multipole_leptonic_weights.py forms leading-static
+The module three_body_multipole_leptonic_weights.py forms the leading-static
 particle coefficients using \(L_C^{(3)}\) for the Coulomb sector and
 \(L_T=L_{11}+L_{22}\) for the transverse sector. The downstream
-contract_three_body_afh_responses.py contracts these coefficients with the
-provisional Python AFH response archive. It includes diagnostics for the
-transverse helicity-odd combination, but the present coefficient table does
-not yet constitute a demonstrated complete projection of every component
-of \(L_{\mu\nu}\) onto all AFH multipole bilinears.
+contract_three_body_afh_responses.py contracts the six candidate nonzero
+coefficients with the provisional Python AFH response archive. It retains
+the helicity-odd quantity as a diagnostic, separate from the AFH
+\(\Sigma'\)-\(\Delta\) interference. The symmetry reduction above is the
+working unpolarized-target projection; explicit tensor-level P3 validation
+remains open.
 
 The coefficients labelled \(C_M,C_{\Phi''},C_{M\Phi''},
 C_\Delta,C_{\Sigma'},C_{\Sigma'\Delta}\) should therefore be treated as
@@ -242,10 +316,11 @@ finite-\(t_N\)-M-only, and full-current results as separate baselines.
 
 ## 6. Acceptance language
 
-Until P0–P3 pass, use the labels:
+Until the bound-current consistency and P3 tensor-level validation pass, use the labels:
 - three_body_tensor_integrated;
-- leading_static_charge_sector;
-- partial_AFH_particle_coefficients.
+- leading_static_coulomb_sector;
+- partial_AFH_particle_coefficients;
+- provisional_fixed_speed_AFH_contraction.
 
 Do not use:
 - full_AFH_three_body_response;

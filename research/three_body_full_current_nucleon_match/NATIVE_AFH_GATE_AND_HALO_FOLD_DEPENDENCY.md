@@ -1,120 +1,170 @@
-# Native AFH gate and charge-sector halo-fold dependency
+# Native AFH gate and Coulomb-sector halo-fold dependency
 
 **Updated: 2026-11-18**
 
 ## 1. Acceptance state
 
-The native AFH database is a hard input gate for the charge-sector halo
-engine. The following states must remain distinct:
+The seven-isotope/eight-response native AFH comparison remains a hard input
+gate for the natural-xenon Coulomb-sector halo engine. Keep these distinct:
 
 | Layer | Evidence | State |
 |---|---|---|
-| Seven-isotope, eight-response Python database | LZ repository workflow run 44244699196; artifact 14400843100 | PASS, Python internal validation |
-| Seven-isotope, eight-response native Wolfram comparison | Private control workflow run 44222502400, attempt 2 | QUEUED; no artifact |
-| Charge-sector halo engine | Requires a validated native artifact | Ready only after native gate closes |
-| Full three-body AFH multipole rate | Requires the complete tensor-to-multipole projection | Not yet complete |
+| Seven-isotope/eight-response Python reference database | Run 44244699196, artifact 14400843100 | PASS for Python internal checks only |
+| Seven-isotope/eight-response native Wolfram comparison | Private control run 44222502400, attempt 2 | QUEUED; no artifact |
+| Single-isotope Xe-131 native charge-response archive | Xe-131 workflow run 44262472992, artifact 14408816831 | PASS for \(M,\Phi'',M\Phi''\) only |
+| Native Coulomb-sector halo engine | Requires the seven-isotope native artifact root | Implemented; production fold blocked by native gate |
+| Full leading-static vector-current halo rate | Requires transverse multipoles and P3 tensor validation | Not yet complete |
 
-The Python result has 16,807 rows: seven isotopes times 2,401 q points.
-Its internal positivity, normalization, and interference checks do not
+The Python reference database has 16,807 rows (seven isotopes times 2,401
+q points). Its positivity, normalization, and interference checks do not
 constitute native Wolfram validation.
 
-The native job is in the private repository
+The private native job is in
 lm846802297-bit/research-compute-control, workflow
 xe131-afh-spatial-native.yml, job native-afh-eight-response, run
-44222502400 attempt 2. It targets the self-hosted labels
-Windows, X64, and research-gpu. The latest observed job state is
-queued, and the run has no uploaded artifact. Therefore the native gate
-must remain OPEN until the runner executes and the pointwise comparator
-reports PASS.
+44222502400 attempt 2. It targets the self-hosted labels Windows, X64, and
+research-gpu. The latest observed state is QUEUED and the run has no
+uploaded artifact. The seven-isotope native gate therefore remains OPEN.
 
-## 2. Pinned native source
+## 2. Pinned seven-isotope native source
 
-The control workflow pins the LZ research checkout to:
+The private control workflow pins the LZ research checkout to
+\`dcefbeb7ad705b6c03f2b4689200eb1d9252e67b\`, with AFH DMFormFactor v6.0.
 
-dcefbeb7ad705b6c03f2b4689200eb1d9252e67b
-
-The expected native package is AFH DMFormFactor v6.0. The native comparison
-must cover the exact isotope set
-
-[128, 129, 130, 131, 132, 134, 136]
-
-and all eight AFH response indices:
+The isotope set is exactly
+\[
+[128,129,130,131,132,134,136],
+\]
+and the eight response indices are:
 
 | Index | Response |
 |---:|---|
-| 1 | M |
-| 2 | SigmaDoublePrime |
-| 3 | SigmaPrime |
-| 4 | PhiPP |
-| 5 | PhiTildePrime |
-| 6 | Delta |
-| 7 | signed M-PhiPP |
-| 8 | signed SigmaPrime-Delta |
+| 1 | \(M\) |
+| 2 | \(\Sigma''\) |
+| 3 | \(\Sigma'\) |
+| 4 | \(\Phi''\) |
+| 5 | \(\widetilde\Phi'\) |
+| 6 | \(\Delta\) |
+| 7 | signed \(M\Phi''\) |
+| 8 | signed \(\Sigma'\Delta\) |
 
-The expected q grid is 2,401 points per isotope from 0 to 0.6 GeV in
-0.00025 GeV steps. The expected total is exactly 16,807 pointwise rows.
+The q grid is 2,401 points per isotope from 0 to 0.6 GeV in 0.00025 GeV
+steps, for exactly 16,807 pointwise rows.
 
-## 3. Native artifact layout
+## 3. Native artifact layout and acceptance
 
-The private control workflow uploads the artifact root with this structure:
+The private control workflow uploads an artifact root containing:
 
-- native/afh_v6_xe128_eight_response_native.csv through Xe-136;
-- native/native_metadata.txt;
-- native-comparison.json;
-- run_manifest.json;
-- SHA256SUMS.txt.
+- \`native/\` with seven CSV exports, Xe-128/129/130/131/132/134/136;
+- \`native/native_metadata.txt\`;
+- \`native-comparison.json\`;
+- \`run_manifest.json\`;
+- \`SHA256SUMS.txt\`.
 
-The halo engine must receive the extracted artifact root, not merely the
-native/ subdirectory. The comparison and provenance manifests live at the
-artifact root, while the seven Wolfram CSV exports live under native/.
+The halo engine must receive the extracted artifact root, not merely
+\`native/\`. Before loading responses it verifies:
 
-## 4. Hardening applied to the charge-sector engine
+1. comparison status PASS, native_afh_validated=true, rows_compared=16807;
+2. all seven isotope CSVs contain 2,401 points on the exact q grid;
+3. all eight response names are present in the pointwise comparison and the
+   failure list is empty;
+4. comparison tolerances are no looser than rtol=5e-7, atol=2e-12, and
+   imaginary residual 2e-12;
+5. run manifest source commit, AFH package, isotope set, response map, q grid,
+   Wolfram/Python versions, and control-run identity match the pin;
+6. native metadata and all seven CSVs exist;
+7. SHA-256 checksums of the comparison, manifest, metadata, and seven CSVs
+   match SHA256SUMS.txt;
+8. every response value is finite and imaginary residuals are negligible.
 
-The engine's native gate must verify all of the following before reading
-response values:
+A native PASS validates the nuclear response database only. It does not
+validate the three-body particle-side coefficients or the full
+\(L_{\mu\nu}^{(3)}W_A^{\mu\nu}\) contraction.
 
-1. native-comparison.json says status=PASS,
-   native_afh_validated=true, and rows_compared=16807.
-2. Python rows and native rows are both 16,807; each of the seven isotopes
-   has 2,401 expected points.
-3. All eight response names appear in the pointwise comparison maxima and
-   the failure list is empty.
-4. The comparison tolerances are no looser than
-   rtol=5e-7, atol=2e-12, and imaginary residual 2e-12.
-5. run_manifest.json identifies the expected LZ repository, pinned source
-   commit, AFH v6.0 package, isotope set, response-index map, q grid,
-   Wolfram/Python versions, and control run identity.
-6. The native metadata file and all seven native isotope CSVs exist.
-7. SHA-256 entries for the comparison, run manifest, metadata, and seven
-   native CSVs match SHA256SUMS.txt.
-8. Every isotope CSV has exactly 2,401 rows, the correct isotope identity,
-   the canonical q grid, finite values for all eight responses, and
-   negligible imaginary residuals for all eight channels.
+## 4. What the current halo engine computes
 
-The engine retains only M, Phi'', and signed M-Phi'' for its current
-charge-density-sector fold, but validates the full eight-response native
-artifact before accepting it. This prevents a three-channel subset or a
-Python-only archive from accidentally satisfying the native AFH gate.
+The engine consumes the complete native artifact root but, in its current
+restricted mode, reads the three charge-sector responses \(W_M\),
+\(W_{\Phi''}\), and signed \(W_{M\Phi''}\). Its leptonic Coulomb weight is
+\[
+L_C^{(3)}=L_{00}^{(3)}
+-\frac{E_R}{Q_A}(L_{03}^{(3)}+L_{30}^{(3)})
++\left(\frac{E_R}{Q_A}\right)^2L_{33}^{(3)}.
+\]
+Thus it includes the nuclear longitudinal current through the conserved
+one-body nuclear-current relation, conditional on that continuity
+assumption. It is not an \(L_{00}\)-only calculation.
 
-## 5. What a native PASS does and does not mean
+The engine computes \(M+\Phi''+M\Phi''\) with exact isotope-specific
+\(q_A(E_R)\), finite-\(t_N\) form factors, and the full three-body
+phase-space tensor. It omits the transverse \(\Delta\), \(\Sigma'\), and
+\(\Sigma'\)-\(\Delta\) multipoles. Its status is
+\`COMPUTED_WITHIN_COULOMB_SECTOR_APPROXIMATION\`, with
+\`full_current_complete=false\`.
 
-A successful native AFH run validates the nuclear response database against
-AFH v6.0 ResponseNuclear outputs. It does not validate the three-body
-particle-side multipole coefficients, the complete
-L_mu_nu^(3) W_A^(mu nu) contraction, the halo integral, or the
-detector response.
+The provisional fixed-speed Python AFH contraction gives
+\[
+\max |R_{\rm spatial}/R_{\rm Coulomb}|=7.09596\times10^{-9}
+\]
+over 84 tested rows only. This is not a global halo-integrated bound and is
+not a reason to omit the spatial terms from the final kernel.
 
-The charge-sector halo engine remains a diagnostic using integrated
-L_00^(3) and M + Phi'' + M-Phi''. It is not the final full-current
-natural-xenon spectrum.
+## 5. Separate single-isotope Xe-131 native charge archive
 
-The complete calculation remains blocked on the independent tensor-to-AFH
-multipole projection audit:
-AFH_THREE_BODY_TENSOR_PROJECTION_AUDIT.md.
+The independent Xe-131 archive used for the fixed-speed diagnostic is
+AFH v6.0 / Wolfram 14.2.0 and contains 2,401 q nodes for the three native
+charge responses \(M,\Phi'',M\Phi''\). It is pinned to archive commit
+\`e6d9dee3527cab200ee6b21198d577b987282fac\`; the original native export
+commit is \`54e1ff10bba0cbffe7acc6af428014415c708475\`.
 
-## 6. Exact-q test correction
+The archive checks:
+- AFH source SHA-256
+  \`dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372\`;
+- density-matrix CSV SHA-256
+  \`f656145ba2fb9da741b77faed4c01d0dc457c955fa340928b5dbf9cee9bc5d45\`;
+- canonical-LF CSV SHA-256
+  \`b1b65708cd103058c3bcaea50bf65550d5671a88e97000b94f2536fbc60a59ff\`;
+- canonical metadata and validation SHA-256 values
+  \`ad8231ec92c71faf12631534871e192bc3000601514c2a369fc84d963bfa9887\`
+  and
+  \`6d199ac9fd4d7fdace93292d1dded1c98d9f49c2836244ee9d2e3ddd334e8333\`.
 
-The exact_qA_GeV regression test now uses the full isotope mass
-121.90971983538435 GeV. The previous expected q values were calculated
-with the rounded mass 121.909719835 GeV. The test expectations are updated
-to the exact mass-shell values; the kinematic formula itself is unchanged.
+The fixed-speed Xe-131 result is a Coulomb-sector ratio only, not a halo
+fold or a substitute for the seven-isotope/eight-response gate:
+
+| \(E_R\) | \(q_A\) (GeV) | ratio to pointlike \(9W_M\) |
+|---:|---:|---:|
+| 200 keV | 0.220825560 | 0.77830934 (-22.1691%) |
+| 267 keV | 0.255146745 | 0.64921591 (-35.0784%) |
+
+At 267 keV, PCHIP-versus-linear interpolation changes the ratio by
+\(7.47\times10^{-4}\), so the deep-\(W_M\)-minimum interpolation sensitivity
+is retained. The common integrated \(L_C^{(3)}\) cancels in this ratio.
+
+## 6. Latest independent workflow validations
+
+- PR #58 full-current run 44262243726: both jobs succeeded. The full-current
+  job passed 69 regression tests plus 11 native Coulomb-engine tests. It
+  generated 12 integrated tensor rows; the independent Dirac-trace residual
+  is \(1.59813\times10^{-9}\), minimum Gram eigenvalue
+  \(-3.19523\times10^{-14}\), and maximum q-frame rotation residual
+  \(3.15227\times10^{-16}\).
+- AFH coefficient extraction: 12 benchmarks; maximum
+  \(C_{\Sigma'\Delta}\) Cauchy-identity residual
+  \(1.72121\times10^{-16}\); maximum continuity correction
+  \(5.12783\times10^{-6}\).
+- Provisional seven-isotope contraction: 84 rows, all total kernels positive;
+  maximum spatial/Coulomb ratio \(7.09596\times10^{-9}\). This is explicitly
+  \`PROVISIONAL_AFH_CONTRACTION_PASS\`, not native validation.
+- Component-wise phase-space convergence: run 44262243726 passed all nine
+  stress scans, comparing all 256 complex Gram entries, all 16 complex
+  Lorentz-tensor entries, and point-nucleus contractions. The worst final
+  Frobenius difference is \(1.50126\times10^{-8}\), active-component
+  difference \(1.56728\times10^{-5}\), and point-nucleus contraction
+  difference \(1.51171\times10^{-8}\).
+- Xe-131 fixed-speed native Coulomb-sector run 44262472992 passed, artifact
+  14408816831.
+
+The full seven-isotope native run 44222502400 remains QUEUED. No native
+seven-isotope PASS, full vector-current halo fold, natural-xenon spectrum,
+or detector-level prediction is claimed.

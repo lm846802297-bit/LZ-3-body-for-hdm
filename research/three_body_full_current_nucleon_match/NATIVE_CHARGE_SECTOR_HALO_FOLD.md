@@ -14,34 +14,33 @@ M+\Phi''+M\Phi''
 with the exact three-body phase-space tensor and isotope-specific nuclear
 kinematics.
 
-The spatial \(\Delta,\Sigma',\Sigma''\) sector is not silently set to zero in
-the theory record; it is excluded from this engine because its independent
-fixed-speed PR #58 contraction already gives
-
+The transverse \(\Delta,\Sigma'\) sector is not silently set to zero in
+the theory record; it is excluded from this Coulomb-sector engine pending
+the full leading-static multipole promotion. The provisional fixed-speed
+PR #58 contraction gives
 \[
-|R_{\rm spatial}/R_{\rm charge}|<7.1\times10^{-9}
+|R_{\rm spatial}/R_{\rm Coulomb}|<7.1\times10^{-9}
 \]
-
-over the tested 84 rows. A separate native spatial-response promotion remains
-the appropriate acceptance gate.
+over the tested 84 rows only. This is not a global halo-integrated bound.
+The seven-isotope native gate validates all eight response inputs, but does
+not by itself validate or fold the transverse three-body coefficients.
 
 ## 1. Native AFH input gate
 
-The engine refuses to consume the provisional Python AFH eight-response table.
-The native input directory must contain:
+The engine refuses to consume the provisional Python AFH table. Pass the
+extracted root of the private native artifact, which contains:
 
-- seven native AFH CSV files, Xe-128/129/130/131/132/134/136;
-- \`native-comparison.json\`;
-- \`native-comparison.json\` must report
-  \`status=PASS\`,
-  \`native_afh_validated=true\`, and
-  \`rows_compared=16807\`;
-- every native CSV must contain 2,401 q nodes from 0 to 0.6 GeV;
-- native imaginary residuals must be below \(2\times10^{-12}\).
+- native/ with seven CSV files, Xe-128/129/130/131/132/134/136;
+- native/native_metadata.txt;
+- native-comparison.json;
+- run_manifest.json;
+- SHA256SUMS.txt.
 
-This is intentional: a local response ratio near a \(W_M\) minimum is too
-sensitive to interpolation and denominator cancellation to promote the
-provisional seven-isotope Python table to the final spectrum.
+The comparison must report status=PASS, native_afh_validated=true, and
+rows_compared=16807. All eight response channels, all 2,401 q nodes per
+isotope, the pinned source commit, package identity, run metadata, and SHA-256
+checksums are validated before the three Coulomb-sector response values are
+read.
 
 ## 2. Exact isotope kinematics
 
@@ -242,3 +241,12 @@ global bound over the halo integral.
 The code output explicitly sets full_current_complete=false and labels its
 status COMPUTED_WITHIN_COULOMB_SECTOR_APPROXIMATION. It remains a restricted
 Coulomb-sector diagnostic, not the final natural-xenon spectrum.
+
+
+## 8. Separate Xe-131 native fixed-speed diagnostic
+
+A separate native AFH v6.0 / Wolfram 14.2.0 Xe-131 archive has passed its
+three-response integrity and response-level checks. It supports the
+fixed-speed Coulomb-sector benchmark in
+\`XE131_FIXED_SPEED_CHARGE_DSIGMA_RESULTS.md\`, but does not replace the
+seven-isotope/eight-response gate or validate transverse multipoles.
