@@ -209,7 +209,9 @@ def finite_width_ward_rhs(point, mchi: float, mchi2: float, imag: float) -> np.n
     d2_complex = d2 + 1j * imag
     if abs(d1) < 1e-30 or abs(d2_complex) < 1e-30:
         raise ZeroDivisionError("chi2 propagator pole in finite-width Ward RHS")
-    ubar_out, u_in = dm.external_spinor_pair(point, mchi)
+    u_in = dm.dirac_spinor_matrix(point.p, mchi)
+    u_out = dm.dirac_spinor_matrix(point.p_prime, mchi)
+    ubar_out = u_out.conj().T @ eq6.GAMMA[0]
     operator = (
         (eq6.slash(r_before) + mchi2 * eq6.ID4) / d1
         - (eq6.slash(r_after) + mchi2 * eq6.ID4) / d2_complex
