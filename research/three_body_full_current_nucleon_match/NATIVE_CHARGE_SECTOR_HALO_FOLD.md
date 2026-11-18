@@ -1,4 +1,4 @@
-# Native-AFH \(M+\Phi''\) Coulomb-sector natural-xenon halo fold
+# Native-AFH Coulomb-sector and leading-static vector-current natural-xenon halo fold
 
 ## Status
 
@@ -250,3 +250,22 @@ three-response integrity and response-level checks. It supports the
 fixed-speed Coulomb-sector benchmark in
 \`XE131_FIXED_SPEED_CHARGE_DSIGMA_RESULTS.md\`, but does not replace the
 seven-isotope/eight-response gate or validate transverse multipoles.
+
+
+## 2026-11-18 update: optional leading-static vector-current candidate mode
+
+The previous sections describe the default Coulomb-only mode. A second,
+explicitly opt-in mode is now implemented in native_charge_sector_halo_fold.py
+with the flag --include-leading-static-vector-candidate. It uses the full
+integrated q-aligned tensor and interpolates all eight native AFH responses.
+Its six candidate nonzero channels are M, Phi'', M-Phi'', Delta, Sigma', and
+Sigma'-Delta. Sigma'' and PhiTilde' remain loaded; their coefficients are
+zero only at the declared leading-static one-body vector-current order.
+
+This mode is still a candidate, not a promoted full-current result. The
+exact AFH spherical-multipole phase validation and P3 direct
+covariant-versus-AFH tensor comparison remain open. Both modes require the
+provenance-pinned native seven-isotope/eight-response 16,807-point gate.
+The current native runner is queued and has not produced an artifact.
+See NATIVE_LEADING_STATIC_VECTOR_CURRENT_HALO_CANDIDATE.md for the formula,
+acceptance conditions, and execution command.

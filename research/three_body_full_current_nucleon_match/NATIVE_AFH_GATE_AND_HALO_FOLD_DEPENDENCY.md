@@ -168,3 +168,19 @@ is retained. The common integrated \(L_C^{(3)}\) cancels in this ratio.
 The full seven-isotope native run 44222502400 remains QUEUED. No native
 seven-isotope PASS, full vector-current halo fold, natural-xenon spectrum,
 or detector-level prediction is claimed.
+
+
+## 2026-11-18 update: optional leading-static candidate fold
+
+In addition to the default Coulomb-sector engine, the repository now has an
+opt-in leading-static vector-current candidate mode. It reads all eight native
+AFH response columns and combines M, Phi'', M-Phi'', Delta, Sigma', and the
+signed Sigma'-Delta interference. The two interference-response
+Cauchy-Schwarz inequalities are checked independently from the
+particle-side Sigma'-Delta coefficient identity.
+
+This is a gated candidate only. Its unit tests use a synthetic
+provenance-shaped fixture to test the loader and computation path; this is
+not a native AFH calculation. The native 16,807-point runner remains queued,
+and P3 has not passed. No real native seven-isotope candidate halo result is
+claimed. See NATIVE_LEADING_STATIC_VECTOR_CURRENT_HALO_CANDIDATE.md.

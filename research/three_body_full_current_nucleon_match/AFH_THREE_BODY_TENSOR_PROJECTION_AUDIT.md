@@ -443,3 +443,24 @@ at both fixed-speed points.
 This does **not** identify the physical bound-nucleon energy sharing,
 off-shell prescription, or interaction currents. The many-body continuity
 equation and the consistency of the one-body AFH truncation remain open.
+
+
+## 2026-11-18 implementation update
+
+The leading-static six-channel particle-side candidate is now wired into the
+optional native halo-fold path. The candidate consumes the full integrated
+q-aligned three-body tensor and all eight native AFH responses; it does not
+reduce the input to the charge-only three columns. The engine checks both
+nuclear interference-response Cauchy-Schwarz bounds:
+\[
+|W_{M\Phi''}|\leq\sqrt{W_MW_{\Phi''}},\qquad
+|W_{\Sigma'\Delta}|\leq\sqrt{W_{\Sigma'}W_\Delta}.
+\]
+These are separate from the particle-side identity for
+\(C_{\Sigma'\Delta}\).
+
+This implementation does not close P2/P3 promotion. The signed
+Sigma'-Delta phase still requires the exact AFH spherical-multipole check,
+and the direct covariant, q-frame-rotated, and AFH multipole contractions
+must still agree. The 16,807-point native input gate is still queued.
+Use the label provisional_leading_static_vector_current_candidate only.
