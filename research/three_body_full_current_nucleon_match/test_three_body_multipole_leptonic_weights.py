@@ -122,7 +122,7 @@ class LeptonicMultipoleWeightTests(unittest.TestCase):
             ],
         }
         result = weights.analyze_tensor_archive(archive)
-        self.assertEqual(result["status"], "PASS_LEPTONIC_MULTIPOLE_WEIGHTS")
+        self.assertEqual(result["status"], "PASS_AFH_LEPTONIC_COEFFICIENT_EXTRACTION")
         self.assertEqual(result["summary"]["benchmark_count"], 1)
         self.assertEqual(result["benchmarks"][0]["width_scheme"], "pole")
 
