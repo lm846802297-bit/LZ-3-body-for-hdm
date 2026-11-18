@@ -762,7 +762,7 @@ The full-recoil scan regression is included in the standard unittest discovery: 
 
 The 943-point native-grid charge-kernel figures are regenerated in a consistent serif/LaTeX-style publication format by the charge-scan plotting script. Both SVG and PDF versions are produced.
 
-The fixed-benchmark absolute charge-sector spectrum is calculated by the fixed-benchmark absolute-dsigma script, using one fixed \(\Delta m=450\) keV across the entire kinematic interval, the current bare-nucleus Xe-131 mass convention, the zero-width prescription, the exact \(Q_A^2=2m_AE_R+E_R^2\) mediator denominator, the relativistic incident momentum, and the public Eq. (6) prefactor. It includes the coherent native-AFH \(M+\Phi''+M\Phi''\) charge sector and outputs the full pointwise CSV, metadata, SVG and PDF.
+The fixed-benchmark absolute charge-sector spectrum is calculated by the fixed-benchmark absolute-dsigma script, using one fixed \(\Delta m=450\) keV across the entire kinematic interval, the current bare-nucleus Xe-131 mass convention, the zero-width prescription, the exact invariant mediator denominator \(m_V^2-t_A\), with \(t_A=-2m_AE_R\), while keeping spatial \(Q_A^2=2m_AE_R+E_R^2\) separate for AFH responses and static nucleon form factors, the relativistic incident momentum, and the public Eq. (6) prefactor. It includes the coherent native-AFH \(M+\Phi''+M\Phi''\) charge sector and outputs the full pointwise CSV, metadata, SVG and PDF.
 
 - Method and scope: [XE131_FIXED_BENCHMARK_ABSOLUTE_DSIGMA.md](XE131_FIXED_BENCHMARK_ABSOLUTE_DSIGMA.md)
 - Calculation: xe131_fixed_benchmark_absolute_dsigma.py
