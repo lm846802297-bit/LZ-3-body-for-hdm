@@ -1,6 +1,18 @@
-# P3-C: C0-consistent fixed-speed three-body × AFH contraction
+# P3-C precursor: C0-consistent three-body × AFH response contraction
 
-**Status: PROVISIONAL_AFH_CONTRACTION_PASS — 84/84 benchmark/isotope rows pass.**  
+> **Current formal-width status (2026-11-19):** the pole-only rerun is
+> [workflow 44336338072](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44336338072),
+> full-current artifact 14442826214. It contains 28 response-level rows
+> (four benchmarks × seven isotopes), all positive, with maximum
+> \(|K_{\rm spatial}/K_{\rm charge}|=7.0304970964\times10^{-9}\) and
+> maximum rank-sum reconstruction residual \(1.11022\times10^{-16}\).
+> The run uses Pole width only.
+>
+> **This remains a response-level contraction, not the requested P3-C
+> amplitude-level PASS.** The seven-isotope and spatial AFH inputs are still
+> Python translations until the native Wolfram gate passes. The older
+> 84-row, three-width results below are retained as historical diagnostics
+> and are not formal-production results.  
 **Workflow:** [44305980766](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44305980766)  
 **PR head:** 1201d03c11030d71c7259277ee98937bf41c8025  
 **Contraction artifact:** 14428247140  
@@ -87,7 +99,7 @@ isotope. The P3-B archive has 16,807 total-response rows and 9,604
 rank-resolved multipole rows. The source-translated AFH-8 and P3-B
 metadata both explicitly set native AFH validation to false.
 
-## 4. Benchmark coverage and numerical acceptance
+## 4. Historical benchmark coverage (superseded by the pole-only rerun)
 
 The phase-space calculation supplies 12 coefficient sets:
 - green_450keV, \(E_R=200\) keV, \(q_A=0.2209306022\) GeV;
@@ -210,16 +222,24 @@ and do not label this a full P3 pass or a final natural-xenon prediction.
 ## 7. Remaining gates
 
 1. Complete the native Wolfram seven-isotope/eight-response comparison.
-   The most recent private native workflow is
-   [44306907993](https://github.com/lm846802297-bit/research-compute-control/actions/runs/44306907993),
-   currently queued on the self-hosted Windows/X64/research-gpu runner;
-   no native artifact is available yet.
+   The current native P3-B workflow is
+   [44346207069](https://github.com/lm846802297-bit/research-compute-control/actions/runs/44346207069),
+   configured by [research-compute-control PR #2](https://github.com/lm846802297-bit/research-compute-control/pull/2).
+   It is pinned to native exporter source commit
+   `5afc500a3102b857dd16e29432db8e6e068d65d1` and P3 artifact
+   run `44337928314`, artifact `14443055701`. The run is queued on the
+   self-hosted Windows/X64/research-gpu runner and currently has no assigned
+   runner; no native artifact is available yet.
 2. Implement the selected-point many-body comparison
    \(\mathcal A_{\rm cov}^{\rm nuclear}\) versus the q-frame and AFH
    spherical-multipole amplitudes using identical OBDMEs, phases,
    normalization, and current truncation.
-3. Replace the constant \(q=0\) form-factor anchors with the approved
-   finite-\(t_N\) \(F_1^V(t_N)\), \(F_2^V(t_N)\) prescription.
-4. Only after the native and pointwise P3 gates pass, perform the
-   natural-xenon halo fold and compare the pointlike-M, finite-\(t_N\)-M,
-   Coulomb-sector, and full matched-current spectra separately.
+3. Complete the selected-point direct covariant-current to AFH multipole
+   amplitude reconstruction, retaining the OBDME phases, Wigner-Eckart
+   factors, and signed \(\Sigma'\)-\(\Delta\) interference.
+4. Replace the constant \(q=0\) form-factor anchors with the approved
+   finite-\(t_N\) \(F_1^V(t_N)\), \(F_2^V(t_N)\) prescription and report
+   the pointlike-anchor result separately.
+5. Only after native P3-B and amplitude-level P3-C pass, perform the
+   seven-isotope natural-xenon halo fold and compare pointlike-M,
+   finite-\(t_N\)-M, Coulomb-sector, and full matched-current spectra.
