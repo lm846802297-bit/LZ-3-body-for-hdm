@@ -806,3 +806,12 @@ AFH indices 1, 4, and 7 on \(0.2545\le q_A\le0.2575\) GeV with
 contraction. Until then, keep the result labelled
 \`PASS_LOCAL_INTERPOLATION_STABILITY_DIAGNOSTIC\`; do not promote
 \`native_afh_validated\` or claim a final continuous \(d\sigma/dE_R\).
+
+
+The dense native export and overlap validator are now prepared in
+[draft PR #63](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/pull/63).
+The private native workflow has been updated to include this 121-point
+Xe-131 charge scan. The old queued run 44306907993 predates that update;
+a fresh workflow dispatch is required after the Windows/Wolfram runner is
+online. Until that run returns its artifact and validation PASS, the
+diffraction-minimum interpolation gate remains open.
