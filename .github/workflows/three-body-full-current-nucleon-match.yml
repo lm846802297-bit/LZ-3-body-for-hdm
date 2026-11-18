@@ -22,6 +22,7 @@ concurrency:
 
 jobs:
   full-current:
+    needs: afh-spatial-obdme
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -80,13 +81,21 @@ jobs:
           repository: ${{ github.repository }}
           run-id: 44222087512
           path: /tmp/afh-full-response
-      - name: Contract three-body coefficients with seven-isotope AFH responses
+      - name: Download P3-B spatial response and multipole archive
+        uses: actions/download-artifact@v4
+        with:
+          name: provisional-afh-spatial-obdme-responses
+          path: /tmp/afh-spatial-obdme
+      - name: Contract three-body coefficients with C0-consistent AFH responses
         run: |
           python research/three_body_full_current_nucleon_match/contract_three_body_afh_responses.py \
             --afh-dir /tmp/afh-full-response \
+            --spatial-dir /tmp/afh-spatial-obdme \
             --weights-json /tmp/three-body-multipole-leptonic-weights.json \
             --out /tmp/three-body-afh-response-contraction.json \
-            --afh-artifact-run-id 44222087512 --afh-artifact-id 14391456283
+            --afh-artifact-run-id 44222087512 --afh-artifact-id 14391456283 \
+            --spatial-artifact-run-id ${{ github.run_id }} \
+            --spatial-artifact-id ${{ needs.afh-spatial-obdme.outputs.artifact_id }}
       - name: Upload matching and integrated tensor diagnostics
         uses: actions/upload-artifact@v4
         with:
@@ -101,6 +110,8 @@ jobs:
 
 
   afh-spatial-obdme:
+    outputs:
+      artifact_id: ${{ steps.upload_spatial.outputs.artifact-id }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -129,6 +140,7 @@ jobs:
             --out-dir /tmp/afh-spatial-obdme \
             --out-json /tmp/afh-spatial-obdme/multipole-validation.json
       - name: Upload provisional AFH spatial OBDME grid
+        id: upload_spatial
         uses: actions/upload-artifact@v4
         with:
           name: provisional-afh-spatial-obdme-responses
