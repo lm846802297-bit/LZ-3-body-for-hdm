@@ -205,66 +205,122 @@ term is the as-yet uncomputed spatial multipole contraction. The
 \(r_\chi\) times a nuclear response: their normalization and interference
 weights follow from the vector-spherical-harmonic projection.
 
-## 6. Leptonic multipole weights and transverse helicity check
+## 6. Exact leading spatial coefficients from AFH Eq. (107)
 
-The integrated \(L_{\mu\nu}^{(3)}\) tensor can be decomposed in the
-q-aligned spherical basis before any AFH nuclear matrix element is inserted.
-The transverse-even and transverse-helicity-odd factors are
+The AFH Appendix A multipole decomposition gives the elastic response
+coefficients in terms of the WIMP-side vectors \(\boldsymbol l_M\) and
+\(\boldsymbol l_5\). In particular, Eq. (107) contains
 \[
-w_T=\frac12(L^{11}+L^{22}),\qquad
-w_{\rm hel}=-2i(L^{12}-L^{21}).
+C_\Delta=
+\frac12\left[
+\frac{q^2}{m_N^2}\boldsymbol l_M\cdot\boldsymbol l_M^*
+-\left(\frac{\boldsymbol q}{m_N}\cdot\boldsymbol l_M\right)
+ \left(\frac{\boldsymbol q}{m_N}\cdot\boldsymbol l_M^*\right)
+\right],
 \]
-The second expression is the factor multiplying the transverse
-electric--magnetic multipole interference in the standard multipole
-expansion; see Hoferichter--Menéndez--Schwenk, PRD 102, 074018 (2020),
-Appendix A, Eqs. (110)--(111). The precise mapping of the electric and
-magnetic multipoles onto the AFH \(\Delta\) and \(\Sigma'\) conventions
-still requires the explicit spherical-projector normalization.
+\[
+C_{\Sigma'}=
+\frac12\left[
+\boldsymbol l_5\cdot\boldsymbol l_5^*
+-(\hat{\boldsymbol q}\cdot\boldsymbol l_5)
+ (\hat{\boldsymbol q}\cdot\boldsymbol l_5^*)
+\right],
+\]
+\[
+C_{\Sigma'\Delta}=
+\frac{\boldsymbol q}{m_N}\cdot
+\operatorname{Re}\left[i\boldsymbol l_M\times\boldsymbol l_5^*\right].
+\]
+These are the AFH response coefficients; the last one is not the
+helicity-odd coefficient in the generic transverse electric--magnetic
+leptonic multipole formula.
 
-For the 12 archived DM tensors (four fixed-speed benchmarks and
-zero/pole/running widths),
+For the static Dirac--Pauli current, the amplitude is
+\[
+-\boldsymbol{\mathcal T}_3\cdot\boldsymbol J_N
+=-\frac{F_1^V}{m_N}\boldsymbol{\mathcal T}_3\cdot\boldsymbol K_N
+-i\frac{F_1^V+F_2^V}{2m_N}
+ \boldsymbol\sigma_N\cdot
+ (\boldsymbol q_N\times\boldsymbol{\mathcal T}_3).
+\]
+The AFH Fourier convention is \(\boldsymbol q=-\boldsymbol q_A\), while
+\(\boldsymbol q_N=\boldsymbol q_A\). Matching to the AFH one-body
+operators therefore gives
+\[
+\boldsymbol l_M=-F_1^V\boldsymbol{\mathcal T}_3,\qquad
+\boldsymbol l_5=
+i\frac{F_1^V+F_2^V}{2m_N}
+(\boldsymbol q\times\boldsymbol{\mathcal T}_3).
+\]
+The phase-space-integrated spin average is
+\(L^{ij}=\frac{1}{2j_\chi+1}\sum_{\rm spins}
+\int d\Phi_3\,\mathcal T_3^i\mathcal T_3^{j*}\).
+With \(\boldsymbol q\) along the third axis, Eq. (107) then gives
 \[
 \boxed{
-4.08\times10^{-8}
-\leq \frac{w_T}{L^{00}}
-\leq 2.26\times10^{-7}.
+C_\Delta^{(3)}
+=\frac{(F_1^V)^2Q_A^2}{2m_N^2}
+ (L^{11}+L^{22}),
 }
 \]
-This is the transverse DM-side kinematic weight relative to the charge
-weight. It is not a nuclear rate correction: the nucleon convection and
-magnetization coefficients, AFH multipole normalization, and nuclear
-responses have not yet been included.
-
-The longitudinal DM-side ratio is
 \[
-5.73\times10^{-6}
-\leq \frac{L^{33}}{L^{00}}
-\leq 6.01\times10^{-6}.
+\boxed{
+C_{\Sigma'}^{(3)}
+=\frac{(F_1^V+F_2^V)^2Q_A^2}{8m_N^2}
+ (L^{11}+L^{22}),
+}
 \]
-In the static on-shell impulse approximation the nuclear one-body
-longitudinal current vanishes because \(q_N^0=0\) and
-\(\boldsymbol q_N\cdot\boldsymbol K_N=0\). For a bound nucleus with
-\(q_A^0=E_R\ne0\), the longitudinal current must instead be treated with
-the appropriate continuity equation; the above \(L^{33}\) ratio alone
-does not determine its contribution.
-
-The normalized transverse helicity-odd diagnostic is
 \[
-\mathcal H_T=
+\boxed{
+C_{\Sigma'\Delta}^{(3)}
+=-\frac{F_1^V(F_1^V+F_2^V)Q_A^2}{2m_N^2}
+ (L^{11}+L^{22}).
+}
+\]
+The sign in the last expression follows from the simultaneous use of
+\(\boldsymbol q_{\rm AFH}=-\boldsymbol q_A\),
+\(\boldsymbol q_N=+\boldsymbol q_A\), and the metric
+\((+---)\). It must be checked against the exact AFH spherical
+matrix-element implementation before the coefficient is frozen.
+
+The leading magnetization vector is perpendicular to \(\boldsymbol q\),
+so \(C_{\Sigma''}^{(3)}=0\) at this order. The leading current also has
+no transverse spin-velocity coefficient, so
+\(C_{\widetilde\Phi'}^{(3)}=0\). These are operator-level statements for
+the leading static vector current.
+
+A useful algebraic check is
+\[
+C_{\Sigma'\Delta}^{(3)}
+=-2\sqrt{C_\Delta^{(3)}C_{\Sigma'}^{(3)}}
+\]
+when \(F_1^V(F_1^V+F_2^V)>0\). This relation is a coefficient identity
+from the fact that \(\boldsymbol l_5\) is the transverse \(90^\circ\)
+rotation of \(\boldsymbol l_M\); it is not a claim that the nuclear
+responses themselves saturate their Cauchy--Schwarz bound.
+
+For the 12 integrated DM tensors, the common transverse factor obeys
+\[
+4.08\times10^{-8}
+\leq\frac{(L^{11}+L^{22})/2}{L^{00}}
+\leq2.26\times10^{-7}.
+\]
+The generic transverse helicity-odd component
+\[
 \frac{\left|-i(L^{12}-L^{21})\right|}
- {|L^{11}+L^{22}|},
-\qquad
-\boxed{\max\mathcal H_T=7.39\times10^{-16}.}
+ {|L^{11}+L^{22}|}
 \]
-Equivalently, the HKS interference weight \(w_{\rm hel}\), normalized to
-\(L^{11}+L^{22}\), is at most \(1.48\times10^{-15}\). This is consistent
-with zero at floating-point precision for the unpolarized pure-vector
-benchmarks. It strongly indicates that the leading
-\(W_{\Sigma'\Delta}\) coefficient vanishes for these benchmark conditions.
-The exact AFH spherical projector must nevertheless confirm the phase and
-normalization before this term is removed from any general rate formula.
-Keep the signed \(W_{\Sigma'\Delta}\) response in the formalism until that
-projection is explicitly verified.
+is at most \(7.39\times10^{-16}\), but this does **not** set
+\(C_{\Sigma'\Delta}^{(3)}\) to zero. The AFH Eq. (107) coefficient above
+depends on the transverse-even trace \(L^{11}+L^{22}\). The two
+quantities must not be confused.
+
+The expressions above are leading static one-body coefficients before
+the common mediator/coupling factors. They are to be contracted with the
+physical equal-\(p=n\) AFH response columns, with the factor of four
+applied exactly once. \(F_1^V(t_N)\) and \(F_2^V(t_N)\) must ultimately
+be evaluated at finite \(t_N=-Q_A^2\); zero-momentum values are only
+benchmark anchors.
 
 ## 7. Mandatory next calculation
 
