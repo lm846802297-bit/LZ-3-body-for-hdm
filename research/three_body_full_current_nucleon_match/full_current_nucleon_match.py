@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """Exact one-nucleon Dirac-Pauli current contracted with spin-resolved T3^mu.
 
-The nucleon is treated in a static elastic impulse-approximation point:
-p_N=l-q/2, p_N'=l+q/2, with l perpendicular to q, so q_N^0=0.
-This is a matching diagnostic, not a nuclear many-body calculation.
+The diagnostic retains the static impulse-approximation point
+p_N=l-q/2, p_N'=l+q/2, l perpendicular to q, so q_N^0=0, and adds a
+separate free on-shell kinematic slice with q_N^0=q_A^0=E_R. The latter is
+not a bound-nucleon model. This is a matching diagnostic, not a nuclear
+many-body calculation.
 """
 from __future__ import annotations
 import argparse, json, math, sys
