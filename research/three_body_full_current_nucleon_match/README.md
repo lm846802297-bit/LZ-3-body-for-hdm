@@ -693,7 +693,7 @@ archive before upload using
 [validate_afh_spatial_multipole_archive.py](validate_afh_spatial_multipole_archive.py).
 
 
-Latest rank-resolved artifact: workflow 44303047483, artifact 14426558224.
+Latest rank-resolved artifact: workflow 44305662906, artifact 14427554198.
 It contains 16,807 total-response rows and 9,604 rank-resolved multipole rows.
 The archive validator passed; rank sums reconstruct the raw responses exactly
 and the physical equal-p/n responses to at most 2.22e-16 absolute residual.
