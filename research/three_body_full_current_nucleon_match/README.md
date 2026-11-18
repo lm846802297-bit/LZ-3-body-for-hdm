@@ -575,3 +575,35 @@ Workflow 44262472992 passed and uploaded artifact 14408816831 (SHA-256
 The native Xe-131 archive provenance is pinned to archive commit
 e6d9dee3527cab200ee6b21198d577b987282fac, with original Wolfram export
 commit 54e1ff10bba0cbffe7acc6af428014415c708475.
+
+
+## 10. Energy-transfer-matched free on-shell nucleon scan
+
+The static reference uses \(\ell\perp q_A\), which gives \(q_N^0=0\).
+For comparison, the new kinematic scan constructs free on-shell momenta
+\[
+\boldsymbol p_i=\boldsymbol\ell-\frac{\boldsymbol q_A}{2},\qquad
+\boldsymbol p_f=\boldsymbol\ell+\frac{\boldsymbol q_A}{2}
+\]
+such that \(E_f-E_i=E_R\), hence \(q_N^\mu=q_A^\mu\). The required
+longitudinal internal momentum is
+\[
+\ell_\parallel=
+\frac{E_R\sqrt{m_N^2+\ell_\perp^2+(Q_A^2-E_R^2)/4}}
+{\sqrt{Q_A^2-E_R^2}}.
+\]
+
+For Xe-131, the constructed \(\ell_\parallel\) values are:
+
+| \(E_R\) | \(Q_A\) | \(\ell_\perp=0\)--200 MeV |
+|---:|---:|---:|
+| 200 keV | 0.220825560 GeV | 0.8562--0.8752 MeV |
+| 267 keV | 0.255146745 GeV | 0.9916--1.0134 MeV |
+
+The code evaluates the exact Dirac--Pauli current and tests its Ward
+identity with both \(q_N^\mu\) and the physical \(q_A^\mu\). This verifies
+that a free on-shell current can be conserved with the physical transfer
+when the energy transfer is matched. It does **not** determine the
+energy-sharing distribution of a bound nucleon, off-shell/binding effects,
+or exchange currents from the nuclear Hamiltonian. It is a kinematic
+free-nucleon slice, not a many-body continuity proof.
