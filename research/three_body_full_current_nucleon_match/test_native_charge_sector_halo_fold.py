@@ -68,6 +68,72 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
                 }
             })
 
+    def test_full_vector_response_interpolation_covers_all_eight_channels(self):
+        q = np.linspace(0.0, 0.6, 2401)
+        entry = {
+            "q": q,
+            "physical": {name: np.ones_like(q) for name in fold.FULL_VECTOR_RESPONSE_NAMES},
+        }
+        out = fold.interpolate_native_response(
+            entry, 0.2551467453856506,
+            response_names=fold.FULL_VECTOR_RESPONSE_NAMES,
+        )
+        self.assertEqual(
+            set(out["physical_equal_pn"]),
+            set(fold.FULL_VECTOR_RESPONSE_NAMES),
+        )
+        self.assertEqual(
+            set(out["pchip_linear_relative_difference"]),
+            set(fold.FULL_VECTOR_RESPONSE_NAMES),
+        )
+
+    def test_leading_static_vector_kernel_reconstructs_charge_and_spatial(self):
+        L = np.zeros((4, 4, 2), dtype=float)
+        L[0, 0, 0] = 1.0
+        L[1, 1, 0] = 0.01
+        L[2, 2, 0] = 0.01
+        responses = {
+            "M": 4.0,
+            "SigmaDoublePrime": 0.0,
+            "SigmaPrime": 1.0,
+            "PhiPP": 0.2,
+            "PhiTildePrime": 0.0,
+            "Delta": 2.0,
+            "MPhiPP": -0.3,
+            "SigmaPrimeDelta": -1.0,
+        }
+        result = fold.leading_static_vector_current_kernel_from_tensor(
+            L, 0.22, 200.0e-6, responses, "pointlike"
+        )
+        self.assertAlmostEqual(
+            result["leading_static_vector_current_candidate"],
+            result["charge_sector"] + result["spatial_sector"],
+            places=13,
+        )
+        self.assertGreaterEqual(result["spatial_sector"], 0.0)
+        self.assertLess(result["particle_Cauchy_identity_relative_residual"], 1.0e-12)
+        self.assertLess(result["charge_reconstruction_relative_residual"], 1.0e-12)
+
+    def test_leading_static_vector_kernel_rejects_bad_nuclear_cauchy_response(self):
+        L = np.zeros((4, 4, 2), dtype=float)
+        L[0, 0, 0] = 1.0
+        L[1, 1, 0] = 0.01
+        L[2, 2, 0] = 0.01
+        responses = {
+            "M": 4.0,
+            "SigmaDoublePrime": 0.0,
+            "SigmaPrime": 1.0,
+            "PhiPP": 0.2,
+            "PhiTildePrime": 0.0,
+            "Delta": 2.0,
+            "MPhiPP": -0.3,
+            "SigmaPrimeDelta": 10.0,
+        }
+        with self.assertRaisesRegex(ValueError, "Cauchy-Schwarz"):
+            fold.leading_static_vector_current_kernel_from_tensor(
+                L, 0.22, 200.0e-6, responses, "pointlike"
+            )
+
     def test_zero_momentum_form_factor_anchor(self):
         f1, f2 = fold.form_factor_values(0.0, "isoscalar_zexp")
         self.assertAlmostEqual(f1, 3.0, places=10)

@@ -42,6 +42,9 @@ from nucleon_vector_form_factors import (  # noqa: E402
     charge_coefficients,
 )
 from three_body_phase_space_tensor import integrate_spin_resolved_tensor  # noqa: E402
+from three_body_multipole_leptonic_weights import (  # noqa: E402
+    extract_afh_vector_coefficients,
+)
 
 C_KM_S = 299792.458
 C_CM_S = 2.99792458e10
@@ -86,6 +89,7 @@ NATIVE_RESPONSE_W_COLUMNS = {
     "MPhiPP": "W_MPhiPP00_AFH",
     "SigmaPrimeDelta": "W_SigmaPrimeDelta00_AFH",
 }
+FULL_VECTOR_RESPONSE_NAMES = tuple(NATIVE_RESPONSE_W_COLUMNS)
 NATIVE_EXPECTED_ROWS = len(ISOTOPES) * 2401
 
 def read_csv(path: Path) -> list[dict[str, str]]:
@@ -404,13 +408,17 @@ def load_native_response_bundle(artifact_root: Path) -> tuple[dict, dict]:
         bundle[A] = {"q": q, "physical": physical}
     return bundle, gate
 
-def interpolate_native_response(bundle_entry: dict, q_GeV: float) -> dict:
+def interpolate_native_response(
+    bundle_entry: dict,
+    q_GeV: float,
+    response_names: tuple[str, ...] = RESPONSE_NAMES,
+) -> dict:
     q = bundle_entry["q"]
     if q_GeV < q[0] or q_GeV > q[-1]:
         raise ValueError(f"q_A={q_GeV:.12g} GeV lies outside native AFH grid")
     out = {}
     linear = {}
-    for name in RESPONSE_NAMES:
+    for name in response_names:
         values = bundle_entry["physical"][name]
         pchip = PchipInterpolator(q, values, extrapolate=False)
         out[name] = float(pchip(q_GeV))
@@ -474,6 +482,126 @@ def charge_kernel_from_coulomb_weight(
         if pointlike_M != 0.0 else math.nan,
         "relative_phi_vs_finite_t_M": charge / finite_t_M - 1.0
         if finite_t_M != 0.0 else math.nan,
+    }
+
+
+def leading_static_vector_current_kernel_from_tensor(
+    L_q_aligned_real_imag: list,
+    qA_GeV: float,
+    omega_GeV: float,
+    responses: dict[str, float],
+    form_factor_prescription: str,
+) -> dict:
+    """Evaluate the six-channel leading-static AFH vector-current candidate.
+
+    This is deliberately labelled a candidate until the direct covariant
+    one-nucleon contraction and AFH multipole contraction pass P3.
+    """
+    required = set(FULL_VECTOR_RESPONSE_NAMES)
+    missing = required.difference(responses)
+    if missing:
+        raise ValueError(f"missing native AFH response channels: {sorted(missing)}")
+    pairs = np.asarray(L_q_aligned_real_imag, dtype=float)
+    if pairs.shape != (4, 4, 2) or not np.all(np.isfinite(pairs)):
+        raise ValueError("integrated q-aligned Lorentz tensor must have shape (4,4,2)")
+    L = pairs[:, :, 0] + 1j * pairs[:, :, 1]
+    F1, F2 = form_factor_values(qA_GeV, form_factor_prescription)
+    coefficients = extract_afh_vector_coefficients(
+        L,
+        qA_GeV,
+        f1=F1,
+        f2=F2,
+        mN_GeV=MN_GEV,
+        omega_GeV=omega_GeV,
+    )
+    charge_terms = {
+        "M": coefficients["C_M"] * responses["M"],
+        "PhiPP": coefficients["C_PhiPP"] * responses["PhiPP"],
+        "MPhiPP": coefficients["C_MPhiPP"] * responses["MPhiPP"],
+    }
+    spatial_terms = {
+        "Delta": coefficients["C_Delta"] * responses["Delta"],
+        "SigmaPrime": coefficients["C_SigmaPrime"] * responses["SigmaPrime"],
+        "SigmaPrimeDelta": (
+            coefficients["C_SigmaPrimeDelta"] * responses["SigmaPrimeDelta"]
+        ),
+        "SigmaDoublePrime": coefficients["C_SigmaDoublePrime"] * responses["SigmaDoublePrime"],
+        "PhiTildePrime": coefficients["C_PhiTildePrime"] * responses["PhiTildePrime"],
+    }
+    charge = float(sum(charge_terms.values()))
+    spatial = float(sum(spatial_terms.values()))
+    total = charge + spatial
+    response_delta = float(responses["Delta"])
+    response_sigma = float(responses["SigmaPrime"])
+    response_cross = float(responses["SigmaPrimeDelta"])
+    if response_delta < -1.0e-12 or response_sigma < -1.0e-12:
+        raise ValueError("negative native AFH spatial diagonal response")
+    response_bound = math.sqrt(
+        max(0.0, response_delta) * max(0.0, response_sigma)
+    )
+    response_cauchy_excess = max(0.0, abs(response_cross) - response_bound)
+    response_cauchy_scale = max(abs(response_cross), response_bound, 1.0e-300)
+    if response_cauchy_excess > 2.0e-10 * response_cauchy_scale:
+        raise ValueError(
+            "native AFH SigmaPrime-Delta response violates Cauchy-Schwarz: "
+            f"excess={response_cauchy_excess:.6g}"
+        )
+    if coefficients["C_SigmaPrimeDelta_cauchy_identity_relative_residual"] > 2.0e-12:
+        raise ValueError("particle-side SigmaPrime-Delta coefficient identity failed")
+    spatial_scale = max(
+        *(abs(value) for value in spatial_terms.values()),
+        1.0e-300,
+    )
+    if spatial < -2.0e-10 * spatial_scale:
+        raise ValueError(
+            f"negative combined leading-static spatial kernel: {spatial:.6g}"
+        )
+    total_scale = max(abs(charge), abs(spatial), 1.0e-300)
+    if total < -2.0e-10 * total_scale:
+        raise ValueError(f"negative total leading-static vector kernel: {total:.6g}")
+
+    charge_check = charge_kernel_from_coulomb_weight(
+        coefficients["L_C_continuity_adjusted_charge_weight"],
+        qA_GeV,
+        responses,
+        form_factor_prescription,
+    )
+    charge_residual = abs(charge - charge_check["charge_sector"]) / max(
+        abs(charge), abs(charge_check["charge_sector"]), 1.0e-300
+    )
+    if charge_residual > 2.0e-12:
+        raise AssertionError(
+            f"charge-sector reconstruction mismatch: {charge_residual:.6g}"
+        )
+    return {
+        "F1V": F1,
+        "F2V": F2,
+        "L_C": coefficients["L_C_continuity_adjusted_charge_weight"],
+        "L_T": float(np.real(L[1, 1] + L[2, 2])),
+        "charge_sector": charge,
+        "spatial_sector": spatial,
+        "leading_static_vector_current_candidate": total,
+        "pointlike_M": charge_check["pointlike_M"],
+        "finite_t_M": charge_check["finite_t_M"],
+        "charge_terms": charge_terms,
+        "spatial_terms": spatial_terms,
+        "particle_coefficients": {
+            key: coefficients[key]
+            for key in (
+                "C_M", "C_PhiPP", "C_MPhiPP", "C_Delta",
+                "C_SigmaPrime", "C_SigmaPrimeDelta",
+                "C_SigmaDoublePrime", "C_PhiTildePrime",
+            )
+        },
+        "response_Cauchy_excess": response_cauchy_excess,
+        "particle_Cauchy_identity_relative_residual": (
+            coefficients["C_SigmaPrimeDelta_cauchy_identity_relative_residual"]
+        ),
+        "charge_reconstruction_relative_residual": charge_residual,
+        "scope": (
+            "leading-static one-body vector-current candidate; not promoted "
+            "until P3 direct covariant-versus-AFH tensor validation passes"
+        ),
     }
 
 
@@ -543,6 +671,7 @@ def integrate_coulomb_weight(
         "qA_GeV": float(result["qA_magnitude_GeV"]),
         "quadrature_points": int(result["quadrature_points"]),
         "pole_clearance_keV": float(result["pole_clearance_keV"]),
+        "L_q_aligned_real_imag": result["L_q_aligned_real_imag"],
     }
 
 
@@ -580,12 +709,17 @@ def fold(
     nphi: int,
     form_factor_prescription: str,
     width_scheme: str,
+    include_leading_static_vector_candidate: bool = False,
     response_input: Path = HALO_INPUT / "natural_xenon_isotope_weights.csv",
 ) -> dict:
     native_bundle, native_gate = load_native_response_bundle(native_dir)
     isotope_data = load_isotope_inputs(response_input)
     mean_atomic_weight = mean_atomic_weight_from_input(response_input)
     rate_factor = _rate_factor(mchi, rho, mean_atomic_weight)
+    response_names = (
+        FULL_VECTOR_RESPONSE_NAMES
+        if include_leading_static_vector_candidate else RESPONSE_NAMES
+    )
 
     speed_nodes, speed_weights = leggauss(nv)
     rows = []
@@ -612,9 +746,16 @@ def fold(
                 halo_charge = 0.0
                 halo_pointlike = 0.0
                 halo_finite_t_M = 0.0
+                halo_spatial_candidate = 0.0
+                halo_full_candidate = 0.0
                 max_interp_difference = 0.0
                 max_abs_continuity_correction = 0.0
                 max_continuity_identity_residual = 0.0
+                max_response_cauchy_excess = 0.0
+                max_particle_cauchy_residual = 0.0
+                max_charge_reconstruction_residual = 0.0
+                min_spatial_candidate_kernel = math.inf
+                min_full_candidate_kernel = math.inf
                 for v, w in zip(vs, ws):
                     fv = pdf(float(v))
                     if fv == 0.0:
@@ -636,7 +777,9 @@ def fold(
                         max_continuity_identity_residual,
                         coulomb_result["continuity_reduced_relative_residual"],
                     )
-                    response = interpolate_native_response(native_bundle[A], qA)
+                    response = interpolate_native_response(
+                        native_bundle[A], qA, response_names=response_names
+                    )
                     max_interp_difference = max(
                         max_interp_difference,
                         max(response["pchip_linear_relative_difference"].values()),
@@ -654,7 +797,41 @@ def fold(
                     halo_charge += float(w) * fv * beta * common * kernel["charge_sector"]
                     halo_pointlike += float(w) * fv * beta * common * kernel["pointlike_M"]
                     halo_finite_t_M += float(w) * fv * beta * common * kernel["finite_t_M"]
-                isotope_rows.append({
+                    if include_leading_static_vector_candidate:
+                        candidate = leading_static_vector_current_kernel_from_tensor(
+                            coulomb_result["L_q_aligned_real_imag"],
+                            qA,
+                            ER,
+                            response["physical_equal_pn"],
+                            form_factor_prescription,
+                        )
+                        max_response_cauchy_excess = max(
+                            max_response_cauchy_excess,
+                            candidate["response_Cauchy_excess"],
+                        )
+                        max_particle_cauchy_residual = max(
+                            max_particle_cauchy_residual,
+                            candidate["particle_Cauchy_identity_relative_residual"],
+                        )
+                        max_charge_reconstruction_residual = max(
+                            max_charge_reconstruction_residual,
+                            candidate["charge_reconstruction_relative_residual"],
+                        )
+                        min_spatial_candidate_kernel = min(
+                            min_spatial_candidate_kernel, candidate["spatial_sector"]
+                        )
+                        min_full_candidate_kernel = min(
+                            min_full_candidate_kernel,
+                            candidate["leading_static_vector_current_candidate"],
+                        )
+                        halo_spatial_candidate += (
+                            float(w) * fv * beta * common * candidate["spatial_sector"]
+                        )
+                        halo_full_candidate += (
+                            float(w) * fv * beta * common
+                            * candidate["leading_static_vector_current_candidate"]
+                        )
+                isotope_row = {
                     "A": A, "abundance": xA, "open": True,
                     "mA_GeV": mA, "qA_GeV": qA, "vmin_km_s": vmin,
                     "charge_halo_integral": halo_charge,
@@ -668,14 +845,47 @@ def fold(
                     "max_abs_charge_continuity_relative_correction": max_abs_continuity_correction,
                     "max_continuity_identity_relative_residual": max_continuity_identity_residual,
                     "nv": nv, "nw": nw, "nz": nz, "nphi": nphi,
-                })
-            total_charge = sum(r.get("abundance", 0.0) * r.get("charge_halo_integral", 0.0) for r in isotope_rows)
-            total_point = sum(r.get("abundance", 0.0) * r.get("pointlike_M_halo_integral", 0.0) for r in isotope_rows)
-            total_finite = sum(r.get("abundance", 0.0) * r.get("finite_t_M_halo_integral", 0.0) for r in isotope_rows)
+                }
+                if include_leading_static_vector_candidate:
+                    isotope_row.update({
+                        "spatial_candidate_halo_integral": halo_spatial_candidate,
+                        "leading_static_vector_candidate_halo_integral": halo_full_candidate,
+                        "relative_spatial_candidate_vs_coulomb": (
+                            halo_spatial_candidate / halo_charge if halo_charge else math.nan
+                        ),
+                        "relative_full_candidate_vs_pointlike_M": (
+                            halo_full_candidate / halo_pointlike - 1.0
+                            if halo_pointlike else math.nan
+                        ),
+                        "max_native_response_Cauchy_excess": max_response_cauchy_excess,
+                        "max_particle_Cauchy_identity_residual": max_particle_cauchy_residual,
+                        "max_charge_reconstruction_residual": max_charge_reconstruction_residual,
+                        "minimum_spatial_candidate_kernel": (
+                            min_spatial_candidate_kernel
+                            if math.isfinite(min_spatial_candidate_kernel) else None
+                        ),
+                        "minimum_full_candidate_kernel": (
+                            min_full_candidate_kernel
+                            if math.isfinite(min_full_candidate_kernel) else None
+                        ),
+                    })
+                isotope_rows.append(isotope_row)
+            total_charge = sum(
+                r.get("abundance", 0.0) * r.get("charge_halo_integral", 0.0)
+                for r in isotope_rows
+            )
+            total_point = sum(
+                r.get("abundance", 0.0) * r.get("pointlike_M_halo_integral", 0.0)
+                for r in isotope_rows
+            )
+            total_finite = sum(
+                r.get("abundance", 0.0) * r.get("finite_t_M_halo_integral", 0.0)
+                for r in isotope_rows
+            )
             total_rate = rate_factor * total_charge
             point_rate = rate_factor * total_point
             finite_rate = rate_factor * total_finite
-            rows.append({
+            row = {
                 "ER_keV": ER_keV,
                 "halo_model": halo_name,
                 "rate_charge_MplusPhi_events_kg_day_keV": total_rate,
@@ -691,30 +901,97 @@ def fold(
                     r["abundance"] for r in isotope_rows if r.get("open")
                 ),
                 "isotope_rows": isotope_rows,
-            })
+            }
+            if include_leading_static_vector_candidate:
+                total_spatial = sum(
+                    r.get("abundance", 0.0) * r.get("spatial_candidate_halo_integral", 0.0)
+                    for r in isotope_rows
+                )
+                total_full = sum(
+                    r.get("abundance", 0.0) * r.get("leading_static_vector_candidate_halo_integral", 0.0)
+                    for r in isotope_rows
+                )
+                spatial_rate = rate_factor * total_spatial
+                full_rate = rate_factor * total_full
+                row.update({
+                    "rate_spatial_candidate_events_kg_day_keV": spatial_rate,
+                    "rate_leading_static_vector_candidate_events_kg_day_keV": full_rate,
+                    "relative_spatial_candidate_vs_coulomb": (
+                        total_spatial / total_charge if total_charge else math.nan
+                    ),
+                    "relative_full_candidate_vs_pointlike_M": (
+                        full_rate / point_rate - 1.0 if point_rate else math.nan
+                    ),
+                    "minimum_spatial_candidate_kernel": min(
+                        (r["minimum_spatial_candidate_kernel"] for r in isotope_rows
+                         if r.get("minimum_spatial_candidate_kernel") is not None),
+                        default=None,
+                    ),
+                    "minimum_full_candidate_kernel": min(
+                        (r["minimum_full_candidate_kernel"] for r in isotope_rows
+                         if r.get("minimum_full_candidate_kernel") is not None),
+                        default=None,
+                    ),
+                    "max_native_response_Cauchy_excess": max(
+                        (r["max_native_response_Cauchy_excess"] for r in isotope_rows),
+                        default=0.0,
+                    ),
+                    "max_particle_Cauchy_identity_residual": max(
+                        (r["max_particle_Cauchy_identity_residual"] for r in isotope_rows),
+                        default=0.0,
+                    ),
+                    "max_charge_reconstruction_residual": max(
+                        (r["max_charge_reconstruction_residual"] for r in isotope_rows),
+                        default=0.0,
+                    ),
+                })
+            rows.append(row)
 
     return {
-        "status": "COMPUTED_WITHIN_COULOMB_SECTOR_APPROXIMATION",
+        "status": (
+            "COMPUTED_WITHIN_LEADING_STATIC_VECTOR_CURRENT_CANDIDATE"
+            if include_leading_static_vector_candidate
+            else "COMPUTED_WITHIN_COULOMB_SECTOR_APPROXIMATION"
+        ),
         "full_current_complete": False,
+        "leading_static_vector_current_candidate_included": (
+            include_leading_static_vector_candidate
+        ),
+        "P3_tensor_validation_complete": False,
         "continuity_reduction_status": (
             "CONDITIONAL_ON_CONSERVED_NUCLEAR_VECTOR_CURRENT; "
             "point-nucleus identity is an algebraic convention check, not proof "
             "of many-body current conservation"
         ),
-        "included_tensor_components": [
-            "L00", "L03", "L30", "L33 reduced using nuclear-current continuity"
-        ],
-        "omitted_tensor_components": [
-            "transverse nuclear-current multipoles (Delta, Sigma', and any additional allowed channels)"
-        ],
+        "included_tensor_components": (
+            [
+                "L00", "L03", "L30", "L33 reduced using nuclear-current continuity",
+                "L11", "L22 transverse-even AFH weights"
+            ]
+            if include_leading_static_vector_candidate
+            else ["L00", "L03", "L30", "L33 reduced using nuclear-current continuity"]
+        ),
+        "omitted_tensor_components": (
+            [
+                "mixed longitudinal/transverse components excluded by the unpolarized parity-even target-tensor symmetry",
+                "transverse antisymmetric/helicity-odd combination not used by the leading AFH SigmaPrime-Delta coefficient",
+                "higher-order and two-body nuclear-current operators"
+            ]
+            if include_leading_static_vector_candidate
+            else [
+                "transverse nuclear-current multipoles (Delta, Sigma', and any additional allowed channels)"
+            ]
+        ),
         "approximation": (
-            "M + Phi'' + M-Phi'' Coulomb sector using continuity-reduced L_C; "
-            "transverse nuclear-current multipoles are not included"
+            "leading-static one-body vector-current candidate with M, Phi'', M-Phi'', Delta, Sigma', and Sigma'-Delta; P3 tensor validation pending"
+            if include_leading_static_vector_candidate
+            else "M + Phi'' + M-Phi'' Coulomb sector using continuity-reduced L_C; transverse nuclear-current multipoles are not included"
         ),
         "scope": (
-            "seven-isotope natural-xenon Coulomb-sector diagnostic using native "
-            "AFH M/Phi''/M-Phi'' responses, nuclear-current continuity, and "
-            "finite-t_N diagnostics; not the full L_mu_nu W_A^mu_nu contraction"
+            "seven-isotope natural-xenon leading-static vector-current candidate; "
+            "not promoted to a complete full-current prediction until P3 passes"
+            if include_leading_static_vector_candidate
+            else "seven-isotope natural-xenon Coulomb-sector diagnostic using native AFH M/Phi''/M-Phi'' responses, nuclear-current continuity, and finite-t_N diagnostics; not the full L_mu_nu W_A^mu_nu contraction"
         ),
         "native_gate": native_gate["comparison"],
         "native_provenance": native_gate["provenance"],
@@ -732,13 +1009,17 @@ def fold(
         "natural_atom_fraction_coverage": sum(
             isotope_data[A]["abundance"] for A in ISOTOPES
         ),
-        "response_interpolation": "PCHIP on native 0.25 MeV absolute response values; linear interpolation retained as diagnostic",
+        "response_interpolation": (
+            "PCHIP on native 0.25 MeV absolute response values; linear interpolation retained as diagnostic"
+        ),
         "recoil_momentum": "q_A=sqrt(2 m_A E_R + E_R^2), exact nuclear mass-shell relation",
         "coulomb_weight": "L_C=L00-(E_R/q_A)(L03+L30)+(E_R/q_A)^2 L33, conditional on conservation of the complete nuclear vector current",
+        "transverse_weight": (
+            "L_T=L11+L22 for the leading-static AFH Delta/SigmaPrime/SigmaPrimeDelta coefficients"
+            if include_leading_static_vector_candidate else None
+        ),
         "results": rows,
     }
-
-
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument(
@@ -771,6 +1052,15 @@ def main() -> None:
         default="pole",
     )
     parser.add_argument(
+        "--include-leading-static-vector-candidate",
+        action="store_true",
+        help=(
+            "also contract native Delta/Sigma'/Sigma'-Delta responses with "
+            "the leading-static AFH coefficients; result remains unpromoted "
+            "until P3 tensor validation passes"
+        ),
+    )
+    parser.add_argument(
         "--response-input",
         type=Path,
         default=HALO_INPUT / "natural_xenon_isotope_weights.csv",
@@ -794,6 +1084,7 @@ def main() -> None:
         nphi=args.nphi,
         form_factor_prescription=args.form_factor,
         width_scheme=args.width_scheme,
+        include_leading_static_vector_candidate=args.include_leading_static_vector_candidate,
         response_input=args.response_input,
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)
@@ -801,6 +1092,10 @@ def main() -> None:
     print(json.dumps({
         "status": result["status"],
         "full_current_complete": result["full_current_complete"],
+        "leading_static_vector_current_candidate_included": (
+            result["leading_static_vector_current_candidate_included"]
+        ),
+        "P3_tensor_validation_complete": result["P3_tensor_validation_complete"],
         "form_factor_prescription": result["form_factor_prescription"],
         "n_recoil_points": len(args.ER_keV),
         "output": str(args.out),
