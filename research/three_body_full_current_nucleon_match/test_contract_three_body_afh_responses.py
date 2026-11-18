@@ -120,6 +120,8 @@ def synthetic_spatial_metadata():
     return {
         "status": "PROVISIONAL_SOURCE_TRANSLATED_AFH_SPATIAL_RESPONSES",
         "source_file_sha256": contract.EXPECTED_AFH_SOURCE_SHA256,
+        "response_file_sha256": contract.EXPECTED_SPATIAL_RESPONSE_SHA256,
+        "multipole_file_sha256": contract.EXPECTED_SPATIAL_MULTIPOLE_SHA256,
         "isotopes": list(ISOTOPES),
         "multipole_ranks_by_isotope": {str(A): RANKS[A] for A in ISOTOPES},
         "multipole_rows": len(synthetic_multipole_rows()),
