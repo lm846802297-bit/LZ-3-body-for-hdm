@@ -78,7 +78,7 @@ def verify_afh_archive(afh_dir: Path) -> dict:
     }
 
 
-def index_afh_rows(rows: list[dict]) -> dict[int, dict]:
+def index_afh_rows(rows: list[dict], *, expected_points: int = 2401) -> dict[int, dict]:
     grouped: dict[int, list[dict]] = {}
     for row in rows:
         A = int(float(row["A"]))
@@ -100,7 +100,7 @@ def index_afh_rows(rows: list[dict]) -> dict[int, dict]:
     for A, entries in grouped.items():
         entries = sorted(entries, key=lambda item: float(item["q_GeV"]))
         q = np.asarray([float(item["q_GeV"]) for item in entries])
-        if len(q) != 2401 or not np.all(np.diff(q) > 0):
+        if len(q) != expected_points or not np.all(np.diff(q) > 0):
             raise ValueError(f"Xe-{A}: AFH q grid is incomplete or not strictly increasing")
         if not np.isclose(q[0], 0.0, atol=1e-12) or not np.isclose(q[-1], 0.6, atol=1e-12):
             raise ValueError(f"Xe-{A}: AFH q grid does not cover [0, 0.6] GeV")
@@ -120,10 +120,11 @@ def contract_archive(
     weights_archive: dict,
     afh_metadata: dict,
     *,
+    expected_points: int = 2401,
     q_tolerance_GeV: float = 1e-10,
     positivity_relative_tolerance: float = 1e-10,
 ) -> dict:
-    isotope_data = index_afh_rows(afh_rows)
+    isotope_data = index_afh_rows(afh_rows, expected_points=expected_points)
     if weights_archive.get("status") != "PASS_AFH_LEPTONIC_COEFFICIENT_EXTRACTION":
         raise ValueError("input three-body coefficient archive has not passed extraction")
 
