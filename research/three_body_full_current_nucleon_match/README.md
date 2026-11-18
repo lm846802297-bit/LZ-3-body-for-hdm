@@ -593,17 +593,38 @@ longitudinal internal momentum is
 {\sqrt{Q_A^2-E_R^2}}.
 \]
 
-For Xe-131, the constructed \(\ell_\parallel\) values are:
+The current workflow test uses the static one-nucleon diagnostic reference
+four-transfer
+\[
+q_A^\mu=(0.0002,\ 0.0705063355,\ 0,\ 0.2093780973)\ {\rm GeV},
+\qquad Q_A=0.2209306022\ {\rm GeV}.
+\]
+For \(\ell_\perp=0,50,100,200\) MeV, the exact free on-shell construction
+returns
+\[
+\ell_\parallel=(0.855829,\ 0.857025,\ 0.860604,\ 0.874771)\ {\rm MeV}.
+\]
+Across these four points, \(|q_N^0-q_A^0|\le 8.90\times10^{-17}\) GeV,
+the largest free-nucleon Ward residual using \(q_N^\mu\) is
+\(2.40\times10^{-16}\), and the largest residual using \(q_A^\mu\) is
+\(1.49\times10^{-17}\).
 
-| \(E_R\) | \(Q_A\) | \(\ell_\perp=0\)--200 MeV |
-|---:|---:|---:|
-| 200 keV | 0.220825560 GeV | 0.8562--0.8752 MeV |
-| 267 keV | 0.255146745 GeV | 0.9916--1.0134 MeV |
+For comparison, the original static slice has \(q_N^0=0\), a free-current
+Ward residual \(3.84\times10^{-18}\) with \(q_N^\mu\), but a residual
+\(5.3513\times10^{-4}\) when the same current is tested with the physical
+\(q_A^\mu\). Thus the free on-shell vertex itself is not the problem; the
+static \(q_N^0=0\) impulse kinematics are not the physical nuclear energy
+transfer.
 
-The code evaluates the exact Dirac--Pauli current and tests its Ward
-identity with both \(q_N^\mu\) and the physical \(q_A^\mu\). This verifies
-that a free on-shell current can be conserved with the physical transfer
-when the energy transfer is matched. It does **not** determine the
-energy-sharing distribution of a bound nucleon, off-shell/binding effects,
-or exchange currents from the nuclear Hamiltonian. It is a kinematic
-free-nucleon slice, not a many-body continuity proof.
+The exact Xe-131 q values used in the separate fixed-speed calculation are
+\(Q_A=0.220825560\) GeV (200 keV) and \(0.255146745\) GeV (267 keV).
+Applying the analytic \(\ell_\parallel\) formula to those q values gives
+0.8562--0.8752 MeV and 0.9916--1.0134 MeV, respectively, for
+\(\ell_\perp=0\)--200 MeV. These latter values are kinematic estimates;
+the workflow's matrix-level Ward test above was run at the diagnostic
+reference four-transfer, not at both fixed-speed Xe-131 points.
+
+This is a kinematic free-nucleon slice, not a bound-nucleon momentum
+distribution or a many-body continuity proof. It does **not** determine
+the energy-sharing distribution of a bound nucleon, off-shell/binding
+effects, or exchange currents from the nuclear Hamiltonian.
