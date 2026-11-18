@@ -9,6 +9,18 @@ convection, and magnetization terms, with a pointwise NR-expansion audit.
 P2 is complete at the particle-side AFH Eq. (107) coefficient and signed
 phase level, including an independent complex-amplitude regression.
 
+P3-A has now passed pointwise: direct covariant and q-aligned (4\times4)
+spin-amplitude contractions agree, and the actual three-body DM current
+reproduces the AFH Eq. (107) spatial coefficients in both lab and q-aligned
+frames. The full-current job of workflow 44295391452 passed 92 tests,
+including all four P3-A tests. P3-B, the bound-nucleus AFH OBDME/multipole
+contraction, remains open.
+
+The main branch already archives seven AFH default-density OBDME tables
+(16,807 response-grid rows are for the (M)-channel only). Those OBDME
+tables are the inputs for P3-B; the (M)-only grid must not be mistaken for
+an eight-response native AFH result.
+
 The native seven-isotope/eight-response AFH input gate is a separate nuclear
 input acceptance task, not the definition of P0. The full many-body AFH
 OBDME contraction, pointwise P3 comparison (direct covariant vs q-frame vs

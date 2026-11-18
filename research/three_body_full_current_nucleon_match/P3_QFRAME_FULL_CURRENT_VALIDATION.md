@@ -74,3 +74,19 @@ Run the full-current test suite:
 python -m unittest research.three_body_full_current_nucleon_match.test_three_body_qframe_full_current_projection -v
 ~~~
 
+
+
+## 5. Updated P3-A acceptance record
+
+Workflow [44295391452](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44295391452):
+the full-current job passed with 92 tests, including:
+- direct covariant versus q-aligned full \(4\times4\) amplitude;
+- lab-frame versus q-frame AFH Eq. (107) coefficients using the
+  frame-independent transverse projector;
+- signed \(C_{\Sigma'\Delta}\) consistency;
+- coherent addition of the two scalar-emission amplitudes and a nonzero
+  squared-amplitude interference cross term.
+
+The separate quadrature-convergence job was still running at the time of
+this update. This record is **P3-A PASS**, not full P3 PASS. The many-body
+AFH OBDME/multipole comparison remains P3-B.

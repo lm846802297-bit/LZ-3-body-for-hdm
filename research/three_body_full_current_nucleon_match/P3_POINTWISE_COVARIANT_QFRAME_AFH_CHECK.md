@@ -1,6 +1,6 @@
 # P3-A: pointwise covariant and q-frame contraction check
 
-**Status:** implementation and tests added; awaiting the current PR workflow.  
+**Status:** <b>P3-A PASS</b> in full-current job of workflow [44295391452](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44295391452); P3-B remains open.  
 **Scope:** pointwise spinor-level check using the actual three-body DM current and
 an exact free on-shell one-nucleon Dirac--Pauli current. This is **P3-A only**;
 it is not the full nuclear OBDME contraction.
@@ -115,3 +115,22 @@ level, while their physical interference is evaluated from
 \]
 A difference of amplitudes would vanish by linearity and is not an
 interference observable.
+
+
+## 6. CI result and exact scope
+
+The full-current job in workflow 44295391452 completed successfully:
+- 92 full-current unit tests passed;
+- all four tests in this P3-A module passed;
+- the full-current calculation and provisional 84-row AFH contraction completed;
+- artifact ID 14423467141 was uploaded.
+
+The independent quadrature-convergence job in the same workflow was still
+running when this note was updated. P0's previously accepted convergence
+result remains recorded in the project README; this new workflow reruns it
+as regression.
+
+P3-A is therefore accepted as a pointwise spinor/frame and particle-side
+Eq. (107) consistency check. It does not validate the bound-nucleus AFH
+OBDME contraction and does not promote the provisional spatial response
+ratio to a physical natural-xenon rate.
