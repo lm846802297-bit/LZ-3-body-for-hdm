@@ -48,6 +48,7 @@ python research/afh_response_crosschecks/compare_p3_spatial_vs_native.py \
   --p3-metadata /path/to/p3_metadata.json \
   --native-dir /path/to/native \
   --native-metadata /path/to/native/native_metadata.txt \
+  --native-manifest /path/to/run_manifest.json \
   --out-json /path/to/p3_b_native_spatial_crosscheck.json
 ~~~
 
