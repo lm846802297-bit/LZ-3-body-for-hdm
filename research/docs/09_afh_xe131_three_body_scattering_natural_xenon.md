@@ -11,7 +11,7 @@
 
 - **2026-11-18：** 新增 Phase III §15，统一完整三体反冲率的 Lorentz-invariant 通量、固定反冲能量约束、AFH 响应矩阵、同位旋干涉、Proca 传播子、Ward 收缩、因子 4、天然氙组装及 LZ 接口；对应逐步推导 §§27–44 已迁入唯一主讨论档案 `research/afh_isotope_response_equivalence/docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md`。本次是公式组织与验收规范更新，不代表完整三体数值收缩或最终 LZ likelihood 已完成。
 
-- **2026-11-18：** 新增正式附录 I，系统整理三体 VV 完整张量、核子 Dirac–Pauli \(F_1/F_2\) 流、时间分量自旋—轨道电荷项以及 AFH \(M,\Phi'',M\Phi'',\Delta,\Sigma',\Sigma''\) 的对应关系；随后 PR #51 归档 Xe-131 的 2,401 点 native Wolfram \(M,\Phi'',M\Phi''\) 响应和 Python response-level validator PASS。该结果不等于完整三体核流收缩。
+- **2026-11-18：** 新增正式附录 I，系统整理三体 VV 完整张量、核子 Dirac–Pauli \(F_1/F_2\) 流、时间分量自旋—轨道电荷项以及 AFH \(M,\Phi'',M\Phi'',\Delta,\Sigma',\Sigma''\) 的对应关系；随后 PR #51 归档 Xe-131 的 2,401 点 native Wolfram \(M,\Phi'',M\Phi''\) 响应和 Python response-level validator PASS。唯一主讨论档案 P 节现进一步汇总该 native 响应、AFH-7 七同位素多极闭合、衍射极小值和四 benchmark 核响应对照。该结果不等于完整三体核流收缩。
 
 - **2026-11-12：** 在附录 A 增加显式 Lorentz boost 及正交基构造，补全从 \(K\) 静止系到靶核静止系的四动量重建说明。
 - **2026-11-12：** 修正附录 D.5 的旧动量约定描述，统一说明固定速度 Xe-131 benchmark 与天然氙 halo fold 均使用精确空间动量；两者区别在核质量输入。
@@ -1904,7 +1904,7 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 | F10 天然氙 \(dR/dE_R\) | 已验证（限 AFH-7/Hybrid-9 84 点网格） | AFH-7/Hybrid-9 四 benchmark、84 点、1,344 行 baseline spectra；GCN/JJ55 亦有四 benchmark 84 点谱 | GCN/JJ55 使用不同的 legacy linear-\(W^2\) mapping，需统一 threshold-\(u^2\) 后重算；AFH-9 输入仍缺失 |
 | F11 LZ 效率加权事件数 | 条件性验证 | 一维 Fig. S2 efficiency、2.84 tonne-year、rate-level 折叠 | 二维 NEST、能量分辨、背景与 profile likelihood 未完成 |
 | F12 \(\chi_2\to\chi_1s\) pole width | 条件性验证 | 条件性 Dirac 纯标量单通道宽度公式和数值测试 | 非完整自能；未纳入所有可能开放衰变道 |
-| F13 完整三体 VV 核流张量与 AFH 收缩 | **未完成** | 正式附录 I 固定了 Dirac–Pauli 与 AFH 响应映射；PR #53 的四分量 DM 张量/点流诊断 exact-source CI 为 8/8 tests PASS；PR #51 已归档 Xe-131 的 2,401 点 native (M,\Phi'',M\Phi'') 响应，validator PASS | 尚无核内流与完整 (L_{\mu\nu}W_A^{\mu\nu}) 数值收缩；有限 (t_A) form factors、空间流响应和天然氙完整 VV 谱仍未完成 |
+| F13 完整三体 VV 核流张量与 AFH 收缩 | **未完成** | 正式附录 I 固定了 Dirac–Pauli 与 AFH 响应映射；PR #53 的四分量 DM 张量/点流诊断 exact-source CI 为 8/8 tests PASS；PR #51 已归档 Xe-131 的 2,401 点 native \(M,\Phi'',M\Phi''\) 响应，validator PASS；唯一主讨论档案 P 节汇总 AFH-7 七同位素与四 benchmark 核响应结果 | 尚无核内流与完整 \(L_{\mu\nu}W_A^{\mu\nu}\) 数值收缩；有限 \(t_N\) form factors、空间流响应和天然氙完整 VV 谱仍未完成 |
 | 核子 \(F_1/F_2\) flavor-universal 匹配 | **解析结构已整理；有限 \(t\) 输入未完成** | \(q_A=p_N'-p_N\) 的 Dirac–Pauli 约定；采用 2017 年显式 flavor-separated 输入 \(F_2^V(0)=-0.552\)；HKS Eq. (21) 显式 flavor 重构与该 benchmark 一致；Eq. (23) 紧凑式不单独用于推断零和；有限 t_A 输入仍待完成 | 活动味道/阈值匹配、有限 \(t_A\) form factors、误差和自由核子 NR 数值对照仍待完成 |
 | Xe-131 \(M,\Phi'',M\Phi''\) | **native response archived; validator PASS** | PR #51：Wolfram 14.2.0、2,401 点、AFH source/density-matrix SHA-256、CSV/metadata/validation/manifest | 仅 response-level；不代表完整三体系数收缩或速率修正 |
 | Xe-129 \(\Phi''\)、\(M\Phi''\) | **未开始 native export** | Xe-131 导出方案完成后再扩展 | 无 AFH 数值网格或完整三体收缩 |
