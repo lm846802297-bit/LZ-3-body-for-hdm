@@ -674,8 +674,10 @@ pending.
 
 - Detailed provenance and numerical results:
   [P3_B_INDEPENDENT_PYTHON_CROSSCHECK.md](results/2026-11-18/P3_B_INDEPENDENT_PYTHON_CROSSCHECK.md)
-- Reproducible artifact comparator:
+- Reproducible Python cross-implementation comparator:
   [compare_p3_spatial_vs_afh8.py](../afh_response_crosschecks/compare_p3_spatial_vs_afh8.py)
+- Direct P3-B versus native Wolfram comparator (run after the native artifact is available):
+  [compare_p3_spatial_vs_native.py](../afh_response_crosschecks/compare_p3_spatial_vs_native.py)
 - Native AFH workflow:
   [research-compute-control run 44222502400](https://github.com/lm846802297-bit/research-compute-control/actions/runs/44222502400)
 
