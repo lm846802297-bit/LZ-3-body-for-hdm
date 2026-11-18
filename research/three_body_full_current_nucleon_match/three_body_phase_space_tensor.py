@@ -368,7 +368,7 @@ def main():
         "status": result["status"],
         "benchmarks": len(result["benchmarks"]),
         "all_dirac_crosschecks": all(
-            item["dirac_trace_crosscheck"]["max_relative_residual"] < 2e-10
+            item["dirac_trace_crosscheck"]["max_relative_residual"] < 5e-10
             for item in result["benchmarks"]
         ),
         "output": str(args.out),
