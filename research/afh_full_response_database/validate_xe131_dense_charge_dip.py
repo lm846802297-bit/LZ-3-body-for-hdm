@@ -47,6 +47,11 @@ def parse_metadata(path: Path) -> dict[str, str]:
     return values
 
 
+def parse_wolfram_float(value: str) -> float:
+    # Mathematica InputForm uses *^ for scientific notation; Python uses e.
+    return float(value.strip().replace("*^", "e"))
+
+
 def close(a: float, b: float) -> bool:
     return abs(a - b) <= ATOL + RTOL * max(abs(a), abs(b))
 
@@ -72,7 +77,7 @@ def validate(dense_csv: Path, dense_metadata: Path, coarse_csv: Path) -> dict:
     wolfram_version = dense_meta.get("wolfram_version", "")
     if "14.2.0" not in wolfram_version:
         raise ValueError(f"expected Wolfram 14.2.0, got {wolfram_version!r}")
-    reported_imag = float(dense_meta.get("max_imaginary_residual", "inf"))
+    reported_imag = parse_wolfram_float(dense_meta.get("max_imaginary_residual", "inf"))
     if not math.isfinite(reported_imag) or reported_imag > IMAG_ATOL:
         raise ValueError(f"reported native imaginary residual too large: {reported_imag}")
 
