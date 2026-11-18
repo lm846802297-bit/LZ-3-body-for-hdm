@@ -104,8 +104,11 @@ We can now separate the calculation into three layers:
 | E | full natural-xenon halo-fold with validated finite-(t_N) form factors | **Pending** |
 
 The dominant unresolved change to the original (W_M)-only spectrum is
-therefore **not** the nuclear spin/orbital response. It is the finite-(t_N)
-nucleon form factor.
+therefore **not** the spatial spin/orbital response. It is the finite-(t_N)
+nucleon form factor. Near a deep (W_M) cancellation, the native Xe-131
+(Phi'') term itself can also become an O(10%) charge-sector correction,
+so the provisional O(1%) seven-isotope number must not be extrapolated to
+natural xenon.
 
 ## 4. Important boundary
 
