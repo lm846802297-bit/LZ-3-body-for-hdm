@@ -103,7 +103,7 @@ def convergence_metrics(
         active_flat_indices = np.flatnonzero(active)
         worst_local = int(np.argmax(component_relative))
         worst_flat = int(active_flat_indices[worst_local])
-        worst_index = list(np.unravel_index(worst_flat, fine.shape))
+        worst_index = [int(index) for index in np.unravel_index(worst_flat, fine.shape)]
         max_active_component_relative = float(component_relative[worst_local])
     else:
         worst_index = None
