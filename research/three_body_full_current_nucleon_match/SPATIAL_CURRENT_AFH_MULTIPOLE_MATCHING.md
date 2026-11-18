@@ -205,39 +205,66 @@ term is the as-yet uncomputed spatial multipole contraction. The
 \(r_\chi\) times a nuclear response: their normalization and interference
 weights follow from the vector-spherical-harmonic projection.
 
-## 6. Transverse helicity-odd tensor check
+## 6. Leptonic multipole weights and transverse helicity check
 
-The latest integrated tensor artifact (workflow run 44231019823, artifact
-14394488484) also permits a direct check of the transverse antisymmetric
-DM tensor component. In the q-aligned frame define
+The integrated \(L_{\mu\nu}^{(3)}\) tensor can be decomposed in the
+q-aligned spherical basis before any AFH nuclear matrix element is inserted.
+The transverse-even and transverse-helicity-odd factors are
+\[
+w_T=\frac12(L^{11}+L^{22}),\qquad
+w_{\rm hel}=-2i(L^{12}-L^{21}).
+\]
+The second expression is the factor multiplying the transverse
+electric--magnetic multipole interference in the standard multipole
+expansion; see Hoferichter--Menéndez--Schwenk, PRD 102, 074018 (2020),
+Appendix A, Eqs. (110)--(111). The precise mapping of the electric and
+magnetic multipoles onto the AFH \(\Delta\) and \(\Sigma'\) conventions
+still requires the explicit spherical-projector normalization.
+
+For the 12 archived DM tensors (four fixed-speed benchmarks and
+zero/pole/running widths),
+\[
+\boxed{
+4.08\times10^{-8}
+\leq \frac{w_T}{L^{00}}
+\leq 2.26\times10^{-7}.
+}
+\]
+This is the transverse DM-side kinematic weight relative to the charge
+weight. It is not a nuclear rate correction: the nucleon convection and
+magnetization coefficients, AFH multipole normalization, and nuclear
+responses have not yet been included.
+
+The longitudinal DM-side ratio is
+\[
+5.73\times10^{-6}
+\leq \frac{L^{33}}{L^{00}}
+\leq 6.01\times10^{-6}.
+\]
+In the static on-shell impulse approximation the nuclear one-body
+longitudinal current vanishes because \(q_N^0=0\) and
+\(\boldsymbol q_N\cdot\boldsymbol K_N=0\). For a bound nucleus with
+\(q_A^0=E_R\ne0\), the longitudinal current must instead be treated with
+the appropriate continuity equation; the above \(L^{33}\) ratio alone
+does not determine its contribution.
+
+The normalized transverse helicity-odd diagnostic is
 \[
 \mathcal H_T=
 \frac{\left|-i(L^{12}-L^{21})\right|}
- {|L^{11}+L^{22}|}.
+ {|L^{11}+L^{22}|},
+\qquad
+\boxed{\max\mathcal H_T=7.39\times10^{-16}.}
 \]
-Across the 12 archived combinations (four fixed-speed benchmarks and
-zero/pole/running widths),
-\[
-\boxed{\max \mathcal H_T=7.39\times10^{-16}.}
-\]
-This is consistent with zero at floating-point precision for the
-unpolarized pure-vector DM current used here.
-
-In the standard multipole expansion, the transverse electric--magnetic
-interference term is proportional to the helicity-odd factor
-\((\boldsymbol l\times\boldsymbol l^*)_3\); see
-Hoferichter--Menéndez--Schwenk, PRD 102, 074018 (2020), Appendix A,
-Eq. (111). The corresponding q-aligned tensor factor is proportional to
-\(-i(L^{12}-L^{21})\). Therefore the present numerical tensor strongly
-indicates that the leading \(W_{\Sigma'\Delta}\) coefficient vanishes
-for these pure-vector, unpolarized benchmark conditions, even though the
-nuclear response \(W_{\Sigma'\Delta}\) itself is not zero in general.
-
-This is an additional kinematic diagnostic, not yet a standalone AFH
-acceptance gate: the exact AFH spherical projector and its normalization
-must still be implemented before the mixed response is removed from any
-rate formula. Keep the signed \(W_{\Sigma'\Delta}\) response in the
-general expression until that projection is explicitly verified.
+Equivalently, the HKS interference weight \(w_{\rm hel}\), normalized to
+\(L^{11}+L^{22}\), is at most \(1.48\times10^{-15}\). This is consistent
+with zero at floating-point precision for the unpolarized pure-vector
+benchmarks. It strongly indicates that the leading
+\(W_{\Sigma'\Delta}\) coefficient vanishes for these benchmark conditions.
+The exact AFH spherical projector must nevertheless confirm the phase and
+normalization before this term is removed from any general rate formula.
+Keep the signed \(W_{\Sigma'\Delta}\) response in the formalism until that
+projection is explicitly verified.
 
 ## 7. Mandatory next calculation
 
