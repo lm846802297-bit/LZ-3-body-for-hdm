@@ -89,7 +89,7 @@ def validate(dense_csv: Path, dense_metadata: Path, coarse_csv: Path) -> dict:
 
     coarse_index = {}
     for row in coarse:
-        q = float(row["q_GeV"])
+        q = parse_wolfram_float(row["q_GeV"])
         key = round(q, 10)
         if key in coarse_index:
             raise ValueError(f"duplicate coarse q node {q}")
@@ -103,16 +103,16 @@ def validate(dense_csv: Path, dense_metadata: Path, coarse_csv: Path) -> dict:
     for i, row in enumerate(dense):
         if int(row["A"]) != 131:
             raise ValueError(f"dense row {i} has A={row['A']}, expected 131")
-        q = float(row["q_GeV"])
+        q = parse_wolfram_float(row["q_GeV"])
         expected_q = Q_MIN + i * DQ_DENSE
         if not math.isclose(q, expected_q, rel_tol=0.0, abs_tol=2e-12):
             raise ValueError(f"dense q grid mismatch at row {i}: {q} != {expected_q}")
         q_values.append(q)
-        if not math.isfinite(float(row["y"])):
+        if not math.isfinite(parse_wolfram_float(row["y"])):
             raise ValueError(f"non-finite y at dense row {i}")
         for name, (real_col, imag_col) in CHANNELS.items():
-            real = float(row[real_col])
-            imag = float(row[imag_col])
+            real = parse_wolfram_float(row[real_col])
+            imag = parse_wolfram_float(row[imag_col])
             if not math.isfinite(real) or not math.isfinite(imag):
                 raise ValueError(f"non-finite {name} response at dense row {i}")
             max_imag = max(max_imag, abs(imag))
@@ -122,12 +122,12 @@ def validate(dense_csv: Path, dense_metadata: Path, coarse_csv: Path) -> dict:
             if key not in coarse_index:
                 raise ValueError(f"missing common coarse node at q={q:.12g}")
             coarse_row = coarse_index[key]
-            if abs(float(coarse_row["q_GeV"]) - q) > 2e-12:
+            if abs(parse_wolfram_float(coarse_row["q_GeV"]) - q) > 2e-12:
                 raise ValueError(f"coarse q mismatch at common node q={q}")
             for name, (real_col, imag_col) in CHANNELS.items():
                 for column in (real_col, imag_col):
-                    a = float(row[column])
-                    b = float(coarse_row[column])
+                    a = parse_wolfram_float(row[column])
+                    b = parse_wolfram_float(coarse_row[column])
                     diff = abs(a - b)
                     rel = diff / max(abs(a), abs(b), 1e-300)
                     if not close(a, b):
