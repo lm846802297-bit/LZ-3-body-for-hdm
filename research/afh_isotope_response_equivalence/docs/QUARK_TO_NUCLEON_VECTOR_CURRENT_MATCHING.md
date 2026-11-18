@@ -4833,7 +4833,11 @@ q_A=\sqrt{2m_AE_R+E_R^2},
 | \(\Sigma'\)、\(\Delta\)、\(\Sigma'\Delta\) | Xe-129/Xe-131 Python 2,401 点开发网格；内部有限性、正定性与 Cauchy–Schwarz 检查通过 | 仅可称 provisional Python development outputs | 尚不能称为 native-AFH validated responses |
 | 三体 \(R_{\alpha\beta}^{(3)}W_{\alpha\beta}\) 完整收缩 | 理论分解和软件架构已写明，完整数值收缩未完成 | 可称为待实现的完整核流收缩目标 | 不得称为完整三体 AFH 预测已完成 |
 
-对最新 full-grid artifact（source commit `41b0218549fd4fcefe7a34c1f10070ace5be0e9c`）另作了独立本地数据审计：CSV SHA-256 为 `08dd97f5db1d9e17d396b992290c694cd09ee88d83ad68affc2ad3ddc794d255`；共 4,802 行，Xe-129 与 Xe-131 各有 2,401 个唯一 (q_A) 节点，最大网格步长偏差 (8.35\times10^{-17}\) GeV，所有数值均有限且四个对角响应均非负。以 ((|W_{ab}|^2-W_{aa}W_{bb})/(W_{aa}W_{bb})) 定义相对 Cauchy excess，两个同位素的最大正 excess 分别不超过 (9.86\times10^{-13})（(M)-(Phi'')）和 (8.99\times10^{-13})（(Sigma')-(Delta)）。这是对归档 Python 表的独立完整性/代数一致性复核，**不构成 native AFH 对空间流算符的验证**。
+对最新 full-grid artifact（source commit **41b0218549fd4fcefe7a34c1f10070ace5be0e9c**）另作了独立本地数据审计：CSV SHA-256 为 **08dd97f5db1d9e17d396b992290c694cd09ee88d83ad68affc2ad3ddc794d255**；共 4,802 行，Xe-129 与 Xe-131 各有 2,401 个唯一 \(q_A\) 节点，最大网格步长偏差 \(8.35\times10^{-17}\) GeV，所有数值均有限且四个对角响应均非负。以
+\[
+\frac{|W_{ab}|^2-W_{aa}W_{bb}}{W_{aa}W_{bb}}
+\]
+定义相对 Cauchy excess，两个同位素的最大正 excess 分别不超过 \(9.86\times10^{-13}\)（\(M\)-\(\Phi''\)）和 \(8.99\times10^{-13}\)（\(\Sigma'\)-\(\Delta\)）。这是对归档 Python 表的独立完整性/代数一致性复核，**不构成 native AFH 对空间流算符的验证**。
 
 **本节结论：** 当前可直接作为核响应数值基线使用的是 AFH-7 的 \(M\) 响应网格，以及 Xe-131 原生 \(M,\Phi'',M\Phi''\) 响应。空间流的 \(\Sigma'\)、\(\Delta\)、\(\Sigma'\Delta\) 仍处于开发移植阶段；四 benchmark 的 full-\(d\sigma\) cross-code PASS 只验证了 \(M\)-only AFH 响应接口。所有这些结果均不能替代完整三体核流张量收缩。
 
