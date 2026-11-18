@@ -176,3 +176,48 @@ marked native-validated. P3-C must then contract
 these nuclear multipoles with the full complex three-body tensor; the
 present response-only comparison is not a rate correction or a conclusion
 about the numerical size of the spatial-current contribution.
+
+
+## 8. Rank-resolved multipole archive correction
+
+A source audit found that the first P3-B grid artifact retained the three
+total spatial responses but did not serialize the rank-by-rank amplitudes
+returned by the engine. The earlier wording that all multipole amplitudes
+were already archived was therefore too strong.
+
+The generator has now been extended to write a second file:
+
+afh_spatial_obdme_multipoles_7isotope_2401.csv
+
+For every isotope, momentum node, and nonzero abnormal-parity OBDME rank,
+the new file stores:
+
+- the signed real amplitudes \(\mathcal M_{\Delta,J}\) and
+  \(\mathcal M_{\Sigma',J}\);
+- the rankwise diagonal contributions
+  \(W_{\Delta,J}=\mathcal M_{\Delta,J}^2/4\) and
+  \(W_{\Sigma',J}=\mathcal M_{\Sigma',J}^2/4\);
+- the signed rankwise interference
+  \(W_{\Sigma'\Delta,J}=\mathcal M_{\Sigma',J}\mathcal M_{\Delta,J}/4\);
+- the corresponding physical equal-p/n rank contributions, including the
+  single factor four and the common OBDME normalization \(C_0\).
+
+The generator checks at every \((A,q_A)\) that summing the rankwise raw and
+physical contributions reconstructs all three total responses. A separate
+validator checks the output file hashes, full isotope/q grid, unique
+\((A,q_A,J)\) keys, spin-zero isotope null channels, normalization identities,
+and rank-summed reconstruction.
+
+The new validator is
+[validate_afh_spatial_multipole_archive.py](../../validate_afh_spatial_multipole_archive.py).
+The CI workflow runs it before uploading the P3-B artifact.
+
+**Current status:** the new engine and test module compile, and the selected
+spatial-response unit tests pass in workflow 44303047483. The seven-isotope
+grid generation and the new archive validator are still running. The earlier
+16,807-row Python-to-Python response comparison remains a valid comparison of
+the previous response CSV; the refreshed artifact must be checked again
+before its new multipole-file SHA-256 is recorded here.
+
+This archive is still provisional Python output. It does not promote
+native_afh_validated and does not replace the queued native Wolfram gate.
