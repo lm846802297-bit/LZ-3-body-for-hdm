@@ -1,10 +1,19 @@
 # Full three-body current × nucleon Dirac–Pauli matching
 
-**Status:** the static one-nucleon Dirac–Pauli diagnostic and the
-phase-space-integrated DM-side three-body tensor are validated. The
-component-wise quadrature scan passes at the reported stress benchmarks.
-The exact AFH spatial-multipole coefficient projection and isotope nuclear
-contraction remain open.
+**Status as of 2026-11-18:** P0 is complete. The convention-fixing
+gate, 12 phase-space-integrated DM tensors, and nine component-wise
+medium-to-high quadrature comparisons have passed. P1 is complete for the
+free on-shell one-body impulse approximation: the exact Dirac--Pauli
+current is decomposed into charge, longitudinal convection, transverse
+convection, and magnetization terms, with a pointwise NR-expansion audit.
+P2 is complete at the particle-side AFH Eq. (107) coefficient and signed
+phase level, including an independent complex-amplitude regression.
+
+The native seven-isotope/eight-response AFH input gate is a separate nuclear
+input acceptance task, not the definition of P0. The full many-body AFH
+OBDME contraction, pointwise P3 comparison (direct covariant vs q-frame vs
+AFH multipoles), finite-t_N form-factor fold, and natural-xenon halo/detector
+prediction remain open. P1 does not claim a bound-nucleus/off-shell current.
 
 ## 1. Purpose and amplitude
 
@@ -218,7 +227,16 @@ C_{\Sigma'\Delta}=\frac{\boldsymbol q}{m_N}\cdot
 With \(q_{\rm AFH}=-q_A\), the static Dirac--Pauli matching gives the candidate expressions
 \(l_M=-F_1^V\boldsymbol{\mathcal T}_3\) and
 \(l_5=i(F_1^V+F_2^V)(\boldsymbol q_{\rm AFH}\times
-\boldsymbol{\mathcal T}_3)/(2m_N)\). Under this candidate AFH multipole-phase assignment,
+\boldsymbol{\mathcal T}_3)/(2m_N)\). The AFH Fourier convention and the exact v6.0 operator definitions
+fix the particle-side vectors
+\[
+\boldsymbol l_M=-F_1^V\boldsymbol{\mathcal T}_3,\qquad
+\boldsymbol l_5=
+\frac{i(F_1^V+F_2^V)}{2m_N}
+(\boldsymbol q_{\rm AFH}\times\boldsymbol{\mathcal T}_3),
+\qquad \boldsymbol q_{\rm AFH}=-\boldsymbol q_A.
+\]
+The resulting Eq. (107) coefficients are
 \[
 C_\Delta^{(3)}
 =\frac{(F_1^V)^2Q_A^2}{2m_N^2}(L^{11}+L^{22}),
@@ -234,12 +252,12 @@ C_{\Sigma'\Delta}^{(3)}
 (L^{11}+L^{22}).
 }
 \]
-Under the current candidate phase assignment, the mixed coefficient is nonzero in general. The AFH v6.0 source audit confirms the operator identities and ordered response bilinear, but does not validate the particle-side relative phase. The sign of \(C_{\Sigma'\Delta}^{(3)}\) and the resulting signed spatial-sector contractions remain provisional pending the direct P3 covariant-versus-AFH comparison of spherical-multipole phases. The Cauchy--Schwarz check bounds response magnitude; it does not validate this sign. The earlier
-inference that a tiny transverse antisymmetric component of \(L^{ij}\)
-would force \(C_{\Sigma'\Delta}^{(3)}=0\) was incorrect: AFH Eq. (107)
-shows that this coefficient depends on the transverse-even trace
-\(L^{11}+L^{22}\), because \(l_5\) is the q-rotated spin-current
-coefficient. The signed \(W_{\Sigma'\Delta}\) response must be retained in the candidate kernel, with its particle-side sign treated as provisional until P3 validation.
+The negative sign and normalization have now been independently checked
+by evaluating AFH Eq. (107) on complex spin-resolved amplitudes before
+spin averaging, and comparing with the 4x4 Lorentz-tensor coefficient
+extractor. This confirms the **particle-side** signed coefficient; it
+does not yet validate the complete many-body AFH OBDME contraction. The
+Cauchy--Schwarz check bounds response magnitude and is a separate test.
 
 For the provisional zero-momentum anchors \(F_1^V(0)=3\),
 \(F_2^V(0)=-0.552\), and \(m_N=0.938918\) GeV, the coefficient ratios
@@ -445,16 +463,18 @@ statement, not a claim that the nuclear responses vanish generally.
 
 The remaining work is:
 
-1. verify the \(\Delta\), \(\Sigma'\), and signed
-   \(\Sigma'\)-\(\Delta\) coefficient phases against native AFH
-   single-particle multipoles and the native Wolfram response functions;
-2. replace constant \(F_1^V(0)\), \(F_2^V(0)\) anchors with the
-   model-specific finite-\(t_N\) form factors;
-3. extend the three-body phase-space tensor from the 12 benchmark points
-   to a converged \(E_R\)- and velocity-dependent grid;
-4. perform the natural-xenon abundance sum and halo integral;
-5. include the detector response and compare the resulting spectrum with
-   the charge-only baseline.
+1. perform P3 at selected phase-space points: compare the direct covariant
+   one-body-current contraction, the same contraction after q-frame
+   rotation, and the AFH OBDME/multipole contraction, including the signed
+   \\(\\Sigma'-\\Delta\\) response;
+2. complete the separate native seven-isotope/eight-response AFH input
+   validation and bind its exact artifact/source checksum to the P3 run;
+3. replace constant \\(F_1^V(0)\\), \\(F_2^V(0)\\) anchors with the
+   model-specific finite-\\(t_N\\) form factors;
+4. extend the three-body phase-space tensor from the 12 benchmark points
+   to a converged \\(E_R\\)- and velocity-dependent grid;
+5. perform the natural-xenon abundance sum, halo integral, detector
+   response, and comparison with the charge-only baseline.
 
 No full natural-xenon three-body spectrum, halo-folded rate, or
 detector-level correction is claimed yet.
