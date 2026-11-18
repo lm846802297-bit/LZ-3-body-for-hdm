@@ -6445,14 +6445,105 @@ Xe-131 的 \(M\) rank-2 多极仍然属于 \(M\) 响应，不能因为 \(J=2\) �
 
 ### 34.4 必须保持的物理状态边界
 
-本次新增的解析推导不等于完成了下列数值任务：
+本次解析推导和后续数值诊断仍不等于完成了下列任务：
 - 没有得到完整有限 \(t_N\) 的 \(F_1^{uds,N}(t_N)\)、\(F_2^{uds,N}(t_N)\) 数据及协方差；
 - 没有得到三体完整张量在全部相空间上的独立收敛结果；
-- 没有完成 Xe-131 的 AFH \(W_{\Phi''}\) 与 \(W_{M\Phi''}\) 数值投影；
+- 尚未将 PR #58 的单点 Pauli-product 系数完成 AFH \(\Delta,\Sigma',\Sigma''\) 多极投影；
 - 没有得到完整一体流修正后的天然氙 halo-folded 反冲谱；
 - 没有计算 VV 两核子流对当前高动量区间的数值修正。
 
-因此，现阶段可以说：三体振幅、相空间、单核子流和 AFH 核响应之间的解析联系已经明确；但不能说完整 VV 三体核响应或最终反冲谱已经通过数值验收。
+已经完成的部分必须明确记录：PR #54 已在 Xe-131 的 2401 点网格上计算并验证 \(W_{\Phi''}\) 与有符号 \(W_{M\Phi''}\)；PR #58 已完成一个静态单核子参考点的完整四分量三体流 \(\mathcal T_3^\mu\) 与 Dirac--Pauli 核子流收缩，并输出完整 \(4\times4\) Pauli-product 系数矩阵。但这两个结果尚未构成全相空间、全 AFH 响应的天然氙预测。
+
+因此，现阶段可以说：三体振幅、相空间、单核子流和 AFH 核响应之间的解析联系已经明确，Xe-131 电荷响应也已有数值投影；但不能说完整 VV 三体核响应或最终反冲谱已经通过数值验收。
+
+
+### 34.5 完整三体流与单核子 Dirac--Pauli 流：PR #58 静态参考点诊断
+
+PR #58 将 PR #57 的自旋分辨三体流矩阵与单核子 Dirac--Pauli
+流的四个 Lorentz 分量直接收缩：
+\[
+\mathcal A=
+\mathcal T_3^0\otimes J_N^0
+-\sum_{i=1}^{3}\mathcal T_3^i\otimes J_N^i.
+\]
+所得算符作用在
+\(\mathcal H_{\chi_1}\otimes\mathcal H_N\) 上，并分解为
+\[
+\mathcal A=\sum_{a,b=0}^{3}
+c_{ab}\,\sigma_\chi^a\otimes\sigma_N^b.
+\]
+这一计算同时输出 full、charge-only、spatial-only 三个 \(4\times4\)
+Pauli-product 系数矩阵，避免只保留一个预先指定的自旋投影。
+
+**外态归一化。** PR #58 现在显式使用
+\[
+\mathcal J_N^\mu=
+\frac{\bar u_N(p_N')\Gamma_N^\mu u_N(p_N)}
+{2\sqrt{E_N'E_N}},
+\]
+而不是把协变旋量矩阵元直接当作 AFH 非相对论一体算符系数。
+零动量 flavor-universal benchmark 采用
+\[
+F_1/F_1(0)=1,\qquad F_2/F_1(0)=-0.184,\qquad
+m_N=0.938918\ {\rm GeV}.
+\]
+这里 \(-0.184\) 仅是 \(t_N=0\) 的输入锚点，不是有限 \(t_N\)
+form factor。
+
+**静态转移处方。** 参考点取
+\[
+\mathbf p_N=\boldsymbol\ell-\frac{\mathbf q_A}{2},\qquad
+\mathbf p_N'=\boldsymbol\ell+\frac{\mathbf q_A}{2},\qquad
+\boldsymbol\ell\cdot\mathbf q_A=0,
+\]
+因此自由在壳核子的 \(q_N^0=0\)。物理核整体转移仍有
+\(q_A^0=E_R\ne0\)。所以必须分别报告两个 Ward 检查：
+\[
+\delta_N=3.84\times10^{-18},\qquad
+\delta_A=5.35\times10^{-4},
+\]
+并且
+\[
+q_A^0/Q_A=9.05\times10^{-4}.
+\]
+\(\delta_N\) 是自由静态核子流守恒检查；\(\delta_A\) 量化静态
+\(q_N^0=0\) 处方与物理核整体能量转移之间的差异，不能将其描述为
+精确的 \(q_A\)-守恒核流。
+
+**\(\Phi''\) 型自旋—轨道投影。** 在 \(v_N=0.10\)、
+\(F_2/F_1(0)=-0.184\) 的参考点，非相对论归一化后的
+\(\sigma_N\cdot(\mathbf q_A\times\boldsymbol\ell)\) 奇投影满足
+\[
+C_{\rm full}^{\rm NR}=C_{\rm charge}^{\rm NR}
+=-8.41409\times10^6 i,
+\]
+而同一投影的空间流贡献约为
+\[
+C_{\rm spatial}^{\rm NR}=8.35\times10^{-12}i.
+\]
+因此在这个参考点和这个特定奇投影中，空间流没有可分辨地改变
+电荷自旋—轨道系数。这不能推出空间流对其他 AFH 响应为零。
+
+**其他空间流自旋结构。** 同一个 \(4\times4\) 分解中，空间部分存在
+一个垂直于 \(\mathbf q_A\) 的核子自旋系数，例如在所选坐标基底中
+\[
+c_{0,2}^{\rm spatial}=-3.75817\times10^3 i.
+\]
+这是横向自旋响应的候选结构，可能进入 AFH \(\Sigma'\)，但在完成
+球张量分解、宇称选择和 OBDME 收缩前，不能把它直接称为
+\(\Sigma'\) Wilson 系数或数值响应。其余 DM-spin/nucleon-spin
+系数也必须一并保留。
+
+本次工作流 run 44209893848（commit
+\`8a99ef3f0908053d60ae38881543826510c240fe\`）的 12 项回归测试全部通过；
+三体 DM 自旋矩阵与 PR #53 独立张量的相对残差为
+\(4.46\times10^{-16}\)。完整 JSON 产物包含 full、charge-only、
+spatial-only 的全部 Pauli-product 系数和重构残差。
+
+**结论边界：** PR #58 已完成单点、静态冲量近似下的完整 Lorentz
+流收缩诊断；尚未完成对 \(\ell\) 方向、三体相空间和核多体态的积分，
+也尚未得到 AFH \(\Delta,\Sigma',\Sigma''\) 的最终系数。因此不能据此
+计算完整天然氙反冲率。
 
 
 
