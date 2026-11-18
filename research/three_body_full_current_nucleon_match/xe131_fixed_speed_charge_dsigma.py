@@ -20,12 +20,12 @@ import numpy as np
 from scipy.interpolate import PchipInterpolator
 
 from nucleon_vector_form_factors import F1V0, charge_coefficients, isoscalar_zexp
-from native_charge_sector_halo_fold import load_isotope_data
+from native_charge_sector_halo_fold import load_isotope_inputs
 from three_body_phase_space_tensor import integrate_spin_resolved_tensor
 
 MCHI_GEV = 1000.0
 MS_GEV = 300.0e-6
-XE131_MASS_RECORD = load_isotope_data()[131]
+XE131_MASS_RECORD = load_isotope_inputs()[131]
 MA_XE131_GEV = float(XE131_MASS_RECORD["mA_GeV"])
 MN_GEV = 0.938918
 SPEED_KM_S = 776.0

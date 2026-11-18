@@ -8,6 +8,8 @@ on:
       - ".github/workflows/xe131-fixed-speed-charge-dsigma.yml"
       - "research/three_body_full_current_nucleon_match/three_body_phase_space_tensor.py"
       - "research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py"
+      - "research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv"
+      - "research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py"
       - "research/afh_default_density_natural_xenon_halo/input/isotope_masses.csv"
       - "research/three_body_spin_resolved_current/**"
       - "research/vector_current_response_audit/**"
