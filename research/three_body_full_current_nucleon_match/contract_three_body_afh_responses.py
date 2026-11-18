@@ -23,6 +23,8 @@ RESPONSE_COLUMNS = {
     "SigmaPrimeDelta": "R_SigmaPrimeDelta_physical_equal_pn",
 }
 REQUIRED_METADATA_ISOTOPES = (128, 129, 130, 131, 132, 134, 136)
+EXPECTED_AFH_SOURCE_COMMIT = "dcefbeb7ad705b6c03f2b4689200eb1d9252e67b"
+EXPECTED_AFH_CSV_SHA256 = "59ea25093137a05b8ebcc158e2fe6a74fe5927599dbb16766b067aa1ad8e3caa"
 
 
 def sha256_file(path: Path) -> str:
@@ -67,14 +69,22 @@ def verify_afh_archive(afh_dir: Path) -> dict:
         raise ValueError(
             f"AFH CSV SHA-256 mismatch: expected {expected}, actual {actual}"
         )
+    if actual != EXPECTED_AFH_CSV_SHA256:
+        raise ValueError(
+            f"AFH CSV is not the reviewed artifact: expected {EXPECTED_AFH_CSV_SHA256}, got {actual}"
+        )
+    source_commit_path = afh_dir / "source_commit.txt"
+    source_commit = source_commit_path.read_text(encoding="utf-8").strip()
+    if source_commit != EXPECTED_AFH_SOURCE_COMMIT:
+        raise ValueError(
+            f"AFH source commit mismatch: expected {EXPECTED_AFH_SOURCE_COMMIT}, got {source_commit}"
+        )
     return {
         "metadata": metadata,
         "validation": validation,
         "csv_path": csv_path,
         "csv_sha256": actual,
-        "source_commit": (afh_dir / "source_commit.txt").read_text(
-            encoding="utf-8"
-        ).strip() if (afh_dir / "source_commit.txt").is_file() else None,
+        "source_commit": source_commit,
     }
 
 
