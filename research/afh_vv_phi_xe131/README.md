@@ -116,9 +116,9 @@ Using the zero-momentum diagnostic inputs \(F_1^V(0)=3\),
 \eta=c_{\Phi''}/c_M=0.01184042,\qquad
 Q_{\Phi''}=0.9816142.
 \]
-Thus the \(\Phi''\) addition changes the same relativistically corrected
+Thus the \(\Phi''\) addition changes the same nonrelativistically normalized
 \(M\)-only charge response by \(-1.839\%\), not by a factor of 115.9.
-Including the \(t_A/(8m_N^2)\) correction to the \(M\) coefficient gives
+Including the \(t_N/(8m_N^2)\) correction to the \(M\) coefficient gives
 a combined \(-2.991\%\) change relative to \(F_1^V(0)^2W_M\) at this point.
 
 The 2401-point diagnostic grid shows a rapid local variation around the
@@ -131,7 +131,7 @@ nonnegative.
 
 The form factors in this benchmark are held fixed at their \(t=0\) values.
 A final prediction requires finite-\(t\), flavour-separated
-\(F_1^{V,N}(t_A)\) and \(F_2^{V,N}(t_A)\). The current calculation also
+\(F_1^{V,N}(t_N)\) and \(F_2^{V,N}(t_N)\). The current calculation also
 contains only the \(M+\Phi''\) vector-charge sector. The spatial-current
 contraction can generate \(\Sigma'\), \(\Sigma''\), and \(\Delta\), which
 must be matched independently.
@@ -150,8 +150,8 @@ this study.
 
 ## Next step
 
-1. Supply finite-\(t\), flavour-separated \(F_1^{V,N}(t_A)\) and
-   \(F_2^{V,N}(t_A)\) in the fixed \(q_A\) convention.
+1. Supply finite-\(t\), flavour-separated \(F_1^{V,N}(t_N)\) and
+   \(F_2^{V,N}(t_N)\) in the fixed \(q_A\) convention.
 2. Complete the spatial-current Pauli reduction and match the resulting
    \(\Sigma'\), \(\Sigma''\), and \(\Delta\) coefficients to AFH.
 3. Repeat the AFH response calculation for the other naturally abundant
