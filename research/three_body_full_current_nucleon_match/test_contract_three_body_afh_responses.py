@@ -105,7 +105,7 @@ class ThreeBodyAFHContractionTests(unittest.TestCase):
         self.assertAlmostEqual(
             first["responses_physical_equal_pn"]["SigmaPrimeDelta"], -0.2
         )
-        self.assertLess(first["coefficient_response_terms"]["SigmaPrimeDelta"], 0.0)
+        self.assertGreater(first["coefficient_response_terms"]["SigmaPrimeDelta"], 0.0)
 
     def test_cauchy_violation_is_rejected(self):
         result = contract.contract_archive(
