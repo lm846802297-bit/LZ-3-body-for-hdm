@@ -359,7 +359,7 @@ def run(afh_csv: Path, outdir: Path) -> dict:
             "finite_Q2_form_factors": "central isoscalar_zexp diagnostic; not final model-specific universal u+d+s form factors",
             "native_provenance": provenance,
         },
-        "formula": "dSigma/dER = mA*(g1*g2*gVN)^2/[256*pi^3*pchi^2*(mV^2+Q_A^2)^2] * L_C^(3) * [cM^2*W_M + 2*cM*cPhiPP*W_MPhiPP + cPhiPP^2*W_PhiPP]",
+        "formula": "dSigma/dER = mA*(g1*g2*gVN)^2/[256*pi^3*pchi^2*(mV^2-t_A)^2] * L_C^(3) * [cM^2*W_M + 2*cM*cPhiPP*W_MPhiPP + cPhiPP^2*W_PhiPP], with t_A=-2*mA*ER and Q_A^2=2*mA*ER+ER^2 used only in AFH/nucleon form factors",
         "definitions": {
             "Q_A_squared_GeV2": "2*mA*ER+ER^2; spatial momentum squared used in AFH response and static nucleon form factors",
             "t_A_GeV2": "-2*mA*ER; Lorentz-invariant transfer used in the mediator propagator",

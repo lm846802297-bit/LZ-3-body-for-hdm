@@ -31,7 +31,7 @@ The absolute charge-sector differential cross section is obtained by restoring t
 \frac{d\sigma_{\rm ch}}{dE_R}
 =
 \frac{m_A(g_1g_2g_{VN})^2}
-{256\pi^3p_{\chi_1}^2(m_V^2+Q_A^2)^2}
+{256\pi^3p_{\chi_1}^2(m_V^2-t_A)^2}
 L_C^{(3)}
 \left[
 c_M^2W_M+
