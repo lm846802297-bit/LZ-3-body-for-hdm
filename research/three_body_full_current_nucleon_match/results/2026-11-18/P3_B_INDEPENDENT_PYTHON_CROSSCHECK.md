@@ -167,9 +167,12 @@ ResponseNuclear[y,index,0,0] for indices 1--8, and compares all
 16,807 rows with rtol=5e-7, atol=2e-12, and native imaginary residual
 tolerance 2e-12.
 
-The next acceptance step is to obtain that native artifact and compare
-indices 3, 6 and 8 directly with the P3-B CSV. Only after that comparison
-passes should P3-B be marked native-validated. P3-C must then contract
+The direct comparison is prepared in
+[compare_p3_spatial_vs_native.py](../../../afh_response_crosschecks/compare_p3_spatial_vs_native.py).
+It requires the native metadata and run manifest, checks the pinned source
+commit and full eight-response native PASS, then compares indices 3, 6 and 8
+directly with the P3-B CSV. Only after that comparison passes should P3-B be
+marked native-validated. P3-C must then contract
 these nuclear multipoles with the full complex three-body tensor; the
 present response-only comparison is not a rate correction or a conclusion
 about the numerical size of the spatial-current contribution.
