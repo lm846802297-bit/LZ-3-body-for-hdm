@@ -10,7 +10,7 @@ if str(HERE) not in sys.path:
     sys.path.insert(0, str(HERE))
 from xe131_fixed_benchmark_absolute_dsigma import (
     COUPLING_PRODUCT_SQUARED, DELTA_M_GEV, GEV_MINUS3_TO_CM2_PER_KEV,
-    MA_XE131_GEV, MCHI_GEV, MV_GEV, SPEED_KM_S, exact_qA_GeV,
+    G2, WIDTH_SCHEME, MA_XE131_GEV, MCHI_GEV, MV_GEV, SPEED_KM_S, exact_qA_GeV,
     incident_momentum_GeV, kinematic_prefactor_GeVminus5, find_open_interval,
     write_csv,
 )
@@ -22,6 +22,10 @@ class TestXe131FixedBenchmarkAbsoluteDsigmadER(unittest.TestCase):
         self.assertEqual(MCHI_GEV, 1000.0)
         self.assertEqual(MV_GEV, 10.0)
         self.assertEqual(SPEED_KM_S, 776.0)
+
+    def test_formal_absolute_spectrum_uses_pole_width(self):
+        self.assertEqual(WIDTH_SCHEME, "pole")
+        self.assertEqual(G2, 1.0)
 
     def test_exact_target_mass_shell_momentum(self):
         q = exact_qA_GeV(MA_XE131_GEV, 200.0)
