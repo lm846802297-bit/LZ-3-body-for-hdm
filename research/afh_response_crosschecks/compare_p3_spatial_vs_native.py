@@ -97,6 +97,9 @@ def run(p3_csv: Path, p3_metadata: Path, native_dir: Path, native_metadata: Path
     source_match = p3meta["source_file_sha256"] == nmeta.get("AFH_source_sha256")
     if not source_match:
         raise ValueError("AFH source SHA-256 mismatch between P3 metadata and native export")
+    p3_csv_sha = sha256(p3_csv)
+    if p3meta.get("response_file_sha256") != p3_csv_sha:
+        raise ValueError("P3-B CSV SHA-256 does not match its artifact metadata")
     if int(nmeta.get("rows", "-1")) != 16807:
         raise ValueError(f"native metadata row count is not 16807: {nmeta.get('rows')}")
     if tuple(p3meta["isotopes"]) != ISOTOPES or int(p3meta["response_rows"]) != 16807:
@@ -137,12 +140,18 @@ def run(p3_csv: Path, p3_metadata: Path, native_dir: Path, native_metadata: Path
         label: compare(joined, p3_col, native_col)
         for label, (p3_col, native_col) in CHANNELS.items()
     }
+    physical_columns = {
+        "Delta": "R_Delta_equal_pn",
+        "SigmaPrime": "R_SigmaPrime_equal_pn",
+        "SigmaPrimeDelta": "R_SigmaPrimeDelta_equal_pn",
+    }
     physical = {}
-    for label, (p3_col, native_col) in CHANNELS.items():
+    for label, (_, native_col) in CHANNELS.items():
         # Compare physical equal-p/n P3 response to the raw native W converted
         # with the same AFH factor four and P3's common OBDME correction C0.
-        physical[label] = compare(joined, p3_col.replace("_AFH_package", "_equal_pn"),
-                                  native_col, scale_native=True)
+        physical[label] = compare(
+            joined, physical_columns[label], native_col, scale_native=True
+        )
     passed = (all(x["passed"] for x in raw.values())
               and all(x["passed"] for x in physical.values())
               and max_imag <= 2e-12 and max_y_diff <= 2e-14)
@@ -157,7 +166,7 @@ def run(p3_csv: Path, p3_metadata: Path, native_dir: Path, native_metadata: Path
         "max_y_absolute_difference": max_y_diff,
         "max_native_imaginary_residual": max_imag,
         "native_imaginary_tolerance": 2e-12,
-        "P3_B_csv_sha256": sha256(p3_csv),
+        "P3_B_csv_sha256": p3_csv_sha,
         "P3_B_metadata_sha256": sha256(p3_metadata),
         "native_metadata": nmeta,
         "native_source_commit": manifest.get("source_commit"),
