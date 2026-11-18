@@ -196,34 +196,91 @@ The PASS establishes numerical stability of the DM-side tensor at the
 reported fixed-speed stress benchmarks and quadrature orders. It does not
 establish convergence over the full recoil-energy or halo-velocity domain.
 
-### Leptonic multipole weights and transverse helicity-odd component
+### Leading AFH spatial coefficients from Eq. (107)
 
-For the 12 archived DM tensors, the transverse-even weight
-\(w_T=(L^{11}+L^{22})/2\) is between \(4.08\times10^{-8}\) and
-\(2.26\times10^{-7}\) relative to \(L^{00}\). This is a DM-side kinematic
-ratio only; it is not a nuclear rate correction because the nucleon current
-coefficients and AFH multipole normalization are not yet included.
+The AFH multipole formula gives the spatial coefficients in terms of
+\(\boldsymbol l_M\) (convection) and \(\boldsymbol l_5\) (spin density):
+\[
+C_\Delta=\frac12\left[
+\frac{q^2}{m_N^2}l_M\cdot l_M^*
+-\left(\frac{\boldsymbol q}{m_N}\cdot l_M\right)
+ \left(\frac{\boldsymbol q}{m_N}\cdot l_M^*\right)\right],
+\]
+\[
+C_{\Sigma'}=\frac12\left[
+l_5\cdot l_5^*
+-(\hat{\boldsymbol q}\cdot l_5)
+ (\hat{\boldsymbol q}\cdot l_5^*)\right],
+\qquad
+C_{\Sigma'\Delta}=\frac{\boldsymbol q}{m_N}\cdot
+\operatorname{Re}[i l_M\times l_5^*].
+\]
+With \(q_{\rm AFH}=-q_A\), the static Dirac--Pauli matching gives
+\(l_M=-F_1^V\boldsymbol{\mathcal T}_3\) and
+\(l_5=i(F_1^V+F_2^V)(\boldsymbol q_{\rm AFH}\times
+\boldsymbol{\mathcal T}_3)/(2m_N)\). Consequently,
+\[
+C_\Delta^{(3)}
+=\frac{(F_1^V)^2Q_A^2}{2m_N^2}(L^{11}+L^{22}),
+\]
+\[
+C_{\Sigma'}^{(3)}
+=\frac{(F_1^V+F_2^V)^2Q_A^2}{8m_N^2}(L^{11}+L^{22}),
+\]
+\[
+\boxed{
+C_{\Sigma'\Delta}^{(3)}
+=-\frac{F_1^V(F_1^V+F_2^V)Q_A^2}{2m_N^2}
+(L^{11}+L^{22}).
+}
+\]
+The mixed coefficient is therefore nonzero in general. The earlier
+inference that a tiny transverse antisymmetric component of \(L^{ij}\)
+would force \(C_{\Sigma'\Delta}^{(3)}=0\) was incorrect: AFH Eq. (107)
+shows that this coefficient depends on the transverse-even trace
+\(L^{11}+L^{22}\), because \(l_5\) is the q-rotated spin-current
+coefficient. The signed \(W_{\Sigma'\Delta}\) term must be retained.
 
-The longitudinal DM-side ratio \(L^{33}/L^{00}\) is between
-\(5.73\times10^{-6}\) and \(6.01\times10^{-6}\). In the static on-shell
-impulse approximation the nuclear longitudinal current vanishes; for a
-bound nucleus with \(q_A^0=E_R\), the continuity-equation correction must
-be treated separately.
+For the provisional zero-momentum anchors \(F_1^V(0)=3\),
+\(F_2^V(0)=-0.552\), and \(m_N=0.938918\) GeV, the coefficient ratios
+relative to the leading charge coefficient \(C_M=F_1^2L^{00}\) over the
+12 archived benchmarks are:
 
-The transverse electric--magnetic multipole interference weight is
-\(w_{\rm hel}=-2i(L^{12}-L^{21})\), as in HKS 2020 Appendix A,
-Eq. (111). For the 12 archived tensors, the normalized transverse
-antisymmetric component satisfies
+| Spatial coefficient | Range relative to \(C_M\) |
+|---|---:|
+| \(C_\Delta^{(3)}/C_M\) | \(2.71\times10^{-8}\) to \(1.12\times10^{-7}\) |
+| \(C_{\Sigma'}^{(3)}/C_M\) | \(4.52\times10^{-9}\) to \(1.87\times10^{-8}\) |
+| \(C_{\Sigma'\Delta}^{(3)}/C_M\) | \(-9.17\times10^{-8}\) to \(-2.21\times10^{-8}\) |
+
+These are particle-side coefficient ratios, not recoil-rate corrections:
+the corresponding AFH nuclear responses have not yet been contracted.
+The coefficient identity
+\[
+C_{\Sigma'\Delta}^{(3)}
+=-2\sqrt{C_\Delta^{(3)}C_{\Sigma'}^{(3)}}
+\]
+holds for the stated sign convention and \(F_1(F_1+F_2)>0\). The nuclear
+responses themselves need not saturate their Cauchy--Schwarz bound.
+
+At this leading static order \(C_{\Sigma''}^{(3)}=0\) and
+\(C_{\widetilde\Phi'}^{(3)}=0\), because the magnetization current is
+transverse and there is no leading spin-velocity current. These are
+order-by-order current statements, not claims that the AFH responses
+vanish generally.
+
+For completeness, the generic transverse helicity-odd diagnostic
 \[
 \max\frac{|-i(L^{12}-L^{21})|}{|L^{11}+L^{22}|}
-=7.39\times10^{-16}.
+=7.39\times10^{-16}
 \]
-Equivalently, the HKS interference weight normalized to
-\(L^{11}+L^{22}\) is at most \(1.48\times10^{-15}\). This is consistent
-with zero at floating-point precision for the unpolarized pure-vector
-benchmarks. The exact AFH spherical projector must still confirm the
-normalization and phase before this term is removed from the general rate
-formula. The signed nuclear response remains in the formalism.
+is also consistent with zero at floating-point precision. It is a
+different multipole factor and does not set the AFH
+\(C_{\Sigma'\Delta}^{(3)}\) coefficient to zero.
+
+The coefficient ratios above use constant zero-momentum form-factor
+anchors. The final calculation must use finite-\(t_N\)
+\(F_1^V(t_N)\) and \(F_2^V(t_N)\), and must contract with the physical
+equal-\(p=n\) AFH response columns so the factor of four is applied once.
 
 ## 6. Leading AFH response content and remaining work
 
