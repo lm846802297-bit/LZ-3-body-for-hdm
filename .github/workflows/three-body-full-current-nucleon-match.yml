@@ -157,7 +157,7 @@ jobs:
           retention-days: 90
 
   quadrature-convergence:
-    if: github.event_name == 'workflow_dispatch' && inputs.run_quadrature_regression == true
+    if: github.event_name == 'pull_request' || (github.event_name == 'workflow_dispatch' && inputs.run_quadrature_regression == true)
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
