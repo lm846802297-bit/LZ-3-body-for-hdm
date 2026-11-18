@@ -138,6 +138,13 @@ The full/pointlike-\(M\) ratio is less sensitive because the \(W_M\)
 dependence partly cancels between numerator and denominator. Its largest
 relative change is \(0.1182\%\), at \(E_R=269.0~\mathrm{keV}\).
 
+The maximum spatial-to-charge ratio itself is also stable at the scale
+relevant here: PCHIP gives \(3.20868\times10^{-8}\), while the local
+Chebyshev degree-10 responses give \(3.24854\times10^{-8}\), both at the
+near-pole \(E_R=269.0~\mathrm{keV}\) running-width point. Thus the updated
+interpolation estimate remains about 32 ppb; it does not change the
+charge-dominance conclusion.
+
 The earlier PCHIP-versus-linear comparison gave a maximum full-kernel
 difference of \(4.73\%\) near \(E_R=268.5~\mathrm{keV}\). Linear
 interpolation is therefore not adopted as the preferred interpolation
