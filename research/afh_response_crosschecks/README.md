@@ -60,3 +60,35 @@ and exact q grid.
 A direct PASS is labelled PASS_NATIVE_AFH_SPATIAL_CROSSCHECK. It validates
 these three P3-B channels only; it does not validate the complete three-body
 tensor contraction or event rate.
+
+
+## Direct rank-by-rank native Wolfram multipole comparison
+
+The native control workflow now exports the raw AFH v6.0 DeltaJ and
+SigmaPJ OBDME amplitudes for Xe-129 and Xe-131, before the physical
+equal-p/n factor-four conversion and common C0 response normalization.
+
+The WLS export is
+research/afh_full_response_database/run_afh_spatial_multipoles_native.wls
+on the pinned native source branch
+research/afh-native-spatial-multipoles-20261118 (source commit
+e1e9c85530a7d609561b34e2c2df5ab36e5c5b89).
+
+After downloading the P3-B and native artifacts, run:
+
+~~~bash
+python research/afh_response_crosschecks/compare_p3_multipoles_vs_native.py \
+  --p3-multipole-csv /path/to/afh_spatial_obdme_multipoles_7isotope_2401.csv \
+  --p3-metadata /path/to/p3_metadata.json \
+  --native-multipole-csv /path/to/native-spatial-multipoles/afh_v6_xe129_xe131_spatial_multipoles_native.csv \
+  --native-metadata /path/to/native-spatial-multipoles/native_spatial_multipole_metadata.txt \
+  --native-manifest /path/to/run_manifest.json \
+  --out-json /path/to/p3_native_multipole_comparison.json
+~~~
+
+The comparator requires the full seven-isotope ResponseNuclear native gate
+to have passed first, checks the pinned AFH source and run-manifest hashes,
+then compares all 9,604 (A,q_A,J) amplitude rows for both channels and
+checks native imaginary residuals. A PASS validates the rank-resolved
+spatial amplitudes; it does not validate the complete three-body contraction
+or event rate.
