@@ -4727,7 +4727,7 @@ AFH v6.0 default-density 数据覆盖
 \[
 A=128,129,130,131,132,134,136.
 \]
-每个同位素 2,401 点，总计 16,807 个 \(M\)-response 网格点；动量区间为 \(0\)–\(0.6\) GeV，步长 \(0.25\) MeV。该七同位素集合覆盖天然氙原子丰度 \(0.998158\)；Xe-124 和 Xe-126 没有纳入 AFH v6.0 default-density 结果，不能将 AFH-7 称为完整 AFH-9。原生 AFH v6.0 包源 SHA-256 为 `dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372`；七同位素网格与等价性审计的具体文件哈希见对应 results manifest。
+每个同位素 2,401 点，总计 16,807 个 \(M\)-response 网格点；动量区间为 \(0\)–\(0.6\) GeV，步长 \(0.25\) MeV。**证据类型：** 这七个同位素网格是依据官方 AFH v6.0 源定义与 default-density OBDME 的 Python source translation，并非七次独立 native Wolfram 执行；对应 metadata 将 native Mathematica re-execution 标记为 pending。P.1 的 Xe-131 native (M,\Phi'',M\Phi'') 导出是独立的原生计算，不应据此把 AFH-7 的全部七个同位素网格升级为 native-validated。该七同位素集合覆盖天然氙原子丰度 \(0.998158\)；Xe-124 和 Xe-126 没有纳入 AFH v6.0 default-density 结果，不能将 AFH-7 称为完整 AFH-9。原生 AFH v6.0 包源 SHA-256 为 `dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372`；七同位素网格与等价性审计的具体文件哈希见对应 results manifest。
 
 AFH raw isoscalar package 的 \(q=0\) 值与 \(A^2/4\) 的有限小数偏差如下。该等价性审计对每个同位素单独作 \(q=0\) 归一化，使物理等质子、等中子响应满足 \(R_A^{\rm phys}(0)=A^2\)；factor four 与小的有限精度归一化修正是两个不同步骤。
 
@@ -4829,7 +4829,7 @@ q_A=\sqrt{2m_AE_R+E_R^2},
 | 核响应工作 | 当前证据 | 可以声称 | 不可以声称 |
 |---|---|---|---|
 | Xe-131 \(M,\Phi'',M\Phi''\) | Native Wolfram 2,401 点导出；Python 在 8 个 \(q_A\) 锚点逐项对照 | 三个响应的 native 导出和八点源翻译对照通过 | 不能声称完整三体收缩通过 |
-| AFH-7 七同位素 \(M\) | 16,807 点；多极重构最大残差 \(2.22\times10^{-16}\)；七同位素归一化和形状审计 | \(M\)-response 数据库、归一化与内部多极闭合已归档 | 不能称为 AFH-9，也不能将核响应比值直接当成速率比 |
+| AFH-7 七同位素 \(M\) | Python source translation，16,807 点；多极重构最大残差 \(2.22\times10^{-16}\)；native Mathematica 七同位素重执行仍 pending | 七同位素 \(M\)-response 数据库、归一化与内部多极闭合已归档 | 不能称为七同位素 native-Wolfram validation 或 AFH-9，也不能将核响应比值直接当成速率比 |
 | \(\Sigma'\)、\(\Delta\)、\(\Sigma'\Delta\) | Xe-129/Xe-131 Python 2,401 点开发网格；内部有限性、正定性与 Cauchy–Schwarz 检查通过 | 仅可称 provisional Python development outputs | 尚不能称为 native-AFH validated responses |
 | 三体 \(R_{\alpha\beta}^{(3)}W_{\alpha\beta}\) 完整收缩 | 理论分解和软件架构已写明，完整数值收缩未完成 | 可称为待实现的完整核流收缩目标 | 不得称为完整三体 AFH 预测已完成 |
 
