@@ -212,12 +212,27 @@ The new validator is
 [validate_afh_spatial_multipole_archive.py](../../validate_afh_spatial_multipole_archive.py).
 The CI workflow runs it before uploading the P3-B artifact.
 
-**Current status:** the new engine and test module compile, and the selected
-spatial-response unit tests pass in workflow 44303047483. The seven-isotope
-grid generation and the new archive validator are still running. The earlier
-16,807-row Python-to-Python response comparison remains a valid comparison of
-the previous response CSV; the refreshed artifact must be checked again
-before its new multipole-file SHA-256 is recorded here.
+**Current status: PASS — refreshed rank-resolved archive.** Workflow
+[44303047483](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44303047483)
+completed the spatial-response job and uploaded artifact 14426558224,
+provisional-afh-spatial-obdme-responses. The archive contains:
 
-This archive is still provisional Python output. It does not promote
+| File | Rows | SHA-256 |
+|---|---:|---|
+| afh_spatial_obdme_responses_7isotope_2401.csv | 16,807 | 4e0a23c18d29df3af04a2531e75b7bffeaa3251d0efe97674b2287cf3c25e7e3 |
+| afh_spatial_obdme_multipoles_7isotope_2401.csv | 9,604 | e83f7499cd0af4ec8f1974238f09daf4899ca1b87205ec837ae0964a2e8532c6 |
+
+The rank coverage is Xe-129: J=1; Xe-131: J=1,2,3; and no abnormal
+spatial ranks for the five spin-zero isotopes. The archive validator returned
+PASS_AFH_SPATIAL_MULTIPOLE_ARCHIVE. The maximum absolute reconstruction
+residuals are zero for the three raw AFH responses and at most
+2.22e-16 for the three physical equal-p/n responses. The maximum rankwise
+Cauchy--Schwarz excess is 3.47e-18.
+
+The refreshed response CSV was re-compared against the independent AFH-8
+Python database. All 16,807 rows pass at rtol=5e-12 and atol=2e-14; the
+maximum relative differences remain 3.20e-14 for Delta,
+2.45e-13 for SigmaPrime, and 1.23e-13 for SigmaPrime-Delta.
+
+This archive remains provisional Python output. It does not promote
 native_afh_validated and does not replace the queued native Wolfram gate.
