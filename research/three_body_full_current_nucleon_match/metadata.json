@@ -7,21 +7,54 @@
   "nucleon_vertex": "Gamma_N^mu=F1*gamma^mu + i*F2*sigma^{mu nu}*q_{N,nu}/(2*mN), q_N=P_N'-P_N",
   "static_nucleon_kinematics": "p_N=l-q_A/2, p_N'=l+q_A/2, l dot q_A=0, q_N^0=0",
   "reference_point": {
-    "mchi_GeV": 1000.0,
-    "mchi2_minus_mchi1_keV": 362.0,
-    "ms_keV": 300.0,
-    "ER_keV": 200.0,
-    "speed_km_s": 776.0,
+    "mchi_GeV": 1000,
+    "mchi2_minus_mchi1_keV": 362,
+    "ms_keV": 300,
+    "ER_keV": 200,
+    "speed_km_s": 776,
     "target": "Xe-131, mA=131*u"
   },
   "form_factor_scenarios": [
-    {"F1": 1.0, "F2": 0.0},
-    {"F1": 1.0, "F2": -0.15}
+    {
+      "F1_over_F1zero": 1,
+      "F2_over_F1zero": 0,
+      "role": "control"
+    },
+    {
+      "F1_over_F1zero": 1,
+      "F2_over_F1zero": -0.184,
+      "role": "zero-momentum flavour-universal anchor; not finite-t"
+    }
   ],
   "scope_limitations": [
     "One phase-space point and one static nucleon momentum orientation only.",
     "Nuclear recoil q_A^0 is neglected in the on-shell nucleon current.",
     "No AFH response coefficient is claimed until complete operator and multipole projection.",
     "No phase-space integral, nuclear many-body response, absolute cross section, halo fold, isotope sum, detector response, or likelihood."
-  ]
+  ],
+  "width_scenarios": {
+    "schemes": [
+      "zero",
+      "pole",
+      "running"
+    ],
+    "g2": [
+      0.1,
+      1
+    ],
+    "reference_phase_space_point": {
+      "ER_keV": 200,
+      "delta_m_keV": 362,
+      "speed_km_s": 776,
+      "pole_clearance_keV": 44.437769361138635
+    },
+    "implementation": "Denominator-only width inserted in after-emission chi2 propagator; modified finite-width Ward identity tested."
+  },
+  "latest_validation": {
+    "workflow_run": 44217582274,
+    "commit": "d7da5809b41c9f40a2f0b3d97e80525d6081b8fb",
+    "tests": 16,
+    "finite_width_scenarios": 6,
+    "conclusion": "success"
+  }
 }
