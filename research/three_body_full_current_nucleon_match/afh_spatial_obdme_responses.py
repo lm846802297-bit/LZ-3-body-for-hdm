@@ -14,6 +14,7 @@ import csv
 import hashlib
 import json
 import math
+import sys
 from functools import lru_cache
 from pathlib import Path
 
@@ -35,6 +36,9 @@ META_PATH = (
 Q_MAX_GEV = 0.60
 Q_STEP_GEV = 0.00025
 ISOTOPES = (128, 129, 130, 131, 132, 134, 136)
+AFH_XE131_DIR = ROOT / "research" / "afh_default_density_xe131"
+if str(AFH_XE131_DIR) not in sys.path:
+    sys.path.insert(0, str(AFH_XE131_DIR))
 from run_afh_default_xe131 import (  # noqa: E402
     bessel_element,
     orbital_n_l,
@@ -207,7 +211,6 @@ def _mjl_div_q(
     jp = Rational(two_jp, 2)
     j = Rational(two_j, 2)
     lcap = J
-    six_outer = _w6(lp, 0, 0, 0, 0, 0)  # replaced below by exact general 6j
     try:
         six_outer = float(wigner_6j(
             Integer(lp), jp, Rational(1, 2),

@@ -30,7 +30,7 @@ jobs:
         with:
           python-version: "3.13"
       - name: Install numerical dependency
-        run: python -m pip install --upgrade numpy==2.3.5 scipy==1.17.0
+        run: python -m pip install --upgrade numpy==2.3.5 scipy==1.17.0 sympy==1.14.0
       - name: Compile code and tests
         run: |
           python -m py_compile \
@@ -45,7 +45,9 @@ jobs:
             research/three_body_full_current_nucleon_match/contract_three_body_afh_responses.py \
             research/three_body_full_current_nucleon_match/test_contract_three_body_afh_responses.py \
             research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py \
-            research/three_body_full_current_nucleon_match/test_native_charge_sector_halo_fold.py
+            research/three_body_full_current_nucleon_match/test_native_charge_sector_halo_fold.py \
+            research/three_body_full_current_nucleon_match/afh_spatial_obdme_responses.py \
+            research/three_body_full_current_nucleon_match/test_afh_spatial_obdme_responses.py
       - name: Run full-current regression tests
         run: |
           python -m unittest discover \
