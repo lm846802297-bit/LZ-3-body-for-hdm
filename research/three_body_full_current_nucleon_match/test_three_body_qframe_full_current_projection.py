@@ -63,13 +63,16 @@ class ThreeBodyQFrameFullCurrentTests(unittest.TestCase):
             omega_GeV=float(point.q_A[0]),
         )
         for key in ("C_Delta", "C_SigmaPrime", "C_SigmaPrimeDelta"):
-            self.assertAlmostEqual(direct[key], tensor[key], places=10)
+            scale = max(abs(direct[key]), abs(tensor[key]), 1.0e-300)
+            self.assertLess(
+                abs(direct[key] - tensor[key]) / scale,
+                2.0e-13,
+                key,
+            )
         self.assertLess(direct["C_SigmaPrimeDelta"], 0.0)
-        self.assertAlmostEqual(
-            direct["transverse_DM_norm_L_T"],
-            float(np.real(L_q[1, 1] + L_q[2, 2])),
-            places=12,
-        )
+        lhs = direct["transverse_DM_norm_L_T"]
+        rhs = float(np.real(L_q[1, 1] + L_q[2, 2]))
+        self.assertLess(abs(lhs - rhs) / max(abs(lhs), abs(rhs), 1.0e-300), 2.0e-13)
 
 
 if __name__ == "__main__":

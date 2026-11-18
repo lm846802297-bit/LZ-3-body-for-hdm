@@ -71,7 +71,9 @@ class P3PointwiseCovariantQFrameAFHTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.point, cls.dm_current = full.build_reference_inputs()
-        cls.qA = np.asarray(cls.point.q_A, dtype=float)
+        # point.q_A is a four-vector (omega, qx, qy, qz); AFH uses the
+        # spatial transfer only in its q-aligned three-vector convention.
+        cls.qA = np.asarray(cls.point.q_A[1:], dtype=float)
         cls.qmag = float(np.linalg.norm(cls.qA))
         cls.f1 = 1.0
         cls.f2 = -0.184
