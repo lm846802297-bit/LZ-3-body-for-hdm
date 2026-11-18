@@ -694,6 +694,11 @@ def fold(
     return {
         "status": "COMPUTED_WITHIN_COULOMB_SECTOR_APPROXIMATION",
         "full_current_complete": False,
+        "continuity_reduction_status": (
+            "CONDITIONAL_ON_CONSERVED_NUCLEAR_VECTOR_CURRENT; "
+            "point-nucleus identity is an algebraic convention check, not proof "
+            "of many-body current conservation"
+        ),
         "included_tensor_components": [
             "L00", "L03", "L30", "L33 reduced using nuclear-current continuity"
         ],
@@ -727,7 +732,7 @@ def fold(
         ),
         "response_interpolation": "PCHIP on native 0.25 MeV absolute response values; linear interpolation retained as diagnostic",
         "recoil_momentum": "q_A=sqrt(2 m_A E_R + E_R^2), exact nuclear mass-shell relation",
-        "coulomb_weight": "L_C=L00-(E_R/q_A)(L03+L30)+(E_R/q_A)^2 L33 from nuclear-current continuity",
+        "coulomb_weight": "L_C=L00-(E_R/q_A)(L03+L30)+(E_R/q_A)^2 L33, conditional on conservation of the complete nuclear vector current",
         "results": rows,
     }
 
