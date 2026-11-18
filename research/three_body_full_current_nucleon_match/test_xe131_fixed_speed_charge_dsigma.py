@@ -32,8 +32,8 @@ class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
         self.assertGreater(terms["finite_t_M_plus_PhiPP"], 0.0)
 
     def test_native_csv_hash_is_line_ending_stable(self):
-        lf = b"q,value\\n0.1,2\\n"
-        crlf = b"q,value\\r\\n0.1,2\\r\\n"
+        lf = b"q,value\n0.1,2\n"
+        crlf = b"q,value\r\n0.1,2\r\n"
         self.assertEqual(canonical_sha256(lf), canonical_sha256(crlf))
 
     def test_normalization_audit_distinguishes_cM_from_F1(self):

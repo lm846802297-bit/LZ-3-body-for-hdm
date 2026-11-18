@@ -39,7 +39,7 @@ EXPECTED_DENSITY_MATRIX_SHA256 = "f656145ba2fb9da741b77faed4c01d0dc457c955fa3409
 
 def canonical_sha256(raw: bytes) -> str:
     """Hash native text exports after canonicalizing Windows CRLF to LF."""
-    return hashlib.sha256(raw.replace(b"\\r\\n", b"\\n")).hexdigest()
+    return hashlib.sha256(raw.replace(b"\r\n", b"\n")).hexdigest()
 
 # (delta_m [GeV], medium order, high order)
 BENCHMARKS = {
