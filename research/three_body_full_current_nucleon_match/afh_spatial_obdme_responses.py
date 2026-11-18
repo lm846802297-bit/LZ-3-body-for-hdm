@@ -310,6 +310,7 @@ def isotope_spatial_response(
     J_A: float,
     T_iso: float,
     b_GeV_inv: float,
+    common_matrix_normalization: float | None = None,
 ) -> dict:
     """Return package and physical equal-p/n Delta/Sigma' responses."""
     if q_GeV < 0.0 or not math.isfinite(q_GeV):
@@ -362,11 +363,12 @@ def isotope_spatial_response(
 
     # The common OBDME rounding correction is calibrated only from the
     # coherent M(q=0)=A^2 anchor; the isospin factor four is applied once.
-    w00, _ = package_w00(0.0, rows, b_GeV_inv, T_iso)
-    package_m_zero = response_prefactor * w00
-    if package_m_zero <= 0.0:
-        raise ArithmeticError(f"nonpositive M(q=0) normalization for Xe-{A}")
-    common_matrix_normalization = (A * A) / (4.0 * package_m_zero)
+    if common_matrix_normalization is None:
+        w00, _ = package_w00(0.0, rows, b_GeV_inv, T_iso)
+        package_m_zero = response_prefactor * w00
+        if package_m_zero <= 0.0:
+            raise ArithmeticError(f"nonpositive M(q=0) normalization for Xe-{A}")
+        common_matrix_normalization = (A * A) / (4.0 * package_m_zero)
     physical_factor = 4.0 * common_matrix_normalization
     return {
         "A": A,
@@ -410,8 +412,17 @@ def generate_grid(
         J_A = float(isotope["J_A"])
         T_iso = float(isotope["T_iso"])
         b = float(isotope["b_A_GeV_inverse"])
+        response_prefactor = 4.0 * math.pi / (2.0 * J_A + 1.0)
+        w00, _ = package_w00(0.0, rows, b, T_iso)
+        package_m_zero = response_prefactor * w00
+        if package_m_zero <= 0.0:
+            raise ArithmeticError(f"nonpositive M(q=0) normalization for Xe-{A}")
+        common_normalization = (A * A) / (4.0 * package_m_zero)
         for q in q_grid:
-            result = isotope_spatial_response(float(q), A, rows, J_A, T_iso, b)
+            result = isotope_spatial_response(
+                float(q), A, rows, J_A, T_iso, b,
+                common_matrix_normalization=common_normalization,
+            )
             rows_out.append({
                 "A": A,
                 "isotope": f"Xe-{A}",
