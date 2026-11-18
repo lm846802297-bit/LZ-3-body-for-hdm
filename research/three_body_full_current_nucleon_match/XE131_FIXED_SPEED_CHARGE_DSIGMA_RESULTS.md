@@ -135,3 +135,32 @@ the complete eight-response three-body contraction, halo velocity
 integration, natural-xenon isotope summation, detector response, or an
 absolute coupling-normalized rate. The seven-isotope/eight-response native
 Wolfram gate remains a separate pending task.
+
+
+## 8. Independent rerun after archive hash-chain repair
+
+The same calculation was rerun after the Xe-131 metadata/validation
+checksum repair and the final archive provenance pin. Workflow
+44264272807 completed SUCCESS and reproduced the same ratios:
+
+| \(E_R\) | \(\mathcal Q(E_R)\) | Relative change |
+|---:|---:|---:|
+| 200 keV | 0.778309339441481 | -22.1690660559% |
+| 267 keV | 0.649215910707624 | -35.0784089292% |
+
+The width-scheme ratio spreads are \(2.22\times10^{-16}\) and
+\(1.11\times10^{-16}\), respectively. The rerun's native-input provenance
+records the explicit policy “UTF-8 text normalized to LF before SHA-256”,
+the unchanged native CSV canonical-LF hash
+b1b65708cd103058c3bcaea50bf65550d5671a88e97000b94f2536fbc60a59ff,
+metadata hash
+ad8231ec92c71faf12631534871e192bc3000601514c2a369fc84d963bfa9887,
+and validation hash
+6d199ac9fd4d7fdace93292d1dded1c98d9f49c2836244ee9d2e3ddd334e8333.
+
+- Workflow: https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44264272807
+- Artifact ID: 14408938287
+- Artifact SHA-256: b1e2e7db3241e88f7230de4f17213d652fb5de1dd696378a68b54e916460abe1
+
+This rerun changes no physics input or response data; it independently
+confirms the previous numerical result with the repaired provenance chain.
