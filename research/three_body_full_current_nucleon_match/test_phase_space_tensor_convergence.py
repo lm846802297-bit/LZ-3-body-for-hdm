@@ -1,3 +1,4 @@
+import json
 import sys
 import unittest
 from pathlib import Path
@@ -29,6 +30,14 @@ class PhaseSpaceTensorConvergenceTests(unittest.TestCase):
         self.assertEqual(result["frobenius_relative_difference"], 0.0)
         self.assertEqual(result["max_active_component_relative_difference"], 0.0)
         self.assertEqual(result["active_component_count"], 16)
+
+    def test_metrics_are_json_serializable(self):
+        reference = np.eye(4, dtype=complex)
+        coarse = reference.copy()
+        coarse[1, 2] += 0.001j
+        payload = conv.convergence_metrics(coarse, reference)
+        encoded = json.dumps(payload)
+        self.assertIn('"worst_active_component_index"', encoded)
 
     def test_componentwise_metric_detects_a_small_but_active_entry(self):
         reference = np.eye(4, dtype=complex)
