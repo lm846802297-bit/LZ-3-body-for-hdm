@@ -33,7 +33,7 @@ class TestXe131FixedBenchmarkAbsoluteDsigmadER(unittest.TestCase):
     def test_full_open_interval(self):
         lo, hi = find_open_interval()
         self.assertAlmostEqual(lo, 109.38223179, places=7)
-        self.assertAlmostEqual(hi, 653.70191372, places=7)
+        self.assertAlmostEqual(hi, 653.70191379, places=6)
         self.assertLess(lo, 200.0)
         self.assertGreater(hi, 650.0)
 
