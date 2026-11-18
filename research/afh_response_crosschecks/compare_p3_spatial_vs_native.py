@@ -14,6 +14,7 @@ import math
 from pathlib import Path
 
 ISOTOPES = (128, 129, 130, 131, 132, 134, 136)
+J_BY_A = {128: 0.0, 129: 0.5, 130: 0.0, 131: 1.5, 132: 0.0, 134: 0.0, 136: 0.0}
 NQ = 2401
 CHANNELS = {
     "Delta": ("W_Delta_AFH_package", "W_Delta00_AFH"),
@@ -120,8 +121,8 @@ def run(p3_csv: Path, p3_metadata: Path, native_dir: Path, native_metadata: Path
     max_y_diff = max_imag = 0.0
     for key in sorted(expected):
         p, n = p3[key], native[key]
-        if float(p["J_A"]) not in (0.0, 0.5, 1.5):
-            raise ValueError(f"unexpected nuclear spin at {key}")
+        if float(p["J_A"]) != J_BY_A[key[0]]:
+            raise ValueError(f"unexpected nuclear spin for Xe-{key[0]} at {key}")
         max_y_diff = max(max_y_diff, abs(float(p["y"])-float(n["y"])))
         for label, (_, native_col) in CHANNELS.items():
             im = abs(float(n[f"Im_{native_col}"]))
