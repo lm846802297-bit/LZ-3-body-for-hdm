@@ -1,31 +1,51 @@
 # Full three-body current × nucleon Dirac–Pauli matching
 
-**Status as of 2026-11-18:** P0 is complete. The convention-fixing
-gate, 12 phase-space-integrated DM tensors, and nine component-wise
-medium-to-high quadrature comparisons have passed. P1 is complete for the
-free on-shell one-body impulse approximation: the exact Dirac--Pauli
-current is decomposed into charge, longitudinal convection, transverse
-convection, and magnetization terms, with a pointwise NR-expansion audit.
-P2 is complete at the particle-side AFH Eq. (107) coefficient and signed
-phase level, including an independent complex-amplitude regression.
+**Status as of 2026-11-18:** P0, P1, P2, and P3-A are complete at their
+stated scopes. P0 includes the 12 phase-space-integrated DM tensors and
+nine component-wise medium-to-high quadrature comparisons. P1 validates
+the free on-shell one-body Dirac--Pauli current in the impulse
+approximation. P2 fixes the particle-side AFH Eq. (107) coefficients and
+the signed \(\Sigma'\)-\(\Delta\) coefficient. P3-A passes the direct
+covariant versus q-frame spin-amplitude comparison and the particle-side
+Eq. (107) projection.
 
-P3-A has now passed pointwise: direct covariant and q-aligned (4\times4)
-spin-amplitude contractions agree, and the actual three-body DM current
-reproduces the AFH Eq. (107) spatial coefficients in both lab and q-aligned
-frames. The full-current job of workflow 44295391452 passed 92 tests,
-including all four P3-A tests. P3-B, the bound-nucleus AFH OBDME/multipole
-contraction, remains open.
+P3-B now has a seven-isotope spatial-response grid, a rank-resolved
+multipole archive, and an independent Python-to-Python comparison over
+all 16,807 isotope/\(q_A\) points. The rank archive contains 9,604
+multipole rows and reconstructs all three spatial responses to
+\(2.22\times10^{-16}\) or better. These are source-translated Python
+results; the native Wolfram AFH comparison and the selected-point
+many-body covariant-versus-AFH amplitude comparison remain open.
 
-The main branch already archives seven AFH default-density OBDME tables
-(16,807 response-grid rows are for the (M)-channel only). Those OBDME
-tables are the inputs for P3-B; the (M)-only grid must not be mistaken for
-an eight-response native AFH result.
+P3-C has passed as a **provisional fixed-speed response contraction**:
+workflow 44305980766 passed 100 full-current tests and 16 native
+charge-engine tests, then contracted 12 three-body coefficient sets
+with seven isotopes (84 rows). All total kernels are positive and the
+maximum rank-sum reconstruction residual is \(1.11\times10^{-16}\).
+The corrected contraction applies the common \(C_0(A)\) normalization
+to AFH-8 charge responses while using the already-\(C_0\)-corrected
+P3-B spatial responses; the AFH factor four is applied once. The
+maximum spatial/charge ratio in these 84 fixed-speed rows is
+\(7.09596\times10^{-9}\). This is not a global halo-integrated bound.
 
-The native seven-isotope/eight-response AFH input gate is a separate nuclear
-input acceptance task, not the definition of P0. The full many-body AFH
-OBDME contraction, pointwise P3 comparison (direct covariant vs q-frame vs
-AFH multipoles), finite-t_N form-factor fold, and natural-xenon halo/detector
-prediction remain open. P1 does not claim a bound-nucleus/off-shell current.
+The native seven-isotope/eight-response gate remains separate. Its latest
+private workflow is 44306907993, currently queued on the
+self-hosted Windows/X64/research-gpu runner, with no native artifact
+available. P3-B is therefore not promoted to native validation, and
+P3 as a whole is not passed. The direct many-body comparison
+\[
+\mathcal A_{\rm cov}^{\rm nuclear}
+\stackrel{?}{=}
+\mathcal A_{q\text{-frame}}^{\rm nuclear}
+\stackrel{?}{=}
+\mathcal A_{\rm AFH\ multipoles}^{\rm nuclear}
+\]
+remains the next physics gate.
+
+Finite-\(t_N\) form factors, a continuous recoil/halo fold, natural-xenon
+spectra, and detector-level predictions remain downstream tasks. The
+current P3-C result uses constant \(q=0\) form-factor anchors and fixed
+speed points only. P1 does not claim a bound-nucleus/off-shell current.
 
 ## 1. Purpose and amplitude
 
