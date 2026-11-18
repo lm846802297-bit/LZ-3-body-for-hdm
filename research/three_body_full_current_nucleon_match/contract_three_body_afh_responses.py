@@ -123,6 +123,8 @@ def contract_archive(
     expected_points: int = 2401,
     q_tolerance_GeV: float = 1e-10,
     positivity_relative_tolerance: float = 1e-10,
+    afh_artifact_run_id: int | None = None,
+    afh_artifact_id: int | None = None,
 ) -> dict:
     isotope_data = index_afh_rows(afh_rows, expected_points=expected_points)
     if weights_archive.get("status") != "PASS_AFH_LEPTONIC_COEFFICIENT_EXTRACTION":
@@ -217,6 +219,8 @@ def contract_archive(
             "source": afh_metadata["source"],
             "source_commit": afh_metadata.get("afh_source_commit"),
             "csv_sha256": afh_metadata.get("csv_sha256"),
+            "artifact_run_id": afh_artifact_run_id,
+            "artifact_id": afh_artifact_id,
             "isotopes": list(REQUIRED_METADATA_ISOTOPES),
             "natural_atom_fraction_coverage": afh_metadata.get(
                 "natural_atom_fraction_coverage"
@@ -235,6 +239,18 @@ def contract_archive(
             ),
             "min_abs_spatial_over_charge": min(spatial_ratios) if spatial_ratios else 0.0,
             "max_abs_spatial_over_charge": max(spatial_ratios) if spatial_ratios else 0.0,
+            "min_signed_spatial_over_charge": min(
+                row["spatial_over_charge"] for row in results
+            ) if results else 0.0,
+            "max_signed_spatial_over_charge": max(
+                row["spatial_over_charge"] for row in results
+            ) if results else 0.0,
+            "min_total_response_kernel": min(
+                row["total_response_kernel"] for row in results
+            ) if results else 0.0,
+            "max_total_response_kernel": max(
+                row["total_response_kernel"] for row in results
+            ) if results else 0.0,
             "failures": failures,
         },
         "limitations": [
@@ -251,6 +267,8 @@ def main():
     parser.add_argument("--afh-dir", type=Path, required=True)
     parser.add_argument("--weights-json", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument("--afh-artifact-run-id", type=int, default=44222087512)
+    parser.add_argument("--afh-artifact-id", type=int, default=14391456283)
     args = parser.parse_args()
 
     verified = verify_afh_archive(args.afh_dir)
@@ -260,7 +278,13 @@ def main():
     metadata = dict(verified["metadata"])
     metadata["csv_sha256"] = verified["csv_sha256"]
     metadata["afh_source_commit"] = verified["source_commit"]
-    result = contract_archive(afh_rows, weights_archive, metadata)
+    result = contract_archive(
+        afh_rows,
+        weights_archive,
+        metadata,
+        afh_artifact_run_id=args.afh_artifact_run_id,
+        afh_artifact_id=args.afh_artifact_id,
+    )
 
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
