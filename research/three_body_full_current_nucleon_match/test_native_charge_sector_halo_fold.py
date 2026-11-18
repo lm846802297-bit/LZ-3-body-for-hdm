@@ -267,6 +267,46 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
                 places=12,
             )
 
+    def test_gated_leading_static_vector_candidate_fold_end_to_end(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._write_valid_native_artifact(root)
+            result = fold.fold(
+                native_dir=root,
+                mchi=1000.0,
+                ms=300.0e-6,
+                delta_m=450.0e-6,
+                mV=10.0,
+                g2=1.0,
+                coupling_product_squared=1.0e-8,
+                rho=0.3,
+                ER_values_keV=(200.0,),
+                nv=2,
+                nw=2,
+                nz=2,
+                nphi=2,
+                form_factor_prescription="pointlike",
+                width_scheme="pole",
+                include_leading_static_vector_candidate=True,
+            )
+            self.assertEqual(
+                result["status"],
+                "COMPUTED_WITHIN_LEADING_STATIC_VECTOR_CURRENT_CANDIDATE",
+            )
+            self.assertFalse(result["full_current_complete"])
+            self.assertFalse(result["P3_tensor_validation_complete"])
+            self.assertTrue(result["leading_static_vector_current_candidate_included"])
+            self.assertEqual(len(result["results"]), 2)
+            mb = next(row for row in result["results"] if row["halo_model"] == "mb_untruncated")
+            self.assertGreater(
+                mb["rate_leading_static_vector_candidate_events_kg_day_keV"], 0.0
+            )
+            self.assertIsNotNone(mb["minimum_spatial_candidate_kernel"])
+            self.assertGreaterEqual(mb["minimum_spatial_candidate_kernel"], -1.0e-12)
+            self.assertLess(mb["max_native_response_Cauchy_excess"], 1.0e-12)
+            self.assertLess(mb["max_particle_Cauchy_identity_residual"], 1.0e-12)
+            self.assertLess(mb["max_charge_reconstruction_residual"], 1.0e-12)
+
     def test_native_gate_rejects_wrong_pinned_source_commit(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
