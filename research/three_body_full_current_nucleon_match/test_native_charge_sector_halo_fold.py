@@ -114,6 +114,26 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
         self.assertLess(result["particle_Cauchy_identity_relative_residual"], 1.0e-12)
         self.assertLess(result["charge_reconstruction_relative_residual"], 1.0e-12)
 
+    def test_leading_static_vector_kernel_rejects_bad_charge_cauchy_response(self):
+        L = np.zeros((4, 4, 2), dtype=float)
+        L[0, 0, 0] = 1.0
+        L[1, 1, 0] = 0.01
+        L[2, 2, 0] = 0.01
+        responses = {
+            "M": 1.0,
+            "SigmaDoublePrime": 0.0,
+            "SigmaPrime": 1.0,
+            "PhiPP": 1.0,
+            "PhiTildePrime": 0.0,
+            "Delta": 1.0,
+            "MPhiPP": 10.0,
+            "SigmaPrimeDelta": -1.0,
+        }
+        with self.assertRaisesRegex(ValueError, "M-Phi'' response violates Cauchy-Schwarz"):
+            fold.leading_static_vector_current_kernel_from_tensor(
+                L, 0.22, 200.0e-6, responses, "pointlike"
+            )
+
     def test_leading_static_vector_kernel_rejects_bad_nuclear_cauchy_response(self):
         L = np.zeros((4, 4, 2), dtype=float)
         L[0, 0, 0] = 1.0
@@ -304,6 +324,8 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             self.assertIsNotNone(mb["minimum_spatial_candidate_kernel"])
             self.assertGreaterEqual(mb["minimum_spatial_candidate_kernel"], -1.0e-12)
             self.assertLess(mb["max_native_response_Cauchy_excess"], 1.0e-12)
+            self.assertLess(mb["max_native_charge_response_Cauchy_excess"], 1.0e-12)
+            self.assertLess(mb["max_native_spatial_response_Cauchy_excess"], 1.0e-12)
             self.assertLess(mb["max_particle_Cauchy_identity_residual"], 1.0e-12)
             self.assertLess(mb["max_charge_reconstruction_residual"], 1.0e-12)
 

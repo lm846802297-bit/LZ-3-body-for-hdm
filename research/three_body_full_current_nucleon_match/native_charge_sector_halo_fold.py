@@ -532,6 +532,28 @@ def leading_static_vector_current_kernel_from_tensor(
     charge = float(sum(charge_terms.values()))
     spatial = float(sum(spatial_terms.values()))
     total = charge + spatial
+    response_m = float(responses["M"])
+    response_phi = float(responses["PhiPP"])
+    response_mphi = float(responses["MPhiPP"])
+    if response_m < -1.0e-12 or response_phi < -1.0e-12:
+        raise ValueError("negative native AFH M/Phi'' diagonal response")
+    charge_response_bound = math.sqrt(
+        max(0.0, response_m) * max(0.0, response_phi)
+    )
+    charge_response_cauchy_excess = max(
+        0.0, abs(response_mphi) - charge_response_bound
+    )
+    charge_response_cauchy_scale = max(
+        abs(response_mphi), charge_response_bound, 1.0e-300
+    )
+    if charge_response_cauchy_excess > max(
+        1.0e-12, 2.0e-10 * charge_response_cauchy_scale
+    ):
+        raise ValueError(
+            "native AFH M-Phi'' response violates Cauchy-Schwarz: "
+            f"excess={charge_response_cauchy_excess:.6g}"
+        )
+
     response_delta = float(responses["Delta"])
     response_sigma = float(responses["SigmaPrime"])
     response_cross = float(responses["SigmaPrimeDelta"])
@@ -540,13 +562,20 @@ def leading_static_vector_current_kernel_from_tensor(
     response_bound = math.sqrt(
         max(0.0, response_delta) * max(0.0, response_sigma)
     )
-    response_cauchy_excess = max(0.0, abs(response_cross) - response_bound)
+    spatial_response_cauchy_excess = max(
+        0.0, abs(response_cross) - response_bound
+    )
     response_cauchy_scale = max(abs(response_cross), response_bound, 1.0e-300)
-    if response_cauchy_excess > 2.0e-10 * response_cauchy_scale:
+    if spatial_response_cauchy_excess > max(
+        1.0e-12, 2.0e-10 * response_cauchy_scale
+    ):
         raise ValueError(
             "native AFH SigmaPrime-Delta response violates Cauchy-Schwarz: "
-            f"excess={response_cauchy_excess:.6g}"
+            f"excess={spatial_response_cauchy_excess:.6g}"
         )
+    response_cauchy_excess = max(
+        charge_response_cauchy_excess, spatial_response_cauchy_excess
+    )
     if coefficients["C_SigmaPrimeDelta_cauchy_identity_relative_residual"] > 2.0e-12:
         raise ValueError("particle-side SigmaPrime-Delta coefficient identity failed")
     spatial_scale = max(
@@ -594,6 +623,8 @@ def leading_static_vector_current_kernel_from_tensor(
                 "C_SigmaDoublePrime", "C_PhiTildePrime",
             )
         },
+        "charge_response_Cauchy_excess": charge_response_cauchy_excess,
+        "spatial_response_Cauchy_excess": spatial_response_cauchy_excess,
         "response_Cauchy_excess": response_cauchy_excess,
         "particle_Cauchy_identity_relative_residual": (
             coefficients["C_SigmaPrimeDelta_cauchy_identity_relative_residual"]
@@ -753,6 +784,8 @@ def fold(
                 max_abs_continuity_correction = 0.0
                 max_continuity_identity_residual = 0.0
                 max_response_cauchy_excess = 0.0
+                max_charge_response_cauchy_excess = 0.0
+                max_spatial_response_cauchy_excess = 0.0
                 max_particle_cauchy_residual = 0.0
                 max_charge_reconstruction_residual = 0.0
                 min_spatial_candidate_kernel = math.inf
@@ -810,6 +843,14 @@ def fold(
                             max_response_cauchy_excess,
                             candidate["response_Cauchy_excess"],
                         )
+                        max_charge_response_cauchy_excess = max(
+                            max_charge_response_cauchy_excess,
+                            candidate["charge_response_Cauchy_excess"],
+                        )
+                        max_spatial_response_cauchy_excess = max(
+                            max_spatial_response_cauchy_excess,
+                            candidate["spatial_response_Cauchy_excess"],
+                        )
                         max_particle_cauchy_residual = max(
                             max_particle_cauchy_residual,
                             candidate["particle_Cauchy_identity_relative_residual"],
@@ -859,6 +900,8 @@ def fold(
                             if halo_pointlike else math.nan
                         ),
                         "max_native_response_Cauchy_excess": max_response_cauchy_excess,
+                        "max_native_charge_response_Cauchy_excess": max_charge_response_cauchy_excess,
+                        "max_native_spatial_response_Cauchy_excess": max_spatial_response_cauchy_excess,
                         "max_particle_Cauchy_identity_residual": max_particle_cauchy_residual,
                         "max_charge_reconstruction_residual": max_charge_reconstruction_residual,
                         "minimum_spatial_candidate_kernel": (
