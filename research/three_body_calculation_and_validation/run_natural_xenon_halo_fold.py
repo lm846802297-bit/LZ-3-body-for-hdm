@@ -131,8 +131,8 @@ def compute_isotope_halo_integrals(
     nw: int,
     nz: int,
     nphi: int,
-    width_scheme: str = "zero",
-    g2: float | None = None,
+    width_scheme: str = "pole",
+    g2: float | None = 1.0,
     response_cache: dict | None = None,
 ) -> list[dict]:
     """Compute both nuclear models while evaluating the shared I6 only once.
@@ -266,9 +266,9 @@ def main() -> None:
     parser.add_argument("--nw", type=int, default=16)
     parser.add_argument("--nz", type=int, default=16)
     parser.add_argument("--nphi", type=int, default=8)
-    parser.add_argument("--width-scheme", choices=("zero", "pole", "running"), default="zero")
-    parser.add_argument("--g2", type=float, default=None,
-                        help="Separate chi2-chi1-s coupling for conditional pole/running width")
+    parser.add_argument("--width-scheme", choices=("zero", "pole", "running"), default="pole")
+    parser.add_argument("--g2", type=float, default=1.0,
+                        help="Separate chi2-chi1-s coupling for the conditional pole width (project benchmark: 1)")
     parser.add_argument("--max-relative-convergence", type=float, default=5.0e-3)
     parser.add_argument("--response-q-convention", choices=("exact_spatial",), default="exact_spatial",
                         help="The AFH/GCN/JJ55 response uses the exact spatial momentum q=sqrt(2*m_A*E_R+E_R^2).")
@@ -432,8 +432,11 @@ def main() -> None:
         "width_scheme": args.width_scheme,
         "g2": args.g2,
         "width_interpretation": (
-            "conditional Dirac pole/running width for chi2 -> chi1 s; assumes Dirac fermions, real scalar, pure scalar off-diagonal Yukawa, and no other open channels"
-            if args.width_scheme in ("pole", "running") else "zero-width diagnostic"
+            "formal constant pole width in the second chi2 propagator; conditional on Dirac fermions, a real scalar, a pure-scalar off-diagonal Yukawa coupling, and no other open channels"
+            if args.width_scheme == "pole" else
+            "running-width sensitivity diagnostic only; not a formal production prescription"
+            if args.width_scheme == "running" else
+            "both-propagators-zero-width cross-check only"
         ),
         "response_q_convention": "exact spatial q=sqrt(2*m_A*E_R+E_R^2); same exact q used by the three-body nuclear recoil kinematics",
         "eq6_quadrature": {"nw": args.nw, "nz": args.nz, "nphi": args.nphi},
