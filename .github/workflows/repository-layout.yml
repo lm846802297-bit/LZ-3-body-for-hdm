@@ -66,3 +66,11 @@ jobs:
 
       - name: Verify Figure 2 benchmark/input/output SHA-256 manifest
         run: python research/docs/supplements/validate_three_body_results_manifest.py
+
+      - name: Archive canonical AFH discussion snapshot
+        uses: actions/upload-artifact@v4
+        with:
+          name: afh-canonical-discussion
+          path: research/afh_isotope_response_equivalence/docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md
+          if-no-files-found: error
+          retention-days: 7
