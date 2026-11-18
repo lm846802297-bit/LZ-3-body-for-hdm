@@ -211,7 +211,7 @@ def build_summary(grid, benchmark, minima, grid_stats):
             {"qA_MeV": row["q_GeV"] * 1000.0, "ER_keV": row["ER_keV"],
              "R_charge_over_M": row["R_charge_over_M"],
              "delta_total_percent": 100.0 * (row["R_charge_over_M"] - 1.0)}
-            for row in minima if row["F2_over_F1_scenario"] == -0.15
+            for row in minima if abs(row["F2_over_F1_scenario"] + 0.184) < 1e-12
         ],
         "grid_sampled_q_0p2_to_0p3_GeV_r2_minus_0p184": {
             "q_grid_step_MeV": 0.25,
