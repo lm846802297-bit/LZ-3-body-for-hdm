@@ -30,7 +30,7 @@ jobs:
         with:
           python-version: "3.13"
       - name: Install numerical dependency
-        run: python -m pip install --upgrade numpy==2.3.5
+        run: python -m pip install --upgrade numpy==2.3.5 scipy==1.17.0
       - name: Compile code and tests
         run: |
           python -m py_compile \
@@ -43,13 +43,13 @@ jobs:
             research/three_body_full_current_nucleon_match/three_body_multipole_leptonic_weights.py \
             research/three_body_full_current_nucleon_match/test_three_body_multipole_leptonic_weights.py \
             research/three_body_full_current_nucleon_match/contract_three_body_afh_responses.py \
-            research/three_body_full_current_nucleon_match/test_contract_three_body_afh_responses.py
+            research/three_body_full_current_nucleon_match/test_contract_three_body_afh_responses.py \\\n            research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py \\\n            research/three_body_full_current_nucleon_match/test_native_charge_sector_halo_fold.py
       - name: Run full-current regression tests
         run: |
           python -m unittest discover \
             -s research/three_body_full_current_nucleon_match \
             -p 'test_*.py' -v
-      - name: Generate static one-nucleon matching diagnostic
+      - name: Run native charge-sector engine unit tests\n        run: |\n          python -m unittest \\\n            research/three_body_full_current_nucleon_match/test_native_charge_sector_halo_fold.py -v\n      - name: Generate static one-nucleon matching diagnostic
         run: |
           python research/three_body_full_current_nucleon_match/full_current_nucleon_match.py \
             --out /tmp/full-current-nucleon-match.json
