@@ -60,6 +60,7 @@ CASES = (
 # convergence pattern and the stability of the final physical rate.
 DEFAULT_FROBENIUS_TOL = 1.0e-3
 DEFAULT_ACTIVE_COMPONENT_TOL = 1.0e-2
+DEFAULT_CONTRACTION_TOL = 1.0e-3
 ACTIVE_COMPONENT_FLOOR = 1.0e-8
 
 
@@ -153,6 +154,7 @@ def run_convergence_scan(
     *,
     frobenius_tolerance: float = DEFAULT_FROBENIUS_TOL,
     active_component_tolerance: float = DEFAULT_ACTIVE_COMPONENT_TOL,
+    contraction_tolerance: float = DEFAULT_CONTRACTION_TOL,
 ) -> dict:
     case_results = []
     for case in CASES:
@@ -220,6 +222,14 @@ def run_convergence_scan(
                                 abs(float(coarse["contractions"][key])),
                                 1.0,
                             ),
+                            "pass": abs(
+                                float(fine["contractions"][key])
+                                - float(coarse["contractions"][key])
+                            ) / max(
+                                abs(float(fine["contractions"][key])),
+                                abs(float(coarse["contractions"][key])),
+                                1.0,
+                            ) <= contraction_tolerance,
                         }
                         for key in coarse["contractions"]
                     },
@@ -249,16 +259,14 @@ def run_convergence_scan(
         for case in case_results
         for pair in case["successive_comparisons"]
     ]
-    high_pairs = [
-        pair for pair in all_pairs
-        if pair["to_orders"] == pair["from_orders"]  # intentionally empty; see below
-    ]
     final_pairs = [
         case["successive_comparisons"][-1]
         for case in case_results
     ]
     all_final_pass = all(
-        pair["gram"]["pass"] and pair["L_munu"]["pass"]
+        pair["gram"]["pass"]
+        and pair["L_munu"]["pass"]
+        and all(item["pass"] for item in pair["point_nucleus_contractions"].values())
         for pair in final_pairs
     )
     max_gram_fro = max(
@@ -273,6 +281,11 @@ def run_convergence_scan(
     max_l_active = max(
         pair["L_munu"]["max_active_component_relative_difference"] for pair in final_pairs
     )
+    max_contraction_difference = max(
+        item["relative_difference"]
+        for pair in final_pairs
+        for item in pair["point_nucleus_contractions"].values()
+    )
     return {
         "status": "CONVERGED_AT_REPORTED_ORDERS" if all_final_pass else "CONVERGENCE_NOT_YET_ESTABLISHED",
         "scope": (
@@ -285,11 +298,13 @@ def run_convergence_scan(
             "successive_high_order_pair_pass": all_final_pass,
             "frobenius_relative_tolerance": frobenius_tolerance,
             "active_component_relative_tolerance": active_component_tolerance,
+            "point_nucleus_contraction_relative_tolerance": contraction_tolerance,
             "active_component_floor": ACTIVE_COMPONENT_FLOOR,
             "max_final_gram_frobenius_difference": max_gram_fro,
             "max_final_L_frobenius_difference": max_l_fro,
             "max_final_gram_active_component_difference": max_gram_active,
             "max_final_L_active_component_difference": max_l_active,
+            "max_final_point_nucleus_contraction_difference": max_contraction_difference,
             "all_sixteen_by_sixteen_complex_Gram_components_compared": True,
             "all_four_by_four_complex_L_components_compared": True,
             "scope_note": (
@@ -306,10 +321,12 @@ def main():
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--frobenius-tol", type=float, default=DEFAULT_FROBENIUS_TOL)
     parser.add_argument("--active-component-tol", type=float, default=DEFAULT_ACTIVE_COMPONENT_TOL)
+    parser.add_argument("--contraction-tol", type=float, default=DEFAULT_CONTRACTION_TOL)
     args = parser.parse_args()
     result = run_convergence_scan(
         frobenius_tolerance=args.frobenius_tol,
         active_component_tolerance=args.active_component_tol,
+        contraction_tolerance=args.contraction_tol,
     )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(result, indent=2) + "\n", encoding="utf-8")
