@@ -521,3 +521,27 @@ P2 is therefore **closed at the particle-side coefficient/phase level**.
 The full nuclear multipole/OBDME contraction and pointwise P3 tensor
 comparison remain open. Do not promote the 84-row provisional contraction
 to a full natural-xenon prediction.
+
+
+## 10. P3-A: direct full-current q-frame covariance — 2026-11-18
+
+The exact three-body DM current and exact free on-shell Dirac--Pauli
+nucleon current have now been contracted as a full
+DM-spin \(\otimes\) nucleon-spin \(4\times4\) amplitude in the lab frame
+and after a common right-handed rotation to the q-aligned frame. The
+regression checks the full, charge, and spatial amplitude operators, the
+spin-summed norm, and the DM Lorentz tensor transformation. The
+energy-transfer-matched nucleon satisfies \(q_N^\mu=q_A^\mu\).
+
+The same test extracts the actual three-body spin-resolved DM amplitudes
+in the q frame, evaluates AFH Eq. (107) before spin averaging, and compares
+the three spatial coefficients with the independent Lorentz-tensor
+extractor using the correct initial-DM-spin average. This joins the
+actual three-body current to the signed particle-side AFH coefficient
+calculation.
+
+This closes P3-A (direct covariant vs q-frame and actual-T3 Eq. (107)
+particle-side comparison) at the reference point. P3-B remains open:
+the AFH nuclear OBDME/multipole contraction must agree with the direct
+nuclear-current contraction at the same point. No full natural-xenon
+spectrum or halo-folded rate is promoted by this test.

@@ -148,6 +148,7 @@ def afh_eq107_spatial_coefficients_from_amplitudes(
     f1: float = DEFAULT_F1,
     f2: float = DEFAULT_F2,
     mN_GeV: float = DEFAULT_MN_GEV,
+    spin_average_denominator: float | None = None,
 ) -> dict:
     """Evaluate AFH Eq. (107) directly on complex spin-resolved amplitudes.
 
@@ -176,6 +177,10 @@ def afh_eq107_spatial_coefficients_from_amplitudes(
     Q = float(np.linalg.norm(qA))
     if Q <= 0.0:
         raise ValueError("qA_vec_GeV must be nonzero")
+    if spin_average_denominator is None:
+        spin_average_denominator = float(amplitudes.shape[0])
+    if not np.isfinite(spin_average_denominator) or spin_average_denominator <= 0.0:
+        raise ValueError("spin_average_denominator must be positive and finite")
     qAFH = -qA
     qhat = qAFH / Q
     q_over_m = qAFH / mN_GeV
@@ -203,20 +208,21 @@ def afh_eq107_spatial_coefficients_from_amplitudes(
         )))
 
     return {
-        "C_Delta": float(np.mean(c_delta)),
-        "C_SigmaPrime": float(np.mean(c_sigma)),
-        "C_SigmaPrimeDelta": float(np.mean(c_sigma_delta)),
+        "C_Delta": float(np.sum(c_delta) / spin_average_denominator),
+        "C_SigmaPrime": float(np.sum(c_sigma) / spin_average_denominator),
+        "C_SigmaPrimeDelta": float(np.sum(c_sigma_delta) / spin_average_denominator),
         "qA_GeV": qA.tolist(),
         "q_AFH_GeV": qAFH.tolist(),
         "spin_channel_count": int(amplitudes.shape[0]),
         "spin_average": True,
+        "spin_average_denominator": float(spin_average_denominator),
         "F1V": float(f1),
         "F2V": float(f2),
         "mN_GeV": float(mN_GeV),
-        "transverse_DM_norm_L_T": float(np.mean(
+        "transverse_DM_norm_L_T": float(np.sum(
             np.sum(np.abs(amplitudes) ** 2, axis=1)
             - np.abs(amplitudes @ qhat) ** 2
-        )),
+        ) / spin_average_denominator),
         "AFH_q_convention": "q_AFH=-q_A; q_N=+q_A",
         "source_formula": "AFH Appendix A Eq. (107), evaluated before spin averaging",
     }

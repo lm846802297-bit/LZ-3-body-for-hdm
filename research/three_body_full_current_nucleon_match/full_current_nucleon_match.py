@@ -133,6 +133,103 @@ def perpendicular_unit(q_vec: np.ndarray) -> np.ndarray:
     return unit / np.linalg.norm(unit)
 
 
+def q_aligned_rotation(q_vec: np.ndarray) -> np.ndarray:
+    """Return a right-handed rotation whose rows are (e1,e2,qhat)."""
+    q_vec = np.asarray(q_vec, dtype=float)
+    if q_vec.shape != (3,) or not np.all(np.isfinite(q_vec)):
+        raise ValueError("q_vec must be a finite three-vector")
+    q_norm = float(np.linalg.norm(q_vec))
+    if q_norm <= 0.0:
+        raise ValueError("q_vec must be nonzero")
+    qhat = q_vec / q_norm
+    e1 = perpendicular_unit(q_vec)
+    e2 = np.cross(qhat, e1)
+    rotation = np.stack((e1, e2, qhat), axis=0)
+    return rotation
+
+
+def rotate_current_to_q_frame(current: np.ndarray, rotation: np.ndarray) -> np.ndarray:
+    """Rotate only spatial components of a four-current into the q frame."""
+    current = np.asarray(current, dtype=complex)
+    rotation = np.asarray(rotation, dtype=float)
+    if current.shape != (4, 2, 2):
+        raise ValueError("current must have shape (4,2,2)")
+    if rotation.shape != (3, 3):
+        raise ValueError("rotation must have shape (3,3)")
+    rotated = current.copy()
+    rotated[1:] = np.einsum("ij,jab->iab", rotation, current[1:])
+    return rotated
+
+
+def run_q_frame_full_current_validation() -> dict:
+    """Compare direct and q-frame full DM x nucleon spin-amplitude contractions."""
+    point, t3 = build_reference_inputs()
+    qA4 = np.asarray(point.q_A, dtype=float)
+    q_vec = qA4[1:]
+    Q = float(np.linalg.norm(q_vec))
+    rotation = q_aligned_rotation(q_vec)
+    t3_q = rotate_current_to_q_frame(t3, rotation)
+
+    p_perp = 0.10
+    l_vec, l_parallel = energy_transfer_matched_internal_momentum(
+        q_vec, float(qA4[0]), p_perp
+    )
+    jn_covariant, qN4, (p_i, p_f) = nucleon_current_matrices(
+        q_vec, l_vec, 1.0, -0.184
+    )
+    normalization = nonrel_state_normalization(p_i, p_f)
+    jn = normalization * jn_covariant
+    jn_q = rotate_current_to_q_frame(jn, rotation)
+
+    full_lab, charge_lab, spatial_lab = full_amplitude_operator(t3, jn)
+    full_q, charge_q, spatial_q = full_amplitude_operator(t3_q, jn_q)
+    rotation4 = np.eye(4)
+    rotation4[1:, 1:] = rotation
+    L_lab = dm.tensor_from_spin_matrices(t3)
+    L_q = dm.tensor_from_spin_matrices(t3_q)
+    L_q_expected = rotation4 @ L_lab @ rotation4.T
+
+    return {
+        "status": "PASS_DIRECT_VS_Q_FRAME_FULL_CURRENT_CONTRACTION",
+        "qA_lab_GeV": qA4.tolist(),
+        "qA_q_frame_GeV": [float(qA4[0]), 0.0, 0.0, Q],
+        "rotation_matrix": rotation.tolist(),
+        "rotation_orthogonality_residual": float(
+            np.linalg.norm(rotation @ rotation.T - np.eye(3))
+        ),
+        "rotation_determinant": float(np.linalg.det(rotation)),
+        "DM_tensor_rotation_residual": dm.relative_matrix_residual(
+            L_q, L_q_expected
+        ),
+        "nucleon_current_rotation_residual": dm.relative_matrix_residual(
+            jn_q, rotate_current_to_q_frame(jn, rotation)
+        ),
+        "full_amplitude_rotation_residual": dm.relative_matrix_residual(
+            full_q, full_lab
+        ),
+        "charge_amplitude_rotation_residual": dm.relative_matrix_residual(
+            charge_q, charge_lab
+        ),
+        "spatial_amplitude_rotation_residual": dm.relative_matrix_residual(
+            spatial_q, spatial_lab
+        ),
+        "spin_summed_norm_relative_residual": abs(
+            float(np.linalg.norm(full_q) ** 2)
+            - float(np.linalg.norm(full_lab) ** 2)
+        ) / max(float(np.linalg.norm(full_lab) ** 2), 1.0e-300),
+        "nucleon_qN0_GeV": float(qN4[0]),
+        "nucleon_qN0_minus_qA0_GeV": float(qN4[0] - qA4[0]),
+        "nucleon_Ward_residual_qN": nucleon_ward_residual(qN4, jn_covariant),
+        "K_N_perp_GeV": p_perp,
+        "K_N_parallel_GeV": l_parallel,
+        "scope": (
+            "exact free on-shell one-nucleon Dirac-Pauli current and exact "
+            "spin-resolved three-body DM current; lab-vs-q-frame covariance "
+            "only, not yet the AFH nuclear OBDME contraction"
+        ),
+    }
+
+
 def energy_transfer_matched_internal_momentum(
     q_vec: np.ndarray,
     omega_GeV: float,
@@ -743,6 +840,7 @@ def run_diagnostic() -> dict:
             run_energy_transfer_matched_on_shell_scan(q_vec, float(q_a4[0]))
         ),
         "leading_NR_one_body_matching_scan": run_one_body_nr_matching_scan(),
+        "q_frame_full_current_validation": run_q_frame_full_current_validation(),
         "limitations": [
             "The nucleon is an on-shell static impulse-approximation point with q_N^0=0 and l perpendicular to q.",
             "The physical nuclear transfer has q_A^0=E_R != 0; the q_N^0=0 approximation is not exactly conserved with q_A and its residual is reported separately.",
@@ -751,7 +849,8 @@ def run_diagnostic() -> dict:
             "The finite-t F1 and F2 are not supplied; F2/F1=-0.184 is only the zero-momentum flavour-universal anchor.",
             "The leading NR expansion scan quantifies O(p^3/m_N^3) spatial-current truncation at two Xe-131 recoil points; it is not a bound-nucleon calculation.",
             "This is one phase-space point and one nucleon-momentum orientation, not a nuclear many-body response calculation.",
-            "No AFH response coefficient is claimed until the full operator structures are projected and normalized.",
+            "The particle-side AFH Eq. (107) coefficient phase is independently tested; the full nuclear OBDME multipole contraction remains pending.",
+            "The q-frame full-current test checks spatial-rotation covariance, not the nuclear multipole reduction.",
             "The Proca propagator longitudinal term and the full bound-nucleon continuity equation are not included in this static diagnostic.",
         ],
     }
