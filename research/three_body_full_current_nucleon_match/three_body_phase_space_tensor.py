@@ -34,6 +34,7 @@ PAULI = (eq6.I2, eq6.s1, eq6.s2, eq6.s3)
 MCHI = 1000.0
 MASS_U_GEV = 0.93149410242
 M_A = 131.0 * MASS_U_GEV
+FORMAL_WIDTH_SCHEME = "pole"
 
 
 def pauli_components(current: np.ndarray) -> np.ndarray:
@@ -332,7 +333,7 @@ def integrate_spin_resolved_tensor(
 def run_default_audit():
     results = []
     for case in vca.DEFAULT_CASES:
-        for scheme in ("zero", "pole", "running"):
+        for scheme in (FORMAL_WIDTH_SCHEME,):
             result = integrate_spin_resolved_tensor(
                 mchi=MCHI,
                 ms=case["ms"],
@@ -402,7 +403,13 @@ def run_default_audit():
         "pauli_basis": ["I", "sigma_x", "sigma_y", "sigma_z"],
         "lorentz_frame": "q-aligned at each phase-space point: (0,e1,e2,qhat)",
         "phase_space_measure": "same threshold-stable Eq.(6) W2,z,phi quadrature and sqrt(lambda_K)/W^2 weight",
-        "width_schemes": ["zero", "pole", "running"],
+        "width_schemes": [FORMAL_WIDTH_SCHEME],
+        "formal_width_prescription": (
+            "Eq. (19) asymmetric prescription: the first p-k chi2 propagator "
+            "retains +i0+, while the second p'+k propagator uses the constant "
+            "pole width Gamma_chi2(m_chi2). Zero-width and running-width "
+            "results are diagnostics only."
+        ),
         "acceptance": acceptance,
         "benchmarks": results,
         "limitations": [
@@ -410,7 +417,7 @@ def run_default_audit():
             "The nucleon convection and magnetization operators and their AFH multipole contractions are not included in this tensor archive.",
             "A separate component-wise convergence scan is archived for nine selected benchmarks; it establishes medium-to-high-order convergence only at those benchmarks and stated tolerances, not globally across all kinematics.",
             "No AFH isotope response, halo fold, detector response, or likelihood is included.",
-            "The running width remains the scalar-channel diagnostic used by the parent audit, not a complete model self-energy.",
+            "Formal production is pole-width only; zero-width and running-width controls are excluded from the production tensor archive.",
         ],
     }
 
