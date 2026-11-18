@@ -335,8 +335,49 @@ def run_default_audit():
             )
             result["benchmark"] = case["benchmark"]
             results.append(result)
+    max_crosscheck = max(
+        item["dirac_trace_crosscheck"]["max_relative_residual"]
+        for item in results
+    )
+    min_gram_eigenvalue = min(item["gram_min_eigenvalue"] for item in results)
+    min_tensor_eigenvalue = min(item["tensor_min_eigenvalue"] for item in results)
+    max_hermiticity = max(
+        max(
+            item["gram_hermiticity_relative_residual"],
+            item["tensor_hermiticity_relative_residual"],
+        )
+        for item in results
+    )
+    max_rotation_residual = max(
+        max(
+            item["q_frame_rotation_max_orthogonality_residual"],
+            item["q_frame_rotation_max_determinant_residual"],
+        )
+        for item in results
+    )
+    acceptance = {
+        "dirac_trace_max_relative_residual": max_crosscheck,
+        "dirac_trace_tolerance": 2e-9,
+        "gram_min_eigenvalue": min_gram_eigenvalue,
+        "tensor_min_eigenvalue": min_tensor_eigenvalue,
+        "minimum_eigenvalue_tolerance": -1e-10,
+        "max_hermiticity_relative_residual": max_hermiticity,
+        "hermiticity_tolerance": 1e-12,
+        "max_q_frame_rotation_residual": max_rotation_residual,
+        "rotation_tolerance": 1e-12,
+    }
+    acceptance["pass"] = (
+        max_crosscheck < acceptance["dirac_trace_tolerance"]
+        and min_gram_eigenvalue > acceptance["minimum_eigenvalue_tolerance"]
+        and min_tensor_eigenvalue > acceptance["minimum_eigenvalue_tolerance"]
+        and max_hermiticity < acceptance["hermiticity_tolerance"]
+        and max_rotation_residual < acceptance["rotation_tolerance"]
+    )
     return {
-        "status": "integrated_spin_resolved_three_body_current_tensor",
+        "status": (
+            "PASS_SPIN_RESOLVED_DM_TENSOR"
+            if acceptance["pass"] else "FAIL_SPIN_RESOLVED_DM_TENSOR"
+        ),
         "scope": (
             "exact DM-side four-vector tensor integrated over three-body phase space; "
             "not yet AFH multipole coefficients or a nuclear event rate"
@@ -347,10 +388,12 @@ def run_default_audit():
         "lorentz_frame": "q-aligned at each phase-space point: (0,e1,e2,qhat)",
         "phase_space_measure": "same threshold-stable Eq.(6) W2,z,phi quadrature and sqrt(lambda_K)/W^2 weight",
         "width_schemes": ["zero", "pole", "running"],
+        "acceptance": acceptance,
         "benchmarks": results,
         "limitations": [
             "The q-aligned spin-resolved DM tensor is an intermediate dynamical object; AFH one-body operator coefficients are not yet projected.",
             "The nucleon convection and magnetization operators and their AFH multipole contractions are not included in this tensor archive.",
+            "A dedicated quadrature-order convergence scan for every integrated Gram component remains pending.",
             "No AFH isotope response, halo fold, detector response, or likelihood is included.",
             "The running width remains the scalar-channel diagnostic used by the parent audit, not a complete model self-energy.",
         ],
@@ -367,12 +410,11 @@ def main():
     print(json.dumps({
         "status": result["status"],
         "benchmarks": len(result["benchmarks"]),
-        "all_dirac_crosschecks": all(
-            item["dirac_trace_crosscheck"]["max_relative_residual"] < 5e-10
-            for item in result["benchmarks"]
-        ),
+        "acceptance": result["acceptance"],
         "output": str(args.out),
     }, indent=2))
+    if not result["acceptance"]["pass"]:
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":
