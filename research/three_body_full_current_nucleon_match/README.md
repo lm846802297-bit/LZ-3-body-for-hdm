@@ -691,3 +691,11 @@ and signed interference contributions are checked to reconstruct the three
 total spatial responses at every isotope/q point. The CI job validates this
 archive before upload using
 [validate_afh_spatial_multipole_archive.py](validate_afh_spatial_multipole_archive.py).
+
+
+Latest rank-resolved artifact: workflow 44303047483, artifact 14426558224.
+It contains 16,807 total-response rows and 9,604 rank-resolved multipole rows.
+The archive validator passed; rank sums reconstruct the raw responses exactly
+and the physical equal-p/n responses to at most 2.22e-16 absolute residual.
+The refreshed total-response CSV again passes the independent AFH-8 Python
+comparison over all 16,807 rows. Native Wolfram validation remains pending.
