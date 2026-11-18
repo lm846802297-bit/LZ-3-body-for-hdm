@@ -101,6 +101,37 @@ class FullCurrentNucleonTests(unittest.TestCase):
         got = fm.nonrel_state_normalization(p_i, p_f)
         self.assertAlmostEqual(got, expected, places=14)
 
+    def test_spatial_current_reduces_to_convection_plus_magnetization(self):
+        # Use a deliberately small q/m and l/m so the leading NR expansion
+        # is isolated from O(p^3/m^3) corrections.
+        q = np.asarray([0.002, 0.0, 0.0])
+        ell = np.asarray([0.0, 0.001, 0.0])
+        f1, f2 = 1.0, -0.184
+        current, _, (p_i, p_f) = fm.nucleon_current_matrices(
+            q, ell, f1, f2
+        )
+        current *= fm.nonrel_state_normalization(p_i, p_f)
+        eps = np.zeros((3, 3, 3))
+        eps[0, 1, 2] = eps[1, 2, 0] = eps[2, 0, 1] = 1.0
+        eps[0, 2, 1] = eps[2, 1, 0] = eps[1, 0, 2] = -1.0
+        for i in range(3):
+            identity_piece = 0.5 * np.trace(current[i + 1])
+            expected_identity = f1 * ell[i] / fm.M_N_GEV
+            self.assertLess(
+                abs(identity_piece - expected_identity),
+                2e-7 * max(abs(expected_identity), 1e-8),
+            )
+            for j in range(3):
+                spin_piece = 0.5 * np.trace(fm.PAULI[j + 1] @ current[i + 1])
+                expected_spin = (
+                    1j * (f1 + f2) / (2.0 * fm.M_N_GEV)
+                    * sum(eps[i, j, k] * q[k] for k in range(3))
+                )
+                self.assertLess(
+                    abs(spin_piece - expected_spin),
+                    2e-7 * max(abs(expected_spin), 1e-8),
+                )
+
     def test_full_pauli_coefficients_are_json_safe_and_complete(self):
         jn, _, _ = fm.nucleon_current_matrices(
             self.q, 0.10 * fm.M_N_GEV * self.lhat, 1.0, -0.184
