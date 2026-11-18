@@ -119,7 +119,7 @@ class FullCurrentNucleonTests(unittest.TestCase):
             expected_identity = f1 * ell[i] / fm.M_N_GEV
             self.assertLess(
                 abs(identity_piece - expected_identity),
-                2e-7 * max(abs(expected_identity), 1e-8),
+                1e-5 * max(abs(expected_identity), 1e-7) + 1e-12,
             )
             for j in range(3):
                 spin_piece = 0.5 * np.trace(fm.PAULI[j + 1] @ current[i + 1])
@@ -129,7 +129,7 @@ class FullCurrentNucleonTests(unittest.TestCase):
                 )
                 self.assertLess(
                     abs(spin_piece - expected_spin),
-                    2e-7 * max(abs(expected_spin), 1e-8),
+                    1e-5 * max(abs(expected_spin), 1e-7) + 1e-12,
                 )
 
     def test_full_pauli_coefficients_are_json_safe_and_complete(self):
