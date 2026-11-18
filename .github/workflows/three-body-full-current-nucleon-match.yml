@@ -122,6 +122,11 @@ jobs:
         run: |
           python research/three_body_full_current_nucleon_match/afh_spatial_obdme_responses.py \
             --out-dir /tmp/afh-spatial-obdme
+      - name: Validate rank-resolved AFH spatial multipole archive
+        run: |
+          python research/three_body_full_current_nucleon_match/validate_afh_spatial_multipole_archive.py \
+            --out-dir /tmp/afh-spatial-obdme \
+            --out-json /tmp/afh-spatial-obdme/multipole-validation.json
       - name: Upload provisional AFH spatial OBDME grid
         uses: actions/upload-artifact@v4
         with:
