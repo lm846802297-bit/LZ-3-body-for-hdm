@@ -213,8 +213,8 @@ The new validator is
 The CI workflow runs it before uploading the P3-B artifact.
 
 **Current status: PASS — refreshed rank-resolved archive.** Workflow
-[44305662906](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44305662906)
-completed the spatial-response job and uploaded artifact 14427554198,
+[44305980766](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44305980766)
+completed the spatial-response job and uploaded artifact 14428386181,
 provisional-afh-spatial-obdme-responses. The archive contains:
 
 | File | Rows | SHA-256 |
