@@ -1,6 +1,6 @@
 # Full three-body current × nucleon Dirac-Pauli matching diagnostic
 
-**Status:** exact one-nucleon spin-matrix contraction at a static reference point; AFH many-body matching remains open.
+**Status:** static one-nucleon spin-matrix matching diagnostic plus a phase-space-integrated q-aligned spin-resolved three-body DM tensor; AFH many-body operator matching remains open.
 
 ## Purpose
 
@@ -247,6 +247,44 @@ The spin-trace comparison against the independent Dirac tensor remains
 below \(4.5\times10^{-16}\), and the finite-width Ward-identity residual
 is below \(3.7\times10^{-13}\) in all six cases.
 
+## Phase-space-integrated spin-resolved three-body tensor (P0-B1)
+
+The new `three_body_phase_space_tensor.py` extends the one-point
+spin-resolved current calculation to the complete three-body phase space.
+At every ((W^2,z,\phi)) point it:
+
+1. constructs both scalar-emission orderings with the same finite-width
+   prescription as PR #53/#57;
+2. rotates the spatial Lorentz components into a local frame
+   ((e_1,e_2,\hat q_A)), with the third axis parallel to the physical
+   nuclear momentum transfer;
+3. decomposes each (2\times2) DM-spin matrix into the Pauli basis
+   (T_3^\mu=\sum_{a=0}^3 c_a^\mu\sigma_\chi^a);
+4. integrates the full spin-resolved Gram tensor
+   [
+   G_{\mu a,\nu b}^{(3)}
+   =\int d\Phi_3\,c_a^\mu c_b^{\nu *},
+   \qquad
+   L_{\mu\nu}^{(3)}=\sum_a G_{\mu a,\nu a}^{(3)}.
+   ]
+
+The archive keeps the before-emission, after-emission, and coherent
+interference Gram tensors separately. It includes zero, pole, and running
+widths and uses the parent Eq. (6) threshold-stable (W^2,z,\phi)
+quadrature. The point-nucleus charge/convection contractions reconstructed
+from the q-aligned tensor are compared with the independent Dirac-trace
+integration in `vector_current_response_audit.integrate_current_components`.
+This is an independent integrated cross-check of the spin-resolved tensor
+representation, not a second AFH calculation.
+
+**Scope boundary:** this is the integrated DM-side dynamical tensor needed
+before AFH matching. It is not yet
+\(\mathcal R_{\alpha\beta}^{(3)}\), because the nucleon Dirac--Pauli
+current has not yet been projected onto the complete AFH one-body
+multipole basis and contracted with the isotope OBDMEs. In particular,
+the new tensor does not by itself supply (\Delta), (\Sigma'),
+(\Sigma''), or their physical three-body response coefficients.
+
 ## Reproduction
 
 Python 3.12+ and NumPy are required.
@@ -258,12 +296,16 @@ python -m unittest discover \
 
 python research/three_body_full_current_nucleon_match/full_current_nucleon_match.py \
   --out /tmp/full-current-nucleon-match.json
+
+python research/three_body_full_current_nucleon_match/three_body_phase_space_tensor.py \
+  --out /tmp/three-body-phase-space-tensor.json
 ~~~
 
 ## Limitations
 
-- One three-body phase-space point and one nucleon-momentum orientation are
-  used; this is not a phase-space-integrated nuclear response.
+- The exact one-nucleon Dirac--Pauli-to-AFH projection remains a static
+  impulse-approximation diagnostic; the new integrated tensor is on the DM
+  side and is not yet a phase-space-integrated nuclear response.
 - q_N^0=0 is used for the on-shell static nucleon. A complete treatment must
   include the appropriate bound-nucleon/current-conservation framework.
 - The finite-(t_N) (F_1) and (F_2) of the model-specific universal
