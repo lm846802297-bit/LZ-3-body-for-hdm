@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import math
 from pathlib import Path
@@ -60,6 +61,29 @@ RESPONSE_W_COLUMNS = {
     "PhiPP": "W_PhiPP00_AFH",
     "MPhiPP": "W_MPhiPP00_AFH",
 }
+NATIVE_AFH_SOURCE_COMMIT = "dcefbeb7ad705b6c03f2b4689200eb1d9252e67b"
+NATIVE_AFH_REPOSITORY = "lm846802297-bit/LZ-3-body-for-hdm"
+NATIVE_RESPONSE_INDEX_MAP = {
+    "M": 1,
+    "SigmaDoublePrime": 2,
+    "SigmaPrime": 3,
+    "PhiPP": 4,
+    "PhiTildePrime": 5,
+    "Delta": 6,
+    "MPhiPP": 7,
+    "SigmaPrimeDelta": 8,
+}
+NATIVE_RESPONSE_W_COLUMNS = {
+    "M": "W_M00_AFH",
+    "SigmaDoublePrime": "W_SigmaDoublePrime00_AFH",
+    "SigmaPrime": "W_SigmaPrime00_AFH",
+    "PhiPP": "W_PhiPP00_AFH",
+    "PhiTildePrime": "W_PhiTildePrime00_AFH",
+    "Delta": "W_Delta00_AFH",
+    "MPhiPP": "W_MPhiPP00_AFH",
+    "SigmaPrimeDelta": "W_SigmaPrimeDelta00_AFH",
+}
+NATIVE_EXPECTED_ROWS = len(ISOTOPES) * 2401
 
 def read_csv(path: Path) -> list[dict[str, str]]:
     with path.open(newline="", encoding="utf-8-sig") as stream:
@@ -122,48 +146,249 @@ def shm_truncated_pdf(
     return v * bracket / (math.sqrt(math.pi) * v0 * ve * norm)
 
 
-def _native_validation_gate(native_dir: Path) -> dict:
-    comparison_path = native_dir / "native-comparison.json"
-    metadata_path = native_dir / "native_metadata.txt"
+def _verify_native_archive_hashes(
+    artifact_root: Path, required_relative_paths: list[str]
+) -> list[str]:
+    checksum_path = artifact_root / "SHA256SUMS.txt"
+    if not checksum_path.is_file():
+        raise RuntimeError("native AFH artifact is missing SHA256SUMS.txt")
+    recorded = {}
+    for line_number, line in enumerate(
+        checksum_path.read_text(encoding="ascii").splitlines(), start=1
+    ):
+        if not line.strip():
+            continue
+        parts = line.split("  ", 1)
+        if len(parts) != 2:
+            raise RuntimeError(
+                f"malformed native AFH checksum line {line_number}"
+            )
+        digest, relative = parts
+        relative = relative.replace("\\", "/")
+        if relative in recorded:
+            raise RuntimeError(f"duplicate native AFH checksum path: {relative}")
+        recorded[relative] = digest.lower()
+
+    verified = []
+    for relative in required_relative_paths:
+        path = artifact_root / Path(relative)
+        if not path.is_file():
+            raise RuntimeError(f"native AFH artifact is missing required file: {relative}")
+        expected = recorded.get(relative.replace("\\", "/"))
+        if expected is None:
+            raise RuntimeError(f"native AFH checksum manifest omits: {relative}")
+        actual = hashlib.sha256(path.read_bytes()).hexdigest()
+        if actual != expected:
+            raise RuntimeError(
+                f"native AFH SHA-256 mismatch for {relative}: "
+                f"expected {expected}, got {actual}"
+            )
+        verified.append(relative.replace("\\", "/"))
+    return verified
+
+
+def _native_validation_gate(artifact_root: Path) -> dict:
+    """Require the complete, provenance-pinned native AFH-8 artifact.
+
+    The private runner artifact has this layout:
+      native/afh_v6_xe*_eight_response_native.csv
+      native/native_metadata.txt
+      native-comparison.json
+      run_manifest.json
+      SHA256SUMS.txt
+    """
+    comparison_path = artifact_root / "native-comparison.json"
+    run_manifest_path = artifact_root / "run_manifest.json"
+    native_data_dir = (
+        artifact_root / "native"
+        if (artifact_root / "native").is_dir()
+        else artifact_root
+    )
+    metadata_path = native_data_dir / "native_metadata.txt"
     if not comparison_path.is_file():
         raise RuntimeError(
             "native AFH comparison manifest is missing; do not use raw native CSVs "
             "before the 16,807-row pointwise comparison passes"
         )
-    comparison = json.loads(comparison_path.read_text(encoding="utf-8"))
-    if (
-        comparison.get("status") != "PASS"
-        or comparison.get("native_afh_validated") is not True
-        or comparison.get("rows_compared") != 16807
-    ):
-        raise RuntimeError(
-            "native AFH gate is not closed: "
-            f"status={comparison.get('status')}, "
-            f"native_afh_validated={comparison.get('native_afh_validated')}, "
-            f"rows_compared={comparison.get('rows_compared')}"
+    if not run_manifest_path.is_file():
+        raise RuntimeError("native AFH run_manifest.json is missing")
+    if not metadata_path.is_file():
+        raise RuntimeError("native AFH native_metadata.txt is missing")
+
+    comparison = json.loads(comparison_path.read_text(encoding="utf-8-sig"))
+    manifest = json.loads(run_manifest_path.read_text(encoding="utf-8-sig"))
+    expected_isotopes = list(ISOTOPES)
+    expected_response_names = set(NATIVE_RESPONSE_INDEX_MAP)
+    failures = []
+
+    if comparison.get("status") != "PASS":
+        failures.append(f"comparison status={comparison.get('status')}")
+    if comparison.get("native_afh_validated") is not True:
+        failures.append("native_afh_validated is not true")
+    if comparison.get("rows_compared") != NATIVE_EXPECTED_ROWS:
+        failures.append(f"rows_compared={comparison.get('rows_compared')}")
+    if comparison.get("expected_rows") != NATIVE_EXPECTED_ROWS:
+        failures.append(f"expected_rows={comparison.get('expected_rows')}")
+    if comparison.get("python_rows") != NATIVE_EXPECTED_ROWS:
+        failures.append(f"python_rows={comparison.get('python_rows')}")
+    if comparison.get("native_rows") != NATIVE_EXPECTED_ROWS:
+        failures.append(f"native_rows={comparison.get('native_rows')}")
+    if comparison.get("isotopes") != expected_isotopes:
+        failures.append(f"isotopes={comparison.get('isotopes')}")
+    if comparison.get("expected_points_per_isotope") != 2401:
+        failures.append(
+            f"expected_points_per_isotope="
+            f"{comparison.get('expected_points_per_isotope')}"
         )
-    if metadata_path.is_file():
-        metadata = metadata_path.read_text(encoding="utf-8")
+    if comparison.get("failures") != []:
+        failures.append("comparison failures list is not empty")
+
+    max_differences = comparison.get("max_differences")
+    if not isinstance(max_differences, dict) or set(max_differences) != expected_response_names:
+        failures.append("comparison does not contain all eight AFH response channels")
     else:
-        metadata = ""
-    return {"comparison": comparison, "native_metadata": metadata}
+        for name, metrics in max_differences.items():
+            try:
+                max_abs = float(metrics["max_abs"])
+                max_rel = float(metrics["max_rel"])
+            except (KeyError, TypeError, ValueError):
+                failures.append(f"invalid comparison maxima for {name}")
+                continue
+            if not math.isfinite(max_abs) or not math.isfinite(max_rel):
+                failures.append(f"non-finite comparison maxima for {name}")
+            elif max_abs < 0.0 or max_rel < 0.0:
+                failures.append(f"negative comparison maxima for {name}")
+
+    for field, maximum in (
+        ("rtol", 5.0e-7),
+        ("atol", 2.0e-12),
+        ("imaginary_atol", 2.0e-12),
+    ):
+        try:
+            value = float(comparison[field])
+        except (KeyError, TypeError, ValueError):
+            failures.append(f"missing/invalid comparison tolerance {field}")
+            continue
+        if not math.isfinite(value) or value > maximum:
+            failures.append(f"comparison tolerance {field}={value} exceeds {maximum}")
+
+    expected_q_grid = {
+        "points": 2401,
+        "q_min_GeV": 0.0,
+        "q_max_GeV": 0.6,
+        "step_GeV": 0.00025,
+    }
+    expected_manifest = {
+        "repository": NATIVE_AFH_REPOSITORY,
+        "source_commit": NATIVE_AFH_SOURCE_COMMIT,
+        "native_package": "AFH DMFormFactor v6.0",
+        "isotopes": expected_isotopes,
+        "response_indices": NATIVE_RESPONSE_INDEX_MAP,
+    }
+    for field, expected in expected_manifest.items():
+        if manifest.get(field) != expected:
+            failures.append(f"run manifest {field} mismatch")
+    q_grid = manifest.get("q_grid")
+    if not isinstance(q_grid, dict):
+        failures.append("run manifest q_grid is missing")
+    else:
+        for field, expected in expected_q_grid.items():
+            try:
+                actual = float(q_grid[field])
+            except (KeyError, TypeError, ValueError):
+                failures.append(f"run manifest q_grid.{field} is missing/invalid")
+                continue
+            if not math.isclose(actual, expected, rel_tol=0.0, abs_tol=1.0e-14):
+                failures.append(
+                    f"run manifest q_grid.{field}={actual} != {expected}"
+                )
+
+    for field in ("wolfram_version", "python_version"):
+        if not isinstance(manifest.get(field), str) or not manifest[field].strip():
+            failures.append(f"run manifest {field} is missing")
+    try:
+        if int(manifest.get("control_run_id", 0)) <= 0:
+            failures.append("run manifest control_run_id is invalid")
+        if int(manifest.get("control_run_attempt", 0)) < 1:
+            failures.append("run manifest control_run_attempt is invalid")
+    except (TypeError, ValueError):
+        failures.append("run manifest control run identity is invalid")
+
+    manifest_comparison = manifest.get("comparison")
+    if not isinstance(manifest_comparison, dict):
+        failures.append("run manifest comparison record is missing")
+    else:
+        for field in ("status", "native_afh_validated", "rows_compared"):
+            if manifest_comparison.get(field) != comparison.get(field):
+                failures.append(
+                    f"run manifest comparison.{field} disagrees with comparison file"
+                )
+
+    if failures:
+        raise RuntimeError(
+            "native AFH provenance gate is not closed: " + "; ".join(failures)
+        )
+
+    metadata = metadata_path.read_text(encoding="utf-8-sig")
+    if not metadata.strip():
+        raise RuntimeError("native AFH native_metadata.txt is empty")
+
+    prefix = "native/" if native_data_dir != artifact_root else ""
+    required_paths = [
+        "native-comparison.json",
+        "run_manifest.json",
+        f"{prefix}native_metadata.txt",
+    ] + [
+        f"{prefix}afh_v6_xe{A}_eight_response_native.csv"
+        for A in ISOTOPES
+    ]
+    verified_files = _verify_native_archive_hashes(
+        artifact_root, required_paths
+    )
+    return {
+        "comparison": comparison,
+        "native_metadata": metadata,
+        "native_csv_directory": str(native_data_dir),
+        "provenance": {
+            "repository": manifest["repository"],
+            "source_commit": manifest["source_commit"],
+            "control_run_id": int(manifest["control_run_id"]),
+            "control_run_attempt": int(manifest["control_run_attempt"]),
+            "native_package": manifest["native_package"],
+            "wolfram_version": manifest["wolfram_version"],
+            "python_version": manifest["python_version"],
+            "response_indices": manifest["response_indices"],
+            "q_grid": manifest["q_grid"],
+        },
+        "sha256_verified_files": verified_files,
+    }
 
 
-def load_native_response_bundle(native_dir: Path) -> tuple[dict, dict]:
-    gate = _native_validation_gate(native_dir)
+def load_native_response_bundle(artifact_root: Path) -> tuple[dict, dict]:
+    gate = _native_validation_gate(artifact_root)
+    native_data_dir = Path(gate["native_csv_directory"])
     bundle = {}
+    expected_q = np.linspace(0.0, 0.6, 2401)
     for A in ISOTOPES:
-        path = native_dir / f"afh_v6_xe{A}_eight_response_native.csv"
+        path = native_data_dir / f"afh_v6_xe{A}_eight_response_native.csv"
         if not path.is_file():
             raise FileNotFoundError(f"missing native AFH export: {path}")
         rows = read_csv(path)
         if len(rows) != 2401:
             raise ValueError(f"Xe-{A}: expected 2401 native rows, got {len(rows)}")
+        row_isotopes = np.asarray([int(float(row["A"])) for row in rows], dtype=int)
+        if not np.all(row_isotopes == A):
+            raise ValueError(f"Xe-{A}: native CSV contains rows from another isotope")
         q = np.asarray([float(row["q_GeV"]) for row in rows], dtype=float)
-        if not np.all(np.diff(q) > 0.0) or not np.isclose(q[0], 0.0) or not np.isclose(q[-1], 0.6):
-            raise ValueError(f"Xe-{A}: native q grid is not the canonical [0,0.6] GeV grid")
+        if not np.all(np.isfinite(q)) or not np.allclose(
+            q, expected_q, rtol=0.0, atol=2.0e-12
+        ):
+            raise ValueError(
+                f"Xe-{A}: native q grid is not the canonical 2401-point [0,0.6] GeV grid"
+            )
         physical = {}
-        for name, column in RESPONSE_W_COLUMNS.items():
+        conversion = 4.0 * math.pi / (2.0 * J_BY_A[A] + 1.0)
+        for name, column in NATIVE_RESPONSE_W_COLUMNS.items():
             values = np.asarray([float(row[column]) for row in rows], dtype=float)
             imaginary = np.asarray(
                 [float(row[f"Im_{column}"]) for row in rows], dtype=float
@@ -172,11 +397,9 @@ def load_native_response_bundle(native_dir: Path) -> tuple[dict, dict]:
                 raise ValueError(f"Xe-{A}: non-finite native {name} response")
             if np.max(np.abs(imaginary)) > 2.0e-12:
                 raise ValueError(f"Xe-{A}: native {name} imaginary residual is too large")
-            conversion = 4.0 * math.pi / (2.0 * J_BY_A[A] + 1.0)
             physical[name] = 4.0 * conversion * values
         bundle[A] = {"q": q, "physical": physical}
     return bundle, gate
-
 
 def interpolate_native_response(bundle_entry: dict, q_GeV: float) -> dict:
     q = bundle_entry["q"]
@@ -440,6 +663,8 @@ def fold(
             "longitudinal and transverse nuclear-current contractions excluded"
         ),
         "native_gate": native_gate["comparison"],
+        "native_provenance": native_gate["provenance"],
+        "native_sha256_verified_files": native_gate["sha256_verified_files"],
         "form_factor_prescription": form_factor_prescription,
         "width_scheme": width_scheme,
         "mchi_GeV": mchi,
@@ -461,7 +686,12 @@ def fold(
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--native-dir", type=Path, required=True)
+    parser.add_argument(
+        "--native-dir",
+        type=Path,
+        required=True,
+        help="extracted root of the private native AFH eight-response artifact",
+    )
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--mchi-GeV", type=float, default=MCHI_DEFAULT)
     parser.add_argument("--ms-keV", type=float, required=True)
