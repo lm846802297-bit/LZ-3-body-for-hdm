@@ -131,6 +131,81 @@ def perpendicular_unit(q_vec: np.ndarray) -> np.ndarray:
     return unit / np.linalg.norm(unit)
 
 
+def energy_transfer_matched_internal_momentum(
+    q_vec: np.ndarray,
+    omega_GeV: float,
+    p_perp_GeV: float,
+    m_n: float = M_N_GEV,
+) -> tuple[np.ndarray, float]:
+    """Construct a free on-shell l with E_f-E_i=omega for q_N=q_A.
+
+    With p_i=l-q/2 and p_f=l+q/2, the exact longitudinal component is
+        l_parallel = omega * sqrt(m_N^2 + p_perp^2 + (Q^2-omega^2)/4)
+                    / sqrt(Q^2-omega^2).
+    This is a kinematic free-nucleon construction, not a bound-nucleon
+    momentum distribution or a many-body continuity prescription.
+    """
+    q_vec = np.asarray(q_vec, dtype=float)
+    if q_vec.shape != (3,) or not np.all(np.isfinite(q_vec)):
+        raise ValueError("q_vec must be a finite three-vector")
+    if not math.isfinite(omega_GeV) or not math.isfinite(p_perp_GeV):
+        raise ValueError("energy transfer and transverse momentum must be finite")
+    if omega_GeV < 0.0 or p_perp_GeV < 0.0 or m_n <= 0.0:
+        raise ValueError("invalid energy transfer, transverse momentum, or mass")
+    Q = float(np.linalg.norm(q_vec))
+    if Q <= 0.0 or omega_GeV >= Q:
+        raise ValueError("the transfer must be spacelike with Q > omega")
+    qhat = q_vec / Q
+    e1 = perpendicular_unit(q_vec)
+    l_perp = p_perp_GeV * e1
+    l_parallel = (
+        omega_GeV
+        * math.sqrt(
+            m_n * m_n + p_perp_GeV * p_perp_GeV
+            + 0.25 * (Q * Q - omega_GeV * omega_GeV)
+        )
+        / math.sqrt(Q * Q - omega_GeV * omega_GeV)
+    )
+    return l_perp + l_parallel * qhat, float(l_parallel)
+
+
+def run_energy_transfer_matched_on_shell_scan(
+    q_vec: np.ndarray,
+    omega_GeV: float,
+    *,
+    f1: float = 1.0,
+    f2: float = -0.184,
+    p_perp_values_GeV: tuple[float, ...] = (0.0, 0.05, 0.10, 0.20),
+) -> list[dict]:
+    """Test the exact free on-shell slice q_N^0=omega=q_A^0."""
+    q_vec = np.asarray(q_vec, dtype=float)
+    q_A4 = np.asarray([omega_GeV, *q_vec], dtype=float)
+    rows = []
+    for p_perp in p_perp_values_GeV:
+        l_vec, l_parallel = energy_transfer_matched_internal_momentum(
+            q_vec, omega_GeV, p_perp
+        )
+        current, q_N4, (p_i, p_f) = nucleon_current_matrices(
+            q_vec, l_vec, f1, f2
+        )
+        rows.append({
+            "p_perp_GeV": float(p_perp),
+            "l_parallel_GeV": l_parallel,
+            "qN0_GeV": float(q_N4[0]),
+            "qA0_GeV": float(omega_GeV),
+            "qN0_minus_qA0_GeV": float(q_N4[0] - omega_GeV),
+            "initial_nucleon_energy_GeV": math.sqrt(
+                M_N_GEV * M_N_GEV + float(np.dot(p_i, p_i))
+            ),
+            "final_nucleon_energy_GeV": math.sqrt(
+                M_N_GEV * M_N_GEV + float(np.dot(p_f, p_f))
+            ),
+            "nucleon_Ward_residual_qN": nucleon_ward_residual(q_N4, current),
+            "nucleon_Ward_residual_qA": nucleon_ward_residual(q_A4, current),
+        })
+    return rows
+
+
 def nonrel_state_normalization(
     p_i: np.ndarray, p_f: np.ndarray, m_n: float = M_N_GEV
 ) -> float:
@@ -494,9 +569,13 @@ def run_diagnostic() -> dict:
         "results": results,
         "complete_Pauli_decompositions_at_vN_0p10": pauli_decompositions,
         "finite_width_scenarios": run_finite_width_scenarios(point, q_vec),
+        "energy_transfer_matched_on_shell_scan": (
+            run_energy_transfer_matched_on_shell_scan(q_vec, float(q_a4[0]))
+        ),
         "limitations": [
             "The nucleon is an on-shell static impulse-approximation point with q_N^0=0 and l perpendicular to q.",
             "The physical nuclear transfer has q_A^0=E_R != 0; the q_N^0=0 approximation is not exactly conserved with q_A and its residual is reported separately.",
+            "A separate free on-shell kinematic scan adjusts l_parallel so q_N^0=E_R; it is not a bound-nucleon momentum distribution or a many-body continuity calculation.",
             "AFH matching requires nonrelativistic one-nucleon state normalization 1/(2 sqrt(E_i E_f)); both covariant and normalized projections are reported.",
             "The finite-t F1 and F2 are not supplied; F2/F1=-0.184 is only the zero-momentum flavour-universal anchor.",
             "This is one phase-space point and one nucleon-momentum orientation, not a nuclear many-body response calculation.",
