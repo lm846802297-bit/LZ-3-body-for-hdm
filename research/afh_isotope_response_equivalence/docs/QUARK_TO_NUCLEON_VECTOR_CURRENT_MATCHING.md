@@ -6546,6 +6546,74 @@ spatial-only 的全部 Pauli-product 系数和重构残差。
 计算完整天然氙反冲率。
 
 
+### 34.6 空间 Dirac--Pauli 流的领先算符：对流与磁化两部分
+
+在与 §30.6.1 相同的非相对论外态归一化下，单核子空间矢量流
+的领先项为
+\[
+\boxed{
+\boldsymbol{\mathcal J}_N
+=\frac{F_1^V(t_N)}{m_N}\boldsymbol K_N
++\frac{i[F_1^V(t_N)+F_2^V(t_N)]}{2m_N}
+  (\boldsymbol\sigma_N\times\boldsymbol q_N)
++\mathcal O(p^3/m_N^3).
+}
+\]
+这里
+\(\boldsymbol K_N=(\boldsymbol p_N'+\boldsymbol p_N)/2\)。
+与时间分量的 \(F_1+2F_2\) 组合不同，空间磁化流的 form-factor
+组合是 \(F_1+F_2\)。这两个组合不能混用。
+
+三体振幅的空间收缩为
+\[
+\boxed{
+-\boldsymbol{\mathcal T}_3\cdot\boldsymbol{\mathcal J}_N
+=-\frac{F_1^V}{m_N}\boldsymbol{\mathcal T}_3\cdot\boldsymbol K_N
+-\frac{i(F_1^V+F_2^V)}{2m_N}
+ \boldsymbol\sigma_N\cdot
+ (\boldsymbol q_N\times\boldsymbol{\mathcal T}_3)
++\cdots .
+}
+\]
+因此领先空间流包含两个不同的核算符来源：
+
+1. **对流流** \(F_1\boldsymbol K_N/m_N\)：经过矢量球谐投影，其横向磁多极对应 AFH \(\Delta\) 通道；纵向部分必须与连续性方程和电荷多极一致处理。
+2. **磁化流** \(i(F_1+F_2)(\boldsymbol\sigma_N\times\boldsymbol q_N)/(2m_N)\)：它满足
+   \[
+   \boldsymbol q_N\cdot
+   (\boldsymbol\sigma_N\times\boldsymbol q_N)=0,
+   \]
+   因而领先项是横向自旋流。对弹性、宇称和时间反演选择规则允许的多极，相关 AFH 通道为 \(\Sigma'\)；不能把它误记成纵向 \(\Sigma''\)。
+3. **干涉项**：对流与磁化流的相干收缩产生 AFH \(W_{\Sigma'\Delta}\) 混合响应，必须保留其符号。
+
+这里的 \(\Sigma'\) 是空间磁化流的横向自旋响应；它与时间分量产生的
+\(\Phi''\) 自旋—轨道响应是两个不同算符。前者的领先核子 form-factor
+组合为 \(F_1+F_2\)，后者为 \(F_1+2F_2\)。即使两者都含有核子自旋，
+也不能将 \(W_{\Sigma'}\) 与 \(W_{\Phi''}\) 合并或互相替代。
+
+**与三体流的接口。** \(\boldsymbol{\mathcal T}_3\) 必须保留完整的
+四分量、两张辐射图及其干涉。不能把它替换成弹性散射的
+\(\boldsymbol v^\perp\)，也不能在三体过程中擅自使用
+\(\boldsymbol q\cdot\boldsymbol v^\perp=0\)。在固定核反冲下，只有完成
+三体相空间积分、DM 自旋平均和 AFH 多极投影，才能得到
+\[
+R_\Delta^{(3)}W_\Delta+
+R_{\Sigma'}^{(3)}W_{\Sigma'}+
+R_{\Sigma'\Delta}^{(3)}W_{\Sigma'\Delta}.
+\]
+这些 \(R_i^{(3)}\) 是三体粒子物理系数，不能从单点 Pauli 系数直接读取。
+
+PR #58 已在低动量极限用精确 Dirac--Pauli 旋量回归检查
+\(\boldsymbol K_N\) 对流项和
+\(\boldsymbol\sigma_N\times\boldsymbol q_N\) 磁化项，并在一个三体参考点
+输出 full/charge/spatial 的全部 Pauli-product 矩阵。PR #51 的 Python
+\(\Sigma'\)、\(\Delta\)、\(\Sigma'\Delta\) 响应网格通过了内部有限性、
+正定性和 Cauchy--Schwarz 检查，但在 native Wolfram indices
+\(3,6,8\) 的逐点对照完成前仍是 provisional。因而目前已建立领先
+算符的理论接口，但尚未得到完整三体 \(R_i^{(3)}W_i\) 反冲率。
+
+
+
 
 ## 35. 推导所依据的文献和代码来源
 
