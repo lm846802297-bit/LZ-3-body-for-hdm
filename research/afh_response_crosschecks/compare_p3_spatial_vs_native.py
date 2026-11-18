@@ -77,10 +77,13 @@ def run(p3_csv: Path, p3_metadata: Path, native_dir: Path, native_metadata: Path
     p3meta = json.loads(p3_metadata.read_text(encoding="utf-8-sig"))
     nmeta = parse_kv(native_metadata)
     manifest = json.loads(native_manifest.read_text(encoding="utf-8-sig"))
-    expected_commit = "aa493b2b76727da2fd51609fe87c647910f7e456"
+    expected_commits = {
+        "e1e9c85530a7d609561b34e2c2df5ab36e5c5b89",
+        "aa493b2b76727da2fd51609fe87c647910f7e456",
+    }
     if manifest.get("repository") != "lm846802297-bit/LZ-3-body-for-hdm":
         raise ValueError("native manifest repository mismatch")
-    if manifest.get("source_commit") != expected_commit:
+    if manifest.get("source_commit") not in expected_commits:
         raise ValueError(f"native source commit mismatch: {manifest.get('source_commit')}")
     if manifest.get("native_package") != "AFH DMFormFactor v6.0":
         raise ValueError("native package identity mismatch")
