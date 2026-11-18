@@ -1,0 +1,70 @@
+name: Xe-131 fixed-benchmark absolute charge-sector differential cross section
+
+on:
+  pull_request:
+    paths:
+      - "research/three_body_full_current_nucleon_match/xe131_fixed_benchmark_absolute_dsigma.py"
+      - "research/three_body_full_current_nucleon_match/test_xe131_fixed_benchmark_absolute_dsigma.py"
+      - "research/three_body_full_current_nucleon_match/paper_plot_style.py"
+      - "research/three_body_full_current_nucleon_match/build_xe131_full_recoil_charge_scan.py"
+      - "research/three_body_full_current_nucleon_match/xe131_fixed_speed_charge_dsigma.py"
+      - "research/three_body_full_current_nucleon_match/three_body_phase_space_tensor.py"
+      - "research/three_body_full_current_nucleon_match/nucleon_vector_form_factors.py"
+      - "research/three_body_spin_resolved_current/**"
+      - "research/vector_current_response_audit/**"
+      - ".github/workflows/xe131-fixed-benchmark-absolute-dsigma.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: xe131-absolute-dsigma-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  absolute-dsigma:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout provenance-pinned native Xe-131 AFH response
+        uses: actions/checkout@v4
+        with:
+          repository: lm846802297-bit/LZ-3-body-for-hdm
+          ref: e6d9dee3527cab200ee6b21198d577b987282fac
+          path: afh-native
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install numerical and plotting dependencies
+        run: python -m pip install numpy==2.3.5 scipy==1.17.0 matplotlib==3.10.8
+      - name: Compile calculation, plot and regression modules
+        run: |
+          python -m py_compile \
+            research/three_body_full_current_nucleon_match/xe131_fixed_benchmark_absolute_dsigma.py \
+            research/three_body_full_current_nucleon_match/test_xe131_fixed_benchmark_absolute_dsigma.py \
+            research/three_body_full_current_nucleon_match/paper_plot_style.py \
+            research/three_body_full_current_nucleon_match/build_xe131_full_recoil_charge_scan.py
+      - name: Run absolute cross-section benchmark tests
+        run: |
+          python -m unittest \
+            research.three_body_full_current_nucleon_match.test_xe131_fixed_benchmark_absolute_dsigma -v
+      - name: Rebuild publication-style charge-kernel figures
+        run: |
+          python research/three_body_full_current_nucleon_match/build_xe131_full_recoil_charge_scan.py \
+            --csv research/three_body_full_current_nucleon_match/results/2026-11-18/xe131_charge_kernel_full_recoil_scan.csv \
+            --outdir /tmp/xe131-absolute-dsigma
+      - name: Compute fixed Delta m=450 keV absolute dSigma/dER curve
+        run: |
+          python research/three_body_full_current_nucleon_match/xe131_fixed_benchmark_absolute_dsigma.py \
+            --afh-csv afh-native/research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_native.csv \
+            --outdir /tmp/xe131-absolute-dsigma
+      - name: Upload paper figures, absolute spectrum, and full numerical tables
+        uses: actions/upload-artifact@v4
+        with:
+          name: xe131-fixed-benchmark-absolute-dsigma-and-paper-figures
+          path: /tmp/xe131-absolute-dsigma
+          if-no-files-found: error
+          retention-days: 90
