@@ -129,7 +129,7 @@ The identity is independently checked by the point-nucleus current
 The implementation now reports the continuity-reduced contraction and its
 relative residual alongside the direct point-nucleus contraction.
 
-For the 12 integrated benchmark/width rows in workflow 44262243726,
+For the 12 integrated benchmark/width rows in workflow 44262472963,
 \(\omega/Q_A\) is \(9.05692\times10^{-4}\) at 200 keV and
 \(1.04646\times10^{-3}\) at 267 keV, using the canonical Xe-131 bare-nucleus
 mass \(m_A=121.90971983538435\) GeV. The continuity-adjusted Coulomb weight
@@ -285,14 +285,23 @@ current.
 
 ### P2 — Perform the AFH multipole projection
 
-Project the charge and spatial current into the appropriate Coulomb,
-longitudinal, transverse-electric, and transverse-magnetic multipoles.
-Derive the particle-side bilinears from the full integrated
-\(L_{\mu\nu}^{(3)}\), including any allowed off-diagonal/helicity structures.
+**Status: leading-static particle-side coefficients derived and implemented;
+full projection validation remains open.**
 
-The result must identify exactly which AFH nuclear responses occur and
-which vanish by a demonstrated symmetry, continuity equation, or the
-declared order of the NR expansion.
+Section 3.2 gives the unpolarized-target symmetry reduction and the six
+candidate nonzero leading-static coefficients
+\(C_M,C_{\Phi''},C_{M\Phi''},C_\Delta,C_{\Sigma'},C_{\Sigma'\Delta}\).
+The coefficient extractor and provisional 84-row contraction exercise
+these terms, including the signed \(\Sigma'\)-\(\Delta\) interference.
+The \(\Sigma''\) and \(\widetilde\Phi'\) zeros are restricted to the stated
+one-body vector-current order.
+
+The remaining P2 work is to derive the explicit Coulomb, longitudinal,
+transverse-electric, and transverse-magnetic nuclear multipole matrix
+elements with the same AFH phase and normalization conventions, and to
+demonstrate that the symmetry reduction is consistent with the actual
+many-body response definitions. The provisional Python response archive
+is not a substitute for native seven-isotope response validation.
 
 ### P3 — Validate at the tensor level
 

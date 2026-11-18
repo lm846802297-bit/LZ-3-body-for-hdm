@@ -65,7 +65,7 @@ linear-interpolation result as a numerical diagnostic. Ratios such as
 \(W_{\Phi''}/W_M\) are formed only after the three absolute responses have
 been interpolated.
 
-## 3. Charge-sector contraction
+## 3. Coulomb-sector contraction
 
 The phase-space calculation supplies the full q-aligned tensor. For a
 conserved one-body nuclear vector current, use

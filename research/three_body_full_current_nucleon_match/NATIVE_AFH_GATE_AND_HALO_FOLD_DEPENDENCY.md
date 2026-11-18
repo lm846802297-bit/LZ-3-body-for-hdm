@@ -143,7 +143,7 @@ is retained. The common integrated \(L_C^{(3)}\) cancels in this ratio.
 
 ## 6. Latest independent workflow validations
 
-- PR #58 full-current run 44262243726: both jobs succeeded. The full-current
+- PR #58 full-current run 44262472963: both jobs succeeded. The full-current
   job passed 69 regression tests plus 11 native Coulomb-engine tests. It
   generated 12 integrated tensor rows; the independent Dirac-trace residual
   is \(1.59813\times10^{-9}\), minimum Gram eigenvalue
@@ -156,7 +156,7 @@ is retained. The common integrated \(L_C^{(3)}\) cancels in this ratio.
 - Provisional seven-isotope contraction: 84 rows, all total kernels positive;
   maximum spatial/Coulomb ratio \(7.09596\times10^{-9}\). This is explicitly
   \`PROVISIONAL_AFH_CONTRACTION_PASS\`, not native validation.
-- Component-wise phase-space convergence: run 44262243726 passed all nine
+- Component-wise phase-space convergence: run 44262472963 passed all nine
   stress scans, comparing all 256 complex Gram entries, all 16 complex
   Lorentz-tensor entries, and point-nucleus contractions. The worst final
   Frobenius difference is \(1.50126\times10^{-8}\), active-component
