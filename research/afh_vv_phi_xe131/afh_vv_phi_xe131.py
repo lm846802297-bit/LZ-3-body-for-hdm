@@ -182,7 +182,7 @@ def load_minima(path):
 def write_csv(path, fields, rows):
     path.parent.mkdir(parents=True,exist_ok=True)
     with path.open('w',newline='',encoding='utf-8') as f:
-        w=csv.DictWriter(f,fieldnames=fields); w.writeheader(); w.writerows(rows)
+        w=csv.DictWriter(f,fieldnames=fields,lineterminator='\n'); w.writeheader(); w.writerows(rows)
 
 
 def run(outdir: Path, matrix_path: Path, minima_path: Path, baseline_path: Path|None, dq: float):
@@ -281,7 +281,7 @@ def run(outdir: Path, matrix_path: Path, minima_path: Path, baseline_path: Path|
         if native_metadata.exists():
             meta['outputs'][str(native_metadata.relative_to(outdir)).replace('\\','/')]={'sha256':sha256(native_metadata)}
     meta_path=outdir/'run_manifest.json'
-    meta_path.write_text(json.dumps(meta,indent=2,sort_keys=True)+'\n',encoding='utf-8')
+    meta_path.write_bytes((json.dumps(meta,indent=2,sort_keys=True)+'\n').encode('utf-8'))
     return meta
 
 

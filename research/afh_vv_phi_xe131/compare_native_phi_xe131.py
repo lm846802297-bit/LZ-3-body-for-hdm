@@ -42,7 +42,7 @@ def main():
       'python_csv_sha256':sha(a.python_csv),'mathematica_csv_sha256':sha(a.mathematica_csv),
       'responses':details,'interpolation':'none; exact q-grid match required'}
     a.output.parent.mkdir(parents=True,exist_ok=True)
-    a.output.write_text(json.dumps(result,indent=2,sort_keys=True)+'\n',encoding='utf-8')
+    a.output.write_bytes((json.dumps(result,indent=2,sort_keys=True)+'\n').encode('utf-8'))
     print(json.dumps(result,indent=2))
     if not passed: raise SystemExit(1)
 if __name__=='__main__': main()
