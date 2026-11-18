@@ -53,6 +53,7 @@ def extract_leptonic_weights(L: np.ndarray, *, hermiticity_tolerance=1e-10) -> d
     helicity_complex = -2j * (L[1, 2] - L[2, 1])
     helicity_odd = float(np.real(helicity_complex))
     helicity_imaginary_residual = float(abs(np.imag(helicity_complex)))
+    helicity_odd_over_sum = abs(helicity_odd) / max(abs(transverse_sum), 1.0e-300)
 
     return {
         "charge_L00": charge,
