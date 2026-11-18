@@ -64,6 +64,7 @@ def extract_leptonic_weights(L: np.ndarray, *, hermiticity_tolerance=1e-10) -> d
         # Backward-compatible explicit name retained by the regression suite.
         "transverse_helicity_odd_minus_2i_L12_minus_L21": helicity_odd,
         "generic_transverse_helicity_odd_imaginary_residual": helicity_imaginary_residual,
+        "transverse_helicity_odd_over_transverse_sum": helicity_odd_over_sum,
         "generic_transverse_helicity_odd_over_transverse_sum": (
             abs(helicity_odd) / max(abs(transverse_sum), 1.0e-300)
         ),
