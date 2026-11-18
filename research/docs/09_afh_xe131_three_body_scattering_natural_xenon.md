@@ -5120,7 +5120,7 @@ smearing, a NEST S1/S2 response, a background model, or a profile likelihood.
 
 ## 15. Phase III update: 完整三体反冲率、AFH 响应矩阵与数值验收规范（2026-11-18）
 
-本节把完整三体反冲率从结构公式推进到可执行的归一化和验收规范。完整推导归档见 companion document 的 §§38–44。本节固定主研究报告中的计算口径，不把尚未完成的数值任务写成已完成结果。
+本节把完整三体反冲率从结构公式推进到可执行的归一化和验收规范。完整推导归档已迁入 PR #51 的唯一主讨论档案 `research/afh_isotope_response_equivalence/docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md`（§§27–44）。本节固定主研究报告中的计算口径，不把尚未完成的数值任务写成已完成结果。
 
 ### 15.1 从 \(M\)-only 到完整三体反冲率
 
@@ -5179,7 +5179,7 @@ t_A=-2m_AE_R.
 \[
 \delta\!\left(E_R-\sqrt{m_A^2+Q_A^2}+m_A\right).
 \]
-只有在 \(E_R\ll m_A\) 时才可用 \(\delta(E_R-Q_A^2/(2m_A))\)。从 \(Q_A\) 变量转换时必须保留 Jacobian。完整 \(d\Phi_3\) 包含末态暗物质、核反冲和辐射标量；\((W^2,z,\phi_*)\) 的边界及 Jacobian 以正文 §28 和 companion document §41 为准。
+只有在 \(E_R\ll m_A\) 时才可用 \(\delta(E_R-Q_A^2/(2m_A))\)。从 \(Q_A\) 变量转换时必须保留 Jacobian。完整 \(d\Phi_3\) 包含末态暗物质、核反冲和辐射标量；\((W^2,z,\phi_*)\) 的边界及 Jacobian 以主讨论档案 §§28、41 为准。
 
 ### 15.3 三体动力学系数与 AFH 核响应的分工
 
