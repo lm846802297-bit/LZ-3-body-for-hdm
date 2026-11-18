@@ -124,9 +124,9 @@ class P3PointwiseCovariantQFrameAFHTests(unittest.TestCase):
         direct_lab = multipoles.afh_eq107_spatial_coefficients_from_amplitudes(
             channels_lab, self.qA, f1=self.f1, f2=self.f2, mN_GeV=self.mN
         )
-        tensor_lab = multipoles.extract_afh_vector_coefficients(
-            np.pad(L_lab, ((1, 0), (1, 0))),
-            self.qmag,
+        tensor_lab = multipoles.extract_afh_spatial_coefficients_from_tensor(
+            L_lab,
+            self.qA,
             f1=self.f1,
             f2=self.f2,
             mN_GeV=self.mN,
@@ -143,9 +143,9 @@ class P3PointwiseCovariantQFrameAFHTests(unittest.TestCase):
         direct_rot = multipoles.afh_eq107_spatial_coefficients_from_amplitudes(
             channels_rot, q_rot, f1=self.f1, f2=self.f2, mN_GeV=self.mN
         )
-        tensor_rot = multipoles.extract_afh_vector_coefficients(
-            np.pad(L_rot, ((1, 0), (1, 0))),
-            self.qmag,
+        tensor_rot = multipoles.extract_afh_spatial_coefficients_from_tensor(
+            L_rot,
+            q_rot,
             f1=self.f1,
             f2=self.f2,
             mN_GeV=self.mN,
@@ -168,14 +168,22 @@ class P3PointwiseCovariantQFrameAFHTests(unittest.TestCase):
         coherent, _, _ = full.full_amplitude_operator(total, self.j_nr_norm)
         before_amp, _, _ = full.full_amplitude_operator(before, self.j_nr_norm)
         after_amp, _, _ = full.full_amplitude_operator(after, self.j_nr_norm)
-        interference = coherent - before_amp - after_amp
-        self.assertGreater(float(np.linalg.norm(interference)), 0.0)
-        self.assertLess(
-            float(np.linalg.norm(
-                coherent - (before_amp + after_amp + interference)
-            )),
-            1.0e-13 * max(float(np.linalg.norm(coherent)), 1.0),
+        amplitude_sum_residual = float(np.linalg.norm(
+            coherent - before_amp - after_amp
+        )) / max(float(np.linalg.norm(coherent)), 1.0e-300)
+        self.assertLess(amplitude_sum_residual, 2.0e-13)
+        interference = (
+            float(np.linalg.norm(coherent) ** 2)
+            - float(np.linalg.norm(before_amp) ** 2)
+            - float(np.linalg.norm(after_amp) ** 2)
         )
+        scale = max(
+            float(np.linalg.norm(coherent) ** 2),
+            float(np.linalg.norm(before_amp) ** 2)
+            + float(np.linalg.norm(after_amp) ** 2),
+            1.0e-300,
+        )
+        self.assertGreater(abs(interference), 1.0e-14 * scale)
 
 
 if __name__ == "__main__":

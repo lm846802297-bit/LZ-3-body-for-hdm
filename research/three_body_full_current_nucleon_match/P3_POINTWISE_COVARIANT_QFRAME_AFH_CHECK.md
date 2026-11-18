@@ -95,3 +95,23 @@ The test result may be labelled **P3-A pointwise spinor/frame consistency**.
 It must not be labelled full P3 PASS, full-current natural-xenon rate, or
 validated bound-nucleus current. P3-B and the finite-\(t_N\) natural-xenon
 halo fold remain separate gates.
+
+
+### Review correction: arbitrary-frame AFH projection and diagram interference
+
+The lab-frame tensor comparison uses the frame-independent transverse
+projector
+\[
+P_{ij}=\delta_{ij}-\hat q_i\hat q_j
+\]
+through extract_afh_spatial_coefficients_from_tensor. The q-aligned
+shortcut \(L_{11}+L_{22}\) is used only after q rotation. The two
+scalar-emission diagrams are checked for coherent addition at amplitude
+level, while their physical interference is evaluated from
+\[
+2\,\mathrm{Re}\,\mathrm{Tr}(A_{\rm before}A_{\rm after}^\dagger)
+=\|A_{\rm before}+A_{\rm after}\|_F^2
+-\|A_{\rm before}\|_F^2-\|A_{\rm after}\|_F^2.
+\]
+A difference of amplitudes would vanish by linearity and is not an
+interference observable.

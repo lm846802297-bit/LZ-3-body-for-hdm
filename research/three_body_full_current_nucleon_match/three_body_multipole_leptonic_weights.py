@@ -228,6 +228,59 @@ def afh_eq107_spatial_coefficients_from_amplitudes(
     }
 
 
+def extract_afh_spatial_coefficients_from_tensor(
+    L_spatial: np.ndarray,
+    qA_vec_GeV: np.ndarray,
+    *,
+    f1: float = DEFAULT_F1,
+    f2: float = DEFAULT_F2,
+    mN_GeV: float = DEFAULT_MN_GEV,
+) -> dict:
+    """AFH Eq. (107) spatial coefficients for a tensor in any spatial frame.
+
+    The q-aligned extractor uses L_11+L_22. This routine instead evaluates
+    the transverse projector P_ij=delta_ij-qhat_i*qhat_j, so it is valid in
+    the lab frame as well as in the q-aligned frame.
+    """
+    Ls = np.asarray(L_spatial, dtype=complex)
+    qA = np.asarray(qA_vec_GeV, dtype=float)
+    if Ls.shape != (3, 3) or not np.all(np.isfinite(Ls)):
+        raise ValueError("L_spatial must be a finite 3x3 tensor")
+    if qA.shape != (3,) or not np.all(np.isfinite(qA)):
+        raise ValueError("qA_vec_GeV must be a finite three-vector")
+    if not all(np.isfinite(x) for x in (f1, f2, mN_GeV)) or mN_GeV <= 0.0:
+        raise ValueError("form factors must be finite and mN_GeV positive")
+    hermiticity = float(
+        np.linalg.norm(Ls - Ls.conj().T)
+        / max(float(np.linalg.norm(Ls)), 1.0e-300)
+    )
+    if hermiticity > 1.0e-10:
+        raise ValueError(f"spatial tensor is not Hermitian: {hermiticity:.6g}")
+    Q = float(np.linalg.norm(qA))
+    if Q <= 0.0:
+        raise ValueError("qA_vec_GeV must be nonzero")
+    qhat = qA / Q
+    projector = np.eye(3) - np.outer(qhat, qhat)
+    L_T = float(np.real(np.trace(projector @ Ls)))
+    if L_T < -1.0e-10 * max(float(np.linalg.norm(Ls)), 1.0):
+        raise ValueError(f"negative transverse tensor trace: {L_T:.6g}")
+    L_T = max(0.0, L_T)
+    Q2 = Q * Q
+    return {
+        "C_Delta": float(f1 * f1 * Q2 * L_T / (2.0 * mN_GeV * mN_GeV)),
+        "C_SigmaPrime": float(
+            (f1 + f2) ** 2 * Q2 * L_T / (8.0 * mN_GeV * mN_GeV)
+        ),
+        "C_SigmaPrimeDelta": float(
+            -f1 * (f1 + f2) * Q2 * L_T / (2.0 * mN_GeV * mN_GeV)
+        ),
+        "L_T_transverse_projector_trace": L_T,
+        "qA_GeV": qA.tolist(),
+        "q_AFH_GeV": (-qA).tolist(),
+        "hermiticity_relative_residual": hermiticity,
+    }
+
+
 def extract_afh_vector_coefficients(
     L: np.ndarray,
     qA_GeV: float,

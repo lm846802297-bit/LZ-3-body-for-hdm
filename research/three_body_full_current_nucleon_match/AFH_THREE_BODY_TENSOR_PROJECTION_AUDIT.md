@@ -545,3 +545,14 @@ particle-side comparison) at the reference point. P3-B remains open:
 the AFH nuclear OBDME/multipole contraction must agree with the direct
 nuclear-current contraction at the same point. No full natural-xenon
 spectrum or halo-folded rate is promoted by this test.
+
+
+## 12. P3-A arbitrary-frame projector and coherent-interference correction
+
+The P3-A lab-frame tensor comparison now uses the full transverse projector
+\(P_{ij}=\delta_{ij}-\hat q_i\hat q_j\). The q-aligned expression
+\(L_{11}+L_{22}\) is used only after the q-frame rotation. The two
+scalar-emission diagrams are checked to add coherently at amplitude level;
+their physical interference is the cross term in the squared amplitude,
+not a difference of amplitudes. This avoids a false frame-dependent
+coefficient check and a trivial zero from linear amplitude addition.
