@@ -195,6 +195,40 @@ class FullCurrentNucleonTests(unittest.TestCase):
         )
         self.assertGreater(pole["coherent_two_diagram_interference_norm"], 0.0)
 
+    def test_arbitrary_internal_momentum_direction_preserves_free_nucleon_Ward_identity(self):
+        direction = (self.q / np.linalg.norm(self.q) + self.lhat) / math.sqrt(2.0)
+        l_vec = 0.10 * fm.M_N_GEV * direction
+        jn, qn, _ = fm.nucleon_current_matrices(
+            self.q, l_vec, 1.0, -0.184
+        )
+        self.assertGreater(abs(float(qn[0])), 1e-8)
+        self.assertLess(fm.nucleon_ward_residual(qn, jn), 2e-12)
+
+    def test_finite_width_scan_covers_internal_momentum_orientations(self):
+        for row in self.width_results:
+            scan = row["internal_nucleon_orientation_scan"]
+            self.assertEqual(len(scan), 8)
+            labels = {
+                (item["vN"], item["internal_momentum_direction"])
+                for item in scan
+            }
+            self.assertEqual(
+                labels,
+                {
+                    (v, direction)
+                    for v in (0.10, 0.30)
+                    for direction in (
+                        "parallel_q", "perpendicular_e1",
+                        "perpendicular_e2", "mixed_45deg",
+                    )
+                },
+            )
+            for item in scan:
+                self.assertLess(item["nucleon_Ward_residual_qN"], 2e-12)
+                self.assertGreaterEqual(
+                    item["spatial_over_charge_operator_norm"], 0.0
+                )
+
     def test_DM_spin_trace_still_matches_PR53_tensor(self):
         ref = fm.dm.vca.dm_current_tensor(
             self.point, dm.MCHI_GEV, dm.MCHI_GEV + 362.0e-6, 0.0
