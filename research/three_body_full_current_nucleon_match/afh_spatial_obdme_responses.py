@@ -533,6 +533,7 @@ def generate_grid(
             "J_A": J_A,
             "matrix_entries": len(rows),
             "matrix_sha256": sha256_file(matrix_path),
+            "common_matrix_normalization": common_normalization,
             "nonzero_abnormal_rank_count": len({
                 row["rank"] for row in rows
                 if row["isospin"] == 0 and row["rank"] > 0
