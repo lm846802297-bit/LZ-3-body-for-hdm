@@ -4727,7 +4727,7 @@ AFH v6.0 default-density 数据覆盖
 \[
 A=128,129,130,131,132,134,136.
 \]
-每个同位素 2,401 点，总计 16,807 个 \(M\)-response 网格点；动量区间为 \(0\)–\(0.6\) GeV，步长 \(0.25\) MeV。**证据类型：** 这七个同位素网格是依据官方 AFH v6.0 源定义与 default-density OBDME 的 Python source translation，并非七次独立 native Wolfram 执行；对应 metadata 将 native Mathematica re-execution 标记为 pending。P.1 的 Xe-131 native (M,\Phi'',M\Phi'') 导出是独立的原生计算，不应据此把 AFH-7 的全部七个同位素网格升级为 native-validated。该七同位素集合覆盖天然氙原子丰度 \(0.998158\)；Xe-124 和 Xe-126 没有纳入 AFH v6.0 default-density 结果，不能将 AFH-7 称为完整 AFH-9。原生 AFH v6.0 包源 SHA-256 为 `dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372`；七同位素网格与等价性审计的具体文件哈希见对应 results manifest。
+每个同位素 2,401 点，总计 16,807 个 \(M\)-response 网格点；动量区间为 \(0\)–\(0.6\) GeV，步长 \(0.25\) MeV。**证据类型：** 这七个同位素网格是依据官方 AFH v6.0 源定义与 default-density OBDME 的 Python source translation，并非七次独立 native Wolfram 执行；对应 metadata 将 native Mathematica re-execution 标记为 pending。P.1 的 Xe-131 native \(M,\Phi'',M\Phi''\) 导出是独立的原生计算，不应据此把 AFH-7 的全部七个同位素网格升级为 native-validated。该七同位素集合覆盖天然氙原子丰度 \(0.998158\)；Xe-124 和 Xe-126 没有纳入 AFH v6.0 default-density 结果，不能将 AFH-7 称为完整 AFH-9。原生 AFH v6.0 包源 SHA-256 为 dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372；七同位素网格与等价性审计的具体文件哈希见对应 results manifest。
 
 AFH raw isoscalar package 的 \(q=0\) 值与 \(A^2/4\) 的有限小数偏差如下。该等价性审计对每个同位素单独作 \(q=0\) 归一化，使物理等质子、等中子响应满足 \(R_A^{\rm phys}(0)=A^2\)；factor four 与小的有限精度归一化修正是两个不同步骤。
 
