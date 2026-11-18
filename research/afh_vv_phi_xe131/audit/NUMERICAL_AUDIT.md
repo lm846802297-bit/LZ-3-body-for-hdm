@@ -77,16 +77,17 @@ expansion of Hoferichter, Menéndez, and Schwenk, PRD 102, 074018 (2020),
 Eq. (41), and matches its spin-orbit term to the AFH \(\Phi''\) operator
 of Anand, Fitzpatrick, and Haxton, PRC 89, 065501 (2014), Eq. (51).
 
-With \(q_A=k'-k\), \(t_A=-q_A^2\), and the AFH Fourier convention
+With \(q_N=k'-k\), \(q_N^0=0\), \(t_N=-Q_A^2\), and the AFH Fourier convention
 \(\boldsymbol q_{\rm AFH}=-\boldsymbol q_A\), the coefficients are
 \[
-c_M=F_1^V(t_A)+\frac{t_A}{8m_N^2}
+c_M=F_1^V(t_N)+\frac{t_N}{8m_N^2}
        [F_1^V(t_N)+2F_2^V(t_N)],
 \]
 \[
-c_{\Phi''}=\frac{q_A^2}{4m_N^2}
+c_{\Phi''}=\frac{Q_A^2}{4m_N^2}
        [F_1^V(t_N)+2F_2^V(t_N)].
 \]
+The exact nuclear invariant is separately \(t_A=t_N+E_R^2\).
 The three-body charge amplitude factorizes as
 \[
 \mathcal M_{M+\Phi''}^{(3)}
@@ -111,9 +112,9 @@ Q_{\Phi''}
 +\eta^2\frac{W_{\Phi''}}{W_M}
 =0.9816142.
 \]
-This is a \(-1.839\%\) change relative to the same relativistically
-corrected \(M\)-only charge response. Including the \(t_N/(8m_N^2)\)
-correction to \(c_M\), the combined result is \(-2.991\%\) relative to
+This is a \(-1.839\%\) change relative to the same
+nonrelativistically normalized \(M\)-only charge response. Including the \(t_N/(8m_N^2)\)
+Darwin--Foldy correction to \(c_M\), the combined result is \(-2.991\%\) relative to
 \(F_1^V(0)^2W_M\) at this selected point.
 
 Across the 2401-node grid, the sampled \(Q_{\Phi''}-1\) varies locally
