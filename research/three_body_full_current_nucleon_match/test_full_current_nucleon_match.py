@@ -143,6 +143,25 @@ class FullCurrentNucleonTests(unittest.TestCase):
         self.assertTrue(all(len(row) == 4 for row in payload))
         self.assertTrue(all(len(value) == 2 for row in payload for value in row))
 
+    def test_energy_transfer_matched_free_nucleon_current_satisfies_physical_qA_ward(self):
+        omega = float(self.point.q_A[0])
+        rows = fm.run_energy_transfer_matched_on_shell_scan(
+            self.q, omega, p_perp_values_GeV=(0.0, 0.05, 0.10, 0.20)
+        )
+        self.assertEqual(len(rows), 4)
+        for row in rows:
+            self.assertGreater(row["l_parallel_GeV"], 0.0)
+            self.assertLess(abs(row["qN0_minus_qA0_GeV"]), 2e-13)
+            self.assertLess(row["nucleon_Ward_residual_qN"], 2e-12)
+            self.assertLess(row["nucleon_Ward_residual_qA"], 2e-12)
+
+    def test_energy_transfer_matched_parallel_momentum_is_sub_mev(self):
+        omega = float(self.point.q_A[0])
+        rows = fm.run_energy_transfer_matched_on_shell_scan(
+            self.q, omega, p_perp_values_GeV=(0.0, 0.05, 0.10, 0.20)
+        )
+        self.assertLess(max(row["l_parallel_GeV"] for row in rows), 0.002)
+
     def test_static_qA_energy_transfer_is_reported_as_distinct_from_qN0(self):
         self.assertGreater(float(self.point.q_A[0]), 0.0)
         jn, qn, _ = fm.nucleon_current_matrices(
