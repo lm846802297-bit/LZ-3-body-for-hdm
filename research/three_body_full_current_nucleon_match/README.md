@@ -699,3 +699,13 @@ The archive validator passed; rank sums reconstruct the raw responses exactly
 and the physical equal-p/n responses to at most 2.22e-16 absolute residual.
 The refreshed total-response CSV again passes the independent AFH-8 Python
 comparison over all 16,807 rows. Native Wolfram validation remains pending.
+
+
+A second native gate is prepared for the rank-resolved amplitudes themselves:
+[compare_p3_multipoles_vs_native.py](../afh_response_crosschecks/compare_p3_multipoles_vs_native.py).
+It compares all 9,604 Xe-129/Xe-131 \((A,q_A,J)\) rows for native AFH DeltaJ
+and SigmaPJ amplitudes, after the full seven-isotope ResponseNuclear native
+gate passes. The corresponding WLS export is pinned to native source commit
+e1e9c85530a7d609561b34e2c2df5ab36e5c5b89. This is the P3-B2 amplitude-level
+acceptance gate; it remains pending until the private Windows Wolfram runner
+executes the native workflow.
