@@ -11,6 +11,8 @@ import phase_space_tensor_convergence as conv
 
 
 class PhaseSpaceTensorConvergenceTests(unittest.TestCase):
+    def test_formal_convergence_scan_uses_pole_width_only(self):
+        self.assertEqual(conv.WIDTH_SCHEMES, ("pole",))
     def test_complex_pair_decoder_preserves_shape_and_phase(self):
         pairs = np.asarray([
             [[1.0, 2.0], [3.0, -4.0]],
