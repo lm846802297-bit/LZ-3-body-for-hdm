@@ -358,8 +358,6 @@ AFH 标准非相对论算符基底的构造背景主要针对低能弹性暗物�
 
 这条路线的关键是区分**核结构响应**与**具体模型的响应系数**：前者由 AFH 核结构计算提供，后者由当前相互作用模型和核子流匹配决定。
 
-
-
 ## K. 已完成的 AFH 核响应 Benchmark 数值结果（PR #51、PR #54）
 
 > **本节范围。**这里只汇总已经计算并归档的 AFH 核结构响应函数及其数值验证。包括七种氙同位素的质量响应 \(W_M\)，以及 Xe-131 的 \(W_M\)、\(W_{\Phi''}\) 和 \(W_{M\Phi''}\)。不把三体粒子物理张量、暗物质空间流、三体相空间积分、halo fold、探测器效率或事件数混入核响应 benchmark。下列结果也不代表完整三体反冲率已经完成。
@@ -657,7 +655,6 @@ PR #54 的 Xe-131 核响应计算完成了以下独立层次的检查：
 
 - [PR #51 — AFH 七种氙同位素核响应审计及其多极重构数据](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/pull/51)；主要结果文件位于 research/afh_isotope_response_equivalence/results/。
 - [PR #54 — Xe-131 的 \(M\)、\(\Phi''\)、\(M\Phi''\) 核响应审计](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/pull/54)；数值审计、2,401 点响应网格、selected points、60 位精度检查和 Mathematica 对照均归档在 research/afh_vv_phi_xe131/。
-
 ---
 
 # 原有讨论正文（完整保留）
