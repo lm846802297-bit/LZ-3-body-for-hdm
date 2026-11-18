@@ -137,30 +137,72 @@ class LeptonicMultipoleWeightTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             weights.extract_leptonic_weights(np.eye(3))
 
-    def test_archive_summary_preserves_width_benchmarks(self):
+    def _continuity_test_benchmark(self):
         L = np.diag([100.0, 2.0, 6.0, 3.0]).astype(complex)
+        mA = 99.9999
+        omega = 0.0002
+        qA = np.sqrt(2.0 * mA * omega + omega * omega)
+        eta = omega / qA
+        LC = L[0, 0].real + eta * eta * L[3, 3].real
+        J0 = 2.0 * mA + omega
+        direct = J0 * J0 * L[0, 0].real + qA * qA * L[3, 3].real
+        contractions = {
+            "I00": float(L[0, 0].real),
+            "L_C_continuity_adjusted": float(LC),
+            "Ifull": float(direct),
+            "continuity_reduced_relative_residual": 0.0,
+        }
         pairs = np.stack((L.real, L.imag), axis=-1).tolist()
+        return L, {
+            "benchmark": "test",
+            "width_scheme": "pole",
+            "g2": 1.0,
+            "ER_keV": 200.0,
+            "ER_GeV": omega,
+            "mA_GeV": mA,
+            "qA_magnitude_GeV": float(qA),
+            "point_nucleus_contractions": contractions,
+            "speed_kms": 776.0,
+            "nw": 24,
+            "nz": 16,
+            "nphi": 8,
+            "L_q_aligned_real_imag": pairs,
+        }
+
+    def test_archive_summary_preserves_width_benchmarks(self):
+        _, benchmark = self._continuity_test_benchmark()
         archive = {
             "status": "PASS_SPIN_RESOLVED_DM_TENSOR",
-            "benchmarks": [
-                {
-                    "benchmark": "test",
-                    "width_scheme": "pole",
-                    "g2": 1.0,
-                    "ER_keV": 200.0,
-                    "qA_magnitude_GeV": 0.2,
-                    "speed_kms": 776.0,
-                    "nw": 24,
-                    "nz": 16,
-                    "nphi": 8,
-                    "L_q_aligned_real_imag": pairs,
-                }
-            ],
+            "benchmarks": [benchmark],
         }
         result = weights.analyze_tensor_archive(archive)
         self.assertEqual(result["status"], "PASS_AFH_LEPTONIC_COEFFICIENT_EXTRACTION")
         self.assertEqual(result["summary"]["benchmark_count"], 1)
         self.assertEqual(result["benchmarks"][0]["width_scheme"], "pole")
+        self.assertLess(
+            result["summary"]["max_qA_mass_shell_relative_residual"], 1e-14
+        )
+        self.assertLess(
+            result["summary"]["max_direct_vs_continuity_relative_residual"], 1e-14
+        )
+
+    def test_archive_rejects_inconsistent_qA_mass_shell(self):
+        _, benchmark = self._continuity_test_benchmark()
+        benchmark["qA_magnitude_GeV"] *= 1.01
+        with self.assertRaisesRegex(ValueError, "mass-shell relation"):
+            weights.analyze_tensor_archive({
+                "status": "PASS_SPIN_RESOLVED_DM_TENSOR",
+                "benchmarks": [benchmark],
+            })
+
+    def test_archive_rejects_corrupt_stored_continuity_contraction(self):
+        _, benchmark = self._continuity_test_benchmark()
+        benchmark["point_nucleus_contractions"]["Ifull"] *= 1.001
+        with self.assertRaisesRegex(ValueError, "stored Ifull disagrees"):
+            weights.analyze_tensor_archive({
+                "status": "PASS_SPIN_RESOLVED_DM_TENSOR",
+                "benchmarks": [benchmark],
+            })
 
 
 if __name__ == "__main__":
