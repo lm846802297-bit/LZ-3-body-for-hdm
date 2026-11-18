@@ -165,10 +165,14 @@ class ThreeBodyAFHContractionTests(unittest.TestCase):
         rows = synthetic_spatial_rows()
         for row in rows:
             if int(row["A"]) in (129, 131) and float(row["q_GeV"]) == 0.6:
+                row["R_Delta_equal_pn"] = 0.5
+                row["R_SigmaPrime_equal_pn"] = 0.4
                 row["R_SigmaPrimeDelta_equal_pn"] = -0.3
         multipoles = synthetic_multipole_rows()
         for row in multipoles:
             if float(row["q_GeV"]) == 0.6:
+                row["R_Delta_J_equal_pn"] = 0.5
+                row["R_SigmaPrime_J_equal_pn"] = 0.4
                 row["R_SigmaPrimeDelta_J_equal_pn"] = -0.3
         result = contract.contract_archive(
             synthetic_afh_rows(), synthetic_weights(), synthetic_metadata(),
