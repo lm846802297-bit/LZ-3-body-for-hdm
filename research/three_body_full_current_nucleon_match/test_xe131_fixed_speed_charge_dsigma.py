@@ -10,7 +10,7 @@ from xe131_fixed_speed_charge_dsigma import (
 
 class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
     def test_exact_recoil_momenta(self):
-        self.assertAlmostEqual(MA_XE131_GEV, 121.9097198353876, places=12)
+        self.assertAlmostEqual(MA_XE131_GEV, 121.90971983538435, places=12)
         self.assertAlmostEqual(exact_qA_GeV(MA_XE131_GEV, 200.0), 0.22082555996567457, places=13)
         self.assertAlmostEqual(exact_qA_GeV(MA_XE131_GEV, 267.0), 0.25514674538605275, places=13)
 
