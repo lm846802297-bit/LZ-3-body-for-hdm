@@ -263,3 +263,31 @@ attempt has no assigned runner (runner_id=0) and requires the Windows
 self-hosted runner with labels self-hosted, Windows, X64, research-gpu to be
 online. No native multipole PASS is claimed until that job completes and the
 direct comparator returns PASS_NATIVE_AFH_MULTIPOLE_AMPLITUDE_CROSSCHECK.
+
+
+## 9. Downstream P3-C response contraction
+
+The rank-resolved P3-B archive was consumed by the fixed-speed
+three-body response contraction in workflow 44305980766 (artifact
+14428247140). This run corrected the common OBDME normalization mismatch:
+\(C_0(A)\) is applied to the AFH-8 charge responses, while the P3-B spatial
+responses are used as already corrected. The AFH equal-\(p=n\) factor four
+is applied once and is not folded into \(C_0\).
+
+The contraction covers 12 particle-side benchmark/width sets and seven
+isotopes, for 84 rows. All 84 total kernels are positive; rankwise
+\(\Delta,\Sigma',\Sigma'\Delta\) contributions reconstruct the total
+spatial sector to at most \(1.11\times10^{-16}\). The maximum spatial to
+charge ratio is \(7.0959581690\times10^{-9}\), at Xe-131,
+\(E_R=267\) keV, \(v_\chi=776\) km/s, \(m_s=362\) keV,
+\(g_2=1\), running-width scheme.
+
+The full details, including per-isotope \(C_0\), coefficient hierarchy,
+rankwise contributions, and exact limitations, are in
+[P3_C_C0_CONSISTENT_CONTRACTION.md](../../P3_C_C0_CONSISTENT_CONTRACTION.md).
+
+This is a downstream **provisional response-level contraction**, not a
+native AFH validation and not the direct covariant/q-frame/AFH
+many-body-amplitude comparison. The latter remains the P3-B promotion
+gate; the native seven-isotope/eight-response workflow 44306907993 is
+currently queued and has no artifact.
