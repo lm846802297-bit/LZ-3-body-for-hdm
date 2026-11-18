@@ -19,8 +19,8 @@ permissions:
   contents: read
 
 concurrency:
-  group: xe131-absolute-dsigma-${{ github.sha }}
-  cancel-in-progress: false
+  group: xe131-absolute-dsigma-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
 
 jobs:
   absolute-dsigma:
