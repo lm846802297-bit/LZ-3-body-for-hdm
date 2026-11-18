@@ -96,7 +96,7 @@ class FullCurrentNucleonTests(unittest.TestCase):
             2.0 * math.sqrt(
                 (fm.M_N_GEV**2 + np.dot(p_i, p_i))
                 * (fm.M_N_GEV**2 + np.dot(p_f, p_f))
-            ) ** 0.5
+            )
         )
         got = fm.nonrel_state_normalization(p_i, p_f)
         self.assertAlmostEqual(got, expected, places=14)
