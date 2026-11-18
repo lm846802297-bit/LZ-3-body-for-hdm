@@ -36,7 +36,15 @@ For every amplitude implementation:
 6. Distinguish the dimensionless kinematic lambda in the phase-space expression from the dimensionful Källén function used in decay-width formulas.
 7. Check the propagator denominator, mediator momentum transfer, overall dimensions, symmetry factors, and limiting cases independently of the final spectrum.
 
-For an internal `chi_2` propagator, justify the width prescription from its momentum and kinematics. A statement that the physical on-shell pole is outside the integration range does not by itself prove that finite-width effects are negligible near the endpoint. Record the minimum pole detuning and compare finite-width and zero-width results; if the model or open channels change, rederive the width and propagator treatment.
+For the two internal chi_2 propagators in the coherent three-body amplitude, the **mandatory formal-production convention** is asymmetric and follows the manuscript's Eq. (19):
+
+- Scalar emission before vector scattering, with internal momentum r_before = p-k: D_before = (p-k)^2 - m_chi2^2 + i 0^+. Do not insert a finite width in this propagator.
+- Scalar emission after vector scattering, with internal momentum r_after = p'+k and W^2 = (p'+k)^2: D_after = W^2 - m_chi2^2 + i m_chi2 Gamma_chi2^pole, where Gamma_chi2^pole is evaluated at the pole mass.
+- Add the two diagram amplitudes coherently before squaring; retain their interference.
+- Use the pole width for all formal three-body cross sections and spectra. Do not use a running-width ansatz as the standard prescription. Running width may appear only in a clearly labelled diagnostic/sensitivity study.
+- The zero-width treatment of both diagrams is permitted only as the far-off-pole approximation or a numerical cross-check (including the approximation explicitly used in Appendix C); it is not the formal production default.
+
+The pole width must be recomputed for each parameter point. Under the currently documented Dirac, pure-scalar Yukawa, single-open-channel assumption, Gamma_chi2^pole = Gamma(chi_2 -> chi_1 s)|_{m_chi2}. If other decay channels are open, use the total pole width (sum of all open partial widths); if the fermion nature or chiral/CP structure changes, rederive the width. A statement that the physical on-shell pole is outside the integration range does not by itself prove that finite-width effects are negligible near the endpoint. Record the minimum pole detuning and compare the formal asymmetric prescription against the zero-width approximation; if the model or open channels change, rederive the width and propagator treatment.
 
 ## 4. Nuclear response and natural xenon
 
