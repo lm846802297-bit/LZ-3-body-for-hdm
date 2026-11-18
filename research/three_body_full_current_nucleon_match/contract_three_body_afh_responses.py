@@ -175,8 +175,9 @@ def index_afh_rows(rows: list[dict], *, expected_points: int = 2401) -> dict[int
         q = np.asarray([float(item["q_GeV"]) for item in entries])
         if len(q) != expected_points or not np.all(np.diff(q) > 0):
             raise ValueError(f"Xe-{A}: AFH-8 q grid is incomplete or not strictly increasing")
-        if not np.isclose(q[0], 0.0, atol=1e-12) or not np.isclose(q[-1], 0.6, atol=1e-12):
-            raise ValueError(f"Xe-{A}: AFH-8 q grid does not cover [0, 0.6] GeV")
+        expected_q = np.arange(expected_points, dtype=float) * 0.00025
+        if not np.allclose(q, expected_q, rtol=0.0, atol=1e-10):
+            raise ValueError(f"Xe-{A}: AFH-8 q grid does not match the canonical 0.25 MeV grid")
         result[A] = {
             "q": q,
             "J_A": float(entries[0]["J_A"]),
@@ -233,6 +234,8 @@ def index_spatial_archive(
         recorded_c0 = float(isotope_meta[A].get("common_matrix_normalization", float("nan")))
         if not np.isclose(recorded_c0, c0_by_A[A], rtol=0.0, atol=2e-14):
             raise ValueError(f"metadata/CSV C0 mismatch for Xe-{A}")
+        if float(isotope_meta[A].get("J_A", float("nan"))) != J_BY_A[A]:
+            raise ValueError(f"metadata nuclear spin mismatch for Xe-{A}")
         if A in SPIN_ZERO and ranks_by_A[A]:
             raise ValueError(f"spin-zero Xe-{A} unexpectedly has spatial multipole ranks")
         result[A] = {
@@ -258,8 +261,19 @@ def index_spatial_archive(
         for J in ranks_by_A[A]:
             entries = sorted(grouped_multipoles.get((A, J), []), key=lambda item: float(item["q_GeV"]))
             q = np.asarray([float(item["q_GeV"]) for item in entries])
+            expected_q = result[A]["q"]
             if len(q) != expected_points or not np.all(np.diff(q) > 0):
                 raise ValueError(f"Xe-{A}, J={J}: incomplete rank-resolved multipole q grid")
+            if not np.allclose(q, expected_q, rtol=0.0, atol=1e-10):
+                raise ValueError(f"Xe-{A}, J={J}: multipole q grid is not aligned with total-response grid")
+            for row in entries:
+                if float(row["J_A"]) != J_BY_A[A]:
+                    raise ValueError(f"Xe-{A}, J={J}: multipole nuclear spin mismatch")
+                if not np.isclose(
+                    float(row["common_matrix_normalization"]), c0_by_A[A],
+                    rtol=0.0, atol=2e-14
+                ):
+                    raise ValueError(f"Xe-{A}, J={J}: multipole C0 mismatch")
             result[A]["multipole_ranks"][J] = {
                 "q": q,
                 "responses": {
