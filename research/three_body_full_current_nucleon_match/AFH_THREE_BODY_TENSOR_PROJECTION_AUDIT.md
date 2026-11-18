@@ -418,13 +418,28 @@ analytically by
 \frac{E_R\sqrt{m_N^2+\ell_\perp^2+(Q_A^2-E_R^2)/4}}
 {\sqrt{Q_A^2-E_R^2}}.
 \]
-At the Xe-131 200-keV point, \(\ell_\parallel=0.8562\)--0.8752 MeV for
-\(\ell_\perp=0\)--200 MeV; at 267 keV it is 0.9916--1.0134 MeV.
-The exact free Dirac--Pauli current is checked against both \(q_N^\mu\)
-and \(q_A^\mu\).
+The workflow's matrix-level test uses the diagnostic reference transfer
+\(q_A^\mu=(0.0002,0.0705063355,0,0.2093780973)\) GeV, with
+\(Q_A=0.2209306022\) GeV. For
+\(\ell_\perp=0,50,100,200\) MeV it obtains
+\(\ell_\parallel=0.855829,0.857025,0.860604,0.874771\) MeV.
+The maximum \(|q_N^0-q_A^0|\) is \(8.90\times10^{-17}\) GeV; the largest
+Ward residual is \(2.40\times10^{-16}\) with \(q_N^\mu\) and
+\(1.49\times10^{-17}\) with \(q_A^\mu\).
 
-This establishes that the static \(q_N^0=0\) mismatch is a consequence of
-that particular impulse kinematics, not a failure of the free Dirac--Pauli
-vertex. It does **not** identify the physical bound-nucleon energy sharing,
+The original static slice has \(q_N^0=0\), Ward residual
+\(3.84\times10^{-18}\) with \(q_N^\mu\), but
+\(5.3513\times10^{-4}\) with physical \(q_A^\mu\). This establishes that
+the static \(q_N^0=0\) mismatch is a consequence of that particular
+impulse kinematics, not a failure of the free Dirac--Pauli vertex.
+
+For the separate exact-mass Xe-131 fixed-speed points, the analytic
+formula gives \(\ell_\parallel=0.8562\)--0.8752 MeV at 200 keV and
+0.9916--1.0134 MeV at 267 keV for
+\(\ell_\perp=0\)--200 MeV. Those are kinematic estimates; the matrix-level
+Ward test was performed at the diagnostic reference four-transfer, not
+at both fixed-speed points.
+
+This does **not** identify the physical bound-nucleon energy sharing,
 off-shell prescription, or interaction currents. The many-body continuity
 equation and the consistency of the one-body AFH truncation remain open.
