@@ -229,8 +229,9 @@ def index_spatial_archive(
         q = np.asarray([float(item["q_GeV"]) for item in entries])
         if len(q) != expected_points or not np.all(np.diff(q) > 0):
             raise ValueError(f"Xe-{A}: P3-B response q grid is incomplete")
-        if not np.isclose(q[0], 0.0, atol=1e-12) or not np.isclose(q[-1], 0.6, atol=1e-12):
-            raise ValueError(f"Xe-{A}: P3-B response q grid does not cover [0, 0.6] GeV")
+        expected_q = np.arange(expected_points, dtype=float) * 0.00025
+        if not np.allclose(q, expected_q, rtol=0.0, atol=1e-10):
+            raise ValueError(f"Xe-{A}: P3-B response q grid does not match the canonical 0.25 MeV grid")
         recorded_c0 = float(isotope_meta[A].get("common_matrix_normalization", float("nan")))
         if not np.isclose(recorded_c0, c0_by_A[A], rtol=0.0, atol=2e-14):
             raise ValueError(f"metadata/CSV C0 mismatch for Xe-{A}")
