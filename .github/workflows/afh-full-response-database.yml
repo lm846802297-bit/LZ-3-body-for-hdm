@@ -1,0 +1,64 @@
+name: AFH v6.0 seven-isotope eight-response database
+
+on:
+  pull_request:
+    paths:
+      - ".github/workflows/afh-full-response-database.yml"
+      - "research/afh_full_response_database/**"
+      - "research/afh_default_density_xe131/run_afh_spatial_response_audit.py"
+      - "research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices/**"
+      - "v6/dmformfactor-V6.m"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  afh-eight-response-database:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+          cache: pip
+      - name: Install numerical dependencies
+        run: python -m pip install --upgrade numpy scipy sympy
+      - name: Compile generator, validator, comparator and tests
+        run: |
+          python -m py_compile \
+            research/afh_full_response_database/run_afh_full_response_database.py \
+            research/afh_full_response_database/validate_afh_full_response_database.py \
+            research/afh_full_response_database/compare_native_afh_full_response.py \
+            research/afh_full_response_database/tests/test_afh_full_response_database.py
+      - name: Run AFH eight-response regression tests
+        run: |
+          python -m unittest discover \
+            -s research/afh_full_response_database/tests \
+            -p 'test_*.py' -v
+      - name: Generate seven-isotope 2401-point eight-response database
+        run: |
+          python research/afh_full_response_database/run_afh_full_response_database.py \
+            --outdir "$RUNNER_TEMP/afh-full-response"
+      - name: Validate grid, positivity, interference, and normalization
+        run: |
+          python research/afh_full_response_database/validate_afh_full_response_database.py \
+            --csv "$RUNNER_TEMP/afh-full-response/afh_v6_full_eight_response_7isotope.csv" \
+            --out-json "$RUNNER_TEMP/afh-full-response/validation.json"
+      - name: Record source identity and SHA-256 checksums
+        run: |
+          git rev-parse HEAD > "$RUNNER_TEMP/afh-full-response/source_commit.txt"
+          cd "$RUNNER_TEMP/afh-full-response"
+          sha256sum \
+            afh_v6_full_eight_response_7isotope.csv \
+            metadata.json validation.json source_commit.txt \
+            > SHA256SUMS.txt
+          cat SHA256SUMS.txt
+      - name: Upload provisional AFH eight-response archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: afh-v6-seven-isotope-eight-response
+          path: ${{ runner.temp }}/afh-full-response/
+          if-no-files-found: error
+          retention-days: 90
