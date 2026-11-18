@@ -104,8 +104,8 @@ class ThreeBodyPhaseSpaceTensorTests(unittest.TestCase):
         fake[1, 1] = 2.0
         fake[2, 2] = 1.0
         fake[3, 3] = 4.0
-        fake[0, 3] = 0.25j
-        fake[3, 0] = -0.25j
+        fake[0, 3] = 0.25 + 0.1j
+        fake[3, 0] = 0.25 - 0.1j
         result = tensor.scalar_contractions_from_q_frame(fake, mA=mA, ER=point.E_R)
         self.assertAlmostEqual(
             result["Ifull"],
@@ -114,6 +114,10 @@ class ThreeBodyPhaseSpaceTensorTests(unittest.TestCase):
         )
         self.assertAlmostEqual(result["Ilongitudinal"], 4.0, places=12)
         self.assertAlmostEqual(result["Itransverse"], 3.0, places=12)
+        self.assertLess(result["continuity_reduced_relative_residual"], 2e-15)
+        self.assertAlmostEqual(
+            result["Icontinuity_reduced"], result["Ifull"], places=10
+        )
         self.assertGreater(Q, 0.0)
         self.assertGreater(J0, 0.0)
 

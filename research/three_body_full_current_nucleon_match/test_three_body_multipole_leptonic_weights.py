@@ -55,6 +55,42 @@ class LeptonicMultipoleWeightTests(unittest.TestCase):
         ):
             self.assertAlmostEqual(original[key], transformed[key], places=12)
 
+    def test_nuclear_continuity_combines_charge_and_longitudinal_weights(self):
+        L = np.asarray([
+            [100.0, 0.0, 0.0, 2.0 + 0.1j],
+            [0.0, 3.0, 0.0, 0.0],
+            [0.0, 0.0, 3.0, 0.0],
+            [2.0 - 0.1j, 0.0, 0.0, 4.0],
+        ], dtype=complex)
+        result = weights.extract_leptonic_weights(
+            L, qA_GeV=0.2, omega_GeV=0.01
+        )
+        expected = 100.0 - 0.05 * 4.0 + 0.05**2 * 4.0
+        self.assertAlmostEqual(result["continuity_adjusted_coulomb_weight"], expected)
+        self.assertAlmostEqual(result["nuclear_omega_over_Q"], 0.05)
+        self.assertAlmostEqual(
+            result["continuity_charge_relative_correction"],
+            expected / 100.0 - 1.0,
+        )
+        afh = weights.extract_afh_vector_coefficients(
+            L, 0.2, f1=3.0, f2=-0.552, mN_GeV=0.938918,
+            omega_GeV=0.01,
+        )
+        cM = 3.0 + (-0.2**2) * (3.0 + 2.0 * -0.552) / (8.0 * 0.938918**2)
+        self.assertAlmostEqual(afh["C_M"], cM**2 * expected)
+
+    def test_zero_transfer_limit_keeps_the_charge_weight(self):
+        L = np.diag([100.0, 2.0, 2.0, 3.0]).astype(complex)
+        weight, ratio = weights.continuity_adjusted_coulomb_weight(
+            L, qA_GeV=0.0, omega_GeV=0.0
+        )
+        self.assertEqual(weight, 100.0)
+        self.assertEqual(ratio, 0.0)
+        with self.assertRaises(ValueError):
+            weights.continuity_adjusted_coulomb_weight(
+                L, qA_GeV=0.0, omega_GeV=1.0e-4
+            )
+
     def test_afh_sigma_prime_delta_coefficient_is_nonzero_even_when_helicity_odd_is_zero(self):
         L = np.diag([100.0, 2.0, 6.0, 3.0]).astype(complex)
         leptonic = weights.extract_leptonic_weights(L)

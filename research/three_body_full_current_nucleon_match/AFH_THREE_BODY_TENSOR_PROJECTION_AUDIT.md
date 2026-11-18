@@ -76,6 +76,63 @@ longitudinal multipoles. The dark-matter transition current is not conserved
 when \(m_{\chi_2}\ne m_{\chi_1}\), so one must not impose
 \(q_{A\mu}L^\mu=0\) on the DM side.
 
+## 3.1 Longitudinal reduction from nuclear-current continuity
+
+For an unpolarized target and a conserved one-body nuclear vector current,
+the q-aligned transfer is
+\[
+q_A^\mu=(\omega,0,0,Q_A),\qquad
+q_{A\mu}J_A^\mu=0
+\quad\Longrightarrow\quad
+J_A^3=\frac{\omega}{Q_A}J_A^0.
+\]
+The metric is \(g_{\mu\nu}=(+,-,-,-)\). Thus
+\[
+T_\mu J_A^\mu
+=\left(T^0-\frac{\omega}{Q_A}T^3\right)J_A^0
+-\boldsymbol T_\perp\cdot\boldsymbol J_\perp,
+\]
+and the charge/longitudinal part of the phase-space-integrated DM tensor
+enters the Coulomb multipoles through
+\[
+\boxed{
+L_C^{(3)}
+=L_{00}^{(3)}
+-\frac{\omega}{Q_A}(L_{03}^{(3)}+L_{30}^{(3)})
++\left(\frac{\omega}{Q_A}\right)^2L_{33}^{(3)}.
+}
+\]
+
+This is a use of **nuclear-current continuity**, not conservation of the
+inelastic DM transition current. No condition \(q_{A\mu}T_3^\mu=0\) is
+imposed. The charge coefficients multiplying \(M\), \(\Phi''\), and
+\(M\Phi''\) must use \(L_C^{(3)}\), not \(L_{00}^{(3)}\) alone.
+
+The identity is independently checked by the point-nucleus current
+\(J_A^\mu=(2m_A+\omega,0,0,Q_A)\), for which
+\(Q_A^2=\omega(2m_A+\omega)\):
+\[
+(2m_A+\omega)^2L_C^{(3)}
+=(2m_A+\omega)^2L_{00}^{(3)}
++Q_A^2L_{33}^{(3)}
+-(2m_A+\omega)Q_A(L_{03}^{(3)}+L_{30}^{(3)}).
+\]
+The implementation now reports the continuity-reduced contraction and its
+relative residual alongside the direct point-nucleus contraction.
+
+For the 12 integrated benchmark/width rows in workflow 44256878592,
+\(\omega/Q_A\) is \(9.0526\times10^{-4}\) at 200 keV and
+\(1.0460\times10^{-3}\) at 267 keV. The continuity-adjusted Coulomb weight
+differs from \(L_{00}\) by approximately \(-4.33\times10^{-6}\) to
+\(-5.13\times10^{-6}\). This is small numerically, but it is retained because
+it is required by the conserved nuclear vector current.
+
+The particle-coefficient extractor now uses \(L_C^{(3)}\) for
+\(C_M,C_{\Phi''},C_{M\Phi''}\), while the transverse coefficients continue
+to use \(L_T=L_{11}+L_{22}\). This closes the charge/longitudinal reduction
+at the leptonic-weight level; it does not by itself complete the AFH
+many-body multipole validation.
+
 ## 4. Existing particle-coefficient extraction is an intermediate result
 
 The module contract_three_body_afh_responses.py currently forms leading static

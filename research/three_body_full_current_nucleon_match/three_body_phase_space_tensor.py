@@ -115,6 +115,17 @@ def scalar_contractions_from_q_frame(
     spatial = Q_A * Q_A * tensor[3, 3]
     interference = -J0 * Q_A * (tensor[0, 3] + tensor[3, 0])
     full = charge + spatial + interference
+    omega_over_Q = ER / Q_A if Q_A > 0.0 else 0.0
+    L_coulomb = (
+        tensor[0, 0]
+        - omega_over_Q * (tensor[0, 3] + tensor[3, 0])
+        + omega_over_Q * omega_over_Q * tensor[3, 3]
+    )
+    continuity_reduced = J0 * J0 * L_coulomb
+    continuity_residual = float(
+        abs(continuity_reduced - full)
+        / max(abs(continuity_reduced), abs(full), 1.0)
+    )
     return {
         "I00": float(np.real(tensor[0, 0])),
         "Ispatial_trace": float(np.real(spatial_trace)),
@@ -124,6 +135,10 @@ def scalar_contractions_from_q_frame(
         "Ispatial_nuclear": float(np.real(spatial)),
         "Iinterference": float(np.real(interference)),
         "Ifull": float(np.real(full)),
+        "omega_over_Q": float(omega_over_Q),
+        "L_C_continuity_adjusted": float(np.real(L_coulomb)),
+        "Icontinuity_reduced": float(np.real(continuity_reduced)),
+        "continuity_reduced_relative_residual": continuity_residual,
     }
 
 

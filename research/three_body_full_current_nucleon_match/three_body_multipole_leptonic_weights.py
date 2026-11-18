@@ -30,7 +30,52 @@ def complex_from_pairs(value) -> np.ndarray:
     return result
 
 
-def extract_leptonic_weights(L: np.ndarray, *, hermiticity_tolerance=1e-10) -> dict:
+def continuity_adjusted_coulomb_weight(
+    L: np.ndarray, qA_GeV: float, omega_GeV: float
+) -> tuple[float, float]:
+    """Reduce the nuclear longitudinal current using q_A_mu J_A^mu = 0.
+
+    In the q-aligned frame q_A^mu=(omega,0,0,Q), nuclear-current
+    conservation gives J_A^3=(omega/Q)J_A^0. Since the DM tensor is stored
+    with contravariant current components and the metric is (+---), the
+    effective Coulomb weight is
+        L_C = L00 - (omega/Q)(L03+L30) + (omega/Q)^2 L33.
+    This uses conservation of the nuclear vector current; it does not impose
+    a Ward identity on the inelastic DM transition current.
+    """
+    if not np.isfinite(qA_GeV) or qA_GeV < 0.0:
+        raise ValueError("qA_GeV must be finite and non-negative")
+    if not np.isfinite(omega_GeV) or omega_GeV < 0.0:
+        raise ValueError("omega_GeV must be finite and non-negative")
+    if qA_GeV == 0.0:
+        if omega_GeV != 0.0:
+            raise ValueError("nonzero energy transfer with zero spatial transfer")
+        omega_over_q = 0.0
+    else:
+        omega_over_q = omega_GeV / qA_GeV
+    if omega_over_q > 1.0 + 1.0e-12:
+        raise ValueError("nuclear transfer is not spacelike in the q-aligned frame")
+
+    L = np.asarray(L, dtype=complex)
+    if L.shape != (4, 4) or not np.all(np.isfinite(L)):
+        raise ValueError("L must be a finite 4x4 complex Lorentz tensor")
+    L00 = float(np.real(L[0, 0]))
+    L03_plus_L30 = float(np.real(L[0, 3] + L[3, 0]))
+    L33 = float(np.real(L[3, 3]))
+    weight = L00 - omega_over_q * L03_plus_L30 + omega_over_q**2 * L33
+    scale = max(abs(L00), abs(omega_over_q * L03_plus_L30), 1.0)
+    if weight < -1.0e-10 * scale:
+        raise ValueError(f"negative continuity-adjusted Coulomb weight: {weight:.6g}")
+    return max(0.0, float(weight)), float(omega_over_q)
+
+
+def extract_leptonic_weights(
+    L: np.ndarray,
+    *,
+    qA_GeV: float | None = None,
+    omega_GeV: float = 0.0,
+    hermiticity_tolerance=1e-10,
+) -> dict:
     """Return q-aligned charge, longitudinal, transverse-even and helicity-odd factors."""
     L = np.asarray(L, dtype=complex)
     if L.shape != (4, 4):
@@ -55,7 +100,7 @@ def extract_leptonic_weights(L: np.ndarray, *, hermiticity_tolerance=1e-10) -> d
     helicity_imaginary_residual = float(abs(np.imag(helicity_complex)))
     helicity_odd_over_sum = abs(helicity_odd) / max(abs(transverse_sum), 1.0e-300)
 
-    return {
+    result = {
         "charge_L00": charge,
         "longitudinal_L33": longitudinal,
         "charge_longitudinal_raw_2ReL03": float(charge_longitudinal_raw),
@@ -77,6 +122,18 @@ def extract_leptonic_weights(L: np.ndarray, *, hermiticity_tolerance=1e-10) -> d
         ),
         "hermiticity_relative_residual": hermiticity,
     }
+    if qA_GeV is not None:
+        effective_charge, omega_over_q = continuity_adjusted_coulomb_weight(
+            L, qA_GeV, omega_GeV
+        )
+        result.update({
+            "nuclear_omega_over_Q": omega_over_q,
+            "continuity_adjusted_coulomb_weight": effective_charge,
+            "continuity_charge_relative_correction": (
+                effective_charge / max(abs(charge), 1.0e-300) - 1.0
+            ),
+        })
+    return result
 
 
 def extract_afh_vector_coefficients(
@@ -86,6 +143,7 @@ def extract_afh_vector_coefficients(
     f1: float = DEFAULT_F1,
     f2: float = DEFAULT_F2,
     mN_GeV: float = DEFAULT_MN_GEV,
+    omega_GeV: float = 0.0,
 ) -> dict:
     """AFH Eq. (107) coefficients for the leading static Dirac--Pauli current.
 
@@ -115,13 +173,18 @@ def extract_afh_vector_coefficients(
     L00 = float(np.real(L[0, 0]))
     if LT < -1e-10 or L00 < -1e-10:
         raise ValueError("negative diagonal spin-averaged leptonic weight")
+    L_C, omega_over_Q = continuity_adjusted_coulomb_weight(
+        L, qA_GeV, omega_GeV
+    )
 
+    # The Coulomb/longitudinal sector is reduced with nuclear-current
+    # continuity. The DM transition current itself is not assumed conserved.
     # Charge coefficients already matched in the M + Phi'' study.
     cM = f1 + tN * (f1 + 2.0 * f2) / (8.0 * mN_GeV * mN_GeV)
     cPhiPP = Q2 * (f1 + 2.0 * f2) / (4.0 * mN_GeV * mN_GeV)
-    C_M = cM * cM * L00
-    C_PhiPP = cPhiPP * cPhiPP * L00
-    C_MPhiPP = 2.0 * cM * cPhiPP * L00
+    C_M = cM * cM * L_C
+    C_PhiPP = cPhiPP * cPhiPP * L_C
+    C_MPhiPP = 2.0 * cM * cPhiPP * L_C
 
     # AFH Eq. (107), with l_M=-F1*T3 and
     # l_5=+i(F1+F2)/(2mN) (q_AFH x T3).
@@ -148,7 +211,14 @@ def extract_afh_vector_coefficients(
 
     return {
         "qA_GeV": float(qA_GeV),
+        "omega_GeV": float(omega_GeV),
+        "omega_over_Q": float(omega_over_Q),
         "tN_GeV2": float(tN),
+        "L00_charge_weight": float(L00),
+        "L_C_continuity_adjusted_charge_weight": float(L_C),
+        "charge_continuity_relative_correction": float(
+            L_C / max(abs(L00), 1.0e-300) - 1.0
+        ),
         "F1V_input": float(f1),
         "F2V_input": float(f2),
         "mN_GeV": float(mN_GeV),
@@ -193,15 +263,21 @@ def analyze_tensor_archive(
                 f"{benchmark.get('benchmark', 'unknown')}: L tensor shape {L.shape}"
             )
         qA = float(benchmark["qA_magnitude_GeV"])
-        weights = extract_leptonic_weights(L)
+        omega = float(
+            benchmark.get("ER_GeV", float(benchmark.get("ER_keV", 0.0)) * 1.0e-6)
+        )
+        weights = extract_leptonic_weights(
+            L, qA_GeV=qA, omega_GeV=omega
+        )
         afh = extract_afh_vector_coefficients(
-            L, qA, f1=f1, f2=f2, mN_GeV=mN_GeV
+            L, qA, f1=f1, f2=f2, mN_GeV=mN_GeV, omega_GeV=omega
         )
         rows.append({
             "benchmark": benchmark.get("benchmark"),
             "width_scheme": benchmark.get("width_scheme"),
             "g2": benchmark.get("g2"),
             "ER_keV": benchmark.get("ER_keV"),
+            "ER_GeV": omega,
             "speed_kms": benchmark.get("speed_kms"),
             "quadrature": {
                 "nw": benchmark.get("nw"),
@@ -238,6 +314,10 @@ def analyze_tensor_archive(
             "benchmark_count": len(rows),
             "max_generic_transverse_helicity_odd_over_transverse_sum": max_helicity_ratio,
             "max_AFH_spatial_Cauchy_identity_relative_residual": max_cauchy_residual,
+            "max_abs_continuity_charge_relative_correction": max(
+                abs(row["afh_vector_coefficients"]["charge_continuity_relative_correction"])
+                for row in rows
+            ),
             "min_C_Delta_over_C_M": min(
                 row["afh_vector_coefficients"]["C_Delta_over_C_M"] for row in rows
             ),
