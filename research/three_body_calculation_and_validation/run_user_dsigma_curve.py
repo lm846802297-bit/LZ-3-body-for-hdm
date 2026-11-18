@@ -1,8 +1,11 @@
 #!/usr/bin/env python3
-"""Fixed-speed Xe-131 d sigma/dER curve for the supplied 450 keV benchmark.
+"""Formal fixed-speed Xe-131 d sigma/dER curve for the supplied 450 keV benchmark.
 
-This is an exploratory, fixed-speed diagnostic. The Xe-131 mass uses A*u
-through joint_xe131.isotope_mass_GeV, not the AME2020 exact isotope mass.
+Uses the project Eq. (19) asymmetric propagator prescription: the p-k
+(first) chi2 propagator is zero-width (+i0^+), while the p'+k (second)
+propagator carries the constant pole width evaluated at m_chi2. The separate
+g2 width coupling defaults to the project's g2=1 benchmark and is recorded
+in every output row. The Xe-131 mass uses A*u through joint_xe131.
 The response is interpolated from the archived GCN/JJ55 tables with PCHIP.
 """
 from __future__ import annotations
@@ -42,6 +45,10 @@ def main() -> None:
     ap.add_argument("--nz", type=int, default=16)
     ap.add_argument("--nphi", type=int, default=12)
     ap.add_argument("--step-keV", type=float, default=5.0)
+    ap.add_argument(
+        "--g2", type=float, default=1.0,
+        help="Separate chi2-chi1-s coupling used for the conditional pole width",
+    )
     args = ap.parse_args()
 
     if not math.isfinite(args.step_keV) or args.step_keV <= 0.0:
@@ -59,6 +66,7 @@ def main() -> None:
     delta_m = 450.0e-6
     ms = 300.0e-6
     mchi2 = mchi + delta_m
+    gamma_pole = eq6_kernel.chi2_width_dirac_scalar(mchi, ms, delta_m, args.g2)
     mV = 10.0
     speed_km_s = 776.0
     coupling_product_sq = 1.0
@@ -84,7 +92,7 @@ def main() -> None:
         I6 = eq6_kernel.reduced_kernel(
             mchi, ms, delta_m, mA, ER, speed_km_s,
             nw=args.nw, nz=args.nz, nphi=args.nphi,
-            width_scheme="zero",
+            width_scheme="pole", g2=args.g2,
         )
         denominator = (mV * mV + 2.0 * mA * ER) ** 2
         for model, response in responses.items():
@@ -105,8 +113,11 @@ def main() -> None:
                 "pchi_GeV": pchi,
                 "mV_GeV": mV,
                 "coupling_product_sq": coupling_product_sq,
+                "g2_for_width": args.g2,
+                "Gamma_chi2_pole_GeV": gamma_pole,
+                "Gamma_chi2_pole_keV": gamma_pole * 1.0e6,
                 "speed_km_s": speed_km_s,
-                "width_scheme": "zero",
+                "width_scheme": "pole",
                 "dsigma_dER_GeVminus3": dsigma,
                 "dsigma_dER_cm2_per_keV": dsigma_GeVminus3_to_cm2_per_keV(dsigma),
             })
