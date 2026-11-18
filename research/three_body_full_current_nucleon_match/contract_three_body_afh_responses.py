@@ -175,9 +175,12 @@ def index_afh_rows(rows: list[dict], *, expected_points: int = 2401) -> dict[int
         q = np.asarray([float(item["q_GeV"]) for item in entries])
         if len(q) != expected_points or not np.all(np.diff(q) > 0):
             raise ValueError(f"Xe-{A}: AFH-8 q grid is incomplete or not strictly increasing")
-        expected_q = np.arange(expected_points, dtype=float) * 0.00025
-        if not np.allclose(q, expected_q, rtol=0.0, atol=1e-10):
-            raise ValueError(f"Xe-{A}: AFH-8 q grid does not match the canonical 0.25 MeV grid")
+        if expected_points == 2401:
+            expected_q = np.arange(expected_points, dtype=float) * 0.00025
+            if not np.allclose(q, expected_q, rtol=0.0, atol=1e-10):
+                raise ValueError(f"Xe-{A}: AFH-8 q grid does not match the canonical 0.25 MeV grid")
+        elif not np.isclose(q[0], 0.0, atol=1e-12) or not np.isclose(q[-1], 0.6, atol=1e-12):
+            raise ValueError(f"Xe-{A}: synthetic AFH-8 q grid must span [0, 0.6] GeV")
         result[A] = {
             "q": q,
             "J_A": float(entries[0]["J_A"]),
@@ -229,9 +232,12 @@ def index_spatial_archive(
         q = np.asarray([float(item["q_GeV"]) for item in entries])
         if len(q) != expected_points or not np.all(np.diff(q) > 0):
             raise ValueError(f"Xe-{A}: P3-B response q grid is incomplete")
-        expected_q = np.arange(expected_points, dtype=float) * 0.00025
-        if not np.allclose(q, expected_q, rtol=0.0, atol=1e-10):
-            raise ValueError(f"Xe-{A}: P3-B response q grid does not match the canonical 0.25 MeV grid")
+        if expected_points == 2401:
+            expected_q = np.arange(expected_points, dtype=float) * 0.00025
+            if not np.allclose(q, expected_q, rtol=0.0, atol=1e-10):
+                raise ValueError(f"Xe-{A}: P3-B response q grid does not match the canonical 0.25 MeV grid")
+        elif not np.isclose(q[0], 0.0, atol=1e-12) or not np.isclose(q[-1], 0.6, atol=1e-12):
+            raise ValueError(f"Xe-{A}: synthetic P3-B q grid must span [0, 0.6] GeV")
         recorded_c0 = float(isotope_meta[A].get("common_matrix_normalization", float("nan")))
         if not np.isclose(recorded_c0, c0_by_A[A], rtol=0.0, atol=2e-14):
             raise ValueError(f"metadata/CSV C0 mismatch for Xe-{A}")
