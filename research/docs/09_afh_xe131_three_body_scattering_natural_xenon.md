@@ -5392,7 +5392,7 @@ smearing, a NEST S1/S2 response, a background model, or a profile likelihood.
 
 ## 15. Phase III update: 完整三体反冲率、AFH 响应矩阵与数值验收规范（2026-11-18）
 
-本节把完整三体反冲率从结构公式推进到可执行的归一化和验收规范。完整推导归档见唯一主讨论档案 [QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md](../afh_isotope_response_equivalence/docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md) 的 §§38–44；该档案 [N 节](../afh_isotope_response_equivalence/docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md#corr-n) 另整理三体辐射与 AFH 结合的文献先例、可复用核结构条件，以及本模型必须重新推导的三体响应系数。本节固定主研究报告中的计算口径，不把尚未完成的数值任务写成已完成结果。
+本节把完整三体反冲率从结构公式推进到可执行的归一化和验收规范。完整推导归档见唯一主讨论档案 [QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md](../afh_isotope_response_equivalence/docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md) 的 §§38–44；该档案 [N 节](../afh_isotope_response_equivalence/docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md#corr-n) 现已核正 AFH/NR-EFT/光子辐射文献映射，并限定其可支持的结论；[O 节](../afh_isotope_response_equivalence/docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md#corr-o) 区分本模型单媒介子交换的精确核流因子化与光子软辐射近似。本节固定主研究报告中的计算口径，不把尚未完成的数值任务写成已完成结果。
 
 ### 15.1 从 \(M\)-only 到完整三体反冲率
 
