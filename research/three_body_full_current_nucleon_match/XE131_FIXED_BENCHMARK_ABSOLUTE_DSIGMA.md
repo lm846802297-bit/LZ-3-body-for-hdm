@@ -39,7 +39,7 @@ c_M^2W_M+
 +c_{\Phi''}^2W_{\Phi''}
 \right].
 \]
-Here \(Q_A^2=2m_AE_R+E_R^2\) is the exact nuclear mass-shell transfer and \(p_{\chi_1}=m_{\chi_1}\gamma v/c\). The continuity-reduced weight is
+Here \(Q_A^2=|\mathbf q_A|^2=2m_AE_R+E_R^2\) is the spatial momentum squared used in the AFH responses and static nucleon form factors, whereas the mediator propagator uses the Lorentz invariant \(t_A=q_A^2=-2m_AE_R\). Thus its denominator is \((m_V^2-t_A)^2=(m_V^2+2m_AE_R)^2\), not \((m_V^2+Q_A^2)^2\). The incident momentum is \(p_{\chi_1}=m_{\chi_1}\gamma v/c\). The continuity-reduced weight is
 \[
 L_C^{(3)}=
 L_{00}^{(3)}
@@ -52,7 +52,7 @@ c_M=F_1^V-\frac{Q_A^2(F_1^V+2F_2^V)}{8m_N^2},
 \qquad
 c_{\Phi''}=\frac{Q_A^2(F_1^V+2F_2^V)}{4m_N^2}.
 \]
-The kernel has units GeV\(^2\), the public prefactor GeV\(^{-5}\), and \(d\sigma/dE_R\) GeV\(^{-3}\). Conversion to cm\(^2\)/keV uses \(3.893793721\times10^{-34}\).
+The kernel has units GeV\(^2\), the public prefactor GeV\(^{-5}\), and \(d\sigma/dE_R\) GeV\(^{-3}\). The exact distinction between \(Q_A^2\) and \(-t_A\) is retained in every recoil row. Conversion to cm\(^2\)/keV uses \(3.893793721\times10^{-34}\).
 
 ## Numerical prescription
 

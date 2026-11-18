@@ -29,9 +29,13 @@ class TestXe131FixedBenchmarkAbsoluteDsigmadER(unittest.TestCase):
         result = kinematic_prefactor_GeVminus5(er)
         pchi = incident_momentum_GeV(MCHI_GEV, SPEED_KM_S)
         q = exact_qA_GeV(MA_XE131_GEV, er)
-        expected = MA_XE131_GEV*COUPLING_PRODUCT_SQUARED/(256.0*math.pi**3*pchi**2*(MV_GEV**2+q**2)**2)
+        minus_tA = 2.0 * MA_XE131_GEV * er * 1.0e-6
+        expected = MA_XE131_GEV*COUPLING_PRODUCT_SQUARED/(256.0*math.pi**3*pchi**2*(MV_GEV**2+minus_tA)**2)
         self.assertAlmostEqual(result["public_prefactor_GeVminus5"], expected, places=22)
         self.assertAlmostEqual(result["qA_GeV"], q, places=14)
+        self.assertAlmostEqual(result["Q_A_squared_GeV2"], q*q, places=14)
+        self.assertAlmostEqual(result["t_A_GeV2"], -minus_tA, places=14)
+        self.assertNotAlmostEqual(result["mediator_denominator_GeV4"], (MV_GEV**2+q*q)**2, places=12)
 
     def test_unit_conversion(self):
         self.assertAlmostEqual(GEV_MINUS3_TO_CM2_PER_KEV, 3.893793721e-34, places=45)

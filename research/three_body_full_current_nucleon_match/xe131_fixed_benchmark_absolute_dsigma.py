@@ -54,12 +54,21 @@ def kinematic_prefactor_GeVminus5(
 ) -> dict:
     qA = exact_qA_GeV(mA_GeV, ER_keV)
     pchi = incident_momentum_GeV(mchi_GeV, speed_km_s)
-    denominator = (mV_GeV * mV_GeV + qA * qA) ** 2
+    ER_GeV = ER_keV * 1.0e-6
+    Q_A_squared = qA * qA
+    t_A = -2.0 * mA_GeV * ER_GeV
+    # The propagator carries the invariant transfer t_A=q_A^2, not the
+    # spatial three-momentum squared Q_A^2.
+    minus_t_A = -t_A
+    denominator = (mV_GeV * mV_GeV - t_A) ** 2
     prefactor = mA_GeV * coupling_product_squared / (
         256.0 * math.pi**3 * pchi * pchi * denominator
     )
     return {
         "qA_GeV": qA,
+        "Q_A_squared_GeV2": Q_A_squared,
+        "t_A_GeV2": t_A,
+        "minus_t_A_GeV2": minus_t_A,
         "pchi_GeV": pchi,
         "mediator_denominator_GeV4": denominator,
         "public_prefactor_GeVminus5": prefactor,
@@ -163,6 +172,9 @@ def calculate_row(ER_keV: float, response_bundle: dict,
         "quadrature_points": phase["quadrature_points"],
         "nw": order[0], "nz": order[1], "nphi": order[2],
         "pchi_GeV": kin["pchi_GeV"],
+        "Q_A_squared_GeV2": kin["Q_A_squared_GeV2"],
+        "t_A_GeV2": kin["t_A_GeV2"],
+        "minus_t_A_GeV2": kin["minus_t_A_GeV2"],
         "mediator_denominator_GeV4": kin["mediator_denominator_GeV4"],
         "public_prefactor_GeVminus5": kin["public_prefactor_GeVminus5"],
         "phase_space_open": bool(phase["phase_space_open"]),
@@ -287,6 +299,28 @@ def run(afh_csv: Path, outdir: Path) -> dict:
     if max_legacy_residual > 2.0e-8:
         raise RuntimeError(f"spin-resolved L00 does not reproduce independent Eq. (6): {max_legacy_residual:.6g}")
 
+    # The AFH/nucleon ratio is independent of the DM-side phase-space factor.
+    # These anchors reproduce the previously validated fixed-speed ratio
+    # calculation, although the full absolute curve keeps Delta m=450 keV
+    # fixed at every recoil.
+    expected_charge_ratios = {
+        200.0: 0.778309339441481,
+        267.0: 0.649215910707624,
+    }
+    ratio_checks = []
+    for ER, expected in expected_charge_ratios.items():
+        row = min(rows, key=lambda item: abs(item["ER_keV"] - ER))
+        residual = abs(row["full_charge_over_pointlike_M"] - expected)
+        ratio_checks.append({
+            "ER_keV": ER,
+            "fixed_Delta_m_keV": DELTA_M_GEV * 1.0e6,
+            "ratio": row["full_charge_over_pointlike_M"],
+            "previous_validated_ratio": expected,
+            "absolute_difference": residual,
+        })
+        if residual > 2.0e-8:
+            raise RuntimeError(f"native AFH charge ratio mismatch at ER={ER}: {residual}")
+
     min_pole_clearance = min(row["pole_clearance_keV"] for row in rows if row["phase_space_open"])
     if min_pole_clearance <= 0.0:
         raise RuntimeError("fixed Delta m=450 keV scan crosses the chi2 pole")
@@ -303,7 +337,7 @@ def run(afh_csv: Path, outdir: Path) -> dict:
             "mV_GeV": MV_GEV, "speed_km_s": SPEED_KM_S, "g2_for_width": G2,
             "coupling_product_squared_(g1_g2_gVN)^2": COUPLING_PRODUCT_SQUARED,
             "width_scheme": WIDTH_SCHEME,
-            "propagator": "1/(mV^2+Q_A^2), Q_A^2=2*mA*ER+ER^2",
+            "propagator": "1/(mV^2-t_A), t_A=q_A^2=-2*mA*ER; Q_A^2=2*mA*ER+ER^2 is not used in the mediator denominator",
             "incident_momentum": "p_chi=m_chi*gamma*v/c",
         },
         "target": {
@@ -322,7 +356,8 @@ def run(afh_csv: Path, outdir: Path) -> dict:
         },
         "formula": "dSigma/dER = mA*(g1*g2*gVN)^2/[256*pi^3*pchi^2*(mV^2+Q_A^2)^2] * L_C^(3) * [cM^2*W_M + 2*cM*cPhiPP*W_MPhiPP + cPhiPP^2*W_PhiPP]",
         "definitions": {
-            "Q_A_squared_GeV2": "2*mA*ER+ER^2",
+            "Q_A_squared_GeV2": "2*mA*ER+ER^2; spatial momentum squared used in AFH response and static nucleon form factors",
+            "t_A_GeV2": "-2*mA*ER; Lorentz-invariant transfer used in the mediator propagator",
             "L_C_GeV2": "L00-(ER/Q_A)*(L03+L30)+(ER/Q_A)^2*L33",
             "cM": "F1V-Q_A^2*(F1V+2*F2V)/(8*mN^2)",
             "cPhiPP": "Q_A^2*(F1V+2*F2V)/(4*mN^2)",
@@ -341,6 +376,7 @@ def run(afh_csv: Path, outdir: Path) -> dict:
         },
         "independent_Eq6_L00_crosschecks": legacy_checks,
         "maximum_independent_Eq6_relative_residual": max_legacy_residual,
+        "nuclear_ratio_crosschecks_against_previous_validated_run": ratio_checks,
         "minimum_chi2_pole_clearance_keV": min_pole_clearance,
         "limitations": [
             "Charge-sector result only; native transverse Delta, SigmaPrime and SigmaPrime-Delta responses are not included in the central absolute curve.",
