@@ -1,3 +1,4 @@
+import math
 import sys
 import unittest
 from pathlib import Path
@@ -66,6 +67,62 @@ class FullCurrentNucleonTests(unittest.TestCase):
         c0 = fm.spin_orbit_odd_coefficient(self.t3, self.q, 0.10, 1.0, 0.0, "full")
         c2 = fm.spin_orbit_odd_coefficient(self.t3, self.q, 0.10, 1.0, -0.15, "full")
         self.assertGreater(abs(c0 - c2), 1e-10)
+
+    def test_nonrel_normalized_charge_spin_orbit_matches_exact_spinor_formula(self):
+        v_n = 0.10
+        f1, f2 = 1.0, -0.184
+        l_vec = fm.M_N_GEV * v_n * self.lhat
+        p_i = l_vec - 0.5 * self.q
+        p_f = l_vec + 0.5 * self.q
+        energy = math.sqrt(
+            fm.M_N_GEV**2 + float(np.dot(p_i, p_i))
+        )
+        t0_identity = 0.5 * np.trace(self.t3[0])
+        expected = 1j * t0_identity * (
+            f1 / (2.0 * energy * (energy + fm.M_N_GEV))
+            + f2 / (2.0 * fm.M_N_GEV * energy)
+        )
+        got = fm.spin_orbit_odd_coefficient(
+            self.t3, self.q, v_n, f1, f2, "charge",
+            nonrel_normalized=True,
+        )
+        self.assertLess(abs(got - expected), 2e-12 * max(abs(expected), 1.0))
+
+    def test_nonrel_state_normalization_uses_both_external_energies(self):
+        l_vec = 0.10 * fm.M_N_GEV * self.lhat
+        p_i = l_vec - 0.5 * self.q
+        p_f = l_vec + 0.5 * self.q
+        expected = 1.0 / (
+            2.0 * math.sqrt(
+                (fm.M_N_GEV**2 + np.dot(p_i, p_i))
+                * (fm.M_N_GEV**2 + np.dot(p_f, p_f))
+            ) ** 0.5
+        )
+        got = fm.nonrel_state_normalization(p_i, p_f)
+        self.assertAlmostEqual(got, expected, places=14)
+
+    def test_full_pauli_coefficients_are_json_safe_and_complete(self):
+        jn, _, _ = fm.nucleon_current_matrices(
+            self.q, 0.10 * fm.M_N_GEV * self.lhat, 1.0, -0.184
+        )
+        full, _, _ = fm.full_amplitude_operator(self.t3, jn)
+        payload = fm.pauli_coefficients_as_pairs(full)
+        self.assertEqual(len(payload), 4)
+        self.assertTrue(all(len(row) == 4 for row in payload))
+        self.assertTrue(all(len(value) == 2 for row in payload for value in row))
+
+    def test_static_qA_energy_transfer_is_reported_as_distinct_from_qN0(self):
+        self.assertGreater(float(self.point.q_A[0]), 0.0)
+        jn, qn, _ = fm.nucleon_current_matrices(
+            self.q, 0.10 * fm.M_N_GEV * self.lhat, 1.0, -0.184
+        )
+        self.assertAlmostEqual(float(qn[0]), 0.0, places=14)
+        residual_qn = fm.nucleon_ward_residual(qn, jn)
+        residual_qA = fm.nucleon_ward_residual(
+            np.asarray(self.point.q_A, dtype=float), jn
+        )
+        self.assertLess(residual_qn, 2e-12)
+        self.assertGreater(residual_qA, 0.0)
 
     def test_DM_spin_trace_still_matches_PR53_tensor(self):
         ref = fm.dm.vca.dm_current_tensor(
