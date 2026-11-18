@@ -466,13 +466,13 @@ The remaining work is:
 1. perform P3 at selected phase-space points: compare the direct covariant
    one-body-current contraction, the same contraction after q-frame
    rotation, and the AFH OBDME/multipole contraction, including the signed
-   \\(\\Sigma'-\\Delta\\) response;
+   \(\\Sigma'-\\Delta\) response;
 2. complete the separate native seven-isotope/eight-response AFH input
    validation and bind its exact artifact/source checksum to the P3 run;
-3. replace constant \\(F_1^V(0)\\), \\(F_2^V(0)\\) anchors with the
-   model-specific finite-\\(t_N\\) form factors;
+3. replace constant \(F_1^V(0)\), \(F_2^V(0)\) anchors with the
+   model-specific finite-\(t_N\) form factors;
 4. extend the three-body phase-space tensor from the 12 benchmark points
-   to a converged \\(E_R\\)- and velocity-dependent grid;
+   to a converged \(E_R\)- and velocity-dependent grid;
 5. perform the natural-xenon abundance sum, halo integral, detector
    response, and comparison with the charge-only baseline.
 
