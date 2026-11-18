@@ -17,6 +17,7 @@ class FullCurrentNucleonTests(unittest.TestCase):
         cls.point, cls.t3 = fm.build_reference_inputs()
         cls.q = np.asarray(cls.point.q_A[1:], dtype=float)
         cls.lhat = fm.perpendicular_unit(cls.q)
+        cls.width_results = fm.run_finite_width_scenarios(cls.point, cls.q)
 
     def test_nucleon_current_is_conserved_in_static_elastic_limit(self):
         jn, qn, _ = fm.nucleon_current_matrices(
@@ -154,6 +155,45 @@ class FullCurrentNucleonTests(unittest.TestCase):
         )
         self.assertLess(residual_qn, 2e-12)
         self.assertGreater(residual_qA, 0.0)
+
+    def test_finite_width_scan_covers_zero_pole_running_and_both_g2(self):
+        keys = {(row["g2"], row["width_scheme"]) for row in self.width_results}
+        expected = {
+            (g2, scheme)
+            for g2 in (0.1, 1.0)
+            for scheme in ("zero", "pole", "running")
+        }
+        self.assertEqual(keys, expected)
+        for row in self.width_results:
+            if row["width_scheme"] == "zero":
+                self.assertEqual(row["denominator_imaginary_part_GeV2"], 0.0)
+            else:
+                self.assertGreater(row["denominator_imaginary_part_GeV2"], 0.0)
+
+    def test_finite_width_spin_trace_and_modified_Ward_identity(self):
+        for row in self.width_results:
+            self.assertLess(row["spin_trace_relative_residual"], 2e-12)
+            self.assertLess(
+                row["finite_width_Ward_identity_relative_residual"], 2e-12
+            )
+            self.assertLess(row["full_pauli_reconstruction_residual"], 2e-13)
+            self.assertLess(row["charge_pauli_reconstruction_residual"], 2e-13)
+            self.assertLess(row["spatial_pauli_reconstruction_residual"], 2e-13)
+
+    def test_finite_width_changes_near_pole_current_norm(self):
+        zero = next(
+            row for row in self.width_results
+            if row["g2"] == 1.0 and row["width_scheme"] == "zero"
+        )
+        pole = next(
+            row for row in self.width_results
+            if row["g2"] == 1.0 and row["width_scheme"] == "pole"
+        )
+        self.assertGreater(
+            abs(pole["DM_current_norm"] - zero["DM_current_norm"]),
+            1e-8 * zero["DM_current_norm"],
+        )
+        self.assertGreater(pole["coherent_two_diagram_interference_norm"], 0.0)
 
     def test_DM_spin_trace_still_matches_PR53_tensor(self):
         ref = fm.dm.vca.dm_current_tensor(
