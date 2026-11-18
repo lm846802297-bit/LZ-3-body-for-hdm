@@ -17,8 +17,9 @@ spatial-current \(\Sigma'\), \(\Sigma''\), and \(\Delta\) sectors remain open.
 ## Status
 
 **AFH response grid reproduced; charge-sector benchmark implemented; native
-Mathematica cross-check pending.** The 2401-point Python response grid,
-selected minima, regression tests, and run manifest are archived. The new
+Mathematica cross-check passed.** The 2401-point Python response grid,
+selected minima, regression tests, native Mathematica export, pointwise
+comparison, and run manifest are archived. The new
 `phi_charge_response_match.py` evaluates the \(M+\Phi''\) charge-sector
 correction using explicitly labelled zero-momentum form-factor anchors.
 This is a controlled benchmark, not yet a finite-\(t\), all-current prediction
@@ -101,8 +102,9 @@ additionally requires Wolfram Engine/Mathematica and wolframscript.
 
 ## Results and interpretation boundary
 
-At the second mass-response minimum,
-\(q_A=256.271867617\) MeV and \(E_R=269.1038976\) keV, the exact AFH
+Recoil energies below use the AME2020 Xe-131 neutral-atom mass converted to
+the bare nuclear mass using CODATA-2022 constants. At the second mass-response
+minimum, \(q_A=256.271867617\) MeV and \(E_R=269.3595249\) keV, the exact AFH
 responses give
 \[
 W_{\Phi''}/W_M=115.8894642,\qquad
@@ -121,8 +123,8 @@ a combined \(-2.991\%\) change relative to \(F_1^V(0)^2W_M\) at this point.
 
 The 2401-point diagnostic grid shows a rapid local variation around the
 deep \(W_M\) cancellation: the sampled \(Q_{\Phi''}-1\) ranges from
-\(-13.61\%\) at \(q_A=255.75\) MeV to \(+11.50\%\) at
-\(q_A=256.75\) MeV. These are local ratios to a very small \(W_M\)
+\(-13.61\%\) at \(q_A=255.75\) MeV (\(E_R=268.2636\) keV) to
+\(+11.50\%\) at \(q_A=256.75\) MeV (\(E_R=270.3656\) keV). These are local ratios to a very small \(W_M\)
 baseline, not global event-rate changes. The signed interference changes
 rapidly across the minimum, while the combined charge response remains
 nonnegative.

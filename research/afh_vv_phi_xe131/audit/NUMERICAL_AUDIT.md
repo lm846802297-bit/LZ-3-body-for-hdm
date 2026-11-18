@@ -24,8 +24,8 @@
    by multiplying by four exactly once.
 6. Check the four existing mass-response minima, Cauchy--Schwarz at every
    grid node, and high-precision mpmath spot checks.
-7. Provide a native Mathematica runner and exact-grid comparator. The native
-   execution remains pending until it is run on a Wolfram installation.
+7. Run the native Mathematica AFH response evaluator and compare all 2401
+   grid points with Python without interpolation.
 
 ## Regression and numerical checks
 
@@ -38,7 +38,7 @@
 | \(q_A=256.272\) MeV response ratios | PASS |
 | Cauchy--Schwarz over all 2401 points | PASS |
 | 60-digit mpmath spot-check at four minima | PASS; max relative amplitude difference \(2.13\times10^{-15}\) |
-| Native Mathematica/Python pointwise comparison | PENDING |
+| Native Mathematica/Python pointwise comparison | PASS; 2401 points, exact q-grid nodes (no interpolation), \(rtol=2\times10^{-8}\), \(atol=2\times10^{-10}\) |
 | (M+Phi'') vector-charge coefficient matching | PASS as a zero-(t) benchmark |
 | Finite-(t) flavour-separated form factors | PENDING |
 | Spatial-current (Sigma'), (Sigma''), and (Delta) matching | PENDING |
@@ -46,6 +46,13 @@
 The full-grid Cauchy--Schwarz maximum is
 \(0.9999998601592628\), at \(q_A=470.75\) MeV. This is a normalized
 correlation and is expected to be no larger than one.
+
+The native comparison used AFH/DMFormFactor v6.0 in Mathematica 14.2.0.
+Maximum scaled differences were \(3.80\times10^{-9}\) for \(W_M^{00}\),
+\(3.52\times10^{-11}\) for \(W_{\Phi\prime\prime}\), and \(9.05\times10^{-10}\)
+for \(W_{M\Phi\prime\prime}\). The q-nodes were identical after matching the
+Python CSV 8-decimal serialization; no interpolation was used. Native output
+and comparison manifest are archived in \`output/native_mathematica/\`.
 
 ## Selected-point results
 
@@ -94,7 +101,7 @@ For the diagnostic anchors \(F_1^V(0)=3\), \(F_2^V(0)=-0.552\), and
 \(m_N=0.938918\) GeV, at the second \(W_M\) minimum:
 \[
 q_A=256.271867617\ {\rm MeV},\quad
-E_R=269.1038976\ {\rm keV},\quad
+E_R=269.3595249\ {\rm keV},\quad
 \eta=c_{\Phi''}/c_M=0.01184042.
 \]
 Using the exact selected-point AFH responses gives
@@ -159,3 +166,5 @@ python research/afh_vv_phi_xe131/verify_phi_mpmath.py
 ~~~
 
 Native Mathematica execution and comparison commands are in the study README.
+The archived recoil-coordinate conversion uses the AME2020 Xe-131 neutral-
+atom mass converted to a bare nuclear mass with CODATA-2022 constants.

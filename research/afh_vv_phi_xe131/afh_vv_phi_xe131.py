@@ -8,6 +8,7 @@ must not be interpreted as a three-body cross-section correction.
 from __future__ import annotations
 import argparse, csv, hashlib, json, math, platform
 from pathlib import Path
+import sys
 import numpy as np
 import scipy
 from scipy.special import factorial2, hyp1f1
@@ -15,10 +16,14 @@ import sympy
 from sympy import Rational, Integer, pi, sqrt, N as symN
 from sympy.physics.wigner import wigner_3j, wigner_6j, wigner_9j
 
+MASS_SCHEME_DIR = Path(__file__).resolve().parent.parent / 'three_body_calculation_and_validation'
+sys.path.insert(0, str(MASS_SCHEME_DIR))
+from isotope_mass_schemes import isotope_mass_GeV
+
 A, Z, J_A, T_ISO = 131, 54, 1.5, 11.5
 B_FM = math.sqrt(41.467 / (45*A**(-1/3) - 25*A**(-2/3)))
 B_GEV_INV = B_FM * 5.0677
-M_A_GEV = A * 0.93149410242
+M_A_GEV = isotope_mass_GeV(A, 'ame2020_nuclear')
 RANKS = (0, 2)
 
 
@@ -224,7 +229,8 @@ def run(outdir: Path, matrix_path: Path, minima_path: Path, baseline_path: Path|
         swm,swp,swmp,sma,spa=calculate(np.array([qi]),rows)
         x,y,z=float(swm[0]),float(swp[0]),float(swmp[0])
         corr=abs(z)/math.sqrt(x*y)
-        selected.append({'q_min_MeV':f'{qi*1000:.9f}','ER_min_keV':r['ER_min_keV'],
+        er_min=(math.sqrt(M_A_GEV**2+qi**2)-M_A_GEV)*1e6
+        selected.append({'q_min_MeV':f'{qi*1000:.9f}','ER_min_keV':f'{er_min:.10f}',
           'W_M00_AFH':f'{x:.16e}','W_PhiPP_AFH':f'{y:.16e}','W_MPhiPP_AFH':f'{z:.16e}',
           'R_M_raw_over_A2':f'{physical_factor*x/A**2:.16e}',
           'R_PhiPP_raw_over_A2':f'{physical_factor*y/A**2:.16e}',
@@ -238,22 +244,42 @@ def run(outdir: Path, matrix_path: Path, minima_path: Path, baseline_path: Path|
           'Phi_rank0_amplitude':f'{float(spa[0][0]):.16e}','Phi_rank2_amplitude':f'{float(spa[2][0]):.16e}'})
     sel_path=outdir/'afh_vv_phi_xe131_selected_points.csv'
     write_csv(sel_path,list(selected[0]),selected)
-    meta={'status':'Python_AFH_v6_translation_reproducible_native_Mathematica_crosscheck_pending',
+    native_dir=outdir/'native_mathematica'
+    native_csv=native_dir/'afh_vv_phi_xe131_native.csv'
+    native_comparison_path=native_dir/'comparison.json'
+    native_check='PENDING'
+    if native_csv.exists() and native_comparison_path.exists():
+        native_comparison=json.loads(native_comparison_path.read_text(encoding='utf-8'))
+        if (native_comparison.get('passed') is True
+                and native_comparison.get('python_csv_sha256') == sha256(full_path)
+                and native_comparison.get('mathematica_csv_sha256') == sha256(native_csv)):
+            native_check={'status':'PASS','points':native_comparison.get('points'),
+                'comparison_sha256':sha256(native_comparison_path),
+                'max_abs_q_grid_difference_GeV':native_comparison.get('q_grid_max_abs_difference_GeV')}
+        else:
+            native_check={'status':'STALE_OR_FAILED','comparison_sha256':sha256(native_comparison_path)}
+    meta={'status':'Python_AFH_v6_translation_reproducible_native_Mathematica_crosscheck_' + (native_check['status'] if isinstance(native_check,dict) else 'PENDING'),
       'source_commit':__import__('os').environ.get('GITHUB_SHA','not_recorded_local_run'),
       'isotope':{'A':A,'Z':Z,'J_A':J_A,'T_iso':T_ISO},
       'input':{'density_matrix':str(matrix_path),'density_matrix_sha256':sha256(matrix_path),'minima_csv_sha256':sha256(minima_path),'entries':len(rows),
         'AFH_source':'v6/dmformfactor-V6.m','AFH_source_sha256_expected':'dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372'},
       'oscillator':{'b_A_fm':B_FM,'b_A_GeV_inverse':B_GEV_INV,'fm_to_GeV_inverse':5.0677},
-      'grid':{'q_min_GeV':0.0,'q_max_GeV':0.6,'dq_GeV':dq,'points':len(q),'m_A_GeV':M_A_GEV},
+      'grid':{'q_min_GeV':0.0,'q_max_GeV':0.6,'dq_GeV':dq,'points':len(q),'m_A_GeV':M_A_GEV,'mass_scheme':'AME2020 nuclear mass with CODATA-2022 constants'},
       'AFH_mapping':{'ResponseNuclear_index_1':'W_M','ResponseNuclear_index_4':'W_PhiPP = W_Phi double-prime','ResponseNuclear_index_7':'W_MPhiPP interference','isospin_components':[0,0]},
       'physical_normalization':{'equal_pn_factor':4,'factor_4pi_over_2Jplus1':4*math.pi/(2*J_A+1),'combined_factor':physical_factor,
         'note':'Raw physical response is reported. The separate 1.00008253 mass-response q=0 shape correction is not imposed on Phi or M-Phi.'},
       'checks':{'W_M_against_existing_AFH_grid':baseline_check,'Cauchy_Schwarz_max':float(np.max(cs)),
-        'Cauchy_Schwarz_max_q_GeV':float(q[int(np.argmax(cs))]),'native_Mathematica_Phi_crosscheck':'PENDING'},
+        'Cauchy_Schwarz_max_q_GeV':float(q[int(np.argmax(cs))]),'native_Mathematica_Phi_crosscheck':native_check},
       'environment':{'python':platform.python_version(),'numpy':np.__version__,'scipy':scipy.__version__,'sympy':sympy.__version__},
       'code':{'path':str(Path(__file__).name),'sha256':sha256(Path(__file__))},
       'outputs':{full_path.name:{'sha256':sha256(full_path),'rows':len(full)},sel_path.name:{'sha256':sha256(sel_path),'rows':len(selected)}},
       'interpretation_boundary':'Nuclear response functions only. The three-body WIMP coefficients multiplying these responses have not yet been derived.'}
+    if native_csv.exists() and native_comparison_path.exists():
+        meta['outputs'][str(native_csv.relative_to(outdir)).replace('\\','/')]={'sha256':sha256(native_csv),'rows':2401}
+        meta['outputs'][str(native_comparison_path.relative_to(outdir)).replace('\\','/')]={'sha256':sha256(native_comparison_path),'rows':1}
+        native_metadata= native_dir/'native_metadata.txt'
+        if native_metadata.exists():
+            meta['outputs'][str(native_metadata.relative_to(outdir)).replace('\\','/')]={'sha256':sha256(native_metadata)}
     meta_path=outdir/'run_manifest.json'
     meta_path.write_text(json.dumps(meta,indent=2,sort_keys=True)+'\n',encoding='utf-8')
     return meta

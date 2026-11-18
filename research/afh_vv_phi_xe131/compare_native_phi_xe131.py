@@ -20,7 +20,13 @@ def main():
     with a.mathematica_csv.open(newline='',encoding='utf-8') as f: ma=list(csv.DictReader(f))
     if len(py)!=len(ma): raise SystemExit(f'row count differs: Python={len(py)}, Mathematica={len(ma)}')
     qpy=np.array([float(r['q_GeV']) for r in py]); qma=np.array([float(r['q_GeV']) for r in ma])
-    if not np.array_equal(qpy,qma): raise SystemExit('q grids differ; interpolation is forbidden')
+    # The archived Python CSV stores q to eight decimal places. Normalize
+    # both coordinate arrays to that storage precision, then require exact
+    # node-by-node equality. This permits CSV rounding only; no interpolation
+    # or shifted-node comparison is performed.
+    qpy_stored=np.round(qpy,8); qma_stored=np.round(qma,8)
+    if not np.array_equal(qpy_stored,qma_stored): raise SystemExit('q grids differ after matching the Python CSV precision; interpolation is forbidden')
+    q_grid_max_abs_difference=float(np.max(np.abs(qpy-qma)))
     details={}; passed=True
     for field in FIELDS:
         x=np.array([float(r[field]) for r in py]); y=np.array([float(r[field]) for r in ma])
@@ -31,6 +37,8 @@ def main():
         details[field]={'passed':ok,'max_abs_difference':float(np.max(absd)),
           'max_scaled_difference':float(np.max(rel)),'worst_q_GeV':float(qpy[int(np.argmax(rel))])}
     result={'passed':bool(passed),'points':len(py),'rtol':a.rtol,'atol':a.atol,
+      'q_grid_match':'exact node equality after rounding both grids to the Python CSV 8-decimal precision; no interpolation',
+      'q_grid_max_abs_difference_GeV':q_grid_max_abs_difference,
       'python_csv_sha256':sha(a.python_csv),'mathematica_csv_sha256':sha(a.mathematica_csv),
       'responses':details,'interpolation':'none; exact q-grid match required'}
     a.output.parent.mkdir(parents=True,exist_ok=True)

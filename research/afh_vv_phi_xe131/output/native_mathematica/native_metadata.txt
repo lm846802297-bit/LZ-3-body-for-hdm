@@ -1,0 +1,12 @@
+AFH source = C:\Users\84680\Documents\ChatGPT\3 body HDM\_pr54_worktree\v6\dmformfactor-V6.m
+AFH source SHA256 = dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372
+SetIsotope[54,131,default,default]
+ResponseNuclear index 1 = W_M
+ResponseNuclear index 4 = W_PhiPP = W_Phi double-prime
+ResponseNuclear index 7 = W_MPhiPP interference
+Isospin components = (0,0), equal physical proton/neutron coupling factor = 4
+Recoil-coordinate mass = AME2020/CODATA-2022 bare Xe-131 nuclear mass = 121.9099224472173273462170533009076451531`20. GeV
+q grid = 0 to 0.6 GeV, dq = 0.00025 GeV, exact spatial q
+b_A [fm] = 2.2923417985218975
+Native Mathematica/Wolfram version = 14.2.0 for Microsoft Windows (64-bit) (December 26, 2024)
+Rows = 2401

@@ -389,10 +389,11 @@ on the full 2401-point AFH grid and at the four exact selected minima.
 It checks the Cauchy--Schwarz inequality and positivity of the combined
 charge response at every point.
 
-At the second \(W_M\) minimum,
+Recoil energies use the AME2020 Xe-131 neutral-atom mass converted to the
+bare nuclear mass with CODATA-2022 constants. At the second \(W_M\) minimum,
 \[
 q_A=256.271867617\ {\rm MeV},\qquad
-E_R=269.1038976\ {\rm keV},
+E_R=269.3595249\ {\rm keV},
 \]
 the zero-momentum benchmark gives
 \[
@@ -427,7 +428,8 @@ The full 0--0.6 GeV grid also shows a rapid local variation around the
 deep \(W_M\) cancellation: with the same zero-\(t\) form-factor anchors,
 the largest sampled negative and positive \(Q_{\Phi''}-1\) are about
 \(-13.61\%\) at \(q_A=255.75\) MeV and \(+11.50\%\) at
-\(q_A=256.75\) MeV. These are local ratios to a very small \(W_M\)
+\(q_A=256.75\) MeV. The corresponding recoil energies are 268.2636 and
+270.3656 keV. These are local ratios to a very small \(W_M\)
 baseline, not global event-rate changes. The absolute matched response
 remains nonnegative; the rapid sign change follows the signed
 \(M\)-\(\Phi''\) interference as the \(W_M\) amplitude passes through its
@@ -437,10 +439,10 @@ The four exact selected-point results are:
 
 | \(q_A\) (MeV) | \(E_R\) (keV) | \(Q_{\Phi''}-1\) | Combined vs. \(F_1(0)^2W_M\) |
 |---:|---:|---:|---:|
-| 157.935778 | 102.206724 | +0.324% | -0.124% |
-| 256.271868 | 269.103898 | -1.839% | -2.991% |
-| 365.066569 | 546.086898 | +1.872% | -0.547% |
-| 499.371886 | 1021.797786 | -0.663% | -5.053% |
+| 157.935778 | 102.303812 | +0.324% | -0.124% |
+| 256.271868 | 269.359525 | -1.839% | -2.991% |
+| 365.066569 | 546.605635 | +1.872% | -0.547% |
+| 499.371886 | 1022.768406 | -0.663% | -5.053% |
 
 These numbers answer the first charge-sector question, not the full
 natural-xenon question. Finite-\(t\) flavour-separated \(F_1^V(t_A)\) and
@@ -466,9 +468,13 @@ multi-nucleon effects vanish.
 - 60-digit mpmath spot checks of the rank-0/rank-2 \(\Phi''\) amplitudes
   at the four selected minima: relative differences from the SciPy double
   implementation are below \(2.2\times10^{-15}\).
-- Native AFH Mathematica export and pointwise comparison: provided, but
-  **pending execution**. It must not be reported as passed until the native
-  output and comparator manifest are archived.
+- Native AFH Mathematica export and pointwise comparison: **PASS** over 2401
+  Xe-131 grid points with no interpolation; tolerances are \(rtol=2\times10^{-8}\)
+  and \(atol=2\times10^{-10}\). Maximum scaled differences are
+  \(3.80\times10^{-9}\) for \(W_M\), \(3.52\times10^{-11}\) for \(W_{\Phi\prime\prime}\), and
+  \(9.05\times10^{-10}\) for \(W_{M\Phi\prime\prime}\). This validates the response
+  implementation on this grid, not finite-\(t\) nucleon form factors or the full
+  three-body spectrum.
 - No F1/F2-dependent three-body coefficient, full three-body cross section,
   natural-xenon sum, halo fold, detector response, or manuscript edit is
   included.

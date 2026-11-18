@@ -8,7 +8,12 @@ If[!FileExistsQ[packagePath],
   Print["ERROR: AFH v6.0 source not found: ", packagePath]; Exit[2]];
 Get[packagePath];
 A = 131; Z = 54; JA = 3/2;
-mA = A*0.93149410242;
+(* AME2020 neutral-atom mass converted to a bare nuclear mass with CODATA-2022 constants. *)
+ame2020AtomicMassU = 13090508412808/10^11;
+atomicMassUnitGeV = 93149410372/10^11;
+electronMassU = 5485799090441/10^16;
+electronBindingEnergyGeV = N[(144381/10^4 Z^(239/100) + 155468/10^11 Z^(535/100))*10^-9, 30];
+mA = N[(ame2020AtomicMassU - Z*electronMassU)*atomicMassUnitGeV + electronBindingEnergyGeV, 20];
 fmToGeVInv = 5.0677;
 bFM = Sqrt[41.467/(45.0 A^(-1.0/3.0) - 25.0 A^(-2.0/3.0))];
 bGeVInv = bFM*fmToGeVInv;
@@ -46,6 +51,7 @@ meta = {
   "ResponseNuclear index 4 = W_PhiPP = W_Phi double-prime",
   "ResponseNuclear index 7 = W_MPhiPP interference",
   "Isospin components = (0,0), equal physical proton/neutron coupling factor = 4",
+  "Recoil-coordinate mass = AME2020/CODATA-2022 bare Xe-131 nuclear mass = " <> ToString[InputForm[mA]] <> " GeV",
   "q grid = 0 to 0.6 GeV, dq = 0.00025 GeV, exact spatial q",
   "b_A [fm] = " <> ToString[InputForm[N[bFM, 16]]],
   "Native Mathematica/Wolfram version = " <> ToString[$Version],
