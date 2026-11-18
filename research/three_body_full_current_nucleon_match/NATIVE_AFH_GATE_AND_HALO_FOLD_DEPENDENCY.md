@@ -209,3 +209,55 @@ artifact. A newer native workflow,
 is currently queued on the self-hosted Windows/X64/research-gpu runner.
 Until it uploads a native comparison artifact with all 16,807 rows passing,
 the seven-isotope native gate remains OPEN.
+
+
+## 2026-11-19 update: current PR #65 and native P3-B queue
+
+The formal three-body pipeline has been refreshed to the asymmetric Pole
+prescription: the first \(p-k\) propagator is zero-width and the second
+\(p'+k\) propagator carries the constant \(\Gamma_{\chi_2}(m_{\chi_2})\).
+The latest full-current workflow is
+[44336328314](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44337928314)
+(artifact 14442826214), and its seven-isotope response-level contraction
+contains 28 rows (four benchmarks × seven isotopes), all positive. Its
+maximum spatial/charge ratio is \(7.0304970964\times10^{-9}\). This does
+not close P3-C because the output is still a response-level contraction,
+not a direct covariant-vs-AFH nuclear-amplitude comparison.
+
+The current P3-B native comparison is prepared in
+[research-compute-control PR #2](https://github.com/lm846802297-bit/research-compute-control/pull/2).
+Its run
+[44346207069](https://github.com/lm846802297-bit/research-compute-control/actions/runs/44346207069)
+is pinned to:
+- native AFH exporter/source commit
+  `5afc500a3102b857dd16e29432db8e6e068d65d1`;
+- LZ P3-B spatial response artifact from run `44337928314`,
+  artifact `14443055701`;
+- AFH source SHA-256
+  `dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372`.
+
+The native job is queued and has no assigned self-hosted runner at the
+latest check. P3-B therefore remains OPEN. Its acceptance target is the
+full 16,807-row seven-isotope/eight-response comparison plus 9,604
+rank-resolved Xe-129/Xe-131 multipole rows, with the comparator's pinned
+normalization, phase, and imaginary-residual tolerances. The 121-point
+Xe-131 dense charge export is also required to resolve the diffraction
+minimum before finalizing the fixed-speed recoil interpolation.
+
+The current interpolation audit is more informative than the old
+PCHIP-versus-linear warning: degree-8 and degree-10 local Chebyshev
+interpolants agree to numerical precision, but PCHIP differs from Cheb10
+by up to 1.6847% in \(W_M\) near
+\(q_A=0.25633847\) GeV. The normalized full/pointlike ratio changes by
+at most 0.1182% in the selected scan. This is a local interpolation
+stability result, not a native AFH validation; the dense native Xe-131
+export remains the deciding comparison.
+
+P4 is not yet a production result. The existing
+`native_charge_sector_halo_fold.py` already requires a provenance-checked
+native seven-isotope/eight-response bundle, defaults to Pole width, and
+can report both the Coulomb-sector rate and an explicitly unpromoted
+leading-static full-vector candidate. The full-vector result must remain a
+candidate until P3-C passes. The seven-isotope set covers 99.8158% of the
+natural xenon atom fraction; the omitted Xe-124/Xe-126 abundance must remain
+explicit in every rate table.
