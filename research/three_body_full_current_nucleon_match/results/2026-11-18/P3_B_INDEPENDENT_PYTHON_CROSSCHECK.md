@@ -223,7 +223,11 @@ provisional-afh-spatial-obdme-responses. The archive contains:
 | afh_spatial_obdme_multipoles_7isotope_2401.csv | 9,604 | e83f7499cd0af4ec8f1974238f09daf4899ca1b87205ec837ae0964a2e8532c6 |
 
 The rank coverage is Xe-129: J=1; Xe-131: J=1,2,3; and no abnormal
-spatial ranks for the five spin-zero isotopes. The archive validator returned
+spatial ranks for the five spin-zero isotopes. Per-isotope C0 is also recorded
+in metadata: Xe-128 1.0000924953327093; Xe-129 1.0001103230777202;
+Xe-130 1.0001260610682259; Xe-131 1.0000825298069376;
+Xe-132 1.0000445028489864; Xe-134 1.0002068258192740;
+Xe-136 1.0000015063597723. The archive validator returned
 PASS_AFH_SPATIAL_MULTIPOLE_ARCHIVE. The maximum absolute reconstruction
 residuals are zero for the three raw AFH responses and at most
 2.22e-16 for the three physical equal-p/n responses. The maximum rankwise
