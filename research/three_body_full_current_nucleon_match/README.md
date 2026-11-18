@@ -406,7 +406,7 @@ finite-(t_N) charge benchmark, then (M+Phi''), and finally the spatial
 current sector.
 
 
-## 7. Leading AFH response content and remaining work
+## 8. Leading AFH response content and remaining work
 
 At leading static one-body vector-current order, the candidate response set
 is
@@ -435,7 +435,7 @@ The remaining work is:
 No full natural-xenon three-body spectrum, halo-folded rate, or
 detector-level correction is claimed yet.
 
-## 7. Reproduction
+## 9. Reproduction
 
 Python 3.12+ and NumPy are required.
 
@@ -464,7 +464,7 @@ python research/three_body_full_current_nucleon_match/contract_three_body_afh_re
   --out /tmp/three-body-afh-response-contraction.json
 ~~~
 
-## 8. References
+## 10. References
 
 - Anand, Fitzpatrick, and Haxton, Phys. Rev. C 89, 065501 (2014),
   https://arxiv.org/abs/1308.6288: AFH nuclear responses.
