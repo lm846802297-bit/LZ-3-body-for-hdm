@@ -196,10 +196,23 @@ The PASS establishes numerical stability of the DM-side tensor at the
 reported fixed-speed stress benchmarks and quadrature orders. It does not
 establish convergence over the full recoil-energy or halo-velocity domain.
 
-### Transverse helicity-odd component
+### Leptonic multipole weights and transverse helicity-odd component
 
-For the 12 archived DM tensors, the normalized transverse antisymmetric
-component satisfies
+For the 12 archived DM tensors, the transverse-even weight
+`w_T=(L11+L22)/2` is between (4.08	imes10^{-8}) and
+(2.26	imes10^{-7}) relative to (L00). This is a DM-side kinematic
+ratio only; it is not a nuclear rate correction because the nucleon current
+coefficients and AFH multipole normalization are not yet included.
+
+The longitudinal DM-side ratio (L33/L00) is between
+(5.73	imes10^{-6}) and (6.01	imes10^{-6}). In the static on-shell
+impulse approximation the nuclear longitudinal current vanishes; for a
+bound nucleus with (q_A^0=E_R), the continuity-equation correction must
+be treated separately.
+
+The transverse electric--magnetic multipole interference weight is
+`w_hel=-2i(L12-L21)`, as in HKS 2020 Appendix A, Eq. (111). For the 12
+archived tensors, the normalized transverse antisymmetric component satisfies
 \[
 \max\frac{|-i(L^{12}-L^{21})|}{|L^{11}+L^{22}|}
 =7.39\times10^{-16}.
