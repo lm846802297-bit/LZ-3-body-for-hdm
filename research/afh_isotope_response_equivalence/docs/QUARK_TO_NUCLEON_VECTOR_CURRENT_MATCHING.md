@@ -8588,3 +8588,192 @@ $$
 - 完整 LZ detector-level likelihood。
 
 因此，当前可以准确称为：**AFH v6.0 核结构框架下的完整三体一体核流反冲率计算规范已经建立；对应的全响应数值实现和最终天然氙预测仍需逐层验收。**
+
+
+## 45. 2026-11-18 三体完整核子流收缩的最新数值结论
+
+本节把 PR #58 的三体 Dirac--Pauli 收缩结果接回本文件的统一 AFH
+匹配框架。必须区分三种证据等级：
+
+1. **三体暗物质流：** 完整四个 (mathcal T_3^mu)、两张标量辐射图及其
+   干涉已经进入相空间积分；九个收敛压力点的 Gram/Lorentz 张量和
+   point-nucleus contraction 均达到约 (10^{-8}) 的最终差异。
+2. **Xe-131 AFH (M,Phi'',MPhi'')：** 2401 个 (q_A) 节点已经有
+   原生 Mathematica v6.0 与 Python 的逐点比较，因此这些 Xe-131
+   charge-sector response 可作为 native-validated 输入。
+3. **七同位素 (Delta,Sigma') 等空间响应：** 当前仍是 Python AFH
+   translation 的固定速度诊断，尚未获得七个同位素的原生 Mathematica
+   逐点验证，因此不能用它们替代最终 natural-xenon response database。
+
+### 45.1 空间核流的结论
+
+完整三体收缩得到
+[
+oxed{
+maxleft|
+rac{R_{m spatial}^{(3)}}{R_{m charge}^{(3)}}
+ight|
+=7.10	imes10^{-9}
+}
+]
+（84 个七同位素/宽度 benchmark rows）。
+
+最大值出现在 near-pole、(E_R=267) keV、(g_2=1) 的测试点。
+因此在当前 tested fixed-speed benchmarks 中，
+(Delta,Sigma',Sigma'') 对总核反冲率的贡献可以安全地称为数值可忽略。
+
+这比单纯使用
+[
+r_chisimeq2.47	imes10^{-3}
+]
+做幂计数更强，因为这里已经完成了三体流与 Dirac--Pauli 空间核流的
+实际收缩，而不是把 (r_chi) 当作核响应比例。
+
+### 45.2 (Phi'') 不能由空间流幂计数删除
+
+(Phi'') 来自核子**时间分量**的自旋--轨道项，因此不能乘上
+(r_chi) 再判断其大小。
+
+对 native-validated Xe-131 AFH grid，采用精确反冲运动学：
+
+[
+m_A=121.9099224472 {m GeV}.
+]
+
+在 (E_R=200) keV：
+
+[
+q_A=0.2208257435 {m GeV},
+]
+[
+rac{W_{Phi''}}{W_M}=0.0369557,
+qquad
+rac{W_{MPhi''}}{W_M}=-0.1912071.
+]
+
+在中心有限-(t_N) form-factor diagnostic 下，
+
+[
+F_1^V=2.66316,qquad F_2^V=-0.46805,
+]
+得到
+
+[
+Q_{Phi''}-1=-0.344%
+]
+
+相对于 finite-(t_N) 的 (M)-only charge term。
+
+但如果与旧的 pointlike (F_1^V(0)^2W_M) 基准比较，
+整个 coherent charge sector 已经下降约
+
+[
+oxed{-21.48%}.
+]
+
+因此此处真正大的修正不是 (Phi'')，而是 finite-(t_N) 的 coherent
+nucleon charge form factor。
+
+### 45.3 (W_M) 深极小值附近必须逐点计算
+
+在 (E_R=267) keV，Xe-131 的精确反冲动量为
+
+[
+q_A=0.2551469574 {m GeV}.
+]
+
+此处 native AFH grid 给出
+
+[
+rac{W_{Phi''}}{W_M}=19.6361,
+qquad
+rac{W_{MPhi''}}{W_M}=-4.23930.
+]
+
+因此 pointlike (M+Phi'') charge correction 已经达到
+
+[
+oxed{-9.68%}
+]
+
+而不是在 200 keV benchmark 中看到的 sub-percent 量级。
+
+加入 central finite-(t_N) form-factor diagnostic 后，
+
+[
+F_1^V=2.56389,qquad
+F_2^V=-0.44977,
+]
+
+得到
+
+[
+oxed{
+rac{R_{m charge}^{m finite-t_N}}
+{R_{M,m pointlike}}-1
+=-34.24%.
+}
+]
+
+这个 (-34.24%) 是**Xe-131 单个 recoil point 的局部结果**，
+不能直接作为天然氙整个谱的统一百分比。
+
+其物理原因是 (W_M) 在该区域发生深 cancellation，使得
+(W_{Phi''}/W_M) 和 (W_{MPhi''}/W_M) 对 (q_A) 极其敏感。
+
+### 45.4 当前天然氙谱的正确分层
+
+因此完整天然氙计算应严格按以下顺序组装：
+
+[
+oxed{
+W_M^{m pointlike}
+ightarrow
+(M+Phi'')^{m finite-t_N}
+ightarrow
+(Delta,Sigma',Sigma'')^{m finite-t_N}
+ightarrow
+	ext{halo fold}
+ightarrow
+	ext{natural Xe}
+}
+]
+
+而不是
+
+[
+W_Mightarrow W_M+Phi''+Delta+Sigma'
+]
+
+直接按响应大小相加。
+
+当前已经可以确定：
+
+- spatial-current sector 在测试点上 (<7.1	imes10^{-9})；
+- (Phi'') 在普通 (W_M) 区域通常是 percent/sub-percent 修正；
+- 在 (W_M) 深极小值附近，(Phi'') 可以达到 (mathcal O(10%))；
+- finite-(t_N) coherent charge normalization 可以达到 tens-of-percent；
+- 因此旧 (W_M^{00})-only natural-xenon spectrum 的主要潜在修正并不是
+  (Delta,Sigma') 或 (Sigma'')，而是 nucleon finite-(t_N) charge
+  form factor 和 (M)-(Phi'') interference。
+
+### 45.5 当前还不能给出最终天然氙百分比
+
+最终 natural-xenon spectrum 仍需同时满足：
+
+1. 七个天然丰度同位素的 native-validated AFH (M,Phi'',MPhi'')；
+2. 统一且有 provenance 的 universal (u+d+s) finite-(Q^2)
+   (F_1^V,F_2^V)；
+3. 每个 isotope 使用自己的 (m_A) 与 (q_A(E_R))；
+4. 完整 halo (v) 积分；
+5. 相同 (chi_2) width prescription 下的三体相空间收敛。
+
+因此，本节的最终状态是：
+
+[
+oxed{
+	ext{空间核流已经被数值证明很小，但旧 }W_M^{00}
+	ext{ 基准到最终 natural-Xe spectrum 的修正尚未闭合。}
+}
+]
+
