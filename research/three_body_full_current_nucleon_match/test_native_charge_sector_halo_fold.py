@@ -48,7 +48,7 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             result["AFH_finite_size_M_baseline"], 2.5 * responses["M"], places=14
         )
         self.assertAlmostEqual(
-            result["AFH_finite_size_M_baseline"], result["AFH_finite_size_M_baseline"], places=14
+            result["nucleon_q0_M_only"], result["AFH_finite_size_M_baseline"], places=14
         )
 
     def test_charge_kernel_uses_continuity_reduced_weight(self):
@@ -58,7 +58,7 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
         )
         self.assertAlmostEqual(result["L_C"], 2.4)
         self.assertAlmostEqual(result["AFH_finite_size_M_baseline"], 2.4 * 4.0)
-        self.assertAlmostEqual(result["AFH_finite_size_M_baseline"], result["AFH_finite_size_M_baseline"])
+        self.assertAlmostEqual(result["nucleon_q0_M_only"], result["AFH_finite_size_M_baseline"])
         self.assertAlmostEqual(
             result["charge_M_PhiPP"],
             sum(result["terms"].values()),
@@ -190,6 +190,12 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
         )
         self.assertAlmostEqual(result["F1V_quark_sum"], 3.0 - 8.392 * (-tN), places=13)
         self.assertAlmostEqual(result["F2V_quark_sum"], -0.552, places=13)
+        self.assertAlmostEqual(
+            result["F1N_effective"], result["F1V_quark_sum"] / 3.0, places=14
+        )
+        self.assertAlmostEqual(
+            result["F2N_effective"], result["F2V_quark_sum"] / 3.0, places=14
+        )
         self.assertNotAlmostEqual(-tN, qA * qA, places=12)
 
     def test_charge_correction_uses_same_finite_t_M_baseline(self):
@@ -206,7 +212,7 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             result["nucleon_q0_M_only"], result["AFH_finite_size_M_baseline"], places=14
         )
         self.assertAlmostEqual(
-            result["AFH_finite_size_M_baseline"], result["AFH_finite_size_M_baseline"], places=14
+            result["nucleon_q0_M_only"], result["AFH_finite_size_M_baseline"], places=14
         )
         self.assertNotEqual(
             result["relative_charge_vs_nucleon_finite_t_M_only"],
