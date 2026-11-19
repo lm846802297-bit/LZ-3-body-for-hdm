@@ -10,9 +10,11 @@ The adopted B prescription is the first-order Bishara Dirac slope with
 the available constant Pauli anchor.  The isoscalar z-expansion remains
 an alternate sensitivity diagnostic, not the adopted B input.
 
-The charge matching deliberately accepts both the exact spatial transfer
-q_A^2 and the Lorentz invariant nucleon transfer t_N as separate inputs:
-c_M depends on t_N, while c_Phi'' depends on q_A^2.  Formal B production
+The charge matching deliberately accepts both the exact spatial momentum
+squared Q_A^2=|boldsymbol q_A|^2 and the Lorentz invariant nucleon transfer
+t_N as separate inputs: c_M depends on t_N, while c_Phi'' depends on Q_A^2.
+The first positional argument qA_GeV is the spatial magnitude Q_A, not the
+four-vector q_A^mu.  Formal B production
 uses t_N=t_A=-2*m_A*E_R; static q_N^0=0 diagnostics must be labelled
 separately.
 """
@@ -132,8 +134,8 @@ def charge_coefficients(
 ) -> tuple[float, float]:
     """Return M and Phi'' charge coefficients with separate q_A and t_N.
 
-    q_A^2 is the exact spatial nuclear recoil momentum squared and enters
-    c_Phi''.  The nucleon invariant t_N enters c_M.  Formal B production
+    qA_GeV denotes the exact spatial magnitude Q_A=|boldsymbol q_A|;
+    Q_A^2 enters c_Phi''. The nucleon invariant t_N enters c_M.  Formal B production
     uses t_N=t_A=-2*m_A*E_R; the static q_N^0=0 diagnostic instead uses
     t_N=-q_A^2 and must pass that value explicitly.
     """
