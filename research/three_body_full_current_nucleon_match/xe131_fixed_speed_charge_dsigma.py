@@ -208,6 +208,7 @@ def charge_sector_kernels(
     eta = cPhi / cM
     Qphi = 1.0 + 2.0 * eta * (WMPhi / WM) + eta * eta * (WPhi / WM)
     ratio_direct = full_charge_kernel / pointlike_M_kernel
+    ratio_finite_t_M = full_charge_kernel / finite_t_M_kernel
     ratio_factorized = (cM * cM / (F1V0 * F1V0)) * Qphi
     ratio_legacy_F1_squared = (F1 * F1 / (F1V0 * F1V0)) * Qphi
     if not math.isclose(ratio_direct, ratio_factorized, rel_tol=2e-13, abs_tol=2e-15):
@@ -222,6 +223,12 @@ def charge_sector_kernels(
         "W_PhiPP_over_W_M": WPhi / WM,
         "W_MPhiPP_over_W_M": WMPhi / WM,
         "Q_PhiPP_relative_to_finite_t_M": Qphi,
+        "finite_t_M_only_over_q0_M_reference": (cM * cM) / 9.0,
+        "full_charge_over_finite_t_M": ratio_finite_t_M,
+        "relative_change_vs_finite_t_M_percent": 100.0 * (ratio_finite_t_M - 1.0),
+        "full_charge_over_q0_M_reference": ratio_direct,
+        "relative_change_vs_q0_M_reference_percent": 100.0 * (ratio_direct - 1.0),
+        # Legacy aliases: the denominator is the q=0 nucleon-form-factor M reference.
         "finite_t_M_only_over_pointlike_M": (cM * cM) / 9.0,
         "full_charge_over_pointlike_M": ratio_direct,
         "relative_change_percent": 100.0 * (ratio_direct - 1.0),
@@ -328,15 +335,21 @@ def run(afh_csv: Path) -> dict:
                 "native_AFH_responses_linear_check": linear_response,
                 "finite_tN_form_factors_and_charge_kernels": kernels,
                 "linear_interpolation_cross_section_ratio": (
-                    linear_kernels["full_charge_over_pointlike_M"]
+                    linear_kernels["full_charge_over_finite_t_M"]
                 ),
                 "pchip_minus_linear_ratio": (
-                    kernels["full_charge_over_pointlike_M"]
-                    - linear_kernels["full_charge_over_pointlike_M"]
+                    kernels["full_charge_over_finite_t_M"]
+                    - linear_kernels["full_charge_over_finite_t_M"]
+                ),
+                "linear_interpolation_ratio_vs_q0_reference": (
+                    linear_kernels["full_charge_over_q0_M_reference"]
+                ),
+                "pchip_ratio_vs_q0_reference": (
+                    kernels["full_charge_over_q0_M_reference"]
                 ),
             })
         ratios = [
-            row["finite_tN_form_factors_and_charge_kernels"]["full_charge_over_pointlike_M"]
+            row["finite_tN_form_factors_and_charge_kernels"]["full_charge_over_finite_t_M"]
             for row in width_rows
         ]
         if len(width_rows) != 1 or width_rows[0]["width_scheme"] != "pole":
@@ -354,12 +367,17 @@ def run(afh_csv: Path) -> dict:
             },
             "fixed_speed_differential_cross_section_ratio": (
                 width_rows[0]["finite_tN_form_factors_and_charge_kernels"][
-                    "full_charge_over_pointlike_M"
+                    "full_charge_over_finite_t_M"
                 ]
             ),
             "relative_change_percent": (
                 width_rows[0]["finite_tN_form_factors_and_charge_kernels"][
-                    "relative_change_percent"
+                    "relative_change_vs_finite_t_M_percent"
+                ]
+            ),
+            "legacy_ratio_vs_q0_M_reference": (
+                width_rows[0]["finite_tN_form_factors_and_charge_kernels"][
+                    "full_charge_over_q0_M_reference"
                 ]
             ),
             "width_scenarios": width_rows,
@@ -379,7 +397,11 @@ def run(afh_csv: Path) -> dict:
         ),
         "ratio_definition": (
             "(dSigma/dER)_[finite-tN M+Phi'' Coulomb sector] / "
-            "(dSigma/dER)_[original pointlike 9 W_M-only]"
+            "(dSigma/dER)_[same finite-tN M-only with identical F1,F2]"
+        ),
+        "secondary_reference_definition": (
+            "(dSigma/dER)_[finite-tN M+Phi'' Coulomb sector] / "
+            "(dSigma/dER)_[q=0 nucleon-form-factor M-only reference]"
         ),
         "factorization": (
             "The same continuity-adjusted L_C^(3), propagator, flux, and phase-space "
