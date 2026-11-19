@@ -102,6 +102,9 @@ are each included exactly once.
 | Nucleon mass | \(m_N=0.938918\) GeV |
 | Width prescription | Pole only |
 
+The coefficient inputs for the external-\\(g_{VN}=3g_{Vq}\\) convention are
+\\(\\widehat F_1^N(0)=1\\) and \\(\\widehat F_2^N(0)=-0.184\\), obtained by dividing the raw universal u+d+s values by three. The earlier pre-P0 archive used the raw values; its dimensionless helicity-versus-Cartesian residuals are invariant under this common rescaling, but its absolute particle-side coefficients are not suitable for an external-\\(g_{VN}\\) rate without the division by three.
+
 The AFH amplitudes are still marked
 PROVISIONAL_SOURCE_TRANSLATED_AFH_SPATIAL_RESPONSES; native Wolfram
 validation is pending.
