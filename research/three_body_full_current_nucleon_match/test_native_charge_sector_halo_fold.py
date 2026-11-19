@@ -23,24 +23,38 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
         self.assertAlmostEqual(q200, 0.22082555996567457, delta=1.0e-15)
         self.assertAlmostEqual(q267, 0.25514674538605275, delta=1.0e-15)
 
+    def test_mediator_denominator_uses_invariant_tA_not_spatial_QA(self):
+        mA, mV, ER_keV = 121.9, 10.0, 200.0
+        ER = ER_keV * 1.0e-6
+        tA = -2.0 * mA * ER
+        actual = fold.mediator_denominator_squared_GeV4(mV, mA, ER_keV)
+        self.assertAlmostEqual(actual, (mV*mV - tA)**2, places=13)
+        spatial_QA2 = 2.0*mA*ER + ER*ER
+        self.assertNotAlmostEqual(actual, (mV*mV + spatial_QA2)**2, places=12)
+
+    def test_q0_anchor_is_effective_gVN_normalized_form_factor(self):
+        f1, f2 = fold.form_factor_values(0.22, "q0_anchor", tN_GeV2=-0.01)
+        self.assertAlmostEqual(f1, 1.0, places=14)
+        self.assertAlmostEqual(f2, -0.184, places=14)
+
     def test_charge_kernel_decomposes_exactly(self):
         responses = {"M": 4.0, "PhiPP": 0.2, "MPhiPP": -0.3}
         result = fold.charge_kernel_from_coulomb_weight(
-            2.5, 0.22, responses, "pointlike"
+            2.5, 0.22, responses, "q0_anchor", tN_GeV2=-0.22**2
         )
         expected = sum(result["terms"].values())
         self.assertAlmostEqual(result["charge_sector"], expected, places=14)
         self.assertAlmostEqual(
-            result["pointlike_M"], 9.0 * 2.5 * responses["M"], places=14
+            result["baseline_A_original_AFH_M"], 2.5 * responses["M"], places=14
         )
 
     def test_charge_kernel_uses_continuity_reduced_weight(self):
         responses = {"M": 4.0, "PhiPP": 0.2, "MPhiPP": -0.3}
         result = fold.charge_kernel_from_coulomb_weight(
-            2.4, 0.22, responses, "pointlike"
+            2.4, 0.22, responses, "q0_anchor", tN_GeV2=-0.22**2
         )
         self.assertAlmostEqual(result["L_C"], 2.4)
-        self.assertAlmostEqual(result["pointlike_M"], 9.0 * 2.4 * 4.0)
+        self.assertAlmostEqual(result["baseline_A_original_AFH_M"], 2.4 * 4.0)
         self.assertAlmostEqual(
             result["charge_sector"],
             sum(result["terms"].values()),
@@ -122,7 +136,7 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             "SigmaPrimeDelta": -1.0,
         }
         result = fold.leading_static_vector_current_kernel_from_tensor(
-            L, 0.22, 200.0e-6, responses, "pointlike"
+            L, 0.22, 200.0e-6, responses, "q0_anchor"
         )
         self.assertAlmostEqual(
             result["leading_static_vector_current_candidate"],
@@ -150,7 +164,7 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
         }
         with self.assertRaisesRegex(ValueError, "M-Phi'' response violates Cauchy-Schwarz"):
             fold.leading_static_vector_current_kernel_from_tensor(
-                L, 0.22, 200.0e-6, responses, "pointlike"
+                L, 0.22, 200.0e-6, responses, "q0_anchor"
             )
 
     def test_leading_static_vector_kernel_rejects_bad_nuclear_cauchy_response(self):
@@ -170,13 +184,13 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
         }
         with self.assertRaisesRegex(ValueError, "Cauchy-Schwarz"):
             fold.leading_static_vector_current_kernel_from_tensor(
-                L, 0.22, 200.0e-6, responses, "pointlike"
+                L, 0.22, 200.0e-6, responses, "q0_anchor"
             )
 
     def test_zero_momentum_form_factor_anchor(self):
-        f1, f2 = fold.form_factor_values(0.0, "isoscalar_zexp")
-        self.assertAlmostEqual(f1, 3.0, places=10)
-        self.assertAlmostEqual(f2, -0.552, places=10)
+        f1, f2 = fold.form_factor_values(0.0, "isoscalar_zexp", tN_GeV2=0.0)
+        self.assertAlmostEqual(f1, 1.0, places=10)
+        self.assertAlmostEqual(f2, -0.184, places=10)
 
     def test_native_physical_conversion_factor(self):
         q = np.linspace(0.0, 0.6, 2401)
@@ -324,7 +338,7 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
                 nw=2,
                 nz=2,
                 nphi=2,
-                form_factor_prescription="pointlike",
+                form_factor_prescription="q0_anchor",
                 width_scheme="pole",
                 include_leading_static_vector_candidate=True,
             )
@@ -337,6 +351,13 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             self.assertTrue(result["leading_static_vector_current_candidate_included"])
             self.assertEqual(len(result["results"]), 2)
             mb = next(row for row in result["results"] if row["halo_model"] == "mb_untruncated")
+            self.assertGreater(mb["rate_A_original_AFH_M_events_kg_day_keV"], 0.0)
+            self.assertGreater(mb["rate_B_baseline_M_events_kg_day_keV"], 0.0)
+            self.assertGreater(mb["rate_C_charge_extension_events_kg_day_keV"], 0.0)
+            self.assertIn("W_M(y_A)", result["primary_baseline"])
+            self.assertIn("t_A=-2*m_A*E_R", result["mediator_denominator"])
+            self.assertEqual(result["nucleon_transfer_scheme"],
+                "strict one-body impulse q_N^mu=q_A^mu; t_N=t_A=-2*m_A*E_R")
             self.assertGreater(
                 mb["rate_leading_static_vector_candidate_events_kg_day_keV"], 0.0
             )
