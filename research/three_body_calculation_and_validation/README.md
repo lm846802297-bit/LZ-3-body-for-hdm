@@ -37,10 +37,6 @@ The kernel uses the interaction/current written in paper-source/main.tex and exp
 
 A separate exploratory reproduction record for the supplied reference paper's Fig. 2 is archived at [fig2_target_mass_reproduction_trial_20261119/README.md](fig2_target_mass_reproduction_trial_20261119/README.md). It infers an effective target mass near 121.04 GeV from digitized fixed-speed endpoints and the red-curve shape, compares this with the (130u) approximation and the separate 122 GeV example in Eq. (107), and does not alter the adopted finite-(t_N) nucleon-form-factor plus finite-size AFH (W_M) baseline.
 
-
-
-A separate exploratory reproduction record for the supplied reference paper's Fig. 2 is archived at [fig2_target_mass_reproduction_trial_20261119/README.md](fig2_target_mass_reproduction_trial_20261119/README.md). It infers an effective target mass near 121.04 GeV from digitized fixed-speed endpoints and the red-curve shape, compares this with the (130u) approximation and the separate 122 GeV example in Eq. (107), and does not alter the adopted finite-(t_N) nucleon-form-factor plus finite-size AFH (W_M) baseline.
-
 ## Reproduce the core regression tests
 
 From the repository root:
