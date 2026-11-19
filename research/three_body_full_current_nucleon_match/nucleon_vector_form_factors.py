@@ -138,13 +138,28 @@ def isoscalar_zexp(Q2: float) -> tuple[float, float]:
     F2s = F2S0
     return 3.0 * (F1S + F1s), 3.0 * (F2S + F2s)
 
-def charge_coefficients(qA_GeV: float, *, F1: float, F2: float, mN_GeV: float = M_N_GEV) -> tuple[float, float]:
+def charge_coefficients(
+    qA_GeV: float,
+    *,
+    F1: float,
+    F2: float,
+    mN_GeV: float = M_N_GEV,
+    tN_GeV2: float | None = None,
+) -> tuple[float, float]:
+    """Return charge-sector coefficients with separate spatial Q_A^2 and t_N.
+
+    If tN_GeV2 is omitted, retain the legacy static-nucleon diagnostic
+    q_N^0=0, t_N=-|q_A|^2.  The strict one-body impulse prescription passes
+    tN_GeV2=t_A=-2 m_A E_R, while the spatial Q_A^2 remains exact.
+    """
     if qA_GeV < 0.0 or mN_GeV <= 0.0:
         raise ValueError("invalid qA or nucleon mass")
-    Q2 = qA_GeV * qA_GeV
-    tN = -Q2
+    Q_A2 = qA_GeV * qA_GeV
+    tN = -Q_A2 if tN_GeV2 is None else float(tN_GeV2)
+    if not math.isfinite(tN):
+        raise ValueError("tN_GeV2 must be finite")
     cM = F1 + tN * (F1 + 2.0 * F2) / (8.0 * mN_GeV**2)
-    cPhiPP = Q2 * (F1 + 2.0 * F2) / (4.0 * mN_GeV**2)
+    cPhiPP = Q_A2 * (F1 + 2.0 * F2) / (4.0 * mN_GeV**2)
     return cM, cPhiPP
 
 def q0_anchor_baseline_correction(qA_GeV: float, W_phi_over_WM: float, W_Mphi_over_WM: float, *, prescription: str = "isoscalar_zexp") -> dict:
