@@ -1,0 +1,8 @@
+{
+  "status": "COMPLETED",
+  "files": {
+    "afh_default_xe131_M_PhiPP_native.csv": "b1b65708cd103058c3bcaea50bf65550d5671a88e97000b94f2536fbc60a59ff",
+    "afh_default_xe131_M_PhiPP_metadata.json": "3583b68799f3de612f435953a3c8e6cc903306d6af0059692a7a9936cfce31b3",
+    "afh_default_xe131_M_PhiPP_validation.json": "682d0a451f8a3118634e4824cfda1909ed165ad16a40a5a873caef0f71177de0"
+  }
+}
