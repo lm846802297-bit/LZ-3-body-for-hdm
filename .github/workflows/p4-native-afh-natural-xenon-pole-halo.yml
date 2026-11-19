@@ -1,0 +1,135 @@
+name: P4 native AFH seven-isotope natural-xenon Pole halo fold
+
+on:
+  workflow_dispatch:
+    inputs:
+      native_run_id:
+        description: "Completed research-compute-control run containing the native AFH artifact"
+        required: true
+        type: string
+      native_artifact_id:
+        description: "Artifact ID for afh-v6-seven-isotope-eight-response"
+        required: true
+        type: string
+      mchi_GeV:
+        description: "Dark-matter mass in GeV"
+        required: true
+        type: string
+        default: "1000"
+      ms_keV:
+        description: "Final scalar mass in keV"
+        required: true
+        type: string
+        default: "450"
+      delta_m_keV:
+        description: "Dark-sector mass splitting in keV"
+        required: true
+        type: string
+        default: "450"
+      g2:
+        description: "Off-diagonal dark-sector coupling"
+        required: true
+        type: string
+        default: "1"
+      ER_keV:
+        description: "Space-separated recoil energies in keV"
+        required: true
+        type: string
+        default: "101 200 267 542"
+      nv:
+        description: "Halo-speed Gauss-Legendre order"
+        required: true
+        type: string
+        default: "16"
+      nw:
+        description: "Three-body w integration order"
+        required: true
+        type: string
+        default: "24"
+      nz:
+        description: "Three-body z integration order"
+        required: true
+        type: string
+        default: "20"
+      nphi:
+        description: "Three-body azimuth integration order"
+        required: true
+        type: string
+        default: "12"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  p4-natural-xenon-pole-fold:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Check out the reviewed research branch
+        uses: actions/checkout@v4
+        with:
+          ref: research/p3b-p3c-p4-gates-20261119
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install numerical dependencies
+        run: python -m pip install --upgrade numpy scipy
+
+      - name: Download provenance-checked native AFH artifact
+        uses: actions/download-artifact@v4
+        with:
+          artifact-ids: ${{ inputs.native_artifact_id }}
+          run-id: ${{ inputs.native_run_id }}
+          repository: lm846802297-bit/research-compute-control
+          github-token: ${{ secrets.LZ_RESEARCH_READ_TOKEN }}
+          path: ${{ runner.temp }}/native-afh
+
+      - name: Compile and run native halo-fold regression tests
+        run: |
+          python -m py_compile research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py
+          python -m unittest research.three_body_full_current_nucleon_match.test_native_charge_sector_halo_fold -v
+
+      - name: Run seven-isotope Coulomb and leading-static candidate folds
+        shell: bash
+        env:
+          MCHI: ${{ inputs.mchi_GeV }}
+          MS: ${{ inputs.ms_keV }}
+          DELTA_M: ${{ inputs.delta_m_keV }}
+          G2: ${{ inputs.g2 }}
+          ER: ${{ inputs.ER_keV }}
+          NV: ${{ inputs.nv }}
+          NW: ${{ inputs.nw }}
+          NZ: ${{ inputs.nz }}
+          NPHI: ${{ inputs.nphi }}
+        run: |
+          set -euo pipefail
+          read -r -a recoil_grid <<< "$ER"
+          python research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py \
+            --native-dir "$RUNNER_TEMP/native-afh" \
+            --out "$RUNNER_TEMP/p4-coulomb-pole.json" \
+            --mchi-GeV "$MCHI" --ms-keV "$MS" --delta-m-keV "$DELTA_M" \
+            --g2 "$G2" --ER-keV "${recoil_grid[@]}" \
+            --nv "$NV" --nw "$NW" --nz "$NZ" --nphi "$NPHI" \
+            --form-factor isoscalar_zexp --width-scheme pole
+          python research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py \
+            --native-dir "$RUNNER_TEMP/native-afh" \
+            --out "$RUNNER_TEMP/p4-leading-static-candidate-pole.json" \
+            --mchi-GeV "$MCHI" --ms-keV "$MS" --delta-m-keV "$DELTA_M" \
+            --g2 "$G2" --ER-keV "${recoil_grid[@]}" \
+            --nv "$NV" --nw "$NW" --nz "$NZ" --nphi "$NPHI" \
+            --form-factor isoscalar_zexp --width-scheme pole \
+            --include-leading-static-vector-candidate
+
+      - name: Upload P4 diagnostics without promoting full-current candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: p4-native-afh-natural-xenon-pole-halo
+          path: |
+            ${{ runner.temp }}/p4-coulomb-pole.json
+            ${{ runner.temp }}/p4-leading-static-candidate-pole.json
+          if-no-files-found: error
+          retention-days: 90
