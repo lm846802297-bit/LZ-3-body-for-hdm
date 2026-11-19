@@ -1,0 +1,92 @@
+{
+  "status": "PASS_SPATIAL_AMPLITUDE_LEVEL_HELICITY_RECONSTRUCTION",
+  "P3C_overall_status": "OPEN_FULL_COVARIANT_NUCLEAR_AMPLITUDE_NOT_YET_VALIDATED",
+  "formal_width_scheme": "pole",
+  "isotope": "Xe-131",
+  "J_A": 1.5,
+  "C0": 1.0000825298069376,
+  "AFH_source_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+  "source_artifacts": {
+    "phase_space_tensor_run": 44337928314,
+    "phase_space_tensor_artifact": 14442826214,
+    "spatial_response_run": 44337928314,
+    "spatial_response_artifact": 14443055701
+  },
+  "form_factor_anchors": {
+    "F1V_q0": 3,
+    "F2V_q0": -0.552,
+    "mN_GeV": 0.938918
+  },
+  "benchmark_count": 4,
+  "max_amplitude_vs_cartesian_relative_residual": 6.089950787672376e-16,
+  "max_Eq107_vs_helicity_coefficient_relative_residual": 8.52922033852403e-16,
+  "interpolation_summary": {
+    "max_PCHIP_amplitude_vs_linear_response_relative_difference": 0.000005526920321278328,
+    "max_linear_amplitude_vs_linear_response_relative_difference": 0.0000019482674933849144,
+    "max_PCHIP_vs_linear_amplitude_kernel_relative_difference": 0.0000035786726069317685
+  },
+  "results": [
+    {
+      "benchmark": "green_450keV",
+      "ER_keV": 200,
+      "qA_GeV": 0.22093060215101032,
+      "K_helicity_amplitude_PCHIP": 0.00835366938272393,
+      "amplitude_vs_cartesian_relative_residual": 2.0766005889152813e-16,
+      "PCHIP_vs_linear_response_relative_difference": 0.000005526920320982571,
+      "linear_amplitude_vs_linear_response_relative_difference": 0.000001948267493218851,
+      "rank_contributions": {
+        "J1": 0.0037884564898606264,
+        "J2": 0,
+        "J3": 0.004565212892863303
+      }
+    },
+    {
+      "benchmark": "green_1MeV",
+      "ER_keV": 200,
+      "qA_GeV": 0.22093060215101032,
+      "K_helicity_amplitude_PCHIP": 0.0005141111107191802,
+      "amplitude_vs_cartesian_relative_residual": 4.2177737453245634e-16,
+      "PCHIP_vs_linear_response_relative_difference": 0.000005526920321278328,
+      "linear_amplitude_vs_linear_response_relative_difference": 0.0000019482674933849144,
+      "rank_contributions": {
+        "J1": 0.00023315353824530208,
+        "J2": 0,
+        "J3": 0.0002809575724738781
+      }
+    },
+    {
+      "benchmark": "near_pole_362keV_g2_0p1",
+      "ER_keV": 267,
+      "qA_GeV": 0.2552681134213372,
+      "K_helicity_amplitude_PCHIP": 0.6107488976284084,
+      "amplitude_vs_cartesian_relative_residual": 5.453418068880268e-16,
+      "PCHIP_vs_linear_response_relative_difference": 0.0000011386250979097965,
+      "linear_amplitude_vs_linear_response_relative_difference": 4.969056209260679e-7,
+      "rank_contributions": {
+        "J1": 0.44362926443408063,
+        "J2": 0,
+        "J3": 0.1671196331943278
+      }
+    },
+    {
+      "benchmark": "near_pole_362keV_g2_1",
+      "ER_keV": 267,
+      "qA_GeV": 0.2552681134213372,
+      "K_helicity_amplitude_PCHIP": 0.13672807835399906,
+      "amplitude_vs_cartesian_relative_residual": 6.089950787672376e-16,
+      "PCHIP_vs_linear_response_relative_difference": 0.000001138625097823098,
+      "linear_amplitude_vs_linear_response_relative_difference": 4.96905620881326e-7,
+      "rank_contributions": {
+        "J1": 0.09931508196446158,
+        "J2": 0,
+        "J3": 0.03741299638953747
+      }
+    }
+  ],
+  "limitations": [
+    "Spatial AFH amplitudes remain provisional Python translations pending native Wolfram P3-B.",
+    "Charge M and Phi'' multipoles are not rank-resolved; full charge-plus-spatial amplitude-level validation is open.",
+    "Independent direct coordinate-space bound-nucleus current calculation is not yet implemented.",
+    "Finite-t_N form factors and higher-order/two-body nuclear currents are not included."
+  ]
+}
