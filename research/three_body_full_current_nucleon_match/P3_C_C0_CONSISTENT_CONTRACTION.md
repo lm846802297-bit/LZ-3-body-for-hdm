@@ -205,7 +205,7 @@ This is **not** a global upper bound on the physical natural-xenon rate.
 The calculation:
 1. uses provisional Python translations of AFH v6.0 responses, not a
    native Wolfram seven-isotope/eight-response PASS;
-2. uses constant zero-momentum anchors in this historical structural diagnostic. The archived input values \\(F_1^{uds}(0)=3\\), \\(F_2^{uds}(0)=-0.552\\) are raw flavor sums. In the external-\\(g_{VN}=3g_{Vq}\\) rate convention, the corresponding coefficient inputs are \\(\\widehat F_1^N(0)=1\\), \\(\\widehat F_2^N(0)=-0.184\\). The dimensionless spatial-to-charge ratios are unchanged by the common factor-three rescaling, but the old raw absolute coefficients must not be used with an external \\(g_{VN}\\) prefactor;
+2. uses constant zero-momentum anchors in this historical structural diagnostic. The archived input values \(F_1^{uds}(0)=3\), \(F_2^{uds}(0)=-0.552\) are raw flavor sums. In the external-\(g_{VN}=3g_{Vq}\) rate convention, the corresponding coefficient inputs are \(\\widehat F_1^N(0)=1\), \(\\widehat F_2^N(0)=-0.184\). The dimensionless spatial-to-charge ratios are unchanged by the common factor-three rescaling, but the old raw absolute coefficients must not be used with an external \(g_{VN}\) prefactor;
 3. evaluates 12 fixed-speed benchmark tensors, not a continuous
    recoil-energy or halo-velocity integral;
 4. does not include the mediator/coupling prefactors, detector efficiency,
@@ -238,9 +238,9 @@ and do not label this a full P3 pass or a final natural-xenon prediction.
    amplitude reconstruction, retaining the OBDME phases, Wigner-Eckart
    factors, and signed \(\Sigma'\)-\(\Delta\) interference.
 4. The P3-C structural subgate now uses the normalized q=0 effective anchors
-   \\(\\widehat F_1^N=1\\), \\(\\widehat F_2^N=-0.184\\) in the external
-   \\(g_{VN}\\) basis. The adopted B production path separately uses the
-   finite-\\(t_N\\) Bishara Dirac slope and leading Pauli term; keep the P3-C
+   \(\\widehat F_1^N=1\), \(\\widehat F_2^N=-0.184\) in the external
+   \(g_{VN}\) basis. The adopted B production path separately uses the
+   finite-\(t_N\) Bishara Dirac slope and leading Pauli term; keep the P3-C
    algebraic subgate distinct from the B absolute-rate calculation.
 5. Only after native P3-B and amplitude-level P3-C pass, perform the
    seven-isotope natural-xenon halo fold and compare the q=0 M reference,
