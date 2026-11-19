@@ -1,0 +1,4 @@
+numpy>=2.0
+scipy>=1.12
+matplotlib>=3.8
+PyMuPDF>=1.24  # only needed to re-extract the source PDF vector paths
