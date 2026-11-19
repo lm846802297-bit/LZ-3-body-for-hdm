@@ -546,19 +546,13 @@ def charge_kernel_from_coulomb_weight(
         "cPhiPP": cPhi,
         "L_C": float(L_C),
         "terms": terms,
-        "baseline_A_original_AFH_M": A_reference_M,
-        "baseline_B_finite_tN_M": B_baseline_M,
-        "extension_C_MplusPhiPP": C_charge_extension,
-        "original_AFH_M_baseline": A_reference_M,
-        "q0_M_reference": A_reference_M,
-        "finite_t_M": B_baseline_M,
-        "charge_sector": C_charge_extension,
-        "relative_B_vs_A": relative_B_vs_A,
-        "relative_C_vs_A": relative_C_vs_A,
-        "relative_C_vs_B": relative_C_vs_B,
-        # Backward-compatible, explicitly deprecated field names for old readers.
-        "pointlike_M_DEPRECATED_ALIAS": A_reference_M,
-        "relative_charge_vs_pointlike_M_DEPRECATED_ALIAS": relative_C_vs_A,
+        "AFH_finite_size_M_baseline": A_reference_M,
+        "nucleon_q0_M_only": A_reference_M,
+        "nucleon_finite_t_M_only": B_baseline_M,
+        "charge_M_PhiPP": C_charge_extension,
+        "relative_nucleon_finite_t_M_only_vs_AFH_finite_size_M_baseline": relative_B_vs_A,
+        "relative_charge_vs_AFH_finite_size_M_baseline": relative_C_vs_A,
+        "relative_charge_vs_nucleon_finite_t_M_only": relative_C_vs_B,
     }
 
 
@@ -684,19 +678,20 @@ def leading_static_vector_current_kernel_from_tensor(
             f"charge-sector reconstruction mismatch: {charge_residual:.6g}"
         )
     return {
-        "F1V": F1,
-        "F2V": F2,
+        "F1N_effective": F1,
+        "F2N_effective": F2,
         "tN_GeV2": tN_GeV2,
         "Q_N2_GeV2": -tN_GeV2,
         "nucleon_transfer_scheme": "strict one-body impulse q_N^mu=q_A^mu",
+        "coupling_basis": "external (g1*g2*gVN)^2 with Fhat_i=F_i^(u+d+s)/3",
         "L_C": coefficients["L_C_continuity_adjusted_charge_weight"],
         "L_T": float(np.real(L[1, 1] + L[2, 2])),
         "charge_sector": charge,
         "spatial_sector": spatial,
-        "leading_static_vector_current_candidate": total,
-        "baseline_A_original_AFH_M": charge_check["baseline_A_original_AFH_M"],
-        "baseline_B_finite_tN_M": charge_check["baseline_B_finite_tN_M"],
-        "extension_C_MplusPhiPP": charge_check["extension_C_MplusPhiPP"],
+        "full_six_channel_candidate": total,
+        "AFH_finite_size_M_baseline": charge_check["AFH_finite_size_M_baseline"],
+        "nucleon_q0_M_only": charge_check["nucleon_q0_M_only"],
+        "nucleon_finite_t_M_only": charge_check["nucleon_finite_t_M_only"],
         "charge_terms": charge_terms,
         "spatial_terms": spatial_terms,
         "particle_coefficients": {
