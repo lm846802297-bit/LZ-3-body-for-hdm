@@ -116,11 +116,29 @@ def load_isotope_inputs(path: Path = HALO_INPUT / "natural_xenon_isotope_weights
 
 
 def exact_qA_GeV(mA_GeV: float, ER_keV: float) -> float:
-    """Exact spatial recoil momentum from P'^2=P^2=m_A^2."""
+    """Exact spatial recoil momentum |q_A| from P_A'^2=P_A^2=m_A^2."""
     ER = float(ER_keV) * 1.0e-6
     if ER < 0.0 or mA_GeV <= 0.0:
         raise ValueError("invalid recoil or nuclear mass")
     return math.sqrt(2.0 * mA_GeV * ER + ER * ER)
+
+
+def nuclear_transfer_invariant_tA_GeV2(mA_GeV: float, ER_keV: float) -> float:
+    """Exact Lorentz invariant t_A=q_A^mu q_{A,mu} for a target initially at rest."""
+    ER = float(ER_keV) * 1.0e-6
+    if ER < 0.0 or mA_GeV <= 0.0:
+        raise ValueError("invalid recoil or nuclear mass")
+    return -2.0 * mA_GeV * ER
+
+
+def mediator_denominator_squared_GeV4(
+    mV_GeV: float, mA_GeV: float, ER_keV: float
+) -> float:
+    """Return (m_V^2-t_A)^2; do not substitute spatial |q_A|^2 for t_A."""
+    if mV_GeV <= 0.0:
+        raise ValueError("mediator mass must be positive")
+    tA = nuclear_transfer_invariant_tA_GeV2(mA_GeV, ER_keV)
+    return (mV_GeV * mV_GeV - tA) ** 2
 
 
 def vmin_three_body_km_s(mchi: float, ms: float, mA: float, ER_keV: float) -> float:
@@ -435,6 +453,11 @@ def interpolate_native_response(
 
 
 def form_factor_values(qA_GeV: float, prescription: str) -> tuple[float, float]:
+    """Evaluate F1,F2 at Q_N^2=|q_N|^2 in the static one-body impulse approximation.
+
+    Here q_N^0=0 and bold(q_N)=bold(q_A).  This spatial transfer squared
+    is distinct from the nuclear invariant t_A used by the vector propagator.
+    """
     Q2 = qA_GeV * qA_GeV
     if prescription == "pointlike":
         return F1V0, F2V0
@@ -465,8 +488,17 @@ def charge_kernel_from_coulomb_weight(
         "MPhiPP": C_MPhiPP * responses["MPhiPP"],
     }
     charge = sum(terms.values())
-    pointlike_M = (F1V0 * F1V0) * L_C * responses["M"]
+    q0_M_reference = (F1V0 * F1V0) * L_C * responses["M"]
     finite_t_M = (cM * cM) * L_C * responses["M"]
+    relative_charge_vs_q0 = (
+        charge / q0_M_reference - 1.0 if q0_M_reference != 0.0 else math.nan
+    )
+    relative_finite_vs_q0 = (
+        finite_t_M / q0_M_reference - 1.0 if q0_M_reference != 0.0 else math.nan
+    )
+    relative_charge_vs_finite = (
+        charge / finite_t_M - 1.0 if finite_t_M != 0.0 else math.nan
+    )
     return {
         "F1V": F1,
         "F2V": F2,
@@ -475,14 +507,16 @@ def charge_kernel_from_coulomb_weight(
         "L_C": float(L_C),
         "terms": terms,
         "charge_sector": charge,
-        "pointlike_M": pointlike_M,
+        "q0_M_reference": q0_M_reference,
+        # Legacy alias: q=0 nucleon form factors, not a point-nucleus target.
+        "pointlike_M": q0_M_reference,
         "finite_t_M": finite_t_M,
-        "relative_charge_vs_pointlike_M": charge / pointlike_M - 1.0
-        if pointlike_M != 0.0 else math.nan,
-        "relative_finite_t_M_vs_pointlike_M": finite_t_M / pointlike_M - 1.0
-        if pointlike_M != 0.0 else math.nan,
-        "relative_phi_vs_finite_t_M": charge / finite_t_M - 1.0
-        if finite_t_M != 0.0 else math.nan,
+        "relative_charge_vs_q0_M_reference": relative_charge_vs_q0,
+        "relative_finite_t_M_vs_q0_M_reference": relative_finite_vs_q0,
+        "relative_charge_vs_finite_t_M": relative_charge_vs_finite,
+        "relative_charge_vs_pointlike_M": relative_charge_vs_q0,
+        "relative_finite_t_M_vs_pointlike_M": relative_finite_vs_q0,
+        "relative_phi_vs_finite_t_M": relative_charge_vs_finite,
     }
 
 
@@ -828,9 +862,10 @@ def fold(
                         response["physical_equal_pn"],
                         form_factor_prescription,
                     )
-                    # Keep the exact recoil invariant used everywhere else:
-                    # Q_A^2 = q_A^2 = 2 m_A E_R + E_R^2 (not its NR truncation).
-                    denominator = (mV * mV + qA * qA) ** 2
+                    # The mediator carries the nuclear four-transfer q_A^mu:
+                    # t_A=q_A^2=-2 m_A E_R exactly.  Spatial |q_A|^2 includes E_R^2
+                    # and is used separately by the static-impulse nucleon FF.
+                    denominator = mediator_denominator_squared_GeV4(mV, mA, ER_keV)
                     common = (
                         mA * coupling_product_squared
                         / (256.0 * math.pi**3 * pchi * pchi * denominator)
@@ -886,6 +921,14 @@ def fold(
                     "charge_halo_integral": halo_charge,
                     "pointlike_M_halo_integral": halo_pointlike,
                     "finite_t_M_halo_integral": halo_finite_t_M,
+                    "q0_M_reference_halo_integral": halo_pointlike,
+                    "relative_charge_vs_q0_M_reference": halo_charge / halo_pointlike - 1.0
+                    if halo_pointlike else math.nan,
+                    "relative_finite_t_M_vs_q0_M_reference": halo_finite_t_M / halo_pointlike - 1.0
+                    if halo_pointlike else math.nan,
+                    "relative_charge_vs_finite_t_M": halo_charge / halo_finite_t_M - 1.0
+                    if halo_finite_t_M else math.nan,
+                    # Legacy aliases retained for old result readers.
                     "relative_charge_vs_pointlike_M": halo_charge / halo_pointlike - 1.0
                     if halo_pointlike else math.nan,
                     "relative_finite_t_M_vs_pointlike_M": halo_finite_t_M / halo_pointlike - 1.0
@@ -901,6 +944,14 @@ def fold(
                         "leading_static_vector_candidate_halo_integral": halo_full_candidate,
                         "relative_spatial_candidate_vs_coulomb": (
                             halo_spatial_candidate / halo_charge if halo_charge else math.nan
+                        ),
+                        "relative_full_candidate_vs_q0_M_reference": (
+                            halo_full_candidate / halo_pointlike - 1.0
+                            if halo_pointlike else math.nan
+                        ),
+                        "relative_full_candidate_vs_finite_t_M": (
+                            halo_full_candidate / halo_finite_t_M - 1.0
+                            if halo_finite_t_M else math.nan
                         ),
                         "relative_full_candidate_vs_pointlike_M": (
                             halo_full_candidate / halo_pointlike - 1.0
@@ -942,6 +993,13 @@ def fold(
                 "rate_charge_MplusPhi_events_kg_day_keV": total_rate,
                 "rate_pointlike_M_events_kg_day_keV": point_rate,
                 "rate_finite_t_M_events_kg_day_keV": finite_rate,
+                "relative_charge_vs_q0_M_reference": total_rate / point_rate - 1.0
+                if point_rate else math.nan,
+                "relative_finite_t_M_vs_q0_M_reference": finite_rate / point_rate - 1.0
+                if point_rate else math.nan,
+                "relative_charge_vs_finite_t_M": total_rate / finite_rate - 1.0
+                if finite_rate else math.nan,
+                # Legacy aliases retained for old result readers.
                 "relative_charge_vs_pointlike_M": total_rate / point_rate - 1.0
                 if point_rate else math.nan,
                 "relative_finite_t_M_vs_pointlike_M": finite_rate / point_rate - 1.0
@@ -969,6 +1027,12 @@ def fold(
                     "rate_leading_static_vector_candidate_events_kg_day_keV": full_rate,
                     "relative_spatial_candidate_vs_coulomb": (
                         total_spatial / total_charge if total_charge else math.nan
+                    ),
+                    "relative_full_candidate_vs_q0_M_reference": (
+                        full_rate / point_rate - 1.0 if point_rate else math.nan
+                    ),
+                    "relative_full_candidate_vs_finite_t_M": (
+                        full_rate / finite_rate - 1.0 if finite_rate else math.nan
                     ),
                     "relative_full_candidate_vs_pointlike_M": (
                         full_rate / point_rate - 1.0 if point_rate else math.nan
@@ -1071,8 +1135,12 @@ def fold(
         "response_interpolation": (
             "PCHIP on native 0.25 MeV absolute response values; linear interpolation retained as diagnostic"
         ),
-        "recoil_momentum": "q_A=sqrt(2 m_A E_R + E_R^2), exact nuclear mass-shell relation",
-        "coulomb_weight": "L_C=L00-(E_R/q_A)(L03+L30)+(E_R/q_A)^2 L33, conditional on conservation of the complete nuclear vector current",
+        "recoil_momentum": "Q_A=|bold(q_A)|=sqrt(2 m_A E_R + E_R^2), exact spatial nuclear recoil momentum",
+        "nuclear_transfer_invariant": "t_A=q_A^mu q_{A,mu}=-2 m_A E_R exactly for an initially resting on-shell target",
+        "mediator_propagator_denominator": "(m_V^2-t_A)^2=(m_V^2+2 m_A E_R)^2; uses t_A, not spatial Q_A^2",
+        "nucleon_form_factor_argument": "Q_N^2=-t_N=|bold(q_N)|^2; in static impulse q_N^0=0 and bold(q_N)=bold(q_A), so Q_N^2=Q_A^2=2 m_A E_R+E_R^2",
+        "form_factor_comparison": "Primary AFH correction is full/finite_t_M with the same F1,F2 prescription; q=0 M is secondary reference only",
+        "coulomb_weight": "L_C=L00-(E_R/Q_A)(L03+L30)+(E_R/Q_A)^2 L33, conditional on conservation of the complete nuclear vector current",
         "transverse_weight": (
             "L_T=L11+L22 for the leading-static AFH Delta/SigmaPrime/SigmaPrimeDelta coefficients"
             if include_leading_static_vector_candidate else None
