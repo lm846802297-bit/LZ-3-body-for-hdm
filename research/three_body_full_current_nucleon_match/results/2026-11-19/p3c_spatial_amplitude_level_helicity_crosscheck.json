@@ -12,6 +12,9 @@
     "spatial_response_run": 44432440600,
     "spatial_response_artifact": 14486014588
   },
+  "normalization_status": "PRE_P0_RAW_FLAVOR_SUMMED_INPUTS",
+  "coupling_basis": "external g_VN=3*g_Vq",
+  "normalization_warning": "Historical structural subgate used raw F1^uds=3 and F2^uds=-0.552. Dimensionless helicity-versus-Cartesian residuals are invariant under the common factor-three rescaling, but absolute particle-side kernels are nine times too large if combined with the external g_VN prefactor. Use Fhat_1=1 and Fhat_2=-0.184 for the normalized external-g_VN convention.",
   "form_factor_anchors": {
     "F1V_q0": 3,
     "F2V_q0": -0.552,
