@@ -339,3 +339,42 @@ Direct communication does not mean overstating evidence. Keep these questions se
 A passing software test is not automatically a validated physical conclusion; equally, a pending independent check does not erase a completed calculation. Report both facts plainly and proportionally.
 
 Avoid repetitive defensive wording, unnecessary disclaimers, generic risk warnings, and re-litigation of settled decisions. Scientific rigor must come from transparent evidence and reproducible work.
+
+## 6. Research status, main-branch archive, and discoverability
+
+The default branch `main` is the canonical, searchable archive for completed research records. A PR is a review/integration mechanism, not the permanent archive of a completed result. This rule supplements §3 above; it does not change the repository's existing research branch naming, scientific source hierarchy, or manuscript boundary.
+
+### Work-state requirements
+
+| Work state | Required handling |
+|---|---|
+| Incomplete or exploratory work in progress | Keep it on a topic branch. Use a Draft PR when early review or handoff is useful; explicitly list incomplete calculations, missing checks, and acceptance criteria. |
+| Ready for review | Open a focused PR to `main` with the study README, source code, tests, inputs/provenance, machine-readable outputs, figures, run manifest, and validation status as applicable. |
+| Completed and accepted | Merge after reviewing the actual diff and satisfying the stated acceptance criteria. Do not leave accepted research only in an open PR or branch. |
+| Historical or superseded | Keep it on `main` with an explicit status and a link to the successor; never erase the provenance of a replaced result. |
+
+### Required index entry
+
+Every substantive study merged to `main` must be discoverable from the relevant topic README and the appropriate parent index (for example `research/README.md`, `research/docs/README.md`, or a calculation/figure-pack index). The entry must provide, as applicable:
+
+- research question and scope;
+- source paper, equation, figure, page, data provenance, and exact source revision;
+- fixed inputs, conventions, and approximations;
+- calculation method and reproduction command;
+- code, test, input, result, and figure paths;
+- tests, convergence, and independent checks actually performed;
+- scientific status (exploratory, reproducible, validated, diagnostic, historical, or superseded);
+- whether it changes or merely compares against the adopted B baseline;
+- unresolved work and the next research entry point.
+
+Update the topic README and parent index in the same PR whenever practical. After merge, verify that the links resolve from `main`. PR search, branch names, chat history, and expiring Actions artifacts are not acceptable substitutes for a main-branch index entry.
+
+### Review, merge, and branch closure
+
+- Merge a PR once its own acceptance criteria are met and its research record is complete at the declared status. Exploratory work may be merged as an explicitly labelled diagnostic; it must not be described as a validated production result.
+- Keep Draft PRs for incomplete work. Do not merge merely to reduce the open-PR count.
+- Do not bulk-merge stacked/dependent PRs without checking their baselines, dependency order, current diffs, and scientific status. A PR that explicitly says required calculations or checks have not run remains open/in progress.
+- After merge, verify the merge commit and all study/index paths on `main`. Delete a topic branch only after confirming that it contains no unique unmerged follow-up work.
+
+The canonical scientific status is the status recorded in the merged study README and evidence record, not the PR's merge state. Merge status and scientific validation status must always be reported separately.
+
