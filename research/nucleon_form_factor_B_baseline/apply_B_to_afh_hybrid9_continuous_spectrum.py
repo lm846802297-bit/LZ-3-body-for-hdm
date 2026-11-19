@@ -198,7 +198,12 @@ def run(
                     R_A = response_for_scenario(row, scenario)
                     if R_A == 0.0 or base_kernel == 0.0:
                         continue
-                    denominator = (mV*mV + 2.0*mA*ER*1.0e-6)**2
+                    # Keep the two transfers distinct:
+                    # Q_A^2=|q_A|^2=2*m_A*E_R+E_R^2 enters t_N=-Q_A^2
+                    # in the finite nucleon form factor, while the mediator
+                    # propagator uses the invariant t_A=-2*m_A*E_R.
+                    tA_GeV2 = -2.0*mA*ER*1.0e-6
+                    denominator = (mV*mV - tA_GeV2)**2
                     a_contribution = (
                         prefactor * atom_fraction * base_kernel * R_A / denominator
                     )
@@ -220,6 +225,7 @@ def run(
                         "q_A_GeV": q,
                         "Q_A2_GeV2": q2,
                         "t_N_GeV2": -q2,
+                        "t_A_GeV2": tA_GeV2,
                         "c_M": float(central_ff["cM"][idx]),
                         "F_M": float(central_ff["F_M"][idx]),
                         "nucleon_FF_rate_multiplier": ff_multiplier,
@@ -305,7 +311,8 @@ def run(
             "F_M": "c_M/3",
             "rate_multiplier": "|F_M|^2",
             "Q_A2": "q_exact_spatial_GeV^2 = 2*m_A*E_R+E_R^2",
-            "t_N": "-Q_A2",
+            "t_N": "-Q_A2 = -(2*m_A*E_R+E_R^2)",
+            "t_A": "-2*m_A*E_R (invariant transfer used in mediator propagator)",
             "nuclear_response": "archived direct AFH v6.0 W_M for seven isotopes; Helm fallback only for Hybrid-9 Xe-124/Xe-126",
         },
         "uncertainty": {
