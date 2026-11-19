@@ -1,27 +1,20 @@
 #!/usr/bin/env python3
-"""Finite-t diagnostic for the universal light-quark vector nucleon current.
+"""Universal light-quark vector nucleon form factors and charge matching.
 
-The model current is J_q^mu = ubar gamma^mu u + dbar gamma^mu d
-+ sbar gamma^mu s.  At Q^2=0 the proton and neutron form factors are
-F1^V=3 and F2^V=-0.552.
+The raw flavor-summed current is ubar*gamma^mu*u + dbar*gamma^mu*d
++ sbar*gamma^mu*s, with F1_uds(0)=3 and F2_uds(0)=-0.552.  When the
+external rate prefactor is written with g_VN=3*g_Vq, the current-side
+coefficients must use the effective form factors Fhat_i=F_i^uds/3.
 
-Two diagnostic finite-Q^2 prescriptions are provided:
+The adopted B prescription is the first-order Bishara Dirac slope with
+the available constant Pauli anchor.  The isoscalar z-expansion remains
+an alternate sensitivity diagnostic, not the adopted B input.
 
-1. bishara_linear:
-   use the slopes of the flavor-separated Dirac form factors quoted in
-   Bishara et al. (JHEP 11 (2017) 059, arXiv:1707.06998), while holding F2
-   at its q=0 value.  This is a first-order low-Q^2 diagnostic.
-
-2. isoscalar_zexp:
-   reconstruct the light-flavor sum from the isoscalar electromagnetic
-   proton+neutron form factors of Borah et al. (PRD 102, 074012 (2020))
-   plus the strange-current q=0/slope inputs from Bishara et al.  The
-   strange Pauli form factor is kept at its q=0 value because the cited
-   Bishara input does not provide a finite-Q^2 F2^s curve.
-
-Neither prescription is the final model-specific finite-t form factor.
-They are controlled diagnostics for the size of the form-factor effect
-relative to the old pointlike F1(0)=3, F2(0)=-0.552 benchmark.
+The charge matching deliberately accepts both the exact spatial transfer
+q_A^2 and the Lorentz invariant nucleon transfer t_N as separate inputs:
+c_M depends on t_N, while c_Phi'' depends on q_A^2.  Formal B production
+uses t_N=t_A=-2*m_A*E_R; static q_N^0=0 diagnostics must be labelled
+separately.
 """
 
 from __future__ import annotations
@@ -109,36 +102,89 @@ def isoscalar_zexp(Q2: float) -> tuple[float, float]:
     F2s = F2S0
     return 3.0 * (F1S + F1s), 3.0 * (F2S + F2s)
 
-def charge_coefficients(qA_GeV: float, *, F1: float, F2: float, mN_GeV: float = M_N_GEV) -> tuple[float, float]:
-    if qA_GeV < 0.0 or mN_GeV <= 0.0:
-        raise ValueError("invalid qA or nucleon mass")
-    Q2 = qA_GeV * qA_GeV
-    tN = -Q2
-    cM = F1 + tN * (F1 + 2.0 * F2) / (8.0 * mN_GeV**2)
-    cPhiPP = Q2 * (F1 + 2.0 * F2) / (4.0 * mN_GeV**2)
+def effective_nucleon_form_factors(
+    F1_uds: float, F2_uds: float
+) -> tuple[float, float]:
+    """Convert raw universal u+d+s sums to the external-gVN nucleon basis.
+
+    The public rate prefactor contains g_VN=3*g_Vq.  Therefore the raw
+    flavor-summed form factors must be divided by three before they enter
+    the current coefficients.  This conversion is independent of AFH's
+    raw-to-physical nuclear-response factor of four.
+    """
+    if not math.isfinite(F1_uds) or not math.isfinite(F2_uds):
+        raise ValueError("raw flavor-summed form factors must be finite")
+    return F1_uds / 3.0, F2_uds / 3.0
+
+
+def charge_coefficients(
+    qA_GeV: float,
+    *,
+    F1: float,
+    F2: float,
+    tN_GeV2: float,
+    mN_GeV: float = M_N_GEV,
+) -> tuple[float, float]:
+    """Return M and Phi'' charge coefficients with separate q_A and t_N.
+
+    q_A^2 is the exact spatial nuclear recoil momentum squared and enters
+    c_Phi''.  The nucleon invariant t_N enters c_M.  Formal B production
+    uses t_N=t_A=-2*m_A*E_R; the static q_N^0=0 diagnostic instead uses
+    t_N=-q_A^2 and must pass that value explicitly.
+    """
+    if (
+        not math.isfinite(qA_GeV)
+        or not math.isfinite(F1)
+        or not math.isfinite(F2)
+        or not math.isfinite(tN_GeV2)
+        or not math.isfinite(mN_GeV)
+        or qA_GeV < 0.0
+        or tN_GeV2 > 1.0e-14
+        or mN_GeV <= 0.0
+    ):
+        raise ValueError("invalid q_A, t_N, form factor, or nucleon mass")
+    Q_A2 = qA_GeV * qA_GeV
+    cM = F1 + tN_GeV2 * (F1 + 2.0 * F2) / (8.0 * mN_GeV**2)
+    cPhiPP = Q_A2 * (F1 + 2.0 * F2) / (4.0 * mN_GeV**2)
     return cM, cPhiPP
 
-def pointlike_baseline_correction(qA_GeV: float, W_phi_over_WM: float, W_Mphi_over_WM: float, *, prescription: str = "isoscalar_zexp") -> dict:
-    Q2 = qA_GeV * qA_GeV
+
+def static_A_reference_correction(
+    qA_GeV: float,
+    W_phi_over_WM: float,
+    W_Mphi_over_WM: float,
+    *,
+    prescription: str = "bishara_linear",
+) -> dict:
+    """Legacy static-q_N^0=0 diagnostic, not the formal B production path."""
+    Q_A2 = qA_GeV * qA_GeV
     if prescription == "bishara_linear":
-        F1, F2 = bishara_linear(Q2)
+        F1_raw, F2_raw = bishara_linear(Q_A2)
     elif prescription == "isoscalar_zexp":
-        F1, F2 = isoscalar_zexp(Q2)
+        F1_raw, F2_raw = isoscalar_zexp(Q_A2)
     else:
         raise ValueError("unknown form-factor prescription")
-    cM, cPhi = charge_coefficients(qA_GeV, F1=F1, F2=F2)
+    F1, F2 = effective_nucleon_form_factors(F1_raw, F2_raw)
+    cM, cPhi = charge_coefficients(
+        qA_GeV, F1=F1, F2=F2, tN_GeV2=-Q_A2
+    )
+    F1hat0, _ = effective_nucleon_form_factors(F1V0, F2V0)
     eta = cPhi / cM
     Qphi = 1.0 + 2.0 * eta * W_Mphi_over_WM + eta * eta * W_phi_over_WM
     return {
         "qA_GeV": qA_GeV,
-        "Q2_GeV2": Q2,
-        "F1V": F1,
-        "F2V": F2,
+        "Q_A2_GeV2": Q_A2,
+        "tN_GeV2_static_diagnostic": -Q_A2,
+        "F1V_quark_sum": F1_raw,
+        "F2V_quark_sum": F2_raw,
+        "F1N_effective": F1,
+        "F2N_effective": F2,
         "cM": cM,
         "cPhiPP": cPhi,
         "eta": eta,
         "Q_phiPP": Qphi,
-        "relative_to_pointlike_M": (cM * cM / F1V0**2) * Qphi - 1.0,
+        "relative_to_A_reference": (cM * cM / F1hat0**2) * Qphi - 1.0,
         "relative_to_finite_t_M": Qphi - 1.0,
+        "kinematics": "static diagnostic q_N^0=0; t_N=-Q_A^2; not formal B",
         "prescription": prescription,
     }
