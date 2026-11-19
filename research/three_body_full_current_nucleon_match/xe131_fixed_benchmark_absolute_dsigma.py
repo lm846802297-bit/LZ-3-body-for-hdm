@@ -26,7 +26,11 @@ if str(HERE) not in sys.path:
 if str(CALC_DIR) not in sys.path:
     sys.path.insert(0, str(CALC_DIR))
 import eq6_kernel  # noqa: E402
-from nucleon_vector_form_factors import F1V0, charge_coefficients, isoscalar_zexp
+from nucleon_vector_form_factors import (
+    charge_coefficients,
+    effective_nucleon_form_factors,
+    isoscalar_zexp,
+)
 from three_body_phase_space_tensor import eq6, integrate_spin_resolved_tensor
 from xe131_fixed_speed_charge_dsigma import (
     G2, MA_XE131_GEV, MCHI_GEV, MN_GEV, MS_GEV, MV_GEV, SPEED_KM_S,
@@ -119,29 +123,48 @@ def phase_space_integral(ER_keV: float, order: tuple[int, int, int]) -> dict:
 
 def nuclear_charge_kernels(ER_keV: float, LC: float, responses: dict[str, float]) -> dict:
     qA = exact_qA_GeV(MA_XE131_GEV, ER_keV)
-    F1, F2 = isoscalar_zexp(qA * qA)
-    cM, cPhi = charge_coefficients(qA, F1=F1, F2=F2, mN_GeV=MN_GEV)
+    ER_GeV = ER_keV * 1.0e-6
+    tN_GeV2 = ER_GeV * ER_GeV - qA * qA
+    QN2_GeV2 = -tN_GeV2
+    F1_quark, F2_quark = isoscalar_zexp(QN2_GeV2)
+    F1_effective, F2_effective = effective_nucleon_form_factors(
+        F1_quark, F2_quark
+    )
+    cM, cPhi = charge_coefficients(
+        qA, F1=F1_effective, F2=F2_effective, mN_GeV=MN_GEV,
+        tN_GeV2=tN_GeV2,
+    )
     WM, WPhi, WMPhi = (
         float(responses["M"]), float(responses["PhiPP"]), float(responses["MPhiPP"])
     )
     if min(WM, WPhi) < -1.0e-12:
         raise ArithmeticError("negative diagonal AFH charge response")
     terms = {
-        "pointlike_M": F1V0**2 * LC * WM,
-        "finite_t_M": cM**2 * LC * WM,
+        "AFH_finite_size_M_baseline": LC * WM,
+        "nucleon_finite_t_M_only": cM**2 * LC * WM,
         "M_Phi_interference": 2.0 * cM * cPhi * LC * WMPhi,
         "PhiPP_diagonal": cPhi**2 * LC * WPhi,
     }
     terms["full_charge"] = (
-        terms["finite_t_M"] + terms["M_Phi_interference"] + terms["PhiPP_diagonal"]
+        terms["nucleon_finite_t_M_only"]
+        + terms["M_Phi_interference"] + terms["PhiPP_diagonal"]
     )
-    if terms["full_charge"] <= 0.0 or terms["pointlike_M"] <= 0.0:
+    if terms["full_charge"] <= 0.0 or terms["AFH_finite_size_M_baseline"] <= 0.0:
         raise ArithmeticError("non-positive coherent charge kernel")
     return {
-        "F1V": F1, "F2V": F2, "cM": cM, "cPhiPP": cPhi,
+        "F1V_quark": F1_quark, "F2V_quark": F2_quark,
+        "F1N_effective": F1_effective, "F2N_effective": F2_effective,
+        "tN_GeV2": tN_GeV2, "Q_N2_GeV2": QN2_GeV2,
+        "nucleon_transfer_scheme": "strict one-body impulse q_N^mu=q_A^mu",
+        "cM_effective": cM, "cPhiPP_effective": cPhi,
         **terms,
-        "full_charge_over_pointlike_M": terms["full_charge"] / terms["pointlike_M"],
-        "full_charge_over_finite_t_M": terms["full_charge"] / terms["finite_t_M"],
+        "full_charge_over_AFH_finite_size_M_baseline": (
+            terms["full_charge"] / terms["AFH_finite_size_M_baseline"]
+        ),
+        "full_charge_over_nucleon_finite_t_M_only": (
+            terms["full_charge"] / terms["nucleon_finite_t_M_only"]
+        ),
+        "nucleon_finite_t_M_only_over_AFH_finite_size_M_baseline": cM**2,
     }
 
 def make_recoil_grid(ER_min: float, ER_max: float) -> np.ndarray:
