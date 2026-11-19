@@ -828,7 +828,9 @@ def fold(
                         response["physical_equal_pn"],
                         form_factor_prescription,
                     )
-                    denominator = (mV * mV + 2.0 * mA * ER) ** 2
+                    # Keep the exact recoil invariant used everywhere else:
+                    # Q_A^2 = q_A^2 = 2 m_A E_R + E_R^2 (not its NR truncation).
+                    denominator = (mV * mV + qA * qA) ** 2
                     common = (
                         mA * coupling_product_squared
                         / (256.0 * math.pi**3 * pchi * pchi * denominator)
