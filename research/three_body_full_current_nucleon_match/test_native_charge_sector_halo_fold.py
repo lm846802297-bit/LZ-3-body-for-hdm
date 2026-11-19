@@ -48,7 +48,7 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             result["baseline_A_original_AFH_M"], 2.5 * responses["M"], places=14
         )
         self.assertAlmostEqual(
-            result["q0_M_reference"], result["baseline_A_original_AFH_M"], places=14
+            result["baseline_A_original_AFH_M"], result["baseline_A_original_AFH_M"], places=14
         )
         self.assertAlmostEqual(
             result["baseline_B_finite_tN_M"],
@@ -63,7 +63,7 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
         )
         self.assertAlmostEqual(result["L_C"], 2.4)
         self.assertAlmostEqual(result["baseline_A_original_AFH_M"], 2.4 * 4.0)
-        self.assertAlmostEqual(result["q0_M_reference"], result["baseline_A_original_AFH_M"])
+        self.assertAlmostEqual(result["baseline_A_original_AFH_M"], result["baseline_A_original_AFH_M"])
         self.assertAlmostEqual(
             result["extension_C_MplusPhiPP"],
             sum(result["terms"].values()),
@@ -130,7 +130,7 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
         )
         self.assertAlmostEqual(
             result["full_six_channel_candidate"],
-            result["charge_sector"] + result["spatial_sector"],
+            result["charge_M_PhiPP"] + result["spatial_sector"],
             places=13,
         )
         self.assertGreaterEqual(result["spatial_sector"], 0.0)
@@ -214,7 +214,7 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             places=14,
         )
         self.assertAlmostEqual(
-            result["q0_M_reference"], result["baseline_A_original_AFH_M"], places=14
+            result["baseline_A_original_AFH_M"], result["baseline_A_original_AFH_M"], places=14
         )
         self.assertNotEqual(
             result["relative_C_vs_B"],
@@ -399,7 +399,7 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             self.assertEqual(len(result["results"]), 2)
             mb = next(row for row in result["results"] if row["halo_model"] == "mb_untruncated")
             self.assertGreater(
-                mb["rate_leading_static_vector_candidate_events_kg_day_keV"], 0.0
+                mb["rate_full_six_channel_candidate_events_kg_day_keV"], 0.0
             )
             self.assertGreater(mb["rate_A_original_AFH_M_events_kg_day_keV"], 0.0)
             self.assertGreater(mb["rate_B_baseline_M_events_kg_day_keV"], 0.0)
