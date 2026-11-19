@@ -321,30 +321,30 @@ C_{\Sigma'\Delta}=\frac{\boldsymbol q}{m_N}\cdot
 \operatorname{Re}[i l_M\times l_5^*].
 \]
 With \(q_{\rm AFH}=-q_A\), the static Dirac--Pauli matching gives the candidate expressions
-\(l_M=-\\widehat F_1^N\boldsymbol{\mathcal T}_3\) and
-\(l_5=i(\\widehat F_1^N+\\widehat F_2^N)(\boldsymbol q_{\rm AFH}\times
+\(l_M=-\widehat F_1^N\boldsymbol{\mathcal T}_3\) and
+\(l_5=i(\widehat F_1^N+\widehat F_2^N)(\boldsymbol q_{\rm AFH}\times
 \boldsymbol{\mathcal T}_3)/(2m_N)\). The AFH Fourier convention and the exact v6.0 operator definitions
 fix the particle-side vectors
 \[
-\boldsymbol l_M=-\\widehat F_1^N\boldsymbol{\mathcal T}_3,\qquad
+\boldsymbol l_M=-\widehat F_1^N\boldsymbol{\mathcal T}_3,\qquad
 \boldsymbol l_5=
-\frac{i(\\widehat F_1^N+\\widehat F_2^N)}{2m_N}
+\frac{i(\widehat F_1^N+\widehat F_2^N)}{2m_N}
 (\boldsymbol q_{\rm AFH}\times\boldsymbol{\mathcal T}_3),
 \qquad \boldsymbol q_{\rm AFH}=-\boldsymbol q_A.
 \]
 The resulting Eq. (107) coefficients are
 \[
 C_\Delta^{(3)}
-=\frac{(\\widehat F_1^N)^2Q_A^2}{2m_N^2}(L^{11}+L^{22}),
+=\frac{(\widehat F_1^N)^2Q_A^2}{2m_N^2}(L^{11}+L^{22}),
 \]
 \[
 C_{\Sigma'}^{(3)}
-=\frac{(\\widehat F_1+\\widehat F_2)^2Q_A^2}{8m_N^2}(L^{11}+L^{22}),
+=\frac{(\widehat F_1^N+\widehat F_2^N)^2Q_A^2}{8m_N^2}(L^{11}+L^{22}),
 \]
 \[
 \boxed{
 C_{\Sigma'\Delta}^{(3)}
-=-\frac{\\widehat F_1(\\widehat F_1+\\widehat F_2)Q_A^2}{2m_N^2}
+=-\frac{\widehat F_1^N(\widehat F_1^N^N+\widehat F_2^N)Q_A^2}{2m_N^2}
 (L^{11}+L^{22}).
 }
 \]
