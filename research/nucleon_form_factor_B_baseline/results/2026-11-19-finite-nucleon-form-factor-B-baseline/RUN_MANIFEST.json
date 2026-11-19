@@ -1,6 +1,6 @@
 {
   "manifest_schema_version": 1,
-  "archive_generated_at_utc": "2026-11-19T17:46:22.377766+00:00",
+  "archive_generated_at_utc": "2026-11-19T17:48:41.980193+00:00",
   "repository": "lm846802297-bit/LZ-3-body-for-hdm",
   "archive_status": "ARCHIVED_AND_INTEGRITY_CHECKED",
   "archive_validation_scope": "ZIP digest verification, run/artifact identity checks, extracted-member SHA matching, CSV schema/grid/row-count checks, metadata consistency checks, and SHA256SUMS self-check; this field describes archive integrity, not independent scientific validation.",
@@ -103,8 +103,8 @@
   "file_inventory": [
     {
       "path": "README.md",
-      "size_bytes": 4082,
-      "sha256": "9fb65a8fd5f75b883cc023a7cb257e9601d161df629a968f49fe00e36a15ab72"
+      "size_bytes": 4001,
+      "sha256": "627a863a65640c1967efe3b773dbe3116eff260a8aab16ed9f029c725b897b11"
     },
     {
       "path": "extracted/B-baseline/alexandrou2020_charge_weighted_converted/metadata.json",
