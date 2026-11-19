@@ -286,6 +286,12 @@ def run(
     write_csv(output_csv, output_rows)
     write_csv(isotope_csv, isotope_output_rows)
 
+    def source_label(path: Path) -> str:
+        try:
+            return str(path.resolve().relative_to(ROOT.resolve()))
+        except ValueError:
+            return str(path.resolve())
+
     metadata = {
         "status": "PASS",
         "calculation": "absolute natural-xenon rate-level B baseline applied to archived isotope-resolved AFH-7/Hybrid-9 three-body kernels",
@@ -308,11 +314,11 @@ def run(
             "strange_lattice_uncertainties_sampled": False,
         },
         "source_files": {
-            "A_spectrum_csv": str(spectrum_path.relative_to(ROOT)),
+            "A_spectrum_csv": source_label(spectrum_path),
             "A_spectrum_sha256": sha256(spectrum_path),
-            "isotope_kernel_csv": str(isotope_path.relative_to(ROOT)),
+            "isotope_kernel_csv": source_label(isotope_path),
             "isotope_kernel_sha256": sha256(isotope_path),
-            "source_metadata_json": str(source_meta_path.relative_to(ROOT)),
+            "source_metadata_json": source_label(source_meta_path),
             "source_metadata_sha256": sha256(source_meta_path),
         },
         "source_A_metadata": source_meta,
