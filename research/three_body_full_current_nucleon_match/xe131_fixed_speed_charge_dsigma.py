@@ -24,6 +24,7 @@ from scipy.interpolate import PchipInterpolator
 
 from nucleon_vector_form_factors import (
     F1V0,
+    F2V0,
     bishara_linear,
     charge_coefficients,
     effective_nucleon_form_factors,
@@ -202,7 +203,9 @@ def charge_sector_kernels(
     Q2 = -tN_used
     if Q2 < 0.0 or not math.isfinite(Q2):
         raise ValueError("nucleon form-factor Q_N^2 must be finite and non-negative")
-    if form_factor_prescription == "bishara_linear":
+    if form_factor_prescription == "q0_anchor":
+        F1, F2 = F1V0, F2V0
+    elif form_factor_prescription == "bishara_linear":
         F1, F2 = bishara_linear(Q2)
     elif form_factor_prescription == "isoscalar_zexp":
         F1, F2 = isoscalar_zexp(Q2)
