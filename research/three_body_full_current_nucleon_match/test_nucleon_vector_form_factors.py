@@ -22,7 +22,7 @@ class VectorFormFactorTests(unittest.TestCase):
         self.assertEqual(transfer["metric_signature"], "+---")
         self.assertEqual(
             transfer["nucleon_transfer_scheme_id"],
-            "strict_one_body_impulse_qN_equals_qA",
+            "one_body_impulse_external_transfer_qN_equals_qA",
         )
 
     def test_static_qN0_zero_is_a_separate_diagnostic(self):
