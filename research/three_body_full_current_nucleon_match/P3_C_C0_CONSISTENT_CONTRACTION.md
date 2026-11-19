@@ -1,18 +1,20 @@
 # P3-C precursor: C0-consistent three-body × AFH response contraction
 
 > **Current formal-width status (2026-11-19):** the pole-only rerun is
-> [workflow 44336338072](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44336338072),
+> [workflow 44337928314](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44337928314),
 > full-current artifact 14442826214. It contains 28 response-level rows
 > (four benchmarks × seven isotopes), all positive, with maximum
 > \(|K_{\rm spatial}/K_{\rm charge}|=7.0304970964\times10^{-9}\) and
 > maximum rank-sum reconstruction residual \(1.11022\times10^{-16}\).
 > The run uses Pole width only.
 >
-> **This remains a response-level contraction, not the requested P3-C
-> amplitude-level PASS.** The seven-isotope and spatial AFH inputs are still
-> Python translations until the native Wolfram gate passes. The older
-> 84-row, three-width results below are retained as historical diagnostics
-> and are not formal-production results.  
+> **The response-level contraction is not, by itself, the requested full
+> P3-C amplitude-level PASS.** A separate Xe-131 spatial helicity-amplitude
+> subgate now passes at the four formal Pole-width benchmarks; see
+> [P3C_SPATIAL_AMPLITUDE_LEVEL_HELICITY_RESULTS.md](P3C_SPATIAL_AMPLITUDE_LEVEL_HELICITY_RESULTS.md).
+> The seven-isotope and spatial AFH inputs remain Python translations until
+> the native Wolfram gate passes. The older 84-row, three-width results below
+> are retained as historical diagnostics and are not formal-production results.  
 **Workflow:** [44305980766](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44305980766)  
 **PR head:** 1201d03c11030d71c7259277ee98937bf41c8025  
 **Contraction artifact:** 14428247140  
@@ -243,3 +245,68 @@ and do not label this a full P3 pass or a final natural-xenon prediction.
 5. Only after native P3-B and amplitude-level P3-C pass, perform the
    seven-isotope natural-xenon halo fold and compare pointlike-M,
    finite-\(t_N\)-M, Coulomb-sector, and full matched-current spectra.
+
+
+## 7. P3-C spatial amplitude-level helicity reconstruction
+
+A new amplitude-level subgate has been implemented in
+`p3c_amplitude_level_helicity_crosscheck.py`. It starts from the full
+complex phase-space Gram tensor
+\[
+G_{\mu a,\nu b}^{(3)}
+=\int d\Phi_3\,c_a^\mu c_b^{\nu *},
+\]
+retains the four DM Pauli channels, and contracts the signed Xe-131
+\(\Delta_J\) and \(\Sigma'_J\) reduced amplitudes rank by rank. The
+helicity amplitudes are formed before summing over the two transverse
+polarizations, DM spin channels, or nuclear multipole ranks.
+
+For the AFH convention \(\boldsymbol q_{\rm AFH}=-\boldsymbol q_A\), the
+helicity reconstruction reproduces all three Eq. (107) coefficients,
+including the signed \(\Sigma'\)-\(\Delta\) interference. The direct
+Cartesian Eq. (107) kernel and the helicity-amplitude kernel agree at
+\(10^{-16}\) relative precision for all four Xe-131 Pole-width benchmarks.
+
+| Benchmark | \(E_R\) | \(K_{\rm helicity}\), PCHIP amplitudes | Amp-vs-Cartesian residual |
+|---|---:|---:|---:|
+| green_450keV | 200 keV | 0.00835366938272 | \(2.08\times10^{-16}\) |
+| green_1MeV | 200 keV | 0.000514111110719 | \(4.22\times10^{-16}\) |
+| near_pole_362keV_g2_0p1 | 267 keV | 0.610748897628 | \(5.45\times10^{-16}\) |
+| near_pole_362keV_g2_1 | 267 keV | 0.136728078354 | \(6.09\times10^{-16}\) |
+
+The maximum relative residuals are
+\[
+\max\delta_{\rm amp/cart}=6.09\times10^{-16},\qquad
+\max\delta_{C_{\rm Eq.(107)}}=8.53\times10^{-16}.
+\]
+The full \(G^{(3)}\) Gram matrix is Hermitian; its most negative numerical
+eigenvalue is \(-3.20\times10^{-14}\), within the existing
+\(-10^{-10}\) PSD tolerance.
+
+### Interpolation cross-check
+
+The existing response-level contraction linearly interpolates the total
+\(\Delta,\Sigma',\Sigma'\Delta\) responses. The new amplitude-level
+calculation interpolates the signed reduced multipole amplitudes and then
+reconstructs the responses. At these four selected benchmarks:
+
+- PCHIP-amplitude versus linear-response kernel differs by at most
+  \(5.53\times10^{-6}\);
+- linear-amplitude versus linear-response kernel differs by at most
+  \(1.95\times10^{-6}\);
+- PCHIP versus linear-amplitude kernel differs by at most
+  \(3.58\times10^{-6}\).
+
+These are few-ppm differences at the selected points, not a global
+interpolation bound. The formal recoil engine should interpolate the signed
+rank amplitudes and reconstruct the diagonal and interference responses
+consistently; the full q-grid interpolation audit remains required.
+
+**Scope qualification:** this is a spatial-sector amplitude-level
+reconstruction using the provisional source-translated AFH amplitudes. It
+does not yet validate the charge multipoles \(M,\Phi''\) at amplitude
+level, an independent direct coordinate-space bound-nucleus current, or
+the native Wolfram AFH source. Therefore it is a **P3-C spatial subgate
+PASS**, not a full P3-C PASS. The full P3-C gate remains open until the
+native P3-B comparison and the independent covariant/q-frame/AFH nuclear
+amplitude comparison are completed.
