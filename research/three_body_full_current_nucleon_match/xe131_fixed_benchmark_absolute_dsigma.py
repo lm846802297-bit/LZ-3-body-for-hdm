@@ -169,6 +169,11 @@ def nuclear_charge_kernels(
         "tN_GeV2": tN_GeV2, "Q_N2_GeV2": QN2_GeV2,
         "nucleon_transfer_scheme": "strict one-body impulse q_N^mu=q_A^mu",
         "cM_effective": cM, "cPhiPP_effective": cPhi,
+        "AFH_finite_size_M_baseline": A_reference,
+        "nucleon_q0_M_only": A_reference,
+        "nucleon_finite_t_M_only": B_baseline,
+        "charge_M_PhiPP": C_extension,
+        # A/B/C names are retained as compact labels for the paper's comparison plot.
         "A_original_AFH_M_reference": A_reference,
         "B_baseline_M_only": B_baseline,
         "C_charge_extension": C_extension,
@@ -236,6 +241,13 @@ def calculate_row(
             "A_original_AFH_M_reference_cm2_per_keV": 0.0,
             "B_baseline_M_only_cm2_per_keV": 0.0,
             "C_charge_extension_cm2_per_keV": 0.0,
+            "AFH_finite_size_M_baseline_GeVminus3": 0.0,
+            "nucleon_q0_M_only_GeVminus3": 0.0,
+            "nucleon_finite_t_M_only_GeVminus3": 0.0,
+            "charge_M_PhiPP_GeVminus3": 0.0,
+            "AFH_finite_size_M_baseline_cm2_per_keV": 0.0,
+            "nucleon_finite_t_M_only_cm2_per_keV": 0.0,
+            "charge_M_PhiPP_cm2_per_keV": 0.0,
             "C_over_A": 0.0,
             "C_over_B": 0.0,
         }
@@ -247,6 +259,10 @@ def calculate_row(
         "A_original_AFH_M_reference": prefactor * kernels["A_original_AFH_M_reference"],
         "B_baseline_M_only": prefactor * kernels["B_baseline_M_only"],
         "C_charge_extension": prefactor * kernels["C_charge_extension"],
+        "AFH_finite_size_M_baseline": prefactor * kernels["AFH_finite_size_M_baseline"],
+        "nucleon_q0_M_only": prefactor * kernels["nucleon_q0_M_only"],
+        "nucleon_finite_t_M_only": prefactor * kernels["nucleon_finite_t_M_only"],
+        "charge_M_PhiPP": prefactor * kernels["charge_M_PhiPP"],
         "M_Phi_interference": prefactor * kernels["M_Phi_interference"],
         "PhiPP_diagonal": prefactor * kernels["PhiPP_diagonal"],
     }
@@ -282,6 +298,19 @@ def calculate_row(
         "C_charge_extension_cm2_per_keV": (
             values["C_charge_extension"] * GEV_MINUS3_TO_CM2_PER_KEV
         ),
+        "AFH_finite_size_M_baseline_GeVminus3": values["AFH_finite_size_M_baseline"],
+        "nucleon_q0_M_only_GeVminus3": values["nucleon_q0_M_only"],
+        "nucleon_finite_t_M_only_GeVminus3": values["nucleon_finite_t_M_only"],
+        "charge_M_PhiPP_GeVminus3": values["charge_M_PhiPP"],
+        "AFH_finite_size_M_baseline_cm2_per_keV": (
+            values["AFH_finite_size_M_baseline"] * GEV_MINUS3_TO_CM2_PER_KEV
+        ),
+        "nucleon_finite_t_M_only_cm2_per_keV": (
+            values["nucleon_finite_t_M_only"] * GEV_MINUS3_TO_CM2_PER_KEV
+        ),
+        "charge_M_PhiPP_cm2_per_keV": (
+            values["charge_M_PhiPP"] * GEV_MINUS3_TO_CM2_PER_KEV
+        ),
         "B_over_A": kernels["B_over_A"],
         "C_over_A": kernels["C_over_A"],
         "C_over_B": kernels["C_over_B"],
@@ -295,12 +324,12 @@ def plot_absolute(rows: list[dict], outdir: Path) -> None:
     opened = [row for row in rows if row["phase_space_open"]]
     er = np.asarray([row["ER_keV"] for row in opened])
     fig, ax = plt.subplots(figsize=(6.8, 4.45))
-    ax.semilogy(er, [r["A_original_AFH_M_reference_cm2_per_keV"] for r in opened],
+    ax.semilogy(er, [r["AFH_finite_size_M_baseline_cm2_per_keV"] for r in opened],
                 linestyle="--", label=r"A: finite-size AFH $W_M$")
-    ax.semilogy(er, [r["B_baseline_M_only_cm2_per_keV"] for r in opened],
+    ax.semilogy(er, [r["nucleon_finite_t_M_only_cm2_per_keV"] for r in opened],
                 linestyle="-.", linewidth=1.9,
                 label=r"B: finite-$t_N$ nucleon current $\times W_M$")
-    ax.semilogy(er, [r["C_charge_extension_cm2_per_keV"] for r in opened],
+    ax.semilogy(er, [r["charge_M_PhiPP_cm2_per_keV"] for r in opened],
                 linestyle="-", linewidth=1.6,
                 label=r"C: $M+\Phi''$ charge-response extension")
     ax.axvline(200.0, color="0.45", linestyle="--", linewidth=0.85,
