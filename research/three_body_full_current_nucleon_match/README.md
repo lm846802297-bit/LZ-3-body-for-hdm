@@ -455,7 +455,7 @@ likelihood is included.
 
 ## 7. Mandatory finite-size AFH baseline and nucleon-current corrections
 
-The original calculation already contains the finite-size nuclear form factor:
+The original calculation already contains the finite-size nuclear finite-size response:
 \[
 R_{A,M}^{\rm phys}(Q_A)
 =A^2\frac{W_M^{00}(y_A)}{W_M^{00}(0)},\qquad
@@ -468,7 +468,7 @@ The original paper and Mathematica benchmark use the effective nucleon coupling 
 \[
 g_{VN}=3g_{Vq},\qquad (g_1g_2g_{VN})^2.
 \]
-The full universal quark-current form factors obey \(F_1^{uds}(0)=3\) and \(F_2^{uds}(0)=-0.552\). Therefore the effective-nucleon coefficients in a \(g_{VN}\)-prefactor calculation must use
+The full universal quark-current nucleon form factors obey \(F_1^{uds}(0)=3\) and \(F_2^{uds}(0)=-0.552\). Therefore the effective-nucleon coefficients in a \(g_{VN}\)-prefactor calculation must use
 \[
 \widehat F_i(t_N)=F_i^{uds}(t_N)/3,\qquad
 \widehat F_1(0)=1,\quad \widehat F_2(0)=-0.184.
@@ -569,7 +569,7 @@ python research/three_body_full_current_nucleon_match/phase_space_tensor_converg
 python research/three_body_full_current_nucleon_match/three_body_multipole_leptonic_weights.py \
   --input /tmp/three-body-phase-space-tensor.json \
   --out /tmp/three-body-multipole-leptonic-weights.json \
-  --f1 3.0 --f2 -0.552 --mN 0.938918
+  --f1 1.0 --f2 -0.184 --mN 0.938918
 
 python research/three_body_full_current_nucleon_match/contract_three_body_afh_responses.py \
   --afh-dir /path/to/afh-seven-isotope-artifact \
