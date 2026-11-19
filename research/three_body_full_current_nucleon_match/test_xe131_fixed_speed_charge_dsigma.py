@@ -7,6 +7,8 @@ from xe131_fixed_speed_charge_dsigma import (
     canonical_sha256,
     exact_qA_GeV,
     charge_sector_kernels,
+    xe131_common_matrix_normalization_c0,
+    apply_xe131_common_matrix_normalization,
 )
 
 
@@ -70,6 +72,28 @@ class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
         terms = out["kernels_with_common_LC"]
         self.assertLess(terms["M_Phi_interference"], 0.0)
         self.assertGreater(terms["C_M_plus_PhiPP"], 0.0)
+
+    def test_native_C0_is_derived_from_raw_M_zero_anchor(self):
+        raw_m_zero = 4289.895955714992
+        c0 = xe131_common_matrix_normalization_c0(raw_m_zero)
+        self.assertAlmostEqual(c0, 1.0000825298069376, places=14)
+
+    def test_native_C0_is_applied_once_to_all_three_physical_channels(self):
+        raw_m_zero = 4289.895955714992
+        c0 = xe131_common_matrix_normalization_c0(raw_m_zero)
+        physical_before = {
+            "M": [4.0 * raw_m_zero, 4.0 * 149.2743467449586],
+            "PhiPP": [4.0 * 149.2743467449586, 4.0 * 120.0],
+            "MPhiPP": [4.0 * -799.9643348289546, 4.0 * -500.0],
+        }
+        physical_after, used_c0 = apply_xe131_common_matrix_normalization(
+            physical_before, raw_m_zero
+        )
+        self.assertAlmostEqual(used_c0, c0, places=15)
+        self.assertAlmostEqual(physical_after["M"][0], 131.0**2, places=10)
+        for name in ("M", "PhiPP", "MPhiPP"):
+            for before, after in zip(physical_before[name], physical_after[name]):
+                self.assertAlmostEqual(after / before, c0, places=14)
 
     def test_native_csv_hash_is_line_ending_stable(self):
         lf = b"q,value\n0.1,2\n"
