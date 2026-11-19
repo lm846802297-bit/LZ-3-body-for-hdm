@@ -721,15 +721,15 @@ def form_factor_values(
     independent spatial Q_A^2. Raw universal u+d+s form factors are divided
     by three exactly once because the external prefactor contains g_VN=3*g_Vq.
     """
-    QN2 = -float(tN_GeV2)
-    if QN2 < 0.0 or not math.isfinite(QN2):
-        raise ValueError("nucleon invariant Q_N^2 must be finite and non-negative")
+    minus_tN_GeV2 = -float(tN_GeV2)
+    if minus_tN_GeV2 < 0.0 or not math.isfinite(minus_tN_GeV2):
+        raise ValueError("spacelike nucleon invariant -t_N must be finite and non-negative")
     if prescription == "q0_anchor":
         raw = (RAW_F1_UDS0, RAW_F2_UDS0)
     elif prescription == "bishara_linear":
-        raw = bishara_linear(QN2)
+        raw = bishara_linear(minus_tN_GeV2)
     elif prescription == "isoscalar_zexp":
-        raw = isoscalar_zexp(QN2)
+        raw = isoscalar_zexp(minus_tN_GeV2)
     else:
         raise ValueError(f"unknown form-factor prescription: {prescription}")
     return effective_nucleon_form_factors(*raw)
@@ -779,7 +779,7 @@ def charge_kernel_from_coulomb_weight(
         "F1N_effective": F1hat,
         "F2N_effective": F2hat,
         "tN_GeV2": float(tN_GeV2),
-        "Q_N2_GeV2": -float(tN_GeV2),
+        "minus_tN_GeV2": -float(tN_GeV2),
         "cM": cM,
         "cPhiPP": cPhi,
         "L_C": float(L_C),
