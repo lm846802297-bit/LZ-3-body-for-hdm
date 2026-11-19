@@ -307,11 +307,11 @@ does not yet validate the complete many-body AFH OBDME contraction. The
 Cauchy--Schwarz check bounds response magnitude and is a separate test.
 
 For the universal u+d+s current the raw zero-momentum sums are
-\\(F_1^{uds}(0)=3\\), \\(F_2^{uds}(0)=-0.552\\). With the external
-\\(g_{VN}=3g_{Vq}\\) prefactor, the coefficients use
-\\(\\widehat F_1^N(0)=1\\), \\(\\widehat F_2^N(0)=-0.184\\).
+\(F_1^{uds}(0)=3\), \(F_2^{uds}(0)=-0.552\). With the external
+\(g_{VN}=3g_{Vq}\) prefactor, the coefficients use
+\(\widehat F_1^N(0)=1\), \(\widehat F_2^N(0)=-0.184\).
 The coefficient ratios relative to
-\\(C_M=\\widehat F_1^{N,2}L^{00}\\) over the 12 archived benchmarks are:
+\(C_M=\(\widehat F_1^N)^2L^{00}\) over the 12 archived benchmarks are:
 
 | Spatial coefficient | Range relative to \(C_M\) |
 |---|---:|
@@ -326,7 +326,7 @@ The coefficient identity
 C_{\Sigma'\Delta}^{(3)}
 =-2\sqrt{C_\Delta^{(3)}C_{\Sigma'}^{(3)}}
 \]
-holds for the stated sign convention and \(F_1(F_1+F_2)>0\). The nuclear
+holds for the stated sign convention and \(\widehat F_1^N(\widehat F_1^N+\widehat F_2^N)>0\). The nuclear
 responses themselves need not saturate their Cauchy--Schwarz bound.
 
 At this leading static order \(C_{\Sigma''}^{(3)}=0\) and
@@ -479,12 +479,12 @@ The hierarchy established by the present calculations is therefore:
 
 Therefore the final natural-xenon spectrum must be built in the order
 [
-A: W_M^{\\rm phys}(y_A) with q=0 effective nucleon current
-;\\rightarrow;
-B: \\widehat c_M(t_N)^2W_M^{\\rm phys}(y_A)
-;\\rightarrow;
+A: W_M^{\rm phys}(y_A) with q=0 effective nucleon current
+;\rightarrow;
+B: \widehat c_M(t_N)^2W_M^{\rm phys}(y_A)
+;\rightarrow;
 C: B plus allowed charge multipoles
-;\\rightarrow;
+;\rightarrow;
 D: full matched AFH current after P3-C validation
 ]
 with each isotope evaluated using its own exact (q_A), and without mixing
@@ -629,7 +629,7 @@ The earlier \(-21.48\%\) and \(-34.24\%\) values are historical
 \(F_1^2\)-normalization diagnostics. The updated result uses the matched
 Darwin-Foldy charge coefficient
 \[
-c_M=F_1^V+\frac{t_N(F_1^V+2F_2^V)}{8m_N^2}
+c_M=\widehat F_1^N+\frac{t_N(\widehat F_1^N+2\widehat F_2^N)}{8m_N^2}
 \]
 and retains \(M,\Phi'',M\Phi''\) coherently. The result is still a
 **fixed-speed Xe-131 Coulomb-sector ratio**, not an absolute differential
