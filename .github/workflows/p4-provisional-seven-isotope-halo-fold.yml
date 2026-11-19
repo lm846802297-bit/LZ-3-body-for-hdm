@@ -7,6 +7,9 @@ on:
       - .github/workflows/p4-provisional-seven-isotope-halo-fold.yml
       - research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py
       - research/three_body_full_current_nucleon_match/test_native_charge_sector_halo_fold.py
+      - research/three_body_full_current_nucleon_match/nucleon_vector_form_factors.py
+      - research/three_body_full_current_nucleon_match/three_body_multipole_leptonic_weights.py
+      - research/three_body_full_current_nucleon_match/test_three_body_multipole_leptonic_weights.py
 
 permissions:
   contents: read
