@@ -1,7 +1,7 @@
 # Xe-131 fixed-benchmark absolute differential cross section
 
-**Status:** corrected coupling normalization and finite-size AFH baseline  
-**Scope:** fixed-speed, single-isotope absolute \(d\sigma/dE_R\) in the native-AFH coherent charge sector \(M+\Phi''+M\Phi''\). This is not the complete six-channel nuclear-vector-current result.
+**Status:** B is the adopted primary baseline; corrected coupling normalization and finite-size AFH response  
+**Scope:** fixed-speed, single-isotope absolute \(d\sigma/dE_R\), with B containing only the finite-\(t_N\) nucleon current and AFH \(W_M(y_A)\); C is reported separately as the \(M+\Phi''+M\Phi''\) charge-response extension. This is not the complete six-channel nuclear-vector-current result.
 
 ## 1. Fixed benchmark
 
@@ -86,9 +86,20 @@ The equivalent quark-coupling convention is \(g_{Vq}=g_{VN}/3\) with the unnorma
 
 ## 4. Cross-section formula
 
-The absolute charge-sector differential cross section is
+The **primary B baseline** is the M-only expression
 \[
-\frac{d\sigma_{\rm ch}}{dE_R}
+\boxed{
+\frac{d\sigma_B}{dE_R}
+=
+\frac{m_A(g_1g_2g_{VN})^2}
+{256\pi^3p_{\chi_1}^2(m_V^2-t_A)^2}
+L_C^{(3)}\,
+\widehat c_M(t_N)^2W_M^{\rm phys}(y_A).
+}
+\]
+It contains no additional AFH response. The separate **C extension** is
+\[
+\frac{d\sigma_C}{dE_R}
 =
 \frac{m_A(g_1g_2g_{VN})^2}
 {256\pi^3p_{\chi_1}^2(m_V^2-t_A)^2}
@@ -99,7 +110,7 @@ L_C^{(3)}
 +\widehat c_{\Phi''}^2W_{\Phi''}^{\rm phys}
 \right].
 \]
-The \(M\)-only A and B kernels are obtained by retaining only the first term, with the corresponding zero-transfer or finite-\(t_N\) coefficient.
+A is obtained by freezing the effective nucleon current at \(\widehat F_1(0)=1\) while retaining the same finite-size AFH \(W_M(y_A)\).
 
 The coefficients are
 \[
