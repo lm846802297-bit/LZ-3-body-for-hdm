@@ -233,7 +233,10 @@ The engine now has two strictly separated input paths:
 
 1. **Native production path:** requires the provenance-pinned native
    seven-isotope/eight-response Wolfram artifact and its 16,807-row
-   pointwise comparison PASS.
+   pointwise comparison PASS. The loader derives each isotope's \\(C_0(A)\\)
+   from its raw \\(M(q_A=0)\\) anchor, applies \\(C_0\\) to all eight
+   channels after the independent factor four, and verifies
+   \\(R_M^{\\rm phys}(0)=A^2\\).
 2. **Provisional calculation path:** accepts only the pinned source-translated
    AFH-8 charge archive plus the independently rank-reconstructed P3-B
    spatial archive. It checks both artifact hashes, the shared AFH source
