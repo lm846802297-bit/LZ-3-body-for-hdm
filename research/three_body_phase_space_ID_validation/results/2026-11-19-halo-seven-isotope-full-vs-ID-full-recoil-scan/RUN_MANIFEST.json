@@ -1,6 +1,6 @@
 {
   "manifest_schema_version": 1,
-  "archive_generated_at_utc": "2026-11-19T17:38:58.722842+00:00",
+  "archive_generated_at_utc": "2026-11-19T17:46:22.375984+00:00",
   "repository": "lm846802297-bit/LZ-3-body-for-hdm",
   "archive_status": "ARCHIVED_AND_INTEGRITY_CHECKED",
   "archive_validation_scope": "ZIP digest verification, run/artifact identity checks, extracted-member SHA matching, CSV schema/grid/row-count checks, metadata consistency checks, and SHA256SUMS self-check; this field describes archive integrity, not independent scientific validation.",
@@ -147,8 +147,8 @@
   "file_inventory": [
     {
       "path": "README.md",
-      "size_bytes": 3471,
-      "sha256": "b82b576326a542dbf2f1b5a206499d2ee8ce22ee22bc8ef43ca14b05362a7b25"
+      "size_bytes": 4008,
+      "sha256": "4a707a7dda8d72ba6abf84a96651e093d9f355fe5a57634ca8d6236e63ede65e"
     },
     {
       "path": "extracted/halo-seven-isotope-baseline/metadata.json",
