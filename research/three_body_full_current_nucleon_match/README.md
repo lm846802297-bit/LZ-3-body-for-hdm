@@ -48,10 +48,13 @@ current comparison remains to be implemented. The direct many-body comparison
 \]
 remains the next physics gate.
 
-Finite-\(t_N\) form factors, a continuous recoil/halo fold, natural-xenon
-spectra, and detector-level predictions remain downstream tasks. The
-current P3-C result uses constant \(q=0\) form-factor anchors and fixed
-speed points only. P1 does not claim a bound-nucleus/off-shell current.
+The P3-C amplitude subgate still uses constant \(q=0\) form-factor
+anchors at fixed-speed points. The P4 halo engine exposes two finite-\(Q_N^2\)
+diagnostics (bishara_linear and isoscalar_zexp) and reports the
+Coulomb/full-current candidate relative to the same finite-\(t_N\) M-only
+baseline. These are diagnostic prescriptions, not yet a pinned exact
+legacy form-factor input or a native-AFH production result. P1 does not
+claim a bound-nucleus/off-shell current.
 
 ## 1. Purpose and amplitude
 
