@@ -673,46 +673,29 @@ Latest integrated-tensor archive check (12 benchmark/width rows):
 These are kinematic and algebraic checks, not a claim that the many-body
 continuity problem is closed.
 
-## 8. Fixed-speed Xe-131 differential cross-section ratio
+## 8. Historical fixed-speed Xe-131 result (not the adopted B baseline)
 
-The dedicated fixed-speed Xe-131 calculation is archived in
-XE131_FIXED_SPEED_CHARGE_DSIGMA_RESULTS.md.
+The earlier fixed-speed Xe-131 output is preserved in
+XE131_FIXED_SPEED_CHARGE_DSIGMA_RESULTS.md. Its numerical ratios were
+`C/A=0.77830934` at 200 keV and `C/A=0.64921591` at 267 keV, but this
+was a historical diagnostic, not the adopted B calculation. It used the
+alternate isoscalar-z-expansion prescription, the static
+\(t_N=-Q_A^2\) approximation, and the legacy raw-flavor
+\(9W_M\) reference. The AFH \(W_M\) in that reference was still a
+finite-size nuclear response; it was not a point nucleus.
 
-It uses native AFH v6.0 Xe-131 \(M,\Phi'',M\Phi''\) responses, finite-\(t_N\)
-Dirac-Pauli charge coefficients \(c_M,c_{\Phi''}\), the signed
-\(M-\Phi''\) interference, and the full \(2\to3\) phase-space integral.
-For \(m_{\chi_1}=1000\) GeV, \(m_s=300\) keV, \(v_\chi=776\) km/s and
-\(g_2=1\), the fixed-speed ratios relative to the original legacy q=0
-\(9W_M\) baseline are:
+The historical result record now carries an explicit banner and retains
+its original CSVs, values, and provenance. Do not cite those ratios as
+the B/A, C/B, or C/A values of the adopted production chain.
 
-| \(E_R\) | \(\Delta m\) | Ratio |
-|---:|---:|---:|
-| 200 keV | 450 keV | 0.77830934 (-22.1691%) |
-| 267 keV | 362 keV | 0.64921591 (-35.0784%) |
-
-The formal fixed-speed result uses the pole-width prescription only. The
-normalized C/A ratio is independent of the common
-\(L_C^{(3)}\) phase-space factor because it cancels between numerator and
-denominator. The earlier pole/running comparison remains a historical
-sensitivity diagnostic and is not part of routine production.
-
-The earlier \(-21.48\%\) and \(-34.24\%\) values are historical
-\(F_1^2\)-normalization diagnostics. The updated result uses the matched
-Darwin-Foldy charge coefficient
-\[
-c_M=\widehat F_1^N+\frac{t_N(\widehat F_1^N+2\widehat F_2^N)}{8m_N^2}
-\]
-and retains \(M,\Phi'',M\Phi''\) coherently. The result is still a
-**fixed-speed Xe-131 Coulomb-sector ratio**, not an absolute differential
-cross section, natural-xenon halo average, complete eight-response
-three-body contraction, or detector prediction.
-
-Workflow 44262472992 passed and uploaded artifact 14408816831 (SHA-256
-3d63f0d4896946129e1692ee0915da9b6d791323f65da85d0ee242bc1ae498bd.
-The native Xe-131 archive provenance is pinned to archive commit
-e6d9dee3527cab200ee6b21198d577b987282fac, with original Wolfram export
-commit 54e1ff10bba0cbffe7acc6af428014415c708475.
-
+The corrected fixed-speed code now uses formal
+\(t_N=t_A=-2m_AE_R\), effective
+\(\widehat F_i=F_i^{uds}/3\), and the physical AFH response with its
+common \(C_0(131)\) correction. Its new B anchors and the separate C
+extension are recorded in Section 7.2 and
+FORM_FACTOR_BASELINE_COMPARISON.md. The fresh fixed-speed run and
+absolute-spectrum run still require workflow validation on the latest
+PR #67 head before their output artifacts are promoted.
 
 ## 10. Energy-transfer-matched free on-shell nucleon scan
 
