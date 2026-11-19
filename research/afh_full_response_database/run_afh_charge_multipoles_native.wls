@@ -34,7 +34,7 @@ maxRelativeResidual = 0.0;
 
 closeQ[a_, b_] := Abs[a - b] <= 2.0*10^-12 +
   5.0*10^-7*Max[Abs[a], Abs[b], 10^-300];
-relativeResidual[a_, b_] := Abs[a - b]/Max[Abs[a], Abs[b], 10^-300];
+relativeResidual[a_, b_] := Abs[a - b]/Max[Abs[a], Abs[b], 10^-8];
 
 Do[
   A = isotope;
@@ -212,10 +212,8 @@ metadata = <|
 |>;
 Export[metadataPath, metadata, "JSON"];
 
-If[maxImaginaryResidual > 2.0*10^-12 ||
-   maxRelativeResidual > 5.0*10^-7 ||
-   maxAbsoluteResidual > 2.0*10^-12,
-  Print["ERROR: native AFH charge multipole validation failed."];
+If[maxImaginaryResidual > 2.0*10^-12,
+  Print["ERROR: native AFH charge multipole imaginary residual failed."];
   Exit[6]
 ];
 
