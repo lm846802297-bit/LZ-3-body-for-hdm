@@ -427,7 +427,28 @@
             "report_path": {
               "type": "string"
             }
-          }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "passed"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "checks": {
+                    "minItems": 1
+                  }
+                }
+              }
+            }
+          ]
         },
         "archive": {
           "type": "object",
@@ -451,7 +472,43 @@
               "type": "string",
               "format": "date-time"
             }
-          }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "committed_to_pr_branch"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "then": {
+                "required": [
+                  "pr_url"
+                ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "merged_and_verified_on_main"
+                  }
+                },
+                "required": [
+                  "status"
+                ]
+              },
+              "then": {
+                "required": [
+                  "verified_at"
+                ]
+              }
+            }
+          ]
         },
         "extensions": {
           "type": "object"
@@ -535,7 +592,8 @@
             "required": [
               "name",
               "value",
-              "unit"
+              "unit",
+              "status"
             ],
             "properties": {
               "name": {
@@ -572,7 +630,50 @@
                   "not_applicable"
                 ]
               }
-            }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "status": {
+                      "const": "computed"
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "value": {
+                      "type": "number"
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "not_computed",
+                        "not_applicable"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "value": {
+                      "type": "null"
+                    }
+                  }
+                }
+              }
+            ]
           }
         },
         "data_files": {
@@ -647,7 +748,28 @@
         "extensions": {
           "type": "object"
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "passed"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "checks": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      ]
     }
   }
 }
