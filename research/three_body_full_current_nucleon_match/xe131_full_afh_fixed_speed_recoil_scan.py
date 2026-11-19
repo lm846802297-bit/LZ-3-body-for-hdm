@@ -24,6 +24,7 @@ import afh_spatial_obdme_responses as spatial
 from nucleon_vector_form_factors import (
     bishara_linear,
     charge_coefficients,
+    effective_nucleon_form_factors,
     isoscalar_zexp,
 )
 from three_body_multipole_leptonic_weights import (
@@ -251,8 +252,9 @@ def contract_six_channels(
     F1: float,
     F2: float,
 ) -> dict:
+    F1_effective, F2_effective = effective_nucleon_form_factors(F1, F2)
     coefficients = extract_afh_vector_coefficients(
-        L, qA_GeV, f1=F1, f2=F2,
+        L, qA_GeV, f1=F1_effective, f2=F2_effective,
         mN_GeV=DEFAULT_MN_GEV, omega_GeV=ER_GeV,
     )
     charge_terms = {
@@ -271,7 +273,7 @@ def contract_six_channels(
     spatial = float(sum(spatial_terms.values()))
     full = charge + spatial
     LC = float(coefficients["L_C_continuity_adjusted_charge_weight"])
-    q0_M_reference = 9.0 * LC * responses["M"]
+    q0_M_reference = LC * responses["M"]
     finite_t_M = coefficients["C_M"] * responses["M"]
     if min(q0_M_reference, finite_t_M, charge, full) <= 0.0:
         raise ArithmeticError(
@@ -285,29 +287,24 @@ def contract_six_channels(
         "coefficients": coefficients,
         "charge_terms": charge_terms,
         "spatial_terms": spatial_terms,
-        "original_AFH_M_baseline": q0_M_reference,
-        "q0_M_reference": q0_M_reference,
-        # Legacy alias: AFH W_M(q_A) is retained, so this is not a point nucleus.
-        "pointlike_M": q0_M_reference,
-        "finite_t_M": finite_t_M,
+        "AFH_finite_size_M_baseline": q0_M_reference,
+        "nucleon_q0_M_only": q0_M_reference,
+        "nucleon_finite_t_M_only": finite_t_M,
+        "F1V_quark": F1,
+        "F2V_quark": F2,
+        "F1N_effective": F1_effective,
+        "F2N_effective": F2_effective,
         "charge_only": charge,
         "spatial_candidate": spatial,
         "full_six_channel_candidate": full,
-        "finite_t_M_over_original_AFH_M_baseline": finite_t_M / q0_M_reference,
+        "nucleon_finite_t_M_only_over_AFH_finite_size_M_baseline": finite_t_M / q0_M_reference,
         "charge_only_over_finite_t_M": charge / finite_t_M,
         "full_over_finite_t_M": full / finite_t_M,
-        "charge_only_over_original_AFH_M_baseline": charge / q0_M_reference,
-        "full_over_original_AFH_M_baseline": full / q0_M_reference,
+        "charge_only_over_AFH_finite_size_M_baseline": charge / q0_M_reference,
+        "full_over_AFH_finite_size_M_baseline": full / q0_M_reference,
         "PhiPP_over_finite_t_M_correction": charge / finite_t_M - 1.0,
         "full_over_charge_only": full / charge,
         "spatial_over_charge_only": spatial / charge,
-        # Explicit q=0 aliases retained for archived-result compatibility.
-        "finite_t_M_over_q0_M_reference": finite_t_M / q0_M_reference,
-        "charge_only_over_q0_M_reference": charge / q0_M_reference,
-        "full_over_q0_M_reference": full / q0_M_reference,
-        "finite_t_M_over_pointlike_M": finite_t_M / q0_M_reference,
-        "charge_only_over_pointlike_M": charge / q0_M_reference,
-        "full_over_pointlike_M": full / q0_M_reference,
     }
 
 
@@ -370,9 +367,10 @@ def integrate_point(
         )
         contracted = contract_six_channels(L, qA, ER_GeV, responses, F1, F2)
         coeff = contracted["coefficients"]
+        F1_effective, F2_effective = effective_nucleon_form_factors(F1, F2)
         cM, cPhiPP = charge_coefficients(
-            qA, F1=F1, F2=F2, mN_GeV=DEFAULT_MN_GEV,
-            tN_GeV2=tN_GeV2,
+            qA, F1=F1_effective, F2=F2_effective,
+            mN_GeV=DEFAULT_MN_GEV, tN_GeV2=tN_GeV2,
         )
         rows.append({
             "form_factor_prescription": form_factor_prescription,
@@ -395,35 +393,31 @@ def integrate_point(
             "quadrature_points": int(result["quadrature_points"]),
             "L_C": float(coeff["L_C_continuity_adjusted_charge_weight"]),
             "L_T": float(np.real(L[1, 1] + L[2, 2])),
-            "F1V_finite_t": F1,
-            "F2V_finite_t": F2,
-            "cM": float(cM),
+            "F1V_quark_finite_t": F1,
+            "F2V_quark_finite_t": F2,
+            "F1N_effective_finite_t": F1_effective,
+            "F2N_effective_finite_t": F2_effective,
+            "cM_effective": float(cM),
             "cPhiPP": float(cPhiPP),
             "eta_cPhi_over_cM": float(cPhiPP / cM),
             **{f"W_{name}": float(responses[name]) for name in RESPONSE_NAMES},
             **{f"pchip_linear_rel_{name}": float(interpolation[name]) for name in RESPONSE_NAMES},
             **{f"kernel_charge_{name}": float(value) for name, value in contracted["charge_terms"].items()},
             **{f"kernel_spatial_{name}": float(value) for name, value in contracted["spatial_terms"].items()},
-            "kernel_original_AFH_M_baseline": float(contracted["original_AFH_M_baseline"]),
-            "kernel_q0_M_reference": float(contracted["q0_M_reference"]),
-            "kernel_finite_t_M": float(contracted["finite_t_M"]),
+            "kernel_AFH_finite_size_M_baseline": float(contracted["AFH_finite_size_M_baseline"]),
+            "kernel_nucleon_q0_M_only": float(contracted["nucleon_q0_M_only"]),
+            "kernel_nucleon_finite_t_M_only": float(contracted["nucleon_finite_t_M_only"]),
             "kernel_charge_only": float(contracted["charge_only"]),
             "kernel_spatial_candidate": float(contracted["spatial_candidate"]),
             "kernel_full_six_channel_candidate": float(contracted["full_six_channel_candidate"]),
-            "finite_t_M_over_original_AFH_M_baseline": float(contracted["finite_t_M_over_original_AFH_M_baseline"]),
+            "nucleon_finite_t_M_only_over_AFH_finite_size_M_baseline": float(contracted["nucleon_finite_t_M_only_over_AFH_finite_size_M_baseline"]),
             "charge_only_over_finite_t_M": float(contracted["charge_only_over_finite_t_M"]),
             "full_over_finite_t_M": float(contracted["full_over_finite_t_M"]),
             "PhiPP_relative_to_finite_t_M": float(contracted["PhiPP_over_finite_t_M_correction"]),
             "full_over_charge_only": float(contracted["full_over_charge_only"]),
             "spatial_over_charge_only": float(contracted["spatial_over_charge_only"]),
-            "charge_only_over_original_AFH_M_baseline": float(contracted["charge_only_over_original_AFH_M_baseline"]),
-            "full_over_original_AFH_M_baseline": float(contracted["full_over_original_AFH_M_baseline"]),
-            "charge_only_over_q0_M_reference": float(contracted["charge_only_over_q0_M_reference"]),
-            "full_over_q0_M_reference": float(contracted["full_over_q0_M_reference"]),
-            # Legacy aliases retained for archived-result compatibility.
-            "finite_t_M_over_pointlike_M": float(contracted["finite_t_M_over_q0_M_reference"]),
-            "charge_only_over_pointlike_M": float(contracted["charge_only_over_q0_M_reference"]),
-            "full_over_pointlike_M": float(contracted["full_over_q0_M_reference"]),
+            "charge_only_over_AFH_finite_size_M_baseline": float(contracted["charge_only_over_AFH_finite_size_M_baseline"]),
+            "full_over_AFH_finite_size_M_baseline": float(contracted["full_over_AFH_finite_size_M_baseline"]),
             "status": "PROVISIONAL_SIX_CHANNEL_FIXED_SPEED_POINT",
         })
     return rows
