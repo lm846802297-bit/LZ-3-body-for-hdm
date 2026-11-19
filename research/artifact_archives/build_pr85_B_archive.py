@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Verify and manifest the corrected PR #83 finite-nucleon B outputs."""
+"""Verify and manifest PR85 finite-nucleon B, LZ-yield, and covariance outputs."""
 from __future__ import annotations
 
 import argparse
@@ -392,8 +392,8 @@ def main() -> None:
             "extracted_payload_matches_source_zip": True,
         },
         "input_and_code_snapshots": {
-            "source_inputs": "Borah2020 electromagnetic coefficients/covariance and LZ 2026 efficiency source files are copied into source-inputs/.",
-            "source_code": "The B form-factor implementation, continuous-spectrum postprocessor, and efficiency-fold script are copied into source-code/.",
+            "source_inputs": "AFH-7/Hybrid-9 A spectrum and isotope kernels, natural-xenon isotope weights, AFH v6.0 source, Borah2020 electromagnetic coefficients/covariance, and LZ 2026 efficiency files are copied into source-inputs/.",
+            "source_code": "The B form-factor implementation, continuous-spectrum postprocessor, correlated covariance propagator, quadrature comparator, detector-fold script, and convention audit are copied into source-code/.",
         },
         "result_summary": summary,
         "file_inventory": file_inventory(root),
