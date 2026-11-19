@@ -1,0 +1,50 @@
+{
+  "study": "Fixed-speed Fig. 2 target-mass reproduction trial",
+  "status": "exploratory_reproduction_diagnostic",
+  "date": "2026-11-19",
+  "repository": "lm846802297-bit/LZ-3-body-for-hdm",
+  "base_commit": "2de7b17961270b210719c1fe15a35d91074787db",
+  "source_pdf": {
+    "filename": "3body_for_HDM(2).pdf",
+    "sha256": "b4fc7bd73265df2bc2ce1640cbf8847b63323ec1dda220f9e7903f4620b871bb",
+    "figure": "Fig. 2",
+    "pdf_page": 3,
+    "committed": false
+  },
+  "inputs": {
+    "mchi_GeV": 1000,
+    "v_km_per_s": 780,
+    "ms_keV": 300,
+    "delta_iDM_keV": 300,
+    "RA_included": false,
+    "nuclear_response_included": false
+  },
+  "digitized_input": {
+    "path": "inputs/fig2_red_curve_digitized.csv",
+    "sha256": "9fd0d2e33dc6d2b90010fdefdd0cb45c98e812805c1a184aee5f00b4b805e966",
+    "rows": 199
+  },
+  "environment": {
+    "python": "3.13.5",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "matplotlib": "3.10.8",
+    "PyMuPDF": "one-time vector extraction only"
+  },
+  "commands": [
+    "python research/three_body_calculation_and_validation/fig2_target_mass_reproduction_trial_20261119/scripts/reproduce_fig2_mass_inference.py",
+    "python -m unittest discover -s research/three_body_calculation_and_validation/fig2_target_mass_reproduction_trial_20261119/tests -v"
+  ],
+  "execution": {
+    "script_exit_code": 0,
+    "tests_passed": 5,
+    "tests_failed": 0,
+    "ci": "not run"
+  },
+  "key_results": {
+    "endpoint_inversion_mT_GeV": 121.04264804063419,
+    "red_shape_fit_mT_GeV": 121.02524697683137,
+    "A130_u_GeV": 121.09423331459999,
+    "implied_mchi_GeV": 999.7843607848502
+  }
+}
