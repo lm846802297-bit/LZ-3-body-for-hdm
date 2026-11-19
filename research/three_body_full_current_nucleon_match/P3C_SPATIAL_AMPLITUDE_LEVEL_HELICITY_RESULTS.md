@@ -93,12 +93,14 @@ are each included exactly once.
 
 | Input | Provenance |
 |---|---|
-| Three-body tensor and response contraction | LZ workflow 44432440600, artifact 14486904025 |
-| AFH spatial response and signed multipole amplitudes | LZ workflow 44432440600, artifact 14486014588 |
+| Three-body tensor, weights, response contraction and normalized P3-C output | LZ workflow 44465719660, artifact 14502480708 |
+| AFH spatial response and signed multipole amplitudes | LZ workflow 44465719660, artifact 14501657777 |
 | AFH v6.0 source SHA-256 | dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372 |
 | Isotope | Xe-131, \(J_A=3/2\) |
 | \(C_0(131)\) | 1.0000825298069376 |
-| Form-factor anchors | \(F_1^V(0)=3,\ F_2^V(0)=-0.552\) |
+| Raw universal u+d+s anchors | \(F_1^{uds}(0)=3,\ F_2^{uds}(0)=-0.552\) |
+| Effective coefficient inputs | \(\widehat F_1^N(0)=1,\ \widehat F_2^N(0)=-0.184\) |
+| Coupling basis | external \(g_{VN}=3g_{Vq}\) |
 | Nucleon mass | \(m_N=0.938918\) GeV |
 | Width prescription | Pole only |
 
@@ -117,18 +119,18 @@ existing PSD tolerance \(-10^{-10}\). The stored \(L_{\mu\nu}\) is
 reconstructed from \(G_{\mu a,\nu b}\) with zero residual at the archived
 precision.
 
-| Benchmark | \(E_R\) | \(q_A\) (GeV) | \(K_{\rm helicity}\), PCHIP amplitudes | Relative amplitude/Cartesian residual |
+| Benchmark | \(E_R\) | \(q_A\) (GeV) | \(K_{\rm helicity}\), PCHIP amplitudes, normalized basis | Relative amplitude/Cartesian residual |
 |---|---:|---:|---:|---:|
-| green_450keV | 200 keV | 0.2209306022 | 0.00835366938272 | \(2.08\times10^{-16}\) |
-| green_1MeV | 200 keV | 0.2209306022 | 0.000514111110719 | \(4.22\times10^{-16}\) |
-| near_pole_362keV_g2_0p1 | 267 keV | 0.2552681134 | 0.610748897628 | \(5.45\times10^{-16}\) |
-| near_pole_362keV_g2_1 | 267 keV | 0.2552681134 | 0.136728078354 | \(6.09\times10^{-16}\) |
+| green_450keV | 200 keV | 0.2209306022 | 0.000928185486969 | \(2.34\times10^{-16}\) |
+| green_1MeV | 200 keV | 0.2209306022 | \(5.71234567466\times10^{-5}\) | \(3.56\times10^{-16}\) |
+| near_pole_362keV_g2_0p1 | 267 keV | 0.2552681134 | 0.0678609886254 | \(6.14\times10^{-16}\) |
+| near_pole_362keV_g2_1 | 267 keV | 0.2552681134 | 0.0151920087060 | \(4.57\times10^{-16}\) |
 
 The global residuals are
 \[
 \boxed{
-\max\delta_{\rm amp/cart}=6.09\times10^{-16},\qquad
-\max\delta_{C_{\rm Eq.(107)}}=8.53\times10^{-16}.
+\max\delta_{\rm amp/cart}=6.14\times10^{-16},\qquad
+\max\delta_{C_{\rm Eq.(107)}}=7.73\times10^{-16}.
 }
 \]
 The deliberately reversed \(\Sigma'\) helicity phase flips the signed
@@ -158,10 +160,13 @@ those interpolated amplitudes.
 ## 6. Reproduction
 
 The standalone script is
-p3c_amplitude_level_helicity_crosscheck.py; its four unit tests are in
-test_p3c_amplitude_level_helicity_crosscheck.py. The archived numerical
-summary is
-results/2026-11-19/p3c_spatial_amplitude_level_helicity_crosscheck.json.
+p3c_amplitude_level_helicity_crosscheck.py; its five unit tests are in
+test_p3c_amplitude_level_helicity_crosscheck.py. The normalized result is
+archived in [workflow 44465719660](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44465719660),
+artifact 14502480708. The older repository JSON at
+results/2026-11-19/p3c_spatial_amplitude_level_helicity_crosscheck.json is
+explicitly marked PRE_P0_RAW_FLAVOR_SUMMED_INPUTS and is retained only as
+historical provenance.
 
 The full-current workflow now:
 1. generates the pole-only three-body tensor;
