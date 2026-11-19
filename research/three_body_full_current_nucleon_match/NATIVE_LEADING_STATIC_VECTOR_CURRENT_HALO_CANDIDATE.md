@@ -3,6 +3,14 @@
 **Status:** code path and synthetic-fixture tests implemented; real seven-isotope
 native execution is blocked by the pending native AFH gate; P3 is not passed.
 
+**Adopted baseline (2026-11-19):** B is the primary rate:
+\[
+\mathcal K_B=L_C^{(3)}\widehat c_M(t_N)^2W_M^{\rm phys}(y_A),
+\]
+using Bishara low-momentum \(\widehat F_1(t_N),\widehat F_2(t_N)\) and
+AFH \(W_M\) only. The optional candidate described below is a D-type
+extension and must be compared with B; it is not the baseline.
+
 ## 1. Purpose and scope
 
 This is the optional second mode of native_charge_sector_halo_fold.py,
@@ -37,21 +45,28 @@ L_T=L_{11}+L_{22}.
 The dark-matter transition current is not assumed conserved.
 
 Using the current matching convention
-\(q_{\rm AFH}=-q_A\), \(q_N=+q_A\), metric \((+---)\), and
-\(t_N=-Q_A^2\), the candidate coefficients are
+\(q_{\rm AFH}=-q_A\), \(q_N=+q_A\), metric \((+---)\), and the formal
+one-body impulse transfer \(t_N=t_A=-2m_AE_R\), the candidate coefficients are
 \[
 \begin{aligned}
 C_M&=c_M^2L_C,&
 C_{\Phi''}&=c_{\Phi''}^2L_C,&
 C_{M\Phi''}&=2c_Mc_{\Phi''}L_C,\\
-C_\Delta&=\frac{(F_1^V)^2Q_A^2}{2m_N^2}L_T,&
-C_{\Sigma'}&=\frac{(F_1^V+F_2^V)^2Q_A^2}{8m_N^2}L_T,\\
-C_{\Sigma'\Delta}&=-\frac{F_1^V(F_1^V+F_2^V)Q_A^2}{2m_N^2}L_T.
+C_\Delta&=\frac{(\widehat F_1)^2Q_A^2}{2m_N^2}L_T,&
+C_{\Sigma'}&=\frac{(\widehat F_1+\widehat F_2)^2Q_A^2}{8m_N^2}L_T,\\
+C_{\Sigma'\Delta}&=-\frac{\widehat F_1(\widehat F_1+\widehat F_2)Q_A^2}{2m_N^2}L_T.
 \end{aligned}
 \]
-The SigmaPrime-Delta sign follows the documented Fourier and current
-conventions but remains subject to explicit AFH spherical-multipole
-phase validation before promotion.
+The coefficients use the effective form factors
+\(\widehat F_i=F_i^{uds}/3\), because the external rate prefactor uses
+\((g_1g_2g_{VN})^2\) with \(g_{VN}=3g_{Vq}\). The default D candidate uses
+the same Bishara low-momentum prescription as B. The SigmaPrime-Delta sign
+follows the documented Fourier and current conventions but remains subject
+to explicit AFH spherical-multipole phase validation before promotion.
+
+The static diagnostic \(q_N^0=0\), which gives
+\(t_N=-Q_A^2\), is separate from the formal production transfer and must
+not be used in the B/D production curves.
 
 The candidate kernel is
 \[
