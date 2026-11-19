@@ -1102,9 +1102,13 @@ def fold(
 
     return {
         "reference_baseline": "A: external gVN coupling times physical equal-p=n AFH finite-size W_M(y_A)",
-        "A_reference": "q=0 effective nucleon-current anchor times the same finite-size AFH W_M(y_A)",
-        "C_extension": "B plus Phi'' and signed M-Phi'' charge responses; diagnostic, not the baseline",
+        "nucleon_q0_M_only": "same finite-size AFH W_M(y_A) with Fhat_1(0)=1",
+        "charge_M_PhiPP": "nucleon_finite_t_M_only plus Phi'' and signed M-Phi'' charge responses at the same AFH W_M(y_A)",
         "coupling_normalization": "coupling_product_squared=(g1*g2*gVN)^2; use Fhat_i=F_i^(u+d+s)/3 in all nucleon-current coefficients",
+        "coupling_basis": "effective nucleon g_VN with g_VN=3*g_Vq",
+        "nuclear_response_baseline": "finite-size native AFH W_M(y_A) at each recoil; no point-nucleus substitution",
+        "AFH_response_normalization": "physical equal-p=n; raw-to-physical factor four applied exactly once",
+        "no_additional_nuclear_form_factor": "do not multiply a Helm or other whole-nucleus form factor on top of AFH W_M",
         "status": (
             "COMPUTED_WITHIN_LEADING_STATIC_VECTOR_CURRENT_CANDIDATE"
             if include_leading_static_vector_candidate
@@ -1117,8 +1121,8 @@ def fold(
         "P3_tensor_validation_complete": False,
         "continuity_reduction_status": (
             "CONDITIONAL_ON_CONSERVED_NUCLEAR_VECTOR_CURRENT; "
-            "point-nucleus identity is an algebraic convention check, not proof "
-            "of many-body current conservation"
+            "the point-target longitudinal identity is an algebraic convention check, "
+            "not proof of many-body current conservation or a point-nucleus AFH baseline"
         ),
         "included_tensor_components": (
             [
@@ -1179,9 +1183,12 @@ def fold(
         "C_extension_definition": "B plus Phi'' diagonal and signed M-Phi'' interference",
         "form_factor_normalization": "Fhat_i=F_i^(u+d+s)/3 because coupling_product_squared uses external g_VN=3*g_Vq",
         "response_comparison": (
-            "B is the primary finite-t_N M-only baseline. Report C/B for the "
-            "additional Phi'' and signed M-Phi'' correction, and B/A for the "
-            "nucleon-form-factor correction relative to the original AFH M-only reference."
+            "A is the mandatory original finite-size AFH M-only reference; B/A isolates "
+            "the single-nucleon finite-t_N correction at fixed W_M(Q_A); C/B isolates "
+            "the additional Phi'' and signed M-Phi'' nuclear-response correction."
+        ),
+        "leading_static_label_meaning": (
+            "leading nonrelativistic one-body nuclear-current expansion; it does not mean q_N^0=0"
         ),
         "coulomb_weight": "L_C=L00-(E_R/Q_A)(L03+L30)+(E_R/Q_A)^2 L33, conditional on conservation of the complete nuclear vector current",
         "transverse_weight": (
