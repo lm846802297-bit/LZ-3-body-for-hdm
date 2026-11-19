@@ -86,14 +86,23 @@ Formal P4 requirements:
   outside the AFH default-density set;
 - use native AFH response columns only; no GCN/JJ55 substitution;
 - use `width_scheme="pole"` only;
-- report separately the original AFH M-only baseline \(F_1(0)^2W_M(Q_A)\),
-  finite-\(t_N\) M-only, Coulomb \(M+\Phi''\), and the full matched-current
-  candidate;
+- report the A/B/C hierarchy with the external \((g_1g_2g_{VN})^2\)
+  prefactor: A = original finite-size AFH M-only
+  \(L_C W_M^{\rm phys}(Q_A)\) with \(\widehat F_1(0)=1\);
+  B = finite-\(t_N\) nucleon M-only
+  \(\widehat c_M(t_N)^2L_CW_M^{\rm phys}(Q_A)\);
+  C = B plus \(\Phi''\) and signed \(M-\Phi''\) interference;
 - preserve the original finite-q AFH nuclear shape factor \(W_M(Q_A)\) in
-  every denominator; never add an extra nuclear form factor on top of AFH;
-- report both \(R_{\rm charge}/R_{t_N,M}\) (multipole correction at fixed
-  nucleon form factors) and \(R_{\rm charge}/R_{\mathrm{AFH},M}^{(0)}\)
-  (total change relative to the original AFH M-only calculation);
+  every denominator; the native equal-\(p=n\) responses already include
+  the AFH factor four exactly once; never add an extra nuclear form factor;
+- report \(B/A\) (single-nucleon form-factor correction),
+  \(C/B\) (additional nuclear-response correction at fixed
+  \(\widehat F_1,\widehat F_2\)), and \(C/A\) (total change relative to
+  the original finite-size AFH baseline);
+- use the effective-nucleon coupling basis \(g_{VN}=3g_{Vq}\) in the
+  external prefactor and \(\widehat F_i=F_i^{uds}/3\) in the current
+  coefficients; do not combine the factor-three quark normalization with
+  the independent AFH factor-four conversion;
 - run the first-order low-\(Q_N^2\) bishara_linear diagnostic and the
   isoscalar_zexp alternative side by side; neither replaces the AFH nuclear
   form factor, and neither is silently identified with an unverified
