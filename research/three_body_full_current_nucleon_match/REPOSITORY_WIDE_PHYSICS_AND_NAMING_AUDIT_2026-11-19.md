@@ -48,7 +48,18 @@ The exact spatial nuclear momentum is instead
 \[
 Q_A^2=2m_AE_R+E_R^2,\quad y_A=b_A^2Q_A^2/4.
 \]
-The static diagnostic \(q_N^0=0\), giving \(t_N=-Q_A^2\), is a distinct approximation and must not enter formal B production.
+In the q-aligned frame and metric \((+---)\), formal B uses
+\[
+q_A^\mu=(E_R,0,0,Q_A),\qquad q_N^\mu=q_A^\mu.
+\]
+The static diagnostic instead assigns
+\(q_N^\mu=(0,0,0,Q_A)\), giving \(t_N=-Q_A^2\); it is a distinct
+approximation and must not enter formal B production. B/P4 outputs
+serialize \texttt{qA\_four\_vector\_GeV},
+\texttt{qN\_four\_vector\_GeV}, \texttt{tA\_GeV2}, and
+\texttt{tN\_GeV2} separately. The stored \(q_N\) is the formal
+one-body impulse assignment, not an independently solved bound-nucleon
+four-momentum.
 
 The mediator propagator uses
 \[
