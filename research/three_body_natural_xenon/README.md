@@ -10,6 +10,10 @@
 - `完整运行与数值对照.md`：此前完整运行的历史结果；不是本次结构整理后的全量重跑记录。
 - `convergence_halo.csv`、`独立验证/methods_comparison.csv`：笔记本验证章节读取的归档对照数据。
 
+## 物理基准说明
+
+主 notebook 的 AFH 氙核路径保留有限尺寸 W_M(y_A)，但使用常数有效核子耦合，未显式加入 F_1^{V,N}(t_N)、F_2^{V,N}(t_N)；因此它是 A 类历史参考，不是当前采用的 B 基准。W_M(y_A) 不是点核响应。详细的核子形状因子、AFH 核响应和历史结果分级见 [全仓库物理与命名审计](../three_body_full_current_nucleon_match/REPOSITORY_WIDE_PHYSICS_AND_NAMING_AUDIT_2026-11-19.md)。
+
 ## 运行要求
 
 主计算需要 Mathematica 和本机安装的 FeynCalc；AFH 核响应数据与 notebook 同目录。笔记本末尾的 FeynRules/FeynArts 验证还需要相应软件包及模型导出环境。本仓库不打包第三方 Mathematica 软件；这些验证的已保存输出保留在 notebook 中，重新运行时需先配置本地软件。
