@@ -8,7 +8,7 @@ All research materials are kept under this directory so the repository root stay
 
 ## Research workflow
 
-Read [WORKFLOW.md](WORKFLOW.md) and the mandatory [research source hierarchy](RESEARCH_GOVERNANCE_AND_SOURCE_HIERARCHY.md) before starting a new study. Use [_template/README.md](_template/README.md) for each new topic, and follow the repository PR checklist. A successful software test or workflow run validates only the code paths and assertions that it actually covers.
+Read [WORKFLOW.md](WORKFLOW.md), the mandatory [research source hierarchy](RESEARCH_GOVERNANCE_AND_SOURCE_HIERARCHY.md), and the [Research Task Handoff Standard](RESEARCH_TASK_HANDOFF_STANDARD.md) before starting a new study. Use [_template/README.md](_template/README.md) for each new topic and [_template/RESEARCH_TASK_BRIEF.md](_template/RESEARCH_TASK_BRIEF.md) for each substantive task. A successful software test or workflow run validates only the code paths and assertions that it actually covers.
 
 ## Directory map
 
@@ -16,6 +16,10 @@ Read [WORKFLOW.md](WORKFLOW.md) and the mandatory [research source hierarchy](RE
 - [docs/](docs/README.md): cross-topic model definitions, phenomenology notes, the AFH/natural-xenon main report, appendices A–G, formula cross-reference index, source audits, and research decisions.
 - [three_body_kinematic_audit/](three_body_kinematic_audit/README.md): threshold conditions, maximum scalar mass, and phase-space checks.
 - [three_body_calculation_and_validation/](three_body_calculation_and_validation/README.md): Eq. (6) kernel, GCN/JJ55 natural-xenon halo-folded continuous spectra, fixed-speed Xe-131 diagnostics, the supplied 450-keV pointwise benchmark, tests, and numerical outputs. The 450-keV fixed-speed curve is a single-isotope zero-width diagnostic, not a halo or detector-level prediction.
+- [three_body_phase_space_ID_validation/](three_body_phase_space_ID_validation/README.md): full three-body L00 versus I(D_NR) comparison, fixed-speed Xe-131 diagnostic, halo-folded seven-isotope natural-xenon scans, quadrature convergence, and permanent native-output archive.
+- [nucleon_form_factor_B_baseline/](nucleon_form_factor_B_baseline/README.md): selected finite-nucleon F1(t_N), F2(t_N) correction multiplied by the finite-size AFH W_M(y_A) response, including two separate strange-current scenarios, covariance propagation, and permanent output archive.
+- [artifact_archives/](artifact_archives/README.md): pinned GitHub Actions source artifacts, native CSV/JSON extraction, run manifests, and SHA-256 inventories for PR #78 and PR #80.
+- [fig2_phase_space_reproduction/](fig2_phase_space_reproduction/README.md): exact-relativistic fixed-speed phase-space reproduction of the source-paper Fig. 2, with digitized curves, outputs, quadrature checks, and an explicit note that its 122 GeV target mass is a comparison input superseded as a source-input hypothesis by the separate target-mass inversion record.
 - [afh_default_density_xe131/](afh_default_density_xe131/README.md): AFH v6.0 Xe-131 response, normalization and momentum-convention audits, AME2020/CODATA-2022 mass diagnostics, and the historical I6 mapping/quadrature audit. The latter reproduces I6 only; it does not validate the full differential cross section.
 - [afh_default_density_natural_xenon_halo/](afh_default_density_natural_xenon_halo/README.md): 七同位素 AFH default-density 响应网格（16,807 行）、selected-q 60 位 mpmath 验证、插值审查，以及 AFH-7/Hybrid-9 的 84 点全范围反冲网格谱。最终高阶谱归档目前仅有外部 checksum；selected-point AME2020 fold 仍是独立质量方案记录。以上都不是 detector-level LZ likelihood。
 - [lz_detector_response/](lz_detector_response/README.md): LZ 2026 public-input and NEST provenance, NR/ER response audits, event-level and two-dimensional three-body response folds, paired Parametric/Full S1 ten-seed statistics and bootstrap, Fig. S2 rate-level folds, and selection-stage diagnostics. The [extended NR/ER archive index](lz_detector_response/lz_2026_extended_nr/README.md) distinguishes the reproducible intermediate NEST proxy from the missing official waveform-level selected PDF and likelihood.
@@ -54,3 +58,8 @@ Keep the following quantities separate:
 ### Mathematica three-body natural-xenon calculation
 
 `three_body_natural_xenon/` contains the reorganized main Mathematica notebook, AFH v6 xenon response data, usage notes, and archived comparison tables. The main calculation is inline in the notebook and uses the in-repository FeynCalc copy plus Mathematica `NIntegrate`. FeynCalc, FeynRules 2.3.49, and FeynArts 3.12 source copies, license notes, and per-file checksums are stored in `three_body_calculation_and_validation/mathematica_halo_notebook/FeynRules_check/`; execution still requires Mathematica. The notebook and command-line checks prefer those local copies. The run record is explicitly marked historical because this reorganization did not rerun all calculations.
+
+
+## PR #78 / PR #80 permanent archive status
+
+The final stable archive pass [44581116762](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44581116762) passed source-artifact download, digest verification, native-file extraction, metadata validation, manifest generation, and all SHA-256 checks. The Halo archive contains 12 inventoried files and 13 checksum entries; the finite-nucleon B archive contains 20 inventoried files and 21 checksum entries. Both manifests are marked `ARCHIVED_AND_INTEGRITY_CHECKED`; the embedded inventories exclude their own manifests, while SHA256SUMS includes them.
