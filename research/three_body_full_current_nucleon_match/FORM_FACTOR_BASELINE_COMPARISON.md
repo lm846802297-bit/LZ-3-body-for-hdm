@@ -120,7 +120,7 @@ as \texttt{qA\_four\_vector\_GeV} and
 \texttt{qN\_four\_vector\_GeV}, and stores \texttt{tA\_GeV2} and
 \texttt{tN\_GeV2} independently.
 
-The adopted one-body impulse prescription for B is
+The adopted one-body impulse-current external-transfer assignment for B is
 
 \[
 q_N^\mu=q_A^\mu,
