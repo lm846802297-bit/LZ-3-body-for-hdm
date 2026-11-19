@@ -40,6 +40,39 @@ class VectorFormFactorTests(unittest.TestCase):
         )
         self.assertNotAlmostEqual(transfer["tN_GeV2"], transfer["tA_GeV2"], places=10)
 
+    def test_static_approximation_has_sub_ppm_effect_on_B_over_A(self):
+        mA = 121.90971983538435
+        for ER_keV in (200.0, 267.0):
+            formal = ff.recoil_transfer_kinematics(mA, ER_keV)
+            static = ff.recoil_transfer_kinematics(
+                mA, ER_keV,
+                nucleon_transfer_scheme=ff.STATIC_NUCLEON_TRANSFER_SCHEME,
+            )
+            self.assertAlmostEqual(
+                abs(formal["tN_GeV2"] - static["tN_GeV2"])
+                / abs(formal["tN_GeV2"]),
+                ER_keV * 1.0e-6 / (2.0 * mA),
+                places=13,
+            )
+            f1_formal_raw, f2_formal_raw = ff.bishara_linear(-formal["tN_GeV2"])
+            f1_static_raw, f2_static_raw = ff.bishara_linear(-static["tN_GeV2"])
+            f1_formal, f2_formal = ff.effective_nucleon_form_factors(
+                f1_formal_raw, f2_formal_raw
+            )
+            f1_static, f2_static = ff.effective_nucleon_form_factors(
+                f1_static_raw, f2_static_raw
+            )
+            cm_formal, _ = ff.charge_coefficients(
+                formal["Q_A_GeV"], F1=f1_formal, F2=f2_formal,
+                tN_GeV2=formal["tN_GeV2"],
+            )
+            cm_static, _ = ff.charge_coefficients(
+                static["Q_A_GeV"], F1=f1_static, F2=f2_static,
+                tN_GeV2=static["tN_GeV2"],
+            )
+            relative_B_over_A_shift = (cm_static / cm_formal)**2 - 1.0
+            self.assertLess(abs(relative_B_over_A_shift), 1.0e-6)
+
     def test_zero_momentum_raw_bishara_anchor(self):
         f1, f2 = ff.bishara_linear(0.0)
         self.assertAlmostEqual(f1, 3.0, places=12)
