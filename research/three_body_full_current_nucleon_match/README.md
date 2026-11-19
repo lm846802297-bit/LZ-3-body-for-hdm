@@ -1010,5 +1010,5 @@ The workflow
 seven-isotope natural-xenon Pole-width halo spectra on a selected recoil
 grid and separately refines speed and three-body phase-space quadratures.
 The current benchmark is \(m_{\chi_1}=1\) TeV,
-\(m_s=200\) keV, \(\Delta m=1\) MeV, and \(m_V=10\) GeV. The outputs
+\(m_s=200\) keV, \(\Delta m=1\) keV, and \(m_V=10\) GeV. The outputs
 remain provisional until the user's local Mathematica comparison is complete.
