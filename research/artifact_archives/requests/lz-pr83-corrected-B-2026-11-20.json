@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "repository": "lm846802297-bit/LZ-3-body-for-hdm",
+  "archive_directory": "research/nucleon_form_factor_B_baseline/results/2026-11-20-corrected-B-baseline-pr83",
+  "run_id": 44584140754,
+  "workflow_name": "Finite nucleon form factors B baseline",
+  "head_branch": "research/nucleon-form-factor-B-baseline-20261119",
+  "head_sha": "0b1d1714e461d4c61535c6850805bd8762e32dd0",
+  "artifact_id": 14561076256,
+  "artifact_name": "finite-nucleon-form-factor-B-baseline",
+  "artifact_size_bytes": 2470406,
+  "artifact_sha256": "bd13f797401169a17d6ae5bae9bbbabcec6770226a5b030a407933fcaf22999d",
+  "source_run": {
+    "id": 44584140754,
+    "name": "Finite nucleon form factors B baseline",
+    "source_commit": "0b1d1714e461d4c61535c6850805bd8762e32dd0",
+    "source_branch": "research/nucleon-form-factor-B-baseline-20261119",
+    "successful_steps": [
+      "B-baseline regression tests",
+      "absolute AFH-7/Hybrid-9 B spectra and LZ efficiency fold",
+      "baseline halo scan",
+      "higher-order halo scan",
+      "B quadrature comparison",
+      "artifact upload"
+    ]
+  },
+  "upstream_halo": {
+    "pr78_original": {
+      "run_id": 44560087038,
+      "artifact_id": 14551462445,
+      "artifact_name": "halo-seven-isotope-full-vs-ID-full-recoil-scan",
+      "source_commit": "9ca1801cdded7002c93776f8a0f5bce894135356",
+      "artifact_sha256": "6d3d711341cdd33200721fc9371c0dcac2ba3b0354043c09c903d89650b40103"
+    },
+    "pr74_final_rerun": {
+      "run_id": 44568592064,
+      "artifact_id": 14555201585,
+      "artifact_name": "halo-seven-isotope-full-vs-ID-full-recoil-scan",
+      "source_commit": "b6b1452b96c5e4697410c92a8ad3e4c358eed80c",
+      "artifact_sha256": "f89db448c83f6a7217c2ec7f4a046f8838e2069b671db2fff48bd94eef474da5"
+    },
+    "extracted_payloads_byte_identical": true,
+    "note": "The PR83 B workflow consumed the PR78 original halo artifact. The PR74 final rerun is preserved in the Halo archive and has byte-identical extracted member files."
+  },
+  "electromagnetic_input": {
+    "source": "Borah, Hill, Lee and Tomalak, Phys. Rev. D 102, 074012 (2020), arXiv:2003.13640",
+    "genie_source_commit": "e2e04f19e96d395ac646cf3382841646b60fa1b4",
+    "files": [
+      "research/nucleon_form_factor_B_baseline/data/borah2020/parameters.json",
+      "research/nucleon_form_factor_B_baseline/data/borah2020/ELZExpFF.dat"
+    ]
+  },
+  "previous_archive": {
+    "path": "research/nucleon_form_factor_B_baseline/results/2026-11-19-finite-nucleon-form-factor-B-baseline",
+    "status": "immutable historical PR80 archive",
+    "note": "The Sufian 2017 result is unchanged. The Alexandrou 2020 converted scenario is superseded because the previous magnetic-radius expansion omitted the overall mu_s factor."
+  }
+}
