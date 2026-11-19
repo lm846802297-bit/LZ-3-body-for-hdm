@@ -35,5 +35,6 @@
     "size_in_bytes": 368745,
     "url": "https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44560087038"
   },
-  "archive_request_note": "The pinned artifact includes B-baseline and high-order 208-point halo scans, 84-point absolute AFH-7/Hybrid-9 spectra, LZ 2026 efficiency-weighted event yields, and 3000-draw correlated Borah 2020 electromagnetic covariance propagation. Native files are extracted and checked against the source artifact ZIP."
+  "archive_request_revision": "trigger-2",
+  "archive_request_note": "The pinned artifact includes B-baseline and high-order 208-point halo scans, 84-point absolute AFH-7/Hybrid-9 spectra, LZ 2026 efficiency-weighted event yields, and 3000-draw correlated Borah 2020 electromagnetic covariance propagation. Native files, exact source-code/input snapshots, source artifact digest, and SHA256SUMS are archived and validated."
 }
