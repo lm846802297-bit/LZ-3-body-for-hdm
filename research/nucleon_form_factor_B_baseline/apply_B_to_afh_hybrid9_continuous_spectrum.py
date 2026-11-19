@@ -19,7 +19,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[2]
+ROOT = HERE.parents[1]
 sys.path.insert(0, str(HERE))
 from borah2020_lowq2 import cM_and_factor, sample_cM_draws  # noqa: E402
 
@@ -198,7 +198,7 @@ def run(
                     R_A = response_for_scenario(row, scenario)
                     if R_A == 0.0 or base_kernel == 0.0:
                         continue
-                    denominator = (mV*mV + q2)**2
+                    denominator = (mV*mV + 2.0*mA*ER*1.0e-6)**2
                     a_contribution = (
                         prefactor * atom_fraction * base_kernel * R_A / denominator
                     )
