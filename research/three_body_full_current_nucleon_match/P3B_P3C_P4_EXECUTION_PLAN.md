@@ -10,7 +10,8 @@
 |---|---|---|
 | P3-B native AFH comparison | QUEUED / OPEN | [control run 44346207069](https://github.com/lm846802297-bit/research-compute-control/actions/runs/44346207069); self-hosted Windows/X64/research-gpu runner has no assigned runner |
 | P3-C response-level contraction | PROVISIONAL PASS | 28 pole-only rows; all total kernels positive; maximum spatial/charge ratio \(7.03050\times10^{-9}\) |
-| P3-C amplitude-level comparison | NOT STARTED / OPEN | Need native multipole amplitudes and direct covariant/q-frame/AFH amplitude reconstruction with common OBDMEs |
+| P3-C spatial amplitude subgate | PASS (provisional Python AFH) | Four Xe-131 Pole-width benchmarks; maximum helicity-vs-Cartesian residual \(6.09\times10^{-16}\) |
+| P3-C full covariant nuclear amplitude | OPEN | Charge multipoles are not yet rank-resolved; independent coordinate-space bound-nucleus current and native AFH comparison remain required |
 | P4 native seven-isotope halo fold | PREPARED / BLOCKED | Native charge-fold engine exists; must wait for P3-B and P3-C acceptance |
 
 ## P3-B — native Wolfram AFH comparison
@@ -109,3 +110,33 @@ energy resolution, exposure, and likelihood are a later detector-level stage.
   spatial/charge ratio makes the mismatch irrelevant.
 - P4 convergence failure: keep the spectrum provisional and refine the
   affected isotope/speed/recoil nodes only.
+
+
+## P3-C spatial amplitude-level subgate — completed locally
+
+The new reproducible calculation
+[`p3c_amplitude_level_helicity_crosscheck.py`](p3c_amplitude_level_helicity_crosscheck.py)
+uses the full complex \(G_{\mu a,\nu b}^{(3)}\) tensor and signed Xe-131
+\(\Delta_J,\Sigma'_J\) amplitudes. It compares the direct Cartesian
+Eq. (107) contraction against a helicity-amplitude reconstruction before
+summing over transverse helicity and multipole rank.
+
+- Pole-width benchmarks: four (200 and 267 keV).
+- Maximum amplitude-kernel relative residual:
+  \(6.09\times10^{-16}\).
+- Maximum Eq. (107) coefficient relative residual:
+  \(8.53\times10^{-16}\).
+- Maximum PCHIP-amplitude versus existing linear-response interpolation
+  difference: \(5.53\times10^{-6}\).
+- Four unit tests pass, including a deliberate sign-flip test showing that
+  the wrong \(\Sigma'\)-helicity phase reverses the signed interference.
+
+This closes only the **spatial helicity reconstruction subgate**. It is not
+an independent coordinate-space many-body current calculation, and the
+charge \(M,\Phi''\) multipoles are not yet rank-resolved. The native
+Wolfram AFH comparison also remains queued. Full P3-C therefore remains
+OPEN.
+
+The workflow now runs this subgate after the C0-consistent response
+contraction and appends its JSON result to the
+`full-three-body-current-nucleon-match-and-phase-space-tensor` artifact.
