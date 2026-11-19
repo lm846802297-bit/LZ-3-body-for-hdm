@@ -11,7 +11,9 @@ class VectorFormFactorTests(unittest.TestCase):
         transfer = ff.recoil_transfer_kinematics(mA, ER_keV)
         qA = math.sqrt(2.0*mA*200.0e-6 + (200.0e-6)**2)
         expected_t = -2.0*mA*200.0e-6
-        self.assertEqual(transfer["qA_four_vector_GeV"], [200.0e-6, 0.0, 0.0, qA])
+        self.assertAlmostEqual(transfer["qA_four_vector_GeV"][0], 200.0e-6, places=18)
+        self.assertEqual(transfer["qA_four_vector_GeV"][1:3], [0.0, 0.0])
+        self.assertAlmostEqual(transfer["qA_four_vector_GeV"][3], qA, places=15)
         self.assertEqual(transfer["qN_four_vector_GeV"], transfer["qA_four_vector_GeV"])
         self.assertAlmostEqual(transfer["tA_GeV2"], expected_t, places=16)
         self.assertAlmostEqual(transfer["tN_GeV2"], expected_t, places=16)
@@ -30,7 +32,7 @@ class VectorFormFactorTests(unittest.TestCase):
             mA, ER_keV,
             nucleon_transfer_scheme=ff.STATIC_NUCLEON_TRANSFER_SCHEME,
         )
-        self.assertEqual(transfer["qA_four_vector_GeV"][0], 200.0e-6)
+        self.assertAlmostEqual(transfer["qA_four_vector_GeV"][0], 200.0e-6, places=18)
         self.assertEqual(transfer["qN_four_vector_GeV"][0], 0.0)
         self.assertAlmostEqual(
             transfer["tN_GeV2"], -transfer["Q_A2_GeV2"], places=16
