@@ -1,9 +1,14 @@
+import sys
 import unittest
+from pathlib import Path
 
 import numpy as np
 
-from fold_lz_2026_rate_level import integrate_piecewise_linear_product
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "research/three_body_calculation_and_validation"))
+
 from propagate_B_covariance_to_lz_yields import integrate_draw_matrix
+from fold_lz_2026_rate_level import integrate_piecewise_linear_product
 
 
 class PropagateBDetectorCovarianceTests(unittest.TestCase):
