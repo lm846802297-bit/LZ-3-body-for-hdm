@@ -140,8 +140,63 @@ The implementation now includes the factor \(\mu_s\) multiplying the slope. A re
 - Regression tests: 10 passed.
 - Repository layout and Figure 2 benchmark manifest checks: passed.
 
+## LZ 2026 detector-efficiency fold of the absolute B spectra
+
+The B correction was also applied to the archived 84-point absolute AFH-7/Hybrid-9 natural-xenon spectra and passed through the existing LZ 2026 final-WIMP-search-ROI NR efficiency fold. The A-spectrum reconstruction from isotope-resolved kernels closes against the archived A spectrum at the configured \(2\times10^{-11}\) relative tolerance.
+
+Detector-fold configuration:
+
+- Exposure: \(2.84\) tonne-year (\(1{,}037{,}310\) kg-day).
+- Reconstructed analysis interval used by the rate-level fold: \(5.4\)–\(269.9\) keV.
+- Efficiency: digitized central LZ 2026 Fig. S2 final-WIMP-search-ROI NR efficiency, with its published gray envelope retained separately.
+- Integration: exact integral of piecewise-linear \(dR/dE_R\) times piecewise-linear efficiency over the union of knots.
+- Maximum dense-trapezoid cross-check difference: \(3.59\times10^{-7}\).
+- The 2026 strange-current scenario is slope-only; the strange-lattice input uncertainties are not sampled.
+
+### Expected events for the three strange-current inputs
+
+Central efficiency-weighted expected events in the \(2.84\) tonne-year exposure:
+
+| Benchmark | AFH-7: Sufian 2017 | AFH-7: Alexandrou 2020 | AFH-7: Alexandrou 2026 |
+|---|---:|---:|---:|
+| \(m_s=200\) keV, \(\Delta m=1\) MeV | \(2.66263\times10^{-1}\) | \(2.64697\times10^{-1}\) | \(2.66358\times10^{-1}\) |
+| \(m_s=300\) keV, \(\Delta m=1\) MeV | \(1.10267\times10^{-3}\) | \(1.09357\times10^{-3}\) | \(1.10322\times10^{-3}\) |
+| \(m_s=360\) keV, \(\Delta m=1\) MeV | \(2.07412\times10^{-9}\) | \(2.04975\times10^{-9}\) | \(2.07559\times10^{-9}\) |
+| \(m_s=300\) keV, \(\Delta m=10\) MeV | \(9.02733\times10^{-6}\) | \(8.95286\times10^{-6}\) | \(9.03183\times10^{-6}\) |
+
+For Hybrid-9, the corresponding Sufian 2017 yields are \(0.266932\), \(1.10469\times10^{-3}\), \(2.07412\times10^{-9}\), and \(9.04390\times10^{-6}\). The difference from AFH-7 is due only to the explicitly labelled Helm fallback for Xe-124 and Xe-126; the seven AFH isotope contributions are unchanged.
+
+### Detector-level A/B comparison
+
+Using the archived A detector-fold results as the denominator, the Sufian 2017 B/A event-yield ratios are:
+
+| Benchmark | A AFH-7 events | B AFH-7 events | B/A | Change |
+|---|---:|---:|---:|---:|
+| \(m_s=200\) keV, \(\Delta m=1\) MeV | 0.317278 | 0.266263 | 0.83921 | \(-16.08\%\) |
+| \(m_s=300\) keV, \(\Delta m=1\) MeV | \(1.39790\times10^{-3}\) | \(1.10267\times10^{-3}\) | 0.78881 | \(-21.12\%\) |
+| \(m_s=360\) keV, \(\Delta m=1\) MeV | \(2.85849\times10^{-9}\) | \(2.07412\times10^{-9}\) | 0.72560 | \(-27.44\%\) |
+| \(m_s=300\) keV, \(\Delta m=10\) MeV | \(1.14430\times10^{-5}\) | \(9.02733\times10^{-6}\) | 0.78890 | \(-21.11\%\) |
+
+The detector-integrated suppression is smaller than the suppression at \(E_R\simeq250\) keV because the event yield integrates over the full analysis interval, including lower recoil energies where the nucleon form-factor correction is weaker.
+
+For fixed \(g_2\), the Sufian 2017 AFH-7 values of the coupling-product-squared required for one central expected event are:
+
+| Benchmark | \( (g_1g_2g_{VN})^2_{\;N=1}\) |
+|---|---:|
+| \(m_s=200\) keV, \(\Delta m=1\) MeV | \(3.75569\times10^{-8}\) |
+| \(m_s=300\) keV, \(\Delta m=1\) MeV | \(9.06888\times10^{-6}\) |
+| \(m_s=360\) keV, \(\Delta m=1\) MeV | \(4.82131\) |
+| \(m_s=300\) keV, \(\Delta m=10\) MeV | \(1.10775\times10^{-3}\) |
+
+The expected yields are all below one event at the reference coupling product squared \(10^{-8}\). The coupling thresholds above are rate-level one-event benchmarks, not exclusion limits.
+
+### Detector-level scope
+
+The fold applies the published NR efficiency and the \(2.84\) tonne-year exposure. It does not apply energy-resolution smearing, an event-level S1c/\(\log_{10}S2_c\) signal PDF, a background model, a profile likelihood, or a confidence-level construction. The efficiency gray envelope is not assigned a confidence level by LZ. The electromagnetic form-factor covariance percentiles are present in the B recoil-spectrum output but are not yet propagated through the detector event-yield integration.
+
 ## Remaining work
 
 1. Decide whether the 2026 strange-current slope-only cross-check should be replaced by a reconstruction of its full published \(z\)-expansion.
 2. Propagate the strange-lattice input uncertainties once a usable coefficient covariance or joint fit information is available.
-3. Fold the B-baseline recoil spectrum through the LZ detector efficiency, energy-resolution kernel, exposure and analysis window to obtain observable event counts.
+3. Add energy-resolution smearing and the two-dimensional S1c/log10(S2c) response, then build the background likelihood if a formal LZ exclusion is required.
+4. Propagate the Borah electromagnetic covariance percentiles through the detector fold; the present detector yields use the central B spectrum.
