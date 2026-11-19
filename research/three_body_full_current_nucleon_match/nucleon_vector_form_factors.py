@@ -39,14 +39,16 @@ M_N_GEV = 0.938918
 F1V0 = 3.0
 F2V0 = -0.552
 
-# Bishara et al. Appendix A.1:
-# F1^{u/p}'(0)=5.57(9), F1^{d/p}'(0)=2.84(5),
-# F1^{s/p}'(0)=-0.018(9), in GeV^{-2}.
-F1_SLOPE_BISHARA = 5.57 + 2.84 - 0.018
-F1_SLOPE_BISHARA_ERR = math.sqrt(0.09**2 + 0.05**2 + 0.009**2)
+# Bishara et al., Appendix A.1, Eqs. (78)-(85):
+# flavor-separated proton Dirac slopes in GeV^{-2}.
+BISHARA_F1_SLOPES = {"u": 5.57, "d": 2.84, "s": -0.018}
+BISHARA_F1_SLOPE_ERRORS = {"u": 0.09, "d": 0.05, "s": 0.009}
+F1_SLOPE_BISHARA = sum(BISHARA_F1_SLOPES.values())
+F1_SLOPE_BISHARA_ERR = math.sqrt(sum(x * x for x in BISHARA_F1_SLOPE_ERRORS.values()))
 
-# F2^{s/p}(0)=-0.064(17), while the universal sum is -0.552.
-F2S0 = -0.064
+# Bishara et al. Eqs. (80)-(82): F2^{u/p}(0), F2^{d/p}(0), F2^{s/p}(0).
+BISHARA_F2_ZERO = {"u": 1.609, "d": -2.097, "s": -0.064}
+F2S0 = BISHARA_F2_ZERO["s"]
 
 # Borah et al. isoscalar Sachs z expansion, Q^2 < 1 GeV^2 default fit.
 M_PI_GEV = 0.13957
@@ -94,11 +96,31 @@ def isoscalar_em_dirac_pauli(Q2: float, *, mN_GeV: float = M_N_GEV) -> tuple[flo
     F2 = (GM - GE) / (1.0 + tau)
     return F1, F2
 
-def bishara_linear(Q2: float) -> tuple[float, float]:
+def bishara_flavor_components(Q2: float) -> dict:
+    """Flavor-resolved low-Q_N^2 Dirac-Pauli inputs from Bishara et al.
+
+    With t_N=-Q_N^2, use F1^{q/p}(t_N)=F1^{q/p}(0)+t_N F1'^{q/p}(0)
+    and the quoted F2^{q/p}(0). Neutron values follow p->n, u<->d.
+    """
     if Q2 < 0.0:
         raise ValueError("Q2 must be non-negative")
-    F1 = F1V0 - Q2 * F1_SLOPE_BISHARA
-    return F1, F2V0
+    F1_zero = {"u": 2.0, "d": 1.0, "s": 0.0}
+    F1 = {
+        flavor: F1_zero[flavor] - Q2 * slope
+        for flavor, slope in BISHARA_F1_SLOPES.items()
+    }
+    F2 = dict(BISHARA_F2_ZERO)
+    return {
+        "F1_by_flavor": F1,
+        "F2_by_flavor": F2,
+        "F1V": sum(F1.values()),
+        "F2V": sum(F2.values()),
+    }
+
+
+def bishara_linear(Q2: float) -> tuple[float, float]:
+    components = bishara_flavor_components(Q2)
+    return components["F1V"], components["F2V"]
 
 def isoscalar_zexp(Q2: float) -> tuple[float, float]:
     """Central finite-Q^2 benchmark for the universal light-quark current.
