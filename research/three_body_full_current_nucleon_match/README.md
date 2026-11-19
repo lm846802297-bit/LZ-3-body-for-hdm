@@ -761,7 +761,7 @@ minimum in \(W_M\) near \(q_A\simeq0.256\) GeV. It compares PCHIP with
 local degree-8 and degree-10 Chebyshev interpolation on the archived
 2,401-point AFH grid. The full charge-dominated kernel changes by at most
 1.6589% under this interpolation comparison; the normalized full /
-pointlike-\(M\) ratio changes by at most 0.1182%. This is the q=0-reference M-only ratio; the primary
+q=0-reference \(M\) ratio changes by at most 0.1182%. This is the q=0-reference M-only ratio; the primary
 finite-\(t_N\) correction is also reported separately in the scan output.
 The spatial kernel changes
 by less than 1 ppm. These are interpolation diagnostics, not a dense native
