@@ -1,0 +1,93 @@
+name: P4 provisional continuous natural-xenon recoil spectrum
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - .github/workflows/p4-provisional-continuous-natural-xenon-spectrum.yml
+      - research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py
+      - research/three_body_full_current_nucleon_match/plot_p4_provisional_halo_spectra.py
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  provisional-continuous-spectrum:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - name: Check out the P4 implementation
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install numerical and plotting dependencies
+        run: python -m pip install --upgrade numpy scipy sympy matplotlib
+
+      - name: Download the pinned provisional AFH-8 charge archive
+        uses: actions/download-artifact@v4
+        with:
+          name: afh-v6-seven-isotope-eight-response
+          run-id: 44222087512
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: /tmp/p4/charge
+
+      - name: Download the pinned provisional AFH spatial OBDME archive
+        uses: actions/download-artifact@v4
+        with:
+          name: provisional-afh-spatial-obdme-responses
+          run-id: 44432440600
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: /tmp/p4/spatial
+
+      - name: Validate pinned provisional AFH input bundle
+        run: |
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, "research/three_body_full_current_nucleon_match")
+          import native_charge_sector_halo_fold as p4
+          bundle, gate = p4.load_provisional_response_bundle(
+              Path("/tmp/p4/charge"), Path("/tmp/p4/spatial")
+          )
+          assert tuple(sorted(bundle)) == p4.ISOTOPES
+          assert gate["comparison"]["native_afh_validated"] is False
+          assert gate["comparison"]["rows_compared"] == 16807
+          print(gate["comparison"])
+          PY
+
+      - name: Compute 81-point seven-isotope Pole-width recoil spectra
+        run: |
+          ER_ARGS=$(python - <<'PY'
+          import numpy as np
+          print(" ".join(f"{x:.6f}" for x in np.linspace(40.0, 800.0, 81)))
+          PY
+          )
+          python research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py \
+            --provisional-charge-dir /tmp/p4/charge \
+            --provisional-spatial-dir /tmp/p4/spatial \
+            --out /tmp/p4/continuous-81-point-spectrum.json \
+            --mchi-GeV 1000 --ms-keV 200 --delta-m-keV 1 --mV-GeV 10 \
+            --g2 1 --coupling-product-squared 1e-8 --rho-GeV-cm3 0.3 \
+            --ER-keV $ER_ARGS \
+            --nv 24 --nw 8 --nz 6 --nphi 4 \
+            --form-factor pointlike --width-scheme pole \
+            --include-leading-static-vector-candidate
+
+      - name: Export CSV tables and paper-style PDF/PNG figures
+        run: |
+          python research/three_body_full_current_nucleon_match/plot_p4_provisional_halo_spectra.py \
+            --input-json /tmp/p4/continuous-81-point-spectrum.json \
+            --out-dir /tmp/p4/figures
+
+      - name: Upload provisional continuous spectrum and figures
+        uses: actions/upload-artifact@v4
+        with:
+          name: p4-provisional-continuous-natural-xenon-spectrum
+          path: /tmp/p4/
+          if-no-files-found: error
+          retention-days: 90
