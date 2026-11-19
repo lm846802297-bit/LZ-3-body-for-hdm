@@ -177,6 +177,18 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
         self.assertAlmostEqual(f1, 3.0, places=10)
         self.assertAlmostEqual(f2, -0.552, places=10)
 
+    def test_charge_kernel_uses_full_impulse_tN_when_supplied(self):
+        qA = 0.22
+        omega = 200.0e-6
+        tN = omega * omega - qA * qA
+        responses = {"M": 4.0, "PhiPP": 0.2, "MPhiPP": -0.3}
+        result = fold.charge_kernel_from_coulomb_weight(
+            2.5, qA, responses, "bishara_linear", tN_GeV2=tN
+        )
+        self.assertAlmostEqual(result["F1V"], 3.0 - 8.392 * (-tN), places=13)
+        self.assertAlmostEqual(result["F2V"], -0.552, places=13)
+        self.assertNotAlmostEqual(-tN, qA * qA, places=12)
+
     def test_charge_correction_uses_same_finite_t_M_baseline(self):
         responses = {"M": 4.0, "PhiPP": 0.2, "MPhiPP": -0.3}
         result = fold.charge_kernel_from_coulomb_weight(
