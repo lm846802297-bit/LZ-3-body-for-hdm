@@ -121,6 +121,10 @@ def load_native_xe131_responses(path: Path) -> tuple[dict, dict]:
         raise ValueError("native Xe-131 dq is not 0.00025 GeV")
     if metadata.get("factor_four_applied_once") is not True:
         raise ValueError("native Xe-131 equal-p/n factor-four bookkeeping is not certified")
+    if metadata.get("shape_renormalization_applied") is not False:
+        raise ValueError(
+            "native Xe-131 source must be the raw OBDME normalization before C0"
+        )
     if "14.2.0" not in str(metadata.get("wolfram_version", "")):
         raise ValueError("native Xe-131 Wolfram version is not 14.2.0")
     if metadata.get("csv_sha256") != NATIVE_CSV_SHA256:
@@ -149,12 +153,37 @@ def load_native_xe131_responses(path: Path) -> tuple[dict, dict]:
         "PhiPP": "R_PhiPP_physical_equal_pn",
         "MPhiPP": "R_MPhiPP_physical_equal_pn",
     }
-    responses = {
+    responses_raw_to_physical = {
         name: np.asarray([float(row[column]) for row in rows], dtype=float)
         for name, column in columns.items()
     }
-    if not all(np.all(np.isfinite(values)) for values in responses.values()):
+    if not all(np.all(np.isfinite(values)) for values in responses_raw_to_physical.values()):
         raise ValueError("native AFH response archive contains non-finite values")
+    raw_m_zero = float(rows[0]["R_M_raw"])
+    metadata_raw_m_zero = float(metadata.get("measured_R_M_raw_q0", math.nan))
+    validation_raw_m_zero = float(validation.get("R_M_raw_q0", math.nan))
+    for label, value in (
+        ("metadata", metadata_raw_m_zero),
+        ("validation", validation_raw_m_zero),
+    ):
+        if not math.isfinite(value) or not math.isclose(
+            raw_m_zero, value, rel_tol=0.0, abs_tol=2.0e-10
+        ):
+            raise ValueError(f"native Xe-131 raw M(q=0) disagrees with {label}")
+    # The native file has already applied the independent equal-p/n factor
+    # four, but explicitly records shape_renormalization_applied=false.
+    # Apply the OBDME common correction C0 once so M_phys(0)=A^2.
+    c0 = 131.0**2 / (4.0 * raw_m_zero)
+    if not math.isfinite(c0) or c0 <= 0.0:
+        raise ValueError(f"invalid Xe-131 OBDME common normalization C0={c0}")
+    responses = {
+        name: c0 * values
+        for name, values in responses_raw_to_physical.items()
+    }
+    if not math.isclose(
+        float(responses["M"][0]), 131.0**2, rel_tol=2.0e-13, abs_tol=2.0e-10
+    ):
+        raise ArithmeticError("C0-corrected native Xe-131 M(q=0) does not equal A^2")
     return {"q": q, "responses": responses}, {
         "sha256_policy": "UTF-8 text normalized to LF before SHA-256",
         "sha256_canonical_lf": canonical_digest,
@@ -168,7 +197,13 @@ def load_native_xe131_responses(path: Path) -> tuple[dict, dict]:
         "afh_source_sha256": metadata["afh_source_sha256"],
         "density_matrix_csv_sha256": metadata["density_matrix_csv_sha256"],
         "response_columns": columns,
-        "normalization": "physical equal-p/n columns; factor four applied once",
+        "normalization": (
+            "source CSV already contains physical equal-p/n columns with factor four; "
+            "loader applies C0= A^2/(4*R_M_raw(q=0)) once to all three responses"
+        ),
+        "common_matrix_normalization_C0": c0,
+        "raw_M_zero_package_response": raw_m_zero,
+        "physical_M_zero_after_C0": float(responses["M"][0]),
         "mass_record": XE131_MASS_RECORD,
         "mass_convention": "bare nucleus: (atomic_mass_u - Z*m_e[u])*u_GeV",
     }
