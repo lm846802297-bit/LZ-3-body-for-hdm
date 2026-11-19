@@ -52,3 +52,8 @@ The higher-order B quadrature comparison gives maximum natural-xenon full-rate a
 ## Scientific scope
 
 This is the rate-level B baseline: finite nucleon \(F_1,F_2\) correction multiplied by the AFH finite-size charge response. Detector response, efficiency, energy resolution, exposure, cuts, and likelihood are not included. The quoted B/A shifts are specific to this benchmark and the two stated strange-current inputs.
+
+
+## Final archive integrity check
+
+The final extraction, run-manifest generation, and complete SHA-256 verification passed in [archive workflow run 44579411941](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44579411941). The manifest inventory lists the README, original PR #80 source ZIP, and 19 extracted native files. `SHA256SUMS` additionally covers `RUN_MANIFEST.json` itself (21 checksum entries total). The manifest is deliberately excluded from its own embedded inventory to avoid a self-referential digest.
