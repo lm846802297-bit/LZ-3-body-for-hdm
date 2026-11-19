@@ -49,5 +49,5 @@
     }
   ],
   "archive_request_revision": "trigger-2",
-  "archive_request_note": "Regenerate manifests with archive-integrity status explicitly separated from scientific validation status."
+  "archive_request_note": "Re-run after making extraction idempotent: remove the prior extraction directory before unpacking the pinned source ZIPs, then regenerate and verify manifests/checksums against the current README files."
 }
