@@ -15,6 +15,24 @@ class VectorFormFactorTests(unittest.TestCase):
         self.assertAlmostEqual(f1, 3.0, places=10)
         self.assertAlmostEqual(f2, -0.552, places=10)
 
+    def test_bishara_flavor_components_sum_to_universal_current(self):
+        q2 = 0.047
+        components = ff.bishara_flavor_components(q2)
+        self.assertAlmostEqual(
+            sum(components["F1_by_flavor"].values()),
+            components["F1V"],
+            places=14,
+        )
+        self.assertAlmostEqual(
+            sum(components["F2_by_flavor"].values()),
+            components["F2V"],
+            places=14,
+        )
+        self.assertAlmostEqual(components["F1_by_flavor"]["u"], 2.0 - 5.57 * q2)
+        self.assertAlmostEqual(components["F1_by_flavor"]["d"], 1.0 - 2.84 * q2)
+        self.assertAlmostEqual(components["F1_by_flavor"]["s"], 0.018 * q2)
+        self.assertAlmostEqual(components["F2V"], -0.552, places=14)
+
     def test_bishara_slope(self):
         q2 = 1.0e-6
         f1, _ = ff.bishara_linear(q2)
