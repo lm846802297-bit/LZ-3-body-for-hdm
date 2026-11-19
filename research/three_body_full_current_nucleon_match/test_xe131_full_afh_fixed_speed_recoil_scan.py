@@ -41,7 +41,7 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
         # C_{Sigma' Delta} and W_{Sigma' Delta} are both negative here.
         self.assertGreater(result["spatial_terms"]["SigmaPrimeDelta"], 0.0)
         self.assertAlmostEqual(
-            result["full_six_channel_candidate"],
+            result["D_full_six_channel_candidate"],
             result["charge_only"] + result["spatial_candidate"],
             places=10,
         )
@@ -58,7 +58,7 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
             "C_over_A_reference",
             "PhiPP_over_B_correction",
             "D_over_C_charge_only",
-            "spatial_over_charge_only",
+            "spatial_over_C_charge_only",
             "D_over_A_reference",
         ):
             self.assertAlmostEqual(a[key], b[key], places=12, msg=key)
