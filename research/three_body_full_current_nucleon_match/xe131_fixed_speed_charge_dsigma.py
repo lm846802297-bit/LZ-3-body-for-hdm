@@ -5,7 +5,8 @@ The DM-side L_C is obtained from the full phase-space-integrated tensor using
 the nuclear-current continuity relation, conditional on conservation of the
 complete nuclear vector current. Native AFH M/Phi''/M-Phi'' responses are
 contracted with finite-t_N charge coefficients and compared with the original
-pointlike 9 W_M baseline using the formal constant pole-width prescription.
+AFH M-only baseline, 9 W_M(Q_A), which retains the finite-q nuclear response.
+The q=0 nucleon-current normalization is not a point-nucleus approximation.
 Transverse nuclear-current multipoles are not included in this restricted
 Coulomb-sector ratio.
 """
@@ -207,13 +208,13 @@ def charge_sector_kernels(
     interference_kernel = 2.0 * cM * cPhi * L_C * WMPhi
     phi_kernel = cPhi * cPhi * L_C * WPhi
     full_charge_kernel = finite_t_M_kernel + interference_kernel + phi_kernel
-    pointlike_M_kernel = F1V0 * F1V0 * L_C * WM
-    if pointlike_M_kernel <= 0.0 or full_charge_kernel <= 0.0:
+    original_AFH_M_baseline_kernel = F1V0 * F1V0 * L_C * WM
+    if original_AFH_M_baseline_kernel <= 0.0 or full_charge_kernel <= 0.0:
         raise ValueError("non-positive numerator or denominator kernel")
 
     eta = cPhi / cM
     Qphi = 1.0 + 2.0 * eta * (WMPhi / WM) + eta * eta * (WPhi / WM)
-    ratio_direct = full_charge_kernel / pointlike_M_kernel
+    ratio_direct = full_charge_kernel / original_AFH_M_baseline_kernel
     ratio_finite_t_M = full_charge_kernel / finite_t_M_kernel
     ratio_factorized = (cM * cM / (F1V0 * F1V0)) * Qphi
     ratio_legacy_F1_squared = (F1 * F1 / (F1V0 * F1V0)) * Qphi
@@ -233,16 +234,22 @@ def charge_sector_kernels(
         "finite_t_M_only_over_q0_M_reference": (cM * cM) / 9.0,
         "full_charge_over_finite_t_M": ratio_finite_t_M,
         "relative_change_vs_finite_t_M_percent": 100.0 * (ratio_finite_t_M - 1.0),
+        "original_AFH_M_baseline_kernel": original_AFH_M_baseline_kernel,
+        "q0_M_reference_kernel": original_AFH_M_baseline_kernel,
+        "full_charge_over_original_AFH_M_baseline": ratio_direct,
+        "relative_change_vs_original_AFH_M_baseline_percent": 100.0 * (ratio_direct - 1.0),
         "full_charge_over_q0_M_reference": ratio_direct,
         "relative_change_vs_q0_M_reference_percent": 100.0 * (ratio_direct - 1.0),
-        # Legacy aliases: the denominator is the q=0 nucleon-form-factor M reference.
+        # Legacy aliases: AFH W_M(Q_A) remains finite-q; this is not a point nucleus.
         "finite_t_M_only_over_pointlike_M": (cM * cM) / 9.0,
         "full_charge_over_pointlike_M": ratio_direct,
         "relative_change_percent": 100.0 * (ratio_direct - 1.0),
         "legacy_F1_squared_ratio_for_normalization_audit": ratio_legacy_F1_squared,
         "legacy_F1_squared_relative_change_percent": 100.0 * (ratio_legacy_F1_squared - 1.0),
         "kernels_with_common_LC": {
-            "pointlike_M_only": pointlike_M_kernel,
+            "original_AFH_M_baseline": original_AFH_M_baseline_kernel,
+            "q0_M_reference": original_AFH_M_baseline_kernel,
+            "pointlike_M_only": original_AFH_M_baseline_kernel,
             "finite_t_M_only": finite_t_M_kernel,
             "M_Phi_interference": interference_kernel,
             "PhiPP_diagonal": phi_kernel,
@@ -410,9 +417,13 @@ def run(afh_csv: Path, form_factor_prescription: str = "isoscalar_zexp") -> dict
             "(dSigma/dER)_[finite-tN M+Phi'' Coulomb sector] / "
             "(dSigma/dER)_[same finite-tN M-only with identical F1,F2]"
         ),
+        "original_AFH_baseline_definition": (
+            "q=0 single-nucleon-current normalization times the finite-q AFH W_M(Q_A) response; "
+            "the nuclear form factor is retained and this is not a point nucleus"
+        ),
         "secondary_reference_definition": (
             "(dSigma/dER)_[finite-tN M+Phi'' Coulomb sector] / "
-            "(dSigma/dER)_[q=0 nucleon-form-factor M-only reference]"
+            "(dSigma/dER)_[original AFH M-only baseline with the same W_M(Q_A)]"
         ),
         "factorization": (
             "The same continuity-adjusted L_C^(3), propagator, flux, and phase-space "
