@@ -34,19 +34,55 @@ def referenced_files(record: dict):
     return []
 
 
+def resolve_repo_path(root: Path, relative_path: str, errors: list):
+    rel = Path(relative_path)
+    if rel.is_absolute() or ".." in rel.parts:
+        errors.append(f"{relative_path}: path must be repository-relative and cannot escape the repo")
+        return None
+    target = (root / rel).resolve()
+    try:
+        target.relative_to(root)
+    except ValueError:
+        errors.append(f"{relative_path}: resolved path escapes repository root")
+        return None
+    return target
+
+
+def verify_inputs(record: dict, repo_root: Path):
+    errors, warnings = [], []
+    if record.get("record_type") != "run_manifest":
+        return errors, warnings
+    root = repo_root.resolve()
+    for item in record.get("inputs", []):
+        if not item.get("path"):
+            continue
+        target = resolve_repo_path(root, item["path"], errors)
+        if target is None:
+            continue
+        if not target.is_file():
+            if item.get("uri"):
+                warnings.append(f"{item['path']}: external input not present locally; URI/version retained")
+            else:
+                errors.append(f"{item['path']}: referenced input file does not exist")
+            continue
+        if item.get("bytes") is not None and target.stat().st_size != item["bytes"]:
+            errors.append(f"{item['path']}: input byte size {target.stat().st_size} != manifest {item['bytes']}")
+        if item.get("sha256"):
+            digest = hashlib.sha256()
+            with target.open("rb") as stream:
+                for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                    digest.update(chunk)
+            if digest.hexdigest() != item["sha256"]:
+                errors.append(f"{item['path']}: input SHA-256 mismatch")
+    return errors, warnings
+
+
 def verify_artifacts(record: dict, repo_root: Path):
     errors, warnings = [], []
     root = repo_root.resolve()
     for item in referenced_files(record):
-        rel = Path(item["path"])
-        if rel.is_absolute() or ".." in rel.parts:
-            errors.append(f"{item['path']}: path must be repository-relative and cannot escape the repo")
-            continue
-        target = (root / rel).resolve()
-        try:
-            target.relative_to(root)
-        except ValueError:
-            errors.append(f"{item['path']}: resolved path escapes repository root")
+        target = resolve_repo_path(root, item["path"], errors)
+        if target is None:
             continue
         if not target.is_file():
             if item.get("uri"):
@@ -148,15 +184,17 @@ def main():
             failed = True
             continue
 
-        file_errors, warnings = verify_artifacts(record, args.repo_root)
-        if file_errors:
-            print(f"FAIL {record_path}: artifact integrity")
-            for error in file_errors:
+        input_errors, input_warnings = verify_inputs(record, args.repo_root)
+        file_errors, file_warnings = verify_artifacts(record, args.repo_root)
+        integrity_errors = input_errors + file_errors
+        if integrity_errors:
+            print(f"FAIL {record_path}: input/output integrity")
+            for error in integrity_errors:
                 print(f"  - {error}")
             failed = True
         else:
-            print(f"PASS {record_path}: schema and local artifact checks")
-        for warning in warnings:
+            print(f"PASS {record_path}: schema and local input/output integrity")
+        for warning in input_warnings + file_warnings:
             print(f"WARN {record_path}: {warning}")
 
     return 1 if failed else 0
