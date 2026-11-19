@@ -6,7 +6,7 @@ These instructions are mandatory for all agents and contributors. They complemen
 
 Before substantive work:
 
-1. Read this file, the root [README](README.md), [CONTRIBUTING.md](CONTRIBUTING.md), [research/WORKFLOW.md](research/WORKFLOW.md), and [research/README.md](research/README.md).
+1. Read this file, the root [README](README.md), [CONTRIBUTING.md](CONTRIBUTING.md), [research/WORKFLOW.md](research/WORKFLOW.md), [research/README.md](research/README.md), and the mandatory [research source hierarchy](research/RESEARCH_GOVERNANCE_AND_SOURCE_HIERARCHY.md).
 2. Read the relevant topic README, theory note, audit, scripts, tests, and input provenance. Use [the model and three-body amplitude note](research/docs/01_model_and_amplitude.md), [the LZ recast plan](research/docs/02_lz_recast.md), [the cosmology note](research/docs/03_cosmology.md), and [the audit/roadmap](research/docs/04_audit_and_roadmap.md) when relevant.
 3. Inspect the latest main SHA, open PRs touching the same paths, and the exact baseline data/code before changing a calculation.
 4. Do not infer that a planned task has run. Create a run record only after execution; preserve failed, partial, and blocked attempts honestly.
@@ -36,7 +36,7 @@ For every amplitude implementation:
 6. Distinguish the dimensionless kinematic lambda in the phase-space expression from the dimensionful Källén function used in decay-width formulas.
 7. Check the propagator denominator, mediator momentum transfer, overall dimensions, symmetry factors, and limiting cases independently of the final spectrum.
 
-For the two internal chi_2 propagators in the coherent three-body amplitude, the **mandatory formal-production convention** is asymmetric and follows the manuscript's Eq. (19):
+For the two internal chi_2 propagators in the coherent three-body amplitude, the current working production convention is asymmetric, as listed below. **The manuscript's Eq. (19) is not the authority for this prescription.** The prescription must be supported by an independently documented physical derivation in the research archive. If that derivation is absent, incomplete, or in conflict with the prescription, mark results using it as provisional and reopen the derivation before describing them as validated formal-production results. The manuscript may describe the prescription after the research record has established it:
 
 - Scalar emission before vector scattering, with internal momentum r_before = p-k: D_before = (p-k)^2 - m_chi2^2 + i 0^+. Do not insert a finite width in this propagator.
 - Scalar emission after vector scattering, with internal momentum r_after = p'+k and W^2 = (p'+k)^2: D_after = W^2 - m_chi2^2 + i m_chi2 Gamma_chi2^pole, where Gamma_chi2^pole is evaluated at the pole mass.
