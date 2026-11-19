@@ -39,4 +39,4 @@ This is a halo-folded rate-ratio and quadrature-convergence record. It is not a 
 
 ## Final archive integrity check
 
-The final extraction, run-manifest generation, and complete SHA-256 verification passed in [archive workflow run 44579411941](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44579411941). The manifest inventory lists the README, two original source ZIPs, and nine extracted native files. `SHA256SUMS` additionally covers `RUN_MANIFEST.json` itself (13 checksum entries total). The manifest is deliberately excluded from its own embedded inventory to avoid a self-referential digest.
+The final extraction, run-manifest generation, and complete SHA-256 verification passed in the repository's archive workflow. The manifest inventory lists the README, two original source ZIPs, and nine extracted native files. `SHA256SUMS` additionally covers `RUN_MANIFEST.json` itself (13 checksum entries total). The manifest is deliberately excluded from its own embedded inventory to avoid a self-referential digest.
