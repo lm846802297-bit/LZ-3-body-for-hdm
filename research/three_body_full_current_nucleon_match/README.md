@@ -98,7 +98,7 @@ q_{N,\rm static}^0=0,\qquad
 t_{N,\rm static}=-Q_A^2.
 \]
 It is a low-energy approximation, not the adopted B convention.
-while AFH uses the exact spatial momentum
+AFH uses the exact spatial momentum
 \[
 Q_A^2=2m_AE_R+E_R^2,\qquad y_A=b_A^2Q_A^2/4.
 \]
