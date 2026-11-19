@@ -40,6 +40,7 @@ from nucleon_vector_form_factors import (  # noqa: E402
     bishara_linear,
     isoscalar_zexp,
     charge_coefficients,
+    effective_nucleon_form_factors,
 )
 from three_body_phase_space_tensor import integrate_spin_resolved_tensor  # noqa: E402
 from three_body_multipole_leptonic_weights import (  # noqa: E402
@@ -673,15 +674,30 @@ def interpolate_native_response(
     }
 
 
-def form_factor_values(qA_GeV: float, prescription: str) -> tuple[float, float]:
-    Q2 = qA_GeV * qA_GeV
-    if prescription == "pointlike":
-        return F1V0, F2V0
-    if prescription == "bishara_linear":
-        return bishara_linear(Q2)
-    if prescription == "isoscalar_zexp":
-        return isoscalar_zexp(Q2)
-    raise ValueError(f"unknown form-factor prescription: {prescription}")
+def form_factor_values(
+    qA_GeV: float,
+    prescription: str,
+    *,
+    tN_GeV2: float,
+) -> tuple[float, float]:
+    """Return effective-nucleon Fhat_1,Fhat_2 for the external gVN basis.
+
+    Formal production uses t_N=t_A=-2*m_A*E_R. The AFH response uses the
+    independent spatial Q_A^2. Raw universal u+d+s form factors are divided
+    by three exactly once because the external prefactor contains g_VN=3*g_Vq.
+    """
+    QN2 = -float(tN_GeV2)
+    if QN2 < 0.0 or not math.isfinite(QN2):
+        raise ValueError("nucleon invariant Q_N^2 must be finite and non-negative")
+    if prescription == "q0_anchor":
+        raw = (F1V0, F2V0)
+    elif prescription == "bishara_linear":
+        raw = bishara_linear(QN2)
+    elif prescription == "isoscalar_zexp":
+        raw = isoscalar_zexp(QN2)
+    else:
+        raise ValueError(f"unknown form-factor prescription: {prescription}")
+    return effective_nucleon_form_factors(*raw)
 
 
 def charge_kernel_from_coulomb_weight(
@@ -689,39 +705,56 @@ def charge_kernel_from_coulomb_weight(
     qA_GeV: float,
     responses: dict[str, float],
     form_factor_prescription: str,
+    *,
+    tN_GeV2: float,
 ) -> dict:
-    """Build M + Phi'' charge-multipole terms from the continuity-reduced L_C."""
+    """Return A reference, B finite-t_N M-only baseline, and C extension."""
     if not math.isfinite(L_C) or L_C < 0.0:
         raise ValueError(f"invalid continuity-adjusted Coulomb weight L_C={L_C}")
-    F1, F2 = form_factor_values(qA_GeV, form_factor_prescription)
-    cM, cPhi = charge_coefficients(qA_GeV, F1=F1, F2=F2)
-    C_M = cM * cM * L_C
-    C_PhiPP = cPhi * cPhi * L_C
-    C_MPhiPP = 2.0 * cM * cPhi * L_C
+    F1hat, F2hat = form_factor_values(
+        qA_GeV, form_factor_prescription, tN_GeV2=tN_GeV2
+    )
+    cM, cPhi = charge_coefficients(
+        qA_GeV, F1=F1hat, F2=F2hat, tN_GeV2=tN_GeV2
+    )
+    WM = float(responses["M"])
+    WPhi = float(responses["PhiPP"])
+    WMPhi = float(responses["MPhiPP"])
+    if WM <= 0.0 or WPhi < -1.0e-12:
+        raise ValueError("invalid AFH M/Phi'' diagonal response")
+    A_reference = L_C * WM
+    B_baseline = cM * cM * L_C * WM
     terms = {
-        "M": C_M * responses["M"],
-        "PhiPP": C_PhiPP * responses["PhiPP"],
-        "MPhiPP": C_MPhiPP * responses["MPhiPP"],
+        "M": B_baseline,
+        "PhiPP": cPhi * cPhi * L_C * WPhi,
+        "MPhiPP": 2.0 * cM * cPhi * L_C * WMPhi,
     }
-    charge = sum(terms.values())
-    pointlike_M = (F1V0 * F1V0) * L_C * responses["M"]
-    finite_t_M = (cM * cM) * L_C * responses["M"]
+    C_extension = sum(terms.values())
+    if min(A_reference, B_baseline, C_extension) <= 0.0:
+        raise ValueError("non-positive A/B/C charge kernel")
+    raw_F1, raw_F2 = (
+        (F1V0, F2V0) if prescription == "q0_anchor"
+        else (bishara_linear(-tN_GeV2) if prescription == "bishara_linear"
+              else isoscalar_zexp(-tN_GeV2))
+    )
     return {
-        "F1V": F1,
-        "F2V": F2,
+        "form_factor_prescription": form_factor_prescription,
+        "F1V_quark_sum": raw_F1,
+        "F2V_quark_sum": raw_F2,
+        "F1N_effective": F1hat,
+        "F2N_effective": F2hat,
+        "tN_GeV2": float(tN_GeV2),
+        "Q_N2_GeV2": -float(tN_GeV2),
         "cM": cM,
         "cPhiPP": cPhi,
         "L_C": float(L_C),
         "terms": terms,
-        "charge_sector": charge,
-        "pointlike_M": pointlike_M,
-        "finite_t_M": finite_t_M,
-        "relative_charge_vs_pointlike_M": charge / pointlike_M - 1.0
-        if pointlike_M != 0.0 else math.nan,
-        "relative_finite_t_M_vs_pointlike_M": finite_t_M / pointlike_M - 1.0
-        if pointlike_M != 0.0 else math.nan,
-        "relative_phi_vs_finite_t_M": charge / finite_t_M - 1.0
-        if finite_t_M != 0.0 else math.nan,
+        "baseline_A_original_AFH_M": A_reference,
+        "baseline_B_finite_tN_M": B_baseline,
+        "extension_C_MplusPhiPP": C_extension,
+        "relative_B_vs_A": B_baseline / A_reference - 1.0,
+        "relative_C_vs_A": C_extension / A_reference - 1.0,
+        "relative_C_vs_B": C_extension / B_baseline - 1.0,
     }
 
 
@@ -745,7 +778,10 @@ def leading_static_vector_current_kernel_from_tensor(
     if pairs.shape != (4, 4, 2) or not np.all(np.isfinite(pairs)):
         raise ValueError("integrated q-aligned Lorentz tensor must have shape (4,4,2)")
     L = pairs[:, :, 0] + 1j * pairs[:, :, 1]
-    F1, F2 = form_factor_values(qA_GeV, form_factor_prescription)
+    tN_GeV2 = omega_GeV * omega_GeV - qA_GeV * qA_GeV
+    F1, F2 = form_factor_values(
+        qA_GeV, form_factor_prescription, tN_GeV2=tN_GeV2
+    )
     coefficients = extract_afh_vector_coefficients(
         L,
         qA_GeV,
@@ -834,24 +870,26 @@ def leading_static_vector_current_kernel_from_tensor(
         qA_GeV,
         responses,
         form_factor_prescription,
+        tN_GeV2=tN_GeV2,
     )
-    charge_residual = abs(charge - charge_check["charge_sector"]) / max(
-        abs(charge), abs(charge_check["charge_sector"]), 1.0e-300
+    charge_residual = abs(charge - charge_check["extension_C_MplusPhiPP"]) / max(
+        abs(charge), abs(charge_check["extension_C_MplusPhiPP"]), 1.0e-300
     )
     if charge_residual > 2.0e-12:
         raise AssertionError(
             f"charge-sector reconstruction mismatch: {charge_residual:.6g}"
         )
     return {
-        "F1V": F1,
-        "F2V": F2,
+        "F1N_effective": F1,
+        "F2N_effective": F2,
+        "tN_GeV2": tN_GeV2,
         "L_C": coefficients["L_C_continuity_adjusted_charge_weight"],
         "L_T": float(np.real(L[1, 1] + L[2, 2])),
         "charge_sector": charge,
         "spatial_sector": spatial,
         "leading_static_vector_current_candidate": total,
-        "pointlike_M": charge_check["pointlike_M"],
-        "finite_t_M": charge_check["finite_t_M"],
+        "baseline_A_original_AFH_M": charge_check["baseline_A_original_AFH_M"],
+        "baseline_B_finite_tN_M": charge_check["baseline_B_finite_tN_M"],
         "charge_terms": charge_terms,
         "spatial_terms": spatial_terms,
         "particle_coefficients": {
@@ -1028,8 +1066,8 @@ def fold(
                 vs = 0.5 * (vmax + vmin) + 0.5 * (vmax - vmin) * speed_nodes
                 ws = 0.5 * (vmax - vmin) * speed_weights
                 halo_charge = 0.0
-                halo_pointlike = 0.0
-                halo_finite_t_M = 0.0
+                halo_A_reference = 0.0
+                halo_B_baseline = 0.0
                 halo_spatial_candidate = 0.0
                 halo_full_candidate = 0.0
                 max_interp_difference = 0.0
@@ -1070,19 +1108,24 @@ def fold(
                         max_interp_difference,
                         max(response["pchip_linear_relative_difference"].values()),
                     )
+                    tA_GeV2 = ER * ER - qA * qA
+                    tN_GeV2 = tA_GeV2
                     kernel = charge_kernel_from_coulomb_weight(
                         coulomb_result["L_C"], qA,
                         response["physical_equal_pn"],
                         form_factor_prescription,
+                        tN_GeV2=tN_GeV2,
                     )
-                    denominator = (mV * mV + qA * qA) ** 2
+                    # The propagator uses invariant t_A=-2*m_A*E_R, not spatial Q_A^2.
+                    tA_GeV2 = -2.0 * mA * ER
+                    denominator = (mV * mV - tA_GeV2) ** 2
                     common = (
                         mA * coupling_product_squared
                         / (256.0 * math.pi**3 * pchi * pchi * denominator)
                     )
                     halo_charge += float(w) * fv * beta * common * kernel["charge_sector"]
-                    halo_pointlike += float(w) * fv * beta * common * kernel["pointlike_M"]
-                    halo_finite_t_M += float(w) * fv * beta * common * kernel["finite_t_M"]
+                    halo_A_reference += float(w) * fv * beta * common * kernel["baseline_A_original_AFH_M"]
+                    halo_B_baseline += float(w) * fv * beta * common * kernel["baseline_B_finite_tN_M"]
                     if include_leading_static_vector_candidate:
                         candidate = leading_static_vector_current_kernel_from_tensor(
                             coulomb_result["L_q_aligned_real_imag"],
@@ -1128,13 +1171,15 @@ def fold(
                 isotope_row = {
                     "A": A, "abundance": xA, "open": True,
                     "mA_GeV": mA, "qA_GeV": qA, "vmin_km_s": vmin,
-                    "charge_halo_integral": halo_charge,
-                    "pointlike_M_halo_integral": halo_pointlike,
-                    "finite_t_M_halo_integral": halo_finite_t_M,
-                    "relative_charge_vs_pointlike_M": halo_charge / halo_pointlike - 1.0
-                    if halo_pointlike else math.nan,
-                    "relative_finite_t_M_vs_pointlike_M": halo_finite_t_M / halo_pointlike - 1.0
-                    if halo_pointlike else math.nan,
+                    "baseline_A_original_AFH_M_halo_integral": halo_A_reference,
+                    "baseline_B_finite_tN_M_halo_integral": halo_B_baseline,
+                    "extension_C_MplusPhiPP_halo_integral": halo_charge,
+                    "relative_B_vs_A": halo_B_baseline / halo_A_reference - 1.0
+                    if halo_A_reference else math.nan,
+                    "relative_C_vs_A": halo_charge / halo_A_reference - 1.0
+                    if halo_A_reference else math.nan,
+                    "relative_C_vs_B": halo_charge / halo_B_baseline - 1.0
+                    if halo_B_baseline else math.nan,
                     "max_pchip_linear_response_difference": max_interp_difference,
                     "max_abs_charge_continuity_relative_correction": max_abs_continuity_correction,
                     "max_continuity_identity_relative_residual": max_continuity_identity_residual,
@@ -1147,9 +1192,13 @@ def fold(
                         "relative_spatial_candidate_vs_coulomb": (
                             halo_spatial_candidate / halo_charge if halo_charge else math.nan
                         ),
-                        "relative_full_candidate_vs_pointlike_M": (
-                            halo_full_candidate / halo_pointlike - 1.0
-                            if halo_pointlike else math.nan
+                        "relative_full_candidate_vs_A": (
+                            halo_full_candidate / halo_A_reference - 1.0
+                            if halo_A_reference else math.nan
+                        ),
+                        "relative_full_candidate_vs_B": (
+                            halo_full_candidate / halo_B_baseline - 1.0
+                            if halo_B_baseline else math.nan
                         ),
                         "max_native_response_Cauchy_excess": max_response_cauchy_excess,
                         "max_native_charge_response_Cauchy_excess": max_charge_response_cauchy_excess,
@@ -1170,29 +1219,29 @@ def fold(
                 r.get("abundance", 0.0) * r.get("charge_halo_integral", 0.0)
                 for r in isotope_rows
             )
-            total_point = sum(
-                r.get("abundance", 0.0) * r.get("pointlike_M_halo_integral", 0.0)
+            total_A_reference = sum(
+                r.get("abundance", 0.0) * r.get("baseline_A_original_AFH_M_halo_integral", 0.0)
                 for r in isotope_rows
             )
-            total_finite = sum(
-                r.get("abundance", 0.0) * r.get("finite_t_M_halo_integral", 0.0)
+            total_B_baseline = sum(
+                r.get("abundance", 0.0) * r.get("baseline_B_finite_tN_M_halo_integral", 0.0)
                 for r in isotope_rows
             )
             total_rate = rate_factor * total_charge
-            point_rate = rate_factor * total_point
-            finite_rate = rate_factor * total_finite
+            A_reference_rate = rate_factor * total_A_reference
+            B_baseline_rate = rate_factor * total_B_baseline
             row = {
                 "ER_keV": ER_keV,
                 "halo_model": halo_name,
-                "rate_charge_MplusPhi_events_kg_day_keV": total_rate,
-                "rate_pointlike_M_events_kg_day_keV": point_rate,
-                "rate_finite_t_M_events_kg_day_keV": finite_rate,
-                "relative_charge_vs_pointlike_M": total_rate / point_rate - 1.0
-                if point_rate else math.nan,
-                "relative_finite_t_M_vs_pointlike_M": finite_rate / point_rate - 1.0
-                if point_rate else math.nan,
-                "relative_phi_vs_finite_t_M": total_rate / finite_rate - 1.0
-                if finite_rate else math.nan,
+                "rate_A_original_AFH_M_events_kg_day_keV": A_reference_rate,
+                "rate_B_baseline_M_events_kg_day_keV": B_baseline_rate,
+                "rate_C_charge_extension_events_kg_day_keV": total_rate,
+                "relative_B_vs_A": B_baseline_rate / A_reference_rate - 1.0
+                if A_reference_rate else math.nan,
+                "relative_C_vs_A": total_rate / A_reference_rate - 1.0
+                if A_reference_rate else math.nan,
+                "relative_C_vs_B": total_rate / B_baseline_rate - 1.0
+                if B_baseline_rate else math.nan,
                 "open_abundance_fraction": sum(
                     r["abundance"] for r in isotope_rows if r.get("open")
                 ),
@@ -1215,8 +1264,11 @@ def fold(
                     "relative_spatial_candidate_vs_coulomb": (
                         total_spatial / total_charge if total_charge else math.nan
                     ),
-                    "relative_full_candidate_vs_pointlike_M": (
-                        full_rate / point_rate - 1.0 if point_rate else math.nan
+                    "relative_full_candidate_vs_A": (
+                        full_rate / A_reference_rate - 1.0 if A_reference_rate else math.nan
+                    ),
+                    "relative_full_candidate_vs_B": (
+                        full_rate / B_baseline_rate - 1.0 if B_baseline_rate else math.nan
                     ),
                     "minimum_spatial_candidate_kernel": min(
                         (r["minimum_spatial_candidate_kernel"] for r in isotope_rows
@@ -1307,7 +1359,13 @@ def fold(
             "Asymmetric Pole prescription: first p-k chi2 propagator zero-width (+i0+); "
             "second p'+k chi2 propagator uses constant Gamma_chi2(m_chi2)."
         ),
-        "mediator_denominator": "(mV^2+qA^2)^2 with qA^2=2*mA*ER+ER^2",
+        "mediator_denominator": "(mV^2-t_A)^2=(mV^2+2*mA*ER)^2; t_A=-2*mA*ER",
+        "nuclear_spatial_momentum": "Q_A^2=2*mA*ER+ER^2; used only in AFH y_A and spatial NR coefficients",
+        "nucleon_transfer_scheme": "strict one-body impulse q_N^mu=q_A^mu; t_N=t_A=-2*mA*ER",
+        "coupling_basis": "external (g1*g2*gVN)^2 with gVN=3*gVq; use Fhat_i=F_i^(u+d+s)/3",
+        "primary_baseline": "B: finite-t_N effective nucleon current times finite-size AFH W_M(y_A) only",
+        "A_reference": "q=0 effective nucleon current times the same finite-size AFH W_M(y_A)",
+        "C_extension": "B plus Phi'' and signed M-Phi'' interference; diagnostic extension, not the primary baseline",
         "mchi_GeV": mchi,
         "ms_GeV": ms,
         "delta_m_GeV": delta_m,
@@ -1359,7 +1417,7 @@ def main() -> None:
     parser.add_argument("--nphi", type=int, default=6)
     parser.add_argument(
         "--form-factor",
-        choices=("pointlike", "bishara_linear", "isoscalar_zexp"),
+        choices=("q0_anchor", "bishara_linear", "isoscalar_zexp"),
         required=True,
     )
     parser.add_argument(
