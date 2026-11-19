@@ -43,12 +43,12 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             2.5, 0.22, responses, "q0_anchor"
         )
         expected = sum(result["terms"].values())
-        self.assertAlmostEqual(result["charge_M_PhiPP"], expected, places=14)
+        self.assertAlmostEqual(result["extension_C_MplusPhiPP"], expected, places=14)
         self.assertAlmostEqual(
-            result["AFH_finite_size_M_baseline"], 2.5 * responses["M"], places=14
+            result["baseline_A_original_AFH_M"], 2.5 * responses["M"], places=14
         )
         self.assertAlmostEqual(
-            result["nucleon_q0_M_only"], result["AFH_finite_size_M_baseline"], places=14
+            result["q0_M_reference"], result["baseline_A_original_AFH_M"], places=14
         )
 
     def test_charge_kernel_uses_continuity_reduced_weight(self):
@@ -57,10 +57,10 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             2.4, 0.22, responses, "q0_anchor"
         )
         self.assertAlmostEqual(result["L_C"], 2.4)
-        self.assertAlmostEqual(result["AFH_finite_size_M_baseline"], 2.4 * 4.0)
-        self.assertAlmostEqual(result["nucleon_q0_M_only"], result["AFH_finite_size_M_baseline"])
+        self.assertAlmostEqual(result["baseline_A_original_AFH_M"], 2.4 * 4.0)
+        self.assertAlmostEqual(result["q0_M_reference"], result["baseline_A_original_AFH_M"])
         self.assertAlmostEqual(
-            result["charge_M_PhiPP"],
+            result["extension_C_MplusPhiPP"],
             sum(result["terms"].values()),
             places=14,
         )
@@ -125,7 +125,7 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
         )
         self.assertAlmostEqual(
             result["full_six_channel_candidate"],
-            result["charge_M_PhiPP"] + result["spatial_sector"],
+            result["charge_sector"] + result["spatial_sector"],
             places=13,
         )
         self.assertGreaterEqual(result["spatial_sector"], 0.0)
@@ -204,19 +204,19 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             2.5, 0.22, responses, "bishara_linear"
         )
         self.assertAlmostEqual(
-            result["relative_charge_vs_nucleon_finite_t_M_only"],
-            result["charge_M_PhiPP"] / result["nucleon_finite_t_M_only"] - 1.0,
+            result["relative_C_vs_B"],
+            result["extension_C_MplusPhiPP"] / result["baseline_B_finite_tN_M"] - 1.0,
             places=14,
         )
         self.assertAlmostEqual(
-            result["nucleon_q0_M_only"], result["AFH_finite_size_M_baseline"], places=14
+            result["q0_M_reference"], result["baseline_A_original_AFH_M"], places=14
         )
         self.assertAlmostEqual(
-            result["nucleon_q0_M_only"], result["AFH_finite_size_M_baseline"], places=14
+            result["q0_M_reference"], result["baseline_A_original_AFH_M"], places=14
         )
         self.assertNotEqual(
-            result["relative_charge_vs_nucleon_finite_t_M_only"],
-            result["relative_charge_vs_AFH_finite_size_M_baseline"],
+            result["relative_C_vs_B"],
+            result["relative_C_vs_A"],
         )
 
     def test_native_physical_conversion_factor(self):
@@ -399,8 +399,10 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             self.assertGreater(
                 mb["rate_full_six_channel_candidate_events_kg_day_keV"], 0.0
             )
-            self.assertGreater(mb["rate_AFH_finite_size_M_baseline_events_kg_day_keV"], 0.0)
-            self.assertIn("relative_full_candidate_vs_AFH_finite_size_M_baseline", mb)
+            self.assertGreater(mb["rate_A_original_AFH_M_events_kg_day_keV"], 0.0)
+            self.assertGreater(mb["rate_B_baseline_M_events_kg_day_keV"], 0.0)
+            self.assertIn("relative_full_candidate_vs_A", mb)
+            self.assertIn("relative_full_candidate_vs_B", mb)
             self.assertEqual(
                 result["nuclear_response_baseline"],
                 "finite-size native AFH W_M(y_A) at each recoil; no point-nucleus substitution",
