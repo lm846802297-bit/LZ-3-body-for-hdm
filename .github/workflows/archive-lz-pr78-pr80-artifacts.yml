@@ -23,14 +23,14 @@ jobs:
       - name: Check out archive branch
         uses: actions/checkout@v4
         with:
-          ref: \${{ github.ref_name }}
+          ref: ${{ github.ref_name }}
           fetch-depth: 0
 
       - name: Download and verify source artifacts
         env:
-          GH_TOKEN: \${{ github.token }}
-          GH_REPOSITORY: \${{ github.repository }}
-          RUNNER_TEMP: \${{ runner.temp }}
+          GH_TOKEN: ${{ github.token }}
+          GH_REPOSITORY: ${{ github.repository }}
+          RUNNER_TEMP: ${{ runner.temp }}
         run: |
           set -euo pipefail
           python - <<'PY'
@@ -105,7 +105,7 @@ jobs:
 
       - name: Validate payloads and generate run manifests
         env:
-          RUNNER_TEMP: \${{ runner.temp }}
+          RUNNER_TEMP: ${{ runner.temp }}
         run: |
           python research/artifact_archives/build_pr78_pr80_archive.py \
             --metadata-dir "$RUNNER_TEMP/lz-pr78-pr80-metadata"
@@ -120,7 +120,7 @@ jobs:
 
       - name: Commit native results and provenance to the archive branch
         env:
-          TARGET_BRANCH: \${{ github.ref_name }}
+          TARGET_BRANCH: ${{ github.ref_name }}
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
@@ -133,4 +133,4 @@ jobs:
             exit 0
           fi
           git commit -m "Archive native numerical outputs from PR #78 and #80 workflows"
-          git push origin "HEAD:\${TARGET_BRANCH}"
+          git push origin "HEAD:${TARGET_BRANCH}"
