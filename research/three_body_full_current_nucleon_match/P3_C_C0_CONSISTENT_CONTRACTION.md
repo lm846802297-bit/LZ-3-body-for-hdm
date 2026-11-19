@@ -241,9 +241,9 @@ and do not label this a full P3 pass or a final natural-xenon prediction.
    factors, and signed \(\Sigma'\)-\(\Delta\) interference.
 4. Replace the constant \(q=0\) form-factor anchors with the approved
    finite-\(t_N\) \(F_1^V(t_N)\), \(F_2^V(t_N)\) prescription and report
-   the pointlike-anchor result separately.
+   the q=0 nucleon-form-factor anchor result separately.
 5. Only after native P3-B and amplitude-level P3-C pass, perform the
-   seven-isotope natural-xenon halo fold and compare pointlike-M,
+   seven-isotope natural-xenon halo fold and compare the q=0 M reference,
    finite-\(t_N\)-M, Coulomb-sector, and full matched-current spectra.
 
 
