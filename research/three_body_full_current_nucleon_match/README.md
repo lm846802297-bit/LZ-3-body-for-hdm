@@ -944,3 +944,21 @@ Its full-current artifact is 14486904025 and its spatial-response artifact
 is 14486014588. The response and multipole CSV SHA-256 hashes are identical
 to the earlier PR #65 P3-B archive, so the native control workflow's pinned
 input remains byte-identical.
+
+
+## 2026-11-19: provisional P4 halo-fold path
+
+`native_charge_sector_halo_fold.py` now supports a separate provisional
+input mode that combines the pinned source-translated AFH-8 charge archive
+with the P3-B rank-reconstructed spatial archive. It verifies both artifact
+hashes, the shared AFH v6.0 source, all seven 2,401-point isotope grids,
+the C0 normalization, and the charge/spatial Cauchy bounds. It never reports
+`native_afh_validated=true`.
+
+The workflow
+`.github/workflows/p4-provisional-seven-isotope-halo-fold.yml` computes
+seven-isotope natural-xenon Pole-width halo spectra on a selected recoil
+grid and separately refines speed and three-body phase-space quadratures.
+The current benchmark is \(m_{\chi_1}=1\) TeV,
+\(m_s=200\) keV, \(\Delta m=1\) MeV, and \(m_V=10\) GeV. The outputs
+remain provisional until the user's local Mathematica comparison is complete.
