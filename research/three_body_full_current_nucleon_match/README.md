@@ -403,10 +403,7 @@ likelihood is included.
 
 ## 7. Finite-t_N form-factor effect: a separate and potentially larger correction
 
-The old (W_M)-only baseline treats the universal light-quark nucleon
-current as pointlike when the reference nucleon coupling is written as
-(g_{VN}=3g_{Vq}). The complete Dirac--Pauli matching instead requires
-(F_1^V(t_N)) and (F_2^V(t_N)).
+The historical M-only reference freezes the single-nucleon current at q=0 but retains the finite-size AFH nuclear response W_M(y_A). It is not a point nucleus. B adds finite-t_N nucleon Dirac--Pauli form factors while retaining the same W_M(y_A).
 
 Bishara et al. give the proton flavor-separated Dirac slopes
 [
@@ -436,13 +433,13 @@ At Xe-131 (E_R=200) keV, the native AFH grid gives
 ]
 The central finite-(t_N) diagnostic gives
 [
-F_1^V=2.66287,qquad F_2^V=-0.46800,
+F_1^{uds}=2.66287,qquad F_2^{uds}=-0.46800,
 ]
 and the charge-sector correction is
 [
 \boxed{delta_{\Phi''}^{\rm finite-t_N}=-0.346\%},
 qquad
-\boxed{delta_{\rm charge}^{\rm pointlike}=-21.5\%}.
+\boxed{delta_{\rm charge}^{\rm legacy q=0}=-21.5\%}.
 ]
 
 At the Xe-131 (W_M) cancellation region around (E_R=267) keV,
@@ -451,21 +448,21 @@ At the Xe-131 (W_M) cancellation region around (E_R=267) keV,
 \frac{W_{\Phi''}}{W_M}=19.6361,qquad
 \frac{W_{M\Phi''}}{W_M}=-4.23930.
 ]
-The pointlike (M+\Phi'') charge correction is then
+The legacy q=0 (M+\Phi'') charge correction is then
 [
-\boxed{delta_{\Phi''}^{\rm pointlike}=-9.68\%}.
+\boxed{delta_{\Phi''}^{\rm legacy q=0}=-9.68\%}.
 ]
 With the central finite-(t_N) form-factor diagnostic,
 [
-F_1^V=2.56389,qquad F_2^V=-0.44977,
+F_1^{uds}=2.56389,qquad F_2^{uds}=-0.44977,
 ]
-and the total charge-sector change relative to the old pointlike
+and the total charge-sector change relative to the old legacy q=0
 (F_1^V(0)^2W_M) baseline is
 [
-\boxed{delta_{\rm charge}^{\rm pointlike}=-34.2\%}.
+\boxed{delta_{\rm charge}^{\rm legacy q=0}=-34.2\%}.
 ]
 
-The \(-21.5\%\) and \(-34.2\%\) total-charge figures above are legacy \(F_1^2\)-normalization diagnostics. The updated matched-\(c_M\) fixed-speed result in Section 8 supersedes them for the coherent-charge ratio: \(0.77830934\) \((-22.1691\%)\) at 200 keV and \(0.64921591\) \((-35.0784\%)\) at 267 keV, relative to pointlike \(9W_M\).
+The \(-21.5\%\) and \(-34.2\%\) total-charge figures above are legacy \(F_1^2\)-normalization diagnostics. The updated matched-\(c_M\) fixed-speed result in Section 8 supersedes them for the coherent-charge ratio: \(0.77830934\) \((-22.1691\%)\) at 200 keV and \(0.64921591\) \((-35.0784\%)\) at 267 keV, relative to legacy q=0 \(9W_M\).
 
 The last number is **Xe-131 only**. It must not be promoted to a natural-xenon
 spectrum because the native Mathematica pointwise validation currently covers
@@ -481,11 +478,11 @@ The hierarchy established by the present calculations is therefore:
    (W_M) cancellation, but can reach (mathcal O(10\%)) locally near
    the Xe-131 cancellation.
 3. The finite-(t_N) coherent charge normalization can change the old
-   pointlike (W_M)-only prediction by tens of percent.
+   legacy q=0 (W_M)-only prediction by tens of percent.
 
 Therefore the final natural-xenon spectrum must be built in the order
 [
-W_M^{\rm pointlike}
+W_M^{\rm legacy q=0}
 ;\rightarrow;
 (M+\Phi'')^{\rm finite-t_N}
 ;\rightarrow;
@@ -615,7 +612,7 @@ It uses native AFH v6.0 Xe-131 \(M,\Phi'',M\Phi''\) responses, finite-\(t_N\)
 Dirac-Pauli charge coefficients \(c_M,c_{\Phi''}\), the signed
 \(M-\Phi''\) interference, and the full \(2\to3\) phase-space integral.
 For \(m_{\chi_1}=1000\) GeV, \(m_s=300\) keV, \(v_\chi=776\) km/s and
-\(g_2=1\), the fixed-speed ratios relative to the original pointlike
+\(g_2=1\), the fixed-speed ratios relative to the original legacy q=0
 \(9W_M\) baseline are:
 
 | \(E_R\) | \(\Delta m\) | Ratio |
@@ -624,7 +621,7 @@ For \(m_{\chi_1}=1000\) GeV, \(m_s=300\) keV, \(v_\chi=776\) km/s and
 | 267 keV | 362 keV | 0.64921591 (-35.0784%) |
 
 The formal fixed-speed result uses the pole-width prescription only. The
-normalized AFH-to-pointlike ratio is independent of the common
+normalized AFH-to-legacy q=0 ratio is independent of the common
 \(L_C^{(3)}\) phase-space factor because it cancels between numerator and
 denominator. The earlier pole/running comparison remains a historical
 sensitivity diagnostic and is not part of routine production.
@@ -771,7 +768,7 @@ A 943-point scan has been added using the native Xe-131 AFH v6.0 \(W_M\), \(W_{\
 - Correction-ratio curves: [xe131_charge_kernel_full_recoil_ratios.svg](results/2026-11-18/xe131_charge_kernel_full_recoil_ratios.svg)
 - Regeneration script: [build_xe131_full_recoil_charge_scan.py](build_xe131_full_recoil_charge_scan.py)
 
-At the exact benchmark recoils, the full charge-sector kernel relative to the finite-\(Q^2\) \(M\)-only kernel is 0.99655805 at 200 keV and 0.89961039 at 267 keV. This is **not** the same observable as the fixed-speed three-body cross-section ratio in Section 8, whose denominator is the original pointlike \(9W_M\) baseline. The present scan is not an absolute \(d\sigma/dE_R\), a halo-folded natural-xenon spectrum, or a detector prediction. Spatial multipoles remain outside this charge-sector plot.
+At the exact benchmark recoils, the full charge-sector kernel relative to the finite-\(Q^2\) \(M\)-only kernel is 0.99655805 at 200 keV and 0.89961039 at 267 keV. This is **not** the same observable as the fixed-speed three-body cross-section ratio in Section 8, whose denominator is the original legacy q=0 \(9W_M\) baseline. The present scan is not an absolute \(d\sigma/dE_R\), a halo-folded natural-xenon spectrum, or a detector prediction. Spatial multipoles remain outside this charge-sector plot.
 
 The full-recoil scan regression is included in the standard unittest discovery: `test_xe131_full_recoil_charge_scan.py`. Rebuilding its CSV and SVG plots requires Python 3.12+, NumPy, pandas, and Matplotlib.
 
@@ -807,7 +804,7 @@ minimum in \(W_M\) near \(q_A\simeq0.256\) GeV. It compares PCHIP with
 local degree-8 and degree-10 Chebyshev interpolation on the archived
 2,401-point AFH grid. The full charge-dominated kernel changes by at most
 1.6589% under this interpolation comparison; the normalized full /
-pointlike-\(M\) ratio changes by at most 0.1182%. The spatial kernel changes
+legacy q=0-\(M\) ratio changes by at most 0.1182%. The spatial kernel changes
 by less than 1 ppm. These are interpolation diagnostics, not a dense native
 AFH validation.
 
