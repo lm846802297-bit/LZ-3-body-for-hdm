@@ -225,13 +225,9 @@ def cM_and_factor(q2_GeV2, strange_model: str = "sufian2017_unit_current"):
     }
 
 
-def sample_cM_factors(q2_GeV2, n_draws: int = 5000, seed: int = 20261119,
-                      strange_model: str = "sufian2017_unit_current"):
-    """Monte-Carlo propagate Ye2020 free-coefficient covariance to F_M.
-
-    Strange inputs are held at their scenario central values here; their
-    separate lattice uncertainties are reported as a distinct model band.
-    """
+def sample_cM_draws(q2_GeV2, n_draws: int = 5000, seed: int = 20261119,
+                    strange_model: str = "sufian2017_unit_current") -> np.ndarray:
+    """Return correlated Monte-Carlo draws of F_M=c_M/3 over a Q^2 grid."""
     if n_draws < 2:
         raise ValueError("n_draws must be at least 2")
     q2 = np.atleast_1d(np.asarray(q2_GeV2, dtype=float))
@@ -263,19 +259,25 @@ def sample_cM_factors(q2_GeV2, n_draws: int = 5000, seed: int = 20261119,
     f1uds = 3.0*(f1p+f1n+f1s[None,:])
     f2uds = 3.0*(f2p+f2n+f2s[None,:])
     cM = f1uds - q2[None,:]/(8.0*MAVG_GEV**2)*(f1uds+2.0*f2uds)
-    fm = cM/3.0
+    return cM/3.0
+
+
+def sample_cM_factors(q2_GeV2, n_draws: int = 5000, seed: int = 20261119,
+                      strange_model: str = "sufian2017_unit_current"):
+    """Summarize Ye2020 coefficient-covariance draws for F_M and |F_M|^2."""
+    fm = sample_cM_draws(q2_GeV2, n_draws, seed, strange_model)
+    fm2 = fm*fm
     return {
         "F_M_median": np.median(fm, axis=0),
         "F_M_p16": np.percentile(fm, 16, axis=0),
         "F_M_p84": np.percentile(fm, 84, axis=0),
-        "rate_multiplier_median": np.median(fm*fm, axis=0),
-        "rate_multiplier_p16": np.percentile(fm*fm, 16, axis=0),
-        "rate_multiplier_p84": np.percentile(fm*fm, 84, axis=0),
+        "rate_multiplier_median": np.median(fm2, axis=0),
+        "rate_multiplier_p16": np.percentile(fm2, 16, axis=0),
+        "rate_multiplier_p84": np.percentile(fm2, 84, axis=0),
         "n_draws": n_draws,
         "seed": seed,
         "strange_model": strange_model,
     }
-
 
 def covariance_diagnostics() -> dict:
     return {
