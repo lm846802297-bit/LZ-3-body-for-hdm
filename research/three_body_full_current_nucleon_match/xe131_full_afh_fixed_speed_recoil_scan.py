@@ -505,11 +505,16 @@ def run(native_charge_csv: Path, outdir: Path) -> dict:
         "nucleon_transfer_scheme": (
             "strict one-body impulse q_N^mu=q_A^mu; t_N=t_A=E_R^2-Q_A^2=-2m_AE_R"
         ),
+        "primary_baseline": "B: finite-t_N Dirac-Pauli nucleon current contracted with AFH W_M(y_A) only",
         "nuclear_response_baseline": "AFH finite-size W_M(y_A), physical equal-p=n response; AFH factor four applied once",
         "coupling_basis": "external (g1*g2*gVN)^2; effective form factors Fhat_i=F_i^(u+d+s)/3",
+        "primary_form_factor_prescription": "bishara_linear; first-order F1 flavor slope and leading constant F2",
+        "alternative_form_factor_sensitivity": "isoscalar_zexp",
+        "baseline_A_reference_definition": "q=0 effective nucleon current times the same finite-size AFH W_M(y_A)",
+        "baseline_B_definition": "finite-t_N effective nucleon current times the same finite-size AFH W_M(y_A), M response only",
         "primary_ratio_definition": (
-            "charge_only and full_six_channel_candidate divided by the same finite-t_N "
-            "M-only kernel; isolates added AFH multipoles at fixed Fhat_1,Fhat_2"
+            "charge_only/B and full_six_channel_candidate/B; isolates added AFH multipoles "
+            "at fixed finite-t_N Fhat_1,Fhat_2"
         ),
         "AFH_finite_size_M_baseline_definition": (
             "external (g1*g2*gVN)^2 prefactor times the physical equal-p=n finite-q AFH W_M(Q_A); "
@@ -535,7 +540,7 @@ def run(native_charge_csv: Path, outdir: Path) -> dict:
             "P3-C bound-nucleus covariant-versus-AFH contraction remains open"
         ),
         "limitations": [
-            "The finite-Q_N^2 bishara_linear and isoscalar_zexp prescriptions are controlled diagnostics; the former uses the first-order flavor-summed F1 slope and F2(0), not an all-orders fit.",
+            "B uses the adopted bishara_linear low-Q_N^2 prescription: first-order flavor-summed F1 slope and leading constant F2(0), not an all-orders fit. isoscalar_zexp is an alternate sensitivity model.",
             "Spatial Delta/Sigma'/Sigma'-Delta nuclear responses are source-translated Python AFH data, not native-Wolfram validated.",
             "The signed Sigma'-Delta particle-side phase remains a candidate pending P3-C amplitude-level validation.",
             "The formal one-body impulse transfer is q_N^mu=q_A^mu, t_N=t_A; the static q_N^0=0 prescription is a separate diagnostic and is not used for this production scan. Bound-nucleon off-shell and interaction-current effects are not included.",
