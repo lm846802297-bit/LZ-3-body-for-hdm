@@ -23,8 +23,13 @@ class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
         a = charge_sector_kernels(1.0, 0.22, responses)
         b = charge_sector_kernels(1.0e8, 0.22, responses)
         self.assertAlmostEqual(
-            a["full_charge_over_pointlike_M"],
-            b["full_charge_over_pointlike_M"],
+            a["full_charge_over_finite_t_M"],
+            b["full_charge_over_finite_t_M"],
+            places=13,
+        )
+        self.assertAlmostEqual(
+            a["full_charge_over_q0_M_reference"],
+            b["full_charge_over_q0_M_reference"],
             places=13,
         )
 
@@ -44,9 +49,14 @@ class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
         responses = {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3}
         out = charge_sector_kernels(1.0, 0.22, responses)
         self.assertNotAlmostEqual(
-            out["full_charge_over_pointlike_M"],
+            out["full_charge_over_q0_M_reference"],
             out["legacy_F1_squared_ratio_for_normalization_audit"],
             places=6,
+        )
+        self.assertAlmostEqual(
+            out["full_charge_over_finite_t_M"],
+            out["Q_PhiPP_relative_to_finite_t_M"],
+            places=14,
         )
 
 
