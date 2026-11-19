@@ -133,7 +133,15 @@ The B spectra can be passed directly to the existing rate-level LZ efficiency fo
 
 This applies the digitized LZ 2026 Fig. S2 final-WIMP-search-ROI NR efficiency over \(5.4\)–\(269.9\) keV and reports efficiency-weighted expected event yields for AFH-7 and Hybrid-9.
 
-The detector fold uses the central B spectrum. Although the B rate-level CSV also records the Borah electromagnetic covariance percentiles, those percentiles are not yet propagated through the detector-level event-yield integration. The gray efficiency envelope is reported separately and has no confidence level assigned by LZ.
+The detector fold reports the central B event yield. The separate covariance propagator applies the same 3000 correlated Borah coefficient draws to every isotope and recoil energy, then integrates each draw through the LZ central efficiency curve. It writes the p16, median and p84 detector event yields and checks the central event yield against the existing detector fold. The strange-lattice uncertainties and the LZ gray efficiency envelope are not sampled or combined with the electromagnetic covariance. The gray envelope has no confidence level assigned by LZ.
+
+    python research/nucleon_form_factor_B_baseline/propagate_B_covariance_to_lz_yields.py \
+      --source-dir research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14 \
+      --b-spectrum-dir results/B-absolute/sufian2017_unit_current \
+      --detector-yield-csv results/B-detector/sufian2017_unit_current/lz_2026_afh7_hybrid9_rate_level_event_yields.csv \
+      --efficiency-csv research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv \
+      --out-dir results/B-detector-covariance/sufian2017_unit_current \
+      --strange-model sufian2017_unit_current --draws 3000
 
 ## Validation and scope
 
