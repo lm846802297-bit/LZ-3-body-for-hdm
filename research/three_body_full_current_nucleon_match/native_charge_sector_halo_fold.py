@@ -486,8 +486,9 @@ def charge_kernel_from_coulomb_weight(
     """Build M + Phi'' charge-multipole terms from the continuity-reduced L_C."""
     if not math.isfinite(L_C) or L_C < 0.0:
         raise ValueError(f"invalid continuity-adjusted Coulomb weight L_C={L_C}")
+    tN_used = -qA_GeV * qA_GeV if tN_GeV2 is None else float(tN_GeV2)
     F1, F2 = form_factor_values(
-        qA_GeV, form_factor_prescription, tN_GeV2=tN_GeV2
+        qA_GeV, form_factor_prescription, tN_GeV2=tN_used
     )
     cM, cPhi = charge_coefficients(
         qA_GeV, F1=F1, F2=F2, tN_GeV2=tN_GeV2
@@ -515,6 +516,11 @@ def charge_kernel_from_coulomb_weight(
     return {
         "F1V": F1,
         "F2V": F2,
+        "tN_GeV2": tN_used,
+        "Q_N2_GeV2": -tN_used,
+        "nucleon_transfer_scheme": (
+            "strict one-body impulse" if tN_GeV2 is not None else "static q_N^0=0 diagnostic"
+        ),
         "cM": cM,
         "cPhiPP": cPhi,
         "L_C": float(L_C),
