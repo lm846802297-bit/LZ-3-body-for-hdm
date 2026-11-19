@@ -48,6 +48,11 @@ class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
         out = charge_sector_kernels(1.0, qA, responses, ER_keV=er_keV)
         expected_tN = -2.0 * MA_XE131_GEV * er_keV * 1.0e-6
         self.assertAlmostEqual(out["tN_GeV2"], expected_tN, places=15)
+        self.assertAlmostEqual(out["tA_GeV2"], expected_tN, places=15)
+        self.assertEqual(out["qA_four_vector_GeV"], out["qN_four_vector_GeV"])
+        self.assertAlmostEqual(out["qN_four_vector_GeV"][0], er_keV * 1.0e-6, places=18)
+        self.assertAlmostEqual(out["qN_four_vector_GeV"][3], qA, places=14)
+        self.assertAlmostEqual(out["Q_A2_GeV2"], qA*qA, places=15)
         self.assertNotAlmostEqual(out["tN_GeV2"], -(qA * qA), places=10)
         self.assertAlmostEqual(
             out["F1N_effective"], out["F1V_quark_sum"] / 3.0, places=14
