@@ -108,7 +108,28 @@
         "access": {
           "type": "string"
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "format": {
+                "const": "csv"
+              }
+            },
+            "required": [
+              "format"
+            ]
+          },
+          "then": {
+            "required": [
+              "rows",
+              "columns",
+              "units"
+            ]
+          }
+        }
+      ]
     },
     "check": {
       "type": "object",
