@@ -17,11 +17,12 @@ from pathlib import Path
 
 import numpy as np
 
-from ye2020_lowq2 import cM_and_factor, sample_cM_draws
+from borah2020_lowq2 import cM_and_factor, sample_cM_draws
 
 MODELS = (
     "sufian2017_unit_current",
     "alexandrou2020_charge_weighted_converted",
+    "alexandrou2026_continuum_unit_current",
 )
 
 
@@ -168,7 +169,7 @@ def process_one(input_dir: Path, output_dir: Path, model: str,
         "uncertainty":{
             "Ye2020_EM_form_factor_covariance_draws":n_draws,
             "seed":seed,
-            "strange_lattice_errors":"not sampled in this first pass; separate strange-current scenarios are both output",
+            "strange_lattice_errors":"not sampled in this first pass; central-value scenarios are kept separate and source uncertainties are recorded in the form-factor metadata",
             "detector_response_applied":False,
         },
         "summary":{
