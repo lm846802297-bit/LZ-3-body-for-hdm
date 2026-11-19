@@ -56,7 +56,7 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
         self.assertAlmostEqual(result["L_C"], 2.4)
         self.assertAlmostEqual(result["baseline_A_original_AFH_M"], 2.4 * 4.0)
         self.assertAlmostEqual(
-            result["charge_sector"],
+            result["extension_C_MplusPhiPP"],
             sum(result["terms"].values()),
             places=14,
         )
