@@ -1,0 +1,643 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:research-result-data-standard:v1.0.0:record",
+  "title": "Research Result Data Standard record v1.0.0",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/run_manifest"
+    },
+    {
+      "$ref": "#/$defs/result_summary"
+    },
+    {
+      "$ref": "#/$defs/validation_report"
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "project_id"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "project_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "workstream_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "research_change_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "file_record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "role",
+        "format",
+        "sha256",
+        "bytes"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "format": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rows": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "records": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "units": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "source_run_id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "check_id",
+        "name",
+        "category",
+        "status"
+      ],
+      "properties": {
+        "check_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "enum": [
+            "analytic",
+            "unit",
+            "software",
+            "regression",
+            "convergence",
+            "independent",
+            "physical",
+            "integrity",
+            "other"
+          ]
+        },
+        "status": {
+          "enum": [
+            "passed",
+            "failed",
+            "partial",
+            "not_run",
+            "blocked",
+            "inconclusive",
+            "stale"
+          ]
+        },
+        "method": {
+          "type": "string"
+        },
+        "observed": {
+          "type": [
+            "number",
+            "string",
+            "null"
+          ]
+        },
+        "threshold": {
+          "type": [
+            "number",
+            "string",
+            "null"
+          ]
+        },
+        "unit": {
+          "type": "string"
+        },
+        "evidence_path": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "run_manifest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "record_type",
+        "run_id",
+        "created_at",
+        "project",
+        "source",
+        "inputs",
+        "configuration",
+        "environment",
+        "execution",
+        "outputs",
+        "validation",
+        "archive"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "record_type": {
+          "const": "run_manifest"
+        },
+        "run_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,80}$"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "project": {
+          "$ref": "#/$defs/project"
+        },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "commit_sha",
+            "script_path"
+          ],
+          "properties": {
+            "commit_sha": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{40}$"
+            },
+            "branch": {
+              "type": "string"
+            },
+            "script_path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "script_sha256": {
+              "$ref": "#/$defs/sha256"
+            },
+            "workflow_path": {
+              "type": "string"
+            },
+            "workflow_run_id": {
+              "type": [
+                "string",
+                "integer"
+              ]
+            }
+          }
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "source",
+              "format"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source": {
+                "type": "string",
+                "minLength": 1
+              },
+              "version": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "uri": {
+                "type": "string",
+                "format": "uri"
+              },
+              "format": {
+                "type": "string",
+                "minLength": 1
+              },
+              "bytes": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "sha256": {
+                "$ref": "#/$defs/sha256"
+              },
+              "access": {
+                "type": "string"
+              },
+              "transformation": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "configuration": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "physics",
+            "numerics",
+            "conventions"
+          ],
+          "properties": {
+            "physics": {
+              "type": "object"
+            },
+            "numerics": {
+              "type": "object"
+            },
+            "conventions": {
+              "type": "object"
+            }
+          }
+        },
+        "environment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "platform",
+            "runtime"
+          ],
+          "properties": {
+            "platform": {
+              "type": "string",
+              "minLength": 1
+            },
+            "runtime": {
+              "type": "object"
+            },
+            "dependencies": {
+              "type": "object"
+            },
+            "hardware": {
+              "type": "object"
+            }
+          }
+        },
+        "execution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "command",
+            "started_at",
+            "finished_at"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "not_started",
+                "running",
+                "succeeded",
+                "partial",
+                "failed",
+                "cancelled",
+                "blocked"
+              ]
+            },
+            "command": {
+              "type": "string"
+            },
+            "started_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "finished_at": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "exit_code": {
+              "type": [
+                "integer",
+                "null"
+              ]
+            },
+            "wall_time_s": {
+              "type": [
+                "number",
+                "null"
+              ],
+              "minimum": 0
+            }
+          }
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/file_record"
+          }
+        },
+        "validation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "checks"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "not_run",
+                "partial",
+                "passed",
+                "failed",
+                "blocked",
+                "inconclusive"
+              ]
+            },
+            "checks": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/check"
+              }
+            },
+            "report_path": {
+              "type": "string"
+            }
+          }
+        },
+        "archive": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "local_only",
+                "committed_to_pr_branch",
+                "merged_and_verified_on_main"
+              ]
+            },
+            "pr_url": {
+              "type": "string",
+              "format": "uri"
+            },
+            "verified_at": {
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "extensions": {
+          "type": "object"
+        }
+      }
+    },
+    "result_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "record_type",
+        "run_id",
+        "created_at",
+        "project",
+        "calculation",
+        "scope",
+        "benchmark",
+        "observables",
+        "data_files",
+        "scientific_status"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "record_type": {
+          "const": "result_summary"
+        },
+        "run_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,80}$"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "project": {
+          "$ref": "#/$defs/project"
+        },
+        "calculation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "included",
+            "excluded"
+          ],
+          "properties": {
+            "included": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "excluded": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "assumptions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "benchmark": {
+          "type": "object"
+        },
+        "observables": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "value",
+              "unit"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "value": {
+                "type": [
+                  "number",
+                  "null"
+                ]
+              },
+              "unit": {
+                "type": "string",
+                "minLength": 1
+              },
+              "definition": {
+                "type": "string"
+              },
+              "uncertainty": {
+                "type": [
+                  "number",
+                  "null"
+                ],
+                "minimum": 0
+              },
+              "dimensions": {
+                "type": "object"
+              },
+              "status": {
+                "enum": [
+                  "computed",
+                  "not_computed",
+                  "not_applicable"
+                ]
+              }
+            }
+          }
+        },
+        "data_files": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/file_record"
+          }
+        },
+        "scientific_status": {
+          "enum": [
+            "diagnostic",
+            "provisional",
+            "reproducible",
+            "validated",
+            "historical",
+            "superseded"
+          ]
+        },
+        "interpretation": {
+          "type": "string"
+        },
+        "extensions": {
+          "type": "object"
+        }
+      }
+    },
+    "validation_report": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "record_type",
+        "run_id",
+        "created_at",
+        "status",
+        "checks"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "1.0.0"
+        },
+        "record_type": {
+          "const": "validation_report"
+        },
+        "run_id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{2,80}$"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "status": {
+          "enum": [
+            "not_run",
+            "partial",
+            "passed",
+            "failed",
+            "blocked",
+            "inconclusive"
+          ]
+        },
+        "checks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/check"
+          }
+        },
+        "convergence": {
+          "type": "object"
+        },
+        "extensions": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}
