@@ -130,12 +130,23 @@ The archive checks:
   \`6d199ac9fd4d7fdace93292d1dded1c98d9f49c2836244ee9d2e3ddd334e8333\`.
 
 The fixed-speed Xe-131 result is a Coulomb-sector ratio only, not a halo
-fold or a substitute for the seven-isotope/eight-response gate:
+fold or a substitute for the seven-isotope/eight-response gate. The q=0
+nucleon-form-factor M-only result is now a secondary normalization
+reference; the primary AFH correction uses the finite-\(t_N\) M-only
+kernel with the same \(F_1,F_2\) prescription:
 
-| \(E_R\) | \(q_A\) (GeV) | ratio to pointlike \(9W_M\) |
-|---:|---:|---:|
-| 200 keV | 0.220825560 | 0.77830934 (-22.1691%) |
-| 267 keV | 0.255146745 | 0.64921591 (-35.0784%) |
+| \(E_R\) | \(q_A\) (GeV) | Form factor | \(R_{\rm charge}/R_{t_N,M}\) | \(R_{\rm charge}/R_{q=0,M}\) |
+|---:|---:|---|---:|---:|
+| 200 keV | 0.220825560 | bishara_linear | 0.99695540 | 0.737630 |
+| 200 keV | 0.220825560 | isoscalar_zexp | 0.99655805 | 0.778309 |
+| 267 keV | 0.255146745 | bishara_linear | 0.91463689 | 0.605649 |
+| 267 keV | 0.255146745 | isoscalar_zexp | 0.89961039 | 0.649216 |
+
+The common integrated \(L_C^{(3)}\) cancels in these normalized ratios.
+The dual-form-factor fixed-speed workflow passed (run 44443361283,
+artifact 14491448839; 7/7 regression tests).
+
+
 
 At 267 keV, PCHIP-versus-linear interpolation changes the ratio by
 \(7.47\times10^{-4}\), so the deep-\(W_M\)-minimum interpolation sensitivity
