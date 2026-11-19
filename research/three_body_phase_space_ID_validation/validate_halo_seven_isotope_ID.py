@@ -27,6 +27,7 @@ sys.path.insert(0, str(HALO_DIR))
 sys.path.insert(0, str(CALC_DIR))
 
 import eq6_kernel as eq6
+import phase_space_convergence as psc
 from generate_afh_default_xenon_response_grid import (
     ISOTOPES, compute_isotope_grid, parse_density_matrix,
     parse_isotopic_spins, read_natural_xenon_masses,
@@ -133,7 +134,9 @@ def nr_speed_threshold(ER: float, mchi: float, ms: float, mA: float) -> float:
 def threshold_l00(ER: float, speed_kms: float, mchi: float, ms: float,
                   delta_m: float, mA: float) -> float:
     wmin2 = (mchi+ms)**2
-    point = eq6.build_point(mchi, ms, mA, ER, speed_kms, wmin2, 0.0, 0.0)
+    point = psc._stable_build_point(
+        mchi, ms, mA, ER, speed_kms, delta_W2=0.0, z=0.0, phi=0.0
+    )
     return eq6.spin_trace(point, mchi, mchi+delta_m, width=0.0)["total"]
 
 
@@ -156,9 +159,10 @@ def velocity_weighted_kernels(ER: float, mA: float, mchi: float, ms: float,
             common = wv*shm_speed_pdf(float(v))*beta/(pchi*pchi)
             if common == 0.0:
                 continue
-            Jfull = eq6.reduced_kernel(
+            Jfull = psc.integrate_i6(
                 mchi, ms, delta_m, mA, ER, float(v),
-                nw=nw, nz=nz, nphi=nphi, width_scheme="zero"
+                nW=nw, nz=nz, nphi=nphi,
+                mapping="threshold_u2", width_scheme="zero"
             )
             full += common*Jfull
             L0 = threshold_l00(ER, float(v), mchi, ms, delta_m, mA)
@@ -167,16 +171,15 @@ def velocity_weighted_kernels(ER: float, mA: float, mchi: float, ms: float,
             Dnr = d_nr(ER, float(v), mchi, ms, mA)
             Japprox = 8.0*L0*i_of_d(Dnr, ms)
             approx += common*Japprox
-            Jphase = 8.0*L0*i_of_d(
-                math.sqrt(max(0.0, eq6.limits(mchi,ms,mA,ER,float(v))[1]))
-                -(mchi+ms), ms
-            )
+            wmax2 = eq6.limits(mchi,ms,mA,ER,float(v))[1]
+            Dexact = max(0.0, math.sqrt(max(0.0, wmax2))-(mchi+ms))
+            Jphase = 8.0*L0*i_of_d(Dexact, ms)
             amp_num += common*Jfull
             amp_den += common*Jphase
     # Use the exact four-vector domain for both integrals. If the NR
     # approximation opens slightly earlier, that sub-threshold sliver is not
     # a physical point of the exact three-body process and is excluded.
-    return full, approx, amp_num/amp_den-1.0 if amp_den else math.nan, vmin_full
+    return full, approx, amp_num/amp_den-1.0 if amp_den else math.nan, vmin_full, vmin_nr
 
 
 def load_afh_responses(energies_keV: list[float], masses: dict[int, dict]):
@@ -206,10 +209,18 @@ def run(args):
     ms = args.ms_keV*1e-6
     delta_m = args.delta_m_MeV*1e-3
     mV = args.mV_GeV
-    energies = sorted(set(
-        [float(x) for x in np.arange(args.er_min_keV, args.er_max_keV+0.5*args.er_step_keV, args.er_step_keV)]
-        + [248.0, 267.0]
-    ))
+    def make_grid(lo: float, hi: float, step: float) -> list[float]:
+        values = [float(x) for x in np.arange(lo, hi+0.5*step, step)]
+        values.extend([float(lo), float(hi)])
+        return values
+
+    energies = set(make_grid(args.er_min_keV, args.er_max_keV, args.er_step_keV))
+    if args.fine_min_keV is not None:
+        if args.fine_max_keV is None or args.fine_step_keV is None:
+            raise ValueError("fine_min_keV requires fine_max_keV and fine_step_keV")
+        energies.update(make_grid(args.fine_min_keV, args.fine_max_keV, args.fine_step_keV))
+    energies.update([248.0, 267.0])
+    energies = sorted(round(x, 10) for x in energies)
     isotope_rows = read_csv(ISOTOPE_WEIGHTS)
     all_masses = read_natural_xenon_masses(ISOTOPE_WEIGHTS)
     afhs = [r for r in isotope_rows if r["AFH_default_density_available"].lower()=="true"]
@@ -224,7 +235,7 @@ def run(args):
         total_full = total_approx = 0.0
         for A in ISOTOPES:
             mA = all_masses[A]["nuclear_mass_GeV"]
-            Jfull, Japprox, amp_corr, vmin = velocity_weighted_kernels(
+            Jfull, Japprox, amp_corr, vmin, vmin_nr = velocity_weighted_kernels(
                 ER, mA, mchi, ms, delta_m, args.speed_order,
                 args.nw, args.nz, args.nphi
             )
@@ -244,11 +255,13 @@ def run(args):
                 "natural_atom_fraction": abundance_A,
                 "mA_GeV": mA, "R_A_AFH_direct_exact_q": RA,
                 "vmin_exact_km_s": vmin,
+                "vmin_NR_km_s": vmin_nr,
                 "halo_kernel_full": Jfull,
                 "halo_kernel_I_D": Japprox,
                 "full_contribution_relative_units": full_contribution,
                 "I_D_contribution_relative_units": approx_contribution,
                 "isotope_relative_error_pct": (Jfull/Japprox-1.0)*100.0 if Japprox else "",
+                "approximation_zero_full_nonzero": bool(Japprox == 0.0 and Jfull > 0.0),
                 "amplitude_correction_after_halo_pct": amp_corr*100.0 if math.isfinite(amp_corr) else "",
             })
         total_results.append({
@@ -276,6 +289,18 @@ def run(args):
         "abundances_not_renormalized": True,
         "missing_AFH_default_density_isotopes": [124,126],
         "AFH_source_sha256": sha256(AFH_PACKAGE),
+        "recoil_grid": {
+            "coarse_min_keV": args.er_min_keV,
+            "coarse_max_keV": args.er_max_keV,
+            "coarse_step_keV": args.er_step_keV,
+            "fine_min_keV": args.fine_min_keV,
+            "fine_max_keV": args.fine_max_keV,
+            "fine_step_keV": args.fine_step_keV,
+            "anchor_energies_keV": [248.0, 267.0],
+            "unique_energy_count": len(energies),
+            "energies_keV": energies,
+        },
+        "phase_space_mapping": "threshold_u2 (delta_W2 = (Wmax2-Wmin2)*u^2)",
         "outputs": ["seven_isotope_halo_comparison.csv","natural_xenon_halo_comparison.csv"],
         "scope": "Rate ratios only; detector response, exposure, efficiency and likelihood are not applied.",
     }
@@ -299,6 +324,9 @@ def main():
     p.add_argument("--er-min-keV",type=float,default=180.0)
     p.add_argument("--er-max-keV",type=float,default=320.0)
     p.add_argument("--er-step-keV",type=float,default=10.0)
+    p.add_argument("--fine-min-keV",type=float,default=None)
+    p.add_argument("--fine-max-keV",type=float,default=None)
+    p.add_argument("--fine-step-keV",type=float,default=None)
     p.add_argument("--speed-order",type=int,default=32)
     p.add_argument("--nw",type=int,default=8)
     p.add_argument("--nz",type=int,default=8)
