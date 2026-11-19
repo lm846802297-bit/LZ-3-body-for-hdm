@@ -93,8 +93,8 @@ are each included exactly once.
 
 | Input | Provenance |
 |---|---|
-| Three-body tensor and response contraction | LZ workflow 44337928314, artifact 14442826214 |
-| AFH spatial response and signed multipole amplitudes | LZ workflow 44337928314, artifact 14443055701 |
+| Three-body tensor and response contraction | LZ workflow 44432440600, artifact 14486904025 |
+| AFH spatial response and signed multipole amplitudes | LZ workflow 44432440600, artifact 14486014588 |
 | AFH v6.0 source SHA-256 | dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372 |
 | Isotope | Xe-131, \(J_A=3/2\) |
 | \(C_0(131)\) | 1.0000825298069376 |
