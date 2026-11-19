@@ -365,7 +365,7 @@ def integrate_point(
         )
         rows.append({
             "form_factor_prescription": form_factor_prescription,
-                "benchmark": case["name"],
+            "benchmark": case["name"],
             "delta_m_keV": delta_m * 1.0e6,
             "mchi1_GeV": MCHI_GEV,
             "ms_keV": MS_GEV * 1.0e6,
