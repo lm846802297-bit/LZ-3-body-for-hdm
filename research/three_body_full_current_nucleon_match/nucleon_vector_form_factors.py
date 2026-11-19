@@ -94,7 +94,6 @@ def transfer_kinematics_from_q_omega(
         "qN_energy_GeV": qN0,
         "Q_A_GeV": qA,
         "Q_A2_GeV2": Q_A2,
-        "Q_N2_GeV2": -tN,
         "tA_GeV2": tA,
         "tN_GeV2": tN,
         "metric_signature": "+---",
