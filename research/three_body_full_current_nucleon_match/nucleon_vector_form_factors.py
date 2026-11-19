@@ -125,7 +125,7 @@ def charge_coefficients(qA_GeV: float, *, F1: float, F2: float, mN_GeV: float = 
     cPhiPP = Q2 * (F1 + 2.0 * F2) / (4.0 * mN_GeV**2)
     return cM, cPhiPP
 
-def pointlike_baseline_correction(qA_GeV: float, W_phi_over_WM: float, W_Mphi_over_WM: float, *, prescription: str = "isoscalar_zexp") -> dict:
+def q0_anchor_baseline_correction(qA_GeV: float, W_phi_over_WM: float, W_Mphi_over_WM: float, *, prescription: str = "isoscalar_zexp") -> dict:
     Q2 = qA_GeV * qA_GeV
     if prescription == "bishara_linear":
         F1, F2 = bishara_linear(Q2)
@@ -145,7 +145,13 @@ def pointlike_baseline_correction(qA_GeV: float, W_phi_over_WM: float, W_Mphi_ov
         "cPhiPP": cPhi,
         "eta": eta,
         "Q_phiPP": Qphi,
-        "relative_to_pointlike_M": (cM * cM / F1V0**2) * Qphi - 1.0,
+        "relative_to_q0_M_reference": (cM * cM / F1V0**2) * Qphi - 1.0,
         "relative_to_finite_t_M": Qphi - 1.0,
+        # Legacy alias: q=0 nucleon-current normalization with AFH W_M(Q_A) retained.
+        "relative_to_pointlike_M": (cM * cM / F1V0**2) * Qphi - 1.0,
         "prescription": prescription,
     }
+
+
+# Backward-compatible alias; this is not a point-nucleus baseline.
+pointlike_baseline_correction = q0_anchor_baseline_correction
