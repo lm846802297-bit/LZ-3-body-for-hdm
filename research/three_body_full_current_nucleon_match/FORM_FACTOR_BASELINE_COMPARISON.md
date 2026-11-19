@@ -98,6 +98,21 @@ Q_A^2=|\boldsymbol q_A|^2
 =2m_AE_R+E_R^2.
 \]
 
+Choose the q-aligned coordinate frame with \(\boldsymbol q_A\) along +z.
+With metric \((+---)\), the four-vector components are
+
+\[
+\boxed{q_A^\mu=(E_R,0,0,Q_A).}
+\]
+
+The formal B one-body impulse prescription assigns the same transfer to
+the nucleon-current vertex, \(q_N^\mu=p_N'^\mu-p_N^\mu=q_A^\mu\).
+This is the adopted impulse-matching assignment; it does not reconstruct
+the microscopic energy change of each bound nucleon from a nuclear
+wavefunction. The code stores the component arrays as
+\texttt{qA\_four\_vector\_GeV} and \texttt{qN\_four\_vector\_GeV},
+and stores \texttt{tA\_GeV2} and \texttt{tN\_GeV2} independently.
+
 The adopted one-body impulse prescription for B is
 
 \[
@@ -114,9 +129,11 @@ Consequently:
 - the mediator propagator uses \((m_V^2-t_A)^2
   =(m_V^2+2m_AE_R)^2\).
 
-The separate static diagnostic \(q_N^0=0\), for which
-\(t_N=-Q_A^2\), must never be substituted into the formal B production
-path.
+The separate static diagnostic assigns
+\(q_N^\mu=(0,0,0,Q_A)\), so \(t_N=-Q_A^2\). It remains a useful
+comparison but must not be substituted into formal B production. The AFH
+Fourier convention \(\boldsymbol q_{\rm AFH}=-\boldsymbol q_A\) is
+separate from the nucleon-current transfer convention.
 
 ## 4. The A / B / C / D hierarchy
 
