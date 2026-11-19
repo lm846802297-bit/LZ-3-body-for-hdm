@@ -293,8 +293,11 @@ def extract_afh_vector_coefficients(
     """AFH Eq. (107) coefficients for the leading static Dirac--Pauli current.
 
     Convention: q_AFH=-q_A, q_N=+q_A, metric (+---). The coefficients
-    multiply the physical equal-p/n AFH response columns. The default F1/F2
-    are provisional q=0 anchors, not finite-t form factors.
+    multiply the physical equal-p/n AFH response columns. With omega_GeV=E_R,
+    the strict one-body impulse transfer is q_N^mu=q_A^mu and
+    t_N=omega^2-|q_A|^2=t_A. Passing omega_GeV=0 instead selects the
+    static-nucleon diagnostic t_N=-|q_A|^2. The default F1/F2 are provisional
+    q=0 anchors, not finite-t form factors.
     """
     if not np.isfinite(qA_GeV) or qA_GeV < 0:
         raise ValueError("qA_GeV must be finite and non-negative")
@@ -313,7 +316,9 @@ def extract_afh_vector_coefficients(
         raise ValueError(f"L is not Hermitian: relative residual {hermiticity:.6g}")
 
     Q2 = qA_GeV * qA_GeV
-    tN = -Q2
+    if not np.isfinite(omega_GeV) or omega_GeV < 0.0:
+        raise ValueError("omega_GeV must be finite and non-negative")
+    tN = omega_GeV * omega_GeV - Q2
     LT = float(np.real(L[1, 1] + L[2, 2]))
     L00 = float(np.real(L[0, 0]))
     if LT < -1e-10 or L00 < -1e-10:
@@ -367,7 +372,10 @@ def extract_afh_vector_coefficients(
         "F1V_input": float(f1),
         "F2V_input": float(f2),
         "mN_GeV": float(mN_GeV),
-        "form_factor_status": "constant provisional q=0 anchors; finite-t dependence not included",
+        "form_factor_status": (
+            "constant provisional q=0 anchors; t_N uses the supplied energy transfer "
+            "and spatial q_A separately"
+        ),
         "AFH_q_convention": "q_AFH=-q_A; q_N=+q_A",
         "response_column_convention": "physical equal-p/n AFH columns; factor four belongs to response columns exactly once",
         "C_M": float(C_M),
