@@ -86,27 +86,32 @@ Formal P4 requirements:
   outside the AFH default-density set;
 - use native AFH response columns only; no GCN/JJ55 substitution;
 - use `width_scheme="pole"` only;
-- report the A/B/C hierarchy with the external \((g_1g_2g_{VN})^2\)
-  prefactor: A = original finite-size AFH M-only
-  \(L_C W_M^{\rm phys}(Q_A)\) with \(\widehat F_1(0)=1\);
-  B = finite-\(t_N\) nucleon M-only
-  \(\widehat c_M(t_N)^2L_CW_M^{\rm phys}(Q_A)\);
-  C = B plus \(\Phi''\) and signed \(M-\Phi''\) interference;
-- preserve the original finite-q AFH nuclear shape factor \(W_M(Q_A)\) in
-  every denominator; the native equal-\(p=n\) responses already include
-  the AFH factor four exactly once; never add an extra nuclear form factor;
-- report \(B/A\) (single-nucleon form-factor correction),
-  \(C/B\) (additional nuclear-response correction at fixed
-  \(\widehat F_1,\widehat F_2\)), and \(C/A\) (total change relative to
-  the original finite-size AFH baseline);
+- **B is the primary P4 baseline:** use the first-order Bishara
+  flavor-resolved nucleon current
+  \(\widehat F_1(t_N),\widehat F_2(t_N)\) and only the native finite-size
+  AFH response \(W_M^{\rm phys}(y_A)\):
+  \(\widehat c_M(t_N)^2L_C^{(3)}W_M^{\rm phys}(y_A)\);
+- retain A only as the historical reference:
+  \(L_C^{(3)}W_M^{\rm phys}(y_A)\) with
+  \(\widehat F_1(0)=1\); A and B use the identical finite-size AFH response;
+- retain C as a separate extension (B plus \(\Phi''\) and signed
+  \(M-\Phi''\) interference); D remains the full allowed AFH response
+  contraction after P3-C validation;
+- preserve the native finite-q AFH nuclear shape factor \(W_M(y_A)\) in
+  every denominator; native equal-\(p=n\) responses already include the
+  AFH factor four exactly once; never add another whole-nucleus form factor;
 - use the effective-nucleon coupling basis \(g_{VN}=3g_{Vq}\) in the
-  external prefactor and \(\widehat F_i=F_i^{uds}/3\) in the current
+  external prefactor and \(\widehat F_i=F_i^{uds}/3\) in current
   coefficients; do not combine the factor-three quark normalization with
   the independent AFH factor-four conversion;
-- run the first-order low-\(Q_N^2\) bishara_linear diagnostic and the
-  isoscalar_zexp alternative side by side; neither replaces the AFH nuclear
-  form factor, and neither is silently identified with an unverified
-  model-specific finite-\(t_N\) input;
+- use strict one-body impulse \(t_N=t_A=-2m_AE_R\) for form factors,
+  while \(Q_A^2=2m_AE_R+E_R^2\) enters AFH \(y_A\) and spatial NR
+  coefficients; static \(q_N^0=0\) remains diagnostic-only;
+- report B/A (single-nucleon form-factor correction), C/B (additional
+  nuclear-response correction at fixed \(\widehat F_i\)), and C/A (total
+  change relative to the original finite-size AFH baseline);
+- retain isoscalar_zexp only as an alternative sensitivity model, not as
+  the default B prescription;
 - include both the truncated SHM and untruncated Maxwellian halo scenarios;
 - run speed, three-body phase-space, and recoil-grid convergence;
 - verify positivity, both response Cauchy-Schwarz inequalities, and the
