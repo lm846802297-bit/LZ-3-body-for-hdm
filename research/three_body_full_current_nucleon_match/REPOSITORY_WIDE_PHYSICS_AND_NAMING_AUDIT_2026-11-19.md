@@ -52,14 +52,17 @@ In the q-aligned frame and metric \((+---)\), formal B uses
 \[
 q_A^\mu=(E_R,0,0,Q_A),\qquad q_N^\mu=q_A^\mu.
 \]
-The static diagnostic instead assigns
-\(q_N^\mu=(0,0,0,Q_A)\), giving \(t_N=-Q_A^2\); it is a distinct
-approximation and must not enter formal B production. B/P4 outputs
-serialize \texttt{qA\_four\_vector\_GeV},
-\texttt{qN\_four\_vector\_GeV}, \texttt{tA\_GeV2}, and
-\texttt{tN\_GeV2} separately. The stored \(q_N\) is the formal
-one-body impulse assignment, not an independently solved bound-nucleon
-four-momentum.
+Here \(q_N^\mu\) denotes the external four-momentum flowing through the
+one-body nucleon-current vertex. For a free on-shell impulse benchmark it
+can be represented as \(k_N'^\mu-k_N^\mu\); for a bound nucleus the B
+prescription assigns the external nuclear transfer to the one-body current
+and does not reconstruct each nucleon's microscopic off-shell momentum
+change. The static diagnostic instead assigns
+\(q_{N,\rm static}^\mu=(0,0,0,Q_A)\), giving
+\(t_{N,\rm static}=-Q_A^2\); it is a distinct low-energy approximation
+and must not enter formal B production. B/P4 outputs serialize
+\texttt{qA\_four\_vector\_GeV}, \texttt{qN\_four\_vector\_GeV},
+\texttt{tA\_GeV2}, and \texttt{tN\_GeV2} separately.
 
 The mediator propagator uses
 \[
