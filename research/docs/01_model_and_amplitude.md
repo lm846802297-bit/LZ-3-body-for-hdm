@@ -66,7 +66,7 @@ g_1\phi\bar\chi_2\chi_1
 \Gamma^\mu =
 \gamma^\mu
 \frac{\slashed p-\slashed k+m_{\chi_2}}
-{(p-k)^2-m_{\chi_2}^2}
+{(p-k)^2-m_{\chi_2}^2+i0^+}
 +
 \frac{(\slashed p'+\slashed k+m_{\chi_2})\gamma^\mu}
 {W^2-m_{\chi_2}^2+i m_{\chi_2}\Gamma_{\chi_2}},
@@ -176,7 +176,9 @@ m_{\chi_2}^2-W^2\gg m_{\chi_2}\Gamma_{\chi_2},
 其中这里的 \(\lambda\) 是有质量量纲的 Källén 函数
 \(\lambda(x,y,z)=x^2+y^2+z^2-2xy-2xz-2yz\)。该式是**带有上述 Dirac/纯标量/单一衰变道假设的核查式**，不能在场内容未明确前直接当作最终模型结果。
 
-完整推导、数值基准、稳定的因式分解实现和单元测试见 `08_chi2_decay_width.md`。
+完整推导、数值基准、稳定的因式分解实现和单元测试见 08_chi2_decay_width.md。
+
+**项目统一正式计算规范（必须遵守）：** 第一张图（标量先于矢量散射发射，内部动量 p-k）采用零宽度分母 ((p-k)^2-m_{\chi_2}^2+i0^+)；第二张图（标量在矢量散射后发射，内部动量 p'+k）采用 pole-width 分母 (W^2-m_{\chi_2}^2+i m_{\chi_2}\Gamma_{\chi_2}^{\rm pole})。宽度在极点质量处计算。两图必须先相干相加再平方。所有正式三体截面、相空间张量、AFH 收缩和反冲谱均使用这一非对称处方。Running width 不作为正式基准；两图均取零宽度仅用于远离极点的近似或数值交叉检查（包括附录 C 的明确远离极点近似）。若存在其他开放衰变道，pole width 应改用总宽度；当前 08_chi2_decay_width.md 中的单道表达式只在其 Dirac/纯标量/单开放道假设下成立。
 
 ## 5. 三体运动学与积分范围
 

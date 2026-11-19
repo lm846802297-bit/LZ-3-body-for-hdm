@@ -1,3 +1,10 @@
+(* AME2020 xenon nuclear masses: atomic mass minus electron masses plus total electronic binding energy. *)
+Global`ame2020XenonAtomicMassU = <|124->123905885174/10^9,126->125904297422/10^9,128->12790353075341/10^11,129->12890478085742/10^11,130->129903509346/10^9,131->13090508412808/10^11,132->13190415508346/10^11,134->133905393030/10^9,136->135907214474/10^9|>;
+Global`xenonZ=54;
+Global`xenonAtomicMassUnitGeV=93149410372/10^11;
+Global`electronMassU=5485799090441/10^16;
+Global`xenonElectronBindingEnergyGeV=N[(144381/10^4 Global`xenonZ^(239/100)+155468/10^11 Global`xenonZ^(535/100))10^-9,30];
+Global`xenonNuclearMassGeV[A_Integer]:=Module[{mAtom=Lookup[Global`ame2020XenonAtomicMassU,A,Null]},If[mAtom===Null,Return[$Failed]];N[(mAtom-Global`xenonZ Global`electronMassU)Global`xenonAtomicMassUnitGeV+Global`xenonElectronBindingEnergyGeV,20]];
 (* Figure 2 2->3 nuclear recoil rate. All energies/masses GeV, speed km/s. *)
 (* Scope: Dirac vector-vector benchmark, AFH response, off-shell pole-width or zero-width. *)
 ClearAll["Fig2`*"];
@@ -92,7 +99,7 @@ response[a_,er_,mA_]:=a^2 N[responseExpr[a]/.Global`y->((Sqrt[2 mA er+er^2] bInv
 NuclearResponse[a_Integer, recoilKeV_?NumericQ] := Module[{nuclearMass},
  If[!TrueQ[recoilKeV >= 0], Throw["Recoil energy must be nonnegative"]];
  If[!ValueQ[responseZero[a]], Throw["Load the requested isotope before evaluating its response"]];
- nuclearMass = a*0.93149410242;
+ nuclearMass = Global`xenonNuclearMassGeV[a];
  response[a, recoilKeV*10^-6, nuclearMass]
 ];
 
@@ -126,7 +133,7 @@ DifferentialCrossSection[a_Integer, recoilKeV_?NumericQ, speedKms_?NumericQ,
    scalarMassGeV_?NumericQ, splittingGeV_?NumericQ, params_Association] :=
  Module[{nuclearMass, nuclearResponse, width},
   nuclearResponse = NuclearResponse[a, recoilKeV];
-  nuclearMass = a*0.93149410242;
+  nuclearMass = Global`xenonNuclearMassGeV[a];
   width = widthForParameters[params["mchi"], scalarMassGeV, splittingGeV, params];
   fixedSpeedCrossSection[nuclearMass, recoilKeV*10^-6, speedKms,
    params["mchi"], scalarMassGeV, splittingGeV, params["mV"],
@@ -137,7 +144,7 @@ Rate[erKeV_?NumericQ,ms_?NumericQ,dm_?NumericQ,p_Association]:=Module[
  {er=erKeV 10^-6,m=p["mchi"],v0=p["v0"],ve=p["vEarth"],vesc=p["vEsc"],coupling=p["couplingSq"],mv=p["mV"],order=p["quad"],isotopes=p["isotopes"],weights=p["abundance"],nv=p["nv"],rho=p["rho"],sum=0.,mA,vmin,vmax,acc,v,w,conv,width,nuclearResponse},
  width=widthForParameters[m,ms,dm,p];
  vmax=ve+vesc;
- Do[mA=a 0.93149410242;vmin=VMin[m,ms,mA,er];
+ Do[mA=Global`xenonNuclearMassGeV[a];vmin=VMin[m,ms,mA,er];
  If[vmin<vmax,
   acc=0.;nuclearResponse=NuclearResponse[a,erKeV];
   Do[v=(vmax+vmin)/2+(vmax-vmin)node[[1]]/2;w=node[[2]](vmax-vmin)/2;

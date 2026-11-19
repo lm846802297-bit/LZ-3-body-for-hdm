@@ -2,6 +2,21 @@
 
 This directory stores generated response tables, corrected cross sections, validation summaries, and versioned diagnostics.
 
+## Nuclear-model status
+
+The AFH v6.0 default-density response is the **mainline nuclear-structure input**.
+The original AFH xenon OBDMEs have B&D shell-model provenance. GCN5082 and the
+JJ55-labelled input are retained only in explicitly separate sensitivity
+comparisons; they must not be averaged with, substituted into, or silently
+combined with the AFH mainline. See the study-level
+[baseline policy](../NUCLEAR_STRUCTURE_BASELINE_POLICY.md).
+
+Files whose names include `GCN_JJ55` or `VS_GCN_JJ55` are comparison
+archives, not the primary AFH prediction. In particular, any result obtained
+by reusing a common three-body `I6` kernel and changing only the nuclear
+response is a response-only sensitivity diagnostic, not an independent
+full-amplitude calculation with a different nuclear model.
+
 ## Canonical and validated outputs
 
 - `afh_default_xe131_WM00.csv`: 2401-node source-translated Python AFH v6.0 Xe-131 response grid.
