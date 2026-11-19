@@ -608,6 +608,14 @@ cancel in each normalized ratio. Here the q=0 single-nucleon-current
 reference is the original AFH M-only baseline because it retains the same
 finite-q native \(W_M(Q_A)\); it is not a point-nucleus approximation.
 
+The full six-channel Xe-131 recoil scan now computes both bishara_linear
+and isoscalar_zexp contractions after one shared phase-space tensor
+integration at each recoil point. Each row carries both the
+same-finite-\(t_N\) M-only ratio and the total ratio to the original AFH
+M-only baseline. The spatial-response portion remains provisional until
+the native Wolfram/P3-C gates pass; the new workflow run must pass before
+these expanded rows are used as numerical results.
+
 The earlier \(-21.48\%\) and \(-34.24\%\) numbers are historical
 \(F_1^2\)-normalization diagnostics. The updated matched-\(c_M\) result
 retains \(M,\Phi'',M\Phi''\) coherently. This remains a fixed-speed Xe-131
