@@ -94,6 +94,12 @@ def process_one(input_dir: Path, output_dir: Path, model: str,
                 _float(row,"full_contribution_relative_units")*float(central["rate_multiplier"][i]),
             "I_D_contribution_B_relative_units":
                 _float(row,"I_D_contribution_relative_units")*float(central["rate_multiplier"][i]),
+            "isotope_relative_error_A_pct": row.get("isotope_relative_error_pct",""),
+            "isotope_relative_error_B_pct": (
+                (_float(row,"full_contribution_relative_units") /
+                 _float(row,"I_D_contribution_relative_units") - 1.0)*100.0
+                if _float(row,"I_D_contribution_relative_units") != 0.0 else ""
+            ),
         })
 
     natural_by_energy = { _float(r,"ER_keV"):r for r in natural_rows }
