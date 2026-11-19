@@ -30,11 +30,9 @@ These labels refer to different layers and must not be used interchangeably:
 - **AFH** means the Anand–Fitzpatrick–Haxton nuclear-response formalism and its `DMFormFactor` Mathematica implementation. The package evaluates the multipole responses from supplied one-body density matrix elements (OBDMEs).
 - **B&D** means the Baldridge–Dalton shell-model effective interaction used to generate the original xenon OBDMEs underlying the AFH default-density calculations.
 
-The 2024 shell-model comparison paper explicitly identifies the original works of Fitzpatrick et al. and Anand, Fitzpatrick, and Haxton as using the Baldridge–Dalton interaction in the (50\text{–}82) major shell. It lists the orbitals as
+The 2024 shell-model comparison paper explicitly identifies the original works of Fitzpatrick et al. and Anand, Fitzpatrick, and Haxton as using the Baldridge–Dalton interaction in the 50–82 major shell. It lists the orbitals as:
 
-[
-1g_{7/2},\quad 2d_{5/2},\quad 2d_{3/2},\quad 3s_{1/2},\quad 1h_{11/2}.
-]
+`1g7/2, 2d5/2, 2d3/2, 3s1/2, 1h11/2`.
 
 The same paper's xenon discussion confirms that the original calculations [15,16] studied the stable xenon isotopes with B&D, with isotope-dependent valence-space restrictions. The AFH v6.0 package documentation/source then supplies the corresponding default density matrices used by the response routines.
 
@@ -57,7 +55,7 @@ Do **not** describe AFH itself as a nuclear interaction. AFH is the response for
 
 GCN5082 and the archived JJ55-labelled input are **separate nuclear-structure sensitivity alternatives**, not ingredients of the AFH mainline.
 
-- **GCN5082** is a distinct effective shell-model interaction. The 2024 comparison describes it as based on the Bonn-C nucleon-nucleon potential and fitted to low-lying levels in the (50\text{–}82) region.
+- **GCN5082** is a distinct effective shell-model interaction. The 2024 comparison describes it as based on the Bonn-C nucleon-nucleon potential and fitted to low-lying levels in the 50–82 region.
 - **JJ55** is a valence-space/model-space label in common usage, not by itself a complete specification of a unique effective Hamiltonian. The exact interaction, truncation, solver, and OBDME provenance for the particular JJ55-labelled data must be stated from its source before it is treated as a fully specified nuclear model.
 
 When these alternatives are shown, they must be labelled as a model-sensitivity comparison. They must not replace, average with, or be blended into the AFH mainline response.
@@ -67,20 +65,17 @@ When these alternatives are shown, they must be labelled as a model-sensitivity 
 A meaningful comparison must hold fixed, or explicitly document differences in:
 
 - isotope and nuclear mass convention;
-- exact spatial momentum transfer (q_A) and its mapping from (E_R);
+- exact spatial momentum transfer `q_A` and its mapping from `E_R`;
 - response normalization and proton/neutron or isoscalar/isovector convention;
 - oscillator length and model-space/truncation choices;
 - interpolation method and treatment of diffraction minima;
 - three-body phase-space kernel, mediator propagators, width prescription, and particle-physics coefficients.
 
-If a comparison reuses a common (I_6) kernel and changes only (R_A(q_A)), describe it as a **response-only substitution/sensitivity diagnostic**. A relation such as
+If a comparison reuses a common `I6` kernel and changes only `R_A(q_A)`, describe it as a **response-only substitution/sensitivity diagnostic**. A relation such as
 
-[
-rac{d\sigma_{m alt}}{dE_R}
-=
-rac{d\sigma_{m reference}}{dE_R}
-rac{R_A^{m alt}(q_A)}{R_A^{m reference}(q_A)}
-]
+```text
+dσ_alt/dE_R = (dσ_reference/dE_R) × [R_A_alt(q_A) / R_A_reference(q_A)]
+```
 
 is conditional on the common-kernel assumption. It is not an independent recalculation of the full three-body amplitude with the alternative nuclear wave functions.
 
@@ -88,12 +83,12 @@ The existing AFH/GCN/JJ55 comparison files remain useful as isolated sensitivity
 
 ## 6. Recommended manuscript wording
 
-> We evaluate the xenon nuclear responses using the Anand–Fitzpatrick–Haxton (AFH) formalism as implemented in DMFormFactor v6.0, adopting its default one-body density matrix elements for the available xenon isotopes. The underlying xenon shell-model calculations used in the original AFH work employ the Baldridge–Dalton effective interaction in the (50\text{–}82) major shell. Alternative GCN5082 and JJ55-labelled nuclear inputs are considered only in separate nuclear-structure sensitivity comparisons and are not mixed into the AFH baseline.
+> We evaluate the xenon nuclear responses using the Anand–Fitzpatrick–Haxton (AFH) formalism as implemented in DMFormFactor v6.0, adopting its default one-body density matrix elements for the available xenon isotopes. The underlying xenon shell-model calculations used in the original AFH work employ the Baldridge–Dalton effective interaction in the 50–82 major shell. Alternative GCN5082 and JJ55-labelled nuclear inputs are considered only in separate nuclear-structure sensitivity comparisons and are not mixed into the AFH baseline.
 
 ## 7. References
 
 1. A. L. Fitzpatrick, W. Haxton, E. Katz, N. Lubbers, and Y. Xu, *The Effective Field Theory of Dark Matter Direct Detection*, JCAP **02** (2013) 004, [arXiv:1203.3542](https://arxiv.org/abs/1203.3542).
 2. N. Anand, A. L. Fitzpatrick, and W. C. Haxton, *Weakly interacting massive particle-nucleus elastic scattering response*, Phys. Rev. C **89**, 065501 (2014), [arXiv:1308.6288](https://arxiv.org/abs/1308.6288).
 3. R. Abdel Khaleq, G. Busoni, C. Simenel, and A. E. Stuchbery, *Impact of shell model interactions on nuclear responses to WIMP elastic scattering*, Phys. Rev. D **109**, 075036 (2024), [doi:10.1103/PhysRevD.109.075036](https://doi.org/10.1103/PhysRevD.109.075036). See Sec. III B, Sec. IV B, and Appendix D for the B&D provenance, xenon model space, and relation between the default density matrices and the AFH package.
-4. W. J. Baldridge and B. J. Dalton, *Shell-model studies for the ({}^{132}mathrm{Sn}) region. II. Exact and statistical results for multi-proton cases*, Phys. Rev. C **18**, 539 (1978).
+4. W. J. Baldridge and B. J. Dalton, *Shell-model studies for the ^132Sn region. II. Exact and statistical results for multi-proton cases*, Phys. Rev. C **18**, 539 (1978).
 5. J. Menéndez, A. Poves, E. Caurier, and F. Nowacki, Nucl. Phys. A **818**, 139 (2009), the GCN5082 interaction reference cited in Ref. [3].
