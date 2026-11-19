@@ -186,15 +186,17 @@ content is:
 The explicit leading-static coefficients in the current convention are
 \[
 \begin{aligned}
-C_\Delta&=\frac{(F_1^V)^2Q_A^2}{2m_N^2}L_T^{(3)},\\
-C_{\Sigma'}&=\frac{(F_1^V+F_2^V)^2Q_A^2}{8m_N^2}L_T^{(3)},\\
-C_{\Sigma'\Delta}&=-\frac{F_1^V(F_1^V+F_2^V)Q_A^2}{2m_N^2}L_T^{(3)}.
+C_\Delta&=\frac{(\widehat F_1^N)^2Q_A^2}{2m_N^2}L_T^{(3)},\\
+C_{\Sigma'}&=\frac{(\widehat F_1^N+\widehat F_2^N)^2Q_A^2}{8m_N^2}L_T^{(3)},\\
+C_{\Sigma'\Delta}&=-\frac{\widehat F_1^N(\widehat F_1^N+\widehat F_2^N)Q_A^2}{2m_N^2}L_T^{(3)}.
 \end{aligned}
 \]
 For \(F_1^V(F_1^V+F_2^V)>0\),
 \[
 C_{\Sigma'\Delta}=-2\sqrt{C_\Delta C_{\Sigma'}}.
 \]
+Here the coefficients are written in the adopted external-\(g_{VN}=3g_{Vq}\) convention, so the symbols are the effective form factors \(\widehat F_i^N=F_i^{uds,N}/3\). The raw universal flavor sums \(F_1^{uds}(0)=3\), \(F_2^{uds}(0)=-0.552\) must not be inserted into these coefficients while retaining the external \(g_{VN}\) prefactor.
+
 The latest 12-benchmark extraction satisfies this particle-side identity
 with maximum relative residual \(1.72121\times10^{-16}\).
 
@@ -353,9 +355,9 @@ shown below. The ratio is
 \[
 \mathcal Q(E_R)=
 \frac{(d\sigma/dE_R)_{\rm finite-t_N,\ M+\Phi''}}
-     {(d\sigma/dE_R)_{\rm pointlike,\ M}},
+     {(d\sigma/dE_R)_{q=0\ {\rm nucleon},\ M}},
 \]
-where the denominator is the original pointlike \(9W_M\) baseline.
+where the denominator retains the same finite-size AFH \(W_M(y_A)\) and is the zero-transfer nucleon-current reference. The historical computation expressed both numerator and denominator in the raw flavor-summed basis, so the denominator was written as \(9W_M\); the equivalent external-\(g_{VN}\) convention divides every nucleon-current coefficient by three and uses \(W_M\). The dimensionless ratio is unchanged, but the raw absolute kernel is not suitable for an external-\(g_{VN}\) prefactor.
 
 | \(E_R\) | \(\Delta m\) | \(\mathcal Q(E_R)\) | Relative change |
 |---:|---:|---:|---:|
