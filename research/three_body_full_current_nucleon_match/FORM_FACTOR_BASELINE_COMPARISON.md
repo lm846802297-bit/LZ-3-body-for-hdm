@@ -102,7 +102,7 @@ Therefore the nucleon-current coefficients in this external-\(g_{VN}\) conventio
 \]
 The external prefactor already contains \(g_{VN}\); using the raw \(F_i^{uds}\) in the current coefficients would count the factor three twice and produce a factor-nine error in the rate.
 
-The equivalent convention is to use \(g_{Vq}=g_{VN}/3\) externally with the unnormalized \(F_i^{uds}\). Both conventions must agree pointwise. All absolute-rate Python modules use the first convention.
+The equivalent convention is to use \(g_{Vq}=g_{VN}/3\) externally with the unnormalized \(F_i^{uds}\). Both conventions must agree pointwise. **All formal B production modules use the first convention.** Legacy A-reference runners and the archived Mathematica engine are deliberately retained as historical calculations; they do not include the finite-\\(t_N\\) Dirac--Pauli insertion and must not be described as B or used to generate new B results.
 
 ## 4. Adopted low-momentum flavor-separated prescription
 
@@ -229,7 +229,23 @@ The finite-\(t_N\) nucleon-current correction reduces the M-only kernel by rough
 
 The archived Mathematica notebook explicitly evaluates the AFH finite-q nuclear response through \(W_M(y_A)\). Its recorded rate-engine path uses a constant effective nucleon coupling and does not, by itself, show an explicit finite-\(t_N\), flavor-resolved Dirac–Pauli insertion. If a different earlier local calculation included another low-order quark-shape prescription, its exact source and coefficients still need to be recovered. This provenance question does not block the adopted B baseline: B is now the declared primary prescription for subsequent calculations.
 
-The current Xe-131 fixed-speed dual-form-factor workflow passed its seven regression tests. The absolute B spectrum must still be rerun on the current branch after the coupling-normalization and baseline-name changes. The natural-xenon halo fold must pass the native seven-isotope/eight-response gate. P3-C's covariant-to-AFH nuclear-amplitude validation remains open; until then, the spatial D candidate is provisional.
+The formal B implementation is present in the current research branch, but the first post-rename CI attempt exposed stale regression-test field names and one q=0 fixture that was still supplying finite-\\(t_N\\) form factors. Those tests are being migrated to the canonical A/B/C output schema; no failed check is being waived. The absolute B spectrum must pass its dedicated workflow, and the natural-xenon halo fold must pass the native seven-isotope/eight-response provenance gate before its numerical output is promoted. P3-C's covariant-to-AFH nuclear-amplitude validation remains open; until then, the spatial D candidate is provisional.
+
+
+### 8.1 Executable pipeline inventory
+
+| Path | Classification | Form-factor treatment | Use |
+|---|---|---|---|
+| `research/three_body_full_current_nucleon_match/xe131_fixed_benchmark_absolute_dsigma.py` | Formal B/C | `Fhat_i=F_i^{uds}/3` | Fixed-benchmark absolute Xe-131 spectrum |
+| `research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py` | Formal B/C; optional D candidate | `Fhat_i=F_i^{uds}/3` | Seven-isotope natural-xenon halo fold; B is emitted separately from C |
+| `research/three_body_full_current_nucleon_match/xe131_fixed_speed_charge_dsigma.py` | Formal finite-`t_N` diagnostic | `Fhat_i=F_i^{uds}/3` | Fixed-speed charge-sector kernels and ratios |
+| `research/three_body_full_current_nucleon_match/xe131_full_afh_fixed_speed_recoil_scan.py` | Provisional full-current diagnostic | `Fhat_i=F_i^{uds}/3` | Six-channel matching; not yet a promoted D prediction |
+| `research/afh_default_density_xe131/run_python_full_dsigma_xe131.py` | Legacy A reference | Constant effective coupling; no explicit finite-`t_N` Dirac--Pauli insertion | Historical Xe-131 absolute-spectrum comparison only |
+| `research/three_body_calculation_and_validation/run_natural_xenon_halo_fold.py` | Legacy A reference | AFH finite-size response with constant effective nucleon coupling | Historical halo-fold comparison only |
+| `research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py` | Legacy A reference | AFH finite-size response with constant effective nucleon coupling | Historical halo-fold comparison only |
+| `research/three_body_calculation_and_validation/mathematica_halo_notebook/three_body_rate_engine.wl` | Legacy A reference | Constant effective nucleon coupling; no explicit `F_1(t_N),F_2(t_N)` | Mathematica historical cross-check |
+
+The legacy A entries are intentionally preserved rather than silently rewritten: they document the calculation that generated the old reference results. Their output is not the adopted B prediction. The formal B production path is the first four rows, and every new absolute B result must record the external-`g_{VN}` coupling basis, the `Fhat_i` normalization, the one-body transfer convention, and the AFH factor-four ledger.
 
 ## 9. Reporting requirements
 
