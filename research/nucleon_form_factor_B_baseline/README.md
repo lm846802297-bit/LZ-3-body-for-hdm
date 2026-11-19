@@ -148,3 +148,10 @@ The detector fold reports the central B event yield. The separate covariance pro
 Regression tests cover zero-momentum normalization, Sachs-to-Dirac/Pauli conversion, the \(z\)-expansion sum rules, covariance properties, strange-current conventions, magnetic-radius normalization, exact A-spectrum closure, isotope-level B multiplication, and natural-xenon resummation.
 
 This stage includes finite nucleon \(F_1,F_2\), the finite-size AFH \(W_M\) response, the three-body/halo spectrum, and the LZ NR efficiency fold. It does not include additional AFH responses such as \(W_{\Phi''}\) or \(W_{M\Phi''}\), energy-resolution smearing, S1c/\(\log_{10}S2_c\) signal PDFs, background likelihood, or a confidence-level exclusion.
+
+
+## Permanent numerical archive
+
+The current PR85 result has a permanent native-output archive at [results/2026-11-20-B-baseline-PR85/README.md](results/2026-11-20-B-baseline-PR85/README.md). It contains the original pinned Actions artifact, all extracted CSV/JSON outputs, source-code and source-input snapshots, the run manifest, and a SHA-256 checksum list.
+
+The archive workflow [44593911420](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44593911420) passed artifact identity/digest verification, extraction checks, B-baseline and detector-scope validations, correlated-covariance checks, and the complete archive checksum self-check. The archived source calculation is pinned to commit f6a01b7735c2373848510657826503484dd118d5.
