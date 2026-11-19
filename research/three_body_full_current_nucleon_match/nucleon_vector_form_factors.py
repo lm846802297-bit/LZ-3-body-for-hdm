@@ -55,12 +55,15 @@ def transfer_kinematics_from_q_omega(
     *,
     nucleon_transfer_scheme: str = FORMAL_NUCLEON_TRANSFER_SCHEME,
 ) -> dict:
-    """Build q_A^mu and q_N^mu in the q-aligned frame with metric (+---).
+    """Build the external nuclear transfer and one-body vertex transfer.
 
-    The spatial nuclear transfer is represented along +z:
-        q_A^mu = (omega, 0, 0, Q_A).
-    Formal B applies the strict one-body impulse prescription q_N^mu=q_A^mu.
-    The static q_N^0=0 choice is retained only as a named diagnostic.
+    In the q-aligned frame with metric (+---), q_A^mu=(omega,0,0,Q_A).
+    Formal B assigns the same external four-transfer to the one-body
+    nucleon-current vertex, q_N^mu=q_A^mu. For a free on-shell impulse
+    benchmark this can be realized as k_N'^mu-k_N^mu=q_A^mu. In a bound
+    nucleus this is the external transfer entering the one-body current;
+    it does not reconstruct each bound nucleon's microscopic off-shell
+    initial and final four-momenta. The q_N^0=0 static choice is diagnostic.
     """
     qA = float(qA_GeV)
     omega = float(omega_GeV)
@@ -71,11 +74,18 @@ def transfer_kinematics_from_q_omega(
     if nucleon_transfer_scheme == FORMAL_NUCLEON_TRANSFER_SCHEME:
         qN0 = omega
         scheme_id = "strict_one_body_impulse_qN_equals_qA"
-        qN_definition = "q_N=p_N'-p_N assigned by strict one-body impulse q_N=q_A"
+        qN_definition = (
+            "external four-momentum at the one-body nucleon-current vertex; "
+            "set q_N=q_A by impulse matching, not a microscopic bound-nucleon "
+            "off-shell momentum reconstruction"
+        )
     elif nucleon_transfer_scheme == STATIC_NUCLEON_TRANSFER_SCHEME:
         qN0 = 0.0
         scheme_id = "static_qN0_zero_diagnostic"
-        qN_definition = "static diagnostic assignment q_N^0=0 and boldsymbol q_N=boldsymbol q_A"
+        qN_definition = (
+            "static diagnostic vertex assignment q_N^0=0 and "
+            "boldsymbol q_N=boldsymbol q_A; not the physical nuclear energy transfer"
+        )
     else:
         raise ValueError(f"unknown nucleon transfer scheme: {nucleon_transfer_scheme}")
 
