@@ -50,6 +50,11 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
         self.assertAlmostEqual(f2hat, raw_f2 / 3.0, places=14)
         self.assertNotAlmostEqual(tN, -(qA * qA), places=10)
 
+        transfer = fold.recoil_transfer_kinematics(mA, ER_keV)
+        self.assertEqual(transfer["qA_four_vector_GeV"], transfer["qN_four_vector_GeV"])
+        self.assertAlmostEqual(transfer["tA_GeV2"], transfer["tN_GeV2"], places=16)
+        self.assertAlmostEqual(transfer["Q_A2_GeV2"], qA*qA, places=16)
+
         responses = {"M": 4.0, "PhiPP": 0.2, "MPhiPP": -0.3}
         result = fold.charge_kernel_from_coulomb_weight(
             2.5, qA, responses, "bishara_linear", tN_GeV2=tN
@@ -407,7 +412,11 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             self.assertIn("W_M(y_A)", result["primary_baseline"])
             self.assertIn("t_A=-2*m_A*E_R", result["mediator_denominator"])
             self.assertEqual(result["nucleon_transfer_scheme"],
-                "strict one-body impulse q_N^mu=q_A^mu; t_N=t_A=-2*m_A*E_R")
+                "strict one-body impulse q_N^mu=q_A^mu; t_N=t_A=-2*mA*ER")
+            xe131 = next(item for item in mb["isotope_rows"] if item["A"] == 131)
+            self.assertEqual(xe131["qA_four_vector_GeV"], xe131["qN_four_vector_GeV"])
+            self.assertAlmostEqual(xe131["tA_GeV2"], xe131["tN_GeV2"], places=16)
+            self.assertEqual(xe131["metric_signature"], "+---")
             self.assertGreater(
                 mb["rate_leading_static_vector_candidate_events_kg_day_keV"], 0.0
             )
