@@ -110,10 +110,13 @@ For exact recoil kinematics, keep the two momentum invariants separate:
 t_A=q_A^\mu q_{A,\mu}=-2m_AE_R,\qquad
 Q_A^2=|\boldsymbol q_A|^2=2m_AE_R+E_R^2.
 \]
-The vector-mediator propagator uses \((m_V^2-t_A)^2\), whereas the static
-one-body impulse form-factor diagnostic uses
-\(Q_N^2=-t_N=|\boldsymbol q_N|^2\simeq Q_A^2\). Do not substitute the
-spatial \(Q_A^2\) into the invariant mediator propagator.
+The vector-mediator propagator uses \((m_V^2-t_A)^2\). The formal
+one-body impulse form-factor argument uses \(t_N=t_A\), so
+\(Q_N^2=-t_N=2m_AE_R\); the spatial \(Q_A^2\) remains
+\(2m_AE_R+E_R^2\) in the AFH/NR spatial coefficients. The alternative
+static \(q_N^0=0\) prescription gives \(t_N=-Q_A^2\) and is diagnostic
+only. Do not substitute spatial \(Q_A^2\) into the invariant mediator
+propagator or conflate it with \(t_N\).
 
 The Coulomb-sector halo result can be reported after native P3-B validation
 as a separately labelled baseline. The full-vector halo spectrum must not
