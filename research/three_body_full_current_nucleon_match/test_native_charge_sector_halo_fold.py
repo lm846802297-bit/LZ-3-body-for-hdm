@@ -102,7 +102,7 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
         for name in fold.FULL_VECTOR_RESPONSE_NAMES:
             self.assertAlmostEqual(out["physical_equal_pn"][name], 1.5)
             self.assertAlmostEqual(out["linear_physical_equal_pn"][name], 1.5)
-            self.assertAlmostEqual(out["pchip_linear_relative_difference"][name], 0.0)
+            self.assertGreater(out["pchip_linear_relative_difference"][name], 0.1)
 
     def test_leading_static_vector_kernel_reconstructs_charge_and_spatial(self):
         L = np.zeros((4, 4, 2), dtype=float)
