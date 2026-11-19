@@ -409,6 +409,229 @@ def load_native_response_bundle(artifact_root: Path) -> tuple[dict, dict]:
         bundle[A] = {"q": q, "physical": physical}
     return bundle, gate
 
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for block in iter(lambda: stream.read(1 << 20), b""):
+            digest.update(block)
+    return digest.hexdigest()
+
+
+def load_provisional_response_bundle(
+    charge_dir: Path, spatial_dir: Path
+) -> tuple[dict, dict]:
+    """Load the internally validated, explicitly provisional Python AFH-8 bundle.
+
+    Charge responses are corrected by the common C0(A) factor from the
+    spatial OBDME archive. Delta/SigmaPrime/SigmaPrimeDelta are taken from
+    the independently rank-reconstructed P3-B archive, which already
+    includes C0. This path never claims native Mathematica validation.
+    """
+    charge_meta_path = charge_dir / "metadata.json"
+    charge_validation_path = charge_dir / "validation.json"
+    charge_csv_path = charge_dir / "afh_v6_full_eight_response_7isotope.csv"
+    charge_sums_path = charge_dir / "SHA256SUMS.txt"
+    charge_commit_path = charge_dir / "source_commit.txt"
+    spatial_meta_path = spatial_dir / "metadata.json"
+    spatial_validation_path = spatial_dir / "multipole-validation.json"
+    spatial_csv_path = spatial_dir / "afh_spatial_obdme_responses_7isotope_2401.csv"
+    spatial_multipole_path = spatial_dir / "afh_spatial_obdme_multipoles_7isotope_2401.csv"
+
+    required = (
+        charge_meta_path, charge_validation_path, charge_csv_path,
+        charge_sums_path, charge_commit_path, spatial_meta_path,
+        spatial_validation_path, spatial_csv_path, spatial_multipole_path,
+    )
+    for path in required:
+        if not path.is_file():
+            raise FileNotFoundError(f"provisional AFH input is missing: {path}")
+
+    charge_meta = json.loads(charge_meta_path.read_text(encoding="utf-8-sig"))
+    charge_validation = json.loads(charge_validation_path.read_text(encoding="utf-8-sig"))
+    spatial_meta = json.loads(spatial_meta_path.read_text(encoding="utf-8-sig"))
+    spatial_validation = json.loads(spatial_validation_path.read_text(encoding="utf-8-sig"))
+
+    expected_source_sha = "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372"
+    expected_source_commit = "dcefbeb7ad705b6c03f2b4689200eb1d9252e67b"
+    expected_charge_sha = "59ea25093137a05b8ebcc158e2fe6a74fe5927599dbb16766b067aa1ad8e3caa"
+    expected_spatial_response_sha = "4e0a23c18d29df3af04a2531e75b7bffeaa3251d0efe97674b2287cf3c25e7e3"
+    expected_spatial_multipole_sha = "e83f7499cd0af4ec8f1974238f09daf4899ca1b87205ec837ae0964a2e8532c6"
+
+    if charge_meta.get("status") != "PROVISIONAL_PYTHON" or charge_meta.get("native_afh_validated") is not False:
+        raise ValueError("charge AFH-8 input is not explicitly provisional Python")
+    if charge_validation.get("status") != "PASS" or charge_validation.get("native_afh_validated") is not False:
+        raise ValueError("charge AFH-8 internal validation did not pass provisionally")
+    if charge_validation.get("actual_total_rows") != NATIVE_EXPECTED_ROWS:
+        raise ValueError("charge AFH-8 response row count is not 16,807")
+    if charge_meta.get("normalization", {}).get("factor_four_applied_once_to_physical_columns") is not True:
+        raise ValueError("charge AFH-8 equal-p/n factor-four convention is not verified")
+    if charge_meta.get("isotopes") != list(ISOTOPES):
+        raise ValueError("charge AFH-8 isotope set mismatch")
+    if charge_commit_path.read_text(encoding="utf-8").strip() != expected_source_commit:
+        raise ValueError("charge AFH-8 source commit mismatch")
+    charge_sha = _sha256_file(charge_csv_path)
+    if charge_sha != expected_charge_sha:
+        raise ValueError(f"charge AFH-8 CSV SHA-256 mismatch: {charge_sha}")
+
+    sums = {}
+    for line in charge_sums_path.read_text(encoding="ascii").splitlines():
+        parts = line.split()
+        if len(parts) == 2:
+            sums[parts[1]] = parts[0].lower()
+    for name, path in (
+        ("afh_v6_full_eight_response_7isotope.csv", charge_csv_path),
+        ("metadata.json", charge_meta_path),
+        ("validation.json", charge_validation_path),
+        ("source_commit.txt", charge_commit_path),
+    ):
+        if sums.get(name) != _sha256_file(path):
+            raise ValueError(f"charge AFH-8 checksum manifest mismatch: {name}")
+
+    if spatial_meta.get("status") != "PROVISIONAL_SOURCE_TRANSLATED_AFH_SPATIAL_RESPONSES":
+        raise ValueError("spatial AFH input is not explicitly provisional")
+    if spatial_meta.get("source_file_sha256") != expected_source_sha:
+        raise ValueError("charge/spatial AFH source hashes disagree")
+    if spatial_meta.get("native_mathematica_spatial_crosscheck") is not False:
+        raise ValueError("spatial AFH archive must remain explicitly non-native")
+    if spatial_meta.get("rankwise_amplitudes_and_signed_interference_saved") is not True:
+        raise ValueError("spatial AFH archive lacks rank-resolved amplitudes")
+    if spatial_validation.get("status") != "PASS_AFH_SPATIAL_MULTIPOLE_ARCHIVE":
+        raise ValueError("spatial AFH internal archive validation did not pass")
+    if spatial_validation.get("native_afh_validated") is not False:
+        raise ValueError("spatial AFH validation must not claim native validation")
+    if spatial_meta.get("response_rows") != NATIVE_EXPECTED_ROWS:
+        raise ValueError("spatial AFH response row count is not 16,807")
+    if spatial_meta.get("multipole_rows") != 9604:
+        raise ValueError("spatial AFH rank-resolved row count is not 9,604")
+    spatial_response_sha = _sha256_file(spatial_csv_path)
+    spatial_multipole_sha = _sha256_file(spatial_multipole_path)
+    if spatial_response_sha != expected_spatial_response_sha:
+        raise ValueError("spatial AFH response CSV SHA-256 mismatch")
+    if spatial_multipole_sha != expected_spatial_multipole_sha:
+        raise ValueError("spatial AFH multipole CSV SHA-256 mismatch")
+    if spatial_meta.get("response_file_sha256") != spatial_response_sha:
+        raise ValueError("spatial AFH response metadata hash mismatch")
+    if spatial_meta.get("multipole_file_sha256") != spatial_multipole_sha:
+        raise ValueError("spatial AFH multipole metadata hash mismatch")
+
+    charge_rows = read_csv(charge_csv_path)
+    spatial_rows = read_csv(spatial_csv_path)
+    if len(charge_rows) != NATIVE_EXPECTED_ROWS or len(spatial_rows) != NATIVE_EXPECTED_ROWS:
+        raise ValueError("provisional charge/spatial AFH archives must each have 16,807 rows")
+
+    charge_index = {}
+    for row in charge_rows:
+        A = int(float(row["A"]))
+        q = float(row["q_GeV"])
+        charge_index[(A, round(q, 10))] = row
+    spatial_index = {}
+    for row in spatial_rows:
+        A = int(float(row["A"]))
+        q = float(row["q_GeV"])
+        spatial_index[(A, round(q, 10))] = row
+    expected_keys = {
+        (A, round(i * 0.00025, 10))
+        for A in ISOTOPES for i in range(2401)
+    }
+    if charge_index.keys() != expected_keys or spatial_index.keys() != expected_keys:
+        raise ValueError("provisional AFH charge/spatial q grids are not the canonical 16,807-row grid")
+
+    c0_by_A = {
+        int(item["A"]): float(item["common_matrix_normalization"])
+        for item in spatial_meta["isotope_metadata"]
+    }
+    if set(c0_by_A) != set(ISOTOPES):
+        raise ValueError("spatial AFH C0 map is incomplete")
+
+    charge_columns = {
+        "M": "R_M_physical_equal_pn",
+        "SigmaDoublePrime": "R_SigmaDoublePrime_physical_equal_pn",
+        "PhiPP": "R_PhiPP_physical_equal_pn",
+        "PhiTildePrime": "R_PhiTildePrime_physical_equal_pn",
+        "MPhiPP": "R_MPhiPP_physical_equal_pn",
+    }
+    spatial_columns = {
+        "Delta": "R_Delta_equal_pn",
+        "SigmaPrime": "R_SigmaPrime_equal_pn",
+        "SigmaPrimeDelta": "R_SigmaPrimeDelta_equal_pn",
+    }
+    bundle = {}
+    max_charge_cauchy_excess = 0.0
+    max_spatial_cauchy_excess = 0.0
+    expected_q = np.arange(2401, dtype=float) * 0.00025
+    for A in ISOTOPES:
+        physical = {name: [] for name in FULL_VECTOR_RESPONSE_NAMES}
+        for i, q in enumerate(expected_q):
+            key = (A, round(float(q), 10))
+            cr = charge_index[key]
+            sr = spatial_index[key]
+            if not math.isclose(float(cr["q_GeV"]), float(sr["q_GeV"]), rel_tol=0.0, abs_tol=1e-12):
+                raise ValueError(f"charge/spatial q mismatch for Xe-{A}")
+            for name, column in charge_columns.items():
+                physical[name].append(c0_by_A[A] * float(cr[column]))
+            for name, column in spatial_columns.items():
+                physical[name].append(float(sr[column]))
+            m = physical["M"][-1]
+            phi = physical["PhiPP"][-1]
+            mphi = physical["MPhiPP"][-1]
+            delta = physical["Delta"][-1]
+            sigma = physical["SigmaPrime"][-1]
+            sigmadelta = physical["SigmaPrimeDelta"][-1]
+            charge_excess = max(0.0, abs(mphi) - math.sqrt(max(0.0, m) * max(0.0, phi)))
+            spatial_excess = max(0.0, abs(sigmadelta) - math.sqrt(max(0.0, delta) * max(0.0, sigma)))
+            max_charge_cauchy_excess = max(max_charge_cauchy_excess, charge_excess)
+            max_spatial_cauchy_excess = max(max_spatial_cauchy_excess, spatial_excess)
+            scale_c = max(abs(mphi), math.sqrt(max(0.0, m) * max(0.0, phi)), 1e-300)
+            scale_s = max(abs(sigmadelta), math.sqrt(max(0.0, delta) * max(0.0, sigma)), 1e-300)
+            if charge_excess > 2e-10 * scale_c + 1e-12:
+                raise ValueError(f"provisional M-Phi'' Cauchy bound fails for Xe-{A}, q={q}")
+            if spatial_excess > 2e-10 * scale_s + 1e-12:
+                raise ValueError(f"provisional Sigma'-Delta Cauchy bound fails for Xe-{A}, q={q}")
+        q = expected_q.copy()
+        bundle[A] = {
+            "q": q,
+            "physical": {name: np.asarray(values, dtype=float) for name, values in physical.items()},
+        }
+
+    comparison = {
+        "status": "PROVISIONAL_INTERNAL_VALIDATION_PASS",
+        "native_afh_validated": False,
+        "rows_compared": NATIVE_EXPECTED_ROWS,
+        "charge_rows": len(charge_rows),
+        "spatial_rows": len(spatial_rows),
+        "spatial_multipole_rows": int(spatial_meta["multipole_rows"]),
+        "max_charge_cauchy_excess": max_charge_cauchy_excess,
+        "max_spatial_cauchy_excess": max_spatial_cauchy_excess,
+    }
+    gate = {
+        "comparison": comparison,
+        "provenance": {
+            "status": "PROVISIONAL_PYTHON_AFH_V6_TRANSLATION",
+            "native_afh_validated": False,
+            "source_commit": expected_source_commit,
+            "source_file_sha256": expected_source_sha,
+            "charge_csv_sha256": charge_sha,
+            "spatial_response_sha256": spatial_response_sha,
+            "spatial_multipole_sha256": spatial_multipole_sha,
+            "charge_artifact_run_id": 44222087512,
+            "charge_artifact_id": 14391456283,
+            "spatial_artifact_run_id": 44432440600,
+            "spatial_artifact_id": 14486014588,
+            "C0_by_isotope": {str(A): c0_by_A[A] for A in ISOTOPES},
+        },
+        "sha256_verified_files": [
+            "charge/afh_v6_full_eight_response_7isotope.csv",
+            "charge/metadata.json",
+            "charge/validation.json",
+            "charge/source_commit.txt",
+            "spatial/afh_spatial_obdme_responses_7isotope_2401.csv",
+            "spatial/afh_spatial_obdme_multipoles_7isotope_2401.csv",
+        ],
+    }
+    return bundle, gate
+
+
 def interpolate_native_response(
     bundle_entry: dict,
     q_GeV: float,
@@ -726,8 +949,10 @@ def mean_atomic_weight_from_input(path: Path) -> float:
 
 def fold(
     *,
-    native_dir: Path,
-    mchi: float,
+    native_dir: Path | None = None,
+    provisional_charge_dir: Path | None = None,
+    provisional_spatial_dir: Path | None = None,
+    mchi: float = MCHI_DEFAULT,
     ms: float,
     delta_m: float,
     mV: float,
@@ -744,7 +969,16 @@ def fold(
     include_leading_static_vector_candidate: bool = False,
     response_input: Path = HALO_INPUT / "natural_xenon_isotope_weights.csv",
 ) -> dict:
-    native_bundle, native_gate = load_native_response_bundle(native_dir)
+    if native_dir is not None:
+        if provisional_charge_dir is not None or provisional_spatial_dir is not None:
+            raise ValueError("choose native AFH inputs or provisional Python AFH inputs, not both")
+        native_bundle, afh_input_gate = load_native_response_bundle(native_dir)
+    else:
+        if provisional_charge_dir is None or provisional_spatial_dir is None:
+            raise ValueError("provide --native-dir or both provisional charge and spatial directories")
+        native_bundle, afh_input_gate = load_provisional_response_bundle(
+            provisional_charge_dir, provisional_spatial_dir
+        )
     isotope_data = load_isotope_inputs(response_input)
     mean_atomic_weight = mean_atomic_weight_from_input(response_input)
     rate_factor = _rate_factor(mchi, rho, mean_atomic_weight)
@@ -1045,9 +1279,10 @@ def fold(
             if include_leading_static_vector_candidate
             else "seven-isotope natural-xenon Coulomb-sector diagnostic using native AFH M/Phi''/M-Phi'' responses, nuclear-current continuity, and finite-t_N diagnostics; not the full L_mu_nu W_A^mu_nu contraction"
         ),
-        "native_gate": native_gate["comparison"],
-        "native_provenance": native_gate["provenance"],
-        "native_sha256_verified_files": native_gate["sha256_verified_files"],
+        "AFH_input_validation": afh_input_gate["comparison"],
+        "AFH_input_provenance": afh_input_gate["provenance"],
+        "AFH_sha256_verified_files": afh_input_gate["sha256_verified_files"],
+        "native_afh_validated": bool(afh_input_gate["comparison"].get("native_afh_validated", False)),
         "form_factor_prescription": form_factor_prescription,
         "width_scheme": width_scheme,
         "mchi_GeV": mchi,
@@ -1077,9 +1312,13 @@ def main() -> None:
     parser.add_argument(
         "--native-dir",
         type=Path,
-        required=True,
-        help="extracted root of the private native AFH eight-response artifact",
+        default=None,
+        help="extracted root of a provenance-validated native AFH eight-response artifact",
     )
+    parser.add_argument("--provisional-charge-dir", type=Path, default=None,
+                        help="AFH-8 provisional Python charge-response artifact directory")
+    parser.add_argument("--provisional-spatial-dir", type=Path, default=None,
+                        help="P3-B provisional Python spatial-response artifact directory")
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--mchi-GeV", type=float, default=MCHI_DEFAULT)
     parser.add_argument("--ms-keV", type=float, required=True)
@@ -1120,8 +1359,17 @@ def main() -> None:
     args = parser.parse_args()
     if min(args.nv, args.nw, args.nz, args.nphi) < 2:
         parser.error("all quadrature orders must be >= 2")
+    if args.width_scheme != "pole":
+        parser.error("formal production accepts only the asymmetric Pole width prescription")
+    provisional_selected = args.provisional_charge_dir is not None or args.provisional_spatial_dir is not None
+    if (args.native_dir is None) == (not provisional_selected):
+        parser.error("provide either --native-dir or both provisional AFH directories")
+    if provisional_selected and (args.provisional_charge_dir is None or args.provisional_spatial_dir is None):
+        parser.error("both --provisional-charge-dir and --provisional-spatial-dir are required")
     result = fold(
         native_dir=args.native_dir,
+        provisional_charge_dir=args.provisional_charge_dir,
+        provisional_spatial_dir=args.provisional_spatial_dir,
         mchi=args.mchi_GeV,
         ms=args.ms_keV * 1.0e-6,
         delta_m=args.delta_m_keV * 1.0e-6,
