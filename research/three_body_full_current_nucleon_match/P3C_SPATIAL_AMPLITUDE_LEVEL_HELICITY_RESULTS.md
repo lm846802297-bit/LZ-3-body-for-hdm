@@ -93,8 +93,8 @@ are each included exactly once.
 
 | Input | Provenance |
 |---|---|
-| Three-body tensor, weights, response contraction and normalized P3-C output | LZ workflow 44465719660, artifact 14502480708 |
-| AFH spatial response and signed multipole amplitudes | LZ workflow 44465719660, artifact 14501657777 |
+| Three-body tensor, weights, response contraction and normalized P3-C output | LZ workflow 44467028248, artifact 14502132933 |
+| AFH spatial response and signed multipole amplitudes | LZ workflow 44467028248, artifact 14502512261 |
 | AFH v6.0 source SHA-256 | dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372 |
 | Isotope | Xe-131, \(J_A=3/2\) |
 | \(C_0(131)\) | 1.0000825298069376 |
@@ -164,8 +164,8 @@ those interpolated amplitudes.
 The standalone script is
 p3c_amplitude_level_helicity_crosscheck.py; its five unit tests are in
 test_p3c_amplitude_level_helicity_crosscheck.py. The normalized result is
-archived in [workflow 44465719660](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44465719660),
-artifact 14502480708. The older repository JSON at
+archived in [workflow 44467028248](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44467028248),
+artifact 14502132933. The older repository JSON at
 results/2026-11-19/p3c_spatial_amplitude_level_helicity_crosscheck.json is
 explicitly marked PRE_P0_RAW_FLAVOR_SUMMED_INPUTS and is retained only as
 historical provenance.
