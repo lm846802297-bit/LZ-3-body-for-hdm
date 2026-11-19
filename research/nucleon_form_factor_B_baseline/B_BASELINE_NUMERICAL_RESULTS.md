@@ -136,7 +136,8 @@ The implementation now includes the factor \(\mu_s\) multiplying the slope. A re
 - PR: [#85](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/pull/85)
 - B-baseline, LZ detector fold and electromagnetic covariance workflow: [run 44587255746](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44587255746)
 - Source halo/high-order workflow: [run 44560087038](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44560087038)
-- B spectra, detector yields and quadrature outputs: artifact finite-nucleon-form-factor-B-baseline
+- Permanent archive and SHA-256 verification: [run 44593911420](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44593911420)
+- Permanent native-output archive: [results/2026-11-20-B-baseline-PR85/README.md](results/2026-11-20-B-baseline-PR85/README.md)
 - Regression tests: 14 passed in the latest complete workflow.
 - Repository layout and Figure 2 benchmark manifest checks: passed.
 
