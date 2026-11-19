@@ -124,6 +124,15 @@ def exact_qA_GeV(mA_GeV: float, ER_keV: float) -> float:
     return math.sqrt(2.0 * mA_GeV * ER + ER * ER)
 
 
+def mediator_denominator_squared_GeV4(mV_GeV: float, mA_GeV: float, ER_keV: float) -> float:
+    """Return (mV^2-t_A)^2 with t_A=-2*m_A*E_R, never spatial Q_A^2."""
+    if min(mV_GeV, mA_GeV) <= 0.0 or ER_keV < 0.0:
+        raise ValueError("invalid mediator or nuclear recoil kinematics")
+    ER_GeV = ER_keV * 1.0e-6
+    tA_GeV2 = -2.0 * mA_GeV * ER_GeV
+    return (mV_GeV * mV_GeV - tA_GeV2) ** 2
+
+
 def vmin_three_body_km_s(mchi: float, ms: float, mA: float, ER_keV: float) -> float:
     ER = ER_keV * 1.0e-6
     q = exact_qA_GeV(mA, ER_keV)
@@ -1109,6 +1118,9 @@ def fold(
                         max(response["pchip_linear_relative_difference"].values()),
                     )
                     tA_GeV2 = ER * ER - qA * qA
+                    tA_expected_GeV2 = -2.0 * mA * ER
+                    if not math.isclose(tA_GeV2, tA_expected_GeV2, rel_tol=2.0e-12, abs_tol=2.0e-18):
+                        raise ArithmeticError("q_A, E_R and m_A violate the exact nuclear mass-shell transfer")
                     tN_GeV2 = tA_GeV2
                     kernel = charge_kernel_from_coulomb_weight(
                         coulomb_result["L_C"], qA,
@@ -1116,9 +1128,8 @@ def fold(
                         form_factor_prescription,
                         tN_GeV2=tN_GeV2,
                     )
-                    # The propagator uses invariant t_A=-2*m_A*E_R, not spatial Q_A^2.
-                    tA_GeV2 = -2.0 * mA * ER
-                    denominator = (mV * mV - tA_GeV2) ** 2
+                    # The propagator uses invariant t_A, not spatial Q_A^2.
+                    denominator = mediator_denominator_squared_GeV4(mV, mA, ER_keV)
                     common = (
                         mA * coupling_product_squared
                         / (256.0 * math.pi**3 * pchi * pchi * denominator)
