@@ -9,8 +9,8 @@
 | Stage | Current state | Evidence / blocker |
 |---|---|---|
 | P3-B native AFH comparison | QUEUED / OPEN | [control run 44346207069](https://github.com/lm846802297-bit/research-compute-control/actions/runs/44346207069); self-hosted Windows/X64/research-gpu runner has no assigned runner |
-| P3-C response-level contraction | PROVISIONAL PASS | 28 pole-only rows; all total kernels positive; maximum spatial/charge ratio \(7.03050\times10^{-9}\) |
-| P3-C spatial amplitude subgate | PASS (provisional Python AFH) | Four Xe-131 Pole-width benchmarks; maximum helicity-vs-Cartesian residual \(6.09\times10^{-16}\) |
+| P3-C response-level contraction | PROVISIONAL / HISTORICAL NORMALIZATION | 28 pole-only rows; spatial/charge ratios are retained, but archived absolute coefficients used raw flavor sums and are not physical g_VN-normalized rates; effective-basis rerun required |
+| P3-C spatial amplitude subgate | STRUCTURAL PASS (provisional Python AFH; normalized rerun pending) | Four Xe-131 Pole-width benchmarks; relative helicity-vs-Cartesian residual is scale-invariant, but archived coefficient output used raw form factors |
 | P3-C full covariant nuclear amplitude | OPEN | Charge multipoles are not yet rank-resolved; independent coordinate-space bound-nucleus current and native AFH comparison remain required |
 | P4 native seven-isotope halo fold | PREPARED / BLOCKED | Native production input still waits for local MMA comparison |
 | P4 provisional seven-isotope halo fold | PRIOR WORKFLOW PASS; CURRENT B/C0 HEAD UNVALIDATED | Explicit source-translated AFH-8 + P3-B loader, hash/C0/Cauchy gates, Pole-only halo integration, exact Lorentz-invariant t_A mediator denominator; output remains provisional |
@@ -159,7 +159,7 @@ contraction and appends its JSON result to the
 
 ## Latest-head validation boundary (2026-11-19)
 
-The prior workflow set at commit \`cb89294c891cfa6ac7ffa52ba89065df84823c28\`
+The prior workflow set at commit `cb89294c891cfa6ac7ffa52ba89065df84823c28`
 passed the full-current regression, provisional P4 halo fold, fixed-speed
 charge-sector, and continuous-spectrum jobs. PR #67 has since received
 additional changes to the adopted B finite-\(t_N\) form factors, explicit
@@ -176,4 +176,4 @@ y_A=b_A^2Q_A^2/4.
 \]
 A is the zero-transfer nucleon-current reference with the same finite-size
 AFH \(W_M\); C is a separate \(\Phi''\) charge extension; D remains the
-full one-body-current target, not yet complete.full one-body-current target, not yet complete.
+full one-body-current target, not yet complete.
