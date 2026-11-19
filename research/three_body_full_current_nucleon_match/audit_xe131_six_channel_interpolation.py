@@ -128,11 +128,11 @@ def run_audit(
         kernels[f"{sector}_cheb10"] = sum(coeff[n] * cheb10_values[n] for n in names)
     kernels["full_pchip"] = kernels["charge_pchip"] + kernels["spatial_pchip"]
     kernels["full_cheb10"] = kernels["charge_cheb10"] + kernels["spatial_cheb10"]
-    pointlike_pchip = np.asarray([float(r["kernel_pointlike_M"]) for r in scan])
-    pointlike_coeff = pointlike_pchip / pchip_values["M"]
-    pointlike_cheb10 = pointlike_coeff * cheb10_values["M"]
-    kernels["full_over_pointlike_pchip"] = kernels["full_pchip"] / pointlike_pchip
-    kernels["full_over_pointlike_cheb10"] = kernels["full_cheb10"] / pointlike_cheb10
+    A_reference_pchip = np.asarray([float(r["kernel_A_reference_M"]) for r in scan])
+    A_reference_coeff = A_reference_pchip / pchip_values["M"]
+    A_reference_cheb10 = A_reference_coeff * cheb10_values["M"]
+    kernels["full_over_A_reference_pchip"] = kernels["full_pchip"] / A_reference_pchip
+    kernels["full_over_A_reference_cheb10"] = kernels["full_cheb10"] / A_reference_cheb10
 
     for sector in ("charge", "spatial", "full"):
         p, c = kernels[f"{sector}_pchip"], kernels[f"{sector}_cheb10"]
@@ -144,10 +144,10 @@ def run_audit(
             "worst_point": point_record(scan, rel, worst),
         }
     ratio_rel = np.abs(
-        kernels["full_over_pointlike_cheb10"] / kernels["full_over_pointlike_pchip"] - 1.0
+        kernels["full_over_A_reference_cheb10"] / kernels["full_over_A_reference_pchip"] - 1.0
     )
     ratio_worst = int(np.argmax(ratio_rel))
-    summaries["ratio_full_over_pointlike_M"] = {
+    summaries["ratio_D_over_A_reference"] = {
         "max_relative_pchip_vs_cheb10": float(ratio_rel[ratio_worst]),
         "worst_point": point_record(scan, ratio_rel, ratio_worst),
     }
@@ -181,11 +181,11 @@ def run_audit(
             item[f"K_{sector}_pchip"] = float(p)
             item[f"K_{sector}_cheb10"] = float(c)
             item[f"K_{sector}_cheb10_over_pchip_minus_1"] = float(c/p - 1.0)
-        item["full_over_pointlike_M_pchip"] = float(kernels["full_over_pointlike_pchip"][i])
-        item["full_over_pointlike_M_cheb10"] = float(kernels["full_over_pointlike_cheb10"][i])
-        item["full_over_pointlike_M_cheb10_over_pchip_minus_1"] = float(
-            kernels["full_over_pointlike_cheb10"][i] /
-            kernels["full_over_pointlike_pchip"][i] - 1.0
+        item["D_over_A_reference_pchip"] = float(kernels["full_over_A_reference_pchip"][i])
+        item["D_over_A_reference_cheb10"] = float(kernels["full_over_A_reference_cheb10"][i])
+        item["D_over_A_reference_cheb10_over_pchip_minus_1"] = float(
+            kernels["full_over_A_reference_cheb10"][i] /
+            kernels["full_over_A_reference_pchip"][i] - 1.0
         )
         output.append(item)
     write_csv(out_csv, output)
@@ -244,7 +244,7 @@ def main() -> None:
         "status": result["status"],
         "scan_rows": result["scan_rows"],
         "max_full_kernel_relative_difference": result["channel_summaries"]["kernel_full"]["max_relative_pchip_vs_cheb10"],
-        "max_full_over_pointlike_ratio_relative_difference": result["channel_summaries"]["ratio_full_over_pointlike_M"]["max_relative_pchip_vs_cheb10"],
+        "max_D_over_A_ratio_relative_difference": result["channel_summaries"]["ratio_D_over_A_reference"]["max_relative_pchip_vs_cheb10"],
         "max_charge_kernel_relative_difference": result["channel_summaries"]["kernel_charge"]["max_relative_pchip_vs_cheb10"],
         "max_spatial_kernel_relative_difference": result["channel_summaries"]["kernel_spatial"]["max_relative_pchip_vs_cheb10"],
     }, indent=2))
