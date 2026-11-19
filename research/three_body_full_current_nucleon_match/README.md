@@ -375,7 +375,7 @@ The coefficient identity
 C_{\Sigma'\Delta}^{(3)}
 =-2\sqrt{C_\Delta^{(3)}C_{\Sigma'}^{(3)}}
 \]
-holds for the stated sign convention and \(F_1(F_1+F_2)>0\). The nuclear
+holds for the stated sign convention and \(\widehat F_1^N(\widehat F_1^N+\widehat F_2^N)>0\). The nuclear
 responses themselves need not saturate their Cauchy--Schwarz bound.
 
 At this leading static order \(C_{\Sigma''}^{(3)}=0\) and
