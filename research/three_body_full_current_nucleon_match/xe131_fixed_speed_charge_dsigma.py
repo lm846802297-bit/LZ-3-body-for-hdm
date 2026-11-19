@@ -21,7 +21,7 @@ from pathlib import Path
 import numpy as np
 from scipy.interpolate import PchipInterpolator
 
-from nucleon_vector_form_factors import F1V0, charge_coefficients, isoscalar_zexp
+from nucleon_vector_form_factors import F1V0, charge_coefficients, form_factor_values
 from native_charge_sector_halo_fold import load_isotope_inputs
 from three_body_phase_space_tensor import integrate_spin_resolved_tensor
 
@@ -185,11 +185,11 @@ def interpolate_responses(bundle: dict, qA_GeV: float) -> dict:
 
 
 def charge_sector_kernels(
-    L_C: float, qA_GeV: float, responses: dict[str, float]
+    L_C: float, qA_GeV: float, responses: dict[str, float],
+    form_factor_prescription: str = "isoscalar_zexp",
 ) -> dict:
-    """Return finite-t_N M+Phi'' and pointlike M-only Coulomb-sector kernels."""
-    Q2 = qA_GeV * qA_GeV
-    F1, F2 = isoscalar_zexp(Q2)
+    """Return finite-t_N M+Phi'' and q=0-reference M-only Coulomb kernels."""
+    F1, F2 = form_factor_values(qA_GeV, form_factor_prescription)
     cM, cPhi = charge_coefficients(qA_GeV, F1=F1, F2=F2, mN_GeV=MN_GEV)
     WM, WPhi, WMPhi = responses["M"], responses["PhiPP"], responses["MPhiPP"]
     if WM <= 0.0:
@@ -215,6 +215,7 @@ def charge_sector_kernels(
         raise AssertionError("direct and factorized Coulomb-sector ratios disagree")
 
     return {
+        "form_factor_prescription": form_factor_prescription,
         "F1V_finite_t": F1,
         "F2V_finite_t": F2,
         "cM": cM,
@@ -292,7 +293,7 @@ def integrate_LC(
         "quadrature_points": int(result["quadrature_points"]),
         "order": {"nw": nw, "nz": nz, "nphi": nphi},
     }
-def run(afh_csv: Path) -> dict:
+def run(afh_csv: Path, form_factor_prescription: str = "isoscalar_zexp") -> dict:
     bundle, provenance = load_native_xe131_responses(afh_csv)
     results = []
     for ER_keV, (delta_m, medium_order, high_order) in BENCHMARKS.items():
@@ -311,8 +312,12 @@ def run(afh_csv: Path) -> dict:
                     f"phase-space medium/high convergence failed: ER={ER_keV}, "
                     f"width={width}, LC={convergence_LC:.6g}, L00={convergence_L00:.6g}"
                 )
-            kernels = charge_sector_kernels(high["L_C"], qA, high_response)
-            linear_kernels = charge_sector_kernels(high["L_C"], qA, linear_response)
+            kernels = charge_sector_kernels(
+                high["L_C"], qA, high_response, form_factor_prescription
+            )
+            linear_kernels = charge_sector_kernels(
+                high["L_C"], qA, linear_response, form_factor_prescription
+            )
             width_rows.append({
                 "width_scheme": width,
                 "g2": G2,
@@ -423,9 +428,10 @@ def run(afh_csv: Path) -> dict:
             "recoil_momentum_convention": "q_A=sqrt(2*m_A*E_R+E_R^2)",
             "nucleon_invariant_convention": "t_N=-|q_A|^2 in the static impulse matching",
         },
-        "form_factor_prescription": (
-            "central isoscalar_zexp diagnostic from nucleon_vector_form_factors.py; "
-            "not a final validated universal finite-Q^2 u+d+s input"
+        "form_factor_prescription": form_factor_prescription,
+        "form_factor_status": (
+            "finite-Q2 diagnostic only; exact legacy universal u+d+s input and "
+            "its provenance remain to be pinned"
         ),
         "results": results,
         "limitations": [
@@ -440,8 +446,12 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--afh-csv", type=Path, required=True)
     parser.add_argument("--out", type=Path, required=True)
+    parser.add_argument(
+        "--form-factor", choices=("bishara_linear", "isoscalar_zexp"),
+        default="isoscalar_zexp",
+    )
     args = parser.parse_args()
-    result = run(args.afh_csv)
+    result = run(args.afh_csv, args.form_factor)
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     print(json.dumps({
