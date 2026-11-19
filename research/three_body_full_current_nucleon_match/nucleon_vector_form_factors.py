@@ -19,9 +19,16 @@ Two diagnostic finite-Q^2 prescriptions are provided:
    strange Pauli form factor is kept at its q=0 value because the cited
    Bishara input does not provide a finite-Q^2 F2^s curve.
 
-Neither prescription is the final model-specific finite-t form factor.
-They are controlled diagnostics for the size of the form-factor effect
-relative to the old pointlike F1(0)=3, F2(0)=-0.552 benchmark.
+Neither prescription is established as the exact legacy/model-specific
+finite-t form factor. They are controlled diagnostics for the size of the
+form-factor effect relative to the q=0 nucleon-current anchor
+F1(0)=3, F2(0)=-0.552.
+
+The q=0 anchor is not a point-nucleus approximation: the AFH nuclear
+response still carries finite nuclear structure. Only the nucleon
+Dirac-Pauli form factors are frozen at zero transfer. For any AFH
+correction, the primary denominator must be the M-only result evaluated
+with the same finite-t F1,F2 prescription.
 """
 
 from __future__ import annotations
