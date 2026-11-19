@@ -37,8 +37,11 @@ if str(sys_path) not in sys.path:
 from nucleon_vector_form_factors import (  # noqa: E402
     F1V0,
     F2V0,
+    F1N0,
+    F2N0,
     bishara_linear,
     isoscalar_zexp,
+    effective_nucleon_form_factors,
     charge_coefficients,
 )
 from three_body_phase_space_tensor import integrate_spin_resolved_tensor  # noqa: E402
@@ -452,27 +455,36 @@ def interpolate_native_response(
     }
 
 
-def form_factor_values(
+def quark_form_factor_values(
     qA_GeV: float,
     prescription: str,
     *,
     tN_GeV2: float | None = None,
 ) -> tuple[float, float]:
-    """Evaluate F1,F2 at Q_N^2=-t_N.
-
-    If tN_GeV2 is omitted, use the static diagnostic q_N^0=0,
-    Q_N^2=|q_A|^2. Formal one-body impulse calls pass t_N=t_A.
-    """
+    """Return raw flavor-summed F1,F2 for the universal u+d+s current."""
     Q2 = qA_GeV * qA_GeV if tN_GeV2 is None else -float(tN_GeV2)
     if Q2 < 0.0 or not math.isfinite(Q2):
         raise ValueError("nucleon form-factor Q_N^2 must be finite and non-negative")
-    if prescription in ("q0_anchor", "pointlike"):
+    if prescription == "q0_anchor":
         return F1V0, F2V0
     if prescription == "bishara_linear":
         return bishara_linear(Q2)
     if prescription == "isoscalar_zexp":
         return isoscalar_zexp(Q2)
     raise ValueError(f"unknown form-factor prescription: {prescription}")
+
+
+def form_factor_values(
+    qA_GeV: float,
+    prescription: str,
+    *,
+    tN_GeV2: float | None = None,
+) -> tuple[float, float]:
+    """Return effective Fhat_i=F_i^{uds}/3 for the external g_VN basis."""
+    raw = quark_form_factor_values(
+        qA_GeV, prescription, tN_GeV2=tN_GeV2
+    )
+    return effective_nucleon_form_factors(*raw)
 
 
 def charge_kernel_from_coulomb_weight(
@@ -483,60 +495,70 @@ def charge_kernel_from_coulomb_weight(
     *,
     tN_GeV2: float | None = None,
 ) -> dict:
-    """Build M + Phi'' charge-multipole terms from the continuity-reduced L_C."""
+    """Build the B baseline and the separate C charge-multipole extension.
+
+    B = c_M(Fhat_1,Fhat_2;t_N)^2 L_C W_M(y_A), with only the AFH M response.
+    C adds Phi'' and signed M-Phi'' terms at the same nucleon form factors.
+    The public prefactor is expressed with g_VN=3*g_Vq, so Fhat_i=F_i^{uds}/3.
+    """
     if not math.isfinite(L_C) or L_C < 0.0:
         raise ValueError(f"invalid continuity-adjusted Coulomb weight L_C={L_C}")
     tN_used = -qA_GeV * qA_GeV if tN_GeV2 is None else float(tN_GeV2)
-    F1, F2 = form_factor_values(
+    F1_quark, F2_quark = quark_form_factor_values(
         qA_GeV, form_factor_prescription, tN_GeV2=tN_used
     )
+    F1, F2 = effective_nucleon_form_factors(F1_quark, F2_quark)
     cM, cPhi = charge_coefficients(
         qA_GeV, F1=F1, F2=F2, tN_GeV2=tN_GeV2
     )
-    C_M = cM * cM * L_C
-    C_PhiPP = cPhi * cPhi * L_C
-    C_MPhiPP = 2.0 * cM * cPhi * L_C
-    terms = {
-        "M": C_M * responses["M"],
-        "PhiPP": C_PhiPP * responses["PhiPP"],
-        "MPhiPP": C_MPhiPP * responses["MPhiPP"],
-    }
-    charge = sum(terms.values())
-    q0_M_reference = (F1V0 * F1V0) * L_C * responses["M"]
-    finite_t_M = (cM * cM) * L_C * responses["M"]
-    relative_charge_vs_q0 = (
-        charge / q0_M_reference - 1.0 if q0_M_reference != 0.0 else math.nan
-    )
-    relative_finite_vs_q0 = (
-        finite_t_M / q0_M_reference - 1.0 if q0_M_reference != 0.0 else math.nan
-    )
-    relative_charge_vs_finite = (
-        charge / finite_t_M - 1.0 if finite_t_M != 0.0 else math.nan
-    )
+    WM = float(responses["M"])
+    WPhi = float(responses["PhiPP"])
+    WMPhi = float(responses["MPhiPP"])
+    if WM <= 0.0:
+        raise ValueError(f"non-positive native W_M at q_A={qA_GeV:.12g} GeV")
+    if not math.isfinite(L_C) or L_C < 0.0:
+        raise ValueError("invalid continuity-adjusted Coulomb weight L_C")
+
+    A_reference_M = F1N0 * F1N0 * L_C * WM
+    B_baseline_M = cM * cM * L_C * WM
+    C_M = B_baseline_M
+    C_PhiPP = cPhi * cPhi * L_C * WPhi
+    C_MPhiPP = 2.0 * cM * cPhi * L_C * WMPhi
+    terms = {"M_B": C_M, "PhiPP": C_PhiPP, "MPhiPP": C_MPhiPP}
+    C_charge_extension = sum(terms.values())
+    relative_C_vs_A = C_charge_extension / A_reference_M - 1.0
+    relative_B_vs_A = B_baseline_M / A_reference_M - 1.0
+    relative_C_vs_B = C_charge_extension / B_baseline_M - 1.0
+
     return {
-        "F1V": F1,
-        "F2V": F2,
+        "form_factor_prescription": form_factor_prescription,
+        "F1V_quark_sum": F1_quark,
+        "F2V_quark_sum": F2_quark,
+        "F1N_effective": F1,
+        "F2N_effective": F2,
         "tN_GeV2": tN_used,
         "Q_N2_GeV2": -tN_used,
         "nucleon_transfer_scheme": (
-            "strict one-body impulse" if tN_GeV2 is not None else "static q_N^0=0 diagnostic"
+            "strict one-body impulse q_N^mu=q_A^mu"
+            if tN_GeV2 is not None else "static q_N^0=0 diagnostic"
         ),
         "cM": cM,
         "cPhiPP": cPhi,
         "L_C": float(L_C),
         "terms": terms,
-        "charge_sector": charge,
-        "original_AFH_M_baseline": q0_M_reference,
-        "q0_M_reference": q0_M_reference,
-        # Legacy alias: AFH W_M(Q_A) is retained, so this is not a point nucleus.
-        "pointlike_M": q0_M_reference,
-        "finite_t_M": finite_t_M,
-        "relative_charge_vs_q0_M_reference": relative_charge_vs_q0,
-        "relative_finite_t_M_vs_q0_M_reference": relative_finite_vs_q0,
-        "relative_charge_vs_finite_t_M": relative_charge_vs_finite,
-        "relative_charge_vs_pointlike_M": relative_charge_vs_q0,
-        "relative_finite_t_M_vs_pointlike_M": relative_finite_vs_q0,
-        "relative_phi_vs_finite_t_M": relative_charge_vs_finite,
+        "baseline_A_original_AFH_M": A_reference_M,
+        "baseline_B_finite_tN_M": B_baseline_M,
+        "extension_C_MplusPhiPP": C_charge_extension,
+        "original_AFH_M_baseline": A_reference_M,
+        "q0_M_reference": A_reference_M,
+        "finite_t_M": B_baseline_M,
+        "charge_sector": C_charge_extension,
+        "relative_B_vs_A": relative_B_vs_A,
+        "relative_C_vs_A": relative_C_vs_A,
+        "relative_C_vs_B": relative_C_vs_B,
+        # Backward-compatible, explicitly deprecated field names for old readers.
+        "pointlike_M_DEPRECATED_ALIAS": A_reference_M,
+        "relative_charge_vs_pointlike_M_DEPRECATED_ALIAS": relative_C_vs_A,
     }
 
 
