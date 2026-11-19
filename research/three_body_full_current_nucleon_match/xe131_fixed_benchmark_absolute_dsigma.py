@@ -421,7 +421,10 @@ def run(afh_csv: Path, outdir: Path) -> dict:
         "nuclear_response": {
             "source": "AFH DMFormFactor v6.0 native Wolfram 14.2.0",
             "responses": ["M", "PhiPP", "MPhiPP"],
-            "normalization": "physical equal-proton/neutron; factor four applied exactly once",
+            "normalization": (
+                "native physical equal-proton/neutron columns include factor four once; "
+                "loader applies common OBDME C0 once to all three charge responses"
+            ),
             "interpolation": "PCHIP on provenance-pinned 2401-point q grid",
             "finite_tN_form_factors": "adopted Bishara-linear raw u+d+s F1 slope plus constant raw F2 anchor; both divided by three in the external-gVN effective nucleon basis",
             "native_provenance": provenance,
