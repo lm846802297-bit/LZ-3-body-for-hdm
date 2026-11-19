@@ -1,0 +1,89 @@
+{
+  "status": "PASS",
+  "calculation": "LZ 2026 final-WIMP-search-ROI efficiency fold of AFH-7 and Hybrid-9 natural-xenon spectra",
+  "input_files": {
+    "spectrum_csv": "artifacts/B-absolute/sufian2017_unit_current/afh_hybrid9_B_natural_xenon_spectrum.csv",
+    "spectrum_csv_sha256": "a9427eb6909f3a1ec03f0bb75bbffc4ac7729e56bb8e97b366316878afeb38bd",
+    "spectrum_metadata_json": "artifacts/B-absolute/sufian2017_unit_current/metadata.json",
+    "spectrum_metadata_sha256": "fa95b5e164da694f37d88415d8c0986d40b7b42709eb218c8f555c2486cdaf2b",
+    "efficiency_csv": "research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv",
+    "efficiency_csv_sha256": "a0917cd29eef20fbbdc9383b81012f4bd9a669859779e39a8b6ccf47dd8a47ed",
+    "efficiency_metadata_json": "research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_metadata.json",
+    "efficiency_metadata_sha256": "79cc439938dab45435cfa19f779f5856c2c7d28154f6a92a87d60c4cc7d94a24",
+    "afh_source_file": "v6/dmformfactor-V6.m",
+    "afh_source_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+    "isotope_weights_sha256": null,
+    "afh_response_grid_sha256": null
+  },
+  "source_response_convention": "AFH direct finite-sum at exact spatial q; PCHIP grid is diagnostic only; Helm fallback is separate",
+  "source_response_evaluation": null,
+  "selected_scenarios": {
+    "AFH-7": "AFH v6.0 default-density responses for Xe-128, Xe-129, Xe-130, Xe-131, Xe-132, Xe-134 and Xe-136; Xe-124/Xe-126 omitted without renormalizing the remaining natural abundances.",
+    "Hybrid-9 (AFH-7 + Helm-2)": "AFH v6.0 for the seven supported isotopes; Helm is used only as an explicitly labelled fallback for Xe-124 and Xe-126."
+  },
+  "benchmark_parameters": {
+    "red_ms200_dm1": {
+      "ms_MeV": 0.2,
+      "delta_m_MeV": 1.0
+    },
+    "green_ms300_dm1": {
+      "ms_MeV": 0.3,
+      "delta_m_MeV": 1.0
+    },
+    "black_ms360_dm1": {
+      "ms_MeV": 0.36,
+      "delta_m_MeV": 1.0
+    },
+    "blue_ms300_dm10": {
+      "ms_MeV": 0.3,
+      "delta_m_MeV": 10.0
+    }
+  },
+  "recoil_grid_points_per_group": 84,
+  "output_rows": 8,
+  "roi_keV": [
+    5.4,
+    269.9
+  ],
+  "candidate_tail_diagnostic": {
+    "candidate_energy_keV": 248.0,
+    "candidate_statistical_uncertainty_keV": 23.0,
+    "integration_interval_keV": [
+      225.0,
+      269.9
+    ],
+    "upper_edge_clipped_by_search_roi": true,
+    "systematic_energy_uncertainty_used": false,
+    "energy_resolution_smearing_used": false,
+    "interpretation": "spectral-shape diagnostic only; not an event likelihood"
+  },
+  "exposure_tonne_year": 2.84,
+  "exposure_kg_day": 1037310.0,
+  "efficiency_source": "LZ 2026 Fig. S2 digitized central final WIMP-search ROI NR efficiency and gray envelope",
+  "efficiency_envelope_treatment": "gray detector-systematic range; no confidence level assigned by LZ",
+  "integration_method": "exact analytic integral of piecewise-linear rate times piecewise-linear efficiency over the union of their knots",
+  "dense_trapezoid_crosscheck_steps": 10000,
+  "maximum_dense_trapezoid_relative_difference_vs_exact": 3.584516587995523e-07,
+  "maximum_dense_trapezoid_refinement_relative_difference": 2.1381428094713328e-07,
+  "abundance_renormalization": "none",
+  "limitations": [
+    "AFH-7 omits Xe-124 and Xe-126 because official AFH v6.0 default density matrices are unavailable; remaining natural abundances are not renormalized",
+    "Hybrid-9 uses Helm only for Xe-124 and Xe-126; those two contributions are not AFH results",
+    "source spectra reuse the archived three-body kernel and natural-xenon halo fold; this script recomputes neither",
+    "the efficiency gray envelope has no confidence level assigned by LZ",
+    "no NEST S1c/log10(S2c) PDFs or nuisance covariance",
+    "no energy-resolution smearing or event-by-event reconstructed-energy response",
+    "no background model, profile likelihood or confidence-level construction",
+    "not a 90% confidence-level exclusion and not an official LZ likelihood"
+  ],
+  "detector_level_scope": {
+    "efficiency_applied": true,
+    "energy_resolution_smearing_applied": false,
+    "two_dimensional_signal_pdf_applied": false,
+    "background_likelihood_applied": false,
+    "is_exclusion_limit": false
+  },
+  "source_commit": "5781c7245f8415d25e00d4282cb1f1d45a07dae9",
+  "output_csv": "artifacts/B-detector/sufian2017_unit_current/lz_2026_afh7_hybrid9_rate_level_event_yields.csv",
+  "output_csv_sha256": "98643ee484ce051de5d015ac0056591a647153ce2cdaa800319d675cb8883292"
+}
