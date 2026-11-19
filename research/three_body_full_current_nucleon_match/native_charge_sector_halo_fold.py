@@ -547,6 +547,13 @@ def charge_kernel_from_coulomb_weight(
         "cPhiPP": cPhi,
         "L_C": float(L_C),
         "terms": terms,
+        "baseline_A_original_AFH_M": A_reference_M,
+        "baseline_B_finite_tN_M": B_baseline_M,
+        "extension_C_MplusPhiPP": C_charge_extension,
+        "relative_B_vs_A": relative_B_vs_A,
+        "relative_C_vs_A": relative_C_vs_A,
+        "relative_C_vs_B": relative_C_vs_B,
+        # Explicit compatibility aliases for historical readers; do not use in new outputs.
         "AFH_finite_size_M_baseline": A_reference_M,
         "nucleon_q0_M_only": A_reference_M,
         "nucleon_finite_t_M_only": B_baseline_M,
@@ -919,9 +926,9 @@ def fold(
                         mA * coupling_product_squared
                         / (256.0 * math.pi**3 * pchi * pchi * denominator)
                     )
-                    halo_charge += float(w) * fv * beta * common * kernel["charge_M_PhiPP"]
-                    halo_A_reference += float(w) * fv * beta * common * kernel["AFH_finite_size_M_baseline"]
-                    halo_B_baseline += float(w) * fv * beta * common * kernel["nucleon_finite_t_M_only"]
+                    halo_charge += float(w) * fv * beta * common * kernel["extension_C_MplusPhiPP"]
+                    halo_A_reference += float(w) * fv * beta * common * kernel["baseline_A_original_AFH_M"]
+                    halo_B_baseline += float(w) * fv * beta * common * kernel["baseline_B_finite_tN_M"]
                     if include_leading_static_vector_candidate:
                         candidate = leading_static_vector_current_kernel_from_tensor(
                             coulomb_result["L_q_aligned_real_imag"],
@@ -967,15 +974,19 @@ def fold(
                 isotope_row = {
                     "A": A, "abundance": xA, "open": True,
                     "mA_GeV": mA, "qA_GeV": qA, "vmin_km_s": vmin,
-                    "AFH_finite_size_M_baseline_halo_integral": halo_A_reference,
-                    "nucleon_finite_t_M_only_halo_integral": halo_B_baseline,
-                    "charge_M_PhiPP_halo_integral": halo_charge,
-                    "relative_nucleon_FF_vs_AFH_finite_size_baseline": halo_B_baseline / halo_A_reference - 1.0
+                    "baseline_A_original_AFH_M_halo_integral": halo_A_reference,
+                    "baseline_B_finite_tN_M_halo_integral": halo_B_baseline,
+                    "extension_C_MplusPhiPP_halo_integral": halo_charge,
+                    "relative_B_vs_A": halo_B_baseline / halo_A_reference - 1.0
                     if halo_A_reference else math.nan,
-                    "relative_charge_M_PhiPP_vs_AFH_finite_size_baseline": halo_charge / halo_A_reference - 1.0
+                    "relative_C_vs_A": halo_charge / halo_A_reference - 1.0
                     if halo_A_reference else math.nan,
-                    "relative_charge_M_PhiPP_vs_nucleon_finite_t_M_only": halo_charge / halo_B_baseline - 1.0
+                    "relative_C_vs_B": halo_charge / halo_B_baseline - 1.0
                     if halo_B_baseline else math.nan,
+                    # Compatibility aliases; canonical A/B/C fields above are authoritative.
+                    "AFH_finite_size_M_baseline_halo_integral_LEGACY": halo_A_reference,
+                    "nucleon_finite_t_M_only_halo_integral_LEGACY": halo_B_baseline,
+                    "charge_M_PhiPP_halo_integral_LEGACY": halo_charge,
                     "max_pchip_linear_response_difference": max_interp_difference,
                     "max_abs_charge_continuity_relative_correction": max_abs_continuity_correction,
                     "max_continuity_identity_relative_residual": max_continuity_identity_residual,
@@ -988,11 +999,11 @@ def fold(
                         "relative_spatial_candidate_vs_C_extension": (
                             halo_spatial_candidate / halo_charge if halo_charge else math.nan
                         ),
-                        "relative_full_candidate_vs_AFH_finite_size_M_baseline": (
+                        "relative_full_candidate_vs_A": (
                             halo_full_candidate / halo_A_reference - 1.0
                             if halo_A_reference else math.nan
                         ),
-                        "relative_full_candidate_vs_nucleon_finite_t_M_only": (
+                        "relative_full_candidate_vs_B": (
                             halo_full_candidate / halo_B_baseline - 1.0
                             if halo_B_baseline else math.nan
                         ),
@@ -1013,15 +1024,15 @@ def fold(
 
                 isotope_rows.append(isotope_row)
             total_charge = sum(
-                r.get("abundance", 0.0) * r.get("charge_M_PhiPP_halo_integral", 0.0)
+                r.get("abundance", 0.0) * r.get("extension_C_MplusPhiPP_halo_integral", 0.0)
                 for r in isotope_rows
             )
             total_A_reference = sum(
-                r.get("abundance", 0.0) * r.get("AFH_finite_size_M_baseline_halo_integral", 0.0)
+                r.get("abundance", 0.0) * r.get("baseline_A_original_AFH_M_halo_integral", 0.0)
                 for r in isotope_rows
             )
             total_B_baseline = sum(
-                r.get("abundance", 0.0) * r.get("nucleon_finite_t_M_only_halo_integral", 0.0)
+                r.get("abundance", 0.0) * r.get("baseline_B_finite_tN_M_halo_integral", 0.0)
                 for r in isotope_rows
             )
             total_rate = rate_factor * total_charge
@@ -1030,14 +1041,14 @@ def fold(
             row = {
                 "ER_keV": ER_keV,
                 "halo_model": halo_name,
-                "rate_nucleon_finite_t_M_only_events_kg_day_keV": B_baseline_rate,
-                "rate_AFH_finite_size_M_baseline_events_kg_day_keV": A_reference_rate,
-                "rate_charge_M_PhiPP_events_kg_day_keV": total_rate,
-                "relative_nucleon_FF_vs_AFH_finite_size_baseline": B_baseline_rate / A_reference_rate - 1.0
+                "rate_B_baseline_M_events_kg_day_keV": B_baseline_rate,
+                "rate_A_original_AFH_M_events_kg_day_keV": A_reference_rate,
+                "rate_C_charge_extension_events_kg_day_keV": total_rate,
+                "relative_B_vs_A": B_baseline_rate / A_reference_rate - 1.0
                 if A_reference_rate else math.nan,
-                "relative_charge_M_PhiPP_vs_AFH_finite_size_baseline": total_rate / A_reference_rate - 1.0
+                "relative_C_vs_A": total_rate / A_reference_rate - 1.0
                 if A_reference_rate else math.nan,
-                "relative_charge_M_PhiPP_vs_nucleon_finite_t_M_only": total_rate / B_baseline_rate - 1.0
+                "relative_C_vs_B": total_rate / B_baseline_rate - 1.0
                 if B_baseline_rate else math.nan,
                 "open_abundance_fraction": sum(
                     r["abundance"] for r in isotope_rows if r.get("open")
@@ -1061,10 +1072,10 @@ def fold(
                     "relative_spatial_candidate_vs_C_extension": (
                         total_spatial / total_charge if total_charge else math.nan
                     ),
-                    "relative_full_candidate_vs_AFH_finite_size_M_baseline": (
+                    "relative_full_candidate_vs_A": (
                         full_rate / A_reference_rate - 1.0 if A_reference_rate else math.nan
                     ),
-                    "relative_full_candidate_vs_nucleon_finite_t_M_only": (
+                    "relative_full_candidate_vs_B": (
                         full_rate / B_baseline_rate - 1.0 if B_baseline_rate else math.nan
                     ),
                     "minimum_spatial_candidate_kernel": min(
