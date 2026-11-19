@@ -109,7 +109,7 @@ def run(tensor_path,spatial_dir,contraction_path,weights_path):
         interp[J]=(q,d,s,PchipInterpolator(q,d),PchipInterpolator(q,s))
     iso=next(x for x in meta["isotope_metadata"] if int(x["A"])==131)
     C0=float(iso["common_matrix_normalization"]); JA=float(iso["J_A"])
-    f1=float(weights["form_factor_input"]["F1V"]); f2=float(weights["form_factor_input"]["F2V"]); mN=float(weights["form_factor_input"]["mN_GeV"])
+    f1=float(weights["form_factor_input"]["F1N_effective"]); f2=float(weights["form_factor_input"]["F2N_effective"]); mN=float(weights["form_factor_input"]["mN_GeV"])
     targets={(x["benchmark"],int(x["A"])):x for x in contraction["benchmarks"]}
     out=[]
     for b in phase["benchmarks"]:
