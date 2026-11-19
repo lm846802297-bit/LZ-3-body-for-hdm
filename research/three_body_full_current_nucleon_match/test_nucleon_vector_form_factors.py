@@ -30,7 +30,7 @@ class VectorFormFactorTests(unittest.TestCase):
         self.assertAlmostEqual(c_phi, 0.0, places=12)
 
     def test_selected_xe131_charge_benchmark_is_finite(self):
-        row = ff.pointlike_baseline_correction(
+        row = ff.q0_anchor_baseline_correction(
             0.256271868,
             115.8894642,
             -1.46249,
@@ -38,12 +38,15 @@ class VectorFormFactorTests(unittest.TestCase):
         )
         self.assertTrue(math.isfinite(row["F1V"]))
         self.assertTrue(math.isfinite(row["F2V"]))
-        self.assertTrue(math.isfinite(row["relative_to_pointlike_M"]))
-        self.assertLess(row["relative_to_pointlike_M"], -0.2)
-        self.assertGreater(row["relative_to_pointlike_M"], -0.4)
+        self.assertTrue(math.isfinite(row["relative_to_q0_M_reference"]))
+        self.assertLess(row["relative_to_q0_M_reference"], -0.2)
+        self.assertGreater(row["relative_to_q0_M_reference"], -0.4)
+        self.assertAlmostEqual(
+            row["relative_to_q0_M_reference"], row["relative_to_pointlike_M"], places=14
+        )
 
     def test_phi_relative_correction_remains_small(self):
-        row = ff.pointlike_baseline_correction(
+        row = ff.q0_anchor_baseline_correction(
             0.256271868,
             115.8894642,
             -1.46249,
