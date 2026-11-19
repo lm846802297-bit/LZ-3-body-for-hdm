@@ -404,99 +404,58 @@ are zero-momentum anchors rather than finite-\(t_N\) functions. No
 recoil-grid scan, natural-abundance sum, halo fold, detector response, or
 likelihood is included.
 
-## 7. Finite-t_N form-factor effect: a separate and potentially larger correction
+## 7. Finite-\(t_N\) nucleon form factors and the correct AFH baseline
 
-The old (W_M)-only baseline treats the universal light-quark nucleon
-current as pointlike when the reference nucleon coupling is written as
-(g_{VN}=3g_{Vq}). The complete Dirac--Pauli matching instead requires
-(F_1^V(t_N)) and (F_2^V(t_N)).
+The coherent nuclear response \(W_M\) already contains finite nuclear structure.
+A calculation with \(F_1^V(0),F_2^V(0)\) is therefore a **zero-transfer
+nucleon-current anchor**, not a point-nucleus calculation and not necessarily
+the original physical benchmark.
 
-Bishara et al. give the proton flavor-separated Dirac slopes
-[
-F_1^{u/p\,\prime}(0)=5.57(9),quad
-F_1^{d/p\,\prime}(0)=2.84(5),quad
-F_1^{s/p\,\prime}(0)=-0.018(9) {\rm GeV}^{-2},
-]
-so the universal light-flavor sum has the diagnostic slope
-[
-F_1^{V\,\prime}(0)=8.392(0.137) {\rm GeV}^{-2}.
-]
-The same input gives (F_2^{s/p}(0)=-0.064(17)) and the total
-(F_2^V(0)=-0.552). These are low-(Q^2) matching inputs, not a complete
-finite-(t_N) form-factor model.
+For a consistent response comparison, hold the finite-\(t_N\) nucleon
+form factors fixed in numerator and denominator:
 
-The script `nucleon_vector_form_factors.py` provides two diagnostics:
-the Bishara linear (F_1) slope benchmark and a central reconstruction from
-the isoscalar proton+neutron electromagnetic z expansion of
-Borah--Hill--Lee--Tomalak, supplemented by the strange (F_1) slope and
-(F_2^s(0)). Neither is the final model-specific finite-(Q^2) input.
+\[
+R_{t_N,M}\propto c_M(t_N)^2W_M,
+\qquad
+R_{\rm charge}\propto c_M^2W_M+
+c_{\Phi''}^2W_{\Phi''}+2c_Mc_{\Phi''}W_{M\Phi''}.
+\]
 
-At Xe-131 (E_R=200) keV, the native AFH grid gives
-(q_A=0.220930602) GeV and
-[
-\frac{W_{\Phi''}}{W_M}=0.0371914,qquad
-\frac{W_{M\Phi''}}{W_M}=-0.191819.
-]
-The central finite-(t_N) diagnostic gives
-[
-F_1^V=2.66287,qquad F_2^V=-0.46800,
-]
-and the charge-sector correction is
-[
-\boxed{delta_{\Phi''}^{\rm finite-t_N}=-0.346\%},
-qquad
-\boxed{delta_{\rm charge}^{\rm pointlike}=-21.5\%}.
-]
+The primary correction is \(R_{\rm charge}/R_{t_N,M}-1\). The
+\(F_1^V(0)=3,\ F_2^V(0)=-0.552\) \(M\)-only result is retained as a
+secondary normalization reference only.
 
-At the Xe-131 (W_M) cancellation region around (E_R=267) keV,
-(q_A=0.255146957) GeV, the native AFH grid gives
-[
-\frac{W_{\Phi''}}{W_M}=19.6361,qquad
-\frac{W_{M\Phi''}}{W_M}=-4.23930.
-]
-The pointlike (M+\Phi'') charge correction is then
-[
-\boxed{delta_{\Phi''}^{\rm pointlike}=-9.68\%}.
-]
-With the central finite-(t_N) form-factor diagnostic,
-[
-F_1^V=2.56389,qquad F_2^V=-0.44977,
-]
-and the total charge-sector change relative to the old pointlike
-(F_1^V(0)^2W_M) baseline is
-[
-\boxed{delta_{\rm charge}^{\rm pointlike}=-34.2\%}.
-]
+The current Python engine compares two finite-\(Q_N^2\) diagnostics:
 
-The \(-21.5\%\) and \(-34.2\%\) total-charge figures above are legacy \(F_1^2\)-normalization diagnostics. The updated matched-\(c_M\) fixed-speed result in Section 8 supersedes them for the coherent-charge ratio: \(0.77830934\) \((-22.1691\%)\) at 200 keV and \(0.64921591\) \((-35.0784\%)\) at 267 keV, relative to pointlike \(9W_M\).
+- bishara_linear: \(F_1^V(Q_N^2)=3-8.392Q_N^2\), with \(F_2^V\) held at
+  \(-0.552\); this is the first-order low-\(Q_N^2\) flavor-separated
+  Dirac-slope approximation.
+- isoscalar_zexp: a central isoscalar electromagnetic Sachs \(z\)-expansion
+  reconstruction with the strange-current inputs.
 
-The last number is **Xe-131 only**. It must not be promoted to a natural-xenon
-spectrum because the native Mathematica pointwise validation currently covers
-Xe-131 (M,Phi'',MPhi''), whereas the seven-isotope spatial-response
-translation is still a provisional Python AFH database.
+Neither is silently identified with the exact legacy low-order quark
+shape-factor input. Its original source and coefficients still need to be
+pinned.
 
-The hierarchy established by the present calculations is therefore:
+The Xe-131 fixed-speed Pole-width calculation gives:
 
-1. The spatial (Delta,Sigma',Sigma'') sector is tiny:
-   (<7.1\times10^{-9}) of the charge sector in the tested fixed-speed
-   contractions.
-2. The explicit (Phi'') correction is normally small away from a deep
-   (W_M) cancellation, but can reach (mathcal O(10\%)) locally near
-   the Xe-131 cancellation.
-3. The finite-(t_N) coherent charge normalization can change the old
-   pointlike (W_M)-only prediction by tens of percent.
+| \(E_R\) | Prescription | \(R_{t_N,M}/R_{q=0,M}\) | \(R_{\rm charge}/R_{t_N,M}\) | \(R_{\rm charge}/R_{q=0,M}\) |
+|---:|---|---:|---:|---:|
+| 200 keV | bishara_linear | 0.739883 | 0.996955 | 0.737630 |
+| 200 keV | isoscalar_zexp | 0.780997 | 0.996558 | 0.778309 |
+| 267 keV | bishara_linear | 0.662175 | 0.914637 | 0.605649 |
+| 267 keV | isoscalar_zexp | 0.721663 | 0.899610 | 0.649216 |
 
-Therefore the final natural-xenon spectrum must be built in the order
-[
-W_M^{\rm pointlike}
-;\rightarrow;
-(M+\Phi'')^{\rm finite-t_N}
-;\rightarrow;
-(\Delta,\Sigma',\Sigma'')^{\rm finite-t_N},
-]
-with each isotope evaluated using its own exact (q_A), and without mixing
-the native Xe-131 response grid with the provisional seven-isotope AFH
-translation.
+The finite-\(Q_N^2\) normalization changes the \(M\)-only kernel by
+approximately 22–34% relative to the \(q=0\) reference. Once that effect is
+factored out, the additional \(\Phi''\) plus signed \(M-\Phi''\)
+interference changes the charge sector by only 0.30–0.34% at 200 keV,
+but by 8.54–10.04% at 267 keV. The larger effect near 267 keV is associated
+with the \(W_M\) diffraction minimum.
+
+These are fixed-speed Xe-131 charge-sector results. They do not include
+the validated spatial-current response or a natural-xenon halo fold.
+
 
 ## 8. Leading AFH response content and remaining work
 
