@@ -150,9 +150,9 @@ The historical 0.778/0.649 values are not interchangeable with 0.9966/0.8996.
 The current `paper-source/main.tex` was reopened and checked against the
 adopted B convention.
 
-A separate conversation-uploaded \`main.tex\` was also inspected. It is a
+A separate conversation-uploaded `main.tex` was also inspected. It is a
 different, longer manuscript version and is **not** the same file as the
-repository's \`paper-source/main.tex\`. The uploaded version still uses
+repository's `paper-source/main.tex`. The uploaded version still uses
 \(m_N\) as the nuclear mass in the recoil section, reuses \(m_N\) for the
 generic point-target derivation, calls the whole-nucleus shape \(F_N(q)\),
 and writes the raw AFH response while asserting \(A^2\) normalization
