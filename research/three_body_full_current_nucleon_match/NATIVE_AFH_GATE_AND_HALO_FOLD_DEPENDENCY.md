@@ -130,12 +130,14 @@ The archive checks:
   \`6d199ac9fd4d7fdace93292d1dded1c98d9f49c2836244ee9d2e3ddd334e8333\`.
 
 The fixed-speed Xe-131 result is a Coulomb-sector ratio only, not a halo
-fold or a substitute for the seven-isotope/eight-response gate. The q=0
-nucleon-form-factor M-only result is now a secondary normalization
-reference; the primary AFH correction uses the finite-\(t_N\) M-only
-kernel with the same \(F_1,F_2\) prescription:
+fold or a substitute for the seven-isotope/eight-response gate. The original
+calculation's finite-q AFH nuclear form factor is retained through
+\(W_M(Q_A)\). Therefore the q=0 single-nucleon-current M-only result is
+the original AFH M-only baseline, not a point-nucleus approximation. We
+report both the finite-\(t_N\) response-only ratio and the total ratio to
+the original AFH baseline:
 
-| \(E_R\) | \(q_A\) (GeV) | Form factor | \(R_{\rm charge}/R_{t_N,M}\) | \(R_{\rm charge}/R_{q=0,M}\) |
+| \(E_R\) | \(q_A\) (GeV) | Form factor | \(R_{\rm charge}/R_{t_N,M}\) | \(R_{\rm charge}/R_{\mathrm{AFH},M}^{(0)}\) |
 |---:|---:|---|---:|---:|
 | 200 keV | 0.220825560 | bishara_linear | 0.99695540 | 0.737630 |
 | 200 keV | 0.220825560 | isoscalar_zexp | 0.99655805 | 0.778309 |
