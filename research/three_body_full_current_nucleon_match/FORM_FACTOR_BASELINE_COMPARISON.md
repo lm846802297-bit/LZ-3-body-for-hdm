@@ -161,6 +161,14 @@ The primary response correction is always divided by item 2, using the same \(F_
 
 The Xe-131 fixed-speed charge-sector workflow and the P4 natural-xenon workflow now run bishara_linear and isoscalar_zexp separately. The Xe-131 comparison reports the finite-t_N M-only denominator as its primary ratio; P4 reports both the Coulomb and leading-static candidate outputs. The candidate remains unpromoted until P3-C passes.
 
+The Xe-131 fixed-speed dual-form-factor workflow passed on 2026-11-19 (run 44443361283, artifact 14491448839; 7/7 regression tests). The measured primary ratios are:
+
+| \(E_R\) | bishara_linear | isoscalar_zexp |
+|---:|---:|---:|
+| 200 keV | 0.9969554027 (-0.304460%) | 0.9965580497 (-0.344195%) |
+| 267 keV | 0.9146368945 (-8.536311%) | 0.8996103903 (-10.038961%) |
+
+
 A provenance distinction remains important: the checked paper-source main.tex explicitly states the universal quark coupling and the AFH W_M response, but does not itself spell out a finite-t_N flavor-resolved F1^q/F2^q low-order parameterization. The archived DMFormFactor-v6 file supplies the nuclear-response machinery; it is not, by itself, evidence for a particular quark-level shape-factor input. Therefore bishara_linear is treated as a low-Q2 diagnostic until the exact legacy expression and coefficients are identified.
 
 ## 7. Validation boundary and next steps
