@@ -33,4 +33,4 @@ The manifest's `file_inventory` intentionally excludes `RUN_MANIFEST.json` itsel
 
 ## Completed PR #78 / PR #80 archive
 
-The final idempotent archive execution passed as [workflow run 44579411941](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44579411941). It downloaded the pinned source artifacts, validated their GitHub digests and payloads, extracted native CSV/JSON data, rebuilt both run manifests, verified all 34 SHA-256 entries across the two result packages, and committed the result directories. The embedded file inventories exclude their own manifests; the SHA256SUMS files include and verify those manifests.
+The final stable archive execution passed as [workflow run 44581116762](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44581116762). It downloaded the pinned source artifacts, validated their GitHub digests and payloads, extracted native CSV/JSON data, rebuilt both run manifests, verified all 34 SHA-256 entries across the two result packages, and committed the result directories. The embedded file inventories exclude their own manifests; the SHA256SUMS files include and verify those manifests.
