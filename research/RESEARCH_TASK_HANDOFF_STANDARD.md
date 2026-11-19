@@ -24,7 +24,7 @@ For a trivial editorial or repository-maintenance change with no scientific cont
 
 ## 3. Canonical location and naming
 
-Use the template at [`research/_template/RESEARCH_TASK_BRIEF.md`]( _template/RESEARCH_TASK_BRIEF.md ).
+Use the [Research Task Brief template](_template/RESEARCH_TASK_BRIEF.md).
 
 Store each filled brief with the topic it governs:
 
