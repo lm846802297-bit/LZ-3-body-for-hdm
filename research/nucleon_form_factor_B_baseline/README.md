@@ -42,14 +42,14 @@ The postprocessor multiplies each isotope's already-computed full and (I(D)) rat
 
 ## Electromagnetic proton/neutron input
 
-The primary (G_E^{p,n}), (G_M^{p,n}) input is the low-(Q^2) z-expansion of Borah, Hill, Lee and Tomalak, Phys. Rev. D 102, 074012 (2020), arXiv:2003.13640. It is optimized for (Q^2lesssim) a few GeV(^2), includes the proton and neutron data/radius constraints, and supplies the free-coefficient covariance matrices.
+The primary (G_E^{p,n}), (G_M^{p,n}) input is the low-(Q^2) z-expansion of Borah, Hill, Lee and Tomalak, Phys. Rev. D 102, 074012 (2020), arXiv:2003.13640. It is optimized for (Q^2lesssim) a few GeV(^2), includes the proton and neutron data/radius constraints, and supplies the free-coefficient covariance matrices. The fit is the separate proton/neutron default fit (not the isospin-combined fit).
 
-The exact central coefficients and covariance matrix are pinned under `data/ye2020/`. The source copy is the GENIE-MC/Generator distribution of the Ye et al. supplemental data:
+The exact central coefficients and covariance matrix are pinned under `data/borah2020/`. The source copy is the GENIE-MC/Generator distribution of the Borah et al. supplemental data:
 - `config/ZExpELFormFactorModel.xml`
 - `data/covariances/FormFactor/Vector/ELZExpFF.dat`
 - pinned source commit: `e2e04f19e96d395ac646cf3382841646b60fa1b4`
 
-The four free coefficients for each Sachs form factor are completed by (G(0)) normalization and the four (Q^4) asymptotic sum rules, matching GENIE's `Q4limit` implementation. The full (G_E,G_M) are converted to (F_1,F_2) with
+The four free coefficients for each Sachs form factor are completed by (G(0)) normalization and the four (Q^4) asymptotic sum rules, matching GENIE's `Q4limit` implementation. The magnetic coefficients stored in the source are already multiplied by the corresponding magnetic moment, so the code treats them as coefficients of the unnormalized (G_M) expansion. The full (G_E,G_M) are converted to (F_1,F_2) with
 [
 F_1=rac{G_E+	au G_M}{1+	au},qquad
 F_2=rac{G_M-G_E}{1+	au},qquad 	au=Q^2/(4m_N^2).
@@ -80,7 +80,7 @@ Outputs per strange-current scenario:
 - `natural_xenon_B_baseline.csv`
 - `metadata.json`
 
-The Ye2020 proton/neutron coefficient covariance is propagated with correlated Monte Carlo draws across the complete (Q_A^2) grid. The strange-current scenario uncertainty is kept separate from the Ye2020 electromagnetic fit covariance.
+The Borah2020 proton/neutron coefficient covariance is propagated with correlated Monte Carlo draws across the complete (Q_A^2) grid. Strange-current central-value scenarios are kept separate from the electromagnetic fit covariance; the source uncertainties for the 2026 scenario are recorded but not yet sampled.
 
 ## Scope
 
