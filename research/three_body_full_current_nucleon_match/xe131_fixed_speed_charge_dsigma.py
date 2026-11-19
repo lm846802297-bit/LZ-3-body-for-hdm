@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
-"""Fixed-speed Xe-131 differential cross-section ratio in the Coulomb sector.
+"""Fixed-speed Xe-131 A/B/C differential cross-section comparison.
 
-The DM-side L_C is obtained from the full phase-space-integrated tensor using
-the nuclear-current continuity relation, conditional on conservation of the
-complete nuclear vector current. Native AFH M/Phi''/M-Phi'' responses are
-contracted with finite-t_N charge coefficients and compared with the original
-pointlike 9 W_M baseline using the formal constant pole-width prescription.
-Transverse nuclear-current multipoles are not included in this restricted
-Coulomb-sector ratio.
-"""
+A and B both retain the finite-size AFH W_M response.  A uses the q=0
+effective nucleon-current anchor; B is the adopted finite-t_N M-only
+production baseline; C adds the Phi'' diagonal and signed M-Phi''
+interference terms.  The formal nucleon invariant is t_N=t_A=-2*m_A*E_R.
+The DM-side L_C uses nuclear-current continuity conditionally on
+conservation of the complete nuclear vector current.  Transverse nuclear
+multipoles are not included in this restricted Coulomb-sector comparison.
+""
 from __future__ import annotations
 
 import argparse
@@ -21,7 +21,10 @@ from pathlib import Path
 import numpy as np
 from scipy.interpolate import PchipInterpolator
 
-from nucleon_vector_form_factors import F1V0, charge_coefficients, isoscalar_zexp
+from nucleon_vector_form_factors import (
+    F1V0, F2V0, bishara_linear, charge_coefficients,
+    effective_nucleon_form_factors,
+)
 from native_charge_sector_halo_fold import load_isotope_inputs
 from three_body_phase_space_tensor import integrate_spin_resolved_tensor
 
@@ -185,54 +188,72 @@ def interpolate_responses(bundle: dict, qA_GeV: float) -> dict:
 
 
 def charge_sector_kernels(
-    L_C: float, qA_GeV: float, responses: dict[str, float]
+    L_C: float,
+    qA_GeV: float,
+    responses: dict[str, float],
+    *,
+    ER_keV: float,
 ) -> dict:
-    """Return finite-t_N M+Phi'' and pointlike M-only Coulomb-sector kernels."""
-    Q2 = qA_GeV * qA_GeV
-    F1, F2 = isoscalar_zexp(Q2)
-    cM, cPhi = charge_coefficients(qA_GeV, F1=F1, F2=F2, mN_GeV=MN_GEV)
+    """Return A reference, adopted B baseline, and C charge extension."""
+    ER_GeV = float(ER_keV) * 1.0e-6
+    tN_GeV2 = -2.0 * MA_XE131_GEV * ER_GeV
+    Q_A2 = qA_GeV * qA_GeV
+    F1_raw, F2_raw = bishara_linear(-tN_GeV2)
+    F1, F2 = effective_nucleon_form_factors(F1_raw, F2_raw)
+    F1hat0, _ = effective_nucleon_form_factors(F1V0, F2V0)
+    cM, cPhi = charge_coefficients(
+        qA_GeV,
+        F1=F1,
+        F2=F2,
+        tN_GeV2=tN_GeV2,
+        mN_GeV=MN_GEV,
+    )
     WM, WPhi, WMPhi = responses["M"], responses["PhiPP"], responses["MPhiPP"]
-    if WM <= 0.0:
-        raise ValueError(f"non-positive native W_M at q_A={qA_GeV:.12g} GeV")
+    if WM <= 0.0 or WPhi < -1.0e-12:
+        raise ValueError(f"invalid native AFH M/Phi'' response at q_A={qA_GeV:.12g} GeV")
     if not math.isfinite(L_C) or L_C <= 0.0:
         raise ValueError("invalid continuity-adjusted Coulomb weight L_C")
 
-    finite_t_M_kernel = cM * cM * L_C * WM
+    A_reference = F1hat0 * F1hat0 * L_C * WM
+    B_baseline = cM * cM * L_C * WM
     interference_kernel = 2.0 * cM * cPhi * L_C * WMPhi
     phi_kernel = cPhi * cPhi * L_C * WPhi
-    full_charge_kernel = finite_t_M_kernel + interference_kernel + phi_kernel
-    pointlike_M_kernel = F1V0 * F1V0 * L_C * WM
-    if pointlike_M_kernel <= 0.0 or full_charge_kernel <= 0.0:
-        raise ValueError("non-positive numerator or denominator kernel")
+    C_extension = B_baseline + interference_kernel + phi_kernel
+    if min(A_reference, B_baseline, C_extension) <= 0.0:
+        raise ValueError("non-positive A/B/C charge kernel")
 
     eta = cPhi / cM
-    Qphi = 1.0 + 2.0 * eta * (WMPhi / WM) + eta * eta * (WPhi / WM)
-    ratio_direct = full_charge_kernel / pointlike_M_kernel
-    ratio_factorized = (cM * cM / (F1V0 * F1V0)) * Qphi
-    ratio_legacy_F1_squared = (F1 * F1 / (F1V0 * F1V0)) * Qphi
-    if not math.isclose(ratio_direct, ratio_factorized, rel_tol=2e-13, abs_tol=2e-15):
-        raise AssertionError("direct and factorized Coulomb-sector ratios disagree")
+    C_over_B = 1.0 + 2.0 * eta * (WMPhi / WM) + eta * eta * (WPhi / WM)
+    B_over_A = (cM * cM) / (F1hat0 * F1hat0)
+    C_over_A = C_extension / A_reference
+    if not math.isclose(C_over_A, B_over_A * C_over_B, rel_tol=2e-13, abs_tol=2e-15):
+        raise AssertionError("direct and factorized A/B/C ratios disagree")
 
     return {
-        "F1V_finite_t": F1,
-        "F2V_finite_t": F2,
+        "form_factor_prescription": "bishara_linear",
+        "F1V_quark_sum": F1_raw,
+        "F2V_quark_sum": F2_raw,
+        "F1N_effective": F1,
+        "F2N_effective": F2,
+        "tN_GeV2": tN_GeV2,
+        "Q_A2_GeV2": Q_A2,
         "cM": cM,
         "cPhiPP": cPhi,
         "eta_cPhi_over_cM": eta,
         "W_PhiPP_over_W_M": WPhi / WM,
         "W_MPhiPP_over_W_M": WMPhi / WM,
-        "Q_PhiPP_relative_to_finite_t_M": Qphi,
-        "finite_t_M_only_over_pointlike_M": (cM * cM) / 9.0,
-        "full_charge_over_pointlike_M": ratio_direct,
-        "relative_change_percent": 100.0 * (ratio_direct - 1.0),
-        "legacy_F1_squared_ratio_for_normalization_audit": ratio_legacy_F1_squared,
-        "legacy_F1_squared_relative_change_percent": 100.0 * (ratio_legacy_F1_squared - 1.0),
+        "B_over_A_reference": B_over_A,
+        "C_over_B_baseline": C_over_B,
+        "C_over_A_reference": C_over_A,
+        "relative_B_vs_A_percent": 100.0 * (B_over_A - 1.0),
+        "relative_C_vs_B_percent": 100.0 * (C_over_B - 1.0),
+        "relative_C_vs_A_percent": 100.0 * (C_over_A - 1.0),
         "kernels_with_common_LC": {
-            "pointlike_M_only": pointlike_M_kernel,
-            "finite_t_M_only": finite_t_M_kernel,
+            "A_reference_M_only": A_reference,
+            "B_finite_tN_M_only": B_baseline,
             "M_Phi_interference": interference_kernel,
             "PhiPP_diagonal": phi_kernel,
-            "finite_t_M_plus_PhiPP": full_charge_kernel,
+            "C_M_plus_PhiPP": C_extension,
         },
     }
 def integrate_LC(
@@ -304,8 +325,8 @@ def run(afh_csv: Path) -> dict:
                     f"phase-space medium/high convergence failed: ER={ER_keV}, "
                     f"width={width}, LC={convergence_LC:.6g}, L00={convergence_L00:.6g}"
                 )
-            kernels = charge_sector_kernels(high["L_C"], qA, high_response)
-            linear_kernels = charge_sector_kernels(high["L_C"], qA, linear_response)
+            kernels = charge_sector_kernels(high["L_C"], qA, high_response, ER_keV=ER_keV)
+            linear_kernels = charge_sector_kernels(high["L_C"], qA, linear_response, ER_keV=ER_keV)
             width_rows.append({
                 "width_scheme": width,
                 "g2": G2,
@@ -322,21 +343,21 @@ def run(afh_csv: Path) -> dict:
                     "atomic_mass_u": XE131_MASS_RECORD["atomic_mass_u"],
                     "ER_keV": ER_keV,
                     "qA_exact_GeV": qA,
-                    "tN_GeV2_static": -(qA * qA),
+                    "tN_GeV2_formal": -2.0 * MA_XE131_GEV * ER_keV * 1.0e-6,\n                    "tN_GeV2_static_diagnostic": -(qA * qA),
                 },
                 "native_AFH_responses_pchip": high_response,
                 "native_AFH_responses_linear_check": linear_response,
                 "finite_tN_form_factors_and_charge_kernels": kernels,
                 "linear_interpolation_cross_section_ratio": (
-                    linear_kernels["full_charge_over_pointlike_M"]
+                    linear_kernels["C_over_A_reference"]
                 ),
                 "pchip_minus_linear_ratio": (
-                    kernels["full_charge_over_pointlike_M"]
-                    - linear_kernels["full_charge_over_pointlike_M"]
+                    kernels["C_over_A_reference"]
+                    - linear_kernels["C_over_A_reference"]
                 ),
             })
         ratios = [
-            row["finite_tN_form_factors_and_charge_kernels"]["full_charge_over_pointlike_M"]
+            row["finite_tN_form_factors_and_charge_kernels"]["C_over_A_reference"]
             for row in width_rows
         ]
         if len(width_rows) != 1 or width_rows[0]["width_scheme"] != "pole":
@@ -354,12 +375,12 @@ def run(afh_csv: Path) -> dict:
             },
             "fixed_speed_differential_cross_section_ratio": (
                 width_rows[0]["finite_tN_form_factors_and_charge_kernels"][
-                    "full_charge_over_pointlike_M"
+                    "C_over_A_reference"
                 ]
             ),
-            "relative_change_percent": (
+            "relative_C_vs_A_percent": (
                 width_rows[0]["finite_tN_form_factors_and_charge_kernels"][
-                    "relative_change_percent"
+                    "relative_C_vs_A_percent"
                 ]
             ),
             "width_scenarios": width_rows,
@@ -372,14 +393,15 @@ def run(afh_csv: Path) -> dict:
     return {
         "status": "PASS_XE131_FIXED_SPEED_COULOMB_SECTOR_RATIO",
         "scope": (
-            "fixed-speed Xe-131 differential cross-section ratio in the "
-            "M+Phi''+M-Phi'' Coulomb sector; the complete 2->3 DM phase space "
-            "is integrated with both scalar-radiation diagrams and finite chi2 "
-            "widths, while native AFH transverse-current responses are not included"
+            "fixed-speed Xe-131 A/B/C comparison in the M+Phi''+M-Phi'' Coulomb sector; "
+            "B is the adopted finite-t_N M-only production baseline, C is a separate "
+            "charge-response extension, and native AFH transverse-current responses are not included"
         ),
         "ratio_definition": (
-            "(dSigma/dER)_[finite-tN M+Phi'' Coulomb sector] / "
-            "(dSigma/dER)_[original pointlike 9 W_M-only]"
+            "A=q=0 effective nucleon current times finite-size W_M; "
+            "B=finite-t_N M-only production baseline; "
+            "C=B plus Phi'' and signed M-Phi'' interference. "
+            "Report B/A, C/B, and C/A separately."
         ),
         "factorization": (
             "The same continuity-adjusted L_C^(3), propagator, flux, and phase-space "
@@ -399,11 +421,11 @@ def run(afh_csv: Path) -> dict:
             "mass_record": XE131_MASS_RECORD,
             "AFH_native_provenance": provenance,
             "recoil_momentum_convention": "q_A=sqrt(2*m_A*E_R+E_R^2)",
-            "nucleon_invariant_convention": "t_N=-|q_A|^2 in the static impulse matching",
+            "nucleon_invariant_convention": "formal B: q_N^mu=q_A^mu and t_N=t_A=-2*m_A*E_R; static t_N=-q_A^2 is diagnostic only",
         },
         "form_factor_prescription": (
-            "central isoscalar_zexp diagnostic from nucleon_vector_form_factors.py; "
-            "not a final validated universal finite-Q^2 u+d+s input"
+            "adopted B: Bishara linear raw u+d+s F1 slope and constant raw F2 anchor, "
+            "converted to the external-gVN effective basis by dividing both form factors by three"
         ),
         "results": results,
         "limitations": [
@@ -429,7 +451,7 @@ def main() -> None:
             {
                 "ER_keV": row["ER_keV"],
                 "ratio": row["fixed_speed_differential_cross_section_ratio"],
-                "relative_change_percent": row["relative_change_percent"],
+                "relative_C_vs_A_percent": row["relative_C_vs_A_percent"],
             }
             for row in result["results"]
         ],
