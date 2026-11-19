@@ -24,7 +24,7 @@ class HaloSevenIsotopeApproximationTests(unittest.TestCase):
         import numpy as np
         v = np.linspace(0.0, 776.0, 20001)
         f = np.asarray([shm_speed_pdf(float(x)) for x in v])
-        self.assertLess(abs(float(np.trapz(f, v))-1.0), 2e-4)
+        self.assertLess(abs(float(np.trapezoid(f, v))-1.0), 2e-4)
 
     def test_seven_afh_isotopes_and_abundance_coverage(self):
         rows = read_csv(ISOTOPE_WEIGHTS)
