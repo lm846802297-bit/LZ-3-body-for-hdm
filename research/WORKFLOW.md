@@ -17,6 +17,13 @@ Do not create new research-specific directories at the repository root.
 
 ### Manuscript source
 
+The manuscript is the project's communication layer, not the source of truth
+for physical definitions or numerical acceptance. Follow the mandatory
+[research source hierarchy](RESEARCH_GOVERNANCE_AND_SOURCE_HIERARCHY.md).
+When a manuscript equation conflicts with an approved derivation or validated
+research record, preserve the discrepancy, investigate it, and update the
+manuscript only after the research decision.
+
 - paper-source/main_original.tex is the preserved original source.
 - paper-source/main.tex is the working manuscript.
 - Original figures, bibliography, style files, and source-build material stay
