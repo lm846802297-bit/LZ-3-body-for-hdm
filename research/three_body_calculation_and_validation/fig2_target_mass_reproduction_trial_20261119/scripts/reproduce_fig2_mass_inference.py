@@ -87,7 +87,9 @@ def main():
     result = {
         "status": "exploratory_reproduction_diagnostic",
         "source": {"file": META["source_file"], "sha256": META["source_sha256"],
-                   "figure": "Fig. 2", "pdf_page": 3},
+                   "figure": "Fig. 2", "pdf_page": 3,
+                   "endpoint_equation": "Eq. (4), PDF p. 2",
+                   "phase_space_kernel": "Eq. (6), PDF p. 2"},
         "fixed_inputs": {"mchi_GeV": MCHI, "v_km_per_s": V_KMS, "ms_keV": MS,
                          "delta_iDM_keV": MS, "RA_included": False,
                          "nuclear_response_included": False},
@@ -105,6 +107,12 @@ def main():
                           "fit_domain_keV": [120, 645],
                           "fit_points": int(mask.sum())},
         "comparisons": cases,
+        "interpretation": [
+            "Endpoint inversion and red-shape fitting independently indicate an effective target mass near 121.04 GeV.",
+            "130u = 121.094233 GeV is numerically consistent with the plotted endpoints at figure-reading precision; the paper does not explicitly state that Fig. 2 uses A=130.",
+            "Eq. (107), PDF p. 17, explicitly uses 122 GeV at 770 km/s for a separate illustration; it does not establish the Fig. 2 target mass.",
+            "This is a normalized fixed-speed phase-space reproduction without R_A(E_R), nucleon form factors, AFH responses, isotope sum, halo average, or detector response. The adopted B baseline is unchanged."
+        ],
     }
     (ROOT / "results").mkdir(exist_ok=True)
     (ROOT / "results/fig2_target_mass_inference.json").write_text(json.dumps(result, indent=2))
