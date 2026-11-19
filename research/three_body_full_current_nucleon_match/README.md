@@ -547,7 +547,7 @@ python research/three_body_full_current_nucleon_match/phase_space_tensor_converg
 python research/three_body_full_current_nucleon_match/three_body_multipole_leptonic_weights.py \
   --input /tmp/three-body-phase-space-tensor.json \
   --out /tmp/three-body-multipole-leptonic-weights.json \
-  --f1 3.0 --f2 -0.552 --mN 0.938918
+  --f1 1.0 --f2 -0.184 --mN 0.938918
 
 python research/three_body_full_current_nucleon_match/contract_three_body_afh_responses.py \
   --afh-dir /path/to/afh-seven-isotope-artifact \
