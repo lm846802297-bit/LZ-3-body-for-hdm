@@ -192,7 +192,8 @@ def charge_sector_kernels(
     tN_GeV2: float | None = None,
 ) -> dict:
     """Return finite-t_N M+Phi'' and original AFH M-only Coulomb kernels."""
-    Q2 = qA_GeV * qA_GeV if tN_GeV2 is None else -float(tN_GeV2)
+    tN_used = -qA_GeV * qA_GeV if tN_GeV2 is None else float(tN_GeV2)
+    Q2 = -tN_used
     if Q2 < 0.0 or not math.isfinite(Q2):
         raise ValueError("nucleon form-factor Q_N^2 must be finite and non-negative")
     if form_factor_prescription == "bishara_linear":
@@ -231,6 +232,11 @@ def charge_sector_kernels(
         "form_factor_prescription": form_factor_prescription,
         "F1V_finite_t": F1,
         "F2V_finite_t": F2,
+        "tN_GeV2": tN_used,
+        "Q_N2_GeV2": -tN_used,
+        "nucleon_transfer_scheme": (
+            "strict one-body impulse" if tN_GeV2 is not None else "static q_N^0=0 diagnostic"
+        ),
         "cM": cM,
         "cPhiPP": cPhi,
         "eta_cPhi_over_cM": eta,
