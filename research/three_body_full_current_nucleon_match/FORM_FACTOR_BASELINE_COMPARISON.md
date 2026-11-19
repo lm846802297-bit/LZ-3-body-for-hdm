@@ -116,7 +116,7 @@ The code provides three distinct inputs.
 | Prescription | Definition | Interpretation |
 |---|---|---|
 | \(q=0\) anchor | \(F_1^V=3,\ F_2^V=-0.552\) | Secondary normalization reference |
-| bishara_linear | \(F_1^V(Q_N^2)=3-8.392\,Q_N^2\), \(F_2^V=-0.552\) | First-order low-\(Q_N^2\) diagnostic from the flavor-separated Dirac slopes; \(F_2\) held at its zero-transfer value |
+| bishara_linear | \(F_1^V(Q_N^2)=3-(8.392\,{\rm GeV}^{-2})Q_N^2\), \(F_2^V=-0.552\) | First-order low-\(Q_N^2\) diagnostic from the flavor-separated Dirac slopes; \(F_2\) held at its zero-transfer value |
 | isoscalar_zexp | Isoscalar electromagnetic Sachs \(z\)-expansion plus the strange-current inputs | Finite-\(Q_N^2\) alternative diagnostic |
 
 Neither finite-\(Q_N^2\) prescription is to be silently identified with the exact legacy calculation until its original input file and parameter provenance are pinned. In particular, the first-order Bishara slope is a low-\(Q_N^2\) diagnostic, not a claim that the full quark-current form factor is known to all orders.
