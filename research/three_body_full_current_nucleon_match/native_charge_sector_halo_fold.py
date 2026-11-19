@@ -670,8 +670,8 @@ def leading_static_vector_current_kernel_from_tensor(
         form_factor_prescription,
         tN_GeV2=tN_GeV2,
     )
-    charge_residual = abs(charge - charge_check["charge_sector"]) / max(
-        abs(charge), abs(charge_check["charge_sector"]), 1.0e-300
+    charge_residual = abs(charge - charge_check["charge_M_PhiPP"]) / max(
+        abs(charge), abs(charge_check["charge_M_PhiPP"]), 1.0e-300
     )
     if charge_residual > 2.0e-12:
         raise AssertionError(
@@ -918,9 +918,9 @@ def fold(
                         mA * coupling_product_squared
                         / (256.0 * math.pi**3 * pchi * pchi * denominator)
                     )
-                    halo_charge += float(w) * fv * beta * common * kernel["charge_sector"]
-                    halo_A_reference += float(w) * fv * beta * common * kernel["baseline_A_original_AFH_M"]
-                    halo_B_baseline += float(w) * fv * beta * common * kernel["baseline_B_finite_tN_M"]
+                    halo_charge += float(w) * fv * beta * common * kernel["charge_M_PhiPP"]
+                    halo_A_reference += float(w) * fv * beta * common * kernel["AFH_finite_size_M_baseline"]
+                    halo_B_baseline += float(w) * fv * beta * common * kernel["nucleon_finite_t_M_only"]
                     if include_leading_static_vector_candidate:
                         candidate = leading_static_vector_current_kernel_from_tensor(
                             coulomb_result["L_q_aligned_real_imag"],
@@ -954,21 +954,21 @@ def fold(
                         )
                         min_full_candidate_kernel = min(
                             min_full_candidate_kernel,
-                            candidate["leading_static_vector_current_candidate"],
+                            candidate["full_six_channel_candidate"],
                         )
                         halo_spatial_candidate += (
                             float(w) * fv * beta * common * candidate["spatial_sector"]
                         )
                         halo_full_candidate += (
                             float(w) * fv * beta * common
-                            * candidate["leading_static_vector_current_candidate"]
+                            * candidate["full_six_channel_candidate"]
                         )
                 isotope_row = {
                     "A": A, "abundance": xA, "open": True,
                     "mA_GeV": mA, "qA_GeV": qA, "vmin_km_s": vmin,
-                    "baseline_A_original_AFH_M_halo_integral": halo_A_reference,
-                    "baseline_B_finite_tN_M_halo_integral": halo_B_baseline,
-                    "extension_C_MplusPhiPP_halo_integral": halo_charge,
+                    "AFH_finite_size_M_baseline_halo_integral": halo_A_reference,
+                    "nucleon_finite_t_M_only_halo_integral": halo_B_baseline,
+                    "charge_M_PhiPP_halo_integral": halo_charge,
                     "relative_B_vs_A": halo_B_baseline / halo_A_reference - 1.0
                     if halo_A_reference else math.nan,
                     "relative_C_vs_A": halo_charge / halo_A_reference - 1.0
@@ -1012,15 +1012,15 @@ def fold(
 
                 isotope_rows.append(isotope_row)
             total_charge = sum(
-                r.get("abundance", 0.0) * r.get("extension_C_MplusPhiPP_halo_integral", 0.0)
+                r.get("abundance", 0.0) * r.get("charge_M_PhiPP_halo_integral", 0.0)
                 for r in isotope_rows
             )
             total_A_reference = sum(
-                r.get("abundance", 0.0) * r.get("baseline_A_original_AFH_M_halo_integral", 0.0)
+                r.get("abundance", 0.0) * r.get("AFH_finite_size_M_baseline_halo_integral", 0.0)
                 for r in isotope_rows
             )
             total_B_baseline = sum(
-                r.get("abundance", 0.0) * r.get("baseline_B_finite_tN_M_halo_integral", 0.0)
+                r.get("abundance", 0.0) * r.get("nucleon_finite_t_M_only_halo_integral", 0.0)
                 for r in isotope_rows
             )
             total_rate = rate_factor * total_charge
@@ -1101,7 +1101,7 @@ def fold(
             rows.append(row)
 
     return {
-        "primary_baseline": "B: finite-t_N Dirac-Pauli current contracted with AFH W_M(y_A) only",
+        "reference_baseline": "A: external gVN coupling times physical equal-p=n AFH finite-size W_M(y_A)",
         "A_reference": "q=0 effective nucleon-current anchor times the same finite-size AFH W_M(y_A)",
         "C_extension": "B plus Phi'' and signed M-Phi'' charge responses; diagnostic, not the baseline",
         "coupling_normalization": "coupling_product_squared=(g1*g2*gVN)^2; use Fhat_i=F_i^(u+d+s)/3 in all nucleon-current coefficients",
@@ -1174,11 +1174,11 @@ def fold(
         "mediator_propagator_denominator": "(m_V^2-t_A)^2=(m_V^2+2 m_A E_R)^2; uses t_A, not spatial Q_A^2",
         "nucleon_form_factor_argument": "Q_N^2=-t_N with strict one-body impulse q_N^mu=q_A^mu, so t_N=t_A=-2 m_A E_R and Q_N^2=2 m_A E_R; static q_N^0=0 is a separate diagnostic",
         "nucleon_transfer_scheme": "full external four-momentum transfer q_N^mu=q_A^mu in formal P4; static q_N^0=0 retained only as optional diagnostic",
-        "baseline_B_definition": "c_M(Fhat_1(t_N),Fhat_2(t_N))^2 * L_C * W_M(y_A); no Phi'', Delta, or Sigma responses in the primary baseline",
-        "baseline_A_reference_definition": "L_C * W_M(y_A), using Fhat_1(0)=1; retains the same AFH finite-size response",
+        "nucleon_finite_t_M_only_definition": "c_M(Fhat_1(t_N),Fhat_2(t_N))^2 * L_C * W_M(y_A); this is the nucleon-current correction to the reference baseline",
+        "AFH_finite_size_M_baseline_definition": "L_C * W_M(y_A), using Fhat_1(0)=1; retains the physical finite-size AFH nuclear response",
         "C_extension_definition": "B plus Phi'' diagonal and signed M-Phi'' interference",
         "form_factor_normalization": "Fhat_i=F_i^(u+d+s)/3 because coupling_product_squared uses external g_VN=3*g_Vq",
-        "form_factor_comparison": (
+        "response_comparison": (
             "B is the primary finite-t_N M-only baseline. Report C/B for the "
             "additional Phi'' and signed M-Phi'' correction, and B/A for the "
             "nucleon-form-factor correction relative to the original AFH M-only reference."
