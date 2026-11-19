@@ -77,7 +77,7 @@ Using raw \(F_i^{uds}\) in those coefficients duplicates the factor three and ma
 
 ### 3.2 AFH raw-to-physical response normalization
 
-The AFH v6.0 raw isoscalar response has zero-momentum normalization \(A^2/4\); the physical equal-proton/equal-neutron response has normalization \(A^2\). The raw-to-physical factor four belongs to the response columns and is applied once. It is independent of the quark-to-nucleon factor three.
+The AFH v6.0 raw isoscalar response has zero-momentum normalization \(A^2/4\); the physical equal-proton/equal-neutron response has normalization \(A^2\). The response conversion is \(R_{\rm phys}=4C_0(A)R_{\rm raw}\), where \(C_0(A)=A^2/[4R_{M,\rm raw}(0)]\) corrects finite-decimal OBDME normalization. The factor four and \(C_0\) are each applied once. They are independent of the quark-to-nucleon factor three. The native Xe-131 loader now derives and applies \(C_0(131)\) from the raw q=0 M response; the seven-isotope native loader does the same per isotope. The Xe-131 six-channel scan compares this native \(C_0\) with P3-B and no longer multiplies the charge responses a second time.
 
 Do not add a second Helm factor on top of AFH \(W_M(y_A)\).
 
