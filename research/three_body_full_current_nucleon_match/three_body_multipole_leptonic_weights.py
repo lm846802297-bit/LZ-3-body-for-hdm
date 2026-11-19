@@ -16,8 +16,9 @@ from pathlib import Path
 import numpy as np
 
 
-DEFAULT_F1 = 3.0
-DEFAULT_F2 = -0.552
+# The public rate prefactor uses g_VN=3*g_Vq, so coefficients use Fhat_i=F_i^{uds}/3.
+DEFAULT_F1 = 1.0
+DEFAULT_F2 = -0.184
 DEFAULT_MN_GEV = 0.938918
 
 
@@ -293,11 +294,12 @@ def extract_afh_vector_coefficients(
     """AFH Eq. (107) coefficients for the leading static Dirac--Pauli current.
 
     Convention: q_AFH=-q_A, q_N=+q_A, metric (+---). The coefficients
-    multiply the physical equal-p/n AFH response columns. With omega_GeV=E_R,
-    the strict one-body impulse transfer is q_N^mu=q_A^mu and
-    t_N=omega^2-|q_A|^2=t_A. Passing omega_GeV=0 instead selects the
-    static-nucleon diagnostic t_N=-|q_A|^2. The default F1/F2 are provisional
-    q=0 anchors, not finite-t form factors.
+    multiply physical equal-p/n AFH response columns and the external
+    g_VN=3*g_Vq prefactor. Hence f1,f2 are effective factors
+    Fhat_i=F_i^{uds}/3; defaults are Fhat_1(0)=1 and Fhat_2(0)=-0.184.
+    With omega_GeV=E_R, strict one-body impulse gives
+    t_N=omega^2-|q_A|^2=t_A. Passing omega_GeV=0 selects the distinct
+    static-nucleon diagnostic t_N=-|q_A|^2.
     """
     if not np.isfinite(qA_GeV) or qA_GeV < 0:
         raise ValueError("qA_GeV must be finite and non-negative")
