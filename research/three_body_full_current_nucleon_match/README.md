@@ -936,3 +936,11 @@ This is a spatial-sector subgate only. Native Wolfram AFH validation,
 rank-resolved charge multipoles, and the independent direct
 coordinate-space bound-nucleus current comparison remain open. The
 full-current workflow now runs and archives the subgate JSON result.
+
+
+The reproducible PR #66 CI rerun completed successfully:
+[workflow 44432440600](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44432440600).
+Its full-current artifact is 14486904025 and its spatial-response artifact
+is 14486014588. The response and multipole CSV SHA-256 hashes are identical
+to the earlier PR #65 P3-B archive, so the native control workflow's pinned
+input remains byte-identical.
