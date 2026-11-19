@@ -311,7 +311,7 @@ For the universal u+d+s current the raw zero-momentum sums are
 \(g_{VN}=3g_{Vq}\) prefactor, the coefficients use
 \(\widehat F_1^N(0)=1\), \(\widehat F_2^N(0)=-0.184\).
 The coefficient ratios relative to
-\(C_M=\(\widehat F_1^N)^2L^{00}\) over the 12 archived benchmarks are:
+\\(C_M=(\\widehat F_1^N)^2L^{00}\\) over the 12 archived benchmarks are:
 
 | Spatial coefficient | Range relative to \(C_M\) |
 |---|---:|
