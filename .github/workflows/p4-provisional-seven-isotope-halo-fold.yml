@@ -88,7 +88,7 @@ jobs:
             --rho-GeV-cm3 0.3 \
             --ER-keV 150 200 267 350 400 \
             --nv 8 --nw 8 --nz 6 --nphi 4 \
-            --form-factor pointlike \
+            --form-factor q0_anchor \
             --width-scheme pole \
             --include-leading-static-vector-candidate
 
@@ -142,9 +142,9 @@ jobs:
           speed24=json.loads((root/"speed-ultra-refined.json").read_text())
           kernel=json.loads((root/"kernel-refined.json").read_text())
           keys=(
-              "rate_charge_MplusPhi_events_kg_day_keV",
-              "rate_pointlike_M_events_kg_day_keV",
-              "rate_finite_t_M_events_kg_day_keV",
+              "rate_C_charge_extension_events_kg_day_keV",
+              "rate_A_original_AFH_M_events_kg_day_keV",
+              "rate_B_baseline_M_events_kg_day_keV",
               "rate_spatial_candidate_events_kg_day_keV",
               "rate_leading_static_vector_candidate_events_kg_day_keV",
           )
