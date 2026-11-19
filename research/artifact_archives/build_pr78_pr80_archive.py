@@ -120,7 +120,7 @@ def check_run_and_artifact(meta_dir: Path, key: str, expected: dict) -> dict:
 def file_inventory(root: Path) -> list[dict]:
     items = []
     for p in sorted(root.rglob("*")):
-        if not p.is_file() or p.name == "SHA256SUMS":
+        if not p.is_file() or p.name in {"RUN_MANIFEST.json", "SHA256SUMS"}:
             continue
         items.append({
             "path": p.relative_to(root).as_posix(),
