@@ -15,9 +15,9 @@ mainline prediction.
 
 ## Response minima
 
-The AFH default matrix is a third nuclear-structure prescription. Its minima
-are close in momentum transfer to the GCN and JJ55 minima, but their depths
-are model dependent.
+Within this sensitivity comparison, the AFH default matrix is compared as a
+third nuclear-structure prescription. Its minima are close in momentum
+transfer to the GCN and JJ55 minima, but their depths are model dependent.
 
 | Minimum | Model | q_min [MeV] | E_R,min [keV] | R_min/R(0) |
 |---:|---|---:|---:|---:|
