@@ -24,6 +24,17 @@ class VectorFormFactorTests(unittest.TestCase):
         self.assertAlmostEqual((g_vq * ff.F1V0)**2, (g_vn * f1)**2, places=15)
         self.assertAlmostEqual((g_vq * ff.F2V0)**2, (g_vn * f2)**2, places=15)
 
+    def test_finite_momentum_coupling_basis_equivalence(self):
+        q2 = 0.047
+        f1_raw, f2_raw = ff.bishara_linear(q2)
+        f1_hat, f2_hat = ff.effective_nucleon_form_factors(f1_raw, f2_raw)
+        g_vq = 0.13
+        g_vn = 3.0 * g_vq
+        self.assertAlmostEqual(g_vq * f1_raw, g_vn * f1_hat, places=14)
+        self.assertAlmostEqual(g_vq * f2_raw, g_vn * f2_hat, places=14)
+        self.assertAlmostEqual((g_vq * f1_raw)**2, (g_vn * f1_hat)**2, places=14)
+        self.assertAlmostEqual((g_vq * f2_raw)**2, (g_vn * f2_hat)**2, places=14)
+
     def test_bishara_flavor_components_sum_to_universal_current(self):
         q2 = 0.047
         components = ff.bishara_flavor_components(q2)
