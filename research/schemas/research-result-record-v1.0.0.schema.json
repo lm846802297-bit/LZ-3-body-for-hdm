@@ -295,7 +295,20 @@
               "transformation": {
                 "type": "string"
               }
-            }
+            },
+            "anyOf": [
+              {
+                "required": [
+                  "sha256"
+                ]
+              },
+              {
+                "required": [
+                  "uri",
+                  "version"
+                ]
+              }
+            ]
           }
         },
         "configuration": {
