@@ -1,7 +1,7 @@
 # AFH v6.0 Xe-131 核响应、三体暗物质散射与天然氙反冲率
 
 > 整理日期：2026-11-11（原始主报告整理日期）
-> 最近文档更新：2026-11-16（新增 AFH-7/Hybrid-9 84 点 full-range spectra、16,807 行七同位素响应网格、高阶求积摘要，以及 GCN/JJ55 与 AFH-7 的数值精度边界）
+> 最近文档更新：2026-11-19（正式采用 B：低动量夸克到核子 Dirac–Pauli 形状因子与有限尺寸 AFH W_M(y_A) 的 M-only 基准；明确 g_VN 因子三与 AFH 因子四的独立归一化）
 > 对话来源：[ChatGPT 分享对话](https://chatgpt.com/share/6af4660e-e388-83ea-a86a-2482b065dcea)  
 > 对应研究仓库：`lm846802297-bit/LZ-3-body-for-hdm`  
 > 当前正式归档：main；PR #10 于 2026-11-13 合并，merge commit 724d9e7877fb76f4cc477fbb9e24e1e706bf37a6。PR #7 是此前研究分支内的历史合并记录。
@@ -30,6 +30,8 @@
 - **2026-11-13：** 将 `research/p1-mma-local` 中已完成的 Wolfram 14.0.0 原生 AFH Xe-131 2401 点结果、Python 对照、minima、源文件和 SHA-256 manifest 逐文件纳入本 PR；更新 README、附录 B/G、F6 索引和 P0–P2 状态。该归档不改变 Eq. (6) kernel 或天然氙连续谱的完成边界。
 - **2026-11-14：** 新增 P1-PhaseSpace 数值收敛审计：比较线性 \(W^2\)、线性 \(W\) 与 threshold-\(u^2\) 参数化，检查五个 \(v_{\min}\) 邻域速度点和代表点角积分，并以未归一化 Lorentz-invariant \(d\Phi_3\) 路径复核 Eq. (6) 前因子；新增六项回归测试和结果 SHA-256 归档；随后测试模块扩展为九项。近极点积分、完整连续反冲网格和 halo fold 仍未完成。
 
+- **2026-11-19：** 正式确定三体 VV Xe-131/天然氙的主基准为 B：采用 flavor-separated 低动量核子形状因子 \(\widehat F_1(t_N),\widehat F_2(t_N)\)，同时保留 AFH 有限尺寸 \(W_M(y_A)\)，不加入其他 AFH 响应。统一外部 \((g_1g_2g_{VN})^2\) 与 \(\widehat F_i=F_i^{uds}/3\) 的耦合记账；A 仅作为历史参考，C/D 作为后续核响应扩展。旧归档数值不追溯改名为 B，必须由新代码重新计算。
+
 ## 0. Current status update — 2026-11-16
 
 This update supersedes older selected-point-only statements in the report.
@@ -43,6 +45,72 @@ This update supersedes older selected-point-only statements in the report.
 - AFH Xe-131 response-level native Mathematica/Python validation has passed. Three validation layers are now recorded separately: (1) native Mathematica/Python AFH response comparison, with its own 2,401-node source-translation result; (2) Python-internal full Eq. (6) and factor-four closure; and (3) independent native Mathematica/Python full-cross-section pointwise comparison. The first two have their own PASS evidence, and the third is now executed and archived: 652 rows (500 open, 152 closed), four benchmarks, fixed 800 km/s, threshold-u2, pole width and 16×16×8. Its comparison JSON reports PASS; maximum relative differences are I6 1.34e-12, physical/no4 dσ 1.34e-12, AFH response 3.36e-16 and converted cross-code dσ 1.34e-12. Cross-code observables use the 2e-7 tolerance; per-code unit-conversion identities are checked separately at 2e-12. Near-pole width-prescription systematics, AFH-9 inputs and the official LZ likelihood remain open.
 
 The detailed sections below preserve earlier calculations and their provenance. Where an older paragraph says AFH is selected-point-only or that the full AFH response grid is absent, read it as the historical status before the 2026-11-14 full-grid run.
+
+## 0.1 2026-11-19 基准更新：正式采用 B
+
+本项目后续三体 VV 的固定速度截面和天然氙 Halo 计算统一采用 **B：有限动量核子流 × 有限尺寸 AFH 电荷响应**。B 是主基准，不再把零动量核子流 A 作为最终基准。
+
+核子层面的低动量 flavor-summed 处方为
+\[
+F_1^{uds,N}(t_N)=3+8.392t_N+\mathcal O(t_N^2),\qquad
+F_2^{uds,N}(t_N)=-0.552+\mathcal O(t_N).
+\]
+这里采用 Bishara et al. Appendix A.1 的一阶 Dirac 斜率；Pauli 形状因子只使用给定的领先阶常数，不人为引入未经验证的斜率。
+
+外部截面前因子采用
+\[
+g_{VN}=3g_{Vq},\qquad (g_1g_2g_{VN})^2.
+\]
+因此进入核子流系数的必须是
+\[
+\widehat F_i^{N}(t_N)=F_i^{uds,N}(t_N)/3,
+\quad
+\widehat F_1(0)=1,\quad
+\widehat F_2(0)=-0.184.
+\]
+不得在外部已经提出 \(g_{VN}\) 时，再把未除以 3 的 \(F_i^{uds}\) 放入流系数，否则绝对截面会多出因子 9。
+
+原子核层面始终使用 AFH 有限尺寸响应
+\[
+Q_A^2=|\mathbf q_A|^2=2m_AE_R+E_R^2,\qquad
+y_A=\frac{b_A^2Q_A^2}{4},
+\]
+\[
+W_M^{\rm phys}(y_A),
+\]
+而不是 \(W_M(0)\) 或常数 \(A^2\)。AFH 原始响应到物理等质子、等中子响应的 factor four 只应用一次；它与夸克到核子的 factor three 完全独立。
+
+正式 B 基准为
+\[
+\boxed{
+\frac{d\sigma_B}{dE_R}
+\propto
+\mathcal P_3 L_C^{(3)}
+\widehat c_M(t_N)^2W_M^{\rm phys}(y_A),
+}
+\]
+其中
+\[
+\widehat c_M(t_N)=
+\widehat F_1(t_N)+
+\frac{t_N}{8m_N^2}
+\left[\widehat F_1(t_N)+2\widehat F_2(t_N)\right].
+\]
+B 只包含 AFH \(M\) 响应；不加入 \(W_{\Phi''}\)、\(W_\Delta\)、\(W_{\Sigma'}\)、\(W_{\Sigma''}\) 或干涉项。
+
+动量约定为
+\[
+t_N=t_A=-2m_AE_R
+\]
+（严格单体 impulse 处方），而 AFH 的 \(y_A\) 使用精确空间动量 \(Q_A^2=2m_AE_R+E_R^2\)。静态核子近似 \(q_N^0=0\) 给出的 \(t_N=-Q_A^2\) 是另一种诊断，不得混入正式 B 曲线。
+
+后续比较统一使用：
+- A：相同有限尺寸 AFH \(W_M(y_A)\)，但核子流冻结在零动量；
+- B：正式主基准，有限 \(t_N\) 核子流乘有限尺寸 AFH \(W_M(y_A)\)；
+- C：B 加 \(\Phi''\) 和带符号 \(M-\Phi''\) 干涉；
+- D：通过 P3-C 完整验证后，再加入所有允许的 AFH 单体核流响应。
+
+分别报告 \(B/A\)（核子形状因子修正）、\(C/B\)（额外核响应修正）和 \(C/A\)（总变化）。此前使用常数核子耦合的 Mathematica/AFH 结果保留为历史 A 参考；它们不会因本次决策自动变成 B 结果，B 的绝对截面和天然氙 Halo 率必须由新处方重新计算。
 
 ## 摘要
 
