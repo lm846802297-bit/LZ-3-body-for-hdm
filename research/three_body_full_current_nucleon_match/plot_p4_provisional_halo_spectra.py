@@ -9,16 +9,16 @@ import matplotlib.pyplot as plt
 from matplotlib.backends.backend_pdf import PdfPages
 
 RATE_FIELDS = (
-    "rate_pointlike_M_events_kg_day_keV",
-    "rate_finite_t_M_events_kg_day_keV",
-    "rate_charge_MplusPhi_events_kg_day_keV",
+    "rate_A_original_AFH_M_events_kg_day_keV",
+    "rate_B_baseline_M_events_kg_day_keV",
+    "rate_C_charge_extension_events_kg_day_keV",
     "rate_leading_static_vector_candidate_events_kg_day_keV",
 )
 RATE_LABELS = {
-    RATE_FIELDS[0]: r"Pointlike $M$",
-    RATE_FIELDS[1]: r"Finite-$t_N$ $M$",
-    RATE_FIELDS[2]: r"$M+\Phi''+M\Phi''$",
-    RATE_FIELDS[3]: "Leading-static six-channel candidate",
+    RATE_FIELDS[0]: r"A: q=0 nucleon current $\\times W_M$",
+    RATE_FIELDS[1]: r"B: finite-$t_N$ nucleon current $\\times W_M$",
+    RATE_FIELDS[2]: r"C: $M+\\Phi''$ charge extension",
+    RATE_FIELDS[3]: "D candidate: leading-static six-channel current",
 }
 HALO_LABELS = {
     "shm_cutoff": "Truncated SHM",
@@ -43,10 +43,10 @@ def export(data: dict, out_dir: Path) -> dict:
     for row in spectra:
         base = {k: row[k] for k in (
             "ER_keV", "halo_model", *RATE_FIELDS,
-            "relative_charge_vs_pointlike_M",
-            "relative_finite_t_M_vs_pointlike_M",
+            "relative_C_vs_A",
+            "relative_B_vs_A",
             "relative_phi_vs_finite_t_M",
-            "relative_full_candidate_vs_pointlike_M",
+            "relative_full_candidate_vs_A",
             "relative_spatial_candidate_vs_coulomb",
             "open_abundance_fraction",
         ) if k in row}
@@ -98,9 +98,9 @@ def export(data: dict, out_dir: Path) -> dict:
 
             fig, ax = plt.subplots(figsize=(8.2, 5.4))
             ratio_fields = (
-                ("relative_finite_t_M_vs_pointlike_M", r"Finite-$t_N$ $M$/pointlike $M$ $-1$"),
-                ("relative_charge_vs_pointlike_M", r"Coulomb sector/pointlike $M$ $-1$"),
-                ("relative_full_candidate_vs_pointlike_M", "Six-channel candidate/pointlike M − 1"),
+                ("relative_B_vs_A", r"B/A: finite-$t_N$ nucleon-current correction"),
+                ("relative_C_vs_A", r"C/A: total charge-sector change"),
+                ("relative_full_candidate_vs_A", "D candidate/A: provisional full-current change"),
                 ("relative_spatial_candidate_vs_coulomb", "Spatial candidate/Coulomb sector"),
             )
             for field, label in ratio_fields:
