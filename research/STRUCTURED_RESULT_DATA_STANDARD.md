@@ -142,6 +142,8 @@ python research/schemas/validate_result_records.py --repo-root . <run_manifest.j
 
 校验器检查 Schema、严格 JSON 数值、引用文件路径/字节数/SHA-256，以及 CSV 的行数、列名、逐列单位和非有限数值。只传入本次实际存在的 JSON 文件。
 
+`status=passed` 仅在至少有一项检查且所有检查均为 `passed` 时允许使用；部分完成或含失败项必须使用 `partial`、`failed` 或 `inconclusive`。
+
 归档前逐项检查：
 
 - JSON 能严格解析且通过 Schema；
