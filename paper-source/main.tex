@@ -229,8 +229,8 @@ dependence of this ratio.
 As shown in Fig.~\ref{fig:fixed-speed-recoil-ratio}, the ratio
 vanishes as $D^{3/2}$ when either endpoint $E_R^\pm(v)$ is
 approached from within the allowed interval. Since $I(D)$ is
-monotonic and $\partial D/\partial q=v-q/\mu$ at fixed $v$,
-the ratio peaks at $q=\mu v$, corresponding to
+monotonic and $\partial D/\partial q_A=v-q_A/\mu$ at fixed $v$,
+the ratio peaks at $q_A=\mu v$, corresponding to
 $E_R^{\rm peak}=\mu^2v^2/(2m_A)$.
 
 \begin{figure}[htb]
@@ -239,7 +239,7 @@ $E_R^{\rm peak}=\mu^2v^2/(2m_A)$.
 %    \fbox{\rule{0pt}{0.40\linewidth}\rule{0.90\linewidth}{0pt}}
     \caption{Ratio of the differential recoil cross sections
     for $2\to 3$ emission and inelastic $2\to2$ scattering
-    at fixed incident speed and matched thresholds ($\delta=m_s$). \zb{Here we already consider $(2m_T)^2$ but without $\mathcal R_A(E_R)$.}}
+    at fixed incident speed and matched thresholds ($\delta=m_s$). \zb{Here we already consider $(2m_A)^2$ but without $\mathcal R_A(E_R)$.}}
     \label{fig:fixed-speed-recoil-ratio}
 \end{figure}
 
@@ -528,8 +528,9 @@ W_M^{00,\mathrm{phys}}(y_A)
 \frac{4\pi}{2J_A+1}W_M^{00,\mathrm{phys}}(y_A),
 \label{eq:physical-AFH-M-response}
 \end{equation}
-where $C_0(A)$ removes the small zero-momentum OBDME normalization
-offset. Thus $\mathcal R_A(0)=A^2$. The factor of four and $C_0(A)$
+where $C_0(A)=A^2/[4\mathcal R_{A,\mathrm{raw}}(0)]$ removes the
+small zero-momentum OBDME normalization offset. Thus
+$\mathcal R_A(0)=A^2$. The factor of four and $C_0(A)$
 are included once in $W_M^{00,\mathrm{phys}}$ and are not repeated
 elsewhere.
 
@@ -1150,6 +1151,9 @@ e^{i\boldsymbol q_A\cdot\boldsymbol r_a}\right|A\right\rangle,
 \label{eq:nuclear}
 \end{equation}
 where $A$ is the nuclear mass number and $m_T=m_A$ for the nuclear target.
+The normalized amplitude $F_A$ is a simplified whole-nucleus density
+shape function; it is not the AFH response $W_M^{\mathrm{phys}}$, which
+contains the nuclear multipole sum and response normalization.
 
 Define
 \begin{equation}
@@ -1407,7 +1411,7 @@ C_2\equiv\Msq{2},\qquad C_3\equiv\Msq{3},\qquad
 The constants have different mass dimensions:
 $[C_2]=\text{mass}^0$ and $[C_3]=\text{mass}^{-2}$.
 The following comparison isolates phase space. For a physical nuclear
-recoil spectrum, the common factor $F_A^2(\qvec_A_A)$ must be restored.
+recoil spectrum, the common factor $F_A^2(\qvec_A)$ must be restored.
 
 \subsection{Phase-space convention and incident flux}
 
