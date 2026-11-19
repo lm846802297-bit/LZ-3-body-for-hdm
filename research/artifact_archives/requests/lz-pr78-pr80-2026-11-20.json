@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "repository": "lm846802297-bit/LZ-3-body-for-hdm",
+  "purpose": "Preserve native numerical outputs and exact GitHub Actions source-artifact provenance for the PR #78 halo/seven-isotope calculation and PR #80 finite-nucleon-form-factor B baseline.",
+  "main_integration": {
+    "pr74_merge_commit": "070dc89cc58699633d0009c1fbaea7fa400ee337"
+  },
+  "artifacts": [
+    {
+      "key": "halo_pr78_original",
+      "run_id": 44560087038,
+      "workflow_name": "Three-body full integral vs I(D), halo and seven isotopes",
+      "head_branch": "research/halo-ID-approximation-seven-isotopes-20261119",
+      "head_sha": "9ca1801cdded7002c93776f8a0f5bce894135356",
+      "artifact_id": 14551462445,
+      "artifact_name": "halo-seven-isotope-full-vs-ID-full-recoil-scan",
+      "sha256": "6d3d711341cdd33200721fc9371c0dcac2ba3b0354043c09c903d89650b40103",
+      "size_in_bytes": 368745,
+      "zip_path": "research/three_body_phase_space_ID_validation/results/2026-11-19-halo-seven-isotope-full-vs-ID-full-recoil-scan/source-artifact-pr78-original.zip",
+      "extract": false
+    },
+    {
+      "key": "halo_pr74_final",
+      "run_id": 44568592064,
+      "workflow_name": "Three-body full integral vs I(D), halo and seven isotopes",
+      "head_branch": "research/full-L00-vs-ID-validation-20261119",
+      "head_sha": "b6b1452b96c5e4697410c92a8ad3e4c358eed80c",
+      "artifact_id": 14555201585,
+      "artifact_name": "halo-seven-isotope-full-vs-ID-full-recoil-scan",
+      "sha256": "f89db448c83f6a7217c2ec7f4a046f8838e2069b671db2fff48bd94eef474da5",
+      "size_in_bytes": 368745,
+      "zip_path": "research/three_body_phase_space_ID_validation/results/2026-11-19-halo-seven-isotope-full-vs-ID-full-recoil-scan/source-artifact-pr74-final-rerun.zip",
+      "extract": true,
+      "extract_path": "research/three_body_phase_space_ID_validation/results/2026-11-19-halo-seven-isotope-full-vs-ID-full-recoil-scan/extracted"
+    },
+    {
+      "key": "b_pr80",
+      "run_id": 44565778594,
+      "workflow_name": "Finite nucleon form factors B baseline",
+      "head_branch": "research/nucleon-form-factor-B-baseline-20261119",
+      "head_sha": "42309444866454bdfc27f45316bd3628815209fe",
+      "artifact_id": 14551033657,
+      "artifact_name": "finite-nucleon-form-factor-B-baseline",
+      "sha256": "f98c6d5a3d9c87cb0350616a0dea86e7c5270484c0eb6f1139c55288ecc35918",
+      "size_in_bytes": 1260840,
+      "zip_path": "research/nucleon_form_factor_B_baseline/results/2026-11-19-finite-nucleon-form-factor-B-baseline/source-artifact-pr80.zip",
+      "extract": true,
+      "extract_path": "research/nucleon_form_factor_B_baseline/results/2026-11-19-finite-nucleon-form-factor-B-baseline/extracted"
+    }
+  ],
+  "archive_request_revision": "trigger-1",
+  "archive_request_note": "Trigger the repository archival workflow. The workflow downloads only the pinned successful source artifacts, verifies their GitHub digests, extracts native files, builds manifests and SHA256SUMS, and commits the archive to this branch."
+}

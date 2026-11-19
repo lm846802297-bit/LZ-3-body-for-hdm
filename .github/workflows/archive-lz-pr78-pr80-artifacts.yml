@@ -1,0 +1,136 @@
+name: Archive PR78 and PR80 numerical artifacts
+
+on:
+  push:
+    branches:
+      - research/halo-ID-approximation-seven-isotopes-20261119
+    paths:
+      - research/artifact_archives/requests/lz-pr78-pr80-2026-11-20.json
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: lz-pr78-pr80-artifact-archive
+  cancel-in-progress: false
+
+jobs:
+  archive-native-results:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out archive branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Download and verify source artifacts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPOSITORY: ${{ github.repository }}
+          RUNNER_TEMP: ${{ runner.temp }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          import pathlib
+          import subprocess
+
+          root = pathlib.Path.cwd()
+          request_path = root / "research/artifact_archives/requests/lz-pr78-pr80-2026-11-20.json"
+          request = json.loads(request_path.read_text(encoding="utf-8"))
+          repo = os.environ["GH_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          meta_dir = pathlib.Path(os.environ["RUNNER_TEMP"]) / "lz-pr78-pr80-metadata"
+          meta_dir.mkdir(parents=True, exist_ok=True)
+
+          def curl_json(url, destination):
+              subprocess.run([
+                  "curl", "--fail", "--silent", "--show-error", "--location",
+                  "-H", "Accept: application/vnd.github+json",
+                  "-H", f"Authorization: Bearer {token}",
+                  "-H", "X-GitHub-Api-Version: 2022-11-28",
+                  url, "-o", str(destination)
+              ], check=True)
+
+          def download_artifact(url, destination):
+              headers = destination.with_suffix(destination.suffix + ".headers")
+              subprocess.run([
+                  "curl", "--silent", "--show-error", "--dump-header", str(headers),
+                  "--output", "/dev/null",
+                  "-H", "Accept: application/vnd.github+json",
+                  "-H", f"Authorization: Bearer {token}",
+                  "-H", "X-GitHub-Api-Version: 2022-11-28",
+                  url
+              ], check=True)
+              location = ""
+              for line in headers.read_text(encoding="utf-8", errors="replace").splitlines():
+                  if line.lower().startswith("location:"):
+                      location = line.split(":", 1)[1].strip()
+              headers.unlink(missing_ok=True)
+              if not location:
+                  raise RuntimeError(f"GitHub did not return an artifact download redirect for {url}")
+              destination.parent.mkdir(parents=True, exist_ok=True)
+              subprocess.run([
+                  "curl", "--fail", "--silent", "--show-error", "--location",
+                  location, "--output", str(destination)
+              ], check=True)
+
+          for item in request["artifacts"]:
+              key = item["key"]
+              curl_json(
+                  f"https://api.github.com/repos/{repo}/actions/runs/{item['run_id']}",
+                  meta_dir / f"{key}_run.json",
+              )
+              curl_json(
+                  f"https://api.github.com/repos/{repo}/actions/artifacts/{item['artifact_id']}",
+                  meta_dir / f"{key}_artifact.json",
+              )
+              zip_path = root / item["zip_path"]
+              download_artifact(
+                  f"https://api.github.com/repos/{repo}/actions/artifacts/{item['artifact_id']}/zip",
+                  zip_path,
+              )
+              if item.get("extract"):
+                  extract_path = root / item["extract_path"]
+                  extract_path.mkdir(parents=True, exist_ok=True)
+                  subprocess.run(["unzip", "-q", str(zip_path), "-d", str(extract_path)], check=True)
+              print(f"Downloaded {key}: {zip_path.stat().st_size} bytes")
+
+          print(f"Metadata directory: {meta_dir}")
+          PY
+
+      - name: Validate payloads and generate run manifests
+        env:
+          RUNNER_TEMP: ${{ runner.temp }}
+        run: |
+          python research/artifact_archives/build_pr78_pr80_archive.py \
+            --metadata-dir "$RUNNER_TEMP/lz-pr78-pr80-metadata"
+
+      - name: Verify every archived file checksum
+        run: |
+          set -euo pipefail
+          cd research/three_body_phase_space_ID_validation/results/2026-11-19-halo-seven-isotope-full-vs-ID-full-recoil-scan
+          sha256sum -c SHA256SUMS
+          cd "$GITHUB_WORKSPACE/research/nucleon_form_factor_B_baseline/results/2026-11-19-finite-nucleon-form-factor-B-baseline"
+          sha256sum -c SHA256SUMS
+
+      - name: Commit native results and provenance to the archive branch
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add \
+            research/three_body_phase_space_ID_validation/results/2026-11-19-halo-seven-isotope-full-vs-ID-full-recoil-scan \
+            research/nucleon_form_factor_B_baseline/results/2026-11-19-finite-nucleon-form-factor-B-baseline
+          if git diff --cached --quiet; then
+            echo "No archive changes to commit."
+            exit 0
+          fi
+          git commit -m "Archive native numerical outputs from PR #78 and #80 workflows"
+          git push origin "HEAD:${TARGET_BRANCH}"
