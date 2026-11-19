@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
-"""Ye et al. low-Q2 electromagnetic proton/neutron form factors.
+"""Legacy-named compatibility implementation of the Borah et al. low-Q2 fit.
 
-The central values and covariance matrix are pinned from the Ye et al.
-supplemental material as redistributed in GENIE-MC/Generator.  The four
-unconstrained coefficients for each Sachs form factor are completed with
-G(0) normalization and the four Q^4 asymptotic sum rules, matching GENIE's
-Q4limit implementation.
+The pinned coefficients/covariance in data/ye2020 are byte-identical to the
+canonical data/borah2020 inputs. New calculations should import
+borah2020_lowq2; this module is retained for old callers and historical
+reproduction. The Alexandrou 2020 magnetic-radius normalization is corrected.
 """
 from __future__ import annotations
 
@@ -161,7 +160,7 @@ def _strange_sachs(q2_GeV2, model: str) -> tuple[np.ndarray, np.ndarray, dict]:
         rE2_weighted_fm2 = -0.0048
         rM2_weighted_fm2 = -0.015
         ge_weighted = -(rE2_weighted_fm2 * FM2_TO_GEVM2) * q2 / 6.0
-        gm_weighted = mu_weighted - (rM2_weighted_fm2 * FM2_TO_GEVM2) * q2 / 6.0
+        gm_weighted = mu_weighted * (1.0 - (rM2_weighted_fm2 * FM2_TO_GEVM2) * q2 / 6.0)
         return ge_weighted/e_s, gm_weighted/e_s, {
             "model": model,
             "source_current": "e_s*sbar gamma_mu s with e_s=-1/3",
@@ -264,7 +263,7 @@ def sample_cM_draws(q2_GeV2, n_draws: int = 5000, seed: int = 20261119,
 
 def sample_cM_factors(q2_GeV2, n_draws: int = 5000, seed: int = 20261119,
                       strange_model: str = "sufian2017_unit_current"):
-    """Summarize Ye2020 coefficient-covariance draws for F_M and |F_M|^2."""
+    """Summarize Borah2020 coefficient-covariance draws for F_M and |F_M|^2."""
     fm = sample_cM_draws(q2_GeV2, n_draws, seed, strange_model)
     fm2 = fm*fm
     return {
