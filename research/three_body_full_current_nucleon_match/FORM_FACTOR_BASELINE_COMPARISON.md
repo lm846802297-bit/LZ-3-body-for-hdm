@@ -102,7 +102,7 @@ Therefore the nucleon-current coefficients in this external-\(g_{VN}\) conventio
 \]
 The external prefactor already contains \(g_{VN}\); using the raw \(F_i^{uds}\) in the current coefficients would count the factor three twice and produce a factor-nine error in the rate.
 
-The equivalent convention is to use \(g_{Vq}=g_{VN}/3\) externally with the unnormalized \(F_i^{uds}\). Both conventions must agree pointwise. **All formal B production modules use the first convention.** Legacy A-reference runners and the archived Mathematica engine are deliberately retained as historical calculations; they do not include the finite-\\(t_N\\) Dirac--Pauli insertion and must not be described as B or used to generate new B results.
+The equivalent convention is to use \(g_{Vq}=g_{VN}/3\) externally with the unnormalized \(F_i^{uds}\). Both conventions must agree pointwise. **All formal B production modules use the first convention.** Legacy A-reference runners and the archived Mathematica engine are deliberately retained as historical calculations; they do not include the finite-\(t_N\) Dirac--Pauli insertion and must not be described as B or used to generate new B results.
 
 ## 4. Adopted low-momentum flavor-separated prescription
 
@@ -229,8 +229,7 @@ The finite-\(t_N\) nucleon-current correction reduces the M-only kernel by rough
 
 The archived Mathematica notebook explicitly evaluates the AFH finite-q nuclear response through \(W_M(y_A)\). Its recorded rate-engine path uses a constant effective nucleon coupling and does not, by itself, show an explicit finite-\(t_N\), flavor-resolved Dirac–Pauli insertion. If a different earlier local calculation included another low-order quark-shape prescription, its exact source and coefficients still need to be recovered. This provenance question does not block the adopted B baseline: B is now the declared primary prescription for subsequent calculations.
 
-The formal B implementation is present in the current research branch, but the first post-rename CI attempt exposed stale regression-test field names and one q=0 fixture that was still supplying finite-\\(t_N\\) form factors. Those tests are being migrated to the canonical A/B/C output schema; no failed check is being waived. The absolute B spectrum must pass its dedicated workflow, and the natural-xenon halo fold must pass the native seven-isotope/eight-response provenance gate before its numerical output is promoted. P3-C's covariant-to-AFH nuclear-amplitude validation remains open; until then, the spatial D candidate is provisional.
-
+The formal B implementation is present in the current research branch. The initial post-rename CI failures were caused by stale A/B/C field names, a q=0 test fixture that still supplied finite-tN inputs, and a raw-versus-effective form-factor mismatch in the P3-C workflow. These have been corrected rather than waived. The full-current workflow 44465719660 passed, including all regression tests, native charge-sector unit tests, phase-space tensor generation, AFH Eq. (107) extraction, response contraction, and the normalized P3-C spatial helicity subgate. The fixed-speed charge-sector workflow 44464849221 also passed. The dedicated B absolute-spectrum workflow is still required before its curve is promoted, and the natural-xenon halo fold still requires a native seven-isotope/eight-response provenance PASS. P3-C remains a spatial subgate PASS, not a full covariant nuclear-amplitude PASS; the spatial D candidate is provisional.
 
 ### 8.1 Executable pipeline inventory
 
