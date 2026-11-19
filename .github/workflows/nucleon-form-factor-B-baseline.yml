@@ -50,7 +50,7 @@ jobs:
             --out-dir artifacts/B-highorder --draws 3000
       - name: Compare B quadrature convergence
         run: |
-          for model in sufian2017_unit_current alexandrou2020_charge_weighted_converted; do
+          for model in sufian2017_unit_current alexandrou2020_charge_weighted_converted alexandrou2026_continuum_unit_current; do
             python research/nucleon_form_factor_B_baseline/compare_B_quadrature.py \
               --baseline-dir artifacts/B-baseline/$model \
               --highorder-dir artifacts/B-highorder/$model \
