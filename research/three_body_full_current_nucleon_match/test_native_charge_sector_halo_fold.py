@@ -412,7 +412,7 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             self.assertIn("W_M(y_A)", result["primary_baseline"])
             self.assertIn("t_A=-2*m_A*E_R", result["mediator_denominator"])
             self.assertEqual(result["nucleon_transfer_scheme"],
-                "strict one-body impulse q_N^mu=q_A^mu; t_N=t_A=-2*mA*ER")
+                "strict one-body impulse q_N^mu=q_A^mu; t_N=t_A=-2*m_A*E_R")
             xe131 = next(item for item in mb["isotope_rows"] if item["A"] == 131)
             self.assertEqual(xe131["qA_four_vector_GeV"], xe131["qN_four_vector_GeV"])
             self.assertAlmostEqual(xe131["tA_GeV2"], xe131["tN_GeV2"], places=16)
