@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
-"""Native-AFH Coulomb-sector halo fold (not a complete vector-current rate).
+"""Natural-xenon halo fold with the B finite-t_N AFH M-only baseline.
 
-This module evaluates M + Phi'' + M-Phi'' using the continuity-reduced
-Coulomb weight L_C = L00 - (omega/Q)(L03+L30) + (omega/Q)^2 L33,
-conditional on conservation of the complete nuclear vector current.
-It therefore eliminates the longitudinal multipole using the conserved-
-current relation, but omits transverse nuclear-current multipoles such as
-Delta and Sigma'. The algebraic point-nucleus identity does not establish
-dynamical continuity of the truncated many-body one-body current. It is not the full
-L_mu_nu W_A^{mu nu} contraction or the final three-body spectrum.
-A native AFH input PASS validates the nuclear response archive only; it does
-not validate the missing three-body transverse multipole projection.
+The primary reported rate is B = c_M(Fhat_1(t_N),Fhat_2(t_N))^2
+L_C W_M(y_A), with the finite-size AFH M response retained and no additional
+AFH responses. The module also computes the separate C charge-sector
+extension (Phi'', M-Phi''), and optionally a provisional leading-static
+spatial-current candidate. L_C uses nuclear-current continuity and is
+conditional on conservation of the complete nuclear vector current; the
+algebraic point-nucleus identity is not a dynamical proof of that condition.
+The result is not the complete L_mu_nu W_A^{mu nu} contraction until P3 passes.
+The public rate prefactor uses (g1*g2*gVN)^2, so the current coefficients
+must use Fhat_i=F_i^(u+d+s)/3.
 """
 from __future__ import annotations
 
@@ -1179,8 +1179,9 @@ def fold(
         "C_extension_definition": "B plus Phi'' diagonal and signed M-Phi'' interference",
         "form_factor_normalization": "Fhat_i=F_i^(u+d+s)/3 because coupling_product_squared uses external g_VN=3*g_Vq",
         "form_factor_comparison": (
-            "Report both full/finite_t_M (multipole correction at fixed F1,F2) and "
-            "full/original_AFH_M_baseline (total change relative to the original AFH M-only result)"
+            "B is the primary finite-t_N M-only baseline. Report C/B for the "
+            "additional Phi'' and signed M-Phi'' correction, and B/A for the "
+            "nucleon-form-factor correction relative to the original AFH M-only reference."
         ),
         "coulomb_weight": "L_C=L00-(E_R/Q_A)(L03+L30)+(E_R/Q_A)^2 L33, conditional on conservation of the complete nuclear vector current",
         "transverse_weight": (
