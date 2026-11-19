@@ -1,0 +1,11 @@
+{
+  "natural_xenon": {
+    "points": 208,
+    "max_abs_full_B_rate_shift_pct": 9.884997065334744e-06,
+    "max_abs_I_D_B_rate_shift_pct": 1.7092129667162226e-05,
+    "max_abs_approximation_error_shift_pp": 1.0792084781385824e-05
+  },
+  "seven_isotopes": {
+    "points": 1456
+  }
+}
