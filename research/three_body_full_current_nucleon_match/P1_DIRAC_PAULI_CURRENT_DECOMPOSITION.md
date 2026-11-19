@@ -23,6 +23,15 @@ J_N^\mu=\bar u_N(k_N')
 \left[F_1^V(t_N)\gamma^\mu+
 \frac{iF_2^V(t_N)}{2m_N}\sigma^{\mu\nu}q_{N,\nu}\right]u_N(k_N).
 \]
+**Rate-normalization convention for the adopted B baseline.** The formulas
+below are written for generic flavor-summed \(F_1^V,F_2^V\). When the
+public rate prefactor is expressed with \(g_{VN}=3g_{Vq}\), the coefficients
+must use \(\widehat F_i=F_i^{uds}/3\), so that
+\(\widehat F_1(0)=1\) and \(\widehat F_2(0)=-0.184\). This is a
+coupling-basis conversion only; it does not alter the Dirac-Pauli current
+or the AFH nuclear response. Never combine raw \(F_i^{uds}\) with an
+external \(g_{VN}\) prefactor.
+
 The AFH Fourier momentum used later is \(\boldsymbol q_{\rm AFH}=-\boldsymbol q_A\), whereas the nucleon vertex above uses \(\boldsymbol q_N=+\boldsymbol q_A\) in the impulse matching slice. These signs are not interchangeable.
 
 Before matching to AFH one-body operators, divide the covariant spinor matrix element by \(2\sqrt{E_NE_N'}\). The exact code path is the nucleon_current_matrices function followed by nonrel_state_normalization.
