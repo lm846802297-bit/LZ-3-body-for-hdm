@@ -1,5 +1,7 @@
 # Repository research workflow
 
+> **Research communication standard:** Follow the canonical [project-wide decision policy](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/blob/main/AGENTS.md#research-communication-and-decision-policy) and [research reporting workflow](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/blob/main/research/WORKFLOW.md#9-research-reporting-and-communication-standard). These are maintained on `main`; do not fork or duplicate the policy text.
+
 This document turns the repository's research-management principles into
 operational rules.
 
@@ -87,6 +89,14 @@ A result can be merged before the physics question is fully settled, but only
 if the archived calculation is reproducible and its status and limitations
 are explicit. A passing software test is not, by itself, validation of the
 physical model.
+
+### Research Task Brief for substantive work
+
+Before beginning or delegating a substantive derivation, calculation, code change, or validation task, create a filled [Research Task Brief](_template/RESEARCH_TASK_BRIEF.md) and follow the [handoff standard](RESEARCH_TASK_HANDOFF_STANDARD.md). The brief must pin the exact sources and Git baseline, freeze metric/momentum/sign/normalization conventions, list assumptions, identify genuinely validated prior results, specify the independent derivation and numerical checks, define expected artifacts, and record unresolved questions.
+
+Store topic-specific briefs in `research/<topic>/task_briefs/<task-id>.md`; store cross-topic briefs in `research/docs/task_briefs/<task-id>.md`. Send the same brief to every model, agent, or collaborator working on the task. Do not rely on a conversational summary as the handoff. If the scope or conventions change, update the change log or issue a linked successor brief; do not silently rewrite the task definition.
+
+The brief defines what is requested; it does not establish that the work has been performed. The receiving researcher must return the derivation, actual checks and tolerances, unresolved discrepancies, artifact paths, and exact completion commit. A trivial editorial or maintenance-only change may state why a brief is not applicable.
 
 ## 3. Branch and PR lifecycle
 
