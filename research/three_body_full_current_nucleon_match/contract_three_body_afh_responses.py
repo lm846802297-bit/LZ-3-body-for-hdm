@@ -452,6 +452,8 @@ def contract_archive(
     c0_values = [float(spatial_data[A]["C0"]) for A in spatial_data]
     return {
         "status": "PROVISIONAL_AFH_CONTRACTION_PASS" if not failures else "FAIL",
+        "calculation_role": "P3-C charge/spatial amplitude-matching diagnostic with q=0 nucleon-current anchors; not B production",
+        "primary_B_baseline_included": False,
         "scope": (
             "fixed-speed benchmark contraction of leading static three-body "
             "particle coefficients; AFH-8 charge responses are multiplied by "
