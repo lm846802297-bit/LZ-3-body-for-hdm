@@ -87,6 +87,23 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             set(fold.FULL_VECTOR_RESPONSE_NAMES),
         )
 
+    def test_provisional_response_interpolation_uses_common_linear_psd_preserving_path(self):
+        q = np.asarray([0.0, 1.0, 2.0])
+        entry = {
+            "q": q,
+            "interpolation_mode": "linear_psd_preserving",
+            "physical": {
+                name: np.asarray([1.0, 2.0, 1.0])
+                for name in fold.FULL_VECTOR_RESPONSE_NAMES
+            },
+        }
+        out = fold.interpolate_native_response(entry, 0.5)
+        self.assertEqual(out["interpolation_used"], "linear_psd_preserving")
+        for name in fold.FULL_VECTOR_RESPONSE_NAMES:
+            self.assertAlmostEqual(out["physical_equal_pn"][name], 1.5)
+            self.assertAlmostEqual(out["linear_physical_equal_pn"][name], 1.5)
+            self.assertAlmostEqual(out["pchip_linear_relative_difference"][name], 0.0)
+
     def test_leading_static_vector_kernel_reconstructs_charge_and_spatial(self):
         L = np.zeros((4, 4, 2), dtype=float)
         L[0, 0, 0] = 1.0
