@@ -169,7 +169,9 @@ The Xe-131 fixed-speed dual-form-factor workflow passed on 2026-11-19 (run 44443
 | 267 keV | 0.9146368945 (-8.536311%) | 0.8996103903 (-10.038961%) |
 
 
-A provenance distinction remains important: the checked paper-source main.tex explicitly states the universal quark coupling and the AFH W_M response, but does not itself spell out a finite-t_N flavor-resolved F1^q/F2^q low-order parameterization. The archived DMFormFactor-v6 file supplies the nuclear-response machinery; it is not, by itself, evidence for a particular quark-level shape-factor input. Therefore bishara_linear is treated as a low-Q2 diagnostic until the exact legacy expression and coefficients are identified.
+A provenance distinction remains important. The archived Mathematica rate engine calls the AFH nuclear response at finite spatial \(Q_A\) and multiplies it by a constant coupling-squared prefactor; its recorded production path does not explicitly evaluate \(F_1^{uds,N}(t_N)\) or \(F_2^{uds,N}(t_N)\). Thus the original calculation did include finite nuclear structure through AFH \(W_M(Q_A)\), but that fact alone does not establish that a finite-\(t_N\) single-nucleon Dirac-Pauli form factor was applied in the rate engine.
+
+The checked paper-source main.tex states the universal quark coupling and AFH \(W_M\), but does not itself spell out a finite-\(t_N\) flavor-resolved \(F_1^q/F_2^q\) low-order parameterization. The archived DMFormFactor-v6 file supplies the nuclear-response machinery; it is not, by itself, evidence for a particular quark-level shape-factor input. The longer quark-to-nucleon matching record lists the Bishara \(F_1\) slope as a low-\(Q_N^2\) diagnostic and explicitly marks the finite-\(t_N\) form-factor insertion into the old rate engine as pending. Therefore bishara_linear is treated as a low-\(Q_N^2\) diagnostic until the exact legacy expression and coefficients are identified.
 
 ## 7. Validation boundary and next steps
 
