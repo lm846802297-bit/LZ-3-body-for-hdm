@@ -452,13 +452,20 @@ def interpolate_native_response(
     }
 
 
-def form_factor_values(qA_GeV: float, prescription: str) -> tuple[float, float]:
-    """Evaluate F1,F2 at Q_N^2=|q_N|^2 in the static one-body impulse approximation.
+def form_factor_values(
+    qA_GeV: float,
+    prescription: str,
+    *,
+    tN_GeV2: float | None = None,
+) -> tuple[float, float]:
+    """Evaluate F1,F2 at Q_N^2=-t_N.
 
-    Here q_N^0=0 and bold(q_N)=bold(q_A).  This spatial transfer squared
-    is distinct from the nuclear invariant t_A used by the vector propagator.
+    If tN_GeV2 is omitted, use the static diagnostic q_N^0=0,
+    Q_N^2=|q_A|^2. Formal one-body impulse calls pass t_N=t_A.
     """
-    Q2 = qA_GeV * qA_GeV
+    Q2 = qA_GeV * qA_GeV if tN_GeV2 is None else -float(tN_GeV2)
+    if Q2 < 0.0 or not math.isfinite(Q2):
+        raise ValueError("nucleon form-factor Q_N^2 must be finite and non-negative")
     if prescription in ("q0_anchor", "pointlike"):
         return F1V0, F2V0
     if prescription == "bishara_linear":
@@ -473,12 +480,18 @@ def charge_kernel_from_coulomb_weight(
     qA_GeV: float,
     responses: dict[str, float],
     form_factor_prescription: str,
+    *,
+    tN_GeV2: float | None = None,
 ) -> dict:
     """Build M + Phi'' charge-multipole terms from the continuity-reduced L_C."""
     if not math.isfinite(L_C) or L_C < 0.0:
         raise ValueError(f"invalid continuity-adjusted Coulomb weight L_C={L_C}")
-    F1, F2 = form_factor_values(qA_GeV, form_factor_prescription)
-    cM, cPhi = charge_coefficients(qA_GeV, F1=F1, F2=F2)
+    F1, F2 = form_factor_values(
+        qA_GeV, form_factor_prescription, tN_GeV2=tN_GeV2
+    )
+    cM, cPhi = charge_coefficients(
+        qA_GeV, F1=F1, F2=F2, tN_GeV2=tN_GeV2
+    )
     C_M = cM * cM * L_C
     C_PhiPP = cPhi * cPhi * L_C
     C_MPhiPP = 2.0 * cM * cPhi * L_C
@@ -541,7 +554,10 @@ def leading_static_vector_current_kernel_from_tensor(
     if pairs.shape != (4, 4, 2) or not np.all(np.isfinite(pairs)):
         raise ValueError("integrated q-aligned Lorentz tensor must have shape (4,4,2)")
     L = pairs[:, :, 0] + 1j * pairs[:, :, 1]
-    F1, F2 = form_factor_values(qA_GeV, form_factor_prescription)
+    tN_GeV2 = omega_GeV * omega_GeV - qA_GeV * qA_GeV
+    F1, F2 = form_factor_values(
+        qA_GeV, form_factor_prescription, tN_GeV2=tN_GeV2
+    )
     coefficients = extract_afh_vector_coefficients(
         L,
         qA_GeV,
@@ -630,6 +646,7 @@ def leading_static_vector_current_kernel_from_tensor(
         qA_GeV,
         responses,
         form_factor_prescription,
+        tN_GeV2=tN_GeV2,
     )
     charge_residual = abs(charge - charge_check["charge_sector"]) / max(
         abs(charge), abs(charge_check["charge_sector"]), 1.0e-300
@@ -859,10 +876,13 @@ def fold(
                         max_interp_difference,
                         max(response["pchip_linear_relative_difference"].values()),
                     )
+                    ER_GeV = float(ER_keV) * 1.0e-6
+                    tN_GeV2 = ER_GeV * ER_GeV - qA * qA
                     kernel = charge_kernel_from_coulomb_weight(
                         coulomb_result["L_C"], qA,
                         response["physical_equal_pn"],
                         form_factor_prescription,
+                        tN_GeV2=tN_GeV2,
                     )
                     # The mediator carries the nuclear four-transfer q_A^mu:
                     # t_A=q_A^2=-2 m_A E_R exactly.  Spatial |q_A|^2 includes E_R^2
@@ -1157,7 +1177,8 @@ def fold(
         "recoil_momentum": "Q_A=|bold(q_A)|=sqrt(2 m_A E_R + E_R^2), exact spatial nuclear recoil momentum",
         "nuclear_transfer_invariant": "t_A=q_A^mu q_{A,mu}=-2 m_A E_R exactly for an initially resting on-shell target",
         "mediator_propagator_denominator": "(m_V^2-t_A)^2=(m_V^2+2 m_A E_R)^2; uses t_A, not spatial Q_A^2",
-        "nucleon_form_factor_argument": "Q_N^2=-t_N=|bold(q_N)|^2; in static impulse q_N^0=0 and bold(q_N)=bold(q_A), so Q_N^2=Q_A^2=2 m_A E_R+E_R^2",
+        "nucleon_form_factor_argument": "Q_N^2=-t_N with strict one-body impulse q_N^mu=q_A^mu, so t_N=t_A=-2 m_A E_R and Q_N^2=2 m_A E_R; static q_N^0=0 is a separate diagnostic",
+        "nucleon_transfer_scheme": "full external four-momentum transfer q_N^mu=q_A^mu in formal P4; static q_N^0=0 retained only as optional diagnostic",
         "original_AFH_M_baseline_definition": (
             "q=0 single-nucleon-current normalization times finite-q native AFH W_M(Q_A); "
             "this preserves the original nuclear form factor and is not a point nucleus"
