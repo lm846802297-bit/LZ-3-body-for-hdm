@@ -163,11 +163,11 @@ python research/schemas/validate_result_records.py --repo-root . <run_manifest.j
 
 `extensions.direct_detection` 应记录：
 
-- (m_{\chi_1},m_{\chi_2},m_s,m_V)、(g_1,g_2,g_{VN})、粒子 Dirac/Majorana 性质及宽度方案；
-- 三体过程、相空间边界、参考系、(q_A)、(q_N)、(t_N)、(E_R) 的独立定义；
+- $m_{\chi_1},m_{\chi_2},m_s,m_V$、$g_1,g_2,g_{VN}$、粒子 Dirac/Majorana 性质及宽度方案；
+- 三体过程、相空间边界、参考系、$q_A$、$q_N$、$t_N$、$E_R$ 的独立定义；
 - 固定速度、halo-folded、天然氙、探测器响应和 likelihood 的计算层级；
-- 同位素、核质量、丰度来源、AFH 版本、响应通道、(W_M,W_{\Phi''}) 等响应定义；
-- 核子 Dirac–Pauli 形状因子 (F_1,F_2)、动量变量、插值方法和归一化；
+- 同位素、核质量、丰度来源、AFH 版本、响应通道、$W_M,W_{\Phi''}$ 等响应定义；
+- 核子 Dirac–Pauli 形状因子 $F_1,F_2$、动量变量、插值方法和归一化；
 - halo 分布、局域密度、实验室速度、效率、能量分辨率、曝光和统计方法（仅在相应层级实际包含时记录）。
 
-CSV 推荐按 (E_R)、同位素、响应通道、核模型、速度/halo 节点等维度逐行保存。必须明确区分 (d\sigma_A/dE_R)、halo rate 和 detector-level event prediction；不得把它们放进同一列或用同一状态表示。AFH 响应表应保留 (q_A) 或 (y_A)、同位素、(	au,	au')、响应类型及归一化约定。
+CSV 推荐按 (E_R)、同位素、响应通道、核模型、速度/halo 节点等维度逐行保存。必须明确区分 $d\sigma_A/dE_R$、halo rate 和 detector-level event prediction；不得把它们放进同一列或用同一状态表示。AFH 响应表应保留 (q_A) 或 $y_A$、同位素、$\tau,\tau'$、响应类型及归一化约定。
