@@ -406,6 +406,7 @@ def load_native_response_bundle(artifact_root: Path) -> tuple[dict, dict]:
             )
         physical = {}
         conversion = 4.0 * math.pi / (2.0 * J_BY_A[A] + 1.0)
+        raw_values = {}
         for name, column in NATIVE_RESPONSE_W_COLUMNS.items():
             values = np.asarray([float(row[column]) for row in rows], dtype=float)
             imaginary = np.asarray(
@@ -415,8 +416,34 @@ def load_native_response_bundle(artifact_root: Path) -> tuple[dict, dict]:
                 raise ValueError(f"Xe-{A}: non-finite native {name} response")
             if np.max(np.abs(imaginary)) > 2.0e-12:
                 raise ValueError(f"Xe-{A}: native {name} imaginary residual is too large")
-            physical[name] = 4.0 * conversion * values
-        bundle[A] = {"q": q, "physical": physical}
+            raw_values[name] = values
+
+        # AFH v6.0 raw isoscalar W_M has R_raw(0)=A^2/4, where
+        # R_raw=4*pi*W_M/(2J+1).  Correct the small OBDME rounding
+        # mismatch with C0(A), then apply the independent isospin factor 4.
+        # This makes R_phys(0)=A^2 exactly and applies neither factor twice.
+        package_m_zero = conversion * float(raw_values["M"][0])
+        if not math.isfinite(package_m_zero) or package_m_zero <= 0.0:
+            raise ValueError(f"Xe-{A}: non-positive AFH raw M(q=0) normalization")
+        c0 = (A * A) / (4.0 * package_m_zero)
+        if not math.isfinite(c0) or c0 <= 0.0:
+            raise ValueError(f"Xe-{A}: invalid AFH common OBDME normalization C0={c0}")
+        for name, values in raw_values.items():
+            physical[name] = 4.0 * c0 * conversion * values
+        if not math.isclose(
+            float(physical["M"][0]), float(A * A), rel_tol=2.0e-13, abs_tol=2.0e-12
+        ):
+            raise ArithmeticError(f"Xe-{A}: physical AFH M(q=0) does not equal A^2")
+        bundle[A] = {
+            "q": q,
+            "physical": physical,
+            "common_matrix_normalization_C0": c0,
+            "raw_M_zero_package_response": package_m_zero,
+        }
+    gate["provenance"]["C0_by_isotope"] = {
+        str(A): bundle[A]["common_matrix_normalization_C0"] for A in ISOTOPES
+    }
+    gate["provenance"]["physical_zero_momentum_M_anchor"] = "M(q_A=0)=A^2"
     return bundle, gate
 
 
