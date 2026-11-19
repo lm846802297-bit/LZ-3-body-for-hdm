@@ -419,11 +419,7 @@ The same input gives (F_2^{s/p}(0)=-0.064(17)) and the total
 (F_2^V(0)=-0.552). These are low-(Q^2) matching inputs, not a complete
 finite-(t_N) form-factor model.
 
-The script `nucleon_vector_form_factors.py` provides two diagnostics:
-the Bishara linear (F_1) slope benchmark and a central reconstruction from
-the isoscalar proton+neutron electromagnetic z expansion of
-Borah--Hill--Lee--Tomalak, supplemented by the strange (F_1) slope and
-(F_2^s(0)). Neither is the final model-specific finite-(Q^2) input.
+The adopted B prescription is the Bishara linear flavor-separated Dirac slope with the available leading constant Pauli term, using effective factors Fhat_i=F_i^{uds}/3 in the external g_VN basis. The isoscalar proton+neutron electromagnetic z expansion of Borah--Hill--Lee--Tomalak, supplemented by strange-current inputs, is retained only as an alternate sensitivity model.
 
 At Xe-131 (E_R=200) keV, the native AFH grid gives
 (q_A=0.220930602) GeV and
