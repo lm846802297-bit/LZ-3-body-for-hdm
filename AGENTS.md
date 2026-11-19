@@ -1,7 +1,5 @@
 # Repository instructions — LZ three-body dark-matter research
 
-> **Research communication standard:** Follow the canonical [project-wide decision policy](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/blob/main/AGENTS.md#research-communication-and-decision-policy) and [research reporting workflow](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/blob/main/research/WORKFLOW.md#9-research-reporting-and-communication-standard). These are maintained on `main`; do not fork or duplicate the policy text.
-
 These instructions are mandatory for all agents and contributors. They complement [CONTRIBUTING.md](CONTRIBUTING.md), [research/WORKFLOW.md](research/WORKFLOW.md), and the research-result archival policy.
 
 ## 1. Minimal preflight
