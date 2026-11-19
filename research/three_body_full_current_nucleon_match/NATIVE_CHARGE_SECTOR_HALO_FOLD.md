@@ -201,6 +201,23 @@ each is applied exactly once. The native loader derives \(C_0(A)\) from
 \(R_{M,\rm raw}(0)\), while the provisional path imports the matched
 P3-B value and applies it to charge responses only once.
 
+The seven-isotope provisional P3-B artifact records:
+
+| Isotope | \(C_0(A)\) |
+|---:|---:|
+| Xe-128 | 1.0000924953327093 |
+| Xe-129 | 1.0001103230777202 |
+| Xe-130 | 1.0001260610682259 |
+| Xe-131 | 1.0000825298069376 |
+| Xe-132 | 1.0000445028489864 |
+| Xe-134 | 1.0002068258192740 |
+| Xe-136 | 1.0000015063597723 |
+
+These are source-translated P3-B OBDME normalization values, not a
+substitute for the pending native seven-isotope Mathematica comparison.
+The independently derived Xe-131 native charge value matches the P3-B
+Xe-131 value at the stored precision.
+
 For the formal one-body impulse prescription,
 \[
 t_N=t_A=-2m_AE_R,\qquad Q_N^2=-t_N.
