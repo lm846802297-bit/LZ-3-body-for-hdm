@@ -60,6 +60,39 @@ def exact_qA_GeV(mA_GeV: float, ER_keV: float) -> float:
     return math.sqrt(2.0 * mA_GeV * ER + ER * ER)
 
 
+def xe131_common_matrix_normalization_c0(raw_m_zero: float) -> float:
+    """Return C0 so the physical equal-p/n Xe-131 M response has M(0)=A^2.
+
+    The native export already contains R_physical=4*R_raw but records
+    shape_renormalization_applied=false.  Here R_raw is
+    4*pi*W_M(0)/(2J+1), so C0=A^2/(4*R_raw).
+    """
+    if not math.isfinite(raw_m_zero) or raw_m_zero <= 0.0:
+        raise ValueError("raw Xe-131 M(q=0) must be positive and finite")
+    return 131.0**2 / (4.0 * raw_m_zero)
+
+
+def apply_xe131_common_matrix_normalization(
+    physical_responses: dict[str, np.ndarray], raw_m_zero: float
+) -> tuple[dict[str, np.ndarray], float]:
+    """Apply the same OBDME C0 once to all physical equal-p/n channels."""
+    required = {"M", "PhiPP", "MPhiPP"}
+    if set(physical_responses) != required:
+        raise ValueError(f"expected native charge responses {sorted(required)}")
+    c0 = xe131_common_matrix_normalization_c0(raw_m_zero)
+    normalized = {}
+    for name, values in physical_responses.items():
+        array = np.asarray(values, dtype=float)
+        if not np.all(np.isfinite(array)):
+            raise ValueError(f"non-finite native Xe-131 {name} response")
+        normalized[name] = c0 * array
+    if not math.isclose(
+        float(normalized["M"][0]), 131.0**2, rel_tol=2.0e-13, abs_tol=2.0e-10
+    ):
+        raise ArithmeticError("C0-corrected native Xe-131 M(q=0) does not equal A^2")
+    return normalized, c0
+
+
 def load_native_xe131_responses(path: Path) -> tuple[dict, dict]:
     raw = path.read_bytes()
     raw_digest = hashlib.sha256(raw).hexdigest()
@@ -173,17 +206,9 @@ def load_native_xe131_responses(path: Path) -> tuple[dict, dict]:
     # The native file has already applied the independent equal-p/n factor
     # four, but explicitly records shape_renormalization_applied=false.
     # Apply the OBDME common correction C0 once so M_phys(0)=A^2.
-    c0 = 131.0**2 / (4.0 * raw_m_zero)
-    if not math.isfinite(c0) or c0 <= 0.0:
-        raise ValueError(f"invalid Xe-131 OBDME common normalization C0={c0}")
-    responses = {
-        name: c0 * values
-        for name, values in responses_raw_to_physical.items()
-    }
-    if not math.isclose(
-        float(responses["M"][0]), 131.0**2, rel_tol=2.0e-13, abs_tol=2.0e-10
-    ):
-        raise ArithmeticError("C0-corrected native Xe-131 M(q=0) does not equal A^2")
+    responses, c0 = apply_xe131_common_matrix_normalization(
+        responses_raw_to_physical, raw_m_zero
+    )
     return {"q": q, "responses": responses}, {
         "sha256_policy": "UTF-8 text normalized to LF before SHA-256",
         "sha256_canonical_lf": canonical_digest,
