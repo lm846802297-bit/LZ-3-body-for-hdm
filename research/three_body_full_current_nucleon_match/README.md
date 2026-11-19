@@ -272,30 +272,30 @@ C_{\Sigma'\Delta}=\frac{\boldsymbol q}{m_N}\cdot
 \operatorname{Re}[i l_M\times l_5^*].
 \]
 With \(q_{\rm AFH}=-q_A\), the static Dirac--Pauli matching gives the candidate expressions
-\(l_M=-F_1^V\boldsymbol{\mathcal T}_3\) and
-\(l_5=i(F_1^V+F_2^V)(\boldsymbol q_{\rm AFH}\times
+\(l_M=-\widehat F_1^N\boldsymbol{\mathcal T}_3\) and
+\(l_5=i(\widehat F_1^N+\widehat F_2^N)(\boldsymbol q_{\rm AFH}\times
 \boldsymbol{\mathcal T}_3)/(2m_N)\). The AFH Fourier convention and the exact v6.0 operator definitions
 fix the particle-side vectors
 \[
-\boldsymbol l_M=-F_1^V\boldsymbol{\mathcal T}_3,\qquad
+\boldsymbol l_M=-\widehat F_1^N\boldsymbol{\mathcal T}_3,\qquad
 \boldsymbol l_5=
-\frac{i(F_1^V+F_2^V)}{2m_N}
+\frac{i(\widehat F_1^N+\widehat F_2^N)}{2m_N}
 (\boldsymbol q_{\rm AFH}\times\boldsymbol{\mathcal T}_3),
 \qquad \boldsymbol q_{\rm AFH}=-\boldsymbol q_A.
 \]
 The resulting Eq. (107) coefficients are
 \[
 C_\Delta^{(3)}
-=\frac{(F_1^V)^2Q_A^2}{2m_N^2}(L^{11}+L^{22}),
+=\frac{(\widehat F_1^N)^2Q_A^2}{2m_N^2}(L^{11}+L^{22}),
 \]
 \[
 C_{\Sigma'}^{(3)}
-=\frac{(F_1^V+F_2^V)^2Q_A^2}{8m_N^2}(L^{11}+L^{22}),
+=\frac{(\widehat F_1^N+\widehat F_2^N)^2Q_A^2}{8m_N^2}(L^{11}+L^{22}),
 \]
 \[
 \boxed{
 C_{\Sigma'\Delta}^{(3)}
-=-\frac{F_1^V(F_1^V+F_2^V)Q_A^2}{2m_N^2}
+=-\frac{\widehat F_1^N(\widehat F_1^N+\widehat F_2^N)Q_A^2}{2m_N^2}
 (L^{11}+L^{22}).
 }
 \]
@@ -306,8 +306,8 @@ extractor. This confirms the **particle-side** signed coefficient; it
 does not yet validate the complete many-body AFH OBDME contraction. The
 Cauchy--Schwarz check bounds response magnitude and is a separate test.
 
-For the provisional zero-momentum anchors \(F_1^V(0)=3\),
-\(F_2^V(0)=-0.552\), and \(m_N=0.938918\) GeV, the coefficient ratios
+For the provisional zero-momentum anchors \(\widehat F_1^N(0)=3\),
+\(\widehat F_2^N(0)=-0.552\), and \(m_N=0.938918\) GeV, the coefficient ratios
 relative to the leading charge coefficient \(C_M=F_1^2L^{00}\) over the
 12 archived benchmarks are:
 
@@ -344,7 +344,7 @@ different multipole factor and does not set the AFH
 
 The coefficient ratios above use constant zero-momentum form-factor
 anchors. The final calculation must use finite-\(t_N\)
-\(F_1^V(t_N)\) and \(F_2^V(t_N)\), and must contract with the physical
+\(\widehat F_1^N(t_N)\) and \(\widehat F_2^N(t_N)\), and must contract with the physical
 equal-\(p=n\) AFH response columns so the factor of four is applied once.
 
 ## 6. Provisional seven-isotope AFH fixed-speed contraction (P0-C2)
