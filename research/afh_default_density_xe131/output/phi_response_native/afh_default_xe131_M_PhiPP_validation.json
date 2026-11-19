@@ -17,9 +17,8 @@
   "R_M_physical_q0": 17159.583822859968,
   "expected_A2": 17161.0,
   "csv_sha256": "b1b65708cd103058c3bcaea50bf65550d5671a88e97000b94f2536fbc60a59ff",
-  "metadata_sha256": "ad8231ec92c71faf12631534871e192bc3000601514c2a369fc84d963bfa9887",
+  "metadata_sha256": "3583b68799f3de612f435953a3c8e6cc903306d6af0059692a7a9936cfce31b3",
   "afh_source_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
   "density_matrix_csv_sha256": "f656145ba2fb9da741b77faed4c01d0dc457c955fa340928b5dbf9cee9bc5d45",
   "wolfram_version": "14.2.0 for Microsoft Windows (64-bit) (December 26, 2024)"
 }
-

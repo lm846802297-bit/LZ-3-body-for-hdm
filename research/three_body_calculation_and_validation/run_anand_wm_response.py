@@ -31,6 +31,9 @@ from scipy.interpolate import PchipInterpolator
 from scipy.optimize import minimize_scalar
 from scipy.signal import find_peaks
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from isotope_mass_schemes import isotope_mass_GeV  # noqa: E402
+
 Z_XE = 54
 FM_TO_GEV_INV = 5.0677
 Q_MIN_GEV = 0.0
@@ -199,7 +202,7 @@ def find_response_minima(result: dict) -> list[dict]:
         qmin = float(opt.x)
         rmin = float(spline(qmin))
         A = result["A"]
-        mA = A * 0.93149410242
+        mA = isotope_mass_GeV(A, "ame2020_nuclear")
         minima.append({
             "A": A,
             "model": result["model"],
@@ -212,7 +215,7 @@ def find_response_minima(result: dict) -> list[dict]:
 
 def write_response_csv(path: Path, result: dict) -> None:
     A = result["A"]
-    mA = A * 0.93149410242
+    mA = isotope_mass_GeV(A, "ame2020_nuclear")
     q = result["q_GeV"]
     ER = recoil_keV_from_q(q, mA)
     y = (q * result["b_GeV_inv"] / 2.0) ** 2
@@ -259,7 +262,7 @@ def make_plots(results: dict, natural: dict, output_dir: Path) -> None:
     fig, ax = plt.subplots(figsize=(8.2, 5.4))
     for model in MODELS:
         r = results[(131, model)]
-        ER = recoil_keV_from_q(r["q_GeV"], 131 * 0.93149410242)
+        ER = recoil_keV_from_q(r["q_GeV"], isotope_mass_GeV(131, "ame2020_nuclear"))
         ax.plot(ER, r["R_A"] / r["R0"], label="Xe-131 " + model.upper())
     for x in (101.0, 267.0, 542.0):
         ax.axvline(x, linestyle=":", linewidth=0.9)
@@ -339,7 +342,7 @@ def main() -> None:
         r = results[(131, model)]
         interp = PchipInterpolator(r["q_GeV"], r["R_A"])
         for ER_keV in (101.0, 267.0, 542.0):
-            q = float(q_from_recoil_keV(ER_keV, 131 * 0.93149410242))
+            q = float(q_from_recoil_keV(ER_keV, isotope_mass_GeV(131, "ame2020_nuclear")))
             dip_rows.append({
                 "A": 131,
                 "model": model.upper(),
@@ -367,7 +370,7 @@ def main() -> None:
         R_mix = np.zeros_like(ER_grid)
         for A in AVAILABLE_ISOTOPES:
             r = results[(A, model)]
-            mA = A * 0.93149410242
+            mA = isotope_mass_GeV(A, "ame2020_nuclear")
             q_i = q_from_recoil_keV(ER_grid, mA)
             interp = PchipInterpolator(r["q_GeV"], r["R_A"])
             R_mix += NATURAL_ABUNDANCE[A] * interp(q_i)

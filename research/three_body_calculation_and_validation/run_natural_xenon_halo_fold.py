@@ -244,7 +244,12 @@ def main() -> None:
     parser.add_argument("--response-dir", type=Path,
                         default=HERE / "results" / "anand_wm_response")
     parser.add_argument("--out-dir", type=Path, required=True)
-    parser.add_argument("--mass-scheme", choices=("A_u", "nist_nuclear"), default="A_u")
+    parser.add_argument(
+        "--mass-scheme",
+        choices=("ame2020_nuclear", "nist_nuclear", "A_u"),
+        default="ame2020_nuclear",
+        help="isotope-specific recoil kinematics mass; default is AME2020 bare-nuclear mass",
+    )
     parser.add_argument("--mchi-GeV", type=float, default=1000.0)
     parser.add_argument("--ms-MeV", type=float, default=0.3)
     parser.add_argument("--delta-m-MeV", type=float, default=1.0)
