@@ -42,14 +42,14 @@ The postprocessor multiplies each isotope's already-computed full and (I(D)) rat
 
 ## Electromagnetic proton/neutron input
 
-The primary (G_E^{p,n}), (G_M^{p,n}) input is the low-(Q^2) z-expansion of Borah, Hill, Lee and Tomalak, Phys. Rev. D 102, 074012 (2020), arXiv:2003.13640. It is optimized for (Q^2lesssim) a few GeV(^2), includes the proton and neutron data/radius constraints, and supplies the free-coefficient covariance matrices.
+The primary (G_E^{p,n}), (G_M^{p,n}) input is the low-(Q^2) z-expansion of Borah, Hill, Lee and Tomalak, Phys. Rev. D 102, 074012 (2020), arXiv:2003.13640. It is optimized for (Q^2lesssim) a few GeV(^2), includes the proton and neutron data/radius constraints, and supplies the free-coefficient covariance matrices. The fit is the separate proton/neutron default fit (not the isospin-combined fit).
 
-The exact central coefficients and covariance matrix are pinned under `data/ye2020/`. The source copy is the GENIE-MC/Generator distribution of the Ye et al. supplemental data:
+The exact central coefficients and covariance matrix are pinned under `data/borah2020/`. The source copy is the GENIE-MC/Generator distribution of the Borah et al. supplemental data:
 - `config/ZExpELFormFactorModel.xml`
 - `data/covariances/FormFactor/Vector/ELZExpFF.dat`
 - pinned source commit: `e2e04f19e96d395ac646cf3382841646b60fa1b4`
 
-The four free coefficients for each Sachs form factor are completed by (G(0)) normalization and the four (Q^4) asymptotic sum rules, matching GENIE's `Q4limit` implementation. The full (G_E,G_M) are converted to (F_1,F_2) with
+The four free coefficients for each Sachs form factor are completed by (G(0)) normalization and the four (Q^4) asymptotic sum rules, matching GENIE's `Q4limit` implementation. The magnetic coefficients stored in the source are already multiplied by the corresponding magnetic moment, so the code treats them as coefficients of the unnormalized (G_M) expansion. The full (G_E,G_M) are converted to (F_1,F_2) with
 [
 F_1=rac{G_E+	au G_M}{1+	au},qquad
 F_2=rac{G_M-G_E}{1+	au},qquad 	au=Q^2/(4m_N^2).
@@ -57,12 +57,13 @@ F_2=rac{G_M-G_E}{1+	au},qquad 	au=Q^2/(4m_N^2).
 
 ## Strange-current input
 
-Two separately labelled strange-current scenarios are implemented. Their current conventions are not interchangeable; see `strange_current_convention_audit.md`.
+Three separately labelled strange-current scenarios are implemented. Their current conventions are not interchangeable; see `strange_current_convention_audit.md`.
 
-1. `sufian2017_unit_current` (primary): directly uses the unit-current matrix element (ar sgamma^mu s), with (G_M^s(0)=-0.064) and (langle r_E^2angle_s=-0.0043,mathrm{fm}^2). The magnetic form factor is frozen at its quoted zero-momentum value because this source does not provide a magnetic radius in the cited result.
-2. `alexandrou2020_charge_weighted_converted` (alternative): uses the published 2020 (e_sar sgamma^mu s) form factors after dividing the reported Sachs functions and slopes by (e_s=-1/3), as required to convert to a unit-current matrix element. The published magnetic and electric radii are used in a first-order low-(Q^2) expansion.
+1. `sufian2017_unit_current` (historical primary benchmark): directly uses the unit-current matrix element \(\bar s\gamma^\mu s\), with \(G_M^s(0)=-0.064\) and \(\langle r_E^2\rangle_s=-0.0043\,\mathrm{fm}^2\). The magnetic form factor is frozen at its quoted zero-momentum value because the cited physical-point result does not provide a magnetic radius.
+2. `alexandrou2020_charge_weighted_converted`: uses the published 2020 \(e_s\bar s\gamma^\mu s\) form factors after dividing the reported Sachs functions by \(e_s=-1/3\), as required to convert to a unit-current matrix element. The electric and magnetic radii are used in a first-order low-\(Q^2\) expansion. The magnetic expansion includes its normalization \(G_M^s(0)=\mu_s\).
+3. `alexandrou2026_continuum_unit_current`: uses the newer continuum-limit physical-point results from arXiv:2603.26600. The paper states that the strange electric charge factor is not included in the reported results, so these values already use the unit-current convention. This scenario is implemented using the published electric and magnetic slopes; it is explicitly a slope-only low-\(Q^2\) representation, not a reconstruction of the full fitted z-expansion.
 
-The two scenarios are both calculated and retained; they are not averaged.
+All three scenarios are calculated and retained separately; they are not averaged. The Sufian set remains the frozen historical benchmark, while the 2026 result is included as an updated continuum-lattice cross-check. The 2026 source uncertainties are recorded in metadata but are not yet sampled.
 
 ## Applying B to a halo/isotope artifact
 
@@ -80,17 +81,8 @@ Outputs per strange-current scenario:
 - `natural_xenon_B_baseline.csv`
 - `metadata.json`
 
-The Ye2020 proton/neutron coefficient covariance is propagated with correlated Monte Carlo draws across the complete (Q_A^2) grid. The strange-current scenario uncertainty is kept separate from the Ye2020 electromagnetic fit covariance.
+The Borah2020 proton/neutron coefficient covariance is propagated with correlated Monte Carlo draws across the complete (Q_A^2) grid. Strange-current central-value scenarios are kept separate from the electromagnetic fit covariance; the source uncertainties for the 2026 scenario are recorded but not yet sampled.
 
 ## Scope
 
 This is the rate-level B baseline. It includes the finite nucleon (F_1,F_2) and AFH finite-size (W_M) response. It does not yet include additional AFH responses, detector efficiency, energy resolution, exposure, analysis cuts or likelihood.
-
-
-## Permanent numerical-output archive
-
-The PR #80 baseline and higher-order output package is now preserved under [results/2026-11-19-finite-nucleon-form-factor-B-baseline/](results/2026-11-19-finite-nucleon-form-factor-B-baseline/README.md). It contains the original Actions artifact, extracted CSV/JSON tables for both strange-current scenarios, quadrature-comparison outputs, the run manifest, and SHA-256 checksums.
-
-The archive records 208 recoil points and 1,456 isotope-level rows per scenario. The maximum absolute B/A full-rate shift is 56.4346% for the Sufian unit-current input and 58.2429% for the Alexandrou charge-weighted input converted to unit current. The maximum absolute full-versus-\(I(D)\) difference in B is 0.3528% on the archived grid.
-
-The result is the selected B prescription \(F_1(t_N),F_2(t_N)\) multiplied by the finite-size AFH \(W_M(y_A)\) response. It is a rate-level nuclear-current correction, not a detector-level prediction. The 3,000-draw Ye2020 electromagnetic covariance is included; strange-lattice uncertainties are not sampled in this first pass.
