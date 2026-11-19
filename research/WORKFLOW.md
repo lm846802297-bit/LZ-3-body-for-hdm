@@ -301,3 +301,41 @@ The current top-level research areas are:
 
 Cross-topic notes and references belong in research/docs/. New topics
 should be added as siblings under research/ and indexed in research/README.md.
+
+
+## 9. Research reporting and communication standard
+
+Use direct, evidence-led reporting. A research update is a record of what was established and what comes next, not a general disclaimer.
+
+### Standard report structure
+
+Unless the task requires a different format, organize research reports in this order:
+
+1. **Conclusion:** answer the research question and state the current decision.
+2. **Evidence:** provide the governing equations, derivation, implementation path, data source, or validation.
+3. **Results:** give numerical values with units and precision, benchmark parameters, comparisons, and physical interpretation.
+4. **Remaining work:** list only pending tasks that affect the next stage.
+
+### Reporting rules
+
+- Report completed calculations with their actual values, precision, units, benchmark, and checks performed.
+- Present proven formulas and completed derivations directly; include the derivation or a traceable reference.
+- State each explicit approximation and its validity domain where relevant. Do not repeat the same caveat throughout a report.
+- Mark unfinished work as **pending**, **in progress**, or **blocked**, with the specific missing step. Do not let pending work negate or obscure independently completed results.
+- When an error is found, state exactly what was wrong, give the corrected equation/code/convention, and identify which outputs require recalculation.
+- When schemes differ, compare quantitative results at matched inputs and state the recommended scheme. Record adopted decisions and proceed with them until new evidence warrants revision.
+- Execute the user's adopted research direction without repeatedly seeking confirmation. Ask only for an essential input that is genuinely unavailable.
+- If a source, repository, runner, dataset, or other resource cannot be accessed, identify the exact resource and concrete access failure. Continue with available routes when possible.
+
+### Scientific status remains explicit
+
+Direct communication does not mean overstating evidence. Keep these questions separate:
+
+- What calculation has actually been completed?
+- What checks have actually been run, and at what precision?
+- What physical claim does the calculation support under its stated assumptions?
+- What separate calculation or validation remains pending?
+
+A passing software test is not automatically a validated physical conclusion; equally, a pending independent check does not erase a completed calculation. Report both facts plainly and proportionally.
+
+Avoid repetitive defensive wording, unnecessary disclaimers, generic risk warnings, and re-litigation of settled decisions. Scientific rigor must come from transparent evidence and reproducible work.
