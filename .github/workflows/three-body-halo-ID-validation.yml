@@ -1,0 +1,57 @@
+name: Three-body full integral vs I(D), halo and seven isotopes
+
+on:
+  pull_request:
+    paths:
+      - "research/three_body_phase_space_ID_validation/**"
+      - "research/three_body_calculation_and_validation/eq6_kernel.py"
+      - "research/three_body_calculation_and_validation/phase_space_convergence.py"
+      - "research/afh_default_density_natural_xenon_halo/**"
+      - ".github/workflows/three-body-halo-ID-validation.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  halo-seven-isotope-validation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install numerical dependencies
+        run: python -m pip install --upgrade numpy scipy sympy
+      - name: Run regression tests
+        run: |
+          python -m unittest research.three_body_phase_space_ID_validation.test_halo_seven_isotope_ID -v
+          python -m unittest research.three_body_calculation_and_validation.tests.test_phase_space_convergence -v
+      - name: Run full recoil scan, baseline quadrature
+        run: |
+          python research/three_body_phase_space_ID_validation/validate_halo_seven_isotope_ID.py \
+            --er-min-keV 5 --er-max-keV 800 --er-step-keV 10 \
+            --fine-min-keV 180 --fine-max-keV 320 --fine-step-keV 1 \
+            --speed-order 24 --nw 8 --nz 4 --nphi 4 \
+            --outdir artifacts/halo-seven-isotope-baseline
+      - name: Run full recoil scan, higher-order quadrature
+        run: |
+          python research/three_body_phase_space_ID_validation/validate_halo_seven_isotope_ID.py \
+            --er-min-keV 5 --er-max-keV 800 --er-step-keV 10 \
+            --fine-min-keV 180 --fine-max-keV 320 --fine-step-keV 1 \
+            --speed-order 32 --nw 12 --nz 4 --nphi 4 \
+            --outdir artifacts/halo-seven-isotope-highorder
+      - name: Compare baseline and higher-order quadrature
+        run: |
+          python research/three_body_phase_space_ID_validation/compare_halo_quadrature.py \
+            --baseline-dir artifacts/halo-seven-isotope-baseline \
+            --highorder-dir artifacts/halo-seven-isotope-highorder \
+            --out-dir artifacts/halo-seven-isotope-quadrature-comparison
+      - name: Upload numerical outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: halo-seven-isotope-full-vs-ID-full-recoil-scan
+          path: artifacts/halo-seven-isotope-*/
+          if-no-files-found: error
+          retention-days: 90
