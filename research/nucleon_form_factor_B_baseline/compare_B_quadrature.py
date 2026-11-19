@@ -70,8 +70,8 @@ def compare(base_dir:Path,high_dir:Path,out_dir:Path):
             "ER_keV":k[0],"A":k[1],
             "full_B_quadrature_shift_pct":"" if full_shift is None else full_shift,
             "I_D_B_quadrature_shift_pct":"" if id_shift is None else id_shift,
-            "full_vs_I_D_error_B_base_pct":b["isotope_relative_error_pct"],
-            "full_vs_I_D_error_B_high_pct":h["isotope_relative_error_pct"],
+            "full_vs_I_D_error_B_base_pct":b["isotope_relative_error_B_pct"],
+            "full_vs_I_D_error_B_high_pct":h["isotope_relative_error_B_pct"],
         })
     out_dir.mkdir(parents=True,exist_ok=True)
     for name,data in (("natural_xenon_B_quadrature_comparison.csv",nat_out),
