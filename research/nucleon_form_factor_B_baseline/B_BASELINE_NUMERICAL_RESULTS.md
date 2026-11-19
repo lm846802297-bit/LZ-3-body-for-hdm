@@ -133,10 +133,10 @@ The implementation now includes the factor \(\mu_s\) multiplying the slope. A re
 
 ## Reproducibility
 
-- PR: [#83](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/pull/83)
-- B-baseline workflow: [run 44574863232](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44574863232)
+- PR: [#85](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/pull/85)
+- B-baseline and LZ detector-fold workflow: [run 44584187532](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44584187532)
 - Source halo/high-order workflow: [run 44560087038](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44560087038)
-- B artifact: \`finite-nucleon-form-factor-B-baseline\`
+- B spectra, detector yields and quadrature outputs: artifact finite-nucleon-form-factor-B-baseline
 - Regression tests: 10 passed.
 - Repository layout and Figure 2 benchmark manifest checks: passed.
 
