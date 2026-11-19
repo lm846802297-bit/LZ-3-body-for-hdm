@@ -89,7 +89,7 @@ superscriptaddress,notitlepage]{revtex4-2}
 \noindent \textbf{$2\to 3$ scattering and recoil kinematics}.
 A dark-matter particle can produce an endothermic nuclear recoil
 without changing its mass. We consider the $2\to 3$ process
-$\chi_1 N\to\chi_1 N + s$, in which a real scalar $s$ is emitted
+$\chi_1 A\to\chi_1 A + s$, in which a real scalar $s$ is emitted
 from the dark-matter line and the target nucleus $N$ remains in
 its ground state. The model contains two Dirac fermions with
 masses $m_{\chi_1}=m$ and $m_{\chi_2}=m+\Delta$, a massive
@@ -115,7 +115,7 @@ both connect an incoming $\chi_1$ to an outgoing $\chi_1$, see Fig~\ref{fig:2_to
 	\centering
 	\includegraphics[width=0.4\linewidth]{figures/LZ_3body_DM_signal} 
     \includegraphics[width=0.4\linewidth]{figures/LZ_3body_DM_signal_2}
-	\caption{Tree-level diagrams for $\chi_1 N\to\chi_1 N + s$. The scalar $s$ is emitted from the dark matter line before or after $A'$ exchange.
+	\caption{Tree-level diagrams for $\chi_1 A\to\chi_1 A + s$. The scalar $s$ is emitted from the dark matter line before or after $A'$ exchange.
         }
 	\label{fig:2_to_3_feynmandiagrams}
 \end{figure}
@@ -126,20 +126,20 @@ $\Delta$ sets the threshold for producing an on-shell $\chi_2$.
 For a given target isotope, the hierarchy
 \begin{equation}
 m_s<\frac12\mu v_{\max}^2<\Delta,
-\qquad \mu=\frac{m m_N}{m+m_N},
+\qquad \mu=\frac{m m_A}{m+m_A},
 \label{eq:radiative-offshell-window-overview}
 \end{equation}
 allows scalar emission at sufficiently high speeds, but forbids
-the inelastic scattering $\chi_1 N\to\chi_2 N$
+the inelastic scattering $\chi_1 A\to\chi_2 A$
 throughout the halo speed range. 
-Here $m_N$ is the nuclear mass and $v_{\max}$ is the
+Here $m_A$ is the nuclear mass and $v_{\max}$ is the
 maximum incident speed of DM $\chi_1$ in the laboratory frame. 
 If the intermediate $\chi_2$ state can go on shell and is narrow, 
 the recoil spectrum reduces to that of conventional $2\to2$ inelastic scattering.
 We focus on the off-shell regime.
 
 To isolate the effect of the extra particle, we compare with
-endothermic inelastic scattering $\psi_1 N\to\psi_2 N$ through the same
+endothermic inelastic scattering $\psi_1 A\to\psi_2 A$ through the same
 vector current, with $m_{\psi_1}=m$ and
 $m_{\psi_2}=m+\delta$~\cite{Bramante:2016rdh}. Setting
 $\delta=m_s$ matches the fixed mass of $\psi_2$ to the minimum
@@ -148,8 +148,9 @@ identical kinematic recoil endpoints at a given incident speed,
 including in exact kinematics. They differ in how they
 populate the interval between those endpoints.
 
-Let $q=\sqrt{2m_N E_R}$ be the momentum transfer at recoil
-energy $E_R$, and write the invariant mass of the $\chi_1 \, s$ pair
+Let $q_A\simeq\sqrt{2m_A E_R}$ be the leading nonrelativistic
+spatial recoil momentum at recoil energy $E_R$. In exact kinematics,
+$Q_A^2=2m_AE_R+E_R^2$ and $t_A=-2m_AE_R$. and write the invariant mass of the $\chi_1 \, s$ pair
 as $W=m+m_s+\epsilon$, where $\epsilon$ is the internal kinematic energy of $\chi_1$-$s$ system. At fixed DM incident speed $v$, energy
 conservation gives $\epsilon=vq\cos\theta-q^2/(2\mu)-m_s$ to leading order in the heavy-particle expansion, where $\theta$ is
 the angle between the incoming dark matter and the nuclear recoil.
@@ -175,7 +176,7 @@ At fixed incident speed $v$, the condition $D \geq 0$ defines
 the common recoil interval $E_R^-(v)\leq E_R\leq E_R^+(v)$
 for the two processes with $\delta=m_s$. The endpoints are
 \begin{equation}
-E_R^\pm(v)=\frac{\mu^2}{2m_N}
+E_R^\pm(v)=\frac{\mu^2}{2m_A}
 \left(v\pm\sqrt{v^2-\frac{2m_s}{\mu}}\right)^2,
 \label{eq:recoil-endpoints}
 \end{equation}
@@ -230,7 +231,7 @@ vanishes as $D^{3/2}$ when either endpoint $E_R^\pm(v)$ is
 approached from within the allowed interval. Since $I(D)$ is
 monotonic and $\partial D/\partial q=v-q/\mu$ at fixed $v$,
 the ratio peaks at $q=\mu v$, corresponding to
-$E_R^{\rm peak}=\mu^2v^2/(2m_N)$.
+$E_R^{\rm peak}=\mu^2v^2/(2m_A)$.
 
 \begin{figure}[htb]
     \centering
@@ -251,7 +252,7 @@ spectrum after averaging over the halo speed distribution.
 With $\delta=m_s$, the two processes have the same minimum
 incident speed $v_{\min}$ at each recoil energy, but they weight the
 incident speeds differently. For a single target isotope,
-let $\widetilde R_i(E_R)\equiv F_N^{-2}(q)\,dR_i/dE_R$ be the
+let $\widetilde R_i(E_R)\equiv F_A^{-2}(q)\,dR_i/dE_R$ be the
 signal event rate spectrum after dividing out the common nuclear form
 factor squared, where $i=2-2,2-3$ labels the two channels. In the
 constant-amplitude limit,
@@ -269,7 +270,7 @@ laboratory frame. The additional phase-space factor suppresses
 the contribution from speeds just above $v_{\min}$.
 
 The function $v_{\min}(E_R)$ has a minimum at
-$E_c=\mu m_s/m_N$. Two recoil energies $E_L<E_c<E_H$ on
+$E_c=\mu m_s/m_A$. Two recoil energies $E_L<E_c<E_H$ on
 opposite sides of this minimum have the same $v_{\min}$ if
 \begin{equation}
 E_L E_H=E_c^2 \quad \Rightarrow 
@@ -515,30 +516,123 @@ at the pole mass.
 %Both diagrams and their interference are retained.
 
 At leading order in the non-relativistic nuclear current, vector
-exchange probes the coherent charge response. For
-$g_p=g_n=g_{VN}$, here we use the vector response function
-$\mathcal R_A(E_R)=4\pi W_M^{00}(y)/(2J_A+1)$, with
-$y=b_A^2m_AE_R/2$ and
-$\mathcal R_A(0)=A^2$ from DMFormFactor-v6 Mathematica package~\cite{Fitzpatrick:2012ix, Anand:2013yka}.
-Defining
-$\mathcal L_{00}=\tfrac12\sum_{\rm spins}
-|\bar u(p')\Gamma^0u(p)|^2$
-in the target rest frame, we obtain
+exchange probes the coherent nuclear charge response. The AFH v6.0
+package returns a raw isoscalar response whose zero-momentum
+normalization is approximately $A^2/4$. For equal proton and neutron
+couplings, define the physical response by
 \begin{equation}
-\begin{split}
-\frac{d\sigma_A}{dE_R}
+W_M^{00,\mathrm{phys}}(y_A)
+\equiv 4C_0(A)W_M^{00,\mathrm{raw}}(y_A),
+\qquad
+\mathcal R_A(E_R)=
+\frac{4\pi}{2J_A+1}W_M^{00,\mathrm{phys}}(y_A),
+\label{eq:physical-AFH-M-response}
+\end{equation}
+where $C_0(A)$ removes the small zero-momentum OBDME normalization
+offset. Thus $\mathcal R_A(0)=A^2$. The factor of four and $C_0(A)$
+are included once in $W_M^{00,\mathrm{phys}}$ and are not repeated
+elsewhere.
+
+The finite-size AFH variable uses the exact spatial momentum,
+\begin{equation}
+Q_A^2=2m_AE_R+E_R^2,
+\qquad
+y_A=\frac{b_A^2Q_A^2}{4}.
+\end{equation}
+The one-body impulse prescription for the nucleon current is
+$q_N^\mu=q_A^\mu$, so
+\begin{equation}
+t_N=t_A=-2m_AE_R.
+\end{equation}
+The invariant $t_N$ enters the nucleon form factors; it must not be
+replaced by $-Q_A^2$, which would impose the separate static
+$q_N^0=0$ diagnostic.
+
+The raw universal $u+d+s$ nucleon form factors have
+$F_1^{uds,N}(0)=3$ and $F_2^{uds,N}(0)=-0.552$. Since the external
+coupling is $g_{VN}=3g_{Vq}$, we use the effective form factors
+\begin{equation}
+\widehat F_i^N(t_N)=\frac{F_i^{uds,N}(t_N)}{3},
+\qquad
+\widehat F_1^N(0)=1,
+\qquad
+\widehat F_2^N(0)=-0.184.
+\end{equation}
+For the adopted low-momentum prescription,
+\begin{equation}
+F_1^{uds,N}(t_N)=3+8.392\,t_N+O(t_N^2),
+\qquad
+F_2^{uds,N}(t_N)=-0.552+O(t_N),
+\end{equation}
+using the flavor-separated Dirac slope of Ref.~\cite{Bishara:2017pfq};
+no unsupported finite-$t_N$ Pauli slope is assumed. The matched
+leading charge coefficient is
+\begin{equation}
+\boxed{
+\widehat c_M(t_N)=
+\widehat F_1^N(t_N)+
+\frac{t_N[\widehat F_1^N(t_N)+2\widehat F_2^N(t_N)]}
+{8m_N^2},
+}
+\label{eq:B-charge-coefficient}
+\end{equation}
+where $m_N$ is the free nucleon mass.
+
+For the three-body dark-matter current, define
+\begin{equation}
+\mathcal L_{\mu\nu}^{(3)}
+=\frac12\sum_{\rm spins}
+[\bar u(p')\Gamma_\mu u(p)]
+[\bar u(p')\Gamma_\nu u(p)]^*.
+\end{equation}
+Using conservation of the complete nuclear one-body vector current
+to eliminate its longitudinal spatial component gives the conditional
+continuity-reduced weight
+\begin{equation}
+\mathcal L_C^{(3)}
+=
+\mathcal L_{00}^{(3)}
+-\frac{E_R}{Q_A}
+(\mathcal L_{03}^{(3)}+\mathcal L_{30}^{(3)})
++\left(\frac{E_R}{Q_A}\right)^2
+\mathcal L_{33}^{(3)}.
+\end{equation}
+This reduction is conditional on the stated nuclear-current
+conservation assumption; it is not an additional Ward identity for
+the inelastic dark-matter transition current.
+
+The adopted B production baseline retains only the finite-$t_N$
+Dirac--Pauli charge coefficient multiplying the finite-size AFH
+$M$ response:
+\begin{equation}
+\boxed{\begin{split}
+\frac{d\sigma_B}{dE_R}
 ={}&
-\frac{m_A(g_1g_2g_{VN})^2\mathcal R_A(E_R)}
-{256\pi^3p_{\chi_1}^2(m_V^2+2m_AE_R)^2}
+\frac{m_A(g_1g_2g_{VN})^2\mathcal R_A(E_R)
+\widehat c_M(t_N)^2}
+{256\pi^3p_{\chi_1}^2(m_V^2-t_A)^2}
 \\
 &\times
 \int_{W_{\min}^2}^{W_{\max}^2}dW^2\,
 \sqrt{\lambda(W^2,m_{\chi_1}^2,m_s^2)}
 \int_{-1}^{1}dz\,
-\langle\mathcal L_{00}\rangle_{\varphi_*}.
-\end{split}
+\langle\mathcal L_C^{(3)}\rangle_{\varphi_*}.
+\end{split}}
 \label{eq:radiative-recoil}
 \end{equation}
+Here $z=\cos\theta_*$ and $\varphi_*$ specify the scalar direction
+in the $\chi_1s$ rest frame, with the polar axis along the incoming
+$\chi_1$ momentum; brackets denote the azimuthal average. The
+propagator uses the Lorentz invariant
+$(m_V^2-t_A)^2=(m_V^2+2m_AE_R)^2$, not
+$(m_V^2+Q_A^2)^2$.
+
+The $\Phi''$ and $M$--$\Phi''$ charge terms are not part of B; they
+define a separate C extension after their matched coefficients and
+signed interference have been included. Likewise, B is not a claim
+that the full three-body current has been expanded into the elastic
+AFH operator basis.
+
 Here $z=\cos\theta_*$ and $\varphi_*$ specify the scalar direction
 in the $\chi_1s$ rest frame, with the polar axis along the incoming
 $\chi_1$ momentum; brackets denote the azimuthal average.
@@ -1037,32 +1131,34 @@ Kinetic and mass terms are implicit.
 The notation distinguishes the on-shell final state $\psi_2$ in iDM
 from the off-shell intermediate state $\chi_2$ in the three-body model.
 
-To display exact spin traces, we first treat $N$ as a pointlike Dirac
-target of mass $m_N$, with
+To display exact spin traces, we first treat $T$ as a pointlike Dirac
+target of mass $m_T$, with
 \begin{equation}
-\mathcal{L}_{VN}=g_NV_\mu\bar N\gamma^\mu N.
+\mathcal{L}_{VT}=g_TV_\mu\bar T\gamma^\mu N.
 \end{equation}
 The exact point-target formulas below are distinct from the coherent
-nuclear approximation. For universal quark vector couplings, the latter
-is obtained from the leading nonrelativistic results by replacing
+nuclear approximation. Here $T$ is a generic pointlike Dirac target;
+when applying the leading nonrelativistic result to a nucleus, set
+$m_T=m_A$. For universal quark vector couplings, the latter is obtained
+by replacing
 \begin{equation}
-g_N\longrightarrow 3A\,g_{Vq}F_N(\qvec),\qquad
-F_N(\boldsymbol{0})=1,
+g_T\longrightarrow 3A\,g_{Vq}F_A(\qvec),\qquad
+F_A(\boldsymbol{0})=1,
 \label{eq:nuclear}
 \end{equation}
-where $A$ is the nuclear mass number and $m_N$ is then the nuclear mass.
+where $A$ is the nuclear mass number and $m_T$ is then the nuclear mass.
 
 Define
 \begin{equation}
 Q=P'-P,\qquad t=Q^2,\qquad
-J_N^\mu=\bar u_N(P')\gamma^\mu u_N(P).
+J_T^\mu=\bar u_T(P')\gamma^\mu u_T(P).
 \end{equation}
-Since $Q_\mu J_N^\mu=0$, the longitudinal $Q_\mu Q_\nu/m_V^2$ term
+Since $Q_\mu J_T^\mu=0$, the longitudinal $Q_\mu Q_\nu/m_V^2$ term
 of the massive-vector propagator does not contribute.
 For a target initially at rest,
 \begin{equation}
-t=-2m_NE_R,\qquad
-\qvec^2=2m_NE_R+E_R^2\simeq2m_NE_R.
+t=-2m_TE_R,\qquad
+\qvec^2=2m_TE_R+E_R^2\simeq2m_TE_R.
 \end{equation}
 Our spin-average convention for a Dirac target is
 \begin{equation}
@@ -1076,8 +1172,8 @@ Up to an irrelevant overall phase, the tree-level amplitude is
 \begin{equation}
 \boxed{
 \mathcal{M}_2=
-\frac{g_1g_N}{t-m_V^2}\,
-J_N^\mu\,\bar u_{\psi_2}(p')\gamma_\mu u_{\psi_1}(p).
+\frac{g_1g_T}{t-m_V^2}\,
+J_T^\mu\,\bar u_{\psi_2}(p')\gamma_\mu u_{\psi_1}(p).
 }
 \label{eq:amp-two}
 \end{equation}
@@ -1085,11 +1181,11 @@ The exact spin-averaged squared amplitude for the pointlike Dirac target is
 \begin{equation}
 \boxed{\begin{aligned}
 \Msq{2}
-={}&\frac{8g_1^2g_N^2}{(t-m_V^2)^2}
+={}&\frac{8g_1^2g_T^2}{(t-m_V^2)^2}
 \Big[
 (p'\cdot P')(p\cdot P)+(p'\cdot P)(p\cdot P')\\
 &\hspace{20mm}
--m_N^2(p'\cdot p)-mm'(P'\cdot P)+2mm'm_N^2
+-m_T^2(p'\cdot p)-mm'(P'\cdot P)+2mm'm_T^2
 \Big].
 \end{aligned}}
 \label{eq:msq-two-exact}
@@ -1101,21 +1197,24 @@ In the nonrelativistic limit, the leading charge-density matrix elements are
 \begin{equation}
 \bar u_{\psi_2}\gamma^0u_{\psi_1}
 \simeq2\sqrt{mm'}\,\xi'^\dagger\xi,\qquad
-J_N^0\simeq2m_N\,\zeta'^\dagger\zeta,
+J_N^0\simeq2m_T\,\zeta'^\dagger\zeta,
 \end{equation}
 where $\xi,\zeta$ are unit-normalized Pauli spinors. Therefore,
 \begin{equation}
 \boxed{
 \Msq{2}_{\NR}
 \simeq
-\frac{16g_1^2g_N^2\,mm'm_N^2}{(m_V^2+\qvec^2)^2}
+\frac{16g_1^2g_T^2\,mm'm_T^2}{(m_V^2+\qvec^2)^2}
 \simeq
-\frac{16g_1^2g_N^2\,m^2m_N^2}{(m_V^2+\qvec^2)^2}.
+\frac{16g_1^2g_T^2\,m^2m_T^2}{(m_V^2+\qvec^2)^2}.
 }
 \label{eq:msq-two-nr}
 \end{equation}
 The last step neglects $\delta/m$. The splitting $\delta$ must still
-be retained in the scattering threshold and phase space.
+be retained in the scattering threshold and phase space. The denominator
+$(m_V^2+\boldsymbol q^2)^2$ here is the static nonrelativistic
+point-target approximation; the production formula in
+Eq.~\eqref{eq:radiative-recoil} uses the exact invariant $t_A$.
 
 \subsection{Three-body scalar emission}
 
@@ -1124,8 +1223,8 @@ vector-mediated scattering. Their sum gives
 \begin{equation}
 \boxed{
 \mathcal{M}_3=
-\frac{g_1g_2g_N}{t-m_V^2}\,
-J_N^\mu\,\bar u_{\chi_1}(p')\Gamma_\mu u_{\chi_1}(p),
+\frac{g_1g_2g_T}{t-m_V^2}\,
+J_T^\mu\,\bar u_{\chi_1}(p')\Gamma_\mu u_{\chi_1}(p),
 }
 \label{eq:amp-three}
 \end{equation}
@@ -1152,12 +1251,12 @@ exact point-target squared amplitude has the trace representation
 \begin{equation}
 \boxed{\begin{aligned}
 \Msq{3}
-={}&\frac{g_1^2g_2^2g_N^2}{4(t-m_V^2)^2}
+={}&\frac{g_1^2g_2^2g_T^2}{4(t-m_V^2)^2}
 \Tr\!\left[
 (\slsh{p'}+m)\Gamma_\mu(\slsh{p}+m)\overline{\Gamma}_\nu
 \right]\\
 &\times\Tr\!\left[
-(\slsh{P'}+m_N)\gamma^\mu(\slsh{P}+m_N)\gamma^\nu
+(\slsh{P'}+m_T)\gamma^\mu(\slsh{P}+m_T)\gamma^\nu
 \right].
 \end{aligned}}
 \label{eq:msq-three-exact}
@@ -1167,7 +1266,7 @@ the two diagrams.
 
 A simple closed form follows for
 \begin{equation}
-v\ll1,\qquad |\qvec|\ll m,m_N,\qquad \Delta,\omega,m_s\ll m,
+v\ll1,\qquad |\qvec|\ll m,m_T,\qquad \Delta,\omega,m_s\ll m,
 \end{equation}
 where $\omega=k^0$ is the laboratory scalar energy. We work sufficiently
 far from the intermediate-state pole that the neglected recoil terms
@@ -1197,12 +1296,12 @@ The nonrelativistic spin-averaged squared amplitude is
 \boxed{\begin{aligned}
 \Msq{3}_{\NR}
 &\simeq
-\frac{16g_1^2g_2^2g_N^2m^2m_N^2}{(m_V^2+\qvec^2)^2}
+\frac{16g_1^2g_2^2g_T^2m^2m_T^2}{(m_V^2+\qvec^2)^2}
 \left[
 \frac{1}{\omega-\Delta}-\frac{1}{\omega+\Delta}
 \right]^2\\[1mm]
 &=
-\frac{64g_1^2g_2^2g_N^2m^2m_N^2\Delta^2}
+\frac{64g_1^2g_2^2g_T^2m^2m_T^2\Delta^2}
 {(m_V^2+\qvec^2)^2(\Delta^2-\omega^2)^2}.
 \end{aligned}}
 \label{eq:msq-three-nr}
@@ -1255,7 +1354,7 @@ Thus,
 \boxed{\begin{aligned}
 \Msq{3}_{\NR}
 &\simeq
-\frac{64g_1^2g_2^2g_N^2m^2m_N^2}
+\frac{64g_1^2g_2^2g_T^2m^2m_T^2}
 {(m_V^2+\qvec^2)^2\Delta^2}\\
 &\simeq\frac{4g_2^2}{\Delta^2}\,\Msq{2}_{\NR},
 \end{aligned}}
@@ -1281,8 +1380,8 @@ In particular, the near-threshold factor $D^{3/2}$ obtained after
 integrating the three-body phase space is not part of the squared
 amplitude in Eq.~\eqref{eq:msq-three-nr}. Here
 \begin{equation}
-D=v|\qvec|-\frac{\qvec^2}{2\mu_{\chi N}}-m_s,\qquad
-\mu_{\chi N}=\frac{mm_N}{m+m_N}.
+D=v|\qvec|-\frac{\qvec^2}{2\mu_{\chi T}}-m_s,\qquad
+\mu_{\chi T}=\frac{mm_T}{m+m_T}.
 \end{equation}
 This phase-space power applies for a smooth nonzero amplitude near
 threshold, with $D\ll m_s$.
@@ -1303,7 +1402,7 @@ C_2\equiv\Msq{2},\qquad C_3\equiv\Msq{3},\qquad
 The constants have different mass dimensions:
 $[C_2]=\text{mass}^0$ and $[C_3]=\text{mass}^{-2}$.
 The following comparison isolates phase space. For a physical nuclear
-recoil spectrum, the common factor $F_N^2(\qvec)$ must be restored.
+recoil spectrum, the common factor $F_A^2(\qvec)$ must be restored.
 
 \subsection{Phase-space convention and incident flux}
 
@@ -1316,7 +1415,7 @@ d\Phi_n=(2\pi)^4
 \end{equation}
 With the target initially at rest, the cross section is
 \begin{equation}
-d\sigma_n=\frac{C_n}{4m_Np_{\rm in}}\,d\Phi_n,\qquad
+d\sigma_n=\frac{C_n}{4m_Ap_{\rm in}}\,d\Phi_n,\qquad
 p_{\rm in}=\sqrt{E_\chi^2-m^2}=m\gamma v,\qquad
 \gamma=(1-v^2)^{-1/2}.
 \label{eq:phase-flux}
@@ -1342,7 +1441,7 @@ introduce an additional recoil dependence within the interval.
 In particular, for a constant matrix element,
 \begin{equation}
 \frac{d\sigma_2}{dE_R}
-=\frac{C_2}{32\pi m_Np_{\rm in}^2}
+=\frac{C_2}{32\pi m_Ap_{\rm in}^2}
 \end{equation}
 inside the allowed interval. This point-target expression is exact.
 
@@ -1391,15 +1490,15 @@ To obtain the upper limit, let $\theta$ denote the angle between the
 incident dark matter and the recoiling nucleus in the laboratory.
 Energy-momentum conservation gives
 \begin{equation}
-W^2=m^2-2(E_\chi+m_N)E_R
-+2p_{\rm in}\sqrt{E_R(E_R+2m_N)}\cos\theta.
+W^2=m^2-2(E_\chi+m_A)E_R
++2p_{\rm in}\sqrt{E_R(E_R+2m_A)}\cos\theta.
 \end{equation}
 Therefore,
 \begin{equation}
 \boxed{
 W_{\max}^2(E_R)
-=m^2-2(E_\chi+m_N)E_R
-+2p_{\rm in}\sqrt{E_R(E_R+2m_N)}.
+=m^2-2(E_\chi+m_A)E_R
++2p_{\rm in}\sqrt{E_R(E_R+2m_A)}.
 }
 \label{eq:phase-wmax}
 \end{equation}
@@ -1423,9 +1522,9 @@ center-of-mass frame. In the heavy-particle limit, its allowed interval is
 where
 \begin{equation}
 \boxed{
-D(E_R,v)=vq-\frac{q^2}{2\mu_{\chi N}}-m_s,\qquad
-q=\sqrt{2m_NE_R},\qquad
-\mu_{\chi N}=\frac{mm_N}{m+m_N}.
+D(E_R,v)=vq-\frac{q^2}{2\mu_{\chi A}}-m_s,\qquad
+q_A\simeq\sqrt{2m_AE_R},\qquad
+\mu_{\chi A}=\frac{mm_A}{m+m_A}.
 }
 \label{eq:phase-D}
 \end{equation}
@@ -1482,10 +1581,10 @@ Using $p_{\rm in}\simeq mv$, the differential cross sections become
 \boxed{\begin{aligned}
 \frac{d\sigma_2}{dE_R}
 &\simeq
-\frac{C_2}{32\pi m^2m_Nv^2}\,\Theta(D),\\[1mm]
+\frac{C_2}{32\pi m^2m_Av^2}\,\Theta(D),\\[1mm]
 \frac{d\sigma_3}{dE_R}
 &\simeq
-\frac{C_3}{128\pi^3m^2m_Nv^2}\,
+\frac{C_3}{128\pi^3m^2m_Av^2}\,
 \mathcal{I}(D)\,\Theta(D).
 \end{aligned}}
 \label{eq:phase-cross-sections}
@@ -1518,19 +1617,19 @@ in the squared amplitude.
 Completing the square in Eq.~\eqref{eq:phase-D} gives
 \begin{equation}
 \boxed{
-D=Q-\frac{(q-\mu_{\chi N}v)^2}{2\mu_{\chi N}},
+D=Q-\frac{(q-\mu_{\chi A}v)^2}{2\mu_{\chi A}},
 \qquad
-Q=\frac12\mu_{\chi N}v^2-m_s.
+Q=\frac12\mu_{\chi A}v^2-m_s.
 }
 \label{eq:phase-complete-square}
 \end{equation}
 The scalar $Q$ in this equation is the leading nonrelativistic
 center-of-mass kinetic energy above threshold; it is distinct from the
 four-momentum transfer $Q^\mu=P'^\mu-P^\mu$ used earlier.
-For $v\geq v_{\rm thr}=\sqrt{2m_s/\mu_{\chi N}}$, the endpoints are
+For $v\geq v_{\rm thr}=\sqrt{2m_s/\mu_{\chi A}}$, the endpoints are
 \begin{equation}
-q_\pm=\mu_{\chi N}v\pm\sqrt{2\mu_{\chi N}Q},\qquad
-E_R^\pm=\frac{q_\pm^2}{2m_N}.
+q_\pm=\mu_{\chi A}v\pm\sqrt{2\mu_{\chi A}Q},\qquad
+E_R^\pm=\frac{q_\pm^2}{2m_A}.
 \label{eq:phase-endpoints}
 \end{equation}
 Both processes have this same allowed interval.
@@ -1538,7 +1637,7 @@ The two-body spectrum is flat within it. The three-body spectrum
 vanishes at both endpoints and is largest where $D$ is largest:
 \begin{equation}
 \boxed{
-E_R^{\rm peak}=\frac{\mu_{\chi N}^2v^2}{2m_N}.
+E_R^{\rm peak}=\frac{\mu_{\chi A}^2v^2}{2m_A}.
 }
 \label{eq:phase-peak}
 \end{equation}
@@ -1559,7 +1658,7 @@ Thus both the low- and high-recoil edges are softened.
 
 For illustration, take
 \begin{equation}
-m=1~\mathrm{TeV},\qquad m_N=122~\mathrm{GeV},\qquad
+m=1~\mathrm{TeV},\qquad m_A=122~\mathrm{GeV},\qquad
 m_s=300~\mathrm{keV},\qquad v=770~\mathrm{km/s}.
 \label{eq:phase-benchmark}
 \end{equation}
@@ -1639,7 +1738,7 @@ Let $f_{\rm speed}(v)$ be the normalized laboratory speed distribution,
 The minimum speed is the same in both models:
 \begin{equation}
 v_{\min}(E_R)
-=\frac{m_s+q^2/(2\mu_{\chi N})}{q},\qquad
+=\frac{m_s+q^2/(2\mu_{\chi A})}{q},\qquad
 D=q\,[v-v_{\min}(E_R)].
 \label{eq:phase-vmin}
 \end{equation}
