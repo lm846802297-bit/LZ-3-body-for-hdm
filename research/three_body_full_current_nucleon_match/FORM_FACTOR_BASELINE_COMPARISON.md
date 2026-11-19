@@ -159,7 +159,9 @@ Every fixed-speed and halo-fold result must retain, separately:
 
 The primary response correction is always divided by item 2, using the same \(F_1,F_2\) prescription in numerator and denominator. Item 1 is a secondary normalization reference. Never compare a finite-\(t_N\) numerator to a \(q=0\) denominator and describe the whole difference as an AFH response correction.
 
-The P4 workflow now runs bishara_linear and isoscalar_zexp separately, each with the Coulomb and leading-static candidate outputs. The candidate remains unpromoted until P3-C passes.
+The Xe-131 fixed-speed charge-sector workflow and the P4 natural-xenon workflow now run bishara_linear and isoscalar_zexp separately. The Xe-131 comparison reports the finite-t_N M-only denominator as its primary ratio; P4 reports both the Coulomb and leading-static candidate outputs. The candidate remains unpromoted until P3-C passes.
+
+A provenance distinction remains important: the checked paper-source main.tex explicitly states the universal quark coupling and the AFH W_M response, but does not itself spell out a finite-t_N flavor-resolved F1^q/F2^q low-order parameterization. The archived DMFormFactor-v6 file supplies the nuclear-response machinery; it is not, by itself, evidence for a particular quark-level shape-factor input. Therefore bishara_linear is treated as a low-Q2 diagnostic until the exact legacy expression and coefficients are identified.
 
 ## 7. Validation boundary and next steps
 
