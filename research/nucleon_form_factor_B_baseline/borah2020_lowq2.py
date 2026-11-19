@@ -293,7 +293,7 @@ def sample_cM_draws(q2_GeV2, n_draws: int = 5000, seed: int = 20261119,
 
 def sample_cM_factors(q2_GeV2, n_draws: int = 5000, seed: int = 20261119,
                       strange_model: str = "sufian2017_unit_current"):
-    """Summarize Ye2020 coefficient-covariance draws for F_M and |F_M|^2."""
+    """Summarize Borah2020 coefficient-covariance draws for F_M and |F_M|^2."""
     fm = sample_cM_draws(q2_GeV2, n_draws, seed, strange_model)
     fm2 = fm*fm
     return {
