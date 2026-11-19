@@ -213,12 +213,27 @@ the untruncated result is retained only as a sensitivity/control comparison.
 
 ## 7. Current limitation
 
-The native AFH runner currently has to complete before a production
-seven-isotope result can be promoted. Until then, the correct status is:
+The engine now has two strictly separated input paths:
 
-\[
-\boxed{\text{engine ready; native AFH input gate open}}
-\]
+1. **Native production path:** requires the provenance-pinned native
+   seven-isotope/eight-response Wolfram artifact and its 16,807-row
+   pointwise comparison PASS.
+2. **Provisional calculation path:** accepts only the pinned source-translated
+   AFH-8 charge archive plus the independently rank-reconstructed P3-B
+   spatial archive. It checks both artifact hashes, the shared AFH source
+   commit, all 16,807 charge/spatial q-grid keys, C0 normalization, and the
+   two response Cauchy-Schwarz bounds. Its output is explicitly marked
+   `native_afh_validated=false`.
+
+The provisional path exists to finish the end-to-end numerical workflow
+before the user's local Mathematica run. It is not a substitute for native
+AFH validation and cannot be promoted to a paper-final nuclear prediction.
+
+The formal three-body width is restricted to the asymmetric Pole prescription:
+the first \(p-k\) \(\chi_2\) propagator is zero-width and the second
+\(p'+k\) propagator carries the constant pole width. The mediator denominator
+uses the exact \((m_V^2+q_A^2)^2\), with
+\(q_A^2=2m_AE_R+E_R^2\).
 
 The present engine includes the charge/longitudinal sector through \(L_C\)
 but still omits the transverse \(\Delta\), \(\Sigma'\), and mixed
@@ -251,6 +266,34 @@ fixed-speed Coulomb-sector benchmark in
 \`XE131_FIXED_SPEED_CHARGE_DSIGMA_RESULTS.md\`, but does not replace the
 seven-isotope/eight-response gate or validate transverse multipoles.
 
+
+## 2026-11-19 update: provisional AFH input path for pre-Mathematica P4 work
+
+The engine accepts either the native AFH archive or an explicit pair of
+provisional Python artifacts. The provisional pair is:
+- AFH-8 charge archive: run 44222087512, artifact 14391456283;
+- P3-B spatial OBDME archive: run 44432440600, artifact 14486014588.
+
+The loader does not manufacture a native comparison manifest. It requires
+both source-translated status flags, verifies the SHA-256 hashes and common
+AFH v6.0 source, applies the P3-B common \(C_0(A)\) factor to charge
+responses exactly once, and uses the already C0-corrected spatial responses
+from P3-B. It also checks the complete seven-isotope 2,401-point q grids
+and both \(M\)-\(\Phi''\) and \(\Sigma'\)-\(\Delta\) Cauchy bounds.
+
+A provisional P4 workflow is defined in
+`.github/workflows/p4-provisional-seven-isotope-halo-fold.yml`. Its selected
+recoil grid is \(E_R=150,200,267,350,400\) keV, with separate speed and
+three-body phase-space refinement runs. The first production benchmark uses
+\(m_{\chi_1}=1\) TeV, \(m_s=200\) keV,
+\(\Delta m=1\) MeV, \(m_V=10\) GeV, and the formal Pole prescription.
+It records pointlike \(M\), finite-\(t_N\) \(M\), Coulomb \(M+\Phi''\),
+and the leading-static six-channel candidate. Both truncated SHM and
+untruncated Maxwellian folds are retained.
+
+Until the local Mathematica comparison is run, every resulting spectrum is
+labelled provisional and `native_afh_validated=false`. No GCN/JJ55
+response enters this path.
 
 ## 2026-11-18 update: optional leading-static vector-current candidate mode
 
