@@ -102,7 +102,7 @@ def main() -> None:
         "calculation": "Xe-131 AFH W_M response x manuscript Eq. (6)",
         "target_A": args.A,
         "target_mass_GeV": mA,
-        "target_mass_prescription": "A * 0.93149410242 GeV",
+        "target_mass_prescription": "AME2020 bare-nuclear mass from isotope_mass_schemes.py (CODATA-2022 constants)",
         "mchi_GeV": args.mchi_GeV,
         "ms_MeV": args.ms_MeV,
         "delta_m_MeV": args.delta_m_MeV,

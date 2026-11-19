@@ -1,0 +1,46 @@
+name: Natural-xenon halo-folded width comparison
+
+on:
+  pull_request:
+    paths:
+      - "research/three_body_calculation_and_validation/run_natural_xenon_width_comparison.py"
+      - "research/three_body_calculation_and_validation/run_natural_xenon_halo_fold.py"
+      - "research/three_body_calculation_and_validation/run_natural_xenon_joint.py"
+      - "research/three_body_calculation_and_validation/results/anand_wm_response/**"
+      - ".github/workflows/natural-xenon-width-comparison.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  halo-width-comparison:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install numerical dependency
+        run: python -m pip install --upgrade numpy==2.3.5 scipy==1.16.3
+      - name: Compile calculation and tests
+        run: |
+          python -m py_compile \
+            research/three_body_calculation_and_validation/run_natural_xenon_width_comparison.py \
+            research/three_body_calculation_and_validation/test_natural_xenon_width_comparison.py
+      - name: Run tests
+        working-directory: research/three_body_calculation_and_validation
+        run: python -m unittest test_natural_xenon_width_comparison -v
+      - name: Generate halo-folded width comparison
+        run: |
+          python research/three_body_calculation_and_validation/run_natural_xenon_width_comparison.py \
+            --response-dir research/three_body_calculation_and_validation/results/anand_wm_response \
+            --out-dir /tmp/natural-xenon-width-comparison
+      - name: Upload natural-xenon width comparison
+        uses: actions/upload-artifact@v4
+        with:
+          name: natural-xenon-halo-width-comparison
+          path: /tmp/natural-xenon-width-comparison/
+          if-no-files-found: error
+          retention-days: 30
