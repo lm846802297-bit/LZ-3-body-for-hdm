@@ -91,7 +91,7 @@ Formal P4 requirements:
   outside the AFH default-density set;
 - use native AFH response columns only; no GCN/JJ55 substitution;
 - use `width_scheme="pole"` only;
-- report separately pointlike \(M\), finite-\(t_N\) \(M\), Coulomb
+- report separately A-reference \(M\), finite-\(t_N\) \(M\), Coulomb
   \(M+\Phi''\), and the full matched-current result;
 - include both the truncated SHM and untruncated Maxwellian halo scenarios;
 - run speed, three-body phase-space, and recoil-grid convergence;
