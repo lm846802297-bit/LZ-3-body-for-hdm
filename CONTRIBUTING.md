@@ -1,7 +1,8 @@
 # Contributing and research workflow
 
-This repository is organized around reproducible research. Please read
-research/WORKFLOW.md before starting a new calculation or submitting a change.
+This repository is organized around reproducible research. Before starting
+work or submitting a change, read [research/WORKFLOW.md](research/WORKFLOW.md)
+and the mandatory [research source hierarchy](research/RESEARCH_GOVERNANCE_AND_SOURCE_HIERARCHY.md).
 
 ## In brief
 
