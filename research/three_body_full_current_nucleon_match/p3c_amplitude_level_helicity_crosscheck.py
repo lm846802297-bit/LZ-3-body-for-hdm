@@ -162,7 +162,10 @@ def run(tensor_path,spatial_dir,contraction_path,weights_path):
       "native_afh_validated":False,"full_covariant_nuclear_amplitude_validated":False,"formal_width_scheme":"pole",
       "AFH_source_sha256":AFH_SHA,"AFH_native_status":meta["status"],"spatial_source_run_id":contraction.get("spatial_afh_source",{}).get("artifact_run_id"),
       "spatial_source_artifact_id":contraction.get("spatial_afh_source",{}).get("artifact_id"),
-      "form_factor_status":"constant q=0 anchors; finite-t_N dependence not included","benchmark_count":len(out),
+      "coupling_basis":"external g_VN=3*g_Vq",
+      "form_factor_normalization":"Fhat_i=F_i^(u+d+s)/3",
+      "form_factor_input":{"F1N_effective":f1,"F2N_effective":f2,"mN_GeV":mN},
+      "form_factor_status":"constant q=0 effective anchors in the external g_VN basis; finite-t_N dependence not included","benchmark_count":len(out),
       "max_amplitude_vs_cartesian_relative_residual":max(x["PCHIP_amplitude_vs_cartesian_relative_residual"] for x in out),
       "max_Eq107_vs_helicity_coefficient_relative_residual":max(max(x["Eq107_vs_helicity_coefficient_relative_residuals"].values()) for x in out),
       "results":out,"limitations":[
