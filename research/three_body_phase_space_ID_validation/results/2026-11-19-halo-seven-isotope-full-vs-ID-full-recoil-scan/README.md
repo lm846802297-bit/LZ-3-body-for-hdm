@@ -35,3 +35,8 @@ The AFH v6.0 calculation includes Xe-128, 129, 130, 131, 132, 134, and 136. Thes
 ## Scientific scope
 
 This is a halo-folded rate-ratio and quadrature-convergence record. It is not a detector-level LZ prediction: detector response, exposure, efficiency, energy resolution, cuts, and likelihood are not included. The full-versus-\(I(D)\) comparison is the DM-side approximation check on the same halo and AFH nuclear weighting.
+
+
+## Final archive integrity check
+
+The final extraction, run-manifest generation, and complete SHA-256 verification passed in [archive workflow run 44579411941](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44579411941). The manifest inventory lists the README, two original source ZIPs, and nine extracted native files. `SHA256SUMS` additionally covers `RUN_MANIFEST.json` itself (13 checksum entries total). The manifest is deliberately excluded from its own embedded inventory to avoid a self-referential digest.
