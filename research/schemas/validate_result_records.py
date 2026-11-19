@@ -78,9 +78,13 @@ def verify_artifacts(record: dict, repo_root: Path):
                         errors.append(f"{item['path']}: duplicate CSV column names")
                     if item.get("columns") is not None and header != item["columns"]:
                         errors.append(f"{item['path']}: CSV header differs from manifest columns")
-                    missing_unit_columns = set(item.get("units", {})) - set(header)
+                    unit_columns = set(item.get("units", {}))
+                    missing_unit_columns = set(header) - unit_columns
+                    unknown_unit_columns = unit_columns - set(header)
                     if missing_unit_columns:
-                        errors.append(f"{item['path']}: unit map contains unknown columns {sorted(missing_unit_columns)}")
+                        errors.append(f"{item['path']}: unit map is missing columns {sorted(missing_unit_columns)}")
+                    if unknown_unit_columns:
+                        errors.append(f"{item['path']}: unit map contains unknown columns {sorted(unknown_unit_columns)}")
                     row_count = 0
                     for row in reader:
                         row_count += 1
