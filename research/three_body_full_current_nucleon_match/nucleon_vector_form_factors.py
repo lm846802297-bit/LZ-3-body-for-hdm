@@ -39,6 +39,21 @@ M_N_GEV = 0.938918
 F1V0 = 3.0
 F2V0 = -0.552
 
+
+def effective_nucleon_form_factors(F1_quark: float, F2_quark: float) -> tuple[float, float]:
+    """Normalize the universal u+d+s current to the external effective g_VN.
+
+    The paper/Mathematica rate prefactor contains g_VN=3*g_Vq. Therefore the
+    full quark-current form factors (F1(0)=3, F2(0)=-0.552) must be divided
+    by three before they enter Dirac-Pauli coefficients multiplying that
+    g_VN-normalized prefactor. This gives Fhat1(0)=1 and Fhat2(0)=-0.184.
+    """
+    if not math.isfinite(F1_quark) or not math.isfinite(F2_quark):
+        raise ValueError("quark-current form factors must be finite")
+    if F1V0 != 3.0:
+        raise ArithmeticError("universal u+d+s normalization changed; revisit g_VN=3*g_Vq")
+    return F1_quark / F1V0, F2_quark / F1V0
+
 # Bishara et al., Appendix A.1, Eqs. (78)-(85):
 # flavor-separated proton Dirac slopes in GeV^{-2}.
 BISHARA_F1_SLOPES = {"u": 5.57, "d": 2.84, "s": -0.018}
