@@ -16,6 +16,6 @@ Mathematica notebook 保留为原始 AFH 有限尺寸 A 参考；本次正式采
 
 ## 运行要求
 
-主计算需要 Mathematica 和本机安装的 FeynCalc；AFH 核响应数据与 notebook 同目录。笔记本末尾的 FeynRules/FeynArts 验证还需要相应软件包及模型导出环境。本仓库不打包第三方 Mathematica 软件；这些验证的已保存输出保留在 notebook 中，重新运行时需先配置本地软件。
+主计算需要 Mathematica；AFH 核响应数据与 notebook 同目录。FeynCalc、FeynRules 2.3.49 与 FeynArts 3.12 的源码副本放在 `../three_body_calculation_and_validation/mathematica_halo_notebook/FeynRules_check/`，版本、许可和 SHA-256 清单见该目录说明。主 notebook 和验证脚本优先加载仓库内的 FeynCalc 副本。笔记本末尾 FeynRules/FeynArts 验证需要按该目录说明运行。
 
 从 notebook 最上方按顺序运行。更改物理输入或积分精度后，要重新运行后续依赖单元；嵌入的旧输出不会自动更新。天然氙事件率没有包含探测器效率、能量分辨率或曝光选择。

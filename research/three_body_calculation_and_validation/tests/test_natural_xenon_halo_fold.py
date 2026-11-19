@@ -59,7 +59,7 @@ class NaturalXenonHaloFoldTests(unittest.TestCase):
     def test_analytic_three_body_vmin_closes_phase_space(self):
         mchi, ms, ER = 1000.0, 0.0003, 101.0e-6
         for A in (131, 136):
-            mA = A * 0.93149410242
+            mA = isotope_mass_with_scheme(A, "ame2020_nuclear")
             vmin = vmin_three_body_km_s(mchi, ms, mA, ER)
             wmin2, wmax2 = eq6_kernel.limits(mchi, ms, mA, ER, vmin)
             self.assertAlmostEqual(wmax2, wmin2, delta=3e-10)
@@ -69,7 +69,7 @@ class NaturalXenonHaloFoldTests(unittest.TestCase):
         mchi, ms, ER, vmax = 1000.0, 0.0003, 101.0e-6, 776.0
         thresholds = {
             A: vmin_three_body_km_s(
-                mchi, ms, A * 0.93149410242, ER
+                mchi, ms, isotope_mass_with_scheme(A, "ame2020_nuclear"), ER
             )
             for A in (128, 129, 130, 131, 132, 134, 136)
         }
@@ -81,7 +81,7 @@ class NaturalXenonHaloFoldTests(unittest.TestCase):
             A=136,
             ER_keV=101.0,
             halo_model="shm_cutoff",
-            mass_scheme="nist_nuclear",
+            mass_scheme="ame2020_nuclear",
             nv=4,
             mchi=1000.0,
             ms=0.0003,
@@ -101,7 +101,7 @@ class NaturalXenonHaloFoldTests(unittest.TestCase):
         )
         self.assertEqual({row["width_scheme"] for row in rows}, {"pole"})
         self.assertEqual({row["g2"] for row in rows}, {1.0})
-        mA = isotope_mass_with_scheme(136, "nist_nuclear")
+        mA = isotope_mass_with_scheme(136, "ame2020_nuclear")
         q_exact = math.sqrt(2.0 * mA * 101.0e-6 + (101.0e-6) ** 2)
         for row in rows:
             self.assertAlmostEqual(row["q_response_GeV"], q_exact, places=14)
