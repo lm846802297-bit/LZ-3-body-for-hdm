@@ -306,10 +306,12 @@ extractor. This confirms the **particle-side** signed coefficient; it
 does not yet validate the complete many-body AFH OBDME contraction. The
 Cauchy--Schwarz check bounds response magnitude and is a separate test.
 
-For the provisional zero-momentum anchors \(\widehat F_1^N(0)=3\),
-\(\widehat F_2^N(0)=-0.552\), and \(m_N=0.938918\) GeV, the coefficient ratios
-relative to the leading charge coefficient \(C_M=F_1^2L^{00}\) over the
-12 archived benchmarks are:
+For the universal u+d+s current the raw zero-momentum sums are
+\\(F_1^{uds}(0)=3\\), \\(F_2^{uds}(0)=-0.552\\). With the external
+\\(g_{VN}=3g_{Vq}\\) prefactor, the coefficients use
+\\(\\widehat F_1^N(0)=1\\), \\(\\widehat F_2^N(0)=-0.184\\).
+The coefficient ratios relative to
+\\(C_M=\\widehat F_1^{N,2}L^{00}\\) over the 12 archived benchmarks are:
 
 | Spatial coefficient | Range relative to \(C_M\) |
 |---|---:|
@@ -477,11 +479,13 @@ The hierarchy established by the present calculations is therefore:
 
 Therefore the final natural-xenon spectrum must be built in the order
 [
-W_M^{\rm legacy q=0}
-;\rightarrow;
-(M+\Phi'')^{\rm finite-t_N}
-;\rightarrow;
-(\Delta,\Sigma',\Sigma'')^{\rm finite-t_N},
+A: W_M^{\\rm phys}(y_A) with q=0 effective nucleon current
+;\\rightarrow;
+B: \\widehat c_M(t_N)^2W_M^{\\rm phys}(y_A)
+;\\rightarrow;
+C: B plus allowed charge multipoles
+;\\rightarrow;
+D: full matched AFH current after P3-C validation
 ]
 with each isotope evaluated using its own exact (q_A), and without mixing
 the native Xe-131 response grid with the provisional seven-isotope AFH
