@@ -5,6 +5,41 @@ import nucleon_vector_form_factors as ff
 
 
 class VectorFormFactorTests(unittest.TestCase):
+    def test_formal_recoil_transfer_stores_both_four_vectors_and_invariants(self):
+        mA = 121.90971983538435
+        ER_keV = 200.0
+        transfer = ff.recoil_transfer_kinematics(mA, ER_keV)
+        qA = math.sqrt(2.0*mA*200.0e-6 + (200.0e-6)**2)
+        expected_t = -2.0*mA*200.0e-6
+        self.assertEqual(transfer["qA_four_vector_GeV"], [200.0e-6, 0.0, 0.0, qA])
+        self.assertEqual(transfer["qN_four_vector_GeV"], transfer["qA_four_vector_GeV"])
+        self.assertAlmostEqual(transfer["tA_GeV2"], expected_t, places=16)
+        self.assertAlmostEqual(transfer["tN_GeV2"], expected_t, places=16)
+        self.assertAlmostEqual(transfer["Q_A2_GeV2"], qA*qA, places=16)
+        self.assertNotAlmostEqual(transfer["tN_GeV2"], -transfer["Q_A2_GeV2"], places=10)
+        self.assertEqual(transfer["metric_signature"], "+---")
+        self.assertEqual(
+            transfer["nucleon_transfer_scheme_id"],
+            "strict_one_body_impulse_qN_equals_qA",
+        )
+
+    def test_static_qN0_zero_is_a_separate_diagnostic(self):
+        mA = 121.90971983538435
+        ER_keV = 200.0
+        transfer = ff.recoil_transfer_kinematics(
+            mA, ER_keV,
+            nucleon_transfer_scheme=ff.STATIC_NUCLEON_TRANSFER_SCHEME,
+        )
+        self.assertEqual(transfer["qA_four_vector_GeV"][0], 200.0e-6)
+        self.assertEqual(transfer["qN_four_vector_GeV"][0], 0.0)
+        self.assertAlmostEqual(
+            transfer["tN_GeV2"], -transfer["Q_A2_GeV2"], places=16
+        )
+        self.assertAlmostEqual(
+            transfer["tA_GeV2"], -2.0*mA*ER_keV*1.0e-6, places=16
+        )
+        self.assertNotAlmostEqual(transfer["tN_GeV2"], transfer["tA_GeV2"], places=10)
+
     def test_zero_momentum_raw_bishara_anchor(self):
         f1, f2 = ff.bishara_linear(0.0)
         self.assertAlmostEqual(f1, 3.0, places=12)
