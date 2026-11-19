@@ -6,7 +6,7 @@ These instructions are mandatory for all agents and contributors. They complemen
 
 Before substantive work:
 
-1. Read this file, the root [README](README.md), [CONTRIBUTING.md](CONTRIBUTING.md), [research/WORKFLOW.md](research/WORKFLOW.md), and [research/README.md](research/README.md).
+1. Read this file, the root [README](README.md), [CONTRIBUTING.md](CONTRIBUTING.md), [research/WORKFLOW.md](research/WORKFLOW.md), [research/README.md](research/README.md), and the mandatory [research source hierarchy](research/RESEARCH_GOVERNANCE_AND_SOURCE_HIERARCHY.md).
 2. Read the relevant topic README, theory note, audit, scripts, tests, and input provenance. Use [the model and three-body amplitude note](research/docs/01_model_and_amplitude.md), [the LZ recast plan](research/docs/02_lz_recast.md), [the cosmology note](research/docs/03_cosmology.md), and [the audit/roadmap](research/docs/04_audit_and_roadmap.md) when relevant.
 3. Inspect the latest main SHA, open PRs touching the same paths, and the exact baseline data/code before changing a calculation.
 4. Do not infer that a planned task has run. Create a run record only after execution; preserve failed, partial, and blocked attempts honestly.
