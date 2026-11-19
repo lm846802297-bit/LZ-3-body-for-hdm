@@ -559,6 +559,8 @@ def analyze_tensor_archive(
         ),
         "calculation_role": "P3-C amplitude-level structural matching diagnostic with q=0 effective nucleon-current anchors; not the adopted B production rate",
         "primary_B_baseline_included": False,
+        "coupling_basis": "external g_VN=3*g_Vq",
+        "form_factor_normalization": "Fhat_i=F_i^(u+d+s)/3",
         "form_factor_input": {
             "F1N_effective": f1,
             "F2N_effective": f2,
