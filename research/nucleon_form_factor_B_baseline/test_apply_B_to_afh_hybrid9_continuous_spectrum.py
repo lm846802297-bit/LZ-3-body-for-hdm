@@ -64,6 +64,7 @@ class ApplyBToAbsoluteAFHSpectrumTests(unittest.TestCase):
                     q = math.sqrt(2.0*mA*ER_GeV + ER_GeV**2)
                     kernel = 1.0e-12 * (1.0 + A/100.0) * (1.0 + ER/100.0)
                     isotope = {
+                        "benchmark": "test_benchmark",
                         "A": A,
                         "ER_keV": ER,
                         "mA_GeV": mA,
