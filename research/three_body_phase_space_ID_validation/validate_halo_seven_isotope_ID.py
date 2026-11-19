@@ -20,7 +20,7 @@ import numpy as np
 from numpy.polynomial.legendre import leggauss
 
 HERE = Path(__file__).resolve().parent
-ROOT = HERE.parents[2]
+ROOT = HERE.parents[1]
 HALO_DIR = ROOT / "research" / "afh_default_density_natural_xenon_halo"
 CALC_DIR = ROOT / "research" / "three_body_calculation_and_validation"
 sys.path.insert(0, str(HALO_DIR))
@@ -173,17 +173,9 @@ def velocity_weighted_kernels(ER: float, mA: float, mchi: float, ms: float,
             )
             amp_num += common*Jfull
             amp_den += common*Jphase
-    # The NR approximation can open slightly below the exact threshold due
-    # to recoil-energy convention differences. Integrate that sliver too.
-    if vmin_nr < min(vmin_full, VMAX):
-        for v, wv in speed_quadrature(vmin_nr, min(vmin_full, VMAX), speed_order):
-            beta = v/C_KM_S
-            pchi = mchi*beta/math.sqrt(1.0-beta*beta)
-            common = wv*shm_speed_pdf(float(v))*beta/(pchi*pchi)
-            if common == 0.0:
-                continue
-            L0 = threshold_l00(ER, float(v), mchi, ms, delta_m, mA)
-            approx += common*8.0*L0*i_of_d(d_nr(ER,float(v),mchi,ms,mA),ms)
+    # Use the exact four-vector domain for both integrals. If the NR
+    # approximation opens slightly earlier, that sub-threshold sliver is not
+    # a physical point of the exact three-body process and is excluded.
     return full, approx, amp_num/amp_den-1.0 if amp_den else math.nan, vmin_full
 
 
