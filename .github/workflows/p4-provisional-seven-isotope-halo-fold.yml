@@ -88,7 +88,7 @@ jobs:
             --rho-GeV-cm3 0.3 \
             --ER-keV 150 200 267 350 400 \
             --nv 8 --nw 8 --nz 6 --nphi 4 \
-            --form-factor q0_anchor \
+            --form-factor bishara_linear \
             --width-scheme pole \
             --include-leading-static-vector-candidate
 
@@ -102,7 +102,7 @@ jobs:
             --g2 1 --coupling-product-squared 1e-8 --rho-GeV-cm3 0.3 \
             --ER-keV 200 267 \
             --nv 12 --nw 8 --nz 6 --nphi 4 \
-            --form-factor q0_anchor --width-scheme pole \
+            --form-factor bishara_linear --width-scheme pole \
             --include-leading-static-vector-candidate
 
       - name: Refine halo-speed quadrature further at 24 nodes
@@ -115,7 +115,7 @@ jobs:
             --g2 1 --coupling-product-squared 1e-8 --rho-GeV-cm3 0.3 \
             --ER-keV 200 267 \
             --nv 24 --nw 8 --nz 6 --nphi 4 \
-            --form-factor q0_anchor --width-scheme pole \
+            --form-factor bishara_linear --width-scheme pole \
             --include-leading-static-vector-candidate
 
       - name: Refine three-body phase-space quadrature at the two principal recoil points
@@ -128,7 +128,7 @@ jobs:
             --g2 1 --coupling-product-squared 1e-8 --rho-GeV-cm3 0.3 \
             --ER-keV 200 267 \
             --nv 8 --nw 10 --nz 8 --nphi 6 \
-            --form-factor q0_anchor --width-scheme pole \
+            --form-factor bishara_linear --width-scheme pole \
             --include-leading-static-vector-candidate
 
       - name: Compare speed and phase-space quadrature refinements
