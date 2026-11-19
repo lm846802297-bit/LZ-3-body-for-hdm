@@ -767,11 +767,16 @@ def charge_kernel_from_coulomb_weight(
     C_extension = sum(terms.values())
     if min(A_reference, B_baseline, C_extension) <= 0.0:
         raise ValueError("non-positive A/B/C charge kernel")
-    raw_F1, raw_F2 = (
-        (RAW_F1_UDS0, RAW_F2_UDS0) if prescription == "q0_anchor"
-        else (bishara_linear(-tN_GeV2) if prescription == "bishara_linear"
-              else isoscalar_zexp(-tN_GeV2))
-    )
+    if form_factor_prescription == "q0_anchor":
+        raw_F1, raw_F2 = RAW_F1_UDS0, RAW_F2_UDS0
+    elif form_factor_prescription == "bishara_linear":
+        raw_F1, raw_F2 = bishara_linear(-tN_GeV2)
+    elif form_factor_prescription == "isoscalar_zexp":
+        raw_F1, raw_F2 = isoscalar_zexp(-tN_GeV2)
+    else:
+        raise ValueError(
+            f"unknown form-factor prescription: {form_factor_prescription}"
+        )
     return {
         "form_factor_prescription": form_factor_prescription,
         "F1V_quark_sum": raw_F1,
