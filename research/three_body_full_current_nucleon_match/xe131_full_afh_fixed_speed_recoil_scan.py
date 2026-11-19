@@ -4,9 +4,9 @@
 The native AFH M/Phi''/M-Phi'' responses are combined with the independently
 source-translated P3-B Delta/Sigma'/Sigma'-Delta OBDME responses.  The latter
 remain provisional until the native Wolfram spatial-response and P3-C
-amplitude-level gates pass.  This script compares pointlike M-only,
-finite-t_N M-only, finite-t_N charge-only, and the six-channel candidate at
-identical recoil points and fixed particle benchmarks.
+amplitude-level gates pass.  This script compares the original finite-q AFH M-only baseline,
+finite-t_N M-only, finite-t_N charge-only, and the six-channel candidate
+for both low-Q_N^2 flavor-slope and isoscalar-z-exp form-factor diagnostics.
 """
 from __future__ import annotations
 
@@ -310,28 +310,30 @@ def integrate_point(
     width_scheme: str,
     orders: tuple[int, int, int],
     response_bundle: dict,
-) -> dict:
+) -> list[dict]:
     ER_GeV = ER_keV * 1.0e-6
     delta_m = float(case["delta_m_GeV"])
     wmin, wmax = eq6.limits(
         MCHI_GEV, MS_GEV, MA_XE131_GEV, ER_GeV, SPEED_KM_S
     )
     if wmax <= wmin:
-        return {
+        return [{
             "benchmark": case["name"], "delta_m_keV": delta_m * 1.0e6,
             "ER_keV": ER_keV, "width_scheme": width_scheme,
+            "form_factor_prescription": "not_applicable",
             "status": "closed_phase_space",
-        }
+        }]
     pole_clearance_keV = (
         MCHI_GEV + delta_m - math.sqrt(wmax)
     ) * 1.0e6
     if pole_clearance_keV <= 0.0:
-        return {
+        return [{
             "benchmark": case["name"], "delta_m_keV": delta_m * 1.0e6,
             "ER_keV": ER_keV, "width_scheme": width_scheme,
+            "form_factor_prescription": "not_applicable",
             "pole_clearance_keV": pole_clearance_keV,
             "status": "on_shell_chi2_accessible_not_in_offshell_scan",
-        }
+        }]
 
     result = integrate_spin_resolved_tensor(
         mchi=MCHI_GEV,
@@ -362,8 +364,8 @@ def integrate_point(
             qA, F1=F1, F2=F2, mN_GeV=DEFAULT_MN_GEV
         )
         rows.append({
-        "form_factor_prescription": form_factor_prescription,
-        "benchmark": case["name"],
+            "form_factor_prescription": form_factor_prescription,
+            "benchmark": case["name"],
         "delta_m_keV": delta_m * 1.0e6,
         "mchi1_GeV": MCHI_GEV,
         "ms_keV": MS_GEV * 1.0e6,
