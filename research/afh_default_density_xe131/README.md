@@ -13,6 +13,21 @@
 This stage uses the **built-in AFH/DMFormFactor v6.0 default density matrix** for
 Xe-131, not GCN5082 or JJ55.
 
+**Model-provenance clarification:** AFH is the nuclear-response formalism and
+package, not a shell-model interaction. The original xenon OBDMEs used by the
+AFH work are associated with the Baldridge–Dalton (B&D) shell-model interaction
+in the 50–82 major shell. The later shell-model comparison by Abdel Khaleq
+et al. (Phys. Rev. D 109, 075036 (2024), Sec. III B and Sec. IV B) explicitly
+identifies the original Fitzpatrick/Anand–Fitzpatrick–Haxton calculations as
+using B&D. The precise terminology is therefore **AFH v6.0 formalism/default
+OBDMEs with B&D underlying shell-model provenance**; AFH itself should not be
+called an interaction.
+
+GCN5082 and the archived JJ55-labelled input remain separate sensitivity
+alternatives only. They are not mixed into the AFH mainline. For the exact
+scope and comparison rules, see
+[NUCLEAR_STRUCTURE_BASELINE_POLICY.md](NUCLEAR_STRUCTURE_BASELINE_POLICY.md).
+
 Official source archive supplied for this calculation:
 - ZIP SHA-256: `4e0f70e6e780f3f4a40faa14792cae239d1989cf15d1e211b4fd7389b0460727`
 - source: `v6/dmformfactor-V6.m`

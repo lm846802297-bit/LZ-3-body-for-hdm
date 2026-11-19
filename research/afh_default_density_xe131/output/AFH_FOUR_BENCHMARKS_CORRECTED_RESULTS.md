@@ -2,7 +2,12 @@
 
 Canonical machine-readable outputs are `four_benchmarks_AFH_GCN_JJ55_corrected.csv` (long form) and `four_benchmarks_AFH_GCN_JJ55_wide_audit.csv` (wide audit). The earlier `four_benchmarks_dsigma_AFH_GCN_JJ55.csv` is historical and superseded; see [CROSS_SECTION_FILE_INDEX.md](CROSS_SECTION_FILE_INDEX.md).
 
-This archive gives the corrected 5 keV-grid AFH-default substitution for four fixed-speed benchmarks. The existing Eq. (6) integral I6 and particle/mediator prefactors are held fixed; only the nuclear response changes.
+> **Scope: response-only nuclear-model sensitivity archive.** The AFH v6.0
+> default-density response is the mainline. GCN5082 and the JJ55-labelled
+> alternative are included only for comparison; they are not mixed into the
+> AFH prediction.
+
+This archive gives the corrected 5 keV-grid AFH-default substitution for four fixed-speed benchmarks. The existing Eq. (6) integral I6 and particle/mediator prefactors are held fixed; only the nuclear response changes. Consequently, the AFH/GCN/JJ55 cross-section columns are conditional response-only substitutions using a common kernel, not three independent full-amplitude calculations.
 
 ## Normalization
 
