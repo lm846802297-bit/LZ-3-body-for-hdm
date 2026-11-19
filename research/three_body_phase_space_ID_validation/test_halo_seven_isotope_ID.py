@@ -9,6 +9,7 @@ from validate_halo_seven_isotope_ID import (
     i_of_d, shm_speed_pdf, d_nr, exact_speed_threshold,
     nr_speed_threshold, ISOTOPES, read_csv, ISOTOPE_WEIGHTS,
 )
+import phase_space_convergence as psc
 
 
 class HaloSevenIsotopeApproximationTests(unittest.TestCase):
@@ -44,6 +45,22 @@ class HaloSevenIsotopeApproximationTests(unittest.TestCase):
         self.assertTrue(math.isfinite(vmin))
         self.assertGreater(eq_dummy := vmin, 0.0)
         self.assertLess(eq_dummy, 776.0)
+
+    def test_threshold_regularized_full_kernel_converges(self):
+        mchi, ms, delta_m = 1000.0, 300e-6, 10e-3
+        mA, ER, speed = 121.90971983538435, 200e-6, 776.0
+        coarse = psc.integrate_i6(
+            mchi, ms, delta_m, mA, ER, speed,
+            nW=6, nz=6, nphi=4, mapping="threshold_u2",
+            width_scheme="zero",
+        )
+        reference = psc.integrate_i6(
+            mchi, ms, delta_m, mA, ER, speed,
+            nW=48, nz=24, nphi=16, mapping="threshold_u2",
+            width_scheme="zero",
+        )
+        self.assertGreater(coarse, 0.0)
+        self.assertLess(abs(coarse/reference-1.0), 2e-6)
 
 
 if __name__ == "__main__":
