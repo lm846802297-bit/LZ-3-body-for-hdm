@@ -153,8 +153,12 @@ The full-transfer prescription is the consistent choice for the covariant
 Dirac--Pauli vertex and its Pauli term; the static prescription is its
 leading low-energy approximation. The free on-shell energy-transfer-matched
 impulse scan documented in the project README realizes
-\(k_N'-k_N=q_A\) with a small longitudinal internal momentum and satisfies
-the free-current Ward identity at numerical precision. This is a
+\(k_N'-k_N=q_A\) with a small longitudinal internal momentum. Its largest
+free-current Ward residual is \(2.40\times10^{-16}\) when evaluated with
+the matched \(q_N\), while the static \(q_N^0=0\) current gives a
+\(5.35\times10^{-4}\) residual when tested against the physical external
+\(q_A\). This directly probes the four-vector entering the Pauli term,
+not merely the tiny change in the scalar invariant argument. This is a
 kinematic consistency check, not a bound-nucleus/off-shell calculation.
 
 For the current Xe-131 Bishara-linear \(F_1\), constant \(F_2\) benchmark,
