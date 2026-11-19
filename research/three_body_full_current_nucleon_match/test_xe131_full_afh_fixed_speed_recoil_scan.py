@@ -54,14 +54,36 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
             17.0 * self.L, self.q, self.ER, self.responses, self.F1, self.F2
         )
         for key in (
-            "finite_t_M_over_pointlike_M",
-            "charge_only_over_pointlike_M",
+            "finite_t_M_over_q0_M_reference",
+            "charge_only_over_finite_t_M",
+            "full_over_finite_t_M",
             "PhiPP_over_finite_t_M_correction",
             "full_over_charge_only",
             "spatial_over_charge_only",
-            "full_over_pointlike_M",
+            "charge_only_over_q0_M_reference",
+            "full_over_q0_M_reference",
         ):
             self.assertAlmostEqual(a[key], b[key], places=12, msg=key)
+
+    def test_full_six_channel_ratio_uses_same_finite_t_M_baseline(self):
+        result = contract_six_channels(
+            self.L, self.q, self.ER, self.responses, self.F1, self.F2
+        )
+        self.assertAlmostEqual(
+            result["charge_only_over_finite_t_M"],
+            result["PhiPP_over_finite_t_M_correction"] + 1.0,
+            places=14,
+        )
+        self.assertAlmostEqual(
+            result["full_over_finite_t_M"],
+            result["full_six_channel_candidate"] / result["finite_t_M"],
+            places=14,
+        )
+        self.assertNotAlmostEqual(
+            result["full_over_finite_t_M"],
+            result["full_over_q0_M_reference"],
+            places=6,
+        )
 
     def test_formal_six_channel_scan_uses_pole_width_only(self):
         self.assertEqual(FORMAL_WIDTH_SCHEMES, ("pole",))
