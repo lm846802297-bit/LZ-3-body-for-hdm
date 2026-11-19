@@ -133,6 +133,8 @@ The global residuals are
 \max\delta_{C_{\rm Eq.(107)}}=7.73\times10^{-16}.
 }
 \]
+Compared with the pre-P0 repository JSON (which used raw \(F_1^{uds}=3\), \(F_2^{uds}=-0.552\) with the external \(g_{VN}\) prefactor), the four absolute particle-side kernels above are smaller by exactly \(1/9\), as required by \(\widehat F_i=F_i^{uds}/3\). The helicity-versus-Cartesian and Eq. (107) relative residuals remain unchanged at machine precision because both sides of the structural identity use the same rescaled current.
+
 The deliberately reversed \(\Sigma'\) helicity phase flips the signed
 \(\Sigma'\)-\(\Delta\) coefficient while leaving the two diagonal
 coefficients unchanged. This is covered by a unit test.
