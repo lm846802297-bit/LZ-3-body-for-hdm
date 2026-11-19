@@ -33,6 +33,16 @@ def finite_float(row: dict[str, str], key: str) -> float:
     return value
 
 
+def optional_float(row: dict[str, str], key: str) -> float | None:
+    raw = row.get(key, "")
+    if raw in ("", None):
+        return None
+    value = float(raw)
+    if not math.isfinite(value):
+        raise ValueError(f"non-finite {key}: {value}")
+    return value
+
+
 def compare_table(base_path: Path, high_path: Path, key_fields: tuple[str, ...],
                   full_key: str, approx_key: str, error_key: str,
                   output_path: Path, activity_floor: float) -> dict:
@@ -46,17 +56,30 @@ def compare_table(base_path: Path, high_path: Path, key_fields: tuple[str, ...],
     out = []
     full_shifts, approx_shifts, error_shifts = [], [], []
     active_full_shifts, active_approx_shifts, active_error_shifts = [], [], []
+    support_mismatches = 0
+    active_support_mismatches = 0
     for key in sorted(base, key=lambda k: tuple(float(x) if _is_number(x) else x for x in k)):
         b, h = base[key], high[key]
         bf, hf = finite_float(b, full_key), finite_float(h, full_key)
         ba, ha = finite_float(b, approx_key), finite_float(h, approx_key)
-        be, he = finite_float(b, error_key), finite_float(h, error_key)
-        sf, sa = rel_shift(hf, bf), rel_shift(ha, ba)
-        se = he-be
+        be, he = optional_float(b, error_key), optional_float(h, error_key)
+        sf = rel_shift(hf, bf) if bf > 0.0 and hf > 0.0 else (0.0 if bf == hf else None)
+        sa = rel_shift(ha, ba) if ba > 0.0 and ha > 0.0 else (0.0 if ba == ha else None)
+        se = he-be if be is not None and he is not None else None
         active = max(bf, hf) >= activity_floor*peak
-        full_shifts.append(abs(sf)); approx_shifts.append(abs(sa)); error_shifts.append(abs(se))
-        if active:
-            active_full_shifts.append(abs(sf)); active_approx_shifts.append(abs(sa)); active_error_shifts.append(abs(se))
+        if sf is None or sa is None:
+            support_mismatches += 1
+            if active:
+                active_support_mismatches += 1
+        if sf is not None:
+            full_shifts.append(abs(sf))
+            if active: active_full_shifts.append(abs(sf))
+        if sa is not None:
+            approx_shifts.append(abs(sa))
+            if active: active_approx_shifts.append(abs(sa))
+        if se is not None:
+            error_shifts.append(abs(se))
+            if active: active_error_shifts.append(abs(se))
         row = {field: value for field, value in zip(key_fields, key)}
         row.update({
             f"{full_key}_base": bf, f"{full_key}_high": hf,
@@ -64,7 +87,8 @@ def compare_table(base_path: Path, high_path: Path, key_fields: tuple[str, ...],
             f"{approx_key}_base": ba, f"{approx_key}_high": ha,
             "I_D_rate_quadrature_shift_pct": sa,
             f"{error_key}_base": be, f"{error_key}_high": he,
-            "approximation_error_shift_pp": se,
+            "approximation_error_shift_pp": "" if se is None else se,
+            "support_mismatch": sf is None or sa is None,
             "active_rate_point": active,
         })
         out.append(row)
@@ -81,6 +105,8 @@ def compare_table(base_path: Path, high_path: Path, key_fields: tuple[str, ...],
         "max_abs_full_rate_shift_active_pct": max(active_full_shifts, default=0.0),
         "max_abs_ID_rate_shift_active_pct": max(active_approx_shifts, default=0.0),
         "max_abs_approximation_error_shift_active_pp": max(active_error_shifts, default=0.0),
+        "support_mismatch_count": support_mismatches,
+        "active_support_mismatch_count": active_support_mismatches,
         "activity_floor_relative_to_peak": activity_floor,
     }
 
