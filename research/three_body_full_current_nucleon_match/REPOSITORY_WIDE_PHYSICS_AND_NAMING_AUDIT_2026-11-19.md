@@ -39,7 +39,7 @@ with no \(\Phi''\), \(\Delta\), \(\Sigma'\), \(\Sigma''\), or interference respo
 | \(F_A(q_A)\) | Reserve for a scalar coherent whole-nucleus form factor in the manuscript | \(F_1^N,F_2^N\) |
 | point_nucleus_contractions | Idealized point-target tensor/current identity for a convention check | Physical AFH \(W_M\) evaluation |
 
-For the formal one-body impulse prescription:
+For the formal one-body impulse-current external-transfer prescription:
 \[
 q_N^\mu=q_A^\mu,\quad
 t_N=t_A=-2m_AE_R,\quad Q_N^2=-t_N=2m_AE_R.
