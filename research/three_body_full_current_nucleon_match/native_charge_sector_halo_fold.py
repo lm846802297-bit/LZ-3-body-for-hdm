@@ -524,7 +524,7 @@ def charge_kernel_from_coulomb_weight(
     C_M = B_baseline_M
     C_PhiPP = cPhi * cPhi * L_C * WPhi
     C_MPhiPP = 2.0 * cM * cPhi * L_C * WMPhi
-    terms = {"M_B": C_M, "PhiPP": C_PhiPP, "MPhiPP": C_MPhiPP}
+    terms = {"M": C_M, "PhiPP": C_PhiPP, "MPhiPP": C_MPhiPP}
     C_charge_extension = sum(terms.values())
     relative_C_vs_A = C_charge_extension / A_reference_M - 1.0
     relative_B_vs_A = B_baseline_M / A_reference_M - 1.0
@@ -694,9 +694,9 @@ def leading_static_vector_current_kernel_from_tensor(
         "charge_sector": charge,
         "spatial_sector": spatial,
         "leading_static_vector_current_candidate": total,
-        "original_AFH_M_baseline": charge_check["original_AFH_M_baseline"],
-        "pointlike_M": charge_check["pointlike_M"],
-        "finite_t_M": charge_check["finite_t_M"],
+        "baseline_A_original_AFH_M": charge_check["baseline_A_original_AFH_M"],
+        "baseline_B_finite_tN_M": charge_check["baseline_B_finite_tN_M"],
+        "extension_C_MplusPhiPP": charge_check["extension_C_MplusPhiPP"],
         "charge_terms": charge_terms,
         "spatial_terms": spatial_terms,
         "particle_coefficients": {
@@ -865,8 +865,8 @@ def fold(
                 vs = 0.5 * (vmax + vmin) + 0.5 * (vmax - vmin) * speed_nodes
                 ws = 0.5 * (vmax - vmin) * speed_weights
                 halo_charge = 0.0
-                halo_pointlike = 0.0
-                halo_finite_t_M = 0.0
+                halo_A_reference = 0.0
+                halo_B_baseline = 0.0
                 halo_spatial_candidate = 0.0
                 halo_full_candidate = 0.0
                 max_interp_difference = 0.0
@@ -924,8 +924,8 @@ def fold(
                         / (256.0 * math.pi**3 * pchi * pchi * denominator)
                     )
                     halo_charge += float(w) * fv * beta * common * kernel["charge_sector"]
-                    halo_pointlike += float(w) * fv * beta * common * kernel["pointlike_M"]
-                    halo_finite_t_M += float(w) * fv * beta * common * kernel["finite_t_M"]
+                    halo_A_reference += float(w) * fv * beta * common * kernel["baseline_A_original_AFH_M"]
+                    halo_B_baseline += float(w) * fv * beta * common * kernel["baseline_B_finite_tN_M"]
                     if include_leading_static_vector_candidate:
                         candidate = leading_static_vector_current_kernel_from_tensor(
                             coulomb_result["L_q_aligned_real_imag"],
@@ -971,26 +971,15 @@ def fold(
                 isotope_row = {
                     "A": A, "abundance": xA, "open": True,
                     "mA_GeV": mA, "qA_GeV": qA, "vmin_km_s": vmin,
-                    "charge_halo_integral": halo_charge,
-                    "original_AFH_M_halo_integral": halo_pointlike,
-                    "pointlike_M_halo_integral": halo_pointlike,
-                    "finite_t_M_halo_integral": halo_finite_t_M,
-                    "q0_M_reference_halo_integral": halo_pointlike,
-                    "relative_charge_vs_original_AFH_M_baseline": halo_charge / halo_pointlike - 1.0
-                    if halo_pointlike else math.nan,
-                    "relative_finite_t_M_vs_original_AFH_M_baseline": halo_finite_t_M / halo_pointlike - 1.0
-                    if halo_pointlike else math.nan,
-                    "relative_charge_vs_q0_M_reference": halo_charge / halo_pointlike - 1.0
-                    if halo_pointlike else math.nan,
-                    "relative_finite_t_M_vs_q0_M_reference": halo_finite_t_M / halo_pointlike - 1.0
-                    if halo_pointlike else math.nan,
-                    "relative_charge_vs_finite_t_M": halo_charge / halo_finite_t_M - 1.0
-                    if halo_finite_t_M else math.nan,
-                    # Legacy aliases retained for old result readers.
-                    "relative_charge_vs_pointlike_M": halo_charge / halo_pointlike - 1.0
-                    if halo_pointlike else math.nan,
-                    "relative_finite_t_M_vs_pointlike_M": halo_finite_t_M / halo_pointlike - 1.0
-                    if halo_pointlike else math.nan,
+                    "baseline_A_original_AFH_M_halo_integral": halo_A_reference,
+                    "baseline_B_finite_tN_M_halo_integral": halo_B_baseline,
+                    "extension_C_MplusPhiPP_halo_integral": halo_charge,
+                    "relative_B_vs_A": halo_B_baseline / halo_A_reference - 1.0
+                    if halo_A_reference else math.nan,
+                    "relative_C_vs_A": halo_charge / halo_A_reference - 1.0
+                    if halo_A_reference else math.nan,
+                    "relative_C_vs_B": halo_charge / halo_B_baseline - 1.0
+                    if halo_B_baseline else math.nan,
                     "max_pchip_linear_response_difference": max_interp_difference,
                     "max_abs_charge_continuity_relative_correction": max_abs_continuity_correction,
                     "max_continuity_identity_relative_residual": max_continuity_identity_residual,
@@ -1000,24 +989,16 @@ def fold(
                     isotope_row.update({
                         "spatial_candidate_halo_integral": halo_spatial_candidate,
                         "leading_static_vector_candidate_halo_integral": halo_full_candidate,
-                        "relative_spatial_candidate_vs_coulomb": (
+                        "relative_spatial_candidate_vs_C_extension": (
                             halo_spatial_candidate / halo_charge if halo_charge else math.nan
                         ),
-                        "relative_full_candidate_vs_original_AFH_M_baseline": (
-                            halo_full_candidate / halo_pointlike - 1.0
-                            if halo_pointlike else math.nan
+                        "relative_full_candidate_vs_A": (
+                            halo_full_candidate / halo_A_reference - 1.0
+                            if halo_A_reference else math.nan
                         ),
-                        "relative_full_candidate_vs_q0_M_reference": (
-                            halo_full_candidate / halo_pointlike - 1.0
-                            if halo_pointlike else math.nan
-                        ),
-                        "relative_full_candidate_vs_finite_t_M": (
-                            halo_full_candidate / halo_finite_t_M - 1.0
-                            if halo_finite_t_M else math.nan
-                        ),
-                        "relative_full_candidate_vs_pointlike_M": (
-                            halo_full_candidate / halo_pointlike - 1.0
-                            if halo_pointlike else math.nan
+                        "relative_full_candidate_vs_B": (
+                            halo_full_candidate / halo_B_baseline - 1.0
+                            if halo_B_baseline else math.nan
                         ),
                         "max_native_response_Cauchy_excess": max_response_cauchy_excess,
                         "max_native_charge_response_Cauchy_excess": max_charge_response_cauchy_excess,
@@ -1033,46 +1014,35 @@ def fold(
                             if math.isfinite(min_full_candidate_kernel) else None
                         ),
                     })
+
                 isotope_rows.append(isotope_row)
             total_charge = sum(
-                r.get("abundance", 0.0) * r.get("charge_halo_integral", 0.0)
+                r.get("abundance", 0.0) * r.get("extension_C_MplusPhiPP_halo_integral", 0.0)
                 for r in isotope_rows
             )
-            total_point = sum(
-                r.get("abundance", 0.0) * r.get("pointlike_M_halo_integral", 0.0)
+            total_A_reference = sum(
+                r.get("abundance", 0.0) * r.get("baseline_A_original_AFH_M_halo_integral", 0.0)
                 for r in isotope_rows
             )
-            total_finite = sum(
-                r.get("abundance", 0.0) * r.get("finite_t_M_halo_integral", 0.0)
+            total_B_baseline = sum(
+                r.get("abundance", 0.0) * r.get("baseline_B_finite_tN_M_halo_integral", 0.0)
                 for r in isotope_rows
             )
             total_rate = rate_factor * total_charge
-            point_rate = rate_factor * total_point
-            finite_rate = rate_factor * total_finite
+            A_reference_rate = rate_factor * total_A_reference
+            B_baseline_rate = rate_factor * total_B_baseline
             row = {
                 "ER_keV": ER_keV,
                 "halo_model": halo_name,
-                "rate_charge_MplusPhi_events_kg_day_keV": total_rate,
-                "rate_original_AFH_M_events_kg_day_keV": point_rate,
-                "rate_pointlike_M_events_kg_day_keV": point_rate,
-                "rate_finite_t_M_events_kg_day_keV": finite_rate,
-                "relative_charge_vs_original_AFH_M_baseline": total_rate / point_rate - 1.0
-                if point_rate else math.nan,
-                "relative_finite_t_M_vs_original_AFH_M_baseline": finite_rate / point_rate - 1.0
-                if point_rate else math.nan,
-                "relative_charge_vs_q0_M_reference": total_rate / point_rate - 1.0
-                if point_rate else math.nan,
-                "relative_finite_t_M_vs_q0_M_reference": finite_rate / point_rate - 1.0
-                if point_rate else math.nan,
-                "relative_charge_vs_finite_t_M": total_rate / finite_rate - 1.0
-                if finite_rate else math.nan,
-                # Legacy aliases retained for old result readers.
-                "relative_charge_vs_pointlike_M": total_rate / point_rate - 1.0
-                if point_rate else math.nan,
-                "relative_finite_t_M_vs_pointlike_M": finite_rate / point_rate - 1.0
-                if point_rate else math.nan,
-                "relative_phi_vs_finite_t_M": total_rate / finite_rate - 1.0
-                if finite_rate else math.nan,
+                "rate_B_baseline_M_events_kg_day_keV": B_baseline_rate,
+                "rate_A_original_AFH_M_events_kg_day_keV": A_reference_rate,
+                "rate_C_charge_extension_events_kg_day_keV": total_rate,
+                "relative_B_vs_A": B_baseline_rate / A_reference_rate - 1.0
+                if A_reference_rate else math.nan,
+                "relative_C_vs_A": total_rate / A_reference_rate - 1.0
+                if A_reference_rate else math.nan,
+                "relative_C_vs_B": total_rate / B_baseline_rate - 1.0
+                if B_baseline_rate else math.nan,
                 "open_abundance_fraction": sum(
                     r["abundance"] for r in isotope_rows if r.get("open")
                 ),
@@ -1092,20 +1062,14 @@ def fold(
                 row.update({
                     "rate_spatial_candidate_events_kg_day_keV": spatial_rate,
                     "rate_leading_static_vector_candidate_events_kg_day_keV": full_rate,
-                    "relative_spatial_candidate_vs_coulomb": (
+                    "relative_spatial_candidate_vs_C_extension": (
                         total_spatial / total_charge if total_charge else math.nan
                     ),
-                    "relative_full_candidate_vs_original_AFH_M_baseline": (
-                        full_rate / point_rate - 1.0 if point_rate else math.nan
+                    "relative_full_candidate_vs_A": (
+                        full_rate / A_reference_rate - 1.0 if A_reference_rate else math.nan
                     ),
-                    "relative_full_candidate_vs_q0_M_reference": (
-                        full_rate / point_rate - 1.0 if point_rate else math.nan
-                    ),
-                    "relative_full_candidate_vs_finite_t_M": (
-                        full_rate / finite_rate - 1.0 if finite_rate else math.nan
-                    ),
-                    "relative_full_candidate_vs_pointlike_M": (
-                        full_rate / point_rate - 1.0 if point_rate else math.nan
+                    "relative_full_candidate_vs_B": (
+                        full_rate / B_baseline_rate - 1.0 if B_baseline_rate else math.nan
                     ),
                     "minimum_spatial_candidate_kernel": min(
                         (r["minimum_spatial_candidate_kernel"] for r in isotope_rows
@@ -1138,9 +1102,14 @@ def fold(
                         default=0.0,
                     ),
                 })
+
             rows.append(row)
 
     return {
+        "primary_baseline": "B: finite-t_N Dirac-Pauli current contracted with AFH W_M(y_A) only",
+        "A_reference": "q=0 effective nucleon-current anchor times the same finite-size AFH W_M(y_A)",
+        "C_extension": "B plus Phi'' and signed M-Phi'' charge responses; diagnostic, not the baseline",
+        "coupling_normalization": "coupling_product_squared=(g1*g2*gVN)^2; use Fhat_i=F_i^(u+d+s)/3 in all nucleon-current coefficients",
         "status": (
             "COMPUTED_WITHIN_LEADING_STATIC_VECTOR_CURRENT_CANDIDATE"
             if include_leading_static_vector_candidate
@@ -1210,10 +1179,10 @@ def fold(
         "mediator_propagator_denominator": "(m_V^2-t_A)^2=(m_V^2+2 m_A E_R)^2; uses t_A, not spatial Q_A^2",
         "nucleon_form_factor_argument": "Q_N^2=-t_N with strict one-body impulse q_N^mu=q_A^mu, so t_N=t_A=-2 m_A E_R and Q_N^2=2 m_A E_R; static q_N^0=0 is a separate diagnostic",
         "nucleon_transfer_scheme": "full external four-momentum transfer q_N^mu=q_A^mu in formal P4; static q_N^0=0 retained only as optional diagnostic",
-        "original_AFH_M_baseline_definition": (
-            "q=0 single-nucleon-current normalization times finite-q native AFH W_M(Q_A); "
-            "this preserves the original nuclear form factor and is not a point nucleus"
-        ),
+        "baseline_B_definition": "c_M(Fhat_1(t_N),Fhat_2(t_N))^2 * L_C * W_M(y_A); no Phi'', Delta, or Sigma responses in the primary baseline",
+        "baseline_A_reference_definition": "L_C * W_M(y_A), using Fhat_1(0)=1; retains the same AFH finite-size response",
+        "C_extension_definition": "B plus Phi'' diagonal and signed M-Phi'' interference",
+        "form_factor_normalization": "Fhat_i=F_i^(u+d+s)/3 because coupling_product_squared uses external g_VN=3*g_Vq",
         "form_factor_comparison": (
             "Report both full/finite_t_M (multipole correction at fixed F1,F2) and "
             "full/original_AFH_M_baseline (total change relative to the original AFH M-only result)"
@@ -1248,8 +1217,8 @@ def main() -> None:
     parser.add_argument("--nphi", type=int, default=6)
     parser.add_argument(
         "--form-factor",
-        choices=("q0_anchor", "pointlike", "bishara_linear", "isoscalar_zexp"),
-        required=True,
+        choices=("q0_anchor", "bishara_linear", "isoscalar_zexp"),
+        default="bishara_linear",
     )
     parser.add_argument(
         "--width-scheme",
