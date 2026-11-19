@@ -19,22 +19,26 @@ multipole rows and reconstructs all three spatial responses to
 results; the native Wolfram AFH comparison and the selected-point
 many-body covariant-versus-AFH amplitude comparison remain open.
 
-P3-C has passed as a **provisional fixed-speed response contraction**:
-workflow 44305980766 passed 100 full-current tests and 16 native
-charge-engine tests, then contracted 12 three-body coefficient sets
-with seven isotopes (84 rows). All total kernels are positive and the
-maximum rank-sum reconstruction residual is \(1.11\times10^{-16}\).
-The corrected contraction applies the common \(C_0(A)\) normalization
-to AFH-8 charge responses while using the already-\(C_0\)-corrected
-P3-B spatial responses; the AFH factor four is applied once. The
-maximum spatial/charge ratio in these 84 fixed-speed rows is
-\(7.09596\times10^{-9}\). This is not a global halo-integrated bound.
+The formal Pole-width response contraction is now 28 rows (four
+benchmarks × seven isotopes), all with positive total kernels. Its maximum
+spatial/charge ratio is \(7.03050\times10^{-9}\); the older 84-row,
+three-width result from workflow 44305980766 is retained as a historical
+sensitivity diagnostic only.
 
-The native seven-isotope/eight-response gate remains separate. Its latest
-private workflow is 44306907993, currently queued on the
-self-hosted Windows/X64/research-gpu runner, with no native artifact
-available. P3-B is therefore not promoted to native validation, and
-P3 as a whole is not passed. The direct many-body comparison
+A new Xe-131 spatial amplitude-level helicity subgate of P3-C passes for
+all four Pole-width benchmarks. The maximum helicity-amplitude versus
+Cartesian Eq. (107) kernel residual is \(6.09\times10^{-16}\), and the
+maximum coefficient residual is \(8.53\times10^{-16}\). The signed
+\(\Sigma'\)-\(\Delta\) interference is retained and a deliberate
+helicity-phase reversal is tested.
+
+The native seven-isotope/eight-response gate remains separate. Its current
+private workflow is [44346207069](https://github.com/lm846802297-bit/research-compute-control/actions/runs/44346207069),
+queued on the self-hosted Windows/X64/research-gpu runner with no assigned
+runner and no native artifact. P3-B is therefore not promoted to native
+validation. Full P3-C also remains open: charge multipoles are not yet
+rank-resolved and an independent direct coordinate-space bound-nucleus
+current comparison remains to be implemented. The direct many-body comparison
 \[
 \mathcal A_{\rm cov}^{\rm nuclear}
 \stackrel{?}{=}
