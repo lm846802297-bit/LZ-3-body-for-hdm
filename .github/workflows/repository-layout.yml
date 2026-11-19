@@ -44,7 +44,7 @@ jobs:
               Path("CONTRIBUTING.md"),
               Path("research/README.md"),
               Path("research/WORKFLOW.md"),
-              Path("paper-source/main_original.tex"),
+              Path("paper-source/main.tex"),
           ):
               if not required.is_file():
                   errors.append(f"Missing required repository file: {required}")
