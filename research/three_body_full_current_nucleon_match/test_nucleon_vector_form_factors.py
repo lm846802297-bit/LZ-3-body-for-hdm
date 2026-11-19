@@ -42,6 +42,19 @@ class VectorFormFactorTests(unittest.TestCase):
             ff.F1_SLOPE_BISHARA, 8.392, places=12
         )
 
+    def test_charge_coefficients_use_independent_tN_and_spatial_QA(self):
+        qA = 0.22
+        tN = -0.04
+        F1, F2 = 2.7, -0.5
+        mN = ff.M_N_GEV
+        cM, cPhi = ff.charge_coefficients(
+            qA, F1=F1, F2=F2, mN_GeV=mN, tN_GeV2=tN
+        )
+        expected_cM = F1 + tN * (F1 + 2.0 * F2) / (8.0 * mN**2)
+        expected_cPhi = qA**2 * (F1 + 2.0 * F2) / (4.0 * mN**2)
+        self.assertAlmostEqual(cM, expected_cM, places=14)
+        self.assertAlmostEqual(cPhi, expected_cPhi, places=14)
+
     def test_charge_coefficients_zero_q(self):
         c_m, c_phi = ff.charge_coefficients(0.0, F1=3.0, F2=-0.552)
         self.assertAlmostEqual(c_m, 3.0, places=12)
