@@ -1,0 +1,205 @@
+{
+  "manifest_schema_version": 1,
+  "archive_generated_at_utc": "2026-11-19T17:48:41.980193+00:00",
+  "repository": "lm846802297-bit/LZ-3-body-for-hdm",
+  "archive_status": "ARCHIVED_AND_INTEGRITY_CHECKED",
+  "archive_validation_scope": "ZIP digest verification, run/artifact identity checks, extracted-member SHA matching, CSV schema/grid/row-count checks, metadata consistency checks, and SHA256SUMS self-check; this field describes archive integrity, not independent scientific validation.",
+  "study": "Finite nucleon Dirac-Pauli form factors multiplied by finite-size AFH W_M",
+  "integration_lineage": {
+    "upstream_halo": {
+      "workflow_run_id": 44560087038,
+      "artifact_id": 14551462445,
+      "artifact_sha256": "6d3d711341cdd33200721fc9371c0dcac2ba3b0354043c09c903d89650b40103",
+      "source_commit": "9ca1801cdded7002c93776f8a0f5bce894135356",
+      "note": "This is the halo artifact run consumed by the PR #80 B-baseline workflow; its extracted payload is byte-identical to the later PR #74 final rerun."
+    },
+    "pr80": "B-baseline implementation and successful numerical workflow.",
+    "pr74_main_merge_commit": "070dc89cc58699633d0009c1fbaea7fa400ee337",
+    "pr82": "Current integration PR carrying this permanent output archive."
+  },
+  "source_workflow_run": {
+    "key": "b_pr80",
+    "workflow_run": {
+      "id": 44565778594,
+      "name": "Finite nucleon form factors B baseline",
+      "conclusion": "success",
+      "head_branch": "research/nucleon-form-factor-B-baseline-20261119",
+      "head_sha": "42309444866454bdfc27f45316bd3628815209fe",
+      "created_at": "2026-11-19T16:24:40Z",
+      "updated_at": "2026-11-19T16:25:14Z",
+      "url": "https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44565778594",
+      "workflow_id": 424067604,
+      "event": "pull_request"
+    },
+    "artifact": {
+      "id": 14551033657,
+      "name": "finite-nucleon-form-factor-B-baseline",
+      "size_in_bytes": 1260840,
+      "digest": "sha256:f98c6d5a3d9c87cb0350616a0dea86e7c5270484c0eb6f1139c55288ecc35918",
+      "digest_verified": true,
+      "created_at": "2026-11-19T16:25:10Z",
+      "expires_at_at_source": "2027-02-17T16:24:40Z",
+      "url": "https://api.github.com/repos/lm846802297-bit/LZ-3-body-for-hdm/actions/artifacts/14551033657"
+    },
+    "expected_sha256": "f98c6d5a3d9c87cb0350616a0dea86e7c5270484c0eb6f1139c55288ecc35918"
+  },
+  "result_summary": {
+    "status": "COMPUTED; B baseline quadrature-converged on the archived grid",
+    "baseline": "finite nucleon F1(t_N), F2(t_N) multiplied by finite-size AFH W_M(y_A)",
+    "momentum_transfer": {
+      "Q_A2_GeV2": "2*m_A*E_R+E_R^2",
+      "t_N_GeV2": "-Q_A^2",
+      "q_NR_used_for_form_factors": false
+    },
+    "strange_current_scenarios": [
+      "sufian2017_unit_current",
+      "alexandrou2020_charge_weighted_converted"
+    ],
+    "Ye2020_covariance_draws": 3000,
+    "covariance_seed": 20261119,
+    "recoil_points": 208,
+    "row_counts": {
+      "B-baseline/sufian2017_unit_current": {
+        "seven_isotope_rows": 1456,
+        "natural_xenon_rows": 208
+      },
+      "B-baseline/alexandrou2020_charge_weighted_converted": {
+        "seven_isotope_rows": 1456,
+        "natural_xenon_rows": 208
+      },
+      "B-highorder/sufian2017_unit_current": {
+        "seven_isotope_rows": 1456,
+        "natural_xenon_rows": 208
+      },
+      "B-highorder/alexandrou2020_charge_weighted_converted": {
+        "seven_isotope_rows": 1456,
+        "natural_xenon_rows": 208
+      }
+    },
+    "models_highorder": {
+      "sufian2017_unit_current": {
+        "strange_form_factor_model": "sufian2017_unit_current",
+        "max_abs_full_vs_ID_error_B_pct": 0.3527618038037472,
+        "max_abs_B_over_A_full_rate_shift_pct": 56.434565058677265,
+        "form_factor_source": "Borah et al., Phys. Rev. D 102, 074012 (2020), arXiv:2003.13640; Ye et al. supplemental coefficients/covariance",
+        "input_halo_directory": "artifacts/source/halo-seven-isotope-highorder"
+      },
+      "alexandrou2020_charge_weighted_converted": {
+        "strange_form_factor_model": "alexandrou2020_charge_weighted_converted",
+        "max_abs_full_vs_ID_error_B_pct": 0.3527618038037472,
+        "max_abs_B_over_A_full_rate_shift_pct": 58.242852530105715,
+        "form_factor_source": "Borah et al., Phys. Rev. D 102, 074012 (2020), arXiv:2003.13640; Ye et al. supplemental coefficients/covariance",
+        "input_halo_directory": "artifacts/source/halo-seven-isotope-highorder"
+      }
+    },
+    "max_abs_full_vs_ID_error_B_pct": 0.3527725958885286,
+    "max_abs_B_over_A_full_rate_shift_pct_by_model": {
+      "sufian2017_unit_current": 56.434565058677265,
+      "alexandrou2020_charge_weighted_converted": 58.242852530105715
+    },
+    "max_abs_B_quadrature_shift_pct_or_pp": 1.7092129689366686e-05,
+    "scope": "Rate-level B baseline; no detector response, efficiency, energy resolution, exposure, cuts, or likelihood."
+  },
+  "file_inventory": [
+    {
+      "path": "README.md",
+      "size_bytes": 4001,
+      "sha256": "627a863a65640c1967efe3b773dbe3116eff260a8aab16ed9f029c725b897b11"
+    },
+    {
+      "path": "extracted/B-baseline/alexandrou2020_charge_weighted_converted/metadata.json",
+      "size_bytes": 1315,
+      "sha256": "8080392fc1d069c6617b811d8f583d65cdb14b2da15ae5fd580ca61c139a3a29"
+    },
+    {
+      "path": "extracted/B-baseline/alexandrou2020_charge_weighted_converted/natural_xenon_B_baseline.csv",
+      "size_bytes": 70774,
+      "sha256": "96ebf2531232bd316fb0a5337324bca1afeb60fcfdd79e0177685d496d241daa"
+    },
+    {
+      "path": "extracted/B-baseline/alexandrou2020_charge_weighted_converted/seven_isotope_B_baseline.csv",
+      "size_bytes": 669841,
+      "sha256": "9d02f0d9066235f74cbfb548bb877a138ff7c782286f75be52b8eecdb5fa516b"
+    },
+    {
+      "path": "extracted/B-baseline/sufian2017_unit_current/metadata.json",
+      "size_bytes": 1299,
+      "sha256": "efdd1aa994d135301dc073956a1b5a126313f1d007ba337269cb3841b571dca8"
+    },
+    {
+      "path": "extracted/B-baseline/sufian2017_unit_current/natural_xenon_B_baseline.csv",
+      "size_bytes": 70783,
+      "sha256": "9d6989c967d7db5e96babedbf0837dcebb642c06d57a4abf1319489e620fbabb"
+    },
+    {
+      "path": "extracted/B-baseline/sufian2017_unit_current/seven_isotope_B_baseline.csv",
+      "size_bytes": 670250,
+      "sha256": "d15a7a7151c38f14f3ce8f7778322a192184b27b01bc4b7ce78a7af77cbc927c"
+    },
+    {
+      "path": "extracted/B-highorder/alexandrou2020_charge_weighted_converted/metadata.json",
+      "size_bytes": 1317,
+      "sha256": "2c33493d4d15115f8df9ec50f02023ea60dd33b3a35f554953a244e21320ab57"
+    },
+    {
+      "path": "extracted/B-highorder/alexandrou2020_charge_weighted_converted/natural_xenon_B_baseline.csv",
+      "size_bytes": 70728,
+      "sha256": "c6e720820afc0919d166cacb65abf9f78e20961f0ff514311980c770f2ea7caf"
+    },
+    {
+      "path": "extracted/B-highorder/alexandrou2020_charge_weighted_converted/seven_isotope_B_baseline.csv",
+      "size_bytes": 669772,
+      "sha256": "3f53fe15aff6b4f2038a529ea7c620fd3b12ab5c446dfc5887ea4a48c9ce79ab"
+    },
+    {
+      "path": "extracted/B-highorder/sufian2017_unit_current/metadata.json",
+      "size_bytes": 1300,
+      "sha256": "9269bd026cdf25f2ace689ec39f7376b0326ce79ee7018b58508ae92b607319b"
+    },
+    {
+      "path": "extracted/B-highorder/sufian2017_unit_current/natural_xenon_B_baseline.csv",
+      "size_bytes": 70677,
+      "sha256": "c7f54c48dd25ecdc156c8f6d38242332e80f546b6c70705858b2e5c3384ee677"
+    },
+    {
+      "path": "extracted/B-highorder/sufian2017_unit_current/seven_isotope_B_baseline.csv",
+      "size_bytes": 670135,
+      "sha256": "ff00f22b9958797743341481b1a4eb23b300b1a2b56432357267740f5132f71d"
+    },
+    {
+      "path": "extracted/B-quadrature-comparison/alexandrou2020_charge_weighted_converted/natural_xenon_B_quadrature_comparison.csv",
+      "size_bytes": 38884,
+      "sha256": "18cf99eaf26ff43e7d181fb7e57487f8d313edee7369ab91c647cd5e145fca4f"
+    },
+    {
+      "path": "extracted/B-quadrature-comparison/alexandrou2020_charge_weighted_converted/seven_isotope_B_quadrature_comparison.csv",
+      "size_bytes": 123834,
+      "sha256": "2e27978d07cba1c05f7cb1e19466de4781056d4674496e18cd805624444555ec"
+    },
+    {
+      "path": "extracted/B-quadrature-comparison/alexandrou2020_charge_weighted_converted/summary.json",
+      "size_bytes": 281,
+      "sha256": "d91e4e88da96434f86db1ef4178906a8e0f0d0a7affad186d8514796c9a316a9"
+    },
+    {
+      "path": "extracted/B-quadrature-comparison/sufian2017_unit_current/natural_xenon_B_quadrature_comparison.csv",
+      "size_bytes": 38895,
+      "sha256": "f2b32eecb7ca22fe75477a933b1542b201717c81e34f837b1b556e220571fb92"
+    },
+    {
+      "path": "extracted/B-quadrature-comparison/sufian2017_unit_current/seven_isotope_B_quadrature_comparison.csv",
+      "size_bytes": 123825,
+      "sha256": "b9484255bc1456ef7828f54ed5e8caa0dd61767f5e3ef32fd49cdf7263b62eca"
+    },
+    {
+      "path": "extracted/B-quadrature-comparison/sufian2017_unit_current/summary.json",
+      "size_bytes": 281,
+      "sha256": "da161622c4916a08dbc01770d415e78bbead168b4395ae14fbb163a3ca709933"
+    },
+    {
+      "path": "source-artifact-pr80.zip",
+      "size_bytes": 1260840,
+      "sha256": "f98c6d5a3d9c87cb0350616a0dea86e7c5270484c0eb6f1139c55288ecc35918"
+    }
+  ]
+}
