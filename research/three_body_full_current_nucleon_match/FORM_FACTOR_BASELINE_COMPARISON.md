@@ -77,14 +77,19 @@ These differ by \(E_R^2\). The vector-mediator propagator therefore uses
 
 not \((m_V^2+Q_A^2)^2\).
 
-For the nucleon form factor, the current implementation uses the static one-body impulse diagnostic
-
+For the formal one-body impulse current, the nucleon vertex carries the full external four-transfer,
 \[
-q_N^0=0,\qquad \boldsymbol q_N=\boldsymbol q_A,
-\qquad Q_N^2=-t_N=|\boldsymbol q_N|^2=Q_A^2.
+q_N^\mu=q_A^\mu,
+\qquad
+\boxed{t_N=t_A=-2m_AE_R,\quad -t_N=2m_AE_R.}
 \]
+Its spatial momentum is still \(\boldsymbol q_N=\boldsymbol q_A\), so the spatial factor in the AFH/NR coefficients is \(Q_A^2=2m_AE_R+E_R^2\).
 
-This is a separate approximation at the nucleon vertex. It must not be reused as the mediator's Lorentz-invariant transfer.
+A distinct static-free-nucleon diagnostic sets \(q_N^0=0\), giving
+\[
+t_N^{\rm static}=-Q_A^2=t_A-E_R^2.
+\]
+This is not the same transfer prescription. The formal P4 calculations now use the full external transfer \(q_N^\mu=q_A^\mu\); the static prescription is retained only as an optional diagnostic. Although the numerical difference is tiny at keV recoil energies, metadata must keep \(t_A\), \(t_N\), and \(Q_A^2\) separate.
 
 ## 3. Nucleon-current matching
 
@@ -110,7 +115,7 @@ c_M=F_1^V(t_N)
 
 \[
 c_{\Phi''}=
-\frac{Q_N^2}{4m_N^2}
+\frac{Q_A^2}{4m_N^2}
 \left[F_1^V(t_N)+2F_2^V(t_N)\right].
 \]
 
@@ -126,7 +131,12 @@ The code provides three distinct inputs.
 | bishara_linear | \(F_1^V(Q_N^2)=3-(8.392\,{\rm GeV}^{-2})Q_N^2\), \(F_2^V=-0.552\) | First-order low-\(Q_N^2\) diagnostic from the flavor-separated Dirac slopes; \(F_2\) held at its zero-transfer value |
 | isoscalar_zexp | Isoscalar electromagnetic Sachs \(z\)-expansion plus the strange-current inputs | Finite-\(Q_N^2\) alternative diagnostic |
 
-Neither finite-\(Q_N^2\) prescription is to be silently identified with the exact legacy calculation until its original input file and parameter provenance are pinned. In particular, the first-order Bishara slope is a low-\(Q_N^2\) diagnostic, not a claim that the full quark-current form factor is known to all orders.
+The bishara_linear prescription is the explicit first-order flavor-summed low-\(t_N\) expansion from Bishara et al. Appendix A.1, not an all-orders form factor:
+\[
+F_1^{uds,N}(t_N)=3+8.392t_N+\mathcal O(t_N^2),\qquad
+F_2^{uds,N}(0)=-0.552.
+\]
+The archived matching record warns that this slope is a local \(t_N=0\) check and must not be extrapolated uncritically across the full \(Q_A\) interval; the quoted \(F_2(0)\) does not determine \(F_2(t_N)\). We therefore use bishara_linear as the requested low-order comparison benchmark, but retain its provisional status and show isoscalar_zexp as an alternative sensitivity diagnostic. Neither is silently claimed to be an exact all-orders legacy parameterization.
 
 ## 5. Xe-131 selected-point comparison
 
@@ -166,7 +176,7 @@ Every fixed-speed and halo-fold result must retain, separately:
 
 Always report both ratios: item 3/item 2 isolates the additional AFH multipoles at fixed nucleon form factors; item 3/item 1 compares with the original AFH calculation. Item 1 is not a point-nucleus baseline: it retains \(W_M(Q_A)\). Never multiply an extra nuclear form factor onto \(W_M\), and never describe the full item 3/item 1 difference as an AFH response correction alone.
 
-The Xe-131 fixed-speed charge-sector workflow and the P4 natural-xenon workflow run bishara_linear and isoscalar_zexp separately. The full six-channel fixed-speed recoil scan has now also been updated to evaluate both prescriptions after one shared three-body phase-space integration at each recoil point. Each row reports both the finite-\(t_N\) M-only denominator and the original AFH M-only baseline. The spatial candidate remains unpromoted until P3-C passes.
+The Xe-131 fixed-speed and P4 natural-xenon workflows run bishara_linear and isoscalar_zexp separately. Both use the formal full-transfer prescription \(t_N=t_A=-2m_AE_R\) for the nucleon form-factor argument while retaining \(Q_A^2=2m_AE_R+E_R^2\) in the spatial NR/AFH coefficients. The static \(q_N^0=0\) choice is only an optional diagnostic. The full six-channel fixed-speed recoil scan evaluates both prescriptions after one shared three-body phase-space integration at each recoil point. Each row reports both the finite-\(t_N\) M-only denominator and the original AFH M-only baseline. The spatial candidate remains unpromoted until P3-C passes.
 
 The Xe-131 fixed-speed dual-form-factor workflow passed on 2026-11-19 (run 44443361283, artifact 14491448839; 7/7 regression tests). The measured primary ratios are:
 
