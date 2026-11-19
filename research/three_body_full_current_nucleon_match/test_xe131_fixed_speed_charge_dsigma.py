@@ -28,6 +28,11 @@ class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
             places=13,
         )
         self.assertAlmostEqual(
+            a["full_charge_over_original_AFH_M_baseline"],
+            b["full_charge_over_original_AFH_M_baseline"],
+            places=13,
+        )
+        self.assertAlmostEqual(
             a["full_charge_over_q0_M_reference"],
             b["full_charge_over_q0_M_reference"],
             places=13,
@@ -57,6 +62,16 @@ class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
         terms = out["kernels_with_common_LC"]
         self.assertLess(terms["M_Phi_interference"], 0.0)
         self.assertGreater(terms["finite_t_M_plus_PhiPP"], 0.0)
+        self.assertAlmostEqual(
+            terms["original_AFH_M_baseline"],
+            out["original_AFH_M_baseline_kernel"],
+            places=14,
+        )
+        self.assertAlmostEqual(
+            out["full_charge_over_original_AFH_M_baseline"],
+            out["full_charge_over_q0_M_reference"],
+            places=14,
+        )
 
     def test_native_csv_hash_is_line_ending_stable(self):
         lf = b"q,value\n0.1,2\n"
