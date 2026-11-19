@@ -1134,7 +1134,7 @@ def fold(
                         mA * coupling_product_squared
                         / (256.0 * math.pi**3 * pchi * pchi * denominator)
                     )
-                    halo_charge += float(w) * fv * beta * common * kernel["charge_sector"]
+                    halo_charge += float(w) * fv * beta * common * kernel["extension_C_MplusPhiPP"]
                     halo_A_reference += float(w) * fv * beta * common * kernel["baseline_A_original_AFH_M"]
                     halo_B_baseline += float(w) * fv * beta * common * kernel["baseline_B_finite_tN_M"]
                     if include_leading_static_vector_candidate:
