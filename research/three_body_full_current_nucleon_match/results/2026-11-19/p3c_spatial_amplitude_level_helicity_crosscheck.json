@@ -7,10 +7,10 @@
   "C0": 1.0000825298069376,
   "AFH_source_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
   "source_artifacts": {
-    "phase_space_tensor_run": 44337928314,
-    "phase_space_tensor_artifact": 14442826214,
-    "spatial_response_run": 44337928314,
-    "spatial_response_artifact": 14443055701
+    "phase_space_tensor_run": 44432440600,
+    "phase_space_tensor_artifact": 14486904025,
+    "spatial_response_run": 44432440600,
+    "spatial_response_artifact": 14486014588
   },
   "form_factor_anchors": {
     "F1V_q0": 3,
@@ -88,5 +88,12 @@
     "Charge M and Phi'' multipoles are not rank-resolved; full charge-plus-spatial amplitude-level validation is open.",
     "Independent direct coordinate-space bound-nucleus current calculation is not yet implemented.",
     "Finite-t_N form factors and higher-order/two-body nuclear currents are not included."
-  ]
+  ],
+  "ci_validation": {
+    "workflow_run_id": 44432440600,
+    "workflow_artifact_id": 14486904025,
+    "workflow_conclusion": "success",
+    "unit_tests": 4,
+    "all_jobs": "success"
+  }
 }
