@@ -969,6 +969,8 @@ def fold(
     include_leading_static_vector_candidate: bool = False,
     response_input: Path = HALO_INPUT / "natural_xenon_isotope_weights.csv",
 ) -> dict:
+    if width_scheme != "pole":
+        raise ValueError("formal three-body halo production requires the asymmetric Pole width prescription")
     if native_dir is not None:
         if provisional_charge_dir is not None or provisional_spatial_dir is not None:
             raise ValueError("choose native AFH inputs or provisional Python AFH inputs, not both")
@@ -1057,7 +1059,7 @@ def fold(
                         response["physical_equal_pn"],
                         form_factor_prescription,
                     )
-                    denominator = (mV * mV + 2.0 * mA * ER) ** 2
+                    denominator = (mV * mV + qA * qA) ** 2
                     common = (
                         mA * coupling_product_squared
                         / (256.0 * math.pi**3 * pchi * pchi * denominator)
@@ -1285,6 +1287,11 @@ def fold(
         "native_afh_validated": bool(afh_input_gate["comparison"].get("native_afh_validated", False)),
         "form_factor_prescription": form_factor_prescription,
         "width_scheme": width_scheme,
+        "formal_width_prescription": (
+            "Asymmetric Pole prescription: first p-k chi2 propagator zero-width (+i0+); "
+            "second p'+k chi2 propagator uses constant Gamma_chi2(m_chi2)."
+        ),
+        "mediator_denominator": "(mV^2+qA^2)^2 with qA^2=2*mA*ER+ER^2",
         "mchi_GeV": mchi,
         "ms_GeV": ms,
         "delta_m_GeV": delta_m,
