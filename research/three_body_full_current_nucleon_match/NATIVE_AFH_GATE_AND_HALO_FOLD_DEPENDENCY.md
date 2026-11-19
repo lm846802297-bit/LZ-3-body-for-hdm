@@ -263,7 +263,7 @@ The current interpolation audit is more informative than the old
 PCHIP-versus-linear warning: degree-8 and degree-10 local Chebyshev
 interpolants agree to numerical precision, but PCHIP differs from Cheb10
 by up to 1.6847% in \(W_M\) near
-\(q_A=0.25633847\) GeV. The normalized full/q=0-reference ratio changes by
+\(q_A=0.25633847\) GeV. The normalized full/original-AFH-M-baseline ratio changes by
 at most 0.1182% in the selected scan. This is a local interpolation
 stability result, not a native AFH validation; the dense native Xe-131
 export remains the deciding comparison.
