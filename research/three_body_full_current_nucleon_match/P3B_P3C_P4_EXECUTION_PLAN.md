@@ -140,8 +140,9 @@ summing over transverse helicity and multipole rank.
   \(8.53\times10^{-16}\).
 - Maximum PCHIP-amplitude versus existing linear-response interpolation
   difference: \(5.53\times10^{-6}\).
-- Four unit tests pass, including a deliberate sign-flip test showing that
-  the wrong \(\Sigma'\)-helicity phase reverses the signed interference.
+- The previous raw-normalization run reported four unit tests passing,
+  including a deliberate sign-flip test. The tests now use the effective
+  nucleon basis; that updated test set still requires a fresh workflow run.
 
 This closes only the **spatial helicity reconstruction subgate**. It is not
 an independent coordinate-space many-body current calculation, and the
