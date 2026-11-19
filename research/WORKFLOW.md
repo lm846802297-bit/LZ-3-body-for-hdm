@@ -24,8 +24,7 @@ When a manuscript equation conflicts with an approved derivation or validated
 research record, preserve the discrepancy, investigate it, and update the
 manuscript only after the research decision.
 
-- paper-source/main_original.tex is the preserved original source.
-- paper-source/main.tex is the working manuscript.
+- paper-source/main.tex is the current manuscript and the reference for its presentation.
 - Original figures, bibliography, style files, and source-build material stay
   under paper-source/.
 - A research PR must not silently alter the manuscript. Any intentional

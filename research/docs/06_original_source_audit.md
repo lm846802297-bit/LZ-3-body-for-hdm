@@ -1,3 +1,5 @@
+> Update 2026-11-19: The historical main_original.tex was removed at the user’s request. Current manuscript equations are in paper-source/main.tex. This document preserves its historical statements.
+
 > Historical note (2026-11-11): this document audits the verbatim source now preserved as `paper-source/main_original.tex`. The current editorial working copy is `paper-source/main.tex`; see `paper-source/EDITORIAL_STATUS.md` for the exact cleanup scope and outstanding items.
 
 # Audit against the original LaTeX source

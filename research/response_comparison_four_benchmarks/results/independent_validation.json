@@ -1,0 +1,97 @@
+{
+  "status": "PASS_FOR_DECLARED_ONE_BODY_CANDIDATE_SCOPE",
+  "points": 4482,
+  "independent_upstream_tensor_checks": [
+    {
+      "benchmark": "red",
+      "ER_keV": 267.0,
+      "upstream_order": [
+        16,
+        8,
+        12
+      ],
+      "new_periodic_order": [
+        16,
+        8,
+        8
+      ],
+      "relative_errors": {
+        "L00": 6.128900720270281e-10,
+        "ReL0L": 6.865421564583585e-10,
+        "LLL": 7.637975807384123e-10,
+        "LC": 6.128897389601207e-10,
+        "LT": 5.795586233148242e-12
+      },
+      "six_channel_contraction_relative_error": 6.128899610047256e-10
+    },
+    {
+      "benchmark": "green",
+      "ER_keV": 267.0,
+      "upstream_order": [
+        16,
+        8,
+        12
+      ],
+      "new_periodic_order": [
+        16,
+        8,
+        8
+      ],
+      "relative_errors": {
+        "L00": 1.2897871659589555e-10,
+        "ReL0L": 1.309028441198734e-10,
+        "LLL": 1.3288481426343424e-10,
+        "LC": 1.2897838352898816e-10,
+        "LT": 9.314538029769892e-11
+      },
+      "six_channel_contraction_relative_error": 1.2897838352898816e-10
+    },
+    {
+      "benchmark": "black",
+      "ER_keV": 267.0,
+      "upstream_order": [
+        16,
+        8,
+        12
+      ],
+      "new_periodic_order": [
+        16,
+        8,
+        8
+      ],
+      "relative_errors": {
+        "L00": 1.0400831307322278e-09,
+        "ReL0L": 1.0529552785243368e-09,
+        "LLL": 1.065922794474261e-09,
+        "LC": 1.0400829086876229e-09,
+        "LT": 2.2755919371064692e-10
+      },
+      "six_channel_contraction_relative_error": 1.0400827976653204e-09
+    },
+    {
+      "benchmark": "blue",
+      "ER_keV": 267.0,
+      "upstream_order": [
+        16,
+        8,
+        12
+      ],
+      "new_periodic_order": [
+        16,
+        8,
+        8
+      ],
+      "relative_errors": {
+        "L00": 4.7471360176132293e-11,
+        "ReL0L": 4.932787511791048e-11,
+        "LLL": 5.123779178717314e-11,
+        "LC": 4.747113813152737e-11,
+        "LT": 1.3683387756202592e-11
+      },
+      "six_channel_contraction_relative_error": 4.7471027109224906e-11
+    }
+  ],
+  "max_saved_ratio_identity_residual": 5.731423026607806e-16,
+  "zero_recoil_normalization_residual": 3.637978807091713e-12,
+  "full_bound_nuclear_current_validated": false
+}

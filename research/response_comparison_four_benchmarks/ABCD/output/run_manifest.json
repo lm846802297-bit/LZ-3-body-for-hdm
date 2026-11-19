@@ -1,0 +1,135 @@
+{
+  "calculation_reference": "B",
+  "target": "Xe-131",
+  "research_status": "leading one-body vector current candidate",
+  "prescriptions": {
+    "A": "F1(0),F2(0) in matched cM_A at finite Q_A; L00 times cM_A^2 R_M",
+    "B": "finite-t_N F1,F2 in cM_B; L00 times cM_B^2 R_M; reference for all main ratios",
+    "C": "B plus the Phi-double-prime diagonal and signed M-Phi-double-prime interference, only J0",
+    "D": "C with nuclear charge-longitudinal continuity and three signed transverse terms, six allowed terms",
+    "paper": "Current manuscript leading-order recoil equation, evaluated with each panel's inputs: S6 = P L00 * 131^2 W_M^00(y6)/W_M^00(0), normalized cM=1, only J0, y6=b_A^2 m_A E_R/2. Gray open diamonds show S6 or S6/S_B. S6/S_B = W_M^00(y6) / [cM_B^2 W_M^00(y_A)]."
+  },
+  "parameters": {
+    "mchi_GeV": 1000.0,
+    "mA_GeV": 122.02572741702,
+    "mV_GeV": 10.0,
+    "v_km_s": 800.0,
+    "g2": 1.0,
+    "coupling_product_squared": 1e-08
+  },
+  "width": "before emission zero; after emission constant pole width; Dirac, real scalar, pure scalar, sole decay chi2->chi1+s",
+  "widths_keV": {
+    "red": 155.93912633420229,
+    "green": 151.82391157482436,
+    "black": 148.48374798964613,
+    "blue": 1590.809210318448
+  },
+  "benchmarks": [
+    [
+      "red",
+      200.0,
+      1.0
+    ],
+    [
+      "green",
+      300.0,
+      1.0
+    ],
+    [
+      "black",
+      360.0,
+      1.0
+    ],
+    [
+      "blue",
+      300.0,
+      10.0
+    ]
+  ],
+  "kinematic_intervals_keV": {
+    "red": [
+      32.03190979985768,
+      991.9078224883073
+    ],
+    "green": [
+      95.26397508095565,
+      750.4262378561597
+    ],
+    "black": [
+      186.36530577258253,
+      552.3751869979279
+    ],
+    "blue": [
+      95.26397508095565,
+      750.4262378561597
+    ]
+  },
+  "form_factors": "isoscalar_zexp central diagnostic; divide F1V and F2V by F1V(0)=3 because gVN=3*gVq",
+  "nuclear_responses": "native AFH v6, equal p/n, common C0",
+  "particle_current_matching_sha": "07e044e76bdfac2cd5559659fa2d458d49b97255",
+  "time_components": "A,B,C and paper use target-rest L00; D uses LC and LT",
+  "scope": "fixed speed, single isotope; D uses leading static impulse one-body matching; bound-nucleus amplitude matching remains open",
+  "numerical_checks": {
+    "rows": 4482,
+    "open_rows": 4474,
+    "closed_endpoints": 8,
+    "max_relative_residuals_on_open_grid": {
+      "manuscript_eq6_over_B_vs_nuclear_ratio": 2.220446049250313e-16,
+      "C_vs_prior_time_only": 4.440892098500626e-16,
+      "D_vs_prior_one_body": 3.3306690738754696e-16,
+      "A_vs_prior_leading_common_q_times_cM_static_squared": 5.551115123125783e-16,
+      "B_vs_prior_leading_common_q_times_cM_finite_squared": 5.551115123125783e-16,
+      "C_over_B_vs_analytic_charge_ratio": 4.440892098500626e-16,
+      "A_over_B_vs_coefficient_ratio": 5.551115123125783e-16
+    },
+    "native_reweighted_B_anchors": 12,
+    "max_relative_residual_B_vs_native_M_reweighted": 6.054827750290315e-09,
+    "R_M_at_zero": 17161.000000000004,
+    "C0": 1.0000825298069378,
+    "b_A_GeV_inverse": 11.61690053236942,
+    "F1V_N_at_zero": 3.0,
+    "F2V_N_at_zero": -0.5519999999999996,
+    "max_relative_effect_of_paper_y_vs_exact_Q_on_leading_paper_curve": 0.0002680778709962528,
+    "tensor_crosscheck": {
+      "maximum_native_absolute_baseline_relative_difference": 6.05482752824571e-09,
+      "maximum_quadrature_relative_difference": 2.475797344914099e-14,
+      "maximum_independent_integrated_tensor_relative_difference": 1.065922794474261e-09
+    }
+  },
+  "environment": {
+    "python": "3.14.7",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pandas": "3.1.1",
+    "matplotlib": "3.11.2",
+    "reportlab": "5.0.1",
+    "pypdf": "6.20.1"
+  },
+  "reproduction": "python -B research/response_comparison_four_benchmarks/ABCD/run_comparison.py",
+  "input_and_code_sha256": {
+    "research/response_comparison_four_benchmarks/results/differential_cross_sections.csv": "16a19db193f3b8a1b9f3198f5bd9e0c03eacda0389c12501cd4df1cf2d771b37",
+    "research/response_comparison_four_benchmarks/results/run_manifest.json": "cd53f86d2837abe1677512cce1e6ecb4e0954688b19cfb5b4f42e16e686134f4",
+    "research/response_comparison_four_benchmarks/inputs/afh_v6_xe131_eight_response_native.csv": "585ab0f483be0d8131566cefc4cb420c6db7e07bebbcd2b887da568cda2f4ffb",
+    "research/response_comparison_four_benchmarks/inputs/provenance.json": "86731e7dc12364512c22eab94cdfcae201fd3ca16ddfd686cfd2e1a8d92e2540",
+    "research/response_comparison_four_benchmarks/inputs/native-comparison.json": "1d3b68ac621e22788a676a9a2f2c97bd433c70883dc30ceb191f69d4d366a030",
+    "research/response_comparison_four_benchmarks/results/native_baseline_comparison.csv": "2d3ae260d4b0b8798e1a8152ba01cd7040f23a2ca66ab0de104efe01351c0e89",
+    "research/response_comparison_four_benchmarks/compare_responses.py": "37687620f4a4b3b310f7814090f259df6b149170f35f3c04de17b2370666e23a",
+    "research/response_comparison_four_benchmarks/inputs/upstream/research/three_body_full_current_nucleon_match/nucleon_vector_form_factors.py": "b9fa7a2df366c6b7413158ad1d9b44d2dda3a1c2ae1f88844f573ce758bec09b",
+    "paper-source/main.tex": "320486060cdea817afc50796752a7803a74db74521e34ecd663de77ad4bd10bc",
+    "research/response_comparison_four_benchmarks/ABCD/run_comparison.py": "c5390218945405b70d10c834bda50b1481d20c1e29bf884b70d2d58b9274dd01",
+    "research/response_comparison_four_benchmarks/ABCD/figures_abcd.py": "6afa865df111c1de9529ba55aaf6c9f6ddd2b4101c0da5ad39b42ba00e656ead",
+    "research/response_comparison_four_benchmarks/ABCD/combined_pdf.py": "da5fb7daef3b0a5d9d88aa380443426ca7520445a60b03e4abd089a2d007bd54",
+    "research/response_comparison_four_benchmarks/ABCD/README.md": "a721a8b12184a132e00e7481e83841274468c5db364c3b5024960e36f8f79462"
+  },
+  "output_sha256": {
+    "abcd_cross_sections.csv": "ee636ed0ac0138ce7db6b5f3f591d76e7c6c7ef773557e07183e05a29d3f0665",
+    "abcd_differential_cross_sections.pdf": "726fb3e77038940ac9d0f537f3e09f8f8dd0754880a25690ec41bc277420c715",
+    "abcd_differential_cross_sections.png": "5ba28eb39f60703666847cf25ab45cf40c7d3fbb89a34db1964a7c5b6701bf65",
+    "abcd_differential_cross_sections.svg": "9cb390eb858d23682ef0b288e722475c2ba89329dca0d79f5c0bc1bfb8c4079c",
+    "abcd_ratios_to_B.pdf": "65637472cdd5e29efa7dbba1c06d415f615defa630e6226127a6f1eb905fca21",
+    "abcd_ratios_to_B.png": "4ae1e3b5d09a7bc741a0a77d0db32f0bb1a363d1fed339d330bcf3cd6cc1c280",
+    "abcd_ratios_to_B.svg": "157ea881985c806c644444deaa3175ba9a5aefd97d8a4426e532fa8029f929d1",
+    "pdf/xe131_cross_sections_and_ratios.pdf": "eade2ddf1204196fb1081f26ecc49425057d2a06697cf859a49a4162473241ab",
+    "selected_energies.csv": "0d12a3316582d0e584ffb32349237e87030bf60e4f285450566097bc0cdbb2f7"
+  }
+}

@@ -1,3 +1,5 @@
+> Update 2026-11-19: The historical main_original.tex was removed at the user’s request. Current manuscript equations are in paper-source/main.tex. This document preserves its historical statements.
+
 # Figure 2 三体暗物质计算：物理公式交叉审查
 
 ## 2026-11-16 superseding status

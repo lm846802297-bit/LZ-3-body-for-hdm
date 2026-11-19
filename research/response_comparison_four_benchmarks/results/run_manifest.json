@@ -1,0 +1,114 @@
+{
+  "status": "NUMERICALLY_CHECKED_LEADING_ONE_BODY_FULL_CURRENT_CANDIDATE",
+  "full_bound_nuclear_current_validated": false,
+  "paper_benchmark_source": "research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131_metadata.json",
+  "local_base_commit": "7456b7743adbed46b09b430ea2a54e8d0545aaa6",
+  "remote_main_observed": "7bd2c59f3bf48979c2e9046fbba847dd28f8c26a",
+  "matching_source_commit": "07e044e76bdfac2cd5559659fa2d458d49b97255",
+  "parameters": {
+    "mchi_GeV": 1000.0,
+    "mA_GeV": 122.02572741702,
+    "mV_GeV": 10.0,
+    "v_km_s": 800.0,
+    "g2": 1.0,
+    "coupling_product_squared": 1e-08
+  },
+  "mass_scheme": "A*u approximation, identical to archived four-benchmark absolute cross-section comparison",
+  "form_factors": "isoscalar_zexp central diagnostic; divide F1V and F2V by F1V(0)=3 because gVN=3*gVq",
+  "nuclear_normalization": {
+    "C0": 1.0000825298069378,
+    "raw_to_physical_factor": 12.567407714499884,
+    "R_M_at_zero": 17161.000000000004
+  },
+  "width": "before emission zero; after emission constant pole width; Dirac, real scalar, pure scalar, sole decay chi2->chi1+s",
+  "widths_keV": {
+    "red": 155.93912633420229,
+    "green": 151.82391157482436,
+    "black": 148.48374798964613,
+    "blue": 1590.809210318448
+  },
+  "recoil_intervals_keV": {
+    "red": [
+      32.03190979985768,
+      991.9078224883073
+    ],
+    "green": [
+      95.26397508095565,
+      750.4262378561597
+    ],
+    "black": [
+      186.36530577258253,
+      552.3751869979279
+    ],
+    "blue": [
+      95.26397508095565,
+      750.4262378561597
+    ]
+  },
+  "quadrature": {
+    "base": [
+      16,
+      8,
+      8
+    ],
+    "high": [
+      32,
+      16,
+      16
+    ],
+    "W2": "threshold-u2",
+    "phi": "uniform periodic normalized average"
+  },
+  "number_of_recoil_points": 4482,
+  "maximum_quadrature_relative_difference": 2.475797344914099e-14,
+  "maximum_native_absolute_baseline_relative_difference": 6.05482752824571e-09,
+  "maximum_trace_vs_spinor_relative_difference": 9.571215682894227e-16,
+  "maximum_independent_integrated_tensor_relative_difference": 1.065922794474261e-09,
+  "maximum_independent_six_channel_contraction_relative_difference": 1.0400827976653204e-09,
+  "response_interpolation": "Main curves sampled at exact native q nodes; PCHIP only at requested anchors and endpoint zoom nodes; no extrapolation",
+  "environment": {
+    "python": "3.14.7",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "matplotlib": "3.11.2"
+  },
+  "elapsed_seconds": 21.005943299998762,
+  "limitations": [
+    "Leading one-body NR truncation; bound-nucleus covariant/AFH amplitude matching and interaction currents remain open.",
+    "Signed transverse SigmaPrimeDelta particle-side matching remains provisional.",
+    "Finite-Q2 nucleon form factors are diagnostic central values without propagated covariance.",
+    "Fixed speed Xe-131; not a halo average, natural-xenon sum or detector-level spectrum.",
+    "Native q grid finite spacing; extrema reported as sampled extrema, not continuous optimizations."
+  ],
+  "sha256": {
+    "compare_responses.py": "37687620f4a4b3b310f7814090f259df6b149170f35f3c04de17b2370666e23a",
+    "inputs/afh_v6_xe131_eight_response_native.csv": "585ab0f483be0d8131566cefc4cb420c6db7e07bebbcd2b887da568cda2f4ffb",
+    "inputs/native-comparison.json": "1d3b68ac621e22788a676a9a2f2c97bd433c70883dc30ceb191f69d4d366a030",
+    "inputs/provenance.json": "86731e7dc12364512c22eab94cdfcae201fd3ca16ddfd686cfd2e1a8d92e2540",
+    "inputs/run_manifest.json": "904ae9fbe1a8321018866e7aaa6465c7c7c72b1c42739e92c97bd528ea75f9e6",
+    "inputs/upstream/research/three_body_calculation_and_validation/chi2_decay_width.py": "c54c563d5998ab141151cb19d610c2d2bc3cfc7a3c84da63530f2c4929878ad2",
+    "inputs/upstream/research/three_body_calculation_and_validation/eq6_kernel.py": "3cdc33ded7bcebc19bba15487de0234a140f13a161f42db5b7bc81163da01619",
+    "inputs/upstream/research/three_body_calculation_and_validation/phase_space_convergence.py": "7396b06fb2ea4bc4f857463ea63c48cc60d118ce286a12915cbb7a7a387217b7",
+    "inputs/upstream/research/three_body_full_current_nucleon_match/nucleon_vector_form_factors.py": "b9fa7a2df366c6b7413158ad1d9b44d2dda3a1c2ae1f88844f573ce758bec09b",
+    "inputs/upstream/research/three_body_full_current_nucleon_match/three_body_multipole_leptonic_weights.py": "e6ddc390716417f02dd77b6cec53c990cb1f6b16a058df10e6a360a6e40e1f5a",
+    "inputs/upstream/research/three_body_full_current_nucleon_match/three_body_phase_space_tensor.py": "12bc17614c17a87c2cde5ae78544011fe50b88ed865ce42d61d82ddaa7e9213f",
+    "inputs/upstream/research/three_body_spin_resolved_current/spin_resolved_three_body_current.py": "1f4754b169bbd20a1d87caa684e3d2daf523f7d653737d107870692321f27d71",
+    "inputs/upstream/research/vector_current_response_audit/vector_current_response_audit.py": "e3bd5a908d49a84085e9eb2f3f6774ef96324fffdb5fcca4c811c1e392a22ea4",
+    "plot_comparison.py": "c598cfa7b3cffacf7fe1e4993ff5979d9f21b872235c86426ee47f4531958fda",
+    "README.md": "1a76bf6b6fa3a98cc0288342c926a5cd847ab486ce6bc1631f0d0c255a7f4421",
+    "results/convergence_checks.csv": "55720491f6e8057a71edfc5a619dde75e066171f84de5a1d35e63b4e16f9d1a6",
+    "results/cross_section_ratios.pdf": "5246c6a83ae9a487d1207ec5b9b366938e166968637e2d5361fab1b1232c5e86",
+    "results/cross_section_ratios.png": "5e0776f65fd5f46cc9df01796607c4af185ae191b18409a637578f52f88872e7",
+    "results/cross_section_ratios.svg": "7e548c6916014cf3b9ec3b44a5462be004e83d8005c3c3d670905cf492c5d731",
+    "results/differential_cross_sections.csv": "16a19db193f3b8a1b9f3198f5bd9e0c03eacda0389c12501cd4df1cf2d771b37",
+    "results/differential_cross_sections.pdf": "5aa78a618e3e53ed3d8bbc4dbba191c72a6ef6c9cd18d3575f59d618c84c633e",
+    "results/differential_cross_sections.png": "092ce94f5a6f2b21fb40b86efcffc39045fd15e53a74d7d5c6b2c2aaca6b31e7",
+    "results/differential_cross_sections.svg": "2a720bbf27435d4e0d80dabe5a99559e4d79386699af6e4e2eb4da51e41e5dd4",
+    "results/independent_validation.json": "9dd0b15e46fbde9e01e150b3d116c8740f903a9d96363bf0c86dbf61278eb080",
+    "results/native_baseline_comparison.csv": "2d3ae260d4b0b8798e1a8152ba01cd7040f23a2ca66ab0de104efe01351c0e89",
+    "results/REPORT.md": "70fda73eafbe4f07b8904b47605727a8f8327991573bc87e1a5ffff5ec3c59d7",
+    "results/selected_energy_comparison.csv": "6a7d72c7e207beebb8805c9ae6f20b6c315ecd11653d607a22b35f6f678b6421",
+    "validate_outputs.py": "191154669e1d4a228d1358fd2a6c7e79992c913c09de931a8c9c420a89f02142"
+  },
+  "native_absolute_baseline_sha256": "585b806fd937760f085d07b9907718f45ca331708021addee618a8362e2c2cce"
+}

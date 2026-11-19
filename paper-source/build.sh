@@ -2,7 +2,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-# Verify the verbatim manuscript source and all committed figure assets first.
+# Verify the current manuscript source and all committed figure assets first.
 sha256sum --check SHA256SUMS
 
 if [[ ! -f utphys28mod.bst ]]; then
@@ -16,7 +16,7 @@ for f in figures/*.pdf; do
   fi
 done
 
-# Build the cleaned working manuscript; main_original.tex is never modified.
+# Build the current manuscript.
 pdflatex -interaction=nonstopmode -halt-on-error -jobname=main_build main.tex
 bibtex8 main_build
 pdflatex -interaction=nonstopmode -halt-on-error -jobname=main_build main.tex
