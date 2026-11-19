@@ -1062,8 +1062,8 @@
     },
     {
       "path": "paper-source/SHA256SUMS",
-      "sha256": "8ae446bc77d7121d45e8f8ebda34e2a01ad162631f6e83911fba0a89f2d69464",
-      "bytes": 1239,
+      "sha256": "5c8e0e9951120d072805beea13dce3ac46cfd966f7d89bea8da91b3b42bc86b6",
+      "bytes": 1155,
       "role": "current manuscript source checksum manifest"
     },
     {
