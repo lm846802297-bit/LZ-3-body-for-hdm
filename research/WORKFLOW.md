@@ -1,7 +1,5 @@
 # Repository research workflow
 
-> **Research communication standard:** Follow the canonical [project-wide decision policy](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/blob/main/AGENTS.md#research-communication-and-decision-policy) and [research reporting workflow](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/blob/main/research/WORKFLOW.md#9-research-reporting-and-communication-standard). These are maintained on `main`; do not fork or duplicate the policy text.
-
 This document turns the repository's research-management principles into
 operational rules.
 
