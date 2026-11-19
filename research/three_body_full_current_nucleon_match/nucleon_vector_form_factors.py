@@ -1,36 +1,29 @@
 #!/usr/bin/env python3
-"""Finite-t diagnostic for the universal light-quark vector nucleon current.
+"""Low-momentum flavor-resolved nucleon vector form factors for the B baseline.
 
-The model current is J_q^mu = ubar gamma^mu u + dbar gamma^mu d
-+ sbar gamma^mu s.  At Q^2=0 the proton and neutron form factors are
-F1^V=3 and F2^V=-0.552.
+The quark current is J_q^mu = ubar gamma^mu u + dbar gamma^mu d
++ sbar gamma^mu s. Bishara et al., JHEP 11 (2017) 059,
+arXiv:1707.06998, Appendix A.1, provide the first-order flavor-separated
+Dirac slopes and the zero-transfer Pauli inputs:
+  F1^{uds}(t_N) = 3 + 8.392 t_N + O(t_N^2),
+  F2^{uds}(t_N) = -0.552 + O(t_N).
+The leading B-baseline prescription therefore keeps the F1 slope and the
+available leading F2 value; it does not invent an F2 slope.
 
-Two diagnostic finite-Q^2 prescriptions are provided:
+The AFH W_M(y_A) response describes the finite spatial distribution of
+nucleons in the whole nucleus. These nucleon form factors describe the
+quark-current matrix element inside an individual nucleon. Both enter B,
+and neither may replace or duplicate the other.
 
-1. bishara_linear:
-   use the slopes of the flavor-separated Dirac form factors quoted in
-   Bishara et al. (JHEP 11 (2017) 059, arXiv:1707.06998), while holding F2
-   at its q=0 value.  This is a first-order low-Q^2 diagnostic.
+The physical rate prefactor is written with g_VN=3*g_Vq outside the
+nucleon-current coefficients. Thus every absolute-rate caller must use
+Fhat_i=F_i^{uds}/3, with Fhat_1(0)=1 and Fhat_2(0)=-0.184.
+The raw quark-summed form factors remain available for provenance and
+flavor-level checks.
 
-2. isoscalar_zexp:
-   reconstruct the light-flavor sum from the isoscalar electromagnetic
-   proton+neutron form factors of Borah et al. (PRD 102, 074012 (2020))
-   plus the strange-current q=0/slope inputs from Bishara et al.  The
-   strange Pauli form factor is kept at its q=0 value because the cited
-   Bishara input does not provide a finite-Q^2 F2^s curve.
-
-Neither prescription is established as the exact legacy/model-specific
-finite-t form factor. They are controlled diagnostics for the size of the
-form-factor effect relative to the q=0 nucleon-current anchor
-F1(0)=3, F2(0)=-0.552.
-
-The q=0 anchor is not a point-nucleus approximation: the AFH nuclear
-response still carries finite nuclear structure. Only the nucleon
-Dirac-Pauli form factors are frozen at zero transfer. For any AFH
-correction, the primary denominator must be the M-only result evaluated
-with the same finite-t F1,F2 prescription.
+The isoscalar_zexp option is retained as an alternative form-factor
+sensitivity model, not as the default B prescription.
 """
-
 from __future__ import annotations
 
 import math
@@ -38,6 +31,9 @@ import math
 M_N_GEV = 0.938918
 F1V0 = 3.0
 F2V0 = -0.552
+F1N0 = 1.0
+F2N0 = F2V0 / 3.0
+DEFAULT_FORM_FACTOR_PRESCRIPTION = "bishara_linear"
 
 
 def effective_nucleon_form_factors(F1_quark: float, F2_quark: float) -> tuple[float, float]:
@@ -177,33 +173,48 @@ def charge_coefficients(
     cPhiPP = Q_A2 * (F1 + 2.0 * F2) / (4.0 * mN_GeV**2)
     return cM, cPhiPP
 
-def q0_anchor_baseline_correction(qA_GeV: float, W_phi_over_WM: float, W_Mphi_over_WM: float, *, prescription: str = "isoscalar_zexp") -> dict:
-    Q2 = qA_GeV * qA_GeV
+def q0_anchor_baseline_correction(
+    qA_GeV: float,
+    W_phi_over_WM: float,
+    W_Mphi_over_WM: float,
+    *,
+    prescription: str = DEFAULT_FORM_FACTOR_PRESCRIPTION,
+    tN_GeV2: float | None = None,
+) -> dict:
+    """Compare the finite-t_N M+Phi'' kernel with the A (q=0-current) M baseline.
+
+    The AFH W_M(Q_A) factor is present in both numerator and denominator.
+    The returned coefficients use Fhat_i=F_i^{uds}/3 because the public
+    prefactor is expressed with g_VN=3*g_Vq.
+    """
+    Q2 = qA_GeV * qA_GeV if tN_GeV2 is None else -float(tN_GeV2)
+    if Q2 < 0.0 or not math.isfinite(Q2):
+        raise ValueError("nucleon form-factor Q_N^2 must be finite and non-negative")
     if prescription == "bishara_linear":
-        F1, F2 = bishara_linear(Q2)
+        F1_quark, F2_quark = bishara_linear(Q2)
     elif prescription == "isoscalar_zexp":
-        F1, F2 = isoscalar_zexp(Q2)
+        F1_quark, F2_quark = isoscalar_zexp(Q2)
     else:
         raise ValueError("unknown form-factor prescription")
-    cM, cPhi = charge_coefficients(qA_GeV, F1=F1, F2=F2)
+    F1, F2 = effective_nucleon_form_factors(F1_quark, F2_quark)
+    cM, cPhi = charge_coefficients(
+        qA_GeV, F1=F1, F2=F2, tN_GeV2=tN_GeV2
+    )
     eta = cPhi / cM
     Qphi = 1.0 + 2.0 * eta * W_Mphi_over_WM + eta * eta * W_phi_over_WM
     return {
         "qA_GeV": qA_GeV,
-        "Q2_GeV2": Q2,
-        "F1V": F1,
-        "F2V": F2,
+        "Q_N2_GeV2": Q2,
+        "tN_GeV2": -Q2,
+        "F1V_quark_sum": F1_quark,
+        "F2V_quark_sum": F2_quark,
+        "F1N_effective": F1,
+        "F2N_effective": F2,
         "cM": cM,
         "cPhiPP": cPhi,
         "eta": eta,
         "Q_phiPP": Qphi,
-        "relative_to_q0_M_reference": (cM * cM / F1V0**2) * Qphi - 1.0,
-        "relative_to_finite_t_M": Qphi - 1.0,
-        # Legacy alias: q=0 nucleon-current normalization with AFH W_M(Q_A) retained.
-        "relative_to_pointlike_M": (cM * cM / F1V0**2) * Qphi - 1.0,
+        "relative_to_A_AFH_finite_size_M": cM * cM * Qphi - 1.0,
+        "relative_to_B_finite_tN_M": Qphi - 1.0,
         "prescription": prescription,
     }
-
-
-# Backward-compatible alias; this is not a point-nucleus baseline.
-pointlike_baseline_correction = q0_anchor_baseline_correction
