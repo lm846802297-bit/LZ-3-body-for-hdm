@@ -22,7 +22,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install numerical dependencies
-        run: python -m pip install --upgrade numpy scipy
+        run: python -m pip install --upgrade numpy scipy sympy
       - name: Run regression tests
         run: python -m unittest research.three_body_phase_space_ID_validation.test_halo_seven_isotope_ID -v
       - name: Run halo-folded comparison
