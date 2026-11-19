@@ -1,3 +1,19 @@
+> **Historical / legacy diagnostic — not the adopted B baseline.**
+>
+> The numerical values below were produced with the earlier raw-flavor
+> normalization, alternate isoscalar-z-expansion form factors, static
+> transfer prescription \(t_N=-Q_A^2\), and the legacy \(9W_M\)
+> denominator. They are preserved unchanged for provenance. The label
+> “pointlike” in the historical text should be read as the raw-current
+> reference, not as a point nucleus: the AFH \(W_M\) response is finite-size.
+> The adopted B calculation uses \(t_N=t_A=-2m_AE_R\), effective
+> \(\widehat F_i=F_i^{uds}/3\), and reports A/B/C separately. See
+> [FORM_FACTOR_BASELINE_COMPARISON.md](FORM_FACTOR_BASELINE_COMPARISON.md)
+> and the new B-baseline result record when its rerun passes CI.
+>
+> No CSV, numerical value, workflow ID, or artifact hash in this historical
+> record has been overwritten.
+
 # Xe-131 fixed-speed charge-sector differential cross-section ratio
 
 **Status:** PASS — workflow 44262472992, commit
