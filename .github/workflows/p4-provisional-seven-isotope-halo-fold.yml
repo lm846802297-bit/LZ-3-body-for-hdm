@@ -70,8 +70,8 @@ jobs:
 
       - name: Run existing P4 kernel and three-body regression tests
         run: |
-          python -m unittest research.three_body_full_current_nucleon_match.test_native_charge_sector_halo_fold -v
-          python -m unittest research.three_body_full_current_nucleon_match.test_p3c_amplitude_level_helicity_crosscheck -v
+          python -m unittest discover -s research/three_body_full_current_nucleon_match -p 'test_native_charge_sector_halo_fold.py' -v
+          python -m unittest discover -s research/three_body_full_current_nucleon_match -p 'test_p3c_amplitude_level_helicity_crosscheck.py' -v
 
       - name: Compute five-point seven-isotope Pole-width halo spectra
         run: |
