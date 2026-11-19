@@ -140,3 +140,47 @@ OPEN.
 The workflow now runs this subgate after the C0-consistent response
 contraction and appends its JSON result to the
 `full-three-body-current-nucleon-match-and-phase-space-tensor` artifact.
+
+
+## 2026-11-19 update: non-Mathematica work completed/prepared
+
+The user will run the native Mathematica/Wolfram comparison locally later.
+Until that comparison is supplied, do not claim native P3-B PASS or full
+P3-C PASS. The remaining work that does not depend on Mathematica has been
+advanced as follows:
+
+1. The formal natural-xenon halo engine now rejects every width setting
+   except `pole` at the Python API boundary. Its CLI exposes only
+   `--width-scheme pole`. This prevents a zero- or running-width result
+   from accidentally entering formal production.
+2. A regression test explicitly checks that both `zero` and `running`
+   are rejected before native files are loaded.
+3. A manual P4 workflow,
+   `.github/workflows/p4-native-afh-natural-xenon-pole-halo.yml`, has been
+   added. It consumes a completed native AFH artifact by run ID and artifact
+   ID, runs the seven-isotope fold for both SHM-cutoff and untruncated
+   Maxwellian halos, and archives two separate outputs:
+   - the Coulomb-sector result;
+   - the leading-static full-vector candidate, explicitly unpromoted.
+4. The workflow is intentionally manual and cannot run until the user's
+   local native AFH comparison has produced an artifact with a PASS
+   provenance manifest. No synthetic or Python-translated response archive
+   is accepted as a substitute.
+
+The P4 workflow defaults to (m_\chi=1\) TeV, (m_s=450\) keV,
+\(\delta m=450\) keV, and recoil nodes 101, 200, 267, and 542 keV.
+These are workflow defaults for a reproducible diagnostic, not a scan
+over the model's preferred parameter space. The quadrature orders are
+higher than the earlier smoke-test settings; a separate convergence
+comparison is still required before treating any spectrum as numerically
+final.
+
+### Local Mathematica handoff
+
+When the local comparison is complete, provide the complete native archive
+root containing `native-comparison.json`, `run_manifest.json`,
+`SHA256SUMS.txt`, `native/`, `native-spatial-multipoles/`, and
+`native-dense-charge-dip/`. The P4 workflow must use the native response
+artifact from that run, not a provisional Python archive. If the native
+comparison fails, preserve the failed artifact and diagnose it; do not
+force a PASS or relax tolerances.
