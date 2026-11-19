@@ -331,6 +331,7 @@ def run(afh_csv: Path, form_factor_prescription: str = "isoscalar_zexp") -> dict
                     f"phase-space medium/high convergence failed: ER={ER_keV}, "
                     f"width={width}, LC={convergence_LC:.6g}, L00={convergence_L00:.6g}"
                 )
+            ER_GeV = float(ER_keV) * 1.0e-6
             tN_GeV2 = ER_GeV * ER_GeV - qA * qA
             kernels = charge_sector_kernels(
                 high["L_C"], qA, high_response, form_factor_prescription,
