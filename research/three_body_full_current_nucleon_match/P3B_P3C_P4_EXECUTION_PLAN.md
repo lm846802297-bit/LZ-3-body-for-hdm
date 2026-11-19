@@ -12,7 +12,8 @@
 | P3-C response-level contraction | PROVISIONAL PASS | 28 pole-only rows; all total kernels positive; maximum spatial/charge ratio \(7.03050\times10^{-9}\) |
 | P3-C spatial amplitude subgate | PASS (provisional Python AFH) | Four Xe-131 Pole-width benchmarks; maximum helicity-vs-Cartesian residual \(6.09\times10^{-16}\) |
 | P3-C full covariant nuclear amplitude | OPEN | Charge multipoles are not yet rank-resolved; independent coordinate-space bound-nucleus current and native AFH comparison remain required |
-| P4 native seven-isotope halo fold | PREPARED / BLOCKED | Native charge-fold engine exists; must wait for P3-B and P3-C acceptance |
+| P4 native seven-isotope halo fold | PREPARED / BLOCKED | Native production input still waits for local MMA comparison |
+| P4 provisional seven-isotope halo fold | IMPLEMENTED / WORKFLOW QUEUED | Explicit source-translated AFH-8 + P3-B loader, hash/C0/Cauchy gates, Pole-only halo integration, exact mediator q_A denominator; output remains provisional |
 
 ## P3-B — native Wolfram AFH comparison
 
@@ -74,7 +75,11 @@ interference, residuals, and source hashes.
 ## P4 — seven-isotope natural-xenon halo fold
 
 The existing `native_charge_sector_halo_fold.py` is the P4 engine. It
-loads a provenance-checked native seven-isotope/eight-response bundle,
+supports a provenance-checked native seven-isotope/eight-response bundle
+and a separate, explicitly provisional Python AFH bundle. The latter loads
+the AFH-8 charge responses and the P3-B spatial OBDME responses, applies the
+common C0 correction to charge responses exactly once, and never labels the
+result native. The engine
 uses isotope-specific exact q kinematics, applies the Pole-width three-body
 phase-space integral at each halo-speed node, and computes abundance-weighted
 rates.
@@ -95,15 +100,20 @@ Formal P4 requirements:
 - retain the seven-isotope abundance coverage and the isotope-by-isotope
   contributions in the output.
 
-The Coulomb-sector halo result can be reported after native P3-B validation
-as a separately labelled baseline. The full-vector halo spectrum must not
-be promoted until the P3-C amplitude-level gate passes. Detector efficiency,
+Before local MMA comparison, the provisional engine can calculate a
+selected-grid Coulomb baseline and a leading-static six-channel candidate.
+These are end-to-end numerical diagnostics only; they are not native AFH
+results or a full P3-C PASS. The final full-vector halo spectrum must not be
+promoted until the local native AFH comparison and the full P3-C
+amplitude-level gate pass. Detector efficiency,
 energy resolution, exposure, and likelihood are a later detector-level stage.
 
 ## Stop conditions
 
 - Native runner unavailable: keep P3-B queued; do not replace native results
-  with the Python translation.
+  with the Python translation. The provisional P4 path may still be run for
+  pipeline completion, but all outputs must retain
+  `native_afh_validated=false` until the user's local MMA comparison.
 - P3-B mismatch: stop P3-C and P4 promotion until source, phase, or
   normalization discrepancies are resolved.
 - P3-C amplitude mismatch: do not infer that the small response-level
