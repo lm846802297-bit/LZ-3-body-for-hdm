@@ -140,8 +140,17 @@ C_MR_M
 }
 \]
 
-The physical equal-\(p=n\) AFH response convention is used, with the factor
-of four applied once in the response conversion.
+The physical equal-\(p=n\) AFH response convention is used. Two independent
+normalizations are required: the isospin factor four and the common OBDME
+correction \(C_0(A)\). For raw AFH v6.0 output,
+\[
+R_{\rm raw}(q_A)=\frac{4\pi}{2J_A+1}W_{\rm raw}(y_A),
+\qquad
+R_{\rm phys}(q_A)=4C_0(A)R_{\rm raw}(q_A),
+\]
+with \(C_0(A)=A^2/[4R_{M,\rm raw}(0)]\), so that
+\(R_M^{\rm phys}(0)=A^2\). The factor four and \(C_0\) are each
+applied exactly once to every response channel.
 
 ## 4. Adopted A/B/C hierarchy
 
@@ -233,10 +242,10 @@ The engine now has two strictly separated input paths:
 
 1. **Native production path:** requires the provenance-pinned native
    seven-isotope/eight-response Wolfram artifact and its 16,807-row
-   pointwise comparison PASS. The loader derives each isotope's \\(C_0(A)\\)
-   from its raw \\(M(q_A=0)\\) anchor, applies \\(C_0\\) to all eight
+   pointwise comparison PASS. The loader derives each isotope's \(C_0(A)\)
+   from its raw \(M(q_A=0)\) anchor, applies \(C_0\) to all eight
    channels after the independent factor four, and verifies
-   \\(R_M^{\\rm phys}(0)=A^2\\).
+   \(R_M^{\\rm phys}(0)=A^2\).
 2. **Provisional calculation path:** accepts only the pinned source-translated
    AFH-8 charge archive plus the independently rank-reconstructed P3-B
    spatial archive. It checks both artifact hashes, the shared AFH source
@@ -316,7 +325,7 @@ recoil grid is \(E_R=150,200,267,350,400\) keV, with separate speed and
 three-body phase-space refinement runs. The first production benchmark uses
 \(m_{\chi_1}=1\) TeV, \(m_s=200\) keV,
 \(\Delta m=1\) MeV, \(m_V=10\) GeV, and the formal Pole prescription.
-It records A (q=0 nucleon-current reference with finite-size AFH \\(W_M\\)), B (finite-\\(t_N\\) M-only baseline), C (charge-response extension),
+It records A (q=0 nucleon-current reference with finite-size AFH \(W_M\)), B (finite-\(t_N\) M-only baseline), C (charge-response extension),
 and the leading-static six-channel candidate. Both truncated SHM and
 untruncated Maxwellian folds are retained.
 
