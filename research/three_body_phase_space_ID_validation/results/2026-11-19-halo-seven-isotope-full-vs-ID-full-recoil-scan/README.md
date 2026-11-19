@@ -1,13 +1,13 @@
 # Archived outputs: halo-folded full three-body vs I(D) validation
 
-**Archive status:** native outputs preserved; source artifact digests and every extracted file are checked by \`RUN_MANIFEST.json\` and \`SHA256SUMS\`.
+**Archive status:** native outputs preserved; source artifact digests and every extracted file are checked by RUN_MANIFEST.json and SHA256SUMS.
 
 ## Provenance and dependency chain
 
-- **PR #78 original workflow:** run [44560087038](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44560087038), source commit \`9ca1801cdded7002c93776f8a0f5bce894135356\`, artifact ID \`14551462445\`.
-- **PR #74 final integration rerun:** run [44568592064](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44568592064), source commit \`b6b1452b96c5e4697410c92a8ad3e4c358eed80c\`, artifact ID \`14555201585\`. This run completed successfully after the PR #74 integration branch incorporated the PR #78 work.
+- **PR #78 original workflow:** run [44560087038](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44560087038), source commit 9ca1801cdded7002c93776f8a0f5bce894135356, artifact ID 14551462445.
+- **PR #74 final integration rerun:** run [44568592064](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44568592064), source commit b6b1452b96c5e4697410c92a8ad3e4c358eed80c, artifact ID 14555201585. This run completed successfully after the PR #74 integration branch incorporated the PR #78 work.
 - The PR #78 original artifact and the PR #74 final rerun have different ZIP-container SHA-256 values, while all nine extracted member files are byte-identical. Both original ZIPs are retained here; the extracted canonical payload is from the final integration rerun.
-- PR #74 was merged into \`main\` as \`070dc89cc58699633d0009c1fbaea7fa400ee337\`. PR #74 includes the PR #78 seven-isotope halo-validation dependency.
+- PR #74 was merged into main as 070dc89cc58699633d0009c1fbaea7fa400ee337. PR #74 includes the PR #78 seven-isotope halo-validation dependency.
 
 ## Calculation and numerical record
 
@@ -24,13 +24,13 @@ The AFH v6.0 calculation includes Xe-128, 129, 130, 131, 132, 134, and 136. Thes
 
 ## Files
 
-- \`source-artifact-pr78-original.zip\`: original PR #78 Actions artifact.
-- \`source-artifact-pr74-final-rerun.zip\`: final successful PR #74 integration-run artifact.
-- \`extracted/halo-seven-isotope-baseline/\`: baseline CSVs and metadata.
-- \`extracted/halo-seven-isotope-highorder/\`: higher-order CSVs and metadata.
-- \`extracted/halo-seven-isotope-quadrature-comparison/\`: pointwise quadrature comparison and convergence summary.
-- \`RUN_MANIFEST.json\`: source run IDs, commits, artifact IDs/digests, payload equivalence, calculation summary, and per-file inventory.
-- \`SHA256SUMS\`: checksums for both source ZIPs, all extracted files, this README, and the run manifest.
+- source-artifact-pr78-original.zip: original PR #78 Actions artifact.
+- source-artifact-pr74-final-rerun.zip: final successful PR #74 integration-run artifact.
+- extracted/halo-seven-isotope-baseline/: baseline CSVs and metadata.
+- extracted/halo-seven-isotope-highorder/: higher-order CSVs and metadata.
+- extracted/halo-seven-isotope-quadrature-comparison/: pointwise quadrature comparison and convergence summary.
+- RUN_MANIFEST.json: source run IDs, commits, artifact IDs/digests, payload equivalence, calculation summary, and per-file inventory.
+- SHA256SUMS: checksums for both source ZIPs, all extracted files, this README, and the run manifest.
 
 ## Scientific scope
 
