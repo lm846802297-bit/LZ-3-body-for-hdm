@@ -148,7 +148,18 @@ The historical 0.778/0.649 values are not interchangeable with 0.9966/0.8996.
 ## 6. Manuscript nomenclature and formula cross-check (2026-11-19)
 
 The current `paper-source/main.tex` was reopened and checked against the
-adopted B convention. The earlier audit statements about an overloaded
+adopted B convention.
+
+A separate conversation-uploaded \`main.tex\` was also inspected. It is a
+different, longer manuscript version and is **not** the same file as the
+repository's \`paper-source/main.tex\`. The uploaded version still uses
+\(m_N\) as the nuclear mass in the recoil section, reuses \(m_N\) for the
+generic point-target derivation, calls the whole-nucleus shape \(F_N(q)\),
+and writes the raw AFH response while asserting \(A^2\) normalization
+without the \(4C_0(A)\) conversion. It has not been copied over the
+repository manuscript because that would risk replacing its newer B-aligned
+content with a divergent draft. The authoritative manuscript source must
+be confirmed before merging those two versions. The earlier audit statements about an overloaded
 \(F_N\), nuclear \(m_N\), and an unconverted raw AFH response are stale
 for the current branch; the manuscript already contains the corresponding
 corrections:
