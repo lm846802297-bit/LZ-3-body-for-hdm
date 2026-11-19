@@ -1,0 +1,54 @@
+{
+  "source_sha256": {
+    "originals/xe131_six_channel_interpolation_audit.pdf": "8f7063b22afc1a4439ab90b24dc8a540756b3c7e37b9850ef6c9a078c605420e",
+    "originals/xe131_afh_six_channel_comparison.pdf": "28f12b4183f64ba6c2fc4629f9d5e54ac46a16637059b975acc70b46191fa498",
+    "data/xe131_six_response_grid.csv": "74ee7ca4897a22c5b5b55fdabb3c009d2947819a098df2d006ca44730c209806",
+    "data/xe131_six_channel_fixed_speed_recoil_scan.csv": "50cbb459f91ae0b72361e7b626ad7da8d27ebc824f4974e2ac9e1c61e003c28c",
+    "data/xe131_six_channel_fixed_speed_recoil_scan.json": "0e594d518d74df82fa44b29f5112843f7a48ebd38c7c4240664ff3b453e22af3"
+  },
+  "plot_origin": "Original PDF pages retained; first PDF contains raster charts, second PDF contains vector charts.",
+  "scan_workflow": 44307471788,
+  "scan_artifact": 14430267797,
+  "outputs": {
+    "xe131_six_channel_interpolation_audit_zh.pdf": {
+      "bytes": 370595,
+      "sha256": "b41dc1c266ca98309d287009f934bb9860be10a161143a366ee092ad7da20835"
+    },
+    "xe131_WM_diffraction_minimum_interpolation_zh.png": {
+      "bytes": 262934,
+      "sha256": "6556966c528115ab4e097e64decbe7bc7157888f785346433d98c3542ba6994f"
+    },
+    "xe131_WM_pchip_vs_cheb10_relative_difference_zh.png": {
+      "bytes": 271381,
+      "sha256": "cb86ecfae55b3fff0cfcf5e4f6460f5d24c5d939a1bba0e140f453873d0a2716"
+    },
+    "xe131_nearpole_full_over_pointlike_interpolation_zh.png": {
+      "bytes": 304421,
+      "sha256": "4c3ca75f2daa17fd68d9f8d481e10041a9e7f4676037cf929924d2e9461976f2"
+    },
+    "xe131_afh_six_channel_comparison_zh.pdf": {
+      "bytes": 410508,
+      "sha256": "d70108d8ae2d58c5c7633263a9363a7ff0ddbc7ff6420e4fb3ded5f09d34c9d9"
+    },
+    "xe131_six_channel_comparison_B1_zh.png": {
+      "bytes": 378558,
+      "sha256": "2d1803389326c4cb21e5916300c34de10b1cc399dad502ab4556b5f4be9f12bb"
+    },
+    "xe131_six_channel_comparison_B2_zh.png": {
+      "bytes": 385476,
+      "sha256": "abd5fcd7186150761a301a89e6a16aab794490872559b745464e50abd0334931"
+    },
+    "xe131_six_channel_comparison_B3_zh.png": {
+      "bytes": 359894,
+      "sha256": "bb329408ff068318d85153622db4fe3951989eba168a9975e278ebabc0d93af1"
+    },
+    "xe131_six_channel_comparison_B4_zh.png": {
+      "bytes": 292304,
+      "sha256": "e2635ec975a911a564a21f14b44836d72eb24e8d7daa75afdd9d700c08ba81a7"
+    },
+    "xe131_six_channel_comparison_B5_zh.png": {
+      "bytes": 305232,
+      "sha256": "8ca4ba72bdeaca9cec4538937b24800c229bf9098b2c5aceb249f56cdd1b1275"
+    }
+  }
+}
