@@ -360,7 +360,7 @@ For the universal \(u+d+s\) current the raw quark-summed anchors are
 \(g_{VN}=3g_{Vq}\) rate convention the coefficients above use
 \(\widehat F_1(0)=1\), \(\widehat F_2(0)=-0.184\), and
 \(m_N=0.938918\) GeV. The coefficient ratios relative to
-\(C_M=\widehat F_1^2L^{00}\) over the 12 archived benchmarks are:
+\\(C_M=(\\widehat F_1^N)^2L^{00}\\) over the 12 archived benchmarks are:
 
 | Spatial coefficient | Range relative to \(C_M\) |
 |---|---:|
