@@ -22,7 +22,7 @@ from sympy.physics.wigner import wigner_3j, wigner_6j
 
 import sys
 HERE = Path(__file__).resolve().parent
-sys.path.insert(0, str(HERE.parent / "figure2_full_reproduction"))
+sys.path.insert(0, str(HERE.parent / "three_body_calculation_and_validation"))
 from isotope_mass_schemes import isotope_mass_GeV  # noqa: E402
 
 ISOTOPES = (128, 129, 130, 131, 132, 134, 136)

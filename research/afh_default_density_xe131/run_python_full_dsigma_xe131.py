@@ -22,7 +22,7 @@ from scipy.interpolate import PchipInterpolator
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
-sys.path.insert(0, str(REPO / "research" / "figure2_full_reproduction"))
+sys.path.insert(0, str(REPO / "research" / "three_body_calculation_and_validation"))
 
 import eq6_kernel as eq6  # noqa: E402
 import phase_space_convergence as psc  # noqa: E402

@@ -9,8 +9,8 @@ do not shorten them to a bare \`output/...\` path.
 
 | Purpose | Repository-root path | Local file |
 |---|---|---|
-| Long-form comparison (AFH default, GCN, JJ55; 1,920 rows) | \`research/afh_default_density_xe131/output/figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv\` | [corrected long-form CSV](figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv) |
-| Wide-form AFH/GCN/JJ55 audit (640 recoil rows) | \`research/afh_default_density_xe131/output/figure2_four_benchmarks_AFH_GCN_JJ55_wide_audit.csv\` | [wide-form audit CSV](figure2_four_benchmarks_AFH_GCN_JJ55_wide_audit.csv) |
+| Long-form comparison (AFH default, GCN, JJ55; 1,920 rows) | \`research/afh_default_density_xe131/output/four_benchmarks_AFH_GCN_JJ55_corrected.csv\` | [corrected long-form CSV](four_benchmarks_AFH_GCN_JJ55_corrected.csv) |
+| Wide-form AFH/GCN/JJ55 audit (640 recoil rows) | \`research/afh_default_density_xe131/output/four_benchmarks_AFH_GCN_JJ55_wide_audit.csv\` | [wide-form audit CSV](four_benchmarks_AFH_GCN_JJ55_wide_audit.csv) |
 | Current response/interpolation/row-count metadata | \`research/afh_default_density_xe131/output/four_benchmark_metadata.json\` | [metadata JSON](four_benchmark_metadata.json) |
 | Detailed cross-section reconstruction and assumptions | \`research/afh_default_density_xe131/output/FOUR_BENCHMARK_CROSS_SECTION_AUDIT.md\` | [cross-section audit](FOUR_BENCHMARK_CROSS_SECTION_AUDIT.md) |
 
@@ -28,7 +28,7 @@ applied only as the q-independent factor \(C_A\).
 ## Superseded historical file
 
 The historical file
-\`research/afh_default_density_xe131/output/figure2_four_benchmarks_dsigma_AFH_GCN_JJ55.csv\`
+\`research/afh_default_density_xe131/output/four_benchmarks_dsigma_AFH_GCN_JJ55.csv\`
 is retained for provenance only and is **superseded**. Its AFH response
 column was copied from the GCN response rather than populated from the AFH
 response table. Do not use it for plots, rate calculations, tables, or

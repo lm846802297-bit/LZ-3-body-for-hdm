@@ -22,7 +22,7 @@ from numpy.polynomial.legendre import leggauss
 from scipy.interpolate import PchipInterpolator
 
 HERE = Path(__file__).resolve().parent
-sys.path.insert(0, str(HERE.parent / "figure2_full_reproduction"))
+sys.path.insert(0, str(HERE.parent / "three_body_calculation_and_validation"))
 
 import eq6_kernel  # noqa: E402
 from isotope_mass_schemes import (  # noqa: E402

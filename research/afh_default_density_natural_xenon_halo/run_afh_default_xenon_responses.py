@@ -20,7 +20,7 @@ from scipy.interpolate import PchipInterpolator
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "afh_default_density_xe131"))
-sys.path.insert(0, str(HERE.parent / "figure2_full_reproduction"))
+sys.path.insert(0, str(HERE.parent / "three_body_calculation_and_validation"))
 
 from run_afh_default_xe131 import (  # noqa: E402
     angular_mj,

@@ -15,7 +15,7 @@ from numpy.polynomial.legendre import leggauss
 
 HERE = Path(__file__).resolve().parent
 RESEARCH = HERE.parent
-sys.path.insert(0, str(RESEARCH / "figure2_full_reproduction"))
+sys.path.insert(0, str(RESEARCH / "three_body_calculation_and_validation"))
 import eq6_kernel
 from isotope_mass_schemes import (
     AME2020_XE_ATOMIC_MASS_U, NIST_XE_ATOMIC_MASS_U, isotope_mass_GeV,

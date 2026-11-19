@@ -43,10 +43,13 @@ selectedBenchmarks = If[benchmarkArg === "all", benchmarks,
   Select[benchmarks, First[#] === benchmarkArg &]];
 If[selectedBenchmarks === {}, Print["Unknown benchmark: ", benchmarkArg]; Exit[2]];
 erGridBase = If[StringLength[erListString] > 0,
-  ToExpression /@ StringSplit[erListString, ","], N[Range[erStart, erStop, erStep]]];
+  N[ToExpression /@ StringSplit[erListString, ","]], N[Range[erStart, erStop, erStep]]];
 (* Match the Python runner: retain the full requested grid and insert the
-   Figure-2/high-order anchors explicitly; 200 keV is already on the 5-keV grid. *)
-erGrid = Sort[DeleteDuplicates[Join[erGridBase, N[{101., 200., 267., 542.}]]]];
+   Figure-2 anchors for a full-grid run. An explicit recoil list is an exact
+   override, used for separate high-order convergence anchors. *)
+erGrid = If[StringLength[erListString] > 0,
+  Sort[DeleteDuplicates[erGridBase]],
+  Sort[DeleteDuplicates[Join[erGridBase, N[{101., 200., 267., 542.}]]]]];
 
 (* AFH response table: columns 1, 4, 7 are q, raw package response, physical response. *)
 rawCSV = Import[responsePath, "CSV"];

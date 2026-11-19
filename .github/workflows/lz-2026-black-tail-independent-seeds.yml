@@ -10,7 +10,7 @@ on:
       - research/lz_detector_response/audit_lz_2026_black_tail_independent_seeds.py
       - research/lz_detector_response/tests/test_lz_2026_black_tail_independent_seeds.py
       - .github/workflows/lz-2026-black-tail-independent-seeds.yml
-      - research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/**
+      - research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/**
   workflow_dispatch:
 
 permissions:

@@ -366,7 +366,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--event-csv", type=Path, required=True)
     parser.add_argument("--spectrum-dir", type=Path, default=Path(
-        "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum"
+        "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum"
     ))
     parser.add_argument("--fold-summary-csv", type=Path, required=True)
     parser.add_argument("--events-per-bin", type=int, default=2000)

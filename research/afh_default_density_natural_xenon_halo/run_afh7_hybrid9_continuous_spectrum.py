@@ -22,7 +22,7 @@ from scipy.interpolate import PchipInterpolator
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
-FIG_DIR = ROOT / "research" / "figure2_full_reproduction"
+FIG_DIR = ROOT / "research" / "three_body_calculation_and_validation"
 sys.path.insert(0, str(FIG_DIR))
 sys.path.insert(0, str(HERE))
 

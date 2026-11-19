@@ -128,7 +128,7 @@ def main() -> None:
         default=list(DEFAULT_BENCHMARKS),
     )
     parser.add_argument("--spectrum-dir", type=Path, default=Path(
-        "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum"
+        "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum"
     ))
     parser.add_argument(
         "--nuclear-models", nargs="+", choices=base.NUCLEAR_MODELS,

@@ -1,7 +1,7 @@
 {
   "status": "DIAGNOSTIC_COMPLETE",
   "scope": "Green Xe-131 fixed-speed I6-only mapping audit at 776 km/s and zero width. AFH response and cross-section normalization are not recalculated.",
-  "archive": "/home/runner/work/LZ-3-body-for-hdm/LZ-3-body-for-hdm/research/figure2_full_reproduction/results/joint_xe131/fine/xe131_gcn_joint_single_speed.csv",
+  "archive": "/home/runner/work/LZ-3-body-for-hdm/LZ-3-body-for-hdm/research/three_body_calculation_and_validation/results/joint_xe131/fine/xe131_gcn_joint_single_speed.csv",
   "inputs": {
     "m_chi1_GeV": 1000.0,
     "m_s_GeV": 0.0003,

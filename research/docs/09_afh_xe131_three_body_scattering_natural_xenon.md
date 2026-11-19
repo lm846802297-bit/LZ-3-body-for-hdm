@@ -40,7 +40,7 @@ This update supersedes older selected-point-only statements in the report.
 - AFH-7 covers natural atom fraction 0.998158. Xe-124/Xe-126 remain missing from the official AFH default-density inputs; Hybrid-9 uses Helm only for those two isotopes and is not AFH-9.
 - The old AFH selected-point rates use the legacy linear-\(W^2\), \(8\times8\times4\) kernel. At common points they differ from the new threshold-\(u^2\) AFH-7 grid by about 230–255 ppm, consistent with the documented low-order linear-\(W^2\) quadrature bias. Keep the old table as a historical result.
 - GCN/JJ55 84-point spectra still use legacy linear-\(W^2\), \(8\times8\times4\). Their \(16\times16\times8\) spot-check reaches \(2.18895\times10^{-4}\) maximum kernel-order difference; AFH-7/Hybrid-9 use threshold-\(u^2\). Cross-model precision is not yet matched.
-- AFH Xe-131 response-level native Mathematica/Python validation has passed. The native Wolfram 14.2.0 full Eq. (6) run and independent Python pointwise comparison have also completed: 652 rows (500 open, 152 closed), four benchmarks, fixed 800 km/s, threshold-u2, pole width and 16×16×8. The corrected comparison JSON reports PASS_WITH_NOTES; maximum relative differences are I6 1.34e-12, physical/no4 dσ 2.58e-9, AFH response 2.58e-9 and converted cross-code dσ 2.58e-9. The latter uses the same 2e-7 observable tolerance as dσ; per-code unit-conversion identities separately pass at 2e-12. Near-pole width-prescription systematics, AFH-9 inputs and the official LZ likelihood remain open.
+- AFH Xe-131 response-level native Mathematica/Python validation has passed. Three validation layers are now recorded separately: (1) native Mathematica/Python AFH response comparison, with its own 2,401-node source-translation result; (2) Python-internal full Eq. (6) and factor-four closure; and (3) independent native Mathematica/Python full-cross-section pointwise comparison. The first two have their own PASS evidence, and the third is now executed and archived: 652 rows (500 open, 152 closed), four benchmarks, fixed 800 km/s, threshold-u2, pole width and 16×16×8. Its comparison JSON reports PASS; maximum relative differences are I6 1.34e-12, physical/no4 dσ 1.34e-12, AFH response 3.36e-16 and converted cross-code dσ 1.34e-12. Cross-code observables use the 2e-7 tolerance; per-code unit-conversion identities are checked separately at 2e-12. Near-pole width-prescription systematics, AFH-9 inputs and the official LZ likelihood remain open.
 
 The detailed sections below preserve earlier calculations and their provenance. Where an older paragraph says AFH is selected-point-only or that the full AFH response grid is absent, read it as the historical status before the 2026-11-14 full-grid run.
 
@@ -52,7 +52,7 @@ The detailed sections below preserve earlier calculations and their provenance. 
 2. **核结构输入：** 采用 AFH/DMFormFactor v6.0 内置的 Xe-131 default density matrix，严格使用文献给出的谐振子长度处方，不把 \(b_A\) 当作拟合参数；并处理 AFH 原始 isoscalar response 与物理等质子、等中子耦合之间的因子 4。
 3. **真实天然氙靶的理论速率：** 对可用氙同位素按天然丰度求和，并对实验室系暗物质速度分布积分，得到 \(dR/dE_R\)。这一步与固定速度下的 \(d\sigma_A/dE_R\) 是不同的物理量。
 
-目前已经形成 AFH default Xe-131 原生 Mathematica/Python response-level 对照、七同位素 16,807 行 AFH 响应网格、AFH-7/Hybrid-9 84 点天然氙全范围谱、GCN/JJ55 84 点天然氙谱、四组固定速度 benchmark，以及 LZ 一维效率加权 rate-level 诊断。LZ 2026 Fig. S2 的一维 final-ROI efficiency 曲线及灰色系统包络也已从官方 PDF 提取，并与独立数字化结果对照；基于 GCN/JJ55 连续谱、2.84 tonne-year exposure 和该效率曲线，已得到初步 efficiency-weighted rate-level event yields。该结果不是完整的 LZ likelihood recast。Xe-131 AFH 响应现已通过 60 位精度 mpmath 独立有限和检查，以及 Wolfram 14.0.0 原生 Mathematica 对 2401 个 q 节点的逐点比较；最大相对差异为 3.59e-9。另已完成原生 Wolfram 14.2.0 的 full Eq. (6) 652 行计算，并由独立 Python 对 652 行逐点复算：500 open、152 closed；最大 I6 差异 1.34e-12，dσ 差异 2.58e-9，AFH response 差异 2.58e-9，factor-four mapping residual 4.30e-16。原 comparator 将 converted-dσ 的跨代码差异误作单位转换恒等式；现已改为每个实现分别检查 conversion identity（2e-12），而 converted observable 的跨代码差异按 dσ 的 2e-7 容差验收，comparison JSON 为 PASS。该 cross-code 结果仅针对固定速度 Xe-131 和条件性 pole-width benchmark，不是天然氙 halo fold 或 LZ likelihood。进一步核查 AFH 原始定义后，确认其响应变量 y=(q b_A/2)^2 中的 q 是空间动量转移；当前 AFH-7/Hybrid-9 与 GCN/JJ55 均有 84 点 full-range spectra，但前者使用 threshold-u^2、后者仍使用 legacy linear-W^2，因此跨模型积分尚未达到匹配精度。一维效率加权 event yields 目前仍是 GCN/JJ55 rate-level 结果，不能混称为 AFH yields 或完整实验重铸。
+目前已经形成 AFH default Xe-131 原生 Mathematica/Python response-level 对照、七同位素 16,807 行 AFH 响应网格、AFH-7/Hybrid-9 84 点天然氙全范围谱、GCN/JJ55 84 点天然氙谱、四组固定速度 benchmark，以及 LZ 一维效率加权 rate-level 诊断。LZ 2026 Fig. S2 的一维 final-ROI efficiency 曲线及灰色系统包络也已从官方 PDF 提取，并与独立数字化结果对照；基于 GCN/JJ55 连续谱、2.84 tonne-year exposure 和该效率曲线，已得到初步 efficiency-weighted rate-level event yields。该结果不是完整的 LZ likelihood recast。Xe-131 AFH 响应现已通过 60 位精度 mpmath 独立有限和检查，以及 Wolfram 14.0.0 原生 Mathematica 对 2401 个 q 节点的逐点比较；最大相对差异为 3.59e-9。另已完成原生 Wolfram 14.2.0 的 full Eq. (6) 652 行计算，并由独立 Python 对 652 行逐点复算：500 open、152 closed；最大 I6 差异 1.34e-12，dσ 差异 1.34e-12，AFH response 差异 3.36e-16，factor-four mapping residual 4.30e-16。比较两端共用原生 Mathematica AFH 响应表；每个实现分别检查 conversion identity（2e-12），converted observable 的跨代码差异按 dσ 的 2e-7 容差验收，comparison JSON 为 PASS。该 cross-code 结果仅针对固定速度 Xe-131 和条件性 pole-width benchmark，不是天然氙 halo fold 或 LZ likelihood。进一步核查 AFH 原始定义后，确认其响应变量 y=(q b_A/2)^2 中的 q 是空间动量转移；当前 AFH-7/Hybrid-9 与 GCN/JJ55 均有 84 点 full-range spectra，但前者使用 threshold-u^2、后者仍使用 legacy linear-W^2，因此跨模型积分尚未达到匹配精度。一维效率加权 event yields 目前仍是 GCN/JJ55 rate-level 结果，不能混称为 AFH yields 或完整实验重铸。
 
 本轮正文还补入了从相互作用拉格朗日量到两张树图、Dirac trace、三体相空间和 Eq. (6) 整体前因子的连贯推导；附录进一步逐步推导最优反冲能量与最大标量质量、条件性二体 pole width、截断 SHM 实验室速度 PDF、天然氙靶核数和通量事件率，并解释核响应极小值、三体阈值、halo 端点和 LZ 效率折叠各自代表的物理机制。完整的 Lorentz boost、相空间归一化、AFH 密度矩阵有限和、因子 4、同位素输入和 halo 数值约定仍分别保留在正式附录 A–H，避免正文与附录互相替代。
 
@@ -62,7 +62,7 @@ The detailed sections below preserve earlier calculations and their provenance. 
 |---|---|---|
 | AFH Xe-131 核响应 | 2401 个 \(q\) 节点；60 位精度 mpmath 与 Wolfram 14.0.0 原生逐点对照均通过，最大相对差异 \(3.59\times10^{-9}\) | 仅验证 Xe-131 AFH response-level；不代表完整天然氙连续谱或 LZ likelihood |
 | Python-only 完整 Eq. (6) 截面与因子 4 | v=800 km/s、Xe-131、652 行（500 open、152 closed），16 个高阶锚点；factor-4 mapping residual \(3.56\times10^{-16}\)，physical/no-factor-four ratio residual 0 | 条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width；Python 内部 PASS，不是 Mathematica/Python cross-code PASS，也不是天然氙 halo fold |
-| 原生 Mathematica/Python 完整 Eq. (6) 截面对照 | Wolfram 14.2.0 与独立 Python 652 行逐点比较 PASS_WITH_NOTES（500 open、152 closed）；max I6 1.34e-12、dσ 2.58e-9、AFH response 2.58e-9、factor-four mapping residual 4.30e-16；per-code conversion identity 4.44e-16/0 | 固定速度 Xe-131、四组 benchmark、条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width；不是天然氙 halo fold 或 LZ likelihood；converted dσ cross-code 使用 2e-7 观测量容差 |
+| 原生 Mathematica/Python 完整 Eq. (6) 截面对照 | Wolfram 14.2.0 与独立 Python 652 行逐点比较 PASS（500 open、152 closed）；max I6 1.34e-12、dσ 1.34e-12、AFH response 3.36e-16、factor-four mapping residual 4.30e-16；per-code conversion identity 3.35e-16/0 | 固定速度 Xe-131、四组 benchmark、条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width；不是天然氙 halo fold 或 LZ likelihood；converted dσ cross-code 使用 2e-7 观测量容差 |
 | AFH 天然氙速率 | 七种可用同位素 16,807 行响应网格和 84 点 AFH-7 full-range spectrum | Xe-124/Xe-126 缺少当前 AFH default density matrix；尚未得到 AFH-9 |
 | GCN/JJ55 天然氙谱 | 四组 benchmark 的 84 点连续反冲谱 | 是独立核模型对照；仍使用 legacy linear-\(W^2\) 求积，与 AFH-7 threshold-\(u^2\) 尚未匹配 |
 | 450 keV supplied benchmark | 单点 \(\mathcal L_{00}\)/\(I_6\) 本地验收；另有 105 点 Xe-131 fixed-speed curve | 不是天然氙 halo rate；curve 使用 \(M_A=131u\)、zero width，且未积分两端开放区间 |
@@ -247,7 +247,7 @@ dW^2\,
 \left\langle\mathcal L_{00}\right\rangle_{\phi_*}.
 \]
 
-> **公式追溯：** Eq. (6) 与 \(I_6\) 的完整相空间和前因子推导见[附录 A，§A.3–A.4.2](appendices/09A_three_body_kinematics_amplitude.md)；正文逐项推导见§2.5.1–2.5.8；对应程序为 [eq6_kernel.py](../figure2_full_reproduction/eq6_kernel.py)。全部公式—符号—程序—结果映射见[交叉引用索引 F3–F5](formula_symbol_code_cross_reference.md)。
+> **公式追溯：** Eq. (6) 与 \(I_6\) 的完整相空间和前因子推导见[附录 A，§A.3–A.4.2](appendices/09A_three_body_kinematics_amplitude.md)；正文逐项推导见§2.5.1–2.5.8；对应程序为 [eq6_kernel.py](../three_body_calculation_and_validation/eq6_kernel.py)。全部公式—符号—程序—结果映射见[交叉引用索引 F3–F5](formula_symbol_code_cross_reference.md)。
 
 这里：
 
@@ -820,7 +820,7 @@ I_6^{\rm raw}=5455179.0558397\ {\rm GeV}^2,
 
 **验证边界：** 本轮完成四组 fixed-speed benchmark、五个阈值邻域速度点、三种 \(W\) 参数化、代表点角积分以及 raw-\(d\Phi_3\) 前因子数值对照；新增六项回归测试本地全部通过。GitHub Actions 已通过 13/13 Eq. (6) kernel 测试、9/9 P1 相空间测试及历史 CSV 逐列复现（run [43581233498](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43581233498)）。初次归档比较失败已定位为 `relative_to_archived=I_6/I_6^{\\rm archive}-1` 这一近零派生残差被错误使用相对容差；比较器现仅对该列使用绝对容差 5×10⁻⁸，原始物理积分列仍采用相对 5×10⁻⁸、绝对 10⁻¹²。历史物理输入和归档数据未修改。虽然 CI 已完成 benchmark、阈值、历史 800 km/s 和离壳近极点扫描，但近极点宽度处方的系统收敛比较、完整连续反冲网格误差控制和天然氙 halo fold 仍未完成。故本轮结论仍限定为已测 benchmark 和阈值邻域，不升级为全参数空间收敛证明。
 
-复算入口为 research/figure2_full_reproduction/phase_space_convergence.py；回归测试为 research/figure2_full_reproduction/tests/test_phase_space_convergence.py。结果 CSV 和归档包位于 research/figure2_full_reproduction/results/。
+复算入口为 research/three_body_calculation_and_validation/phase_space_convergence.py；回归测试为 research/three_body_calculation_and_validation/tests/test_phase_space_convergence.py。结果 CSV 和归档包位于 research/three_body_calculation_and_validation/results/。
 
 ### 2.6 参数分别控制归一化、阈值还是谱形？
 
@@ -1429,7 +1429,7 @@ Green benchmark 在其他网格锚点的当前 AFH-7 速率为：
 - GCN/JJ55 天然氙连续谱已与 LZ 2026 一维效率曲线及 2.84 tonne-year exposure 做 rate-level 折叠；分段线性函数乘积采用解析积分，稠密梯形交叉检查的最大相对差异为 \(3.77\times10^{-7}\)（CI run 43151727539）。该事件数只对应 GCN/JJ55 连续谱，不对应 AFH-7/Hybrid-9 预测。GCN/JJ55 production kernel 仍为 legacy linear-\(W^2\)、\(8\times8\times4\)，四组 benchmark 的 \(16\times16\times8\) spot-check 最大差异为 \(2.18895\times10^{-4}\)；与 AFH-7 threshold-\(u^2\) 尚未匹配。
 
 - **Python-only 完整 Xe-131 Eq. (6) 与因子 4 ledger 已通过（限定范围）：** v=800 km/s fixed-speed、652 行（500 open、152 closed）、16 个高阶锚点；最大 I6 相对差异 1.66367e-11，factor-4 mapping residual 3.55679e-16，physical/no-factor-four ratio residual 0。该结果依赖条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width 假设；不是 Mathematica/Python 独立交叉验证，也不是 halo-folded 截面。GitHub Actions artifact 14112736343。
-- **原生 Mathematica/Python 完整 Eq. (6) 截面对照已通过（限定范围）：** Wolfram 14.2.0、Python 3.14.7；652 行（500 open、152 closed）；最大相对差异 I6 = 1.33872e-12、dσ = 2.57632e-9、AFH response = 2.57510e-9；factor-four mapping residual = 4.30300e-16；Mathematica/Python 自身单位转换 residual 分别为 4.44089e-16/0。比较结果与 SHA-256 归档见 `research/afh_default_density_xe131/output/full_dsigma_mathematica/`。交叉代码的 converted-dσ 差异按 2e-7 观测量容差验收，而非 2e-12 代数恒等式容差。
+- **原生 Mathematica/Python 完整 Eq. (6) 截面对照已通过（限定范围）：** Wolfram 14.2.0、Python 3.14.7；652 行（500 open、152 closed）；最大相对差异 I6 = 1.33872e-12、dσ = 1.33872e-12、AFH response = 3.36051e-16；factor-four mapping residual = 4.30300e-16；Mathematica/Python 自身单位转换 residual 分别为 3.34766e-16/0。比较结果与 SHA-256 归档见 `research/afh_default_density_xe131/output/full_dsigma_mathematica/`。交叉代码的 converted-dσ 差异按 2e-7 观测量容差验收，而非 2e-12 代数恒等式容差。
 
 ### 8.2 尚未完成或不能过度声称的事项
 
@@ -1464,7 +1464,7 @@ Green benchmark 在其他网格锚点的当前 AFH-7 速率为：
 7. GCN/JJ55 连续谱的 LZ efficiency-weighted event yields 仅为 rate-level 结果，灰色效率包络不是置信区间；
 8. 不把固定速度截面、AFH selected-point 速率、天然氙连续谱和完整 LZ detector-level likelihood 混为一谈。
 
-后续事项按物理依赖关系排列。Xe-131 原生 Mathematica 2401 点 response-level 对照、Python-only full Eq. (6) 因子 4 ledger，以及原生 Mathematica/Python 652 行完整截面对照均已完成（最后一项为 PASS_WITH_NOTES，限定固定速度和条件性宽度假设）。当前未完成事项不再包括 full-cross-section cross-code 比较：
+后续事项按物理依赖关系排列。Xe-131 原生 Mathematica 2401 点 response-level 对照、Python-only full Eq. (6) 因子 4 ledger，以及原生 Mathematica/Python 652 行完整截面对照均已完成（最后一项的比较器状态为 PASS，科学适用范围仍限定于固定速度和条件性宽度假设）。当前未完成事项不再包括 full-cross-section cross-code 比较：
 
 1. **统一核模型相空间积分。** 将 GCN/JJ55 84 点谱从 legacy linear-\(W^2\) 改为 threshold-\(u^2\)，使用与 AFH-7 相同的速度积分和 \(10^{-5}\) 收敛标准；重算 GCN/JJ55 谱、225–269.9 keV 高能尾部比例和依赖它们的 rate-level event yields。
 2. **补齐高阶结果归档。** 将 AFH-7/Hybrid-9 \(24\times8\times8\times4\) 的完整 1,344 行高阶谱以及独立 Numba 实现作为 native files 或版本化 Release 提交；不要只保留外部 ZIP checksum。
@@ -1479,8 +1479,8 @@ Green benchmark 在其他网格锚点的当前 AFH-7 速率为：
 ### 仓库内的主要研究记录
 
 - 公式—符号—正文—程序—结果交叉引用索引：`research/docs/formula_symbol_code_cross_reference.md`（F1–F12 公式追溯、单位、近似、代码入口和结果文件）。
-- 450 keV pointwise L00 benchmark：[输入与计算记录](../figure2_full_reproduction/results/USER_L00_BENCHMARK_G1_G2_GVN_1_DELTA_M_450KEV.md)；[本地验收记录](../figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md)。
-- 450 keV fixed-speed Xe-131 curve：[结果记录](../figure2_full_reproduction/results/USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md)；该结果仅是内部反冲能量网格上的固定速度诊断。
+- 450 keV pointwise L00 benchmark：[输入与计算记录](../three_body_calculation_and_validation/results/USER_L00_BENCHMARK_G1_G2_GVN_1_DELTA_M_450KEV.md)；[本地验收记录](../three_body_calculation_and_validation/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md)。
+- 450 keV fixed-speed Xe-131 curve：[结果记录](../three_body_calculation_and_validation/results/USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md)；该结果仅是内部反冲能量网格上的固定速度诊断。
 - AFH default Xe-131 README：`research/afh_default_density_xe131/README.md`
 - AFH 因子 4 归一化映射：`research/afh_default_density_xe131/audit/AFH_COUPLING_NORMALIZATION_MAPPING.md`
 - AFH Xe-131 源码与归一化审计：`research/afh_default_density_xe131/audit/AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md`
@@ -1586,7 +1586,7 @@ The central final-ROI efficiency curve and the gray uncertainty envelope have no
 - `research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_metadata.json`;
 - the extracted vector page `lz_2026_figS2.svg`.
 
-The extraction is reproducible from the official arXiv PDF using `research/figure2_full_reproduction/extract_lz_2026_nr_efficiency.py`; [CI run #43151814368](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43151814368) passes the extraction and independent-digitization regression tests. The central curve gives a mean final-ROI efficiency of 95.471% over 14–250 keV, 0.529 percentage points below the paper's rounded 96%. Its high-energy 50% crossing is 269.868 keV, consistent with 269.9 keV. At low energy, the central vector curve crosses 50% near 5.090 keV, whereas the paper text/caption quotes 5.4 keV; the central curve is 57.18% at 5.4 keV. This discrepancy is retained explicitly, and the published 5.4 keV lower ROI boundary is used without rescaling the curve.
+The extraction is reproducible from the official arXiv PDF using `research/three_body_calculation_and_validation/extract_lz_2026_nr_efficiency.py`; [CI run #43151814368](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/43151814368) passes the extraction and independent-digitization regression tests. The central curve gives a mean final-ROI efficiency of 95.471% over 14–250 keV, 0.529 percentage points below the paper's rounded 96%. Its high-energy 50% crossing is 269.868 keV, consistent with 269.9 keV. At low energy, the central vector curve crosses 50% near 5.090 keV, whereas the paper text/caption quotes 5.4 keV; the central curve is 57.18% at 5.4 keV. This discrepancy is retained explicitly, and the published 5.4 keV lower ROI boundary is used without rescaling the curve.
 
 A useful independent check comes from Di Mauro, arXiv:2609.02608v2, Appendix D. That independent digitization reports \(\epsilon(248\,{\rm keV})=0.9457\), with lower/upper envelope values 0.8835 and 0.9800. Our extracted central/lower/upper values are 0.9456876, 0.8835461 and 0.9800029, respectively; all three agree within the quoted precision. At 269.9 keV the extracted central/lower/upper values are 0.49882, 0.46599 and 0.51687. The gray envelope is treated as a detector-systematic range only: LZ does not assign a confidence level to this plotted envelope.
 
@@ -1768,8 +1768,8 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 | F2 \(W_{\min}^2,W_{\max}^2\) 与相空间开闭 | 条件性验证 | limits、wmax_squared、开闭区间和阈值回归 | 尚未对更宽质量—速度区域做独立扫描 |
 | F3 三体相空间变量与 \(I_6\) | 部分验证（按计算链分层） | AFH-7/Hybrid-9 84 点 threshold-\(u^2\) 网格；基准谱到 \(24\times8\times8\times4\) 高阶谱的最大差异 \(6.47\times10^{-6}\) | GCN/JJ55 仍为 legacy linear-\(W^2\)、\(8\times8\times4\)，最大 kernel-order difference \(2.18895\times10^{-4}\)；近极点宽度处方系统比较与跨模型匹配重算仍开放 |
 | F4 两张辐射图与 Dirac trace | 条件性验证 | before/after/干涉分解、显式自旋求和、壳条件与四动量闭合 | 目前是代表性测试点，不是全参数扫描 |
-| F5 单同位素固定速度 Eq. (6) | **PASS_WITH_NOTES：原生 Mathematica/Python full-grid cross-code** | 652 行（500 open、152 closed），四组 benchmark，v=800 km/s，16×16×8；max I6 1.33872e-12、dσ 2.57632e-9、converted dσ 2.57632e-9；per-code unit-conversion residuals 4.44e-16/0；SHA-256 归档在 `output/full_dsigma_mathematica/` | 条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width；不是天然氙 halo fold 或 detector likelihood；求积收敛仍需与 cross-code 一致性分开判断 |
-| F6 AFH 响应与因子 4 归一化 | **PASS_WITH_NOTES：response-level + full Eq. (6) cross-code** | Xe-131 2401 点 response-level 最大差异 3.59e-9；full Eq. (6) 652 行 factor-four mapping residual 4.30e-16、physical/no-factor-four ratio residual 0；Mathematica/Python conversion identities 4.44e-16/0 | 限定 Xe-131 fixed-speed 和条件性 pole-width；AFH-7 仍覆盖天然氙原子丰度 0.998158，Xe-124/Xe-126 缺官方 default matrices；不是 AFH-9 或 LZ likelihood |
+| F5 单同位素固定速度 Eq. (6) | **PASS：原生 Mathematica/Python full-grid cross-code** | 652 行（500 open、152 closed），四组 benchmark，v=800 km/s，16×16×8；max I6 1.33872e-12、dσ 1.33872e-12、converted dσ 1.33857e-12；per-code unit-conversion residuals 3.35e-16/0；SHA-256 归档在 `output/full_dsigma_mathematica/` | 条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width；不是天然氙 halo fold 或 detector likelihood；求积收敛仍需与 cross-code 一致性分开判断 |
+| F6 AFH 响应与因子 4 归一化 | **PASS_WITH_NOTES：response-level + full Eq. (6) cross-code** | Xe-131 2401 点 response-level 最大差异 3.59e-9；full Eq. (6) 652 行 factor-four mapping residual 4.30e-16、physical/no-factor-four ratio residual 0；Mathematica/Python conversion identities 3.35e-16/0 | 限定 Xe-131 fixed-speed 和条件性 pole-width；AFH-7 仍覆盖天然氙原子丰度 0.998158，Xe-124/Xe-126 缺官方 default matrices；不是 AFH-9 或 LZ likelihood |
 | F7 同位素质量、丰度与 \(N_T\) | 已验证 | 九同位素质量—丰度表、精确加权平均质量和每 kg 靶核数 | 电子结合能忽略；AFH 响应可用同位素仅七种 |
 | F8 三体 \(v_{\min,A}\) | 已验证 | 28/28 逐同位素阈值复算；最大速度差 \(4.35\times10^{-10}\) km/s | 适用范围为当前 benchmark 与输入质量约定 |
 | F9 实验室系速度 PDF | 已验证 | untruncated MB 与 truncated SHM 数值积分归一化 | 物理预测仍依赖所选 halo 参数 |
@@ -1782,7 +1782,7 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 | GCN/JJ55 84 点天然氙谱 | PASS_WITH_NOTES | 四 benchmark 的 84 点谱和 metadata 已归档；速度求积最大差异 \(1.60401\times10^{-6}\) | production 使用 legacy linear-\(W^2\)、\(8\times8\times4\)；最大 kernel-order difference \(2.18895\times10^{-4}\)；threshold-\(u^2\) 匹配重算待完成 |
 | 完整 LZ detector-level recast | 未完成 | GCN/JJ55 一维效率加权 rate-level yields | 需要二维信号 PDF、NEST nuisance、背景和 profile likelihood |
 
-**P0 判定：** 精确空间动量 Python 复算、60 位 mpmath 全网格检查、Wolfram 14.0.0 原生 Mathematica/Python 2401 点 response-level 比较、Wolfram 14.2.0 原生完整 Eq. (6) 652 行运行及独立 Python 逐点对照均已完成；full cross-code comparison 为 PASS_WITH_NOTES。**P1 判定：** AFH-7/Hybrid-9 84 点网格与高阶摘要已通过当前 10^-5 验收；GCN/JJ55 仍需统一 threshold-u^2 后重算，近极点宽度处方系统比较仍开放。**P2 判定：** AFH-9 缺失同位素输入和完整 LZ likelihood 仍未完成。
+**P0 判定：** 精确空间动量 Python 复算、60 位 mpmath 全网格检查、Wolfram 14.0.0 原生 Mathematica/Python 2401 点 response-level 比较、Wolfram 14.2.0 原生完整 Eq. (6) 652 行运行及独立 Python 逐点对照均已完成；full cross-code comparison 为 PASS（固定速度和条件性宽度范围）。**P1 判定：** AFH-7/Hybrid-9 84 点网格与高阶摘要已通过当前 10^-5 验收；GCN/JJ55 仍需统一 threshold-u^2 后重算，近极点宽度处方系统比较仍开放。**P2 判定：** AFH-9 缺失同位素输入和完整 LZ likelihood 仍未完成。
 
 ## 13. 公式—符号—程序—结果交叉引用
 
@@ -1832,11 +1832,11 @@ I_6^{(\Gamma)}=1.5439364806\times10^7\ {\rm GeV}^2.
 
 为避免主报告、附录和结果目录分别维护不同的 benchmark 口径，当前归档另设三份互相对应的维护记录：
 
-- [当前 Figure 2 数值结果总索引](supplements/figure2_results_master_index_2026-11-16.md)：12 组结果、87 个文件条目的当前 SHA-256 provenance；旧版 2026-11-13 索引保留为历史快照。
-- [当前机器可读结果清单](supplements/figure2_results_master_index_2026-11-16.json)：记录当前源提交、参数、路径、SHA-256 与外部归档边界。
+- [当前 Figure 2 数值结果总索引](supplements/three_body_results_master_index_2026-11-16.md)：13 组结果、98 个文件条目的当前 SHA-256 provenance；旧版 2026-11-13 索引保留为历史快照。
+- [当前机器可读结果清单](supplements/three_body_results_master_index_2026-11-16.json)：记录当前源提交、参数、路径、SHA-256 与外部归档边界。
 - [Phase 1 科学内容审查](supplements/scientific_content_audit_2026-11-16.md)：AFH-7 全网格、旧新积分方案差异、GCN/JJ55 匹配精度缺口及剩余验证边界。
-- [物理公式交叉审查](supplements/figure2_physics_formula_audit_2026-11-13.md)：从原始拉格朗日量、两张辐射图、Dirac trace、三体相空间、\(256\pi^3\)、AFH factor 4、三体 \(v_{\min}\) 到天然氙速率逐项对照主报告、附录和代码。
-- [科学结果状态表](supplements/figure2_scientific_status_2026-11-13.md)：将每项结果明确标记为已验证、部分验证、待补输入或尚未完成，并注明适用范围和剩余限制。
+- [物理公式交叉审查](supplements/three_body_physics_formula_audit_2026-11-13.md)：从原始拉格朗日量、两张辐射图、Dirac trace、三体相空间、\(256\pi^3\)、AFH factor 4、三体 \(v_{\min}\) 到天然氙速率逐项对照主报告、附录和代码。
+- [科学结果状态表](supplements/three_body_scientific_status_2026-11-13.md)：将每项结果明确标记为已验证、部分验证、待补输入或尚未完成，并注明适用范围和剩余限制。
 
 这三份记录是本报告的复现与审查入口，不替代附录 A–G 中的正式推导，也不把 selected-point、fixed-speed 或 rate-level 结果升级表述为完整模型或完整 LZ likelihood 的验证。
 
@@ -2948,12 +2948,12 @@ k^2=m_s^2.
 4. 一个关闭相空间的测试返回严格零；
 5. 提高 \(W^2,z,\phi_*\) 求积阶数后，reduced kernel 收敛。
 
-主要代码：**research/figure2_full_reproduction/eq6_kernel.py**。
+主要代码：**research/three_body_calculation_and_validation/eq6_kernel.py**。
 
 复现入口：
 
 ~~~bash
-python -m unittest discover -s research/figure2_full_reproduction/tests -v
+python -m unittest discover -s research/three_body_calculation_and_validation/tests -v
 ~~~
 
 上述检查验证的是当前 Dirac 基准实现和被测试点，不自动证明所有参数点、所有传播子方案或未定义的 Majorana 模型都已验证。
@@ -3474,7 +3474,7 @@ https://www.escholarship.org/content/qt3ns8f1r8/qt3ns8f1r8.pdf
 
 - research/afh_default_density_xe131/audit/AFH_COUPLING_NORMALIZATION_MAPPING.md
 - research/afh_default_density_xe131/audit/AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md
-- research/figure2_full_reproduction/ANAND_WM_RESPONSE_AUDIT.md
+- research/three_body_calculation_and_validation/ANAND_WM_RESPONSE_AUDIT.md
 
 最终论文 Eq. (6) 的选择是：前因子保留物理单核子耦合 \(g_{VN}\)，核响应使用 \(16\pi W_{M,\rm AFH}^{00}/(2J_A+1)\)，因子 4 只出现一次。
 
@@ -4162,7 +4162,7 @@ python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_hal
 
 | 任务 | 主要程序/目录 | 作用 |
 |---|---|---|
-| Eq. (6) 三体 kernel | research/figure2_full_reproduction/eq6_kernel.py | 构造末态四动量、Dirac trace、\(I_6\) |
+| Eq. (6) 三体 kernel | research/three_body_calculation_and_validation/eq6_kernel.py | 构造末态四动量、Dirac trace、\(I_6\) |
 | AFH Xe-131 响应 | research/afh_default_density_xe131/run_afh_default_xe131.py | 解析密度矩阵并计算 \(W_M^{00}\) |
 | AFH Xe-131 Mathematica runner | research/afh_default_density_xe131/run_afh_default_xe131.wls | 调用官方 AFH 包生成原生响应 |
 | AFH mpmath full-grid validation | research/afh_default_density_xe131/verify_afh_mpmath_full_grid.py | 独立 60 位精度有限和对照全部 2401 个 q 节点 |
@@ -4179,7 +4179,7 @@ python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_hal
 - input/afh_default_xe131_density_matrix.csv：67 项官方内置矩阵提取结果；
 - output/afh_default_xe131_WM00.csv：2401 点响应网格；
 - output/minima.csv：细化极小值；
-- output/figure2_dip_check.csv：101、267、542 keV 参考点；
+- output/nuclear_response_dip_check.csv：101、267、542 keV 参考点；
 - output/metadata.json：源文件哈希、质量、\(b_A\)、归一化和限制；
 - output/mpmath_full_grid_summary.json：2401 点、60 位精度 mpmath 全网格验证汇总；
 - CI artifact afh-xe131-mpmath-full-grid-validation：完整逐点比较 CSV 和 JSON summary。
@@ -4188,8 +4188,8 @@ python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_hal
 
 ### 四 benchmark 截面对照
 
-- output/figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv；
-- output/figure2_four_benchmarks_AFH_GCN_JJ55_wide_audit.csv；
+- output/four_benchmarks_AFH_GCN_JJ55_corrected.csv；
+- output/four_benchmarks_AFH_GCN_JJ55_wide_audit.csv；
 - FOUR_BENCHMARK_CROSS_SECTION_AUDIT.md。
 
 四组 benchmark 各有 160 个反冲能量点；三种核响应模型共形成 1920 行 long table 和 640 行 wide table。该对照固定同一组 \(I_6(E_R)\) 网格，只替换 \(R_A(E_R)\) 并重新计算 Eq. (6) 的截面前因子。因此它是受控的核响应替换比较，**不是重新独立计算 4×160 个三体积分**。该脚本采用固定 \(v=800\) km/s；这一速度高于截断 SHM 的 776 km/s 端点，所以这组结果是固定速度截面诊断，不能直接当作截断 SHM 支持区间内的 halo 事件率。
@@ -4274,14 +4274,14 @@ Eq. (6) kernel 测试：
 
 ~~~bash
 python -m unittest discover \
-  -s research/figure2_full_reproduction/tests -v
+  -s research/three_body_calculation_and_validation/tests -v
 ~~~
 
 四 benchmark 截面对照脚本需要归档的 GCN/JJ55 基础 CSV 和 AFH response CSV。当前归档输入的调用形式为：
 
 ~~~bash
 python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
-  --base-csv research/afh_default_density_xe131/input/figure2_recalc_mV10_g2_1_v800_Xe131_full_5keV.csv \
+  --base-csv research/afh_default_density_xe131/input/recalc_mV10_g2_1_v800_Xe131_full_5keV.csv \
   --afh-response-csv research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv \
   --outdir research/afh_default_density_xe131/output
 ~~~
@@ -4356,17 +4356,17 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 从仓库根目录复现：
 
 ~~~bash
-python research/figure2_full_reproduction/run_user_l00_benchmark.py \
+python research/three_body_calculation_and_validation/run_user_l00_benchmark.py \
   --nw 48 --nz 40 --nphi 24 \
   --output /tmp/USER_L00_BENCHMARK_450KEV_48x40x24.json
 python -m unittest discover \
-  -s research/figure2_full_reproduction/tests \
+  -s research/three_body_calculation_and_validation/tests \
   -p test_user_l00_benchmark.py -v
 ~~~
 
 本地验收记录位于：
 
-- research/figure2_full_reproduction/research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md；
+- research/three_body_calculation_and_validation/research/three_body_calculation_and_validation/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md；
 - 同目录的 JSON、quadrature convergence CSV、run manifest、validation log 和 SHA256SUMS。
 
 该结果比较 zero-width 与条件性 pole-width；后者只在 Dirac 费米子、实标量、纯 scalar off-diagonal Yukawa 且仅 \(\chi_2\to\chi_1s\) 通道开放的假设下成立。它不是完整 vector-plus-scalar self-energy，也不是 halo-folded 或 detector-level prediction。该本地验收没有使用 GitHub Actions；不能将未运行的 CI 描述为通过。
@@ -4378,25 +4378,25 @@ python -m unittest discover \
 从仓库根目录复现：
 
 ~~~bash
-python research/figure2_full_reproduction/run_user_dsigma_curve.py \
+python research/three_body_calculation_and_validation/run_user_dsigma_curve.py \
   --step-keV 5 --nw 20 --nz 16 --nphi 12 \
   --output /tmp/xe131_dsigma_450kev.csv
-python research/figure2_full_reproduction/plot_user_dsigma_curve.py
+python research/three_body_calculation_and_validation/plot_user_dsigma_curve.py
 python -m unittest discover \
-  -s research/figure2_full_reproduction/tests \
+  -s research/three_body_calculation_and_validation/tests \
   -p test_user_dsigma_curve.py -v
 ~~~
 
 结果与 provenance：
 
-- research/figure2_full_reproduction/results/fixed_speed_xe131_dsigma_450kev.csv；
-- research/figure2_full_reproduction/results/local_minima_refinement_1keV.csv；
-- research/figure2_full_reproduction/results/kernel_quadrature_convergence_450kev.csv；
-- research/figure2_full_reproduction/results/metadata_user_dsigma_450kev.json；
-- research/figure2_full_reproduction/results/USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md；
-- research/figure2_full_reproduction/results/SHA256SUMS_user_dsigma_450kev.txt；
-- research/figure2_full_reproduction/results/plots/fixed_speed_xe131_dsigma_450kev.svg；
-- research/figure2_full_reproduction/results/plots/xe131_gcn_jj55_response_ratio_450kev.svg。
+- research/three_body_calculation_and_validation/results/fixed_speed_xe131_dsigma_450kev.csv；
+- research/three_body_calculation_and_validation/results/local_minima_refinement_1keV.csv；
+- research/three_body_calculation_and_validation/results/kernel_quadrature_convergence_450kev.csv；
+- research/three_body_calculation_and_validation/results/metadata_user_dsigma_450kev.json；
+- research/three_body_calculation_and_validation/results/USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md；
+- research/three_body_calculation_and_validation/results/SHA256SUMS_user_dsigma_450kev.txt；
+- research/three_body_calculation_and_validation/results/plots/fixed_speed_xe131_dsigma_450kev.svg；
+- research/three_body_calculation_and_validation/results/plots/xe131_gcn_jj55_response_ratio_450kev.svg。
 
 开放反冲区间约为 109.150286–654.955583 keV；当前曲线只覆盖 130–650 keV。两端的 kinematic bracket tests 不等于端点附近的高阶积分收敛，故当前归档只能称为内部网格 fixed-speed diagnostic。它不是天然氙 halo-folded spectrum、事件率、LZ detector-level prediction 或 exclusion。
 
@@ -4561,9 +4561,9 @@ m_V^2-t=m_V^2+2m_AE_R
 
 当前统一约定：
 
-- research/figure2_full_reproduction/rate_kinematics.py：精确 \(q_{\rm exact}\)，用于三体运动学；
-- research/figure2_full_reproduction/eq6_kernel.py：精确 \(q_{\rm exact}\)，用于三体末态构造；
-- research/figure2_full_reproduction/joint_xe131.py：AFH 响应插值使用精确空间 \(q_{\rm exact}\)；
+- research/three_body_calculation_and_validation/rate_kinematics.py：精确 \(q_{\rm exact}\)，用于三体运动学；
+- research/three_body_calculation_and_validation/eq6_kernel.py：精确 \(q_{\rm exact}\)，用于三体末态构造；
+- research/three_body_calculation_and_validation/joint_xe131.py：AFH 响应插值使用精确空间 \(q_{\rm exact}\)；
 - research/afh_default_density_xe131/recompute_afh_four_benchmarks.py：固定速度四组 benchmark 使用精确空间 \(q_{\rm exact}\)；
 - research/afh_default_density_xe131/compute_four_benchmark_dsigma.py：同样使用精确空间 \(q_{\rm exact}\)；
 - research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py：默认 exact_spatial；nr_approx 仅用于近似对照；legacy_exact 保留为向后兼容别名。
@@ -4713,7 +4713,7 @@ t=-2m_AE_R.
 新增程序：
 
 - **research/afh_default_density_xe131/run_afh_eq6_full_dsigma.wls**：在 Wolfram Language 中独立构造三体末态四动量、计算完整 Dirac trace、执行 \(W^2,z,\phi_*\) 求积，并装配完整截面。它只读取已经归档的 AFH 2401 点响应表，不重新运行 AFH package。
-- **research/afh_default_density_xe131/compare_full_dsigma_mathematica.py**：独立调用 research/figure2_full_reproduction/eq6_kernel.py 重新计算同一组 \(I_6\)，使用 SciPy PCHIP 独立插值 AFH 响应，再与 Mathematica CSV 逐点比较。
+- **research/afh_default_density_xe131/compare_full_dsigma_mathematica.py**：独立调用 research/three_body_calculation_and_validation/eq6_kernel.py 重新计算同一组 \(I_6\)，使用 SciPy PCHIP 独立插值 AFH 响应，再与 Mathematica CSV 逐点比较。
 - **research/afh_default_density_xe131/run_native_full_dsigma_windows.ps1**：Windows 端到端封装；检查 652 行/500 open full-grid、固定 800 km/s、pole-width、threshold-\(u^2\) 和求积阶数；原生运行已在 Wolfram 14.2.0 完成，输出 CSV/JSON、SHA-256 manifest，并记录 Wolfram/Python runtime versions。
 - **research/afh_default_density_xe131/run_python_full_dsigma_xe131.py**：已执行独立 Python-only v=800 km/s fixed-speed 652 行 full Eq. (6) 网格；CSV、metadata 和 16 个高阶锚点归档为 GitHub Actions artifact `14112736343`。其 factor-four ledger 在 Python 内部通过，但不替代上面的 Mathematica/Python cross-code 检验。
 - **research/afh_default_density_xe131/output/full_dsigma_mathematica/**：原生 Mathematica 14.2.0 652 行 CSV/metadata、Python 独立逐点比较 CSV/JSON 和 SHA-256 校验清单。比较 JSON 为 `PASS`；交叉代码 converted-dσ 差异使用与 dσ 相同的 2e-7 观测量容差，每个实现内部的单位转换恒等式仍使用 2e-12。
@@ -4768,7 +4768,7 @@ I_6^{\rm archived}=1.4336780722867665\times10^6\ {\rm GeV}^2.
 | 历史 Python 单点 \(I_6\) 求积预检 | **历史诊断** | green benchmark 单点求积阶数对照和 800 km/s 历史点质量常数/映射误差分离；已被后续完整 Python 网格结果补充，不应作为当前唯一状态 |
 | Python-only 完整 Xe-131 Eq. (6) 与因子 4 ledger | **PASS_WITH_NOTES（Python 内部）** | v=800 km/s、652 行（500 open、152 closed）、16 个高阶锚点；最大 \(I_6\) 相对差异 \(1.66367\times10^{-11}\)，factor-4 mapping residual \(3.55679\times10^{-16}\)，physical/no-factor-four ratio residual 0；artifact 14112736343。依赖条件性 Dirac / real-scalar / pure-scalar / single-channel pole-width 假设 |
 | 原生 Wolfram 完整网格 \(I_6\) | **已执行并通过逐点对照** | 652 行原生输出；Python 独立重算的 I6 最大相对差异 1.34e-12 |
-| 完整 \(d\sigma_A/dE_R\) Mathematica/Python 逐点对照 | **PASS_WITH_NOTES** | 652 行；dσ 最大相对差异 2.58e-9；converted dσ cross-code difference 2.58e-9（按 2e-7 观测量容差）；per-code conversion identities 分别 4.44e-16 和 0 |
+| 完整 \(d\sigma_A/dE_R\) Mathematica/Python 逐点对照 | **PASS** | 652 行；dσ 最大相对差异 1.34e-12；converted dσ cross-code difference 1.34e-12（按 2e-7 观测量容差）；AFH response 3.36e-16；per-code conversion identities 分别 3.35e-16 和 0 |
 | 完整宽度与 UV 自能 | **未完成** | 当前 pole width 仍是 Dirac/纯 scalar/单道条件性宽度 |
 
 完整网格的第一层使用 \(16\times16\times8\)；随后对阈值附近、AFH 响应极小值附近和积分收敛最慢的点进行 \(48\times40\times24\) 高阶复算。代码间对照和求积收敛是两个独立验收：前者检查 Mathematica 与 Python 是否实现同一积分，后者检查该积分本身是否达到所需精度。
@@ -4779,11 +4779,11 @@ I_6^{\rm archived}=1.4336780722867665\times10^6\ {\rm GeV}^2.
 | Quantity | 最大相对差异/残差 | 验收容差 |
 |---|---:|---:|
 | \(I_6\) | \(1.33872\times10^{-12}\) | \(2\times10^{-7}\) |
-| \(d\sigma_A/dE_R\) | \(2.57632\times10^{-9}\) | \(2\times10^{-7}\) |
-| AFH PCHIP response | \(2.57510\times10^{-9}\) | \(2\times10^{-8}\) |
+| \(d\sigma_A/dE_R\) | \(1.33872\times10^{-12}\) | \(2\times10^{-7}\) |
+| AFH PCHIP response | \(3.36051\times10^{-16}\) | \(2\times10^{-10}\) |
 | Factor-four mapping | \(4.30300\times10^{-16}\) | \(2\times10^{-12}\) |
-| Mathematica / Python conversion identity | \(4.44089\times10^{-16}\) / 0 | \(2\times10^{-12}\) |
-| Converted cross-code \(d\sigma_A/dE_R\) | \(2.57632\times10^{-9}\) | \(2\times10^{-7}\) |
+| Mathematica / Python conversion identity | \(3.34766\times10^{-16}\) / 0 | \(2\times10^{-12}\) |
+l=>l.replace("1.33872","1.33857")
 
 原始 comparator 曾把两个代码输出的 converted-dσ 之间的差异误作单位转换恒等式误差。该差异包含 AFH PCHIP 源翻译的已接受差异，因此应作为同一物理观测量的 cross-code 比较，并使用 dσ 的 2e-7 容差。修正后，Mathematica 和 Python 各自的单位转换恒等式仍分别以 2e-12 单独验收；没有放宽物理量的 cross-code 精度。
 

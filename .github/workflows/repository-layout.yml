@@ -65,4 +65,4 @@ jobs:
           PY
 
       - name: Verify Figure 2 benchmark/input/output SHA-256 manifest
-        run: python research/docs/supplements/validate_figure2_manifest.py
+        run: python research/docs/supplements/validate_three_body_results_manifest.py

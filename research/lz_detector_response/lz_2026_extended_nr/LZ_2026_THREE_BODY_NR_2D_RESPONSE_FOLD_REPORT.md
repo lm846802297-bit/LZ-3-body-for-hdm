@@ -5,7 +5,7 @@
 ## 1. Inputs reused (no duplicate nuclear/halo calculation)
 
 The fold reuses the archived continuous natural-xenon spectra:
-`research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/<benchmark>/natural_xenon_continuous_spectrum.csv`.
+`research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/<benchmark>/natural_xenon_continuous_spectrum.csv`.
 
 These spectra already include:
 - isotope-by-isotope natural-xenon abundance weighting for the seven available isotopes (Xe-128, 129, 130, 131, 132, 134, 136);

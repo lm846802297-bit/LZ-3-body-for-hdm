@@ -348,7 +348,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--input-csv", type=Path, required=True)
     ap.add_argument("--spectrum-dir", type=Path, default=Path(
-        "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum"
+        "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum"
     ))
     ap.add_argument("--events-per-bin", type=int, default=2000)
     ap.add_argument("--out-dir", type=Path, required=True)

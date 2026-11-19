@@ -30,7 +30,7 @@ Run from the repository root:
 
     python research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py
 
-The script imports research/figure2_full_reproduction/eq6_kernel.py and reads the compact response samples and NIST isotope weights in this directory. The default response-q mode is exact_spatial. The optional nr_approx mode intentionally rejects these exact-q samples unless matching R_A values are supplied. The legacy_exact option remains as a backward-compatible alias for exact_spatial. The hash of the full AFH response input used to extract the samples is recorded in results/afh_response_input_sha256.txt.
+The script imports research/three_body_calculation_and_validation/eq6_kernel.py and reads the compact response samples and NIST isotope weights in this directory. The default response-q mode is exact_spatial. The optional nr_approx mode intentionally rejects these exact-q samples unless matching R_A values are supplied. The legacy_exact option remains as a backward-compatible alias for exact_spatial. The hash of the full AFH response input used to extract the samples is recorded in results/afh_response_input_sha256.txt.
 
 The q-convention audit is archived in results/natural_xenon_q_convention_audit.csv, results/xe131_afh_response_shift_NR_vs_exact.csv and results/q_convention_audit_summary.json. The exact-spatial-q mode is rerun in CI and compared against all 98 isotope contributions and 14 total-rate rows; see the latest exact-spatial reproduction artifact and comparison summary.
 

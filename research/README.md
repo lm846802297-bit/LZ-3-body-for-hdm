@@ -14,11 +14,12 @@ Read [WORKFLOW.md](WORKFLOW.md) and the mandatory [research source hierarchy](RE
 
 - [_template/](_template/README.md): starting point for a new study README; copy and fill it before adding a new research topic.
 - [docs/](docs/README.md): cross-topic model definitions, phenomenology notes, the AFH/natural-xenon main report, appendices A–G, formula cross-reference index, source audits, and research decisions.
-- [figure2_kinematic_audit/](figure2_kinematic_audit/README.md): threshold conditions, maximum scalar mass, and phase-space checks.
-- [figure2_full_reproduction/](figure2_full_reproduction/README.md): Eq. (6) kernel, GCN/JJ55 natural-xenon halo-folded continuous spectra, fixed-speed Xe-131 diagnostics, the supplied 450-keV pointwise benchmark, tests, and numerical outputs. The 450-keV fixed-speed curve is a single-isotope zero-width diagnostic, not a halo or detector-level prediction.
+- [three_body_kinematic_audit/](three_body_kinematic_audit/README.md): threshold conditions, maximum scalar mass, and phase-space checks.
+- [three_body_calculation_and_validation/](three_body_calculation_and_validation/README.md): Eq. (6) kernel, GCN/JJ55 natural-xenon halo-folded continuous spectra, fixed-speed Xe-131 diagnostics, the supplied 450-keV pointwise benchmark, tests, and numerical outputs. The 450-keV fixed-speed curve is a single-isotope zero-width diagnostic, not a halo or detector-level prediction.
 - [afh_default_density_xe131/](afh_default_density_xe131/README.md): AFH v6.0 Xe-131 response, normalization and momentum-convention audits, AME2020/CODATA-2022 mass diagnostics, and the historical I6 mapping/quadrature audit. The latter reproduces I6 only; it does not validate the full differential cross section.
 - [afh_default_density_natural_xenon_halo/](afh_default_density_natural_xenon_halo/README.md): 七同位素 AFH default-density 响应网格（16,807 行）、selected-q 60 位 mpmath 验证、插值审查，以及 AFH-7/Hybrid-9 的 84 点全范围反冲网格谱。最终高阶谱归档目前仅有外部 checksum；selected-point AME2020 fold 仍是独立质量方案记录。以上都不是 detector-level LZ likelihood。
 - [lz_detector_response/](lz_detector_response/README.md): LZ 2026 public-input and NEST provenance, NR/ER response audits, event-level and two-dimensional three-body response folds, paired Parametric/Full S1 ten-seed statistics and bootstrap, Fig. S2 rate-level folds, and selection-stage diagnostics. The [extended NR/ER archive index](lz_detector_response/lz_2026_extended_nr/README.md) distinguishes the reproducible intermediate NEST proxy from the missing official waveform-level selected PDF and likelihood.
+- [lz_inelastic_2to2_afh_reference/](lz_inelastic_2to2_afh_reference/README.md): AFH v6.0 natural-xenon O1 inelastic 2-to-2 reference-spectrum comparison against approximate points digitized from LZ Figure 1; separate from the three-body model and not an exact LZ reproduction.
 - [figure_packs/](figure_packs/README.md): curated scientific figure collections, indexes, manifests, checksums, and scope notes; metadata does not imply that every image binary is committed.
 ## Current result layers
 
@@ -45,7 +46,11 @@ Keep the following quantities separate:
 
 ## Figure 2 P0–P2 audit records
 
-- [Figure 2 numerical-results master index](docs/supplements/figure2_results_master_index_2026-11-16.md): current main-branch result provenance, including the full AFH-7 response grid and 84-point spectra.
+- [Figure 2 numerical-results master index](docs/supplements/three_body_results_master_index_2026-11-16.md): current main-branch result provenance, including the full AFH-7 response grid and 84-point spectra.
 - [Phase 1 scientific content audit](docs/supplements/scientific_content_audit_2026-11-16.md): current numerical-method and documentation consistency findings.
-- [Figure 2 physics-formula audit](docs/supplements/figure2_physics_formula_audit_2026-11-13.md): equation, implementation, normalization, and validation cross-checks.
-- [Figure 2 scientific-status table](docs/supplements/figure2_scientific_status_2026-11-13.md): verified scope and remaining scientific boundaries.
+- [Figure 2 physics-formula audit](docs/supplements/three_body_physics_formula_audit_2026-11-13.md): equation, implementation, normalization, and validation cross-checks.
+- [Figure 2 scientific-status table](docs/supplements/three_body_scientific_status_2026-11-13.md): verified scope and remaining scientific boundaries.
+
+### Mathematica three-body natural-xenon calculation
+
+`three_body_natural_xenon/` contains the reorganized main Mathematica notebook, AFH v6 xenon response data, usage notes, and archived comparison tables. The main calculation is inline in the notebook and uses the in-repository FeynCalc copy plus Mathematica `NIntegrate`. FeynCalc, FeynRules 2.3.49, and FeynArts 3.12 source copies, license notes, and per-file checksums are stored in `three_body_calculation_and_validation/mathematica_halo_notebook/FeynRules_check/`; execution still requires Mathematica. The notebook and command-line checks prefer those local copies. The run record is explicitly marked historical because this reorganization did not rerun all calculations.

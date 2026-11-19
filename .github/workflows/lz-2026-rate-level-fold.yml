@@ -11,9 +11,9 @@ on:
       - 'research/**'
     paths:
       - .github/workflows/lz-2026-rate-level-fold.yml
-      - research/figure2_full_reproduction/fold_lz_2026_rate_level.py
-      - research/figure2_full_reproduction/tests/test_lz_2026_rate_level_fold.py
-      - "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/**"
+      - research/three_body_calculation_and_validation/fold_lz_2026_rate_level.py
+      - research/three_body_calculation_and_validation/tests/test_lz_2026_rate_level_fold.py
+      - "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/**"
       - research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv
   workflow_dispatch:
 
@@ -38,14 +38,14 @@ jobs:
       - name: Run rate-level fold regression tests
         run: |
           python -m unittest discover \
-            -s research/figure2_full_reproduction/tests \
+            -s research/three_body_calculation_and_validation/tests \
             -p 'test_lz_2026_rate_level_fold.py' -v
 
       - name: Integrate the digitized LZ final-ROI efficiency (manual cloud run only)
         if: false
         run: |
-          python research/figure2_full_reproduction/fold_lz_2026_rate_level.py \
-            --spectrum-dir research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum \
+          python research/three_body_calculation_and_validation/fold_lz_2026_rate_level.py \
+            --spectrum-dir research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum \
             --efficiency-csv research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv \
             --out-dir "$RUNNER_TEMP/lz_rate_level"
 

@@ -16,7 +16,7 @@ A separate full-grid path has since been added to `main` and must not be conflat
 
 Accordingly, the historical PCHIP warning is **not** a statement that AFH-7 full-grid spectra are absent. It is a warning against using the old interpolated 28-row sample path as if it were the new direct finite-sum grid. The selected-point legacy halo rates also use the old linear-`W^2` low-order kernel and differ from the new threshold-`u^2` AFH-7 grid by about 230–255 ppm at common points; keep those outputs separately labelled.
 
-GCN/JJ55 spectra in `research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/` remain on the legacy linear-`W^2`, `8x8x4` kernel. Their `16x16x8` spot checks reach `2.18895e-4` maximum kernel-order difference across the four benchmarks. A matched threshold-`u^2` rerun is still required before precision cross-model comparisons.
+GCN/JJ55 spectra in `research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/` remain on the legacy linear-`W^2`, `8x8x4` kernel. Their `16x16x8` spot checks reach `2.18895e-4` maximum kernel-order difference across the four benchmarks. A matched threshold-`u^2` rerun is still required before precision cross-model comparisons.
 
 **Status:** diagnostic completed; the 2401-node response grids reproduce the historical PCHIP samples, but the existing PCHIP interpolation is not yet accepted for the precision halo fold.
 

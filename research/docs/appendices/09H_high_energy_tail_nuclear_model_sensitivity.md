@@ -192,5 +192,5 @@ wolframscript -file research/afh_default_density_xe131/validate_afh_mathematica_
 - 输出 CSV：`research/afh_default_density_natural_xenon_halo/results/high_energy_tail_model_sensitivity_2026-11-14.csv`
 - 原生 Mathematica 验证：`research/afh_default_density_xe131/validate_afh_mathematica_vs_python.wls`
 - AFH-7/Hybrid-9 原始谱与 metadata：`research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/`
-- GCN/JJ55 原始谱：`research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/`
+- GCN/JJ55 原始谱：`research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/`
 - LZ 效率曲线：`research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv`

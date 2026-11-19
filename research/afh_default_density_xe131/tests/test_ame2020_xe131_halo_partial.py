@@ -6,7 +6,7 @@ from pathlib import Path
 from scipy.integrate import quad
 
 HERE = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(HERE.parent / "figure2_full_reproduction"))
+sys.path.insert(0, str(HERE.parent / "three_body_calculation_and_validation"))
 sys.path.insert(0, str(HERE))
 
 from isotope_mass_schemes import isotope_mass_GeV

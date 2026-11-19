@@ -8,7 +8,7 @@ from pathlib import Path
 STUDY_DIR = Path(__file__).resolve().parents[1]
 REPO = STUDY_DIR.parents[1]
 sys.path.insert(0, str(STUDY_DIR))
-sys.path.insert(0, str(REPO / "research" / "figure2_full_reproduction"))
+sys.path.insert(0, str(REPO / "research" / "three_body_calculation_and_validation"))
 
 import run_python_full_dsigma_xe131 as runner
 import phase_space_convergence as psc
