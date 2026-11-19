@@ -41,6 +41,99 @@ F1_SLOPE_BISHARA_ERR = math.sqrt(0.09**2 + 0.05**2 + 0.009**2)
 # F2^{s/p}(0)=-0.064(17), while the universal sum is -0.552.
 F2S0 = -0.064
 
+FORMAL_NUCLEON_TRANSFER_SCHEME = (
+    "strict one-body impulse q_N^mu=q_A^mu; t_N=t_A=-2*m_A*E_R"
+)
+STATIC_NUCLEON_TRANSFER_SCHEME = (
+    "static diagnostic q_N^0=0; t_N=-Q_A^2; not formal B"
+)
+
+
+def transfer_kinematics_from_q_omega(
+    qA_GeV: float,
+    omega_GeV: float,
+    *,
+    nucleon_transfer_scheme: str = FORMAL_NUCLEON_TRANSFER_SCHEME,
+) -> dict:
+    """Build q_A^mu and q_N^mu in the q-aligned frame with metric (+---).
+
+    The spatial nuclear transfer is represented along +z:
+        q_A^mu = (omega, 0, 0, Q_A).
+    Formal B applies the strict one-body impulse prescription q_N^mu=q_A^mu.
+    The static q_N^0=0 choice is retained only as a named diagnostic.
+    """
+    qA = float(qA_GeV)
+    omega = float(omega_GeV)
+    if not math.isfinite(qA) or not math.isfinite(omega):
+        raise ValueError("q_A and omega must be finite")
+    if qA < 0.0 or omega < 0.0:
+        raise ValueError("q_A and omega must be non-negative")
+    if nucleon_transfer_scheme == FORMAL_NUCLEON_TRANSFER_SCHEME:
+        qN0 = omega
+        scheme_id = "strict_one_body_impulse_qN_equals_qA"
+        qN_definition = "q_N=p_N'-p_N assigned by strict one-body impulse q_N=q_A"
+    elif nucleon_transfer_scheme == STATIC_NUCLEON_TRANSFER_SCHEME:
+        qN0 = 0.0
+        scheme_id = "static_qN0_zero_diagnostic"
+        qN_definition = "static diagnostic assignment q_N^0=0 and boldsymbol q_N=boldsymbol q_A"
+    else:
+        raise ValueError(f"unknown nucleon transfer scheme: {nucleon_transfer_scheme}")
+
+    Q_A2 = qA * qA
+    tA = omega * omega - Q_A2
+    tN = qN0 * qN0 - Q_A2
+    if tA > 1.0e-14 or tN > 1.0e-14:
+        raise ValueError("nuclear and nucleon transfers must be spacelike or zero")
+
+    qA4 = [omega, 0.0, 0.0, qA]
+    qN4 = [qN0, 0.0, 0.0, qA]
+    return {
+        "qA_four_vector_GeV": qA4,
+        "qN_four_vector_GeV": qN4,
+        "qA_energy_GeV": omega,
+        "qN_energy_GeV": qN0,
+        "Q_A_GeV": qA,
+        "Q_A2_GeV2": Q_A2,
+        "Q_N2_GeV2": -tN,
+        "tA_GeV2": tA,
+        "tN_GeV2": tN,
+        "metric_signature": "+---",
+        "four_vector_frame": "q-aligned frame with boldsymbol q_A along +z",
+        "qA_definition": "P_A' - P_A",
+        "qN_definition": qN_definition,
+        "nucleon_transfer_scheme": nucleon_transfer_scheme,
+        "nucleon_transfer_scheme_id": scheme_id,
+    }
+
+
+def recoil_transfer_kinematics(
+    mA_GeV: float,
+    ER_keV: float,
+    *,
+    nucleon_transfer_scheme: str = FORMAL_NUCLEON_TRANSFER_SCHEME,
+) -> dict:
+    """Return exact recoil q_A^mu and the selected one-body q_N^mu prescription."""
+    mA = float(mA_GeV)
+    ER_keV = float(ER_keV)
+    ER = ER_keV * 1.0e-6
+    if not math.isfinite(mA) or not math.isfinite(ER_keV) or mA <= 0.0 or ER < 0.0:
+        raise ValueError("invalid nuclear mass or recoil energy")
+    Q_A = math.sqrt(2.0 * mA * ER + ER * ER)
+    result = transfer_kinematics_from_q_omega(
+        Q_A, ER, nucleon_transfer_scheme=nucleon_transfer_scheme
+    )
+    expected_tA = -2.0 * mA * ER
+    if not math.isclose(
+        result["tA_GeV2"], expected_tA, rel_tol=2.0e-12, abs_tol=2.0e-18
+    ):
+        raise ArithmeticError("q_A four-vector violates the exact nuclear mass-shell relation")
+    result.update({
+        "mA_GeV": mA,
+        "ER_keV": ER_keV,
+        "mass_shell_tA_GeV2": expected_tA,
+    })
+    return result
+
 # Borah et al. isoscalar Sachs z expansion, Q^2 < 1 GeV^2 default fit.
 M_PI_GEV = 0.13957
 TCUT_ISOSCALAR_GEV2 = 9.0 * M_PI_GEV**2
