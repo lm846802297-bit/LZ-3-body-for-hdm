@@ -481,7 +481,7 @@ def run(afh_csv: Path) -> dict:
             "mA_bare_nucleus_GeV": MA_XE131_GEV,
             "mass_record": XE131_MASS_RECORD,
             "AFH_native_provenance": provenance,
-            "recoil_momentum_convention": "q_A=sqrt(2*m_A*E_R+E_R^2)",
+            "recoil_momentum_convention": "Q_A=|boldsymbol q_A|=sqrt(2*m_A*E_R+E_R^2); qA_GeV in the legacy Python API denotes this magnitude",
             "nucleon_invariant_convention": "formal B: q_N^mu=q_A^mu and t_N=t_A=-2*m_A*E_R; static t_N=-q_A^2 is diagnostic only",
         },
         "form_factor_prescription": (
