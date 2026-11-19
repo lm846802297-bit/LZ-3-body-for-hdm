@@ -41,7 +41,7 @@ jobs:
           import shutil
 
           root = pathlib.Path.cwd()
-          request_path = root / "research/artifact_archives/requests/lz-pr83-corrected-B-2026-11-20.json"
+          request_path = root / "research/artifact_archives/requests/lz-pr85-B-2026-11-20.json"
           request = json.loads(request_path.read_text(encoding="utf-8"))
           repo = os.environ["GH_REPOSITORY"]
           token = os.environ["GH_TOKEN"]
@@ -165,7 +165,7 @@ The detector-level output does not include energy-resolution smearing, a two-dim
           RUNNER_TEMP: ${{ runner.temp }}
         run: |
           python research/artifact_archives/build_pr85_B_archive.py \
-            --metadata-dir "$RUNNER_TEMP/lz-pr83-corrected-B-metadata"
+            --metadata-dir "$RUNNER_TEMP/lz-pr85-B-metadata"
 
       - name: Verify complete archive checksum list
         run: |
@@ -180,7 +180,7 @@ The detector-level output does not include energy-resolution smearing, a two-dim
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add research/nucleon_form_factor_B_baseline/results/2026-11-20-corrected-B-baseline-pr83
+          git add research/nucleon_form_factor_B_baseline/results/2026-11-20-B-baseline-PR85
           if git diff --cached --quiet; then
             echo "No archive changes to commit."
             exit 0
