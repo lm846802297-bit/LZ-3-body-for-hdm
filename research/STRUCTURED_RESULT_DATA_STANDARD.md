@@ -133,7 +133,7 @@ results/<run_label>/
 
 ## 6. Schema 校验和归档验收
 
-本仓库配套的 `research-result-record-v1.0.0.schema.json` 使用 JSON Schema Draft 2020-12，支持 `run_manifest`、`result_summary` 和 `validation_report` 三类记录。使用支持 Draft 2020-12 的校验器，并启用 `date-time` / `uri` 格式检查。
+本仓库配套的 `research/schemas/research-result-record-v1.0.0.schema.json` 使用 JSON Schema Draft 2020-12，支持 `run_manifest`、`result_summary` 和 `validation_report` 三类记录。使用支持 Draft 2020-12 的校验器，并启用 `date-time` / `uri` 格式检查。
 
 归档前逐项检查：
 
