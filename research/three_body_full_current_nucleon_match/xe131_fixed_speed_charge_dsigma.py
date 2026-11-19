@@ -188,16 +188,22 @@ def interpolate_responses(bundle: dict, qA_GeV: float) -> dict:
 def charge_sector_kernels(
     L_C: float, qA_GeV: float, responses: dict[str, float],
     form_factor_prescription: str = "isoscalar_zexp",
+    *,
+    tN_GeV2: float | None = None,
 ) -> dict:
-    """Return finite-t_N M+Phi'' and q=0-reference M-only Coulomb kernels."""
-    Q2 = qA_GeV * qA_GeV
+    """Return finite-t_N M+Phi'' and original AFH M-only Coulomb kernels."""
+    Q2 = qA_GeV * qA_GeV if tN_GeV2 is None else -float(tN_GeV2)
+    if Q2 < 0.0 or not math.isfinite(Q2):
+        raise ValueError("nucleon form-factor Q_N^2 must be finite and non-negative")
     if form_factor_prescription == "bishara_linear":
         F1, F2 = bishara_linear(Q2)
     elif form_factor_prescription == "isoscalar_zexp":
         F1, F2 = isoscalar_zexp(Q2)
     else:
         raise ValueError(f"unknown form-factor prescription: {form_factor_prescription}")
-    cM, cPhi = charge_coefficients(qA_GeV, F1=F1, F2=F2, mN_GeV=MN_GEV)
+    cM, cPhi = charge_coefficients(
+        qA_GeV, F1=F1, F2=F2, mN_GeV=MN_GEV, tN_GeV2=tN_GeV2
+    )
     WM, WPhi, WMPhi = responses["M"], responses["PhiPP"], responses["MPhiPP"]
     if WM <= 0.0:
         raise ValueError(f"non-positive native W_M at q_A={qA_GeV:.12g} GeV")
@@ -325,11 +331,14 @@ def run(afh_csv: Path, form_factor_prescription: str = "isoscalar_zexp") -> dict
                     f"phase-space medium/high convergence failed: ER={ER_keV}, "
                     f"width={width}, LC={convergence_LC:.6g}, L00={convergence_L00:.6g}"
                 )
+            tN_GeV2 = ER_GeV * ER_GeV - qA * qA
             kernels = charge_sector_kernels(
-                high["L_C"], qA, high_response, form_factor_prescription
+                high["L_C"], qA, high_response, form_factor_prescription,
+                tN_GeV2=tN_GeV2,
             )
             linear_kernels = charge_sector_kernels(
-                high["L_C"], qA, linear_response, form_factor_prescription
+                high["L_C"], qA, linear_response, form_factor_prescription,
+                tN_GeV2=tN_GeV2,
             )
             width_rows.append({
                 "width_scheme": width,
@@ -447,8 +456,11 @@ def run(afh_csv: Path, form_factor_prescription: str = "isoscalar_zexp") -> dict
         },
         "form_factor_prescription": form_factor_prescription,
         "form_factor_status": (
-            "finite-Q2 diagnostic only; exact legacy universal u+d+s input and "
-            "its provenance remain to be pinned"
+            "bishara_linear uses F1^uds(t_N)=3+8.392 t_N and F2^uds(0)=-0.552; "
+            "isoscalar_zexp is an alternative sensitivity diagnostic"
+        ),
+        "nucleon_transfer_scheme": (
+            "strict one-body impulse q_N^mu=q_A^mu, t_N=t_A=E_R^2-Q_A^2=-2m_AE_R"
         ),
         "results": results,
         "limitations": [
