@@ -37,6 +37,29 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
         self.assertAlmostEqual(f1, 1.0, places=14)
         self.assertAlmostEqual(f2, -0.184, places=14)
 
+    def test_bishara_form_factors_follow_formal_tN_and_effective_basis(self):
+        mA = 121.90971983538435
+        ER_keV = 200.0
+        qA = fold.exact_qA_GeV(mA, ER_keV)
+        tN = -2.0 * mA * ER_keV * 1.0e-6
+        f1hat, f2hat = fold.form_factor_values(
+            qA, "bishara_linear", tN_GeV2=tN
+        )
+        raw_f1, raw_f2 = fold.bishara_linear(-tN)
+        self.assertAlmostEqual(f1hat, raw_f1 / 3.0, places=14)
+        self.assertAlmostEqual(f2hat, raw_f2 / 3.0, places=14)
+        self.assertNotAlmostEqual(tN, -(qA * qA), places=10)
+
+        responses = {"M": 4.0, "PhiPP": 0.2, "MPhiPP": -0.3}
+        result = fold.charge_kernel_from_coulomb_weight(
+            2.5, qA, responses, "bishara_linear", tN_GeV2=tN
+        )
+        expected_cM = f1hat + tN * (f1hat + 2.0 * f2hat) / (
+            8.0 * fold.M_N_GEV**2
+        )
+        self.assertAlmostEqual(result["cM"], expected_cM, places=14)
+        self.assertAlmostEqual(result["tN_GeV2"], tN, places=15)
+
     def test_charge_kernel_decomposes_exactly(self):
         responses = {"M": 4.0, "PhiPP": 0.2, "MPhiPP": -0.3}
         result = fold.charge_kernel_from_coulomb_weight(
