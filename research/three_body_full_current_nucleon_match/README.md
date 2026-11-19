@@ -344,7 +344,7 @@ C_{\Sigma'}^{(3)}
 \[
 \boxed{
 C_{\Sigma'\Delta}^{(3)}
-=-\frac{\widehat F_1^N(\widehat F_1^N^N+\widehat F_2^N)Q_A^2}{2m_N^2}
+=-\frac{\widehat F_1^N(\widehat F_1^N+\widehat F_2^N)Q_A^2}{2m_N^2}
 (L^{11}+L^{22}).
 }
 \]
