@@ -1,10 +1,14 @@
 # Contributing and research workflow
 
 This repository is organized around reproducible research. Before starting
-work or submitting a change, read [research/WORKFLOW.md](research/WORKFLOW.md)
-and the mandatory [research source hierarchy](research/RESEARCH_GOVERNANCE_AND_SOURCE_HIERARCHY.md).
+work or submitting a change, read [research/WORKFLOW.md](research/WORKFLOW.md),
+the mandatory [research source hierarchy](research/RESEARCH_GOVERNANCE_AND_SOURCE_HIERARCHY.md),
+and the [Research Task Handoff Standard](research/RESEARCH_TASK_HANDOFF_STANDARD.md).
 
 ## In brief
+
+For every substantive research task, first create a filled [Research Task Brief](research/_template/RESEARCH_TASK_BRIEF.md) and follow the [handoff standard](research/RESEARCH_TASK_HANDOFF_STANDARD.md). Keep the brief with the topic archive and link it from the PR. A brief may be marked not applicable for a trivial editorial or maintenance-only change, with a short reason in the PR.
+
 
 1. Create a topic branch from the latest main.
 2. Put research-specific material under research/<topic>/.

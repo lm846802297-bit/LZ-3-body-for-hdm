@@ -1,0 +1,35 @@
+{
+  "study": "fixed-speed matched-threshold source Fig. 2 reproduction",
+  "run_status": "PASS: reproducible diagnostic; source-figure input discrepancy remains open",
+  "source_repository": "lm846802297-bit/LZ-3-body-for-hdm",
+  "base_main_commit": "2de7b17961270b210719c1fe15a35d91074787db",
+  "source_pdf": {
+    "filename": "3body_for_HDM(1).pdf",
+    "page": 3,
+    "sha256": "b4fc7bd73265df2bc2ce1640cbf8847b63323ec1dda220f9e7903f4620b871bb",
+    "redistributed_in_repo": false,
+    "source_curve_extraction": "PDF vector paths, not raster digitization"
+  },
+  "command": "python reproduce_fig2.py --source-pdf \"3body_for_HDM(1).pdf\" --quadrature-order 512 --n-grid 701",
+  "test_command": "python -m unittest discover -s tests -v",
+  "tests": {"status": "PASS", "passed": 5, "failed": 0},
+  "environment": {
+    "python": "3.13.5",
+    "platform": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "matplotlib": "3.10.8",
+    "PyMuPDF": "1.26.7"
+  },
+  "numerics": {
+    "internal_recoil_grid_points": 701,
+    "archived_spectrum_csv_sampling_keV": 5.0,
+    "quadrature_order": 512,
+    "order_256_vs_512_max_relative_difference": 2.3366363090847643e-15,
+    "exact_vs_NR_max_endpoint_difference_keV": 0.007985546353211248,
+    "exact_endpoints_keV": [106.5912099531907, 670.7107218077737],
+    "exact_2to3_peak_keV": 328.01521028884076,
+    "exact_2to3_peak_height_1e3_per_keV": 3.0254675659530075,
+    "source_mismatch_status": "retained and quantified; no parameter tuning applied to primary 780 km/s result"
+  }
+}
