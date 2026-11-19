@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Fixed-speed Xe-131 d sigma/dER curve for the supplied 450 keV benchmark.
 
-This is an exploratory, fixed-speed diagnostic. The Xe-131 mass uses A*u
-through joint_xe131.isotope_mass_GeV, not the AME2020 exact isotope mass.
-The response is interpolated from the archived GCN/JJ55 tables with PCHIP.
+This is an exploratory, fixed-speed diagnostic using the AME2020 bare-nuclear
+mass returned by joint_xe131.isotope_mass_GeV. The response is interpolated
+from the archived GCN/JJ55 tables with PCHIP.
 """
 from __future__ import annotations
 
@@ -54,7 +54,7 @@ def main() -> None:
     from joint_xe131 import isotope_mass_GeV, load_nuclear_response
 
     A = 131
-    mA = isotope_mass_GeV(A)  # A*u approximation, not AME2020 exact mass
+    mA = isotope_mass_GeV(A)  # AME2020 bare-nuclear mass in GeV
     mchi = 1000.0
     delta_m = 450.0e-6
     ms = 300.0e-6
@@ -96,7 +96,7 @@ def main() -> None:
             rows.append({
                 "A": A,
                 "model": model.upper(),
-                "mass_scheme": "A*u approximate; not AME2020",
+                "mass_scheme": "AME2020 bare-nuclear mass",
                 "mA_GeV": mA,
                 "ER_keV": float(er_keV),
                 "q_GeV": q_response,
@@ -126,7 +126,7 @@ def main() -> None:
         f"{rows[-1]['ER_keV']} keV"
     )
     print(
-        f"Xe-131 mA={mA:.12g} GeV (A*u approximation); "
+        f"Xe-131 mA={mA:.12g} GeV (AME2020 bare-nuclear mass); "
         f"pchi={pchi:.12g} GeV; mchi2={mchi2:.12g} GeV"
     )
     for model in ("GCN", "JJ55"):

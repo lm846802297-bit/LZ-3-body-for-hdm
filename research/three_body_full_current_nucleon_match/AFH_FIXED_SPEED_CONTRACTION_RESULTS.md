@@ -2,6 +2,8 @@
 
 > **Superseded normalization record (2026-11-18).** This initial fixed-speed contraction predates the common-\(C_0(A)\) correction applied to the AFH-8 charge responses. Use [P3_C_C0_CONSISTENT_CONTRACTION.md](P3_C_C0_CONSISTENT_CONTRACTION.md) for the current 84-row result and corrected normalization policy.
 
+> **Additional convention warning (2026-11-19).** This is a historical static-nucleon diagnostic, not the formal production transfer. It uses the full quark-current anchors \(F_1^{uds}(0)=3\), \(F_2^{uds}(0)=-0.552\) in coefficients before the common coupling factor is restored, and uses \(t_N=-Q_A^2\) for the static slice. The formal production basis instead places \((g_1g_2g_{VN})^2\) outside and uses \(\widehat F_i=F_i^{uds}/3\), with \(t_N=t_A\). The AFH nuclear response in this historical result is still finite-size; the warning concerns the nucleon-current and normalization convention, not a missing nuclear form factor. Do not use this file for absolute rates or as the formal P4 benchmark.
+
 
 **Status: preliminary Python contraction; native AFH validation and finite-\(t_N\) form factors pending.**
 
@@ -40,7 +42,7 @@ C_{\Sigma'}R_{\Sigma'}+
 C_{\Sigma'\Delta}R_{\Sigma'\Delta}.
 \]
 The coefficients are those derived from AFH Eq. (107), with
-\(q_{\rm AFH}=-q_A\), \(q_N=+q_A\), and the static Dirac--Pauli current.
+\(q_{\rm AFH}=-q_A\), \(q_N=+q_A\), and the static diagnostic Dirac--Pauli current \(q_N^0=0\), \(t_N=-Q_A^2\).
 The signed \(R_{\Sigma'\Delta}\) term is retained.
 
 This is a response kernel before the common mediator propagator and

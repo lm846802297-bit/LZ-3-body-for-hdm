@@ -177,3 +177,55 @@ q 审计程序保存以下文件：
 | 天然氙 halo fold | exact-q 基线 | 98 个同位素贡献、14 个总速率复现；最大总速率差异 \(2.67\\times10^{-12}\)，CI run 43044583357 通过 |
 | AFH-7/Hybrid-9 全范围反冲谱 | PASS_WITH_NOTES | 四 benchmark、84 点、1,344 baseline rows；AFH direct exact-q + threshold-\(u^2\)；高阶 baseline-to-final spectrum difference 最大 \(6.46772\times10^{-6}\) | 这是 grid-sampled pre-detector spectrum；高阶 ZIP 仅外部 checksum；Xe-124/Xe-126 缺 AFH matrices；GCN/JJ55 求积尚未匹配 |
 | 原生 Mathematica 复算 | 已完成 PASS（Xe-131 response-level） | Wolfram 14.0.0；2401 个 q 节点；与 Python 最大相对差异 (3.59\times10^{-9})；SHA-256 manifest 已归档 | 不代表完整 AFH 天然氙连续谱或 LZ likelihood |
+
+
+## G.9 2026-11-19：B 基准中的核子形状因子与 AFH 核形状因子
+
+本项目现在正式采用 B 作为三体 VV 的主基准。必须区分两个不同尺度的形状效应：
+
+1. 单核子内部的夸克流结构由
+   \(\widehat F_1^N(t_N)\)、\(\widehat F_2^N(t_N)\) 描述；
+2. 核子在整个氙核中的空间分布由 AFH 的
+   \(W_M^{\rm phys}(y_A)\) 描述。
+
+它们不是同一个 form factor，也不能互相替代。B 的 M-only 基准为
+\[
+\frac{d\sigma_B}{dE_R}\propto
+\mathcal P_3L_C^{(3)}
+\widehat c_M(t_N)^2W_M^{\rm phys}(y_A),
+\]
+其中
+\[
+\widehat c_M(t_N)=
+\widehat F_1(t_N)+
+\frac{t_N}{8m_N^2}
+\left[\widehat F_1(t_N)+2\widehat F_2(t_N)\right].
+\]
+B 不包含其他 AFH 响应；\(\Phi''\)、\(\Delta\)、\(\Sigma'\) 及干涉项属于后续 C/D 扩展。
+
+采用 Bishara et al. Appendix A.1 的低动量 flavor-separated 输入：
+\[
+F_1^{uds,N}(t_N)=3+8.392t_N+\mathcal O(t_N^2),\qquad
+F_2^{uds,N}(t_N)=-0.552+\mathcal O(t_N).
+\]
+外部截面前因子使用 \(g_{VN}=3g_{Vq}\)，所以
+\[
+\widehat F_i=F_i^{uds}/3,\qquad
+\widehat F_1(0)=1,\quad \widehat F_2(0)=-0.184.
+\]
+\(F_2\) 仅取已给定的领先阶常数，不假设未提供的 Pauli 斜率。
+
+严格单体 impulse 处方取
+\[
+q_N^\mu=q_A^\mu,\qquad t_N=t_A=-2m_AE_R.
+\]
+AFH 核响应仍然使用
+\[
+Q_A^2=2m_AE_R+E_R^2,\qquad y_A=b_A^2Q_A^2/4.
+\]
+静态核子处方 \(q_N^0=0\Rightarrow t_N=-Q_A^2\) 是独立诊断，不得混入正式 B 结果。
+
+AFH raw-to-physical factor four 与 \(g_{VN}=3g_{Vq}\) 的 quark-current factor three 是独立归一化。native physical equal-\(p=n\) AFH response 已经包含 factor four；外部 \(g_{VN}\) 基准使用 \(\widehat F_i=F_i^{uds}/3\)。二者各自只计入一次。
+
+历史 Mathematica notebook 的 AFH \(W_M(y_A)\) 有限核尺寸效应必须保留；其已归档常数 \(g_{VN}\) 路径作为 A 历史参考，不自动等同于 B。所有 B 绝对截面和 Halo 率必须使用上述有限-\(t_N\) 核子流重新计算。
+

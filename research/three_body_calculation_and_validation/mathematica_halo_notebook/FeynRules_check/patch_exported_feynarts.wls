@@ -1,4 +1,5 @@
 root=DirectoryName[$InputFileName];modelDir=FileNameJoin[{root,"ThreeBodyVV_FA"}];
+PrependTo[$Path,FileNameJoin[{root,"FeynCalc"}]];
 patched=FileNameJoin[{root,"FeynArtsPatched"}];custom=FileNameJoin[{patched,"CustomModel"}];
 exportHash=FileNameJoin[{root,"feynarts_export_source_sha256.txt"}];
 If[!FileExistsQ[exportHash]||ToLowerCase[FileHash[FileNameJoin[{root,"ThreeBodyVV.fr"}],"SHA256","HexString"]]=!=StringTrim[Import[exportHash,"Text"]],

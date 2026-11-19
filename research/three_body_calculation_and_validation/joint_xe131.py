@@ -6,9 +6,10 @@ Conventions:
   q, with y=(q*b_A/2)^2. For exact three-body recoil kinematics we use
   q_response^2 = 2*m_A*E_R + E_R^2.
 - q_NR^2=2*m_A*E_R is retained only as a small-recoil approximation.
-- m_A = A * atomic mass unit is the same mass approximation used by the
-  current response archive; replace it only when an isotope-mass source is
-  selected and recorded.
+- m_A uses an isotope-specific AME2020 neutral-atom mass, converted to the
+  bare nuclear mass with CODATA-2022 constants and the AME electron-binding
+  correction. The archived q-grid response itself is independent of this
+  choice; the mass enters q(E_R), thresholds, and the cross-section kernel.
 """
 from __future__ import annotations
 
@@ -22,8 +23,8 @@ import numpy as np
 from scipy.interpolate import PchipInterpolator
 
 import eq6_kernel
+from isotope_mass_schemes import isotope_mass_GeV as isotope_mass_with_scheme
 
-U_GEV = 0.93149410242
 RESPONSE_COLUMN = "R_A=4pi/(2J+1)*W_M00"
 
 
@@ -52,10 +53,9 @@ class NuclearResponse:
         return max(0.0, value), q_response
 
 
-def isotope_mass_GeV(A: int) -> float:
-    if A <= 0:
-        raise ValueError("A must be positive")
-    return A * U_GEV
+def isotope_mass_GeV(A: int, scheme: str = "ame2020_nuclear") -> float:
+    """Return the default AME2020 bare-nuclear mass, in GeV."""
+    return isotope_mass_with_scheme(A, scheme)
 
 
 def load_nuclear_response(csv_path: str | Path, A: int, model: str) -> NuclearResponse:
