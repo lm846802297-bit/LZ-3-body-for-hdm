@@ -204,11 +204,13 @@ promote native_afh_validated, and it does not close the P3-B direct
 many-body covariant/q-frame/AFH amplitude comparison.
 
 The earlier private run 44222502400 attempt 2 was cancelled without an
-artifact. A newer native workflow,
-[44306907993](https://github.com/lm846802297-bit/research-compute-control/actions/runs/44306907993),
-is currently queued on the self-hosted Windows/X64/research-gpu runner.
-Until it uploads a native comparison artifact with all 16,807 rows passing,
-the seven-isotope native gate remains OPEN.
+artifact. The current native P3-B workflow is
+[44346207069](https://github.com/lm846802297-bit/research-compute-control/actions/runs/44346207069),
+opened from control-repository PR #2 and pinned to the reviewed source
+commit 5afc500a3102b857dd16e29432db8e6e068d65d1. Its job is QUEUED with
+no assigned self-hosted runner. Until it uploads a native comparison
+artifact with all 16,807 total-response rows and all 9,604 rank-resolved
+multipole rows passing, the seven-isotope native gate remains OPEN.
 
 
 ## 2026-11-19 update: current PR #65 and native P3-B queue
