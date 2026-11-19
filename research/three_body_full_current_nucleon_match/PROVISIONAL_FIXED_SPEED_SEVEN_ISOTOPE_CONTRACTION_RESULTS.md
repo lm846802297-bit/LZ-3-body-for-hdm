@@ -1,5 +1,7 @@
 # Provisional fixed-speed seven-isotope AFH contraction results
 
+> **Adopted-baseline notice (2026-11-19):** This remains a provisional fixed-speed response contraction with zero-momentum nucleon-current anchors. It is not the adopted B rate, which requires finite-(t_N) Bishara (widehat F_1,widehat F_2) and AFH (W_M(y_A)) only. Do not promote these kernel numbers as B; recompute B separately and keep this file as a P3-D/current-matching diagnostic.
+
 > **Superseded normalization record (2026-11-18).** The contraction below predates the common-\(C_0(A)\) correction to the charge sector. Its qualitative benchmark conclusion is retained as historical context, but its charge-kernel numbers must not be used as the current result. The canonical corrected result is [P3_C_C0_CONSISTENT_CONTRACTION.md](P3_C_C0_CONSISTENT_CONTRACTION.md), based on workflow 44305980766 and artifact 14428247140.
 
 
