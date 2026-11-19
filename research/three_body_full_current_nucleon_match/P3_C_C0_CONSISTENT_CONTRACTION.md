@@ -1,8 +1,8 @@
 # P3-C precursor: C0-consistent three-body × AFH response contraction
 
 > **Current formal-width status (2026-11-19):** the pole-only rerun is
-> [workflow 44337928314](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44337928314),
-> full-current artifact 14442826214. It contains 28 response-level rows
+> [workflow 44432440600](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44432440600),
+> full-current artifact 14486904025. It contains 28 response-level rows
 > (four benchmarks × seven isotopes), all positive, with maximum
 > \(|K_{\rm spatial}/K_{\rm charge}|=7.0304970964\times10^{-9}\) and
 > maximum rank-sum reconstruction residual \(1.11022\times10^{-16}\).
