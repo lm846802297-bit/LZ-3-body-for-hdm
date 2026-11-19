@@ -1,16 +1,16 @@
-# Research Task Brief — <short task title>
+# Research Task Brief — [short task title]
 
 > Copy this file, complete every field, and send the completed brief with the task. If a field does not apply, write `N/A` and explain why. Do not leave ambiguous blanks.
 
 **Task ID:** `YYYYMMDD-short-kebab-case`  
 **Status:** draft | assigned | in-progress | blocked | completed  
 **Prepared on:** YYYY-MM-DD  
-**Prepared by:** <person/model/agent>  
-**Assigned to:** <person/model/agent/team>  
-**Research topic:** <research/<topic> or cross-topic>  
-**Baseline repository:** <owner/repository>  
-**Baseline branch and commit:** <branch> @ `<full SHA>`  
-**Related issue / PR / task:** <URL or N/A>
+**Prepared by:** [person/model/agent]  
+**Assigned to:** [person/model/agent/team]  
+**Research topic:** [research topic or cross-topic]  
+**Baseline repository:** [owner/repository]  
+**Baseline branch and commit:** [branch] @ `[full SHA]`  
+**Related issue / PR / task:** [URL or N/A]
 
 ---
 
@@ -18,7 +18,7 @@
 
 **Primary question**
 
-<One precise, answerable question. Define the physical/computational object and requested parameter or kinematic range.>
+[One precise, answerable question. Define the physical/computational object and requested parameter or kinematic range.]
 
 **Scope**
 
@@ -91,9 +91,9 @@ Relevant historical, provisional, diagnostic, or superseded results:
 
 Specify the exact derivations required and the starting source for each.
 
-1. <Equation/result to derive from the primary source or Lagrangian>
-2. <Intermediate identities, signs, factors, or approximations to expose>
-3. <Independent comparison target; do not use it as a substitute for derivation>
+1. [Equation/result to derive from the primary source or Lagrangian]
+2. [Intermediate identities, signs, factors, or approximations to expose]
+3. [Independent comparison target; do not use it as a substitute for derivation]
 
 The derivation must show intermediate steps, assumptions, sign conventions, normalization factors, and the point at which each approximation is applied.
 
