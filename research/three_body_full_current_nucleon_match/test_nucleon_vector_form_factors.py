@@ -69,30 +69,37 @@ class VectorFormFactorTests(unittest.TestCase):
         self.assertAlmostEqual(c_m, 3.0, places=12)
         self.assertAlmostEqual(c_phi, 0.0, places=12)
 
+    def test_default_baseline_is_bishara_linear(self):
+        self.assertEqual(ff.DEFAULT_FORM_FACTOR_PRESCRIPTION, "bishara_linear")
+        q2 = 0.05
+        f1q, f2q = ff.bishara_linear(q2)
+        f1n, f2n = ff.effective_nucleon_form_factors(f1q, f2q)
+        self.assertAlmostEqual(f1n, 1.0 - (8.392 / 3.0) * q2, places=14)
+        self.assertAlmostEqual(f2n, -0.184, places=14)
+
     def test_selected_xe131_charge_benchmark_is_finite(self):
         row = ff.q0_anchor_baseline_correction(
             0.256271868,
             115.8894642,
             -1.46249,
             prescription="isoscalar_zexp",
+            tN_GeV2=-0.065,
         )
-        self.assertTrue(math.isfinite(row["F1V"]))
-        self.assertTrue(math.isfinite(row["F2V"]))
-        self.assertTrue(math.isfinite(row["relative_to_q0_M_reference"]))
-        self.assertLess(row["relative_to_q0_M_reference"], -0.2)
-        self.assertGreater(row["relative_to_q0_M_reference"], -0.4)
-        self.assertAlmostEqual(
-            row["relative_to_q0_M_reference"], row["relative_to_pointlike_M"], places=14
-        )
+        self.assertTrue(math.isfinite(row["F1V_quark_sum"]))
+        self.assertTrue(math.isfinite(row["F2V_quark_sum"]))
+        self.assertTrue(math.isfinite(row["relative_to_A_AFH_finite_size_M"]))
+        self.assertLess(row["relative_to_A_AFH_finite_size_M"], -0.2)
+        self.assertGreater(row["relative_to_A_AFH_finite_size_M"], -0.4)
 
-    def test_phi_relative_correction_remains_small(self):
+    def test_phi_relative_correction_is_reported_separately_from_B(self):
         row = ff.q0_anchor_baseline_correction(
             0.256271868,
             115.8894642,
             -1.46249,
             prescription="isoscalar_zexp",
+            tN_GeV2=-0.065,
         )
-        self.assertAlmostEqual(row["relative_to_finite_t_M"], -0.01843, delta=0.002)
+        self.assertAlmostEqual(row["relative_to_B_finite_tN_M"], -0.01843, delta=0.002)
 
 if __name__ == "__main__":
     unittest.main()
