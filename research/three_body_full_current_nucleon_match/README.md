@@ -94,7 +94,18 @@ while AFH uses the exact spatial momentum
 \[
 Q_A^2=2m_AE_R+E_R^2,\qquad y_A=b_A^2Q_A^2/4.
 \]
-The nucleon form factors are evaluated at \(t_N\), not at \(-Q_A^2\).
+In the q-aligned frame with \(\boldsymbol q_A\) along +z and metric
+\((+---)\),
+\[
+q_A^\mu=(E_R,0,0,Q_A),\qquad
+q_N^\mu=q_A^\mu\quad\text{(formal B)}.
+\]
+The code serializes these as \texttt{qA\_four\_vector\_GeV} and
+\texttt{qN\_four\_vector\_GeV}, and separately stores
+\texttt{tA\_GeV2} and \texttt{tN\_GeV2}. Thus
+\(t_N=t_A=E_R^2-Q_A^2=-2m_AE_R\), not \(-Q_A^2\).
+This is an impulse-matching assignment for the one-body current, not a
+microscopic reconstruction of each bound nucleon's energy transfer.
 The AFH Fourier convention used in the matching note is
 \(\boldsymbol q_{\rm AFH}=-\boldsymbol q_A\). The emitted scalar momentum
 is not part of the nuclear Fourier transfer:
