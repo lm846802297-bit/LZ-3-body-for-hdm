@@ -81,13 +81,24 @@ The nuclear transfer and one-nucleon transfer are kept distinct:
 q_A^\mu=P_A'^\mu-P_A^\mu,\qquad
 q_N^\mu=k_N'^\mu-k_N^\mu.
 \]
-In the static one-body impulse diagnostic,
+The static-free-nucleon diagnostic sets
 \[
 q_N^0=0,\qquad
 \boldsymbol q_N=\boldsymbol q_A,\qquad
-t_N=-|\boldsymbol q_A|^2.
+t_N^{\rm static}=-Q_A^2.
 \]
-The AFH Fourier convention used in the matching note is
+The formal one-body impulse prescription instead carries the full external
+four-transfer,
+\[
+q_N^\mu=q_A^\mu,\qquad
+t_N=t_A=-2m_AE_R,\qquad
+Q_N^2=-t_N=2m_AE_R.
+\]
+The spatial recoil remains
+\(Q_A^2=|\boldsymbol q_A|^2=2m_AE_R+E_R^2\), and enters the AFH/NR
+spatial coefficients separately. The Xe-131 fixed-speed and P4 formal
+calculations now use the full-transfer prescription; the static choice is
+retained only as a diagnostic. The AFH Fourier convention used in the matching note is
 \(\boldsymbol q_{\rm AFH}=-\boldsymbol q_A\). The emitted scalar momentum
 is not part of the nuclear Fourier transfer:
 \[
@@ -437,17 +448,23 @@ AFH charge multipoles at fixed nucleon form factors. The second,
 with the original AFH M-only calculation, retaining its finite-q nuclear
 form factor.
 
-The current Python engine compares two finite-\(Q_N^2\) diagnostics:
+The current Python engine compares two finite-\(t_N\) prescriptions:
 
-- bishara_linear: \(F_1^V(Q_N^2)=3-(8.392\,{\rm GeV}^{-2})Q_N^2\), with \(F_2^V\) held at
-  \(-0.552\); this is the first-order low-\(Q_N^2\) flavor-separated
-  Dirac-slope approximation.
+- bishara_linear: \(F_1^{uds}(t_N)=3+8.392t_N\), equivalently
+  \(F_1^{uds}(Q_N^2)=3-8.392Q_N^2\) with \(Q_N^2=-t_N\), and
+  \(F_2^{uds}(0)=-0.552\). This explicitly sums the flavor-separated
+  first-order Dirac slopes from Bishara et al. Appendix A.1.
 - isoscalar_zexp: a central isoscalar electromagnetic Sachs \(z\)-expansion
-  reconstruction with the strange-current inputs.
+  reconstruction with the strange-current inputs, used as an alternative
+  sensitivity diagnostic.
 
-Neither is silently identified with the exact legacy low-order quark
-shape-factor input. Its original source and coefficients still need to be
-pinned.
+The Bishara slope is a local expansion about \(t_N=0\), not an all-orders
+fit; the quoted \(F_2(0)\) does not determine \(F_2(t_N)\). The formal
+calculation uses \(t_N=t_A\) and reports this low-order result separately
+from the z-exp sensitivity check. The archived Mathematica rate engine
+clearly contains the finite-q AFH nuclear factor; its stored production
+path does not by itself prove that the flavor-resolved single-nucleon
+Dirac-Pauli factor was already inserted.
 
 The Xe-131 fixed-speed Pole-width calculation gives:
 
