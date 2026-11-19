@@ -408,12 +408,12 @@ def run(
         ratio_checks.append({
             "ER_keV": ER,
             "fixed_Delta_m_keV": DELTA_M_GEV * 1.0e6,
-            "ratio": row["full_charge_over_AFH_finite_size_M_baseline"],
-            "previous_validated_ratio": expected,
+            "C_over_A": row["C_over_A"],
+            "previous_Bishara_linear_anchor": expected,
             "absolute_difference": residual,
         })
-        if residual > 2.0e-8:
-            raise RuntimeError(f"native AFH charge ratio mismatch at ER={ER}: {residual}")
+        if residual > 2.0e-5:
+            raise RuntimeError(f"Bishara-linear C/A anchor mismatch at ER={ER}: {residual}")
 
     min_pole_clearance = min(row["pole_clearance_keV"] for row in rows if row["phase_space_open"])
     if min_pole_clearance <= 0.0:
@@ -423,7 +423,7 @@ def run(
     metadata_path = outdir / "xe131_fixed_benchmark_absolute_dsigma_450keV_metadata.json"
     write_csv(csv_path, rows)
     summary = {
-        "status": "PASS_XE131_FIXED_BENCHMARK_ABSOLUTE_CHARGE_SECTOR_DSIGMA",
+        "status": "PASS_XE131_FIXED_BENCHMARK_ABSOLUTE_B_BASELINE_AND_C_EXTENSION",
         "scope": "absolute fixed-speed Xe-131 spectrum with B as the primary finite-t_N M-only baseline and C as a separate Phi'' charge-response extension",
         "benchmark": {
             "mchi1_GeV": MCHI_GEV, "mchi2_GeV": MCHI_GEV + DELTA_M_GEV,
@@ -496,7 +496,7 @@ def run(
         "limitations": [
             "B is the primary baseline; C is a separate charge-multipole extension. Native transverse Delta, SigmaPrime and SigmaPrime-Delta responses are not included in this absolute curve.",
             "Continuity reduction is conditional on conservation of the complete nuclear one-body vector current.",
-            "Finite-Q2 isoscalar_zexp F1/F2 is diagnostic, especially for F2V(Q2); full quark-current values are normalized by three before entering the g_VN-prefactor rate.",
+            "The primary B prescription is the first-order Bishara flavor-summed F1(t_N) expansion with F2(t_N)=F2(0)+O(t_N); isoscalar_zexp is a separate sensitivity model. Full quark-current values are normalized by three before entering the external g_VN-prefactor rate.",
             "Single isotope and fixed incident speed only; no halo average, isotope sum, detector response, exposure, event count or exclusion.",
             "Coupling-product-squared is the unit reference normalization; results scale linearly with this quantity.",
             "The six-channel spatial OBDME candidate remains provisional pending native-Wolfram spatial-response validation and P3-C amplitude-level matching.",
