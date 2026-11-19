@@ -170,4 +170,4 @@ python research/schemas/validate_result_records.py --repo-root . <run_manifest.j
 - 核子 Dirac–Pauli 形状因子 $F_1,F_2$、动量变量、插值方法和归一化；
 - halo 分布、局域密度、实验室速度、效率、能量分辨率、曝光和统计方法（仅在相应层级实际包含时记录）。
 
-CSV 推荐按 (E_R)、同位素、响应通道、核模型、速度/halo 节点等维度逐行保存。必须明确区分 $d\sigma_A/dE_R$、halo rate 和 detector-level event prediction；不得把它们放进同一列或用同一状态表示。AFH 响应表应保留 (q_A) 或 $y_A$、同位素、$\tau,\tau'$、响应类型及归一化约定。
+CSV 推荐按 $E_R$、同位素、响应通道、核模型、速度/halo 节点等维度逐行保存。必须明确区分 $d\sigma_A/dE_R$、halo rate 和 detector-level event prediction；不得把它们放进同一列或用同一状态表示。AFH 响应表应保留 $q_A$ 或 $y_A$、同位素、$\tau,\tau'$、响应类型及归一化约定。
