@@ -1,0 +1,80 @@
+{
+  "status": "reproducible diagnostic; source-figure input mismatch remains under investigation",
+  "source_pdf": {
+    "name": "3body_for_HDM.pdf",
+    "sha256": "b4fc7bd73265df2bc2ce1640cbf8847b63323ec1dda220f9e7903f4620b871bb",
+    "page": 3,
+    "curves_digitized_from_pdf_vector_paths": true,
+    "axis_calibration_pdf_points": {
+      "x_left": 89.29635620117188,
+      "x_right": 282.033935546875,
+      "y_bottom": 193.21514892578125,
+      "y_top": 62.1549072265625,
+      "x_range_keV": [0.0, 700.0],
+      "y_range_1e3_per_keV": [0.0, 5.0]
+    }
+  },
+  "parameters": {
+    "mchi1_GeV": 1000.0,
+    "mT_GeV": 122.0,
+    "ms_keV": 300.0,
+    "delta_iDM_keV": 300.0,
+    "speed_km_s": 780.0,
+    "c_km_s": 299792.458,
+    "mchi1_caption_status": "adopted 1 TeV benchmark from adjacent source-PDF natural-xenon discussion; Fig. 2 caption itself omits m_chi",
+    "mT_caption_status": "approximate xenon target mass adopted for the fixed-speed comparison",
+    "matrix_element": "constant-amplitude phase-space-shape limit",
+    "nuclear_response": "R_A(E_R) omitted, as stated in Fig. 2 caption",
+    "target_current_factor": "(2 m_T)^2 is common to both channels and cancels in each unit-area normalized spectrum; not separately multiplied numerically",
+    "normalization": "each channel independently normalized to integral dE_R P_i(E_R)=1, as indicated by the plotted ordinate"
+  },
+  "exact_relativistic_phase_space_eq90_92": {
+    "recoil_endpoints_keV": [106.5912099531907, 670.7107218077737],
+    "P22_plateau_1e3_per_keV": 1.7726740149661355,
+    "P23_peak_ER_keV": 328.01521028884076,
+    "P23_peak_1e3_per_keV": 3.0254675659530075,
+    "P23_grid_integral": 0.9999999999999999,
+    "quadrature_order": 512,
+    "max_relative_difference_order256_vs_order512": 2.3366363090847643e-15
+  },
+  "heavy_particle_limit_eq95_97": {
+    "recoil_endpoints_keV": [106.59251700367113, 670.7027362614205],
+    "P23_grid_integral": 0.9999999999999999,
+    "max_endpoint_difference_exact_vs_NR_keV": 0.007985546353211248
+  },
+  "source_pdf_vector_digitization": {
+    "2to2_plateau_ER_min_keV": 108.45828401781296,
+    "2to2_plateau_ER_max_keV": 660.2604492825334,
+    "2to2_plateau_1e3_per_keV": 1.8146911620269446,
+    "2to3_peak_ER_keV": 326.42158931222167,
+    "2to3_peak_1e3_per_keV": 3.0931007953742644
+  },
+  "comparison_exact_780_minus_source": {
+    "low_endpoint_keV": -1.8670740646222583,
+    "high_endpoint_keV": 10.45027252524028,
+    "P22_plateau_relative_difference": -0.023153883117983276,
+    "P23_peak_position_difference_keV": 1.5936209766190927,
+    "P23_peak_height_relative_difference": -0.021865834285905716
+  },
+  "source_curve_residuals_for_red_curve_y_above_0p15": {
+    "number_of_vector_digitized_points": 184,
+    "v780_mean_absolute_relative_difference": 0.04941345205955416,
+    "v780_rms_relative_difference": 0.09486188108395428,
+    "conditional_veff_mean_absolute_relative_difference": 0.004405246769066865,
+    "conditional_veff_rms_relative_difference": 0.007843345434791857
+  },
+  "conditional_effective_speed_diagnostic": {
+    "inferred_speed_km_s_if_masses_held_fixed": 777.578965087319,
+    "exact_endpoints_at_inferred_speed_keV": [108.15471227116176, 661.0148199324524],
+    "P22_plateau_at_inferred_speed_1e3_per_keV": 1.8087758298029515,
+    "P23_peak_ER_keV": 325.98212071842767,
+    "P23_peak_1e3_per_keV": 3.086562590202489,
+    "interpretation": "diagnostic inversion only; does not establish the speed or mass inputs used by the source plotting script"
+  },
+  "outputs": {
+    "source_vector_digitization_csv": "data/paper_fig2_vector_digitized.csv",
+    "spectra_csv": "data/fig2_spectra_780km_s.csv",
+    "figure_svg": "figures/fig2_reproduction_overlay.svg",
+    "conditional_effective_speed_figure_svg": "figures/fig2_effective_speed_diagnostic.svg"
+  }
+}

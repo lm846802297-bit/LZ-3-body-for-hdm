@@ -2,6 +2,14 @@
 
 <!-- What question does this PR answer? -->
 
+## Research task brief
+
+- Brief path: `research/<topic>/task_briefs/<task-id>.md` or `research/docs/task_briefs/<task-id>.md`:
+- [ ] The brief pins exact source and Git revisions, conventions, assumptions, and known validated results.
+- [ ] The required independent derivation, numerical checks, acceptance criteria, expected outputs, and unresolved questions are recorded.
+- [ ] Any change to the brief's scope or conventions is documented in its change log or a linked successor brief.
+- [ ] If no brief is needed, the reason is stated (trivial editorial / maintenance-only change).
+
 ## Scope and files
 
 <!-- Which research topic is affected? List important code, inputs, results, and documents. -->
