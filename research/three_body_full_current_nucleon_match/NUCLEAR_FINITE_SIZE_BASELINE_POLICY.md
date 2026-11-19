@@ -166,7 +166,7 @@ Report three distinct comparisons:
         {\mathcal K_A(\widehat F_1(0),\widehat F_2(0))}-1.
    \]
 
-The first ratio isolates extra AFH multipoles. The second isolates nucleon structure. The third is the combined effect. Do not call the first ratio the total correction, and do not call the third ratio a pure AFH-multipole correction.
+The first ratio B/A isolates the single-nucleon finite-\(t_N\) correction. The second ratio C/B isolates the extra AFH multipoles at fixed nucleon current. The third ratio C/A is the combined effect. Do not call C/B the total correction, and do not call C/A a pure AFH-multipole correction.
 
 ## 5. Momentum-transfer conventions
 
