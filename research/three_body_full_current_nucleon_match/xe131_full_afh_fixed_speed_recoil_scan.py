@@ -376,6 +376,9 @@ def integrate_point(
         )
         rows.append({
             "form_factor_prescription": form_factor_prescription,
+            "nucleon_transfer_scheme": "strict one-body impulse q_N^mu=q_A^mu",
+            "tN_GeV2": tN_GeV2,
+            "Q_N2_GeV2": -tN_GeV2,
             "benchmark": case["name"],
             "delta_m_keV": delta_m * 1.0e6,
             "mchi1_GeV": MCHI_GEV,
