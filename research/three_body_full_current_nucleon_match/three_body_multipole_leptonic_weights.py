@@ -557,6 +557,8 @@ def analyze_tensor_archive(
             "leading static vector-current particle coefficients from AFH Eq. (107); "
             "not yet contracted with AFH nuclear response values"
         ),
+        "calculation_role": "P3-C amplitude-level structural matching diagnostic with q=0 effective nucleon-current anchors; not the adopted B production rate",
+        "primary_B_baseline_included": False,
         "form_factor_input": {
             "F1V": f1,
             "F2V": f2,
