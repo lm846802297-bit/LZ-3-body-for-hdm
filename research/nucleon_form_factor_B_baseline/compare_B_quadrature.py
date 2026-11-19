@@ -38,7 +38,7 @@ def compare(base_dir:Path,high_dir:Path,out_dir:Path):
         E=f(b,"ER_keV"); h=high_by_E[E]
         df=shift(f(h,"natural_xenon_full_B_relative_rate"),f(b,"natural_xenon_full_B_relative_rate"))
         di=shift(f(h,"natural_xenon_I_D_B_relative_rate"),f(b,"natural_xenon_I_D_B_relative_rate"))
-        eb=f(b,"full_vs_I_D_error_B_pct"); eh=f(h,"full_vs_I_D_error_B_pct")
+        eb=b.get("full_vs_I_D_error_B_pct",""); eh=h.get("full_vs_I_D_error_B_pct","")
         de=float(eh)-float(eb) if eb!="" and eh!="" else ""
         if df is not None: sf.append(abs(df))
         if di is not None: si.append(abs(di))
