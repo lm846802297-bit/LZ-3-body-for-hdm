@@ -13,7 +13,7 @@ combined with the AFH mainline. See the study-level
 
 Files whose names include `GCN_JJ55` or `VS_GCN_JJ55` are comparison
 archives, not the primary AFH prediction. In particular, any result obtained
-by reusing a common three-body `I6) kernel and changing only the nuclear
+by reusing a common three-body `I6` kernel and changing only the nuclear
 response is a response-only sensitivity diagnostic, not an independent
 full-amplitude calculation with a different nuclear model.
 
