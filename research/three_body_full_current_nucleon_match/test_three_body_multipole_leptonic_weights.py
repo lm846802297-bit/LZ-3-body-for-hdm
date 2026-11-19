@@ -86,6 +86,11 @@ class LeptonicMultipoleWeightTests(unittest.TestCase):
         cM = 1.0 + tN * (1.0 + 2.0 * -0.184) / (8.0 * 0.938918**2)
         self.assertAlmostEqual(afh["C_M"], cM**2 * expected)
         self.assertAlmostEqual(afh["tN_GeV2"], tN)
+        self.assertEqual(afh["qA_four_vector_GeV"], afh["qN_four_vector_GeV"])
+        self.assertAlmostEqual(afh["tA_GeV2"], tN, places=16)
+        self.assertAlmostEqual(afh["qN_four_vector_GeV"][0], 0.01, places=16)
+        self.assertAlmostEqual(afh["qN_four_vector_GeV"][3], 0.2, places=16)
+        self.assertEqual(afh["metric_signature"], "+---")
 
     def test_zero_transfer_limit_keeps_the_charge_weight(self):
         L = np.diag([100.0, 2.0, 2.0, 3.0]).astype(complex)
