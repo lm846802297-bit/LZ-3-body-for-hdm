@@ -1,0 +1,62 @@
+{
+	"calculation":"Xe-131 finite-Q^2 Dirac-Pauli charge-sector ratio",
+	"mathematica_version":"14.2.0 for Microsoft Windows (64-bit) (December 26, 2024)",
+	"response_source":"C:\\Users\\84680\\Documents\\ChatGPT\\3 body HDM\\main\\research\\afh_default_density_xe131\\output\\phi_response_native\\afh_default_xe131_M_PhiPP_native.csv",
+	"response_columns":[
+		"R_M_physical_equal_pn",
+		"R_PhiPP_physical_equal_pn",
+		"R_MPhiPP_physical_equal_pn"
+	],
+	"interpolation":"shape-preserving cubic Hermite (PCHIP)",
+	"mA_GeV":1.219097198354e2,
+	"mN_GeV":0.938918,
+	"form_factor_note":"F1V and F2V are supplied isoscalar_zexp center diagnostic inputs, not independently recomputed here",
+	"scope":[
+		"Xe-131 only",
+		"fixed-speed three-body kernel cancels in the ratio",
+		"spatial nuclear current omitted",
+		"width prescription cancels from the ratio"
+	],
+	"results":[
+		{
+			"ER_keV":2.0e2,
+			"DeltaM_keV":4.5e2,
+			"QA_GeV":0.22082555996568876,
+			"F1V":2.663163406,
+			"F2V":-0.46805344,
+			"F1plus2F2":1.7270565259999997,
+			"cM":2.6512218775983585,
+			"cPhiPP":2.3883056803282423e-2,
+			"cPhi_over_cM":9.008320655877047e-3,
+			"WM":9.627755783678397,
+			"WPhiPP":0.3558027727957173,
+			"WMPhiPP":-1.8409164149904012,
+			"WPhiPP_over_WM":3.6955940801790745e-2,
+			"WMPhiPP_over_WM":-0.19120929699019198,
+			"interference_fraction":-3.4449493193449508e-3,
+			"PhiPP_diagonal_fraction":2.9989687215157486e-6,
+			"charge_ratio":0.9965580496493766,
+			"change_percent":-0.3441950350623446
+		},
+		{
+			"ER_keV":2.67e2,
+			"DeltaM_keV":3.62e2,
+			"QA_GeV":0.25514674538606913,
+			"F1V":2.563886256,
+			"F2V":-0.449774513,
+			"F1plus2F2":1.6643372300000001,
+			"cM":2.5485232543583654,
+			"cPhiPP":3.072600328326958e-2,
+			"cPhi_over_cM":1.2056395102820193e-2,
+			"WM":6.767035734601585e-3,
+			"WPhiPP":0.13429224764927913,
+			"WMPhiPP":-2.8982973051521435e-2,
+			"WPhiPP_over_WM":1.984506258221876e1,
+			"WMPhiPP_over_WM":-4.282964386211836,
+			"interference_fraction":-0.10327422170295533,
+			"PhiPP_diagonal_fraction":2.884612071502936e-3,
+			"charge_ratio":0.8996103903685476,
+			"change_percent":-1.0038960963145238e1
+		}
+	]
+}

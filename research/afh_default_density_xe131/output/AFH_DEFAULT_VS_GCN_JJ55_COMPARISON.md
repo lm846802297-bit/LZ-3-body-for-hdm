@@ -1,10 +1,23 @@
 # AFH default versus GCN/JJ55: Xe-131 comparison
 
+> **Status: sensitivity comparison only — not the AFH mainline result.**
+> The mainline uses the AFH/DMFormFactor v6.0 default OBDMEs (with the
+> original B&D shell-model provenance). GCN and the JJ55-labelled input are
+> kept as separate alternative nuclear-structure prescriptions. No averaging
+> or mixing of these density matrices is performed.
+
+This archive compares nuclear-response shapes and a fixed-kernel response-only
+three-body diagnostic. Where the same three-body kernel is reused, the
+cross-section ratio isolates the response substitution under that common-kernel
+assumption; it is not a separately recomputed full three-body amplitude for
+each alternative nuclear wave function. Use the AFH-only output for the
+mainline prediction.
+
 ## Response minima
 
-The AFH default matrix is a third nuclear-structure prescription. Its minima
-are close in momentum transfer to the GCN and JJ55 minima, but their depths
-are model dependent.
+Within this sensitivity comparison, the AFH default matrix is compared as a
+third nuclear-structure prescription. Its minima are close in momentum
+transfer to the GCN and JJ55 minima, but their depths are model dependent.
 
 | Minimum | Model | q_min [MeV] | E_R,min [keV] | R_min/R(0) |
 |---:|---|---:|---:|---:|

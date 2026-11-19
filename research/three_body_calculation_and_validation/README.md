@@ -8,11 +8,11 @@
 
 This directory contains the Eq. (6) particle-physics kernel and the numerical runners that connect it to selected nuclear-response and natural-xenon calculations. The calculations are related, but they do not all share the same mass scheme, width prescription, nuclear input, or physical output layer.
 
-1. **Kernel layer:** reconstruct the final-state four-momenta, evaluate the Dirac trace, retain interference between the two scalar-emission orderings, and integrate the reduced three-body kernel over \(W^2,z,\phi_*\).
+1. **Kernel layer:** reconstruct the final-state four-momenta, evaluate the Dirac trace, retain interference between the two scalar-emission orderings, and integrate the reduced three-body kernel over \(W^2,z,\phi_*\). The formal production propagator convention is asymmetric: the p-k (scalar-before-scattering) propagator is zero-width (+i0^+), while the p'+k (scalar-after-scattering) propagator uses the constant pole width (+i m_chi2 Gamma_pole), as in the manuscript's Eq. (19). Both diagrams are added coherently before squaring.
 2. **Fixed-speed cross-section layer:** combine the kernel with a specified single-isotope nuclear response to obtain \(d\sigma_A/dE_R\).
 3. **Natural-xenon theory-rate layer:** sum isotope-specific contributions and fold over an explicitly selected laboratory-frame halo distribution. GCN/JJ55 have 84-point full-range spectra in this directory, using the legacy linear-W^2 kernel. AFH-7/Hybrid-9 have a separate 84-point full-range grid in the sibling study directory, using direct exact-q AFH responses and threshold-u^2 integration. These spectra are pre-detector and do not yet have matched kernel quadrature.
 4. **Detector-interface layer:** fold GCN/JJ55 continuous spectra with the LZ 2026 one-dimensional final-ROI efficiency. This gives rate-level expected event yields, not the official LZ likelihood.
-5. **450 keV diagnostics:** a pointwise \(\mathcal L_{00}/I_6\) benchmark with a conditional scalar pole-width comparison, and a separate fixed-speed Xe-131 curve with GCN/JJ55 responses, \(m_A=131u\), and zero width. These two diagnostics are not interchangeable.
+5. **450 keV diagnostics:** a pointwise \(\mathcal L_{00}/I_6\) benchmark with a conditional scalar pole-width comparison, and a separate fixed-speed Xe-131 curve with GCN/JJ55 responses, \(m_A=131u\), and zero width. The latter is a historical both-propagators-zero-width diagnostic, not a formal Eq. (19) production result. These two diagnostics are not interchangeable.
 
 ## Core Eq. (6) implementation
 
@@ -61,9 +61,11 @@ Important model inputs remain explicit: the manuscript does not fully define Dir
 ## P0-4 propagator-width audit
 
 The archived implementation includes a comparison of:
-- zero width;
-- constant pole width;
+- both propagators zero width;
+- the asymmetric formal Eq. (19) prescription (first propagator zero width, second propagator constant pole width);
 - a diagnostic running-width ansatz using the current virtual mass W.
+
+**Production rule:** use the asymmetric Eq. (19) prescription for every formal three-body result. The both-zero-width and running-width options are diagnostic comparisons only. In particular, a historical result produced with width_scheme="zero" has zero width in both diagrams and must not be relabelled as a formal finite-width result.
 
 The implementation is exposed through `reduced_kernel(..., width_scheme="zero"|"pole"|"running", g2=...)`. The running-width denominator uses `i W Gamma(W)`; it is a diagnostic Breit-Wigner approximation, not a full fermionic self-energy calculation.
 

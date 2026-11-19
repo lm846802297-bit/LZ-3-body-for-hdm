@@ -1,3 +1,8 @@
+(* AME2020 xenon nuclear mass from atomic masses and CODATA-2022 constants. *)
+Global`ame2020XenonAtomicMassU=<|124->123905885174/10^9,126->125904297422/10^9,128->12790353075341/10^11,129->12890478085742/10^11,130->129903509346/10^9,131->13090508412808/10^11,132->13190415508346/10^11,134->133905393030/10^9,136->135907214474/10^9|>;
+Global`xenonZ=54; Global`xenonAtomicMassUnitGeV=93149410372/10^11; Global`electronMassU=5485799090441/10^16;
+Global`xenonElectronBindingEnergyGeV=N[(144381/10^4 Global`xenonZ^(239/100)+155468/10^11 Global`xenonZ^(535/100))10^-9,30];
+Global`xenonNuclearMassGeV[A_Integer]:=Module[{mAtom=Lookup[Global`ame2020XenonAtomicMassU,A,Null]},If[mAtom===Null,Return[$Failed]];N[(mAtom-Global`xenonZ Global`electronMassU)Global`xenonAtomicMassUnitGeV+Global`xenonElectronBindingEnergyGeV,20]];
 ClearAll["Global" <> FromCharacterCode[96] <> "*"];
 scriptDir = DirectoryName[$InputFileName];
 packageEnv = Environment["DMFormFactorPath"];
@@ -12,7 +17,7 @@ CreateDirectory[outDir, CreateIntermediateDirectories -> True];
 packageText = Import[packagePath, "Text"];
 If[!StringContainsQ[packageText, "Welcome to DMFormFactor version 1.1."], Print["ERROR: unexpected AFH package/version marker"]; Exit[8]];
 Get[packagePath];
-A = 131; Z = 54; JA = 3/2; mA = A*0.93149410242; fmToGeVInv = 5.0677;
+A = 131; Z = 54; JA = 3/2; mA = Global`xenonNuclearMassGeV[A]; fmToGeVInv = 5.0677;
 bFM = Sqrt[41.467/(45.0 A^(-1.0/3.0) - 25.0 A^(-2.0/3.0))];
 bGeVInv = bFM*fmToGeVInv;
 SetIsotope[Z, A, "default", "default"];
