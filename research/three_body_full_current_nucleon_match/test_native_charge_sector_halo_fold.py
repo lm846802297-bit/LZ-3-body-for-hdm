@@ -23,6 +23,20 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
         self.assertAlmostEqual(q200, 0.22082555996567457, delta=1.0e-15)
         self.assertAlmostEqual(q267, 0.25514674538605275, delta=1.0e-15)
 
+    def test_mediator_denominator_uses_exact_lorentz_invariant(self):
+        mA = 121.90971983538435
+        ER_keV = 200.0
+        mV = 10.0
+        ER = ER_keV * 1.0e-6
+        tA = fold.nuclear_transfer_invariant_tA_GeV2(mA, ER_keV)
+        self.assertAlmostEqual(tA, -2.0 * mA * ER, places=18)
+        expected = (mV * mV + 2.0 * mA * ER) ** 2
+        actual = fold.mediator_denominator_squared_GeV4(mV, mA, ER_keV)
+        self.assertAlmostEqual(actual, expected, places=12)
+        qA2 = fold.exact_qA_GeV(mA, ER_keV) ** 2
+        spatial_substitution = (mV * mV + qA2) ** 2
+        self.assertNotEqual(actual, spatial_substitution)
+
     def test_charge_kernel_decomposes_exactly(self):
         responses = {"M": 4.0, "PhiPP": 0.2, "MPhiPP": -0.3}
         result = fold.charge_kernel_from_coulomb_weight(
@@ -158,6 +172,24 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
         f1, f2 = fold.form_factor_values(0.0, "isoscalar_zexp")
         self.assertAlmostEqual(f1, 3.0, places=10)
         self.assertAlmostEqual(f2, -0.552, places=10)
+
+    def test_charge_correction_uses_same_finite_t_M_baseline(self):
+        responses = {"M": 4.0, "PhiPP": 0.2, "MPhiPP": -0.3}
+        result = fold.charge_kernel_from_coulomb_weight(
+            2.5, 0.22, responses, "bishara_linear"
+        )
+        self.assertAlmostEqual(
+            result["relative_charge_vs_finite_t_M"],
+            result["charge_sector"] / result["finite_t_M"] - 1.0,
+            places=14,
+        )
+        self.assertAlmostEqual(
+            result["q0_M_reference"], result["pointlike_M"], places=14
+        )
+        self.assertNotEqual(
+            result["relative_charge_vs_finite_t_M"],
+            result["relative_charge_vs_q0_M_reference"],
+        )
 
     def test_native_physical_conversion_factor(self):
         q = np.linspace(0.0, 0.6, 2401)
