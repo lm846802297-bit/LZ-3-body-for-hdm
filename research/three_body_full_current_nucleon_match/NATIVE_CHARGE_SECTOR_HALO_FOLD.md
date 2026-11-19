@@ -141,27 +141,27 @@ of four applied once in the response conversion.
 The halo fold reports three distinct quantities, all retaining the same finite-size AFH response:
 
 \[
-R_A=L_C^{(3)}W_M^{\\rm phys}(y_A),
+R_A=L_C^{(3)}W_M^{\rm phys}(y_A),
 \]
 
 \[
-R_B=\\widehat c_M(t_N)^2L_C^{(3)}W_M^{\\rm phys}(y_A),
+R_B=\widehat c_M(t_N)^2L_C^{(3)}W_M^{\rm phys}(y_A),
 \]
 
 \[
-R_C=L_C^{(3)}\\left[
-\\widehat c_M^2W_M^{\\rm phys}
-+2\\widehat c_M\\widehat c_{\\Phi''}W_{M\\Phi''}^{\\rm phys}
-+\\widehat c_{\\Phi''}^2W_{\\Phi''}^{\\rm phys}
-\\right].
+R_C=L_C^{(3)}\left[
+\widehat c_M^2W_M^{\rm phys}
++2\widehat c_M\widehat c_{\Phi''}W_{M\Phi''}^{\rm phys}
++\widehat c_{\Phi''}^2W_{\Phi''}^{\rm phys}
+\right].
 \]
 
 A is the zero-transfer effective-nucleon-current reference, B is the adopted
-finite-\\(t_N\\) M-only production baseline, and C is the additional charge
+finite-\(t_N\) M-only production baseline, and C is the additional charge
 multipole extension. Report B/A (single-nucleon form-factor correction),
 C/B (additional AFH charge-response correction at fixed nucleon current),
 and C/A (combined change). Do not call A a point-nucleus response: it
-contains the same finite-size AFH \\(W_M(y_A)\\) as B and C.
+contains the same finite-size AFH \(W_M(y_A)\) as B and C.
 
 The spatial-current candidate is a separate provisional D extension. It is
 not a completed full-current prediction until the P3-C covariant-to-AFH
@@ -171,33 +171,33 @@ nuclear-amplitude gate passes.
 
 The CLI requires an explicit prescription:
 
-- \`q0_anchor\`: \\(\\widehat F_1(0)=1,\\widehat F_2(0)=-0.184\\), the A reference;
+- \`q0_anchor\`: \(\widehat F_1(0)=1,\widehat F_2(0)=-0.184\), the A reference;
 - \`bishara_linear\`: adopted B low-momentum flavor-resolved Dirac slope
   with the available leading constant Pauli term;
-- \`isoscalar_zexp\`: alternate finite-\\(Q_N^2\\) sensitivity model.
+- \`isoscalar_zexp\`: alternate finite-\(Q_N^2\) sensitivity model.
 
-The external rate prefactor uses \\((g_1g_2g_{VN})^2\\), with
-\\(g_{VN}=3g_{Vq}\\). Therefore the full universal quark-current form
+The external rate prefactor uses \((g_1g_2g_{VN})^2\), with
+\(g_{VN}=3g_{Vq}\). Therefore the full universal quark-current form
 factors must be divided by three before they enter the nucleon-current
-coefficients: \\(\\widehat F_i=F_i^{uds}/3\\). The AFH raw-to-physical
+coefficients: \(\widehat F_i=F_i^{uds}/3\). The AFH raw-to-physical
 factor four is independent and is applied exactly once.
 
 For the formal one-body impulse prescription,
-\\[
-t_N=t_A=-2m_AE_R,\\qquad Q_N^2=-t_N.
-\\]
+\[
+t_N=t_A=-2m_AE_R,\qquad Q_N^2=-t_N.
+\]
 The AFH response instead uses the spatial transfer
-\\[
-Q_A^2=2m_AE_R+E_R^2,\\qquad y_A=b_A^2Q_A^2/4.
-\\]
-The static diagnostic \\(q_N^0=0\\), giving \\(t_N=-Q_A^2\\), is
+\[
+Q_A^2=2m_AE_R+E_R^2,\qquad y_A=b_A^2Q_A^2/4.
+\]
+The static diagnostic \(q_N^0=0\), giving \(t_N=-Q_A^2\), is
 not the formal production prescription.
 
 The mediator denominator is the Lorentz-invariant
-\\[
+\[
 (m_V^2-t_A)^2=(m_V^2+2m_AE_R)^2,
-\\]
-not \\( (m_V^2+Q_A^2)^2\\).
+\]
+not \( (m_V^2+Q_A^2)^2\).
 
 ## 6. Halo fold
 
