@@ -50,9 +50,16 @@ FORM_FACTOR_PRESCRIPTIONS = ("bishara_linear", "isoscalar_zexp")
 RESPONSE_NAMES = ("M", "PhiPP", "MPhiPP", "Delta", "SigmaPrime", "SigmaPrimeDelta")
 
 
-def nucleon_form_factors(qA_GeV: float, prescription: str) -> tuple[float, float]:
-    """Return the finite-Q_N^2 diagnostic form factors for one prescription."""
-    Q2 = qA_GeV * qA_GeV
+def nucleon_form_factors(
+    qA_GeV: float,
+    prescription: str,
+    *,
+    tN_GeV2: float | None = None,
+) -> tuple[float, float]:
+    """Return F1,F2 at Q_N^2=-t_N for one transfer prescription."""
+    Q2 = qA_GeV * qA_GeV if tN_GeV2 is None else -float(tN_GeV2)
+    if Q2 < 0.0 or not math.isfinite(Q2):
+        raise ValueError("nucleon form-factor Q_N^2 must be finite and non-negative")
     if prescription == "bishara_linear":
         return bishara_linear(Q2)
     if prescription == "isoscalar_zexp":
@@ -357,11 +364,15 @@ def integrate_point(
     responses, interpolation = responses_at(response_bundle, qA)
     rows = []
     for form_factor_prescription in FORM_FACTOR_PRESCRIPTIONS:
-        F1, F2 = nucleon_form_factors(qA, form_factor_prescription)
+        tN_GeV2 = ER_GeV * ER_GeV - qA * qA
+        F1, F2 = nucleon_form_factors(
+            qA, form_factor_prescription, tN_GeV2=tN_GeV2
+        )
         contracted = contract_six_channels(L, qA, ER_GeV, responses, F1, F2)
         coeff = contracted["coefficients"]
         cM, cPhiPP = charge_coefficients(
-            qA, F1=F1, F2=F2, mN_GeV=DEFAULT_MN_GEV
+            qA, F1=F1, F2=F2, mN_GeV=DEFAULT_MN_GEV,
+            tN_GeV2=tN_GeV2,
         )
         rows.append({
             "form_factor_prescription": form_factor_prescription,
@@ -494,6 +505,9 @@ def run(native_charge_csv: Path, outdir: Path) -> dict:
             },
         ],
         "width_schemes": list(FORMAL_WIDTH_SCHEMES),
+        "nucleon_transfer_scheme": (
+            "strict one-body impulse q_N^mu=q_A^mu; t_N=t_A=E_R^2-Q_A^2=-2m_AE_R"
+        ),
         "primary_ratio_definition": (
             "charge_only and full_six_channel_candidate divided by the same finite-t_N "
             "M-only kernel; isolates added AFH multipoles at fixed F1,F2"
