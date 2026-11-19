@@ -252,7 +252,7 @@ spectrum after averaging over the halo speed distribution.
 With $\delta=m_s$, the two processes have the same minimum
 incident speed $v_{\min}$ at each recoil energy, but they weight the
 incident speeds differently. For a single target isotope,
-let $\widetilde R_i(E_R)\equiv F_A^{-2}(q)\,dR_i/dE_R$ be the
+let $\widetilde R_i(E_R)\equiv F_A^{-2}(q_A)\,dR_i/dE_R$ be the
 signal event rate spectrum after dividing out the common nuclear form
 factor squared, where $i=2-2,2-3$ labels the two channels. In the
 constant-amplitude limit,
@@ -1134,7 +1134,7 @@ from the off-shell intermediate state $\chi_2$ in the three-body model.
 To display exact spin traces, we first treat $T$ as a pointlike Dirac
 target of mass $m_T$, with
 \begin{equation}
-\mathcal{L}_{VT}=g_TV_\mu\bar T\gamma^\mu N.
+\mathcal{L}_{VT}=g_TV_\mu\bar T\gamma^\mu T.
 \end{equation}
 The exact point-target formulas below are distinct from the coherent
 nuclear approximation. Here $T$ is a generic pointlike Dirac target;
@@ -1142,11 +1142,14 @@ when applying the leading nonrelativistic result to a nucleus, set
 $m_T=m_A$. For universal quark vector couplings, the latter is obtained
 by replacing
 \begin{equation}
-g_T\longrightarrow 3A\,g_{Vq}F_A(\qvec),\qquad
-F_A(\boldsymbol{0})=1,
+g_T\longrightarrow 3A\,g_{Vq}F_A(q_A),\qquad
+F_A(q_A)=\frac{1}{A}
+\left\langle A\left|\sum_{a=1}^{A}
+e^{i\boldsymbol q_A\cdot\boldsymbol r_a}\right|A\right\rangle,
+\qquad F_A(0)=1,
 \label{eq:nuclear}
 \end{equation}
-where $A$ is the nuclear mass number and $m_T$ is then the nuclear mass.
+where $A$ is the nuclear mass number and $m_T=m_A$ for the nuclear target.
 
 Define
 \begin{equation}
@@ -1197,7 +1200,7 @@ In the nonrelativistic limit, the leading charge-density matrix elements are
 \begin{equation}
 \bar u_{\psi_2}\gamma^0u_{\psi_1}
 \simeq2\sqrt{mm'}\,\xi'^\dagger\xi,\qquad
-J_N^0\simeq2m_T\,\zeta'^\dagger\zeta,
+J_T^0\simeq2m_T\,\zeta'^\dagger\zeta,
 \end{equation}
 where $\xi,\zeta$ are unit-normalized Pauli spinors. Therefore,
 \begin{equation}
@@ -1391,8 +1394,10 @@ threshold, with $D\ll m_s$.
 \section{Phase-space comparison for constant amplitudes}
 \label{sec:phase-space}
 
-We now take $m_V^2\gg\qvec^2$ and work in the off-shell regime
-$\Delta\gg\omega$. After factoring out the common nuclear form factor,
+We denote the spatial nuclear recoil momentum by
+$q_A=|\boldsymbol q_A|$ and use the exact relation
+$q_A^2=2m_AE_R+E_R^2$. We now take $m_V^2\gg q_A^2$ and work in
+the off-shell regime $\Delta\gg\omega$. After factoring out the common nuclear form factor,
 the spin-averaged squared amplitudes can be approximated by constants:
 \begin{equation}
 C_2\equiv\Msq{2},\qquad C_3\equiv\Msq{3},\qquad
@@ -1402,7 +1407,7 @@ C_2\equiv\Msq{2},\qquad C_3\equiv\Msq{3},\qquad
 The constants have different mass dimensions:
 $[C_2]=\text{mass}^0$ and $[C_3]=\text{mass}^{-2}$.
 The following comparison isolates phase space. For a physical nuclear
-recoil spectrum, the common factor $F_A^2(\qvec)$ must be restored.
+recoil spectrum, the common factor $F_A^2(\qvec_A_A)$ must be restored.
 
 \subsection{Phase-space convention and incident flux}
 
