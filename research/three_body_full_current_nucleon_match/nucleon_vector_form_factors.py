@@ -22,8 +22,13 @@ from __future__ import annotations
 import math
 
 M_N_GEV = 0.938918
-F1V0 = 3.0
-F2V0 = -0.552
+RAW_F1_UDS0 = 3.0
+RAW_F2_UDS0 = -0.552
+
+# Backward-compatible aliases. These are raw u+d+s sums, not effective
+# nucleon form factors; new code should use the explicit RAW_F*_UDS0 names.
+F1V0 = RAW_F1_UDS0
+F2V0 = RAW_F2_UDS0
 
 # Bishara et al. Appendix A.1:
 # F1^{u/p}'(0)=5.57(9), F1^{d/p}'(0)=2.84(5),
@@ -83,8 +88,8 @@ def isoscalar_em_dirac_pauli(Q2: float, *, mN_GeV: float = M_N_GEV) -> tuple[flo
 def bishara_linear(Q2: float) -> tuple[float, float]:
     if Q2 < 0.0:
         raise ValueError("Q2 must be non-negative")
-    F1 = F1V0 - Q2 * F1_SLOPE_BISHARA
-    return F1, F2V0
+    F1 = RAW_F1_UDS0 - Q2 * F1_SLOPE_BISHARA
+    return F1, RAW_F2_UDS0
 
 def isoscalar_zexp(Q2: float) -> tuple[float, float]:
     """Central finite-Q^2 benchmark for the universal light-quark current.
@@ -168,7 +173,7 @@ def static_A_reference_correction(
     cM, cPhi = charge_coefficients(
         qA_GeV, F1=F1, F2=F2, tN_GeV2=-Q_A2
     )
-    F1hat0, _ = effective_nucleon_form_factors(F1V0, F2V0)
+    F1hat0, _ = effective_nucleon_form_factors(RAW_F1_UDS0, RAW_F2_UDS0)
     eta = cPhi / cM
     Qphi = 1.0 + 2.0 * eta * W_Mphi_over_WM + eta * eta * W_phi_over_WM
     return {
