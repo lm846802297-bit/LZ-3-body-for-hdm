@@ -427,7 +427,7 @@ secondary normalization reference only.
 
 The current Python engine compares two finite-\(Q_N^2\) diagnostics:
 
-- bishara_linear: \(F_1^V(Q_N^2)=3-8.392Q_N^2\), with \(F_2^V\) held at
+- bishara_linear: \(F_1^V(Q_N^2)=3-(8.392\,{\rm GeV}^{-2})Q_N^2\), with \(F_2^V\) held at
   \(-0.552\); this is the first-order low-\(Q_N^2\) flavor-separated
   Dirac-slope approximation.
 - isoscalar_zexp: a central isoscalar electromagnetic Sachs \(z\)-expansion
