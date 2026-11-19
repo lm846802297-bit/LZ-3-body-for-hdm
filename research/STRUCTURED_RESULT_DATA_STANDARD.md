@@ -54,7 +54,41 @@ results/<run_label>/
 - 科学状态：`diagnostic`、`provisional`、`reproducible`、`validated`、`historical` 或 `superseded`；
 - 结果解释、适用范围和明确排除的内容。
 
-数值应保存为 JSON number，不要把数值写成带单位的字符串。单位放在独立字段。未计算的量使用 `null` 并标注 `not_computed`；不得用 0 代表缺失或未执行。
+数值应保存为 JSON number，不要把数值写成带单位的字符串。单位放在独立字段。未计算的量使用 `null` 并标注 `not_computed`；不得用 0 代表缺失或未执行。每个 observable 都必须有 `status`：`computed`、`not_computed` 或 `not_applicable`。
+
+下面是**纯格式示例**，数值为人为构造，不是科研结果：
+
+```json
+{
+  "schema_version": "1.0.0",
+  "record_type": "result_summary",
+  "run_id": "EXAMPLE-RUN-001",
+  "created_at": "2026-11-20T00:00:00Z",
+  "project": {
+    "repository": "example/research",
+    "project_id": "example-project"
+  },
+  "calculation": "Synthetic schema fixture only",
+  "scope": {
+    "included": ["data-format validation"],
+    "excluded": []
+  },
+  "benchmark": {
+    "mass": {"value": 1.0, "unit": "MeV"}
+  },
+  "observables": [
+    {
+      "name": "example_quantity",
+      "value": 1.0,
+      "unit": "arb.",
+      "status": "computed"
+    }
+  ],
+  "data_files": [],
+  "scientific_status": "diagnostic",
+  "interpretation": "Synthetic example; not a physical result."
+}
+```
 
 ### 2.3 `validation_report.json`：哪些检查实际通过
 
