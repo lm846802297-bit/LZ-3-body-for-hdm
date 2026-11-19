@@ -23,7 +23,7 @@ from scipy.interpolate import PchipInterpolator
 
 from nucleon_vector_form_factors import (
     RAW_F1_UDS0, RAW_F2_UDS0, bishara_linear, charge_coefficients,
-    effective_nucleon_form_factors,
+    effective_nucleon_form_factors, recoil_transfer_kinematics,
 )
 from native_charge_sector_halo_fold import load_isotope_inputs
 from three_body_phase_space_tensor import integrate_spin_resolved_tensor
@@ -255,9 +255,13 @@ def charge_sector_kernels(
     ER_keV: float,
 ) -> dict:
     """Return A reference, adopted B baseline, and C charge extension."""
-    ER_GeV = float(ER_keV) * 1.0e-6
-    tN_GeV2 = -2.0 * MA_XE131_GEV * ER_GeV
-    Q_A2 = qA_GeV * qA_GeV
+    transfer = recoil_transfer_kinematics(MA_XE131_GEV, ER_keV)
+    if not math.isclose(
+        qA_GeV, transfer["Q_A_GeV"], rel_tol=0.0, abs_tol=2.0e-12
+    ):
+        raise ValueError("provided q_A does not match the exact Xe-131 recoil transfer")
+    tN_GeV2 = transfer["tN_GeV2"]
+    Q_A2 = transfer["Q_A2_GeV2"]
     F1_raw, F2_raw = bishara_linear(-tN_GeV2)
     F1, F2 = effective_nucleon_form_factors(F1_raw, F2_raw)
     F1hat0, _ = effective_nucleon_form_factors(RAW_F1_UDS0, RAW_F2_UDS0)
@@ -290,6 +294,7 @@ def charge_sector_kernels(
         raise AssertionError("direct and factorized A/B/C ratios disagree")
 
     return {
+        **transfer,
         "form_factor_prescription": "bishara_linear",
         "F1V_quark_sum": F1_raw,
         "F2V_quark_sum": F2_raw,
