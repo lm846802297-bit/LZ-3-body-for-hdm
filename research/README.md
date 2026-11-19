@@ -55,3 +55,7 @@ Keep the following quantities separate:
 ### Mathematica three-body natural-xenon calculation
 
 `three_body_natural_xenon/` contains the reorganized main Mathematica notebook, AFH v6 xenon response data, usage notes, and archived comparison tables. The main calculation is inline in the notebook and uses the in-repository FeynCalc copy plus Mathematica `NIntegrate`. FeynCalc, FeynRules 2.3.49, and FeynArts 3.12 source copies, license notes, and per-file checksums are stored in `three_body_calculation_and_validation/mathematica_halo_notebook/FeynRules_check/`; execution still requires Mathematica. The notebook and command-line checks prefer those local copies. The run record is explicitly marked historical because this reorganization did not rerun all calculations.
+
+## Structured numerical result records
+
+New calculations use the [Structured Research Result Data Standard](STRUCTURED_RESULT_DATA_STANDARD.md). The shared Draft 2020-12 record schema is stored in `research/schemas/research-result-record-v1.0.0.schema.json`. This applies to new run manifests, result summaries, validation reports, and pointwise tables; legacy files remain unchanged.
