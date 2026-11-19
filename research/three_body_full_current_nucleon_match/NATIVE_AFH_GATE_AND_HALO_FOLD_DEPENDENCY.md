@@ -219,8 +219,8 @@ The formal three-body pipeline has been refreshed to the asymmetric Pole
 prescription: the first \(p-k\) propagator is zero-width and the second
 \(p'+k\) propagator carries the constant \(\Gamma_{\chi_2}(m_{\chi_2})\).
 The latest full-current workflow is
-[44337928314](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44337928314)
-(artifact 14442826214), and its seven-isotope response-level contraction
+[44432440600](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44432440600)
+(artifact 14486904025), and its seven-isotope response-level contraction
 contains 28 rows (four benchmarks × seven isotopes), all positive. Its
 maximum spatial/charge ratio is \(7.0304970964\times10^{-9}\). This does
 not close P3-C because the output is still a response-level contraction,
@@ -271,8 +271,8 @@ The new Xe-131 spatial amplitude-level calculation is recorded in
 [P3_C_C0_CONSISTENT_CONTRACTION.md](P3_C_C0_CONSISTENT_CONTRACTION.md)
 and its detailed report
 [P3C_SPATIAL_AMPLITUDE_LEVEL_HELICITY_RESULTS.md](P3C_SPATIAL_AMPLITUDE_LEVEL_HELICITY_RESULTS.md).
-Using the pole-only full-current artifact 14442826214 and spatial response
-artifact 14443055701, the Cartesian Eq. (107) contraction and the
+Using the pole-only full-current artifact 14486904025 and spatial response
+artifact 14486014588, the Cartesian Eq. (107) contraction and the
 helicity-resolved \(\Delta_J+\Sigma'_J\) amplitude reconstruction agree
 to a maximum relative residual of \(6.09\times10^{-16}\) over four Xe-131
 benchmarks. The maximum Eq. (107)-coefficient residual is
@@ -291,3 +291,9 @@ independently integrated coordinate-space bound-nucleus current. Full
 P3-C remains OPEN. The full-current workflow now runs this check and
 archives its JSON output; the CI rerun on the new PR branch will provide
 the reproducible hosted test result.
+
+
+The PR #66 CI rerun regenerated the spatial archive with the same response
+and multipole CSV SHA-256 values as the PR #65 archive. The private native
+workflow remains pinned to artifact 14443055701; its input files are
+byte-identical to the PR #66 spatial artifact 14486014588.
