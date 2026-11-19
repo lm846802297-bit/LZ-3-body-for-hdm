@@ -82,7 +82,7 @@ jobs:
           python research/three_body_full_current_nucleon_match/three_body_multipole_leptonic_weights.py \
             --input /tmp/three-body-phase-space-tensor.json \
             --out /tmp/three-body-multipole-leptonic-weights.json \
-            --f1 3.0 --f2 -0.552 --mN 0.938918
+            --f1 1.0 --f2 -0.184 --mN 0.938918
       - name: Download provisional seven-isotope AFH response archive
         uses: actions/download-artifact@v4
         with:
