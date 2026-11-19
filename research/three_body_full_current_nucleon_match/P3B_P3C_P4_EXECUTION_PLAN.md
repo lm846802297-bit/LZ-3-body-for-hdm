@@ -36,7 +36,7 @@ The comparator's tolerances are fixed in the version-pinned script. Do not relax
 
 ### Interpolation disposition
 
-The current local interpolation audit finds Cheb8/Cheb10 stability at the selected q points, while PCHIP differs from Cheb10 by up to 1.6847% for \(W_M\) near the Xe-131 diffraction minimum. The corresponding normalized full/q=0-reference ratio difference is at most 0.1182% in the selected scan. This is not a native result. After the native dense export arrives, regenerate the absolute and ratio curves with native dense \(M,\Phi'',M\Phi''\) values in the dip region; do not smooth or fit away the minimum.
+The current local interpolation audit finds Cheb8/Cheb10 stability at the selected q points, while PCHIP differs from Cheb10 by up to 1.6847% for \(W_M\) near the Xe-131 diffraction minimum. The corresponding normalized full/original-AFH-M-baseline ratio difference is at most 0.1182% in the selected scan. The denominator retains the native finite-q \(W_M(Q_A)\) response. This is not a native result. After the native dense export arrives, regenerate the absolute and ratio curves with native dense \(M,\Phi'',M\Phi''\) values in the dip region; do not smooth or fit away the minimum.
 
 ## P3-C — amplitude-level covariant-to-AFH validation
 
