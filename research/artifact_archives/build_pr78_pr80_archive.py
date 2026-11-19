@@ -349,7 +349,8 @@ def main() -> None:
         "manifest_schema_version": 1,
         "archive_generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "repository": request["repository"],
-        "archive_status": "ARCHIVED_AND_VALIDATED",
+        "archive_status": "ARCHIVED_AND_INTEGRITY_CHECKED",
+        "archive_validation_scope": "ZIP digest verification, run/artifact identity checks, extracted-member SHA matching, CSV schema/grid/row-count checks, metadata consistency checks, and SHA256SUMS self-check; this field describes archive integrity, not independent scientific validation.",
         "study": "Halo-folded full three-body L00 vs I(D_NR), AFH seven-isotope natural xenon",
         "integration_lineage": {
             "pr_78": "Merged into the PR #74 research branch; its calculation and outputs are present in the PR #74 integration.",
@@ -375,7 +376,8 @@ def main() -> None:
         "manifest_schema_version": 1,
         "archive_generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "repository": request["repository"],
-        "archive_status": "ARCHIVED_AND_VALIDATED",
+        "archive_status": "ARCHIVED_AND_INTEGRITY_CHECKED",
+        "archive_validation_scope": "ZIP digest verification, run/artifact identity checks, extracted-member SHA matching, CSV schema/grid/row-count checks, metadata consistency checks, and SHA256SUMS self-check; this field describes archive integrity, not independent scientific validation.",
         "study": "Finite nucleon Dirac-Pauli form factors multiplied by finite-size AFH W_M",
         "integration_lineage": {
             "upstream_halo": {
