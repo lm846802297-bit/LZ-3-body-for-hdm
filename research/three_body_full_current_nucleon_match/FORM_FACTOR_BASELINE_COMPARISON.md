@@ -1,163 +1,243 @@
-# Finite-size AFH baseline and single-nucleon form-factor comparison
+# Adopted B baseline: nucleon form factors × finite-size AFH response
 
-**Updated:** 2026-11-19  
-**Status:** mandatory finite-size nuclear baseline; effective-\(g_{VN}\) normalization  
-**Formal nuclear input:** native AFH v6.0  
-**Formal transfer:** \(t_N=t_A=-2m_AE_R\) for the declared one-body impulse prescription  
+**Project:** LZ-3-body-for-hdm  
+**Decision date:** 2026-11-19  
+**Status:** B is the adopted primary baseline. The finite-size AFH nuclear response is mandatory; the low-momentum flavor-resolved nucleon current is also included. No additional AFH response is included in B.  
+**Nuclear input:** AFH v6.0 only  
+**Form-factor baseline:** Bishara et al., arXiv:1707.06998, Appendix A.1, first-order Dirac slopes and leading Pauli values  
 **Formal width:** asymmetric Pole width only
 
-## 1. Three distinct physical layers
+## 1. Adopted calculation hierarchy
 
-The original calculation is not a point-nucleus calculation. The paper writes the coherent nuclear replacement with a finite nuclear form factor, and the archived Mathematica rate engine evaluates the native AFH response at finite spatial recoil:
-\[
-Q_A^2=|\boldsymbol q_A|^2=2m_AE_R+E_R^2,\qquad
-y_A=\left(\frac{Q_A b_A}{2}\right)^2,
-\]
-\[
-\boxed{
-R_{A,M}^{\rm phys}(Q_A)
-=A^2\frac{W_M^{00}(y_A)}{W_M^{00}(0)},\qquad
-R_{A,M}^{\rm phys}(0)=A^2.
-}
-\]
-The physical equal-\(p=n\) native AFH response already contains the raw-to-physical factor four exactly once. It must be used at finite \(Q_A\) in every reference denominator. Do not multiply an additional Helm, Fermi, Gaussian, or other whole-nucleus shape factor onto AFH \(W_M(y_A)\).
+The baseline is **B**, not A:
 
-A second, independent layer is the finite-momentum single-nucleon Dirac--Pauli current \(F_1^{q/N}(t_N),F_2^{q/N}(t_N)\). A third layer consists of additional nuclear multipoles such as \(\Phi''\), \(\Delta\), and \(\Sigma'\). These layers must not be conflated.
+| Version | Single-nucleon current | Whole-nucleus response | Role |
+|---|---|---|---|
+| A | zero-transfer effective current, \(\widehat F_1(0)=1\) | finite-size \(W_M(y_A)\) | historical AFH reference |
+| **B** | **finite-\(t_N\) Dirac–Pauli current \(\widehat F_1(t_N),\widehat F_2(t_N)\)** | **finite-size \(W_M(y_A)\)** | **adopted primary baseline** |
+| C | same finite-\(t_N\) current as B | \(W_M,W_{\Phi''},W_{M\Phi''}\) | additional charge-response correction |
+| D | same finite-\(t_N\) current as B | all allowed AFH responses and interference terms | full one-body nuclear-current extension; P3-C/native gates required |
 
-## 2. Coupling basis: \(g_{VN}\) is external
-
-The original paper and Mathematica benchmark use
-\[
-g_{VN}=3g_{Vq},\qquad (g_1g_2g_{VN})^2
-\]
-in the external cross-section prefactor. The full universal \(u+d+s\) quark current has
-\[
-F_1^{uds,N}(0)=3,\qquad F_2^{uds,N}(0)=-0.552.
-\]
-For the mandatory \(g_{VN}\) coupling basis, the current coefficients must therefore use
+The B baseline is
 \[
 \boxed{
-\widehat F_i^N(t_N)=F_i^{uds,N}(t_N)/3,\qquad
-\widehat F_1^N(0)=1,\quad \widehat F_2^N(0)=-0.184.
+\frac{d\sigma_B}{dE_R}
+=\mathcal P_3(E_R)\,
+L_C^{(3)}\,
+\widehat c_M(t_N)^2\,
+W_M^{\rm phys}(y_A).
 }
 \]
-Using the external \(g_{VN}\) prefactor together with unnormalized \(F_1^{uds}(0)=3\) would insert a spurious factor nine. The AFH factor four is a separate isospin-normalization conversion and must not be combined with this factor-three ledger.
+Here \(\mathcal P_3\) contains the common three-body phase-space, flux, mediator-propagator, and coupling prefactors. The primary nuclear response is **only** \(W_M\). No \(W_{\Phi''}\), \(W_\Delta\), \(W_{\Sigma'}\), \(W_{\Sigma''}\), or response interference is added to B.
 
-The equivalent quark-level convention uses \(g_{Vq}=g_{VN}/3\) with the full \(F_i^{uds}\). Both conventions must agree pointwise:
+The three useful comparisons are
 \[
-(g_{Vq})^2(F_i^{uds})^2=(g_{VN})^2(\widehat F_i)^2.
-\]
-
-## 3. A/B/C hierarchy: preserve the finite-size AFH response throughout
-
-At fixed three-body kinematics and fixed isotope, define:
-
-- **A — mandatory AFH finite-size M-only baseline**
-  \[
-  A\propto (g_1g_2g_{VN})^2 L_C^{(3)}R_{A,M}^{\rm phys}(Q_A),
-  \]
-  with the nucleon current frozen at \(\widehat F_1(0)=1\). This is the original finite-size AFH baseline.
-
-- **B — finite-\(t_N\) nucleon M-only result**
-  \[
-  B\propto (g_1g_2g_{VN})^2 L_C^{(3)}
-  \widehat c_M(t_N)^2R_{A,M}^{\rm phys}(Q_A).
-  \]
-  Only the single-nucleon current changes; the same AFH finite-size response is retained.
-
-- **C — charge-response extension**
-  \[
-  C\propto (g_1g_2g_{VN})^2 L_C^{(3)}
-  \left[
-  \widehat c_M^2R_M^{\rm phys}
-  +2\widehat c_M\widehat c_{\Phi''}R_{M\Phi''}^{\rm phys}
-  +\widehat c_{\Phi''}^2R_{\Phi''}^{\rm phys}
-  \right].
-  \]
-  This adds \(\Phi''\) and the signed \(M-\Phi''\) interference on top of B.
-
-The ratios have distinct meanings:
-\[
-\boxed{B/A-1=\text{single-nucleon finite-}t_N\text{ correction},}
+\boxed{B/A-1}
+\quad\text{(finite-\(t_N\) nucleon-current correction),}
 \]
 \[
-\boxed{C/B-1=\text{additional AFH charge-response correction at fixed }\widehat F_i,}
+\boxed{C/B-1}
+\quad\text{(additional charge multipoles at fixed nucleon current),}
 \]
 \[
-\boxed{C/A-1=\text{total change relative to the original finite-size AFH baseline}.}
+\boxed{C/A-1}
+\quad\text{(total change relative to the historical AFH reference).}
 \]
-Do not call \(C/A-1\) a pure AFH multipole correction, and do not call \(C/B-1\) the total change.
+B is the reference for subsequent C and D response studies.
 
-The spatial-current candidate adds only those \(\Delta,\Sigma'\), and signed \(\Sigma'-\Delta\) terms that are produced by the complete three-body current matching. It remains provisional until the native-Wolfram and P3-C amplitude-level gates pass.
+## 2. Two different finite-size effects
 
-## 4. Momentum-transfer conventions
+The nucleon form factors and the AFH nuclear responses describe different physical scales.
+
+**Inside one nucleon:** the quark vector current is matched onto a proton or neutron matrix element,
+\[
+\langle N'|J_q^\mu|N\rangle
+=\bar u_N'
+\left[
+F_1^{q/N}(t_N)\gamma^\mu
++\frac{iF_2^{q/N}(t_N)}{2m_N}\sigma^{\mu\nu}q_{N,\nu}
+\right]u_N.
+\]
+The flavor-summed form factors describe the finite-momentum structure of the quark current inside an individual nucleon.
+
+**Inside the whole nucleus:** the nucleons occupy a finite spatial distribution and form nuclear multipoles. AFH describes this with
+\[
+W_M(y_A),\quad W_{\Phi''}(y_A),\quad W_\Delta(y_A),\quad
+W_{\Sigma'}(y_A),\ldots
+\]
+The \(W_M\) response is already a finite-size nuclear response. It must not be replaced by a point-nucleus constant or multiplied by an additional Helm/nuclear form factor.
+
+For the original AFH M-only reference,
+\[
+R_{A,M}\propto
+\widehat F_1(0)^2 L_C^{(3)}W_M^{\rm phys}(y_A)
+=L_C^{(3)}W_M^{\rm phys}(y_A).
+\]
+For B,
+\[
+R_{B,M}\propto
+\widehat c_M(t_N)^2L_C^{(3)}W_M^{\rm phys}(y_A).
+\]
+The same finite-size AFH \(W_M\) occurs in both.
+
+## 3. Coupling normalization: do not count the factor three twice
+
+The external rate convention uses
+\[
+g_{VN}=3g_{Vq},\qquad
+\mathcal P_3\propto(g_1g_2g_{VN})^2.
+\]
+For the universal light-quark current \(u+d+s\), the raw flavor-summed values at zero transfer are
+\[
+F_1^{uds}(0)=3,\qquad F_2^{uds}(0)=-0.552.
+\]
+Therefore the nucleon-current coefficients in this external-\(g_{VN}\) convention must use
+\[
+\boxed{
+\widehat F_i(t_N)=\frac{F_i^{uds}(t_N)}{3},
+\qquad
+\widehat F_1(0)=1,\quad
+\widehat F_2(0)=-0.184.
+}
+\]
+The external prefactor already contains \(g_{VN}\); using the raw \(F_i^{uds}\) in the current coefficients would count the factor three twice and produce a factor-nine error in the rate.
+
+The equivalent convention is to use \(g_{Vq}=g_{VN}/3\) externally with the unnormalized \(F_i^{uds}\). Both conventions must agree pointwise. All absolute-rate Python modules use the first convention.
+
+## 4. Adopted low-momentum flavor-separated prescription
+
+B uses the flavor-separated first-order Dirac slopes and leading Pauli inputs from Bishara et al., Appendix A.1:
+\[
+\begin{aligned}
+F_1^{u/p}(t_N)&=2+5.57t_N,\\
+F_1^{d/p}(t_N)&=1+2.84t_N,\\
+F_1^{s/p}(t_N)&=-0.018t_N,
+\end{aligned}
+\]
+with slopes in \({\rm GeV}^{-2}\). Summing the universal \(u+d+s\) current gives
+\[
+\boxed{
+F_1^{uds,N}(t_N)=3+8.392t_N+\mathcal O(t_N^2).
+}
+\]
+Equivalently, for \(Q_N^2=-t_N\),
+\[
+F_1^{uds,N}(Q_N^2)=3-8.392Q_N^2+\mathcal O(Q_N^4).
+\]
+The flavor-separated Pauli inputs are
+\[
+F_2^{u/p}(0)=1.609,\qquad
+F_2^{d/p}(0)=-2.097,\qquad
+F_2^{s/p}(0)=-0.064,
+\]
+so
+\[
+F_2^{uds,N}(t_N)=-0.552+\mathcal O(t_N).
+\]
+The available input does **not** provide a validated Pauli slope. B therefore uses the leading constant Pauli term; it does not invent an \(F_2'\).
+
+In the external-\(g_{VN}\) convention,
+\[
+\boxed{
+\widehat F_1(t_N)=1+\frac{8.392}{3}t_N+\mathcal O(t_N^2),
+\qquad
+\widehat F_2(t_N)=-0.184+\mathcal O(t_N).
+}
+\]
+This is the adopted low-momentum truncation for B, not an all-orders nucleon form-factor fit. The alternative isoscalar_zexp model is retained only as a sensitivity comparison; it is not the default baseline.
+
+## 5. Transfer variables
 
 For an initially resting on-shell nucleus,
 \[
-q_A^\mu=(E_R,\boldsymbol q_A),\qquad
-t_A=q_A^2=-2m_AE_R,\qquad
-Q_A^2=|\boldsymbol q_A|^2=2m_AE_R+E_R^2.
+q_A^\mu=P_A'^\mu-P_A^\mu=(E_R,\boldsymbol q_A).
 \]
-- AFH \(y_A\) and spatial NR coefficients use \(Q_A^2\).
-- The mediator propagator uses \(t_A\), so \((m_V^2-t_A)^2=(m_V^2+2m_AE_R)^2\).
-- The formal one-body impulse prescription sets \(q_N^\mu=q_A^\mu\), hence \(t_N=t_A\).
-- The separate static-nucleon diagnostic sets \(q_N^0=0\), hence \(t_N=-Q_A^2\). It is not the formal production transfer.
-
-The AFH nuclear response is not evaluated at \(t_N\), and the nucleon form factors are not evaluated at \(y_A\).
-
-## 5. Nucleon-current matching
-
-For the effective-\(g_{VN}\) convention, use
+The exact invariant and spatial momentum are different:
 \[
-\widehat c_M=
-\widehat F_1(t_N)
-+\frac{t_N}{8m_N^2}
-\left[\widehat F_1(t_N)+2\widehat F_2(t_N)\right],
+\boxed{t_A=q_A^2=-2m_AE_R,}
+\qquad
+\boxed{Q_A^2=|\boldsymbol q_A|^2=2m_AE_R+E_R^2.}
 \]
+The mediator propagator uses
+\[
+(m_V^2-t_A)^2=(m_V^2+2m_AE_R)^2.
+\]
+The AFH oscillator variable uses
+\[
+y_A=\frac{b_A^2Q_A^2}{4}.
+\]
+
+For the formal one-body impulse prescription,
+\[
+q_N^\mu=q_A^\mu,\qquad
+\boxed{t_N=t_A=-2m_AE_R.}
+\]
+Thus \(-t_N=2m_AE_R\), whereas the AFH and spatial NR coefficients retain the exact \(Q_A^2=2m_AE_R+E_R^2\). The static diagnostic \(q_N^0=0\), \(t_N=-Q_A^2\), is a different approximation and is not the B production convention.
+
+## 6. B current coefficient and C extension
+
+The effective one-nucleon Dirac–Pauli current is
+\[
+J_N^\mu=\bar u_N'
+\left[
+\widehat F_1(t_N)\gamma^\mu+
+\frac{i\widehat F_2(t_N)}{2m_N}
+\sigma^{\mu\nu}q_{N,\nu}
+\right]u_N.
+\]
+The charge coefficient used by the B M-only kernel is
+\[
+\boxed{
+\widehat c_M(t_N)=
+\widehat F_1(t_N)+
+\frac{t_N}{8m_N^2}
+\left[\widehat F_1(t_N)+2\widehat F_2(t_N)\right].
+}
+\]
+Therefore B is \(\widehat c_M^2L_C^{(3)}W_M\), with no additional response.
+
+For C, the spin-orbit charge multipole is added:
 \[
 \widehat c_{\Phi''}=
 \frac{Q_A^2}{4m_N^2}
-\left[\widehat F_1(t_N)+2\widehat F_2(t_N)\right].
+\left[\widehat F_1(t_N)+2\widehat F_2(t_N)\right],
 \]
-The \(t_N\) in \(\widehat c_M\) is the Lorentz invariant. The spatial \(Q_A^2\) in \(\widehat c_{\Phi''}\) is not interchangeable with it. Keep the signed \(M-\Phi''\) interference.
+\[
+R_C\propto L_C^{(3)}
+\left[
+\widehat c_M^2W_M+
+\widehat c_{\Phi''}^2W_{\Phi''}+
+2\widehat c_M\widehat c_{\Phi''}W_{M\Phi''}
+\right].
+\]
+The signed interference must be retained. C is a separate extension, not the baseline.
 
-## 6. Form-factor prescriptions and selected-point comparison
+## 7. Xe-131 selected-point comparison
 
-The code computes full flavor-summed quark-current form factors first and then divides by three before using the external \(g_{VN}\) prefactor.
+The current fixed-speed native-AFH diagnostics give the following dimensionless ratios. The absolute coefficients are in the external-\(g_{VN}\) convention; the ratios are unchanged by a common factor-three conversion.
 
-| Prescription | Full quark-current input | Interpretation |
-|---|---|---|
-| q0 anchor | \(F_1^{uds}(0)=3,\ F_2^{uds}(0)=-0.552\) | Original AFH M-only current normalization; finite-size \(W_M(Q_A)\) remains present |
-| bishara_linear | \(F_1^{uds}(t_N)=3+8.392t_N+O(t_N^2),\ F_2^{uds}(0)=-0.552\) | First-order low-\(Q_N^2\) flavor-summed diagnostic |
-| isoscalar_zexp | Isoscalar electromagnetic Sachs \(z\)-expansion plus strange-current inputs | Alternative finite-\(Q_N^2\) sensitivity prescription |
+| \(E_R\) | Prescription | \(B/A\) | \(C/B\) | \(C/A\) |
+|---:|---|---:|---:|---:|
+| 200 keV | bishara_linear | 0.739883 | 0.996955 | 0.737630 |
+| 200 keV | isoscalar_zexp | 0.780997 | 0.996558 | 0.778309 |
+| 267 keV | bishara_linear | 0.662175 | 0.914637 | 0.605649 |
+| 267 keV | isoscalar_zexp | 0.721663 | 0.899610 | 0.649216 |
 
-For the numerical table below, \(F_1^{uds}\) and \(F_2^{uds}\) are shown in the full quark-current convention, while \(\widehat c_M,\widehat c_{\Phi''}\) are normalized to the external \(g_{VN}\) coupling.
+The finite-\(t_N\) nucleon-current correction reduces the M-only kernel by roughly 22–34% at these points. The additional \(\Phi''\) plus signed \(M-\Phi''\) correction is small at 200 keV but larger near the \(W_M\) diffraction minimum around 267 keV. These are fixed-speed Xe-131 charge-sector results, not a natural-xenon halo spectrum.
 
-The archived Xe-131 response ratios are:
-| \(E_R\) | \(W_{\Phi''}/W_M\) | \(W_{M\Phi''}/W_M\) |
-|---:|---:|---:|
-| 200 keV | 0.03695594 | -0.19120930 |
-| 267 keV | 19.84506258 | -4.28296439 |
+## 8. Historical provenance and validation boundary
 
-| \(E_R\) | Prescription | \(F_1^{uds}\) | \(F_2^{uds}\) | \(\widehat c_M\) | \(\widehat c_{\Phi''}\) | \(B/A\) | \(C/B\) | \(C/A\) |
-|---:|---|---:|---:|---:|---:|---:|---:|---:|
-| 200 keV | bishara_linear | 2.590773 | -0.552000 | 0.860164 | 0.006853 | 0.739883 | 0.996955 | 0.737630 |
-| 200 keV | isoscalar_zexp | 2.663163 | -0.468053 | 0.883741 | 0.007961 | 0.780997 | 0.996558 | 0.778309 |
-| 267 keV | bishara_linear | 2.453682 | -0.552000 | 0.813741 | 0.008306 | 0.662175 | 0.914637 | 0.605649 |
-| 267 keV | isoscalar_zexp | 2.563886 | -0.449775 | 0.849508 | 0.010242 | 0.721663 | 0.899610 | 0.649216 |
+The archived Mathematica notebook explicitly evaluates the AFH finite-q nuclear response through \(W_M(y_A)\). Its recorded rate-engine path uses a constant effective nucleon coupling and does not, by itself, show an explicit finite-\(t_N\), flavor-resolved Dirac–Pauli insertion. If a different earlier local calculation included another low-order quark-shape prescription, its exact source and coefficients still need to be recovered. This provenance question does not block the adopted B baseline: B is now the declared primary prescription for subsequent calculations.
 
-All ratios are dimensionless. \(B/A\) isolates the nucleon-current normalization correction. \(C/B\) isolates the additional \(\Phi''\) response and signed interference. \(C/A\) gives the total change relative to the original finite-size AFH M-only baseline.
+The current Xe-131 fixed-speed dual-form-factor workflow passed its seven regression tests. The absolute B spectrum must still be rerun on the current branch after the coupling-normalization and baseline-name changes. The natural-xenon halo fold must pass the native seven-isotope/eight-response gate. P3-C's covariant-to-AFH nuclear-amplitude validation remains open; until then, the spatial D candidate is provisional.
 
-The finite-\(Q_N^2\) single-nucleon correction changes the M-only kernel by tens of percent in these selected points. Once that correction is factored out, the additional charge response is small at 200 keV but reaches several-to-ten percent at 267 keV, where \(W_M\) is near a diffraction minimum. These selected-point diagnostics are not a natural-xenon halo-integrated result and do not include the spatial-current candidate.
+## 9. Reporting requirements
 
-## 7. Provenance and validation boundary
+Every new result must report:
+1. the B absolute spectrum or rate, using \(\widehat F_1(t_N),\widehat F_2(t_N)\) and finite-size AFH \(W_M(y_A)\) only;
+2. B/A, which isolates the nucleon-current finite-\(t_N\) correction;
+3. C/B, which isolates the additional charge multipoles;
+4. C/A, which gives the total change relative to the historical AFH M-only reference;
+5. the form-factor prescription, transfer convention, coupling basis, AFH normalization, interpolation provenance, and quadrature convergence.
 
-The archived Mathematica rate engine evaluates AFH \(W_M(y_A)\) at finite spatial \(Q_A\) and uses a constant effective nucleon coupling. This establishes that the original calculation includes finite nuclear size. It does not establish that the original rate engine separately inserted finite-\(t_N\) flavor-resolved \(F_1^{q/N},F_2^{q/N}\).
-
-The current formal fixed-speed and P4 paths use \(t_N=t_A\) for the declared one-body impulse prescription. The static \(q_N^0=0\) results are diagnostic-only. The low-order Bishara prescription is a local first-order input, not an all-orders fit; \(F_2(0)\) does not determine \(F_2(t_N)\). Isoscalar-z-expansion is retained as an alternate sensitivity model.
-
-The native seven-isotope AFH comparison remains a hard gate. Python-translated AFH data are not a substitute. The full spatial-current candidate is not promoted until the native response comparison and P3-C amplitude-level contraction pass.
-
-## 8. Required reporting convention
-
-Every fixed-speed and halo-fold result must report A, B, and C separately, with the same finite-size AFH response \(W_M(y_A)\) in every denominator. Report \(B/A\), \(C/B\), and \(C/A\) with the meanings defined above. Keep the raw AFH factor-four conversion separate from the quark-current factor-three normalization. Do not use the labels “pointlike M baseline” or “point-nucleus baseline” for A.
+Never call B a point-nucleus calculation. Never replace AFH \(W_M(y_A)\) with a constant. Never multiply a second whole-nucleus form factor onto AFH. Never use raw \(F_i^{uds}\) with an external \(g_{VN}\) prefactor; use \(\widehat F_i=F_i^{uds}/3\).
