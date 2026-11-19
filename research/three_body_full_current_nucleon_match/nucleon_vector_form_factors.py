@@ -73,7 +73,7 @@ def transfer_kinematics_from_q_omega(
         raise ValueError("q_A and omega must be non-negative")
     if nucleon_transfer_scheme == FORMAL_NUCLEON_TRANSFER_SCHEME:
         qN0 = omega
-        scheme_id = "strict_one_body_impulse_qN_equals_qA"
+        scheme_id = "one_body_impulse_external_transfer_qN_equals_qA"
         qN_definition = (
             "external four-momentum at the one-body nucleon-current vertex; "
             "set q_N=q_A by impulse matching, not a microscopic bound-nucleon "
