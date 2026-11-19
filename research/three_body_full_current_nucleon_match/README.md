@@ -416,8 +416,7 @@ so the universal light-flavor sum has the diagnostic slope
 F_1^{V\,\prime}(0)=8.392(0.137) {\rm GeV}^{-2}.
 ]
 The same input gives (F_2^{s/p}(0)=-0.064(17)) and the total
-(F_2^V(0)=-0.552). These are low-(Q^2) matching inputs, not a complete
-finite-(t_N) form-factor model.
+(F_2^{uds}(0)=-0.552). B adopts the first-order F_1 slope and the available leading constant F_2 term; no F_2 slope is assumed. This is a controlled low-momentum truncation, not an all-orders finite-(t_N) fit.
 
 The adopted B prescription is the Bishara linear flavor-separated Dirac slope with the available leading constant Pauli term, using effective factors Fhat_i=F_i^{uds}/3 in the external g_VN basis. The isoscalar proton+neutron electromagnetic z expansion of Borah--Hill--Lee--Tomalak, supplemented by strange-current inputs, is retained only as an alternate sensitivity model.
 
