@@ -1405,7 +1405,7 @@ def fold(
         ),
         "mediator_denominator": "(m_V^2-t_A)^2=(m_V^2+2*m_A*E_R)^2; t_A=-2*m_A*E_R",
         "nuclear_spatial_momentum": "Q_A^2=2*mA*ER+ER^2; used only in AFH y_A and spatial NR coefficients",
-        "nucleon_transfer_scheme": "strict one-body impulse q_N^mu=q_A^mu; t_N=t_A=-2*m_A*E_R",
+        "nucleon_transfer_scheme": "one-body impulse-current external-transfer assignment q_N^mu=q_A^mu; t_N=t_A=-2*m_A*E_R",
         "transfer_vector_storage": (
             "Each isotope row stores qA_four_vector_GeV and qN_four_vector_GeV "
             "in the q-aligned (+z) frame, together with tA_GeV2 and tN_GeV2; "
