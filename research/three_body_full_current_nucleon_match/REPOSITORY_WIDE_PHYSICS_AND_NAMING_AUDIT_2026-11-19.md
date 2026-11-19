@@ -130,15 +130,46 @@ C/A=\text{combined change}.
 \]
 The historical 0.778/0.649 values are not interchangeable with 0.9966/0.8996.
 
-## 6. Manuscript and main-branch issues still requiring synchronization
+## 6. Manuscript nomenclature and formula cross-check (2026-11-19)
 
-These issues are identified but have not been silently edited in the paper source.
+The current `paper-source/main.tex` was reopened and checked against the
+adopted B convention. The earlier audit statements about an overloaded
+\(F_N\), nuclear \(m_N\), and an unconverted raw AFH response are stale
+for the current branch; the manuscript already contains the corresponding
+corrections:
 
-1. In paper-source/main.tex, the coherent nuclear form factor is denoted \(F_N(q)\). This is a whole-nucleus form factor, not the single-nucleon Dirac–Pauli pair. Prefer \(F_A(q_A)\) or \(\mathcal F_A(q_A)\), reserving \(F_{1,2}^{V,N}(t_N)\) for nucleon form factors.
-2. The same paper appendix overloads \(m_N\) between a nucleon target and nuclear target mass. Use \(m_n\) (or \(m_N\)) for nucleon mass and \(m_A\) for the nucleus throughout.
-3. The paper currently writes \(4\pi W_M^{00}/(2J_A+1)\) while asserting physical zero-momentum normalization \(A^2\). The repository AFH v6.0 raw-response audit says the raw response gives \(A^2/4\). If the paper's \(W_M^{00}\) is the raw package response, the physical coefficient must be \(16\pi\), or convert the response to the physical convention first and then use the corresponding \(4\pi\) formula. Resolve this against the exact imported response convention before editing the manuscript.
-4. The paper's \(y_A\) expression uses the leading recoil approximation \(b_A^2m_AE_R/2\). Current code uses exact \(b_A^2Q_A^2/4\), with \(Q_A^2=2m_AE_R+E_R^2\). The difference is tiny in this recoil regime but should be labelled as an approximation or synchronized.
-5. The Mathematica notebook and archived historical rate outputs remain A-like because the recorded main rate path uses a constant nucleon coupling. Do not relabel those outputs as B. A separate Mathematica B implementation or pointwise comparison with Python B remains necessary.
+1. **Whole-nucleus form factor:** the appendix uses \(F_A(q_A)\) for the
+   normalized whole-nucleus density amplitude, with \(F_A(0)=1\). It
+   explicitly distinguishes this object from the AFH response
+   \(W_M^{\mathrm{phys}}\) and from the single-nucleon
+   \(F_{1,2}^{V,N}(t_N)\).
+2. **Mass symbols:** the manuscript uses \(m_A\) for the nucleus,
+   \(m_N\) for the free nucleon in the Dirac--Pauli charge coefficient,
+   and \(m_T\) for a generic pointlike Dirac target in the appendix,
+   setting \(m_T=m_A\) when that target is the nucleus. No current
+   occurrence uses \(m_N\) as the nuclear mass.
+3. **AFH normalization:** the manuscript defines
+   \(W_M^{00,\mathrm{phys}}=4C_0(A)W_M^{00,\mathrm{raw}}\), then
+   defines \(\mathcal R_A=4\pi W_M^{00,\mathrm{phys}}/(2J_A+1)\).
+   The zero-momentum normalization is therefore
+   \(\mathcal R_A(0)=A^2\), with factor four and \(C_0\) included
+   once in the physical response.
+4. **Momentum variables:** the manuscript distinguishes
+   \(Q_A^2=2m_AE_R+E_R^2\), \(t_A=-2m_AE_R\), and the formal
+   impulse prescription \(t_N=t_A\). It uses exact
+   \(y_A=b_A^2Q_A^2/4\) in the AFH response.
+5. **Historical A versus B:** the Mathematica rate engine and its
+   archived outputs remain A-like if they use the constant nucleon
+   coupling without the finite-\(t_N\) Dirac--Pauli insertion. They
+   must not be relabelled as B. A separate Mathematica B implementation
+   or pointwise comparison with the Python B result remains a future
+   cross-check.
+
+A small editorial defect in the introductory recoil derivation was also
+fixed in this branch: an extra period before “We write the invariant mass”
+was removed, and the leading recoil expressions now use \(q_A\)
+consistently instead of an unindexed \(q\). The heavy-mediator comparison
+now states its spatial-transfer limit using \(Q_A^2\).
 
 ## 7. Validation status and next gates
 
