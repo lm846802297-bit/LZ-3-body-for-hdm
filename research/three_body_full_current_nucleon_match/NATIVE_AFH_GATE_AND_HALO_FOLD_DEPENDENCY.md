@@ -132,17 +132,20 @@ The archive checks:
 The fixed-speed Xe-131 result is a Coulomb-sector ratio only, not a halo
 fold or a substitute for the seven-isotope/eight-response gate. The original
 calculation's finite-q AFH nuclear form factor is retained through
-\(W_M(Q_A)\). Therefore the q=0 single-nucleon-current M-only result is
-the original AFH M-only baseline, not a point-nucleus approximation. We
-report both the finite-\(t_N\) response-only ratio and the total ratio to
-the original AFH baseline:
+\(W_M^{\rm phys}(Q_A)\). In the external \(g_{VN}\) coupling basis,
+the original AFH reference uses \(\widehat F_1(0)=1\), not an extra
+\(F_1^{uds}(0)^2=9\). The AFH factor four is already included once in
+the physical equal-\(p=n\) response. We report all three ratios in the
+A/B/C hierarchy: B/A isolates the nucleon-current correction, C/B
+isolates the additional nuclear response at fixed nucleon form factors,
+and C/A is the total change from the original finite-size AFH reference.
 
-| \(E_R\) | \(q_A\) (GeV) | Form factor | \(R_{\rm charge}/R_{t_N,M}\) | \(R_{\rm charge}/R_{\mathrm{AFH},M}^{(0)}\) |
-|---:|---:|---|---:|---:|
-| 200 keV | 0.220825560 | bishara_linear | 0.99695540 | 0.737630 |
-| 200 keV | 0.220825560 | isoscalar_zexp | 0.99655805 | 0.778309 |
-| 267 keV | 0.255146745 | bishara_linear | 0.91463689 | 0.605649 |
-| 267 keV | 0.255146745 | isoscalar_zexp | 0.89961039 | 0.649216 |
+| \(E_R\) | \(q_A\) (GeV) | Form factor | \(B/A\) | \(C/B\) | \(C/A\) |
+|---:|---:|---|---:|---:|---:|
+| 200 keV | 0.220825560 | bishara_linear | 0.739883 | 0.99695540 | 0.737630 |
+| 200 keV | 0.220825560 | isoscalar_zexp | 0.780997 | 0.99655805 | 0.778309 |
+| 267 keV | 0.255146745 | bishara_linear | 0.662175 | 0.91463689 | 0.605649 |
+| 267 keV | 0.255146745 | isoscalar_zexp | 0.721663 | 0.89961039 | 0.649216 |
 
 The common integrated \(L_C^{(3)}\) cancels in these normalized ratios.
 The dual-form-factor fixed-speed workflow passed (run 44443361283,
