@@ -57,7 +57,9 @@ jobs:
             research/three_body_full_current_nucleon_match/validate_afh_spatial_multipole_archive.py \
             research/three_body_full_current_nucleon_match/test_afh_spatial_obdme_responses.py \
             research/three_body_full_current_nucleon_match/test_afh_native_multipole_comparator.py \
-            research/afh_response_crosschecks/compare_p3_multipoles_vs_native.py
+            research/afh_response_crosschecks/compare_p3_multipoles_vs_native.py \
+            research/three_body_full_current_nucleon_match/p3c_amplitude_level_helicity_crosscheck.py \
+            research/three_body_full_current_nucleon_match/test_p3c_amplitude_level_helicity_crosscheck.py
       - name: Run full-current regression tests
         run: |
           python -m unittest discover \
@@ -104,6 +106,14 @@ jobs:
             --afh-artifact-run-id 44222087512 --afh-artifact-id 14391456283 \
             --spatial-artifact-run-id ${{ github.run_id }} \
             --spatial-artifact-id ${{ needs.afh-spatial-obdme.outputs.artifact_id }}
+      - name: Run P3-C spatial amplitude-level helicity reconstruction
+        run: |
+          python research/three_body_full_current_nucleon_match/p3c_amplitude_level_helicity_crosscheck.py \
+            --phase-space-tensor /tmp/three-body-phase-space-tensor.json \
+            --spatial-dir /tmp/afh-spatial-obdme \
+            --response-contraction /tmp/three-body-afh-response-contraction.json \
+            --leptonic-weights /tmp/three-body-multipole-leptonic-weights.json \
+            --out-json /tmp/p3c-spatial-amplitude-level-helicity-crosscheck.json
       - name: Upload matching and integrated tensor diagnostics
         uses: actions/upload-artifact@v4
         with:
@@ -113,6 +123,7 @@ jobs:
             /tmp/three-body-phase-space-tensor.json
             /tmp/three-body-multipole-leptonic-weights.json
             /tmp/three-body-afh-response-contraction.json
+            /tmp/p3c-spatial-amplitude-level-helicity-crosscheck.json
           if-no-files-found: error
           retention-days: 90
 
