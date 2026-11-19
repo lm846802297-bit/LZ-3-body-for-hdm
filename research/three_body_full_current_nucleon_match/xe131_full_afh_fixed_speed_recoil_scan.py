@@ -108,11 +108,20 @@ def load_response_interpolators(native_charge_csv: Path) -> tuple[dict, dict]:
     c0_anchor = spatial.isotope_spatial_response(
         0.0, 131, density_rows, J_A, T_iso, b_GeV_inv
     )
-    C0 = float(c0_anchor["common_matrix_normalization"])
+    C0_spatial = float(c0_anchor["common_matrix_normalization"])
+    C0_native = float(native_provenance["common_matrix_normalization_C0"])
+    if not math.isclose(C0_native, C0_spatial, rel_tol=0.0, abs_tol=2.0e-12):
+        raise ValueError(
+            "native charge and P3-B spatial OBDME C0 normalizations disagree: "
+            f"native={C0_native:.16g}, spatial={C0_spatial:.16g}"
+        )
+    C0 = C0_spatial
     q_grid = np.asarray(native["q"], dtype=float)
 
+    # load_native_xe131_responses already applies C0 to the three native
+    # physical equal-p/n charge channels. Do not multiply them a second time.
     charge = {
-        name: C0 * np.asarray(native["responses"][name], dtype=float)
+        name: np.asarray(native["responses"][name], dtype=float)
         for name in ("M", "PhiPP", "MPhiPP")
     }
     spatial_rows = [
@@ -177,7 +186,10 @@ def load_response_interpolators(native_charge_csv: Path) -> tuple[dict, dict]:
         "T_iso": T_iso,
         "b_A_GeV_inverse": b_GeV_inv,
         "C0": C0,
-        "equal_pn_factor_four": "already included once in all six physical response columns",
+        "normalization": (
+            "factor four is included once by the native AFH charge export; "
+            "one common C0 is applied once to charge and spatial channels"
+        ),
         "q_grid_points": len(q_grid),
         "q_grid_min_GeV": float(q_grid[0]),
         "q_grid_max_GeV": float(q_grid[-1]),
