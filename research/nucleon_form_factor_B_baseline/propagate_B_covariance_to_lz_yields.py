@@ -143,10 +143,11 @@ def run(
     isotope_path = source_dir / "afh_hybrid9_isotope_kernel_integrals.csv"
     source_metadata_path = source_dir / "metadata.json"
     b_spectrum_path = b_spectrum_dir / "afh_hybrid9_B_natural_xenon_spectrum.csv"
+    b_isotope_path = b_spectrum_dir / "afh_hybrid9_B_isotope_contributions.csv"
     b_metadata_path = b_spectrum_dir / "metadata.json"
     for path in (
         source_spectrum_path, isotope_path, source_metadata_path,
-        b_spectrum_path, b_metadata_path, detector_yield_csv, efficiency_csv,
+        b_spectrum_path, b_isotope_path, b_metadata_path, detector_yield_csv, efficiency_csv,
     ):
         if not path.is_file():
             raise FileNotFoundError(path)
@@ -169,8 +170,9 @@ def run(
     source_spectrum = read_csv(source_spectrum_path)
     isotope_rows = read_csv(isotope_path)
     b_rows = read_csv(b_spectrum_path)
+    b_isotope_rows = read_csv(b_isotope_path)
     detector_rows = read_csv(detector_yield_csv)
-    if not source_spectrum or not isotope_rows or not b_rows or not detector_rows:
+    if not source_spectrum or not isotope_rows or not b_rows or not b_isotope_rows or not detector_rows:
         raise ValueError("one or more required rate tables are empty")
 
     b_groups = defaultdict(list)
@@ -181,6 +183,17 @@ def run(
 
     detector_lookup = {
         (row["benchmark"], row["scenario"]): row for row in detector_rows
+    }
+    source_spectrum_lookup = {
+        (row["benchmark"], row["scenario"], number(row, "ER_keV")): row
+        for row in source_spectrum
+    }
+    b_isotope_lookup = {
+        (
+            row["benchmark"], row["scenario"],
+            number(row, "ER_keV"), int(row["A"]),
+        ): row
+        for row in b_isotope_rows
     }
 
     energies_by_benchmark = {
@@ -223,6 +236,8 @@ def run(
 
     output_rows = []
     max_central_closure = 0.0
+    max_A_spectrum_closure = 0.0
+    max_isotope_A_contribution_closure = 0.0
     max_draw_nonfinite = 0
     for benchmark, energies in energies_by_benchmark.items():
         if len(energies) < 2:
@@ -231,23 +246,61 @@ def run(
             draw_rates = np.zeros((n_draws, len(energies)), dtype=float)
             energy_index = {energy: i for i, energy in enumerate(energies)}
             for ER in energies:
+                reconstructed_A_rate = 0.0
                 for row in isotope_groups[(benchmark, ER)]:
                     R_A = response_for_scenario(row, scenario)
-                    if R_A == 0.0:
+                    base_kernel = number(row, "kernel_halo_integral_GeV")
+                    if R_A == 0.0 or base_kernel == 0.0:
                         continue
                     A = int(row["A"])
                     atom_fraction = number(row, "natural_atom_fraction")
-                    base_kernel = number(row, "kernel_halo_integral_GeV")
                     mA = number(row, "mA_GeV")
-                    q2 = number(row, "q_exact_spatial_GeV")**2
                     tA = -2.0*mA*ER*1.0e-6
                     denominator = (mV*mV - tA)**2
                     a_contribution = (
                         prefactor * atom_fraction * base_kernel * R_A / denominator
                     )
+                    reconstructed_A_rate += a_contribution
+                    stored_key = (benchmark, scenario, ER, A)
+                    stored_isotope = b_isotope_lookup[stored_key]
+                    stored_A_contribution = number(
+                        stored_isotope, "rate_A_contribution_events_kg_day_keV"
+                    )
+                    isotope_closure = (
+                        abs(a_contribution/stored_A_contribution-1.0)
+                        if stored_A_contribution > 0.0 else (
+                            0.0 if a_contribution == 0.0 else math.inf
+                        )
+                    )
+                    max_isotope_A_contribution_closure = max(
+                        max_isotope_A_contribution_closure, isotope_closure
+                    )
+                    if isotope_closure > closure_tolerance:
+                        raise ArithmeticError(
+                            f"{benchmark}/{scenario}/{ER}/Xe-{A}: isotope A contribution "
+                            f"does not close ({isotope_closure:.6e})"
+                        )
+                    q2 = number(row, "q_exact_spatial_GeV")**2
                     idx = q2_index_for_row[(benchmark, ER, A)]
                     draw_rates[:, energy_index[ER]] += (
                         a_contribution * multiplier_draws[:, idx]
+                    )
+
+                source_A_rate = number(
+                    source_spectrum_lookup[(benchmark, scenario, ER)],
+                    "rate_events_kg_day_keV",
+                )
+                spectrum_closure = (
+                    abs(reconstructed_A_rate/source_A_rate-1.0)
+                    if source_A_rate > 0.0 else (
+                        0.0 if reconstructed_A_rate == 0.0 else math.inf
+                    )
+                )
+                max_A_spectrum_closure = max(max_A_spectrum_closure, spectrum_closure)
+                if spectrum_closure > closure_tolerance:
+                    raise ArithmeticError(
+                        f"{benchmark}/{scenario}/{ER}: reconstructed A spectrum "
+                        f"does not close ({spectrum_closure:.6e})"
                     )
 
             rows = b_groups[(benchmark, scenario)]
@@ -335,6 +388,8 @@ def run(
         },
         "validation": {
             "maximum_central_detector_yield_closure_relative_difference": max_central_closure,
+            "maximum_A_spectrum_reconstruction_relative_difference": max_A_spectrum_closure,
+            "maximum_isotope_A_contribution_relative_difference": max_isotope_A_contribution_closure,
             "central_detector_yield_closure_tolerance": closure_tolerance,
             "nonfinite_draw_count": max_draw_nonfinite,
         },
@@ -345,6 +400,8 @@ def run(
             "source_metadata_sha256": sha256(source_metadata_path),
             "B_spectrum_csv": str(b_spectrum_path),
             "B_spectrum_sha256": sha256(b_spectrum_path),
+            "B_isotope_contributions_csv": str(b_isotope_path),
+            "B_isotope_contributions_sha256": sha256(b_isotope_path),
             "B_metadata_json": str(b_metadata_path),
             "B_metadata_sha256": sha256(b_metadata_path),
             "efficiency_csv": str(efficiency_csv),
