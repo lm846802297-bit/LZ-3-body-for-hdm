@@ -1,13 +1,13 @@
 # Archived outputs: finite nucleon form factors in the AFH B baseline
 
-**Archive status:** native outputs preserved; source artifact digest and every extracted file are checked by \`RUN_MANIFEST.json\` and \`SHA256SUMS\`.
+**Archive status:** native outputs preserved; source artifact digest and every extracted file are checked by RUN_MANIFEST.json and SHA256SUMS.
 
 ## Provenance and dependency chain
 
-- The upstream halo input is the PR #78 artifact from [workflow run 44560087038](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44560087038), artifact ID \`14551462445\`, source commit \`9ca1801cdded7002c93776f8a0f5bce894135356\`.
-- PR #80's B-baseline workflow completed successfully in [run 44565778594](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44565778594), source commit \`42309444866454bdfc27f45316bd3628815209fe\`, artifact ID \`14551033657\`.
-- The B workflow consumed the halo artifact from run \`44560087038\`. The later successful PR #74 integration rerun (run \`44568592064\`) has byte-identical extracted halo payloads and is preserved in the linked halo archive.
-- PR #74 is now merged to \`main\` as \`070dc89cc58699633d0009c1fbaea7fa400ee337\`. PR #82 integrates the B implementation and these permanent outputs into \`main\`.
+- The upstream halo input is the PR #78 artifact from [workflow run 44560087038](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44560087038), artifact ID 14551462445, source commit 9ca1801cdded7002c93776f8a0f5bce894135356.
+- PR #80's B-baseline workflow completed successfully in [run 44565778594](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44565778594), source commit 42309444866454bdfc27f45316bd3628815209fe, artifact ID 14551033657.
+- The B workflow consumed the halo artifact from run 44560087038. The later successful PR #74 integration rerun (run 44568592064) has byte-identical extracted halo payloads and is preserved in the linked halo archive.
+- PR #74 is now merged to main as 070dc89cc58699633d0009c1fbaea7fa400ee337. PR #82 integrates the B implementation and these permanent outputs into main.
 
 ## Adopted B prescription
 
@@ -24,10 +24,10 @@ The form factors use the exact spatial nuclear transfer \(Q_A\); \(q_{NR}\) is n
 
 Two strange-current scenarios are kept separate and are not averaged:
 
-1. \`sufian2017_unit_current\` — primary unit-strange-current input.
-2. \`alexandrou2020_charge_weighted_converted\` — published charge-weighted input converted to the unit-current convention.
+1. sufian2017_unit_current — primary unit-strange-current input.
+2. alexandrou2020_charge_weighted_converted — published charge-weighted input converted to the unit-current convention.
 
-The Ye2020 electromagnetic coefficient covariance is propagated with 3,000 correlated draws using seed \`20261119\`. Strange-lattice uncertainties are not sampled in this first pass.
+The Ye2020 electromagnetic coefficient covariance is propagated with 3,000 correlated draws using seed 20261119. Strange-lattice uncertainties are not sampled in this first pass.
 
 ## Archived numerical results
 
@@ -42,12 +42,12 @@ The higher-order B quadrature comparison gives maximum natural-xenon full-rate a
 
 ## Files
 
-- \`source-artifact-pr80.zip\`: original successful PR #80 Actions artifact.
-- \`extracted/B-baseline/\`: baseline outputs for both strange-current scenarios.
-- \`extracted/B-highorder/\`: higher-order outputs and metadata for both scenarios.
-- \`extracted/B-quadrature-comparison/\`: pointwise quadrature comparisons and summary JSONs.
-- \`RUN_MANIFEST.json\`: source run IDs, upstream halo lineage, artifact ID/digest, calculation summary, and per-file inventory.
-- \`SHA256SUMS\`: checksums for the source ZIP, all extracted files, this README, and the run manifest.
+- source-artifact-pr80.zip: original successful PR #80 Actions artifact.
+- extracted/B-baseline/: baseline outputs for both strange-current scenarios.
+- extracted/B-highorder/: higher-order outputs and metadata for both scenarios.
+- extracted/B-quadrature-comparison/: pointwise quadrature comparisons and summary JSONs.
+- RUN_MANIFEST.json: source run IDs, upstream halo lineage, artifact ID/digest, calculation summary, and per-file inventory.
+- SHA256SUMS: checksums for the source ZIP, all extracted files, this README, and the run manifest.
 
 ## Scientific scope
 
