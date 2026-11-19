@@ -73,23 +73,29 @@ interference.
 
 ## 2. Momentum and nucleon-current conventions
 
-The nuclear transfer and one-nucleon transfer are kept distinct:
+The nuclear transfer and the momentum argument at the one-body nucleon
+current vertex are denoted separately:
 \[
 q_A^\mu=P_A'^\mu-P_A^\mu,\qquad
-q_N^\mu=k_N'^\mu-k_N^\mu.
+q_N^\mu\equiv\text{four-momentum flowing through the one-body current vertex}.
 \]
-In the static one-body impulse diagnostic,
+For a free on-shell impulse benchmark one can write
+\(q_N^\mu=k_N'^\mu-k_N^\mu\). In a bound nucleus, formal B assigns the
+known external transfer to this one-body vertex,
 \[
-q_N^0=0,\qquad
-\boldsymbol q_N=\boldsymbol q_A,\qquad
-t_N=-|\boldsymbol q_A|^2.
+q_N^\mu=q_A^\mu,
+\qquad
+t_N=t_A=-2m_AE_R.
 \]
-This is a separate diagnostic approximation. The adopted B production
-prescription instead uses the full one-body transfer
+This is the one-body impulse-current prescription used for production; it
+does not solve the microscopic off-shell initial and final four-momenta of
+each bound nucleon. The alternative static diagnostic instead takes
 \[
-q_N^\mu=q_A^\mu,\qquad
-t_N=t_A=-2m_AE_R,
+q_{N,\rm static}^0=0,\qquad
+\boldsymbol q_{N,\rm static}=\boldsymbol q_A,\qquad
+t_{N,\rm static}=-Q_A^2.
 \]
+It is a low-energy approximation, not the adopted B convention.
 while AFH uses the exact spatial momentum
 \[
 Q_A^2=2m_AE_R+E_R^2,\qquad y_A=b_A^2Q_A^2/4.
@@ -123,9 +129,12 @@ F_1^{V,N}(t_N)\gamma^\mu+
 \frac{iF_2^{V,N}(t_N)}{2m_N}
 \sigma^{\mu\nu}q_{N,\nu},
 \]
-with the Pauli sign tied to \(q_N=k_N'-k_N\). Before identifying AFH
-one-body coefficients, the covariant spinor matrix element is divided by
-\(2\sqrt{E_NE_N'}\).
+with the Pauli sign tied to the direction of the external four-transfer
+through the one-body current vertex. For the free on-shell impulse
+validation, this is explicitly \(q_N=k_N'-k_N\); the bound-nucleus B
+prescription uses the same external transfer \(q_N=q_A\). Before
+identifying AFH one-body coefficients, the covariant spinor matrix element
+is divided by \(2\sqrt{E_NE_N'}\).
 
 The leading nonrelativistic current used by the diagnostic is
 \[
