@@ -22,7 +22,7 @@ from scipy.interpolate import PchipInterpolator
 
 import afh_spatial_obdme_responses as spatial
 from nucleon_vector_form_factors import (
-    F1V0, F2V0, bishara_linear, charge_coefficients,
+    bishara_linear, charge_coefficients,
     effective_nucleon_form_factors,
 )
 from three_body_multipole_leptonic_weights import (
