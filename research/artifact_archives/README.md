@@ -26,3 +26,6 @@ The resulting archives live in the corresponding study directories:
 ## Reuse
 
 For another study, create a new request JSON with pinned successful run IDs, artifact IDs, expected SHA-256 digests, source commit SHAs, and destination paths. Add a corresponding narrowly scoped workflow trigger and validator. Do not overwrite a prior archive; create a new dated result directory and link the successor from the study README.
+
+
+The manifest's `file_inventory` intentionally excludes `RUN_MANIFEST.json` itself to avoid a self-referential digest. `SHA256SUMS` does include and verify `RUN_MANIFEST.json`, along with the README, source ZIPs, and extracted native files.
