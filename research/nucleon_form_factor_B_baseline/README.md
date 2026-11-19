@@ -57,12 +57,13 @@ F_2=rac{G_M-G_E}{1+	au},qquad 	au=Q^2/(4m_N^2).
 
 ## Strange-current input
 
-Two separately labelled strange-current scenarios are implemented. Their current conventions are not interchangeable; see `strange_current_convention_audit.md`.
+Three separately labelled strange-current scenarios are implemented. Their current conventions are not interchangeable; see `strange_current_convention_audit.md`.
 
-1. `sufian2017_unit_current` (primary): directly uses the unit-current matrix element (ar sgamma^mu s), with (G_M^s(0)=-0.064) and (langle r_E^2angle_s=-0.0043,mathrm{fm}^2). The magnetic form factor is frozen at its quoted zero-momentum value because this source does not provide a magnetic radius in the cited result.
-2. `alexandrou2020_charge_weighted_converted` (alternative): uses the published 2020 (e_sar sgamma^mu s) form factors after dividing the reported Sachs functions and slopes by (e_s=-1/3), as required to convert to a unit-current matrix element. The published magnetic and electric radii are used in a first-order low-(Q^2) expansion.
+1. `sufian2017_unit_current` (historical primary benchmark): directly uses the unit-current matrix element \(\bar s\gamma^\mu s\), with \(G_M^s(0)=-0.064\) and \(\langle r_E^2\rangle_s=-0.0043\,\mathrm{fm}^2\). The magnetic form factor is frozen at its quoted zero-momentum value because the cited physical-point result does not provide a magnetic radius.
+2. `alexandrou2020_charge_weighted_converted`: uses the published 2020 \(e_s\bar s\gamma^\mu s\) form factors after dividing the reported Sachs functions by \(e_s=-1/3\), as required to convert to a unit-current matrix element. The electric and magnetic radii are used in a first-order low-\(Q^2\) expansion. The magnetic expansion includes its normalization \(G_M^s(0)=\mu_s\).
+3. `alexandrou2026_continuum_unit_current`: uses the newer continuum-limit physical-point results from arXiv:2603.26600. The paper states that the strange electric charge factor is not included in the reported results, so these values already use the unit-current convention. This scenario is implemented using the published electric and magnetic slopes; it is explicitly a slope-only low-\(Q^2\) representation, not a reconstruction of the full fitted z-expansion.
 
-The two scenarios are both calculated and retained; they are not averaged.
+All three scenarios are calculated and retained separately; they are not averaged. The Sufian set remains the frozen historical benchmark, while the 2026 result is included as an updated continuum-lattice cross-check. The 2026 source uncertainties are recorded in metadata but are not yet sampled.
 
 ## Applying B to a halo/isotope artifact
 
