@@ -22,7 +22,7 @@ import numpy as np
 from scipy.interpolate import PchipInterpolator
 
 from nucleon_vector_form_factors import (
-    F1V0, F2V0, bishara_linear, charge_coefficients,
+    RAW_F1_UDS0, RAW_F2_UDS0, bishara_linear, charge_coefficients,
     effective_nucleon_form_factors,
 )
 from native_charge_sector_halo_fold import load_isotope_inputs
@@ -260,7 +260,7 @@ def charge_sector_kernels(
     Q_A2 = qA_GeV * qA_GeV
     F1_raw, F2_raw = bishara_linear(-tN_GeV2)
     F1, F2 = effective_nucleon_form_factors(F1_raw, F2_raw)
-    F1hat0, _ = effective_nucleon_form_factors(F1V0, F2V0)
+    F1hat0, _ = effective_nucleon_form_factors(RAW_F1_UDS0, RAW_F2_UDS0)
     cM, cPhi = charge_coefficients(
         qA_GeV,
         F1=F1,
