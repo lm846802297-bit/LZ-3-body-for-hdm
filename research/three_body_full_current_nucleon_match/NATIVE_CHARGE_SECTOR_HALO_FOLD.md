@@ -91,21 +91,28 @@ inelastic DM transition current. The point-nucleus contraction independently
 checks that \((2m_A+E_R)^2L_C\) equals the direct charge plus longitudinal
 plus interference contraction.
 
-For the static Dirac-Pauli charge matching,
+For the separate **static diagnostic** with \(q_N^0=0\), one sets
+\(t_N=-Q_A^2\). Its coefficients must nevertheless use the effective
+nucleon form factors \(\widehat F_i=F_i^{uds}/3\), because the external
+rate prefactor already contains \(g_{VN}=3g_{Vq}\):
 
 \[
-c_M =
-F_1^V+
-\frac{t_N(F_1^V+2F_2^V)}{8m_N^2},
+c_M^{\rm static} =
+\widehat F_1+
+\frac{t_N(\widehat F_1+2\widehat F_2)}{8m_N^2},
 \]
 
 \[
-c_{\Phi''}
+c_{\Phi''}^{\rm static}
 =
-\frac{Q_A^2(F_1^V+2F_2^V)}{4m_N^2},
+\frac{Q_A^2(\widehat F_1+2\widehat F_2)}{4m_N^2},
 \qquad
 t_N=-Q_A^2.
 \]
+
+This static prescription is retained only as a diagnostic. It is **not**
+the adopted B production prescription; formal B uses \(t_N=t_A\), as
+specified in Section 5.
 
 Therefore
 
@@ -241,8 +248,18 @@ AFH validation and cannot be promoted to a paper-final nuclear prediction.
 The formal three-body width is restricted to the asymmetric Pole prescription:
 the first \(p-k\) \(\chi_2\) propagator is zero-width and the second
 \(p'+k\) propagator carries the constant pole width. The mediator denominator
-uses the exact \((m_V^2+q_A^2)^2\), with
-\(q_A^2=2m_AE_R+E_R^2\).
+uses the Lorentz invariant
+\[
+(m_V^2-t_A)^2=(m_V^2+2m_AE_R)^2,
+\qquad t_A=-2m_AE_R.
+\]
+The exact spatial momentum
+\[
+Q_A^2=2m_AE_R+E_R^2
+\]
+is used in the AFH variable \(y_A=b_A^2Q_A^2/4\), not in the mediator
+denominator. Formal B also uses \(t_N=t_A\), not the static
+\(t_N=-Q_A^2\) diagnostic.
 
 The present engine includes the charge/longitudinal sector through \(L_C\)
 but still omits the transverse \(\Delta\), \(\Sigma'\), and mixed
