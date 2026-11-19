@@ -17,11 +17,12 @@ from pathlib import Path
 
 import numpy as np
 
-from ye2020_lowq2 import cM_and_factor, sample_cM_draws
+from borah2020_lowq2 import cM_and_factor, sample_cM_draws
 
 MODELS = (
     "sufian2017_unit_current",
     "alexandrou2020_charge_weighted_converted",
+    "alexandrou2026_continuum_unit_current",
 )
 
 
@@ -151,7 +152,8 @@ def process_one(input_dir: Path, output_dir: Path, model: str,
         "baseline":"B = finite nucleon F1(t_N), F2(t_N) times finite-size AFH W_M(y_A)",
         "input_halo_directory":str(input_dir),
         "strange_form_factor_model":model,
-        "form_factor_source":"Borah et al., Phys. Rev. D 102, 074012 (2020), arXiv:2003.13640; Ye et al. supplemental coefficients/covariance",
+        "strange_input_metadata":central["strange_metadata"],
+        "electromagnetic_form_factor_source":"Borah et al., Phys. Rev. D 102, 074012 (2020), arXiv:2003.13640; pinned coefficients/covariance distributed by GENIE",
         "strange_input_convention":"model-specific; see strange_current_convention_audit.md",
         "momentum_transfer":{
             "Q_A2_GeV2":"2*m_A*E_R+E_R^2",
@@ -166,9 +168,9 @@ def process_one(input_dir: Path, output_dir: Path, model: str,
             "nuclear_response":"AFH v6.0 finite-size W_M; no point-nucleus replacement",
         },
         "uncertainty":{
-            "Ye2020_EM_form_factor_covariance_draws":n_draws,
+            "Borah2020_EM_form_factor_covariance_draws":n_draws,
             "seed":seed,
-            "strange_lattice_errors":"not sampled in this first pass; separate strange-current scenarios are both output",
+            "strange_lattice_errors":"not sampled in this first pass; central-value scenarios are kept separate and source uncertainties are recorded in the form-factor metadata",
             "detector_response_applied":False,
         },
         "summary":{
