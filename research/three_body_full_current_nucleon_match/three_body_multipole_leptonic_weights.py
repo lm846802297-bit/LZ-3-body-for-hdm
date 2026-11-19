@@ -16,8 +16,11 @@ from pathlib import Path
 import numpy as np
 
 
-DEFAULT_F1 = 3.0
-DEFAULT_F2 = -0.552
+RAW_F1_UDS0 = 3.0
+RAW_F2_UDS0 = -0.552
+# The public prefactor already contains g_VN=3*g_Vq.
+DEFAULT_F1 = RAW_F1_UDS0 / 3.0
+DEFAULT_F2 = RAW_F2_UDS0 / 3.0
 DEFAULT_MN_GEV = 0.938918
 
 
@@ -293,8 +296,11 @@ def extract_afh_vector_coefficients(
     """AFH Eq. (107) coefficients for the leading static Dirac--Pauli current.
 
     Convention: q_AFH=-q_A, q_N=+q_A, metric (+---). The coefficients
-    multiply the physical equal-p/n AFH response columns. The default F1/F2
-    are provisional q=0 anchors, not finite-t form factors.
+    multiply the physical equal-p/n AFH response columns. F1/F2 are in the
+    external-gVN effective nucleon basis. The charge coefficient uses the
+    formal impulse invariant t_N=t_A=omega^2-Q_A^2; the spatial AFH
+    coefficients use Q_A^2. The default F1/F2 are q=0 anchors, not
+    finite-t form factors.
     """
     if not np.isfinite(qA_GeV) or qA_GeV < 0:
         raise ValueError("qA_GeV must be finite and non-negative")
@@ -313,7 +319,9 @@ def extract_afh_vector_coefficients(
         raise ValueError(f"L is not Hermitian: relative residual {hermiticity:.6g}")
 
     Q2 = qA_GeV * qA_GeV
-    tN = -Q2
+    tN = omega_GeV * omega_GeV - Q2
+    if tN > 1.0e-14:
+        raise ValueError("formal one-body nucleon transfer must be spacelike")
     LT = float(np.real(L[1, 1] + L[2, 2]))
     L00 = float(np.real(L[0, 0]))
     if LT < -1e-10 or L00 < -1e-10:
@@ -358,7 +366,9 @@ def extract_afh_vector_coefficients(
         "qA_GeV": float(qA_GeV),
         "omega_GeV": float(omega_GeV),
         "omega_over_Q": float(omega_over_Q),
+        "Q_A2_GeV2": float(Q2),
         "tN_GeV2": float(tN),
+        "nucleon_transfer_convention": "formal one-body impulse: t_N=t_A=omega^2-Q_A^2",
         "L00_charge_weight": float(L00),
         "L_C_continuity_adjusted_charge_weight": float(L_C),
         "charge_continuity_relative_correction": float(
