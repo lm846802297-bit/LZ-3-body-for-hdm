@@ -33,6 +33,10 @@ The kernel uses the interaction/current written in paper-source/main.tex and exp
 - The native Wolfram 14.2.0 / independent Python full Mathematica–Python \(d\sigma_A/dE_R\) comparison has completed: 652 rows (500 open, 152 closed), four fixed-speed Xe-131 benchmarks, 16×16×8 quadrature; comparator JSON PASS and scientific status PASS_WITH_NOTES. The 2401-node AFH response-level comparison is a separate validation layer. See `research/afh_default_density_xe131/output/MATHEMATICA_PYTHON_FULL_DSIGMA_CROSSCHECK_REVIEW.md`.
 - None of these theory spectra is an official LZ likelihood or a detector-level exclusion.
 
+## Fixed-speed Fig. 2 target-mass reproduction trial (2026-11-19)
+
+A separate exploratory reproduction record for the supplied reference paper's Fig. 2 is archived at [fig2_target_mass_reproduction_trial_20261119/README.md](fig2_target_mass_reproduction_trial_20261119/README.md). It infers an effective target mass near 121.04 GeV from digitized fixed-speed endpoints and the red-curve shape, compares this with the (130u) approximation and the separate 122 GeV example in Eq. (107), and does not alter the adopted finite-(t_N) nucleon-form-factor plus finite-size AFH (W_M) baseline.
+
 ## Reproduce the core regression tests
 
 From the repository root:
