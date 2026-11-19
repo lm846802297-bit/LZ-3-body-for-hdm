@@ -114,7 +114,7 @@ jobs:
             --mchi-GeV "$MCHI" --ms-keV "$MS" --delta-m-keV "$DELTA_M" \
             --g2 "$G2" --ER-keV "${recoil_grid[@]}" \
             --nv "$NV" --nw "$NW" --nz "$NZ" --nphi "$NPHI" \
-            --form-factor bishara_linear --width-scheme pole \\
+            --form-factor bishara_linear --width-scheme pole \
             --include-leading-static-vector-candidate
           python research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py \
             --native-dir "$RUNNER_TEMP/native-afh" \
