@@ -42,7 +42,7 @@ F1_SLOPE_BISHARA_ERR = math.sqrt(0.09**2 + 0.05**2 + 0.009**2)
 F2S0 = -0.064
 
 FORMAL_NUCLEON_TRANSFER_SCHEME = (
-    "strict one-body impulse q_N^mu=q_A^mu; t_N=t_A=-2*m_A*E_R"
+    "one-body impulse-current external-transfer assignment q_N^mu=q_A^mu; t_N=t_A=-2*m_A*E_R"
 )
 STATIC_NUCLEON_TRANSFER_SCHEME = (
     "static diagnostic q_N^0=0; t_N=-Q_A^2; not formal B"
