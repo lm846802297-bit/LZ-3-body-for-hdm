@@ -571,42 +571,34 @@ continuity problem is closed.
 ## 8. Fixed-speed Xe-131 differential cross-section ratio
 
 The dedicated fixed-speed Xe-131 calculation is archived in
-XE131_FIXED_SPEED_CHARGE_DSIGMA_RESULTS.md.
+XE131_FIXED_SPEED_CHARGE_DSIGMA_RESULTS.md. It uses native AFH v6.0
+\(M,\Phi'',M\Phi''\) responses, finite-\(t_N\) Dirac-Pauli charge
+coefficients \(c_M,c_{\Phi''}\), signed \(M-\Phi''\) interference, and the
+full \(2\to3\) phase-space integral.
 
-It uses native AFH v6.0 Xe-131 \(M,\Phi'',M\Phi''\) responses, finite-\(t_N\)
-Dirac-Pauli charge coefficients \(c_M,c_{\Phi''}\), the signed
-\(M-\Phi''\) interference, and the full \(2\to3\) phase-space integral.
-For \(m_{\chi_1}=1000\) GeV, \(m_s=300\) keV, \(v_\chi=776\) km/s and
-\(g_2=1\), the fixed-speed ratios relative to the original pointlike
-\(9W_M\) baseline are:
+The primary ratio is the finite-\(t_N\) charge-sector result divided by the
+\(M\)-only kernel evaluated with the **same** \(F_1^V(t_N),F_2^V(t_N)\).
+The \(q=0\) \(M\)-only reference is reported separately:
 
-| \(E_R\) | \(\Delta m\) | Ratio |
-|---:|---:|---:|
-| 200 keV | 450 keV | 0.77830934 (-22.1691%) |
-| 267 keV | 362 keV | 0.64921591 (-35.0784%) |
+| \(E_R\) | \(\Delta m\) | Form factor | \(R_{\rm charge}/R_{t_N,M}\) | \(R_{\rm charge}/R_{q=0,M}\) |
+|---:|---:|---|---:|---:|
+| 200 keV | 450 keV | bishara_linear | 0.99695540 (-0.30446%) | 0.737630 |
+| 200 keV | 450 keV | isoscalar_zexp | 0.99655805 (-0.34420%) | 0.778309 |
+| 267 keV | 362 keV | bishara_linear | 0.91463689 (-8.53631%) | 0.605649 |
+| 267 keV | 362 keV | isoscalar_zexp | 0.89961039 (-10.03896%) | 0.649216 |
 
-The formal fixed-speed result uses the pole-width prescription only. The
-normalized AFH-to-pointlike ratio is independent of the common
-\(L_C^{(3)}\) phase-space factor because it cancels between numerator and
-denominator. The earlier pole/running comparison remains a historical
-sensitivity diagnostic and is not part of routine production.
+The Xe-131 dual-form-factor workflow passed on 2026-11-19
+(run 44443361283, artifact 14491448839; 7/7 regression tests). The common
+continuity-adjusted \(L_C^{(3)}\), propagator, flux, and phase-space factors
+cancel in each normalized ratio. The q=0 reference is not called the
+original physical baseline.
 
-The earlier \(-21.48\%\) and \(-34.24\%\) values are historical
-\(F_1^2\)-normalization diagnostics. The updated result uses the matched
-Darwin-Foldy charge coefficient
-\[
-c_M=F_1^V+\frac{t_N(F_1^V+2F_2^V)}{8m_N^2}
-\]
-and retains \(M,\Phi'',M\Phi''\) coherently. The result is still a
-**fixed-speed Xe-131 Coulomb-sector ratio**, not an absolute differential
-cross section, natural-xenon halo average, complete eight-response
-three-body contraction, or detector prediction.
-
-Workflow 44262472992 passed and uploaded artifact 14408816831 (SHA-256
-3d63f0d4896946129e1692ee0915da9b6d791323f65da85d0ee242bc1ae498bd.
-The native Xe-131 archive provenance is pinned to archive commit
-e6d9dee3527cab200ee6b21198d577b987282fac, with original Wolfram export
-commit 54e1ff10bba0cbffe7acc6af428014415c708475.
+The earlier \(-21.48\%\) and \(-34.24\%\) numbers are historical
+\(F_1^2\)-normalization diagnostics. The updated matched-\(c_M\) result
+retains \(M,\Phi'',M\Phi''\) coherently. This remains a fixed-speed Xe-131
+Coulomb-sector ratio, not an absolute differential cross section,
+natural-xenon halo average, complete eight-response three-body contraction,
+or detector prediction.
 
 
 ## 10. Energy-transfer-matched free on-shell nucleon scan
