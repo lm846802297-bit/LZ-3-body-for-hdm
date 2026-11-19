@@ -391,10 +391,22 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             self.assertEqual(len(result["results"]), 2)
             mb = next(row for row in result["results"] if row["halo_model"] == "mb_untruncated")
             self.assertGreater(
-                mb["rate_leading_static_vector_candidate_events_kg_day_keV"], 0.0
+                mb["rate_full_six_channel_candidate_events_kg_day_keV"], 0.0
             )
             self.assertGreater(mb["rate_AFH_finite_size_M_baseline_events_kg_day_keV"], 0.0)
             self.assertIn("relative_full_candidate_vs_AFH_finite_size_M_baseline", mb)
+            self.assertEqual(
+                result["nuclear_response_baseline"],
+                "finite-size native AFH W_M(y_A) at each recoil; no point-nucleus substitution",
+            )
+            self.assertEqual(
+                result["AFH_response_normalization"],
+                "physical equal-p=n; raw-to-physical factor four applied exactly once",
+            )
+            self.assertEqual(
+                result["coupling_normalization"],
+                "coupling_product_squared=(g1*g2*gVN)^2; use Fhat_i=F_i^(u+d+s)/3 in all nucleon-current coefficients",
+            )
             self.assertIsNotNone(mb["minimum_spatial_candidate_kernel"])
             self.assertGreaterEqual(mb["minimum_spatial_candidate_kernel"], -1.0e-12)
             self.assertLess(mb["max_native_response_Cauchy_excess"], 1.0e-12)
