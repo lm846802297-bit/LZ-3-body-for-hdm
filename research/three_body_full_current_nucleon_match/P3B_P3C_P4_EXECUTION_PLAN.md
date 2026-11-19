@@ -145,9 +145,13 @@ summing over transverse helicity and multipole rank.
 
 This closes only the **spatial helicity reconstruction subgate**. It is not
 an independent coordinate-space many-body current calculation, and the
-charge \(M,\Phi''\) multipoles are not yet rank-resolved. The native
-Wolfram AFH comparison also remains queued. Full P3-C therefore remains
-OPEN.
+charge \(M,\Phi''\) multipoles are not yet rank-resolved. The archived
+coefficient output used raw \(F_1^{uds}=3\), \(F_2^{uds}=-0.552\); the
+current producer and P3-C consumer now use explicit effective-nucleon
+fields \(\widehat F_{1,2}^{N}\). The relative structural residuals are
+unchanged by a common normalization, but the serialized output must be
+regenerated in the effective basis. The native Wolfram AFH comparison
+also remains queued. Full P3-C therefore remains OPEN.
 
 The workflow now runs this subgate after the C0-consistent response
 contraction and appends its JSON result to the
@@ -155,21 +159,21 @@ contraction and appends its JSON result to the
 
 ## Latest-head validation boundary (2026-11-19)
 
-The prior workflow set at commit `cb89294c891cfa6ac7ffa52ba89065df84823c28`
+The prior workflow set at commit \`cb89294c891cfa6ac7ffa52ba89065df84823c28\`
 passed the full-current regression, provisional P4 halo fold, fixed-speed
 charge-sector, and continuous-spectrum jobs. PR #67 has since received
-additional changes to the adopted B finite-(t_N) form factors, explicit
-raw/effective field names, native AFH (C_0(A)) handling, and the Xe-131
+additional changes to the adopted B finite-\(t_N\) form factors, explicit
+raw/effective field names, native AFH \(C_0(A)\) handling, and the Xe-131
 absolute A/B/C workflow. No workflow run is currently attached to the
 latest PR head. Therefore the earlier PASS is historical and does not
 validate the current B/C0 code; rerun all affected workflows before merge.
 
 The adopted production convention is B:
-[
-widehat F_{1,2}^{N}(t_N),W_M^{\rm phys}(y_A),qquad
-t_N=t_A=-2m_AE_R,qquad
+\[
+\widehat F_{1,2}^{N}(t_N)\,W_M^{\rm phys}(y_A),\qquad
+t_N=t_A=-2m_AE_R,\qquad
 y_A=b_A^2Q_A^2/4.
-]
+\]
 A is the zero-transfer nucleon-current reference with the same finite-size
-AFH (W_M); C is a separate (Phi'') charge extension; D remains the
-full one-body-current target, not yet complete.
+AFH \(W_M\); C is a separate \(\Phi''\) charge extension; D remains the
+full one-body-current target, not yet complete.full one-body-current target, not yet complete.
