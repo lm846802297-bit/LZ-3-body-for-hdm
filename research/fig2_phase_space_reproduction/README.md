@@ -14,7 +14,7 @@ Independently reproduce the fixed-incident-speed recoil curves in source Fig. 2 
 | Scalar mass | 300 keV | Fig. 2 panel title |
 | iDM threshold | 300 keV | Matched to m_s |
 | Dark-matter mass | 1 TeV | Adopted from adjacent natural-xenon benchmark; not stated in Fig. 2 caption |
-| Target mass | 122 GeV | Approximate xenon target mass adopted for comparison |
+| Target mass | 122 GeV | Fixed comparison input for this exact-relativistic diagnostic; not source-confirmed. The later Fig. 2 endpoint/shape inversion in [the 2026-11-19 target-mass trial](../three_body_calculation_and_validation/fig2_target_mass_reproduction_trial_20261119/README.md) indicates an effective mass near 121.04 GeV. This record retains 122 GeV as a separate comparison case, not as the inferred original input. |
 | Nuclear response | Omitted | Fig. 2 caption |
 
 The plotted ordinate is P_i(E_R) = (1/σ_i) dσ_i/dE_R, with each channel independently normalized to unit area. The common target-current factor (2m_T)^2 is independent of E_R and cancels in this normalization.
@@ -79,7 +79,7 @@ The maximum relative difference between 256- and 512-point Gauss–Legendre quad
 
 The characteristic shapes are reproduced, but the 780-km/s result does not match every source vector coordinate: the source plateau is narrower, its normalized height is 2.32% higher, and its 2→3 peak is 1.59 keV lower and 2.19% higher.
 
-## Conditional effective-speed diagnostic
+## Updated interpretation of the target-mass input (2026-11-20)\n\nThe 122 GeV value in this exact-relativistic reproduction is an adopted comparison input, not a value stated in the Fig. 2 caption or independently established as the author's original target mass. The subsequent vector-path endpoint inversion and normalized red-shape fit in the linked target-mass reproduction trial give approximately 121.04 GeV; the mass-number approximation \\(130u\\) is numerically consistent at figure-reading precision, but the source paper does not explicitly identify an A=130 target. Therefore, preserve the 122 GeV calculation as a reproducible comparison benchmark and do not cite it as the recovered Fig. 2 source input.\n\n## Conditional effective-speed diagnostic
 
 Holding the adopted masses fixed, the source 2→2 endpoints imply 777.578965 km/s through the heavy-particle endpoint relation. At this speed the exact calculation gives endpoints 108.155 and 661.015 keV, a 2→3 peak at 325.982 keV, and peak height 3.08656×10^-3 keV^-1. The mean absolute relative residual against source red-curve points above 0.15 falls from 4.94% at 780 km/s to 0.44%.
 
