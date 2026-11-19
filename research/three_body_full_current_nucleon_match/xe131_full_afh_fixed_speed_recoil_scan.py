@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Xe-131 fixed-speed recoil scan with the leading-static six-channel AFH current.
+"""Xe-131 fixed-speed A/B/C/D recoil scan with the leading-static six-channel AFH current.
 
-The native AFH M/Phi''/M-Phi'' responses are combined with the independently
-source-translated P3-B Delta/Sigma'/Sigma'-Delta OBDME responses.  The latter
-remain provisional until the native Wolfram spatial-response and P3-C
-amplitude-level gates pass.  This script compares pointlike M-only,
-finite-t_N M-only, finite-t_N charge-only, and the six-channel candidate at
-identical recoil points and fixed particle benchmarks.
+A is the q=0 effective-nucleon-current reference; B is the adopted
+finite-t_N M-only baseline; C adds the matched Phi'' charge terms; D adds
+the provisional Delta/Sigma'/Sigma'-Delta spatial candidate. The native
+AFH M/Phi''/M-Phi'' responses are combined with source-translated P3-B
+spatial OBDME responses. The spatial sector remains provisional until
+native-Wolfram and P3-C amplitude-level gates pass.
 """
 from __future__ import annotations
 
@@ -21,7 +21,10 @@ import numpy as np
 from scipy.interpolate import PchipInterpolator
 
 import afh_spatial_obdme_responses as spatial
-from nucleon_vector_form_factors import charge_coefficients, isoscalar_zexp
+from nucleon_vector_form_factors import (
+    F1V0, F2V0, bishara_linear, charge_coefficients,
+    effective_nucleon_form_factors,
+)
 from three_body_multipole_leptonic_weights import (
     DEFAULT_MN_GEV,
     complex_from_pairs,
@@ -39,8 +42,8 @@ SPEED_KM_S = 776.0
 G2 = 1.0
 FORMAL_WIDTH_SCHEMES = ("pole",)
 EXPECTED_CHARGE_RATIOS = {
-    ("off_pole_dm450", 200.0): 0.778309339441481,
-    ("near_pole_dm362", 267.0): 0.649215910707624,
+    ("off_pole_dm450", 200.0): 0.7376302304925361,
+    ("near_pole_dm362", 267.0): 0.6056496631467666,
 }
 RESPONSE_NAMES = ("M", "PhiPP", "MPhiPP", "Delta", "SigmaPrime", "SigmaPrimeDelta")
 
@@ -249,12 +252,12 @@ def contract_six_channels(
     spatial = float(sum(spatial_terms.values()))
     full = charge + spatial
     LC = float(coefficients["L_C_continuity_adjusted_charge_weight"])
-    pointlike_M = 9.0 * LC * responses["M"]
-    finite_t_M = coefficients["C_M"] * responses["M"]
-    if min(pointlike_M, finite_t_M, charge, full) <= 0.0:
+    A_reference = LC * responses["M"]
+    B_baseline = coefficients["C_M"] * responses["M"]
+    if min(A_reference, B_baseline, charge, full) <= 0.0:
         raise ArithmeticError(
-            "non-positive comparison kernel: "
-            f"point={pointlike_M}, finiteM={finite_t_M}, charge={charge}, full={full}"
+            "non-positive A/B/C/D comparison kernel: "
+            f"A={A_reference}, B={B_baseline}, C={charge}, D={full}"
         )
     if spatial < -2.0e-10 * max(abs(charge), 1.0e-300):
         raise ArithmeticError(f"negative combined spatial kernel: {spatial}")
@@ -263,17 +266,18 @@ def contract_six_channels(
         "coefficients": coefficients,
         "charge_terms": charge_terms,
         "spatial_terms": spatial_terms,
-        "pointlike_M": pointlike_M,
-        "finite_t_M": finite_t_M,
-        "charge_only": charge,
+        "A_reference_M": A_reference,
+        "B_finite_tN_M": B_baseline,
+        "C_charge_only": charge,
         "spatial_candidate": spatial,
-        "full_six_channel_candidate": full,
-        "finite_t_M_over_pointlike_M": finite_t_M / pointlike_M,
-        "charge_only_over_pointlike_M": charge / pointlike_M,
-        "PhiPP_over_finite_t_M_correction": charge / finite_t_M - 1.0,
-        "full_over_charge_only": full / charge,
-        "spatial_over_charge_only": spatial / charge,
-        "full_over_pointlike_M": full / pointlike_M,
+        "D_full_six_channel_candidate": full,
+        "B_over_A_reference": B_baseline / A_reference,
+        "C_over_B_baseline": charge / B_baseline,
+        "C_over_A_reference": charge / A_reference,
+        "D_over_C_charge_only": full / charge,
+        "spatial_over_C_charge_only": spatial / charge,
+        "D_over_A_reference": full / A_reference,
+        "PhiPP_over_B_correction": charge / B_baseline - 1.0,
     }
 
 
@@ -326,11 +330,13 @@ def integrate_point(
         raise ArithmeticError("phase-space tensor q_A does not match exact Xe-131 mass-shell momentum")
     L = complex_from_pairs(np.asarray(result["L_q_aligned_real_imag"], dtype=float))
     responses, interpolation = responses_at(response_bundle, qA)
-    F1, F2 = isoscalar_zexp(qA * qA)
+    tN_GeV2 = ER_GeV * ER_GeV - qA * qA
+    F1_raw, F2_raw = bishara_linear(-tN_GeV2)
+    F1, F2 = effective_nucleon_form_factors(F1_raw, F2_raw)
     contracted = contract_six_channels(L, qA, ER_GeV, responses, F1, F2)
     coeff = contracted["coefficients"]
     cM, cPhiPP = charge_coefficients(
-        qA, F1=F1, F2=F2, mN_GeV=DEFAULT_MN_GEV
+        qA, F1=F1, F2=F2, tN_GeV2=tN_GeV2, mN_GeV=DEFAULT_MN_GEV
     )
     return {
         "benchmark": case["name"],
@@ -349,8 +355,11 @@ def integrate_point(
         "quadrature_points": int(result["quadrature_points"]),
         "L_C": float(coeff["L_C_continuity_adjusted_charge_weight"]),
         "L_T": float(np.real(L[1, 1] + L[2, 2])),
-        "F1V_finite_t": F1,
-        "F2V_finite_t": F2,
+        "F1V_quark_sum": F1_raw,
+        "F2V_quark_sum": F2_raw,
+        "F1N_effective": F1,
+        "F2N_effective": F2,
+        "tN_GeV2": tN_GeV2,
         "cM": float(cM),
         "cPhiPP": float(cPhiPP),
         "eta_cPhi_over_cM": float(cPhiPP / cM),
@@ -358,17 +367,18 @@ def integrate_point(
         **{f"pchip_linear_rel_{name}": float(interpolation[name]) for name in RESPONSE_NAMES},
         **{f"kernel_charge_{name}": float(value) for name, value in contracted["charge_terms"].items()},
         **{f"kernel_spatial_{name}": float(value) for name, value in contracted["spatial_terms"].items()},
-        "kernel_pointlike_M": float(contracted["pointlike_M"]),
-        "kernel_finite_t_M": float(contracted["finite_t_M"]),
-        "kernel_charge_only": float(contracted["charge_only"]),
+        "kernel_A_reference_M": float(contracted["A_reference_M"]),
+        "kernel_B_finite_tN_M": float(contracted["B_finite_tN_M"]),
+        "kernel_C_charge_only": float(contracted["C_charge_only"]),
         "kernel_spatial_candidate": float(contracted["spatial_candidate"]),
-        "kernel_full_six_channel_candidate": float(contracted["full_six_channel_candidate"]),
-        "finite_t_M_over_pointlike_M": float(contracted["finite_t_M_over_pointlike_M"]),
-        "charge_only_over_pointlike_M": float(contracted["charge_only_over_pointlike_M"]),
-        "PhiPP_relative_to_finite_t_M": float(contracted["PhiPP_over_finite_t_M_correction"]),
-        "full_over_charge_only": float(contracted["full_over_charge_only"]),
-        "spatial_over_charge_only": float(contracted["spatial_over_charge_only"]),
-        "full_over_pointlike_M": float(contracted["full_over_pointlike_M"]),
+        "kernel_D_full_six_channel_candidate": float(contracted["D_full_six_channel_candidate"]),
+        "B_over_A_reference": float(contracted["B_over_A_reference"]),
+        "C_over_B_baseline": float(contracted["C_over_B_baseline"]),
+        "C_over_A_reference": float(contracted["C_over_A_reference"]),
+        "PhiPP_relative_to_B": float(contracted["PhiPP_over_B_correction"]),
+        "D_over_C_charge_only": float(contracted["D_over_C_charge_only"]),
+        "spatial_over_C_charge_only": float(contracted["spatial_over_C_charge_only"]),
+        "D_over_A_reference": float(contracted["D_over_A_reference"]),
         "status": "PROVISIONAL_SIX_CHANNEL_FIXED_SPEED_POINT",
     }
 
@@ -403,7 +413,7 @@ def run(native_charge_csv: Path, outdir: Path) -> dict:
         ]
         if len(match) != 1:
             raise RuntimeError(f"missing unique anchor point {(case_name, ER_keV)}")
-        actual = float(match[0]["charge_only_over_pointlike_M"])
+        actual = float(match[0]["C_over_A_reference"])
         residual = abs(actual - expected)
         anchor_checks.append({
             "benchmark": case_name, "ER_keV": ER_keV,
@@ -433,7 +443,8 @@ def run(native_charge_csv: Path, outdir: Path) -> dict:
             "mchi1_GeV": MCHI_GEV, "ms_keV": MS_GEV * 1.0e6,
             "speed_km_s": SPEED_KM_S, "g2": G2,
             "mA_bare_nucleus_GeV": MA_XE131_GEV,
-            "form_factor_prescription": "isoscalar_zexp central diagnostic",
+            "form_factor_prescription": "adopted B: Bishara-linear raw u+d+s F1 slope and constant F2 anchor, divided by three for the external-gVN basis",
+            "nucleon_transfer_convention": "q_N^mu=q_A^mu; t_N=t_A=omega^2-Q_A^2=-2*m_A*E_R",
         },
         "fixed_benchmarks": [
             {
@@ -463,10 +474,10 @@ def run(native_charge_csv: Path, outdir: Path) -> dict:
             "P3-C bound-nucleus covariant-versus-AFH contraction remains open"
         ),
         "limitations": [
-            "The finite-t_N isoscalar_zexp form factors are a central diagnostic, not a final validated model-specific F1/F2 input.",
+            "B uses the adopted low-momentum Bishara F1 slope and constant F2 anchor; no unsupported F2 slope is assumed.",
             "Spatial Delta/Sigma'/Sigma'-Delta nuclear responses are source-translated Python AFH data, not native-Wolfram validated.",
             "The signed Sigma'-Delta particle-side phase remains a candidate pending P3-C amplitude-level validation.",
-            "The static impulse matching uses q_N^0=0 and q_N spatial equal to q_A; bound-nucleon off-shell and interaction-current effects are not included.",
+            "The one-body impulse matching uses q_N^mu=q_A^mu; bound-nucleon off-shell and interaction-current effects are not included.",
             "This is fixed-speed and isotope-specific; no halo average, natural-xenon isotope sum, detector response, or absolute event rate is included.",
             "The common mediator, flux, and coupling prefactors cancel in the reported response ratios.",
         ],
