@@ -71,6 +71,8 @@ The phase-space calculation separately retains the full four-vector
 \(\mathcal T_3^\mu\), both scalar-emission orderings, and their coherent
 interference.
 
+**Canonical theory record:** [QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md](../afh_isotope_response_equivalence/docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md). Its Q correction defines q_N as the external four-momentum argument at the one-body nucleon-current vertex and states the bound-state, free on-shell, and Ward-identity limits.
+
 ## 2. Momentum and nucleon-current conventions
 
 The nuclear transfer and the momentum argument at the one-body nucleon
