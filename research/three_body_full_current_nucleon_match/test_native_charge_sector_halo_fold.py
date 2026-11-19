@@ -50,6 +50,11 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
         self.assertAlmostEqual(
             result["q0_M_reference"], result["baseline_A_original_AFH_M"], places=14
         )
+        self.assertAlmostEqual(
+            result["baseline_B_finite_tN_M"],
+            result["cM"] ** 2 * result["L_C"] * responses["M"],
+            places=14,
+        )
 
     def test_charge_kernel_uses_continuity_reduced_weight(self):
         responses = {"M": 4.0, "PhiPP": 0.2, "MPhiPP": -0.3}
@@ -207,9 +212,6 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             result["relative_C_vs_B"],
             result["extension_C_MplusPhiPP"] / result["baseline_B_finite_tN_M"] - 1.0,
             places=14,
-        )
-        self.assertAlmostEqual(
-            result["q0_M_reference"], result["baseline_A_original_AFH_M"], places=14
         )
         self.assertAlmostEqual(
             result["q0_M_reference"], result["baseline_A_original_AFH_M"], places=14
@@ -397,19 +399,17 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             self.assertEqual(len(result["results"]), 2)
             mb = next(row for row in result["results"] if row["halo_model"] == "mb_untruncated")
             self.assertGreater(
-                mb["rate_full_six_channel_candidate_events_kg_day_keV"], 0.0
+                mb["rate_leading_static_vector_candidate_events_kg_day_keV"], 0.0
             )
             self.assertGreater(mb["rate_A_original_AFH_M_events_kg_day_keV"], 0.0)
             self.assertGreater(mb["rate_B_baseline_M_events_kg_day_keV"], 0.0)
             self.assertIn("relative_full_candidate_vs_A", mb)
             self.assertIn("relative_full_candidate_vs_B", mb)
+            self.assertIn("W_M(y_A)", result["baseline_B_definition"])
+            self.assertIn("only", result["primary_baseline"])
             self.assertEqual(
-                result["nuclear_response_baseline"],
-                "finite-size native AFH W_M(y_A) at each recoil; no point-nucleus substitution",
-            )
-            self.assertEqual(
-                result["AFH_response_normalization"],
-                "physical equal-p=n; raw-to-physical factor four applied exactly once",
+                result["form_factor_normalization"],
+                "Fhat_i=F_i^(u+d+s)/3 because coupling_product_squared uses external g_VN=3*g_Vq",
             )
             self.assertEqual(
                 result["coupling_normalization"],
