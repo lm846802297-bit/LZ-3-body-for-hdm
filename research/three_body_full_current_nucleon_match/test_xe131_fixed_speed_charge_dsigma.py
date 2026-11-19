@@ -38,6 +38,19 @@ class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
             places=13,
         )
 
+    def test_bishara_form_factor_uses_full_one_body_tN(self):
+        qA = exact_qA_GeV(MA_XE131_GEV, 200.0)
+        ER = 200.0e-6
+        tN = ER * ER - qA * qA
+        result = charge_sector_kernels(
+            1.0, qA, {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3},
+            "bishara_linear", tN_GeV2=tN,
+        )
+        QN2 = -tN
+        self.assertAlmostEqual(result["F1V_finite_t"], 3.0 - 8.392 * QN2, places=13)
+        self.assertAlmostEqual(result["F2V_finite_t"], -0.552, places=13)
+        self.assertNotAlmostEqual(QN2, qA * qA, places=12)
+
     def test_low_q2_and_zexp_form_factors_are_distinct_inputs(self):
         f1_linear, f2_linear = charge_sector_kernels(
             1.0, 0.22, {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3},
