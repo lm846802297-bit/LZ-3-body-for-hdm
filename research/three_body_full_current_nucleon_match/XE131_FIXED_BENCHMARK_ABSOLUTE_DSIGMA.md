@@ -1,8 +1,11 @@
-# Xe-131 fixed-benchmark absolute differential cross section
+# Xe-131 fixed-benchmark absolute differential cross section: adopted B baseline
 
-**Scope:** fixed-speed, single-isotope absolute \(d\sigma/dE_R\) in the native-AFH coherent charge sector \(M+\Phi''+M\Phi''\). This is not the complete six-channel nuclear-vector-current result.
+**Status:** Code and regression tests have been updated to the adopted B
+prescription. The new absolute spectrum must be regenerated and pass the
+PR #67 workflow before its CSV/PDF/SVG outputs are promoted. Earlier output
+and provenance are historical and are not overwritten.
 
-## Fixed benchmark
+## 1. Fixed benchmark
 
 | Input | Value |
 |---|---:|
@@ -14,55 +17,184 @@
 | \(v\) | 776 km/s |
 | \(g_2\) (width input) | 1 |
 | \((g_1g_2g_{VN})^2\) | 1 |
-| width prescription | zero width |
+| width prescription | asymmetric pole-width prescription |
 | target | Xe-131 |
 
-The target mass follows the current repository isotope-mass convention:
+The target mass follows the repository's canonical bare-nucleus convention,
+
 \[
 m_A=(M_{\rm atom}-54m_e)u
 =121.90971983538435~\mathrm{GeV}.
 \]
-This supersedes the older \(131u=122.02572741702\) GeV approximation used by the 2026-11-13 exploratory curve. The AFH response factor of four is already included once in the physical equal-proton/neutron response; it is not applied again.
 
-## Cross-section formula
+The response input is the provenance-pinned native AFH v6.0 Xe-131
+\(W_M,W_{\Phi''},W_{M\Phi''}\) archive. The physical equal-proton,
+equal-neutron AFH normalization includes the factor of four exactly once.
 
-The absolute charge-sector differential cross section is obtained by restoring the common three-body phase-space, incident-flux, mediator and coupling factors:
+## 2. Formal B kinematics and form factors
+
+For every recoil,
+
 \[
-\frac{d\sigma_{\rm ch}}{dE_R}
+Q_A^2=|\boldsymbol q_A|^2=2m_AE_R+E_R^2,
+\qquad
+t_A=q_A^2=-2m_AE_R.
+\]
+
+The formal one-body impulse prescription is
+
+\[
+q_N^\mu=q_A^\mu,
+\qquad
+\boxed{t_N=t_A=-2m_AE_R}.
+\]
+
+Thus \(t_N\), not \(-Q_A^2\), is passed to the nucleon form factors.
+The exact spatial \(Q_A^2\) is used in the AFH variable
+
+\[
+y_A=\frac{b_A^2Q_A^2}{4}.
+\]
+
+The mediator denominator is Lorentz invariant:
+
+\[
+(m_V^2-t_A)^2=(m_V^2+2m_AE_R)^2.
+\]
+
+The universal raw flavor-summed form factors satisfy
+\(F_1^{uds,N}(0)=3\) and \(F_2^{uds,N}(0)=-0.552\). Since the external
+prefactor contains \(g_{VN}=3g_{Vq}\), the effective nucleon form factors
+are
+
+\[
+\widehat F_i^N(t_N)=F_i^{uds,N}(t_N)/3,
+\]
+
+with \(\widehat F_1^N(0)=1\) and \(\widehat F_2^N(0)=-0.184\).
+
+The adopted B truncation uses the Bishara linear Dirac slope and the
+available constant Pauli anchor:
+
+\[
+F_1^{uds,N}(t_N)=3+8.392t_N+O(t_N^2),
+\qquad
+F_2^{uds,N}(t_N)=-0.552+O(t_N).
+\]
+
+No unsupported finite-\(t_N\) Pauli slope is assumed.
+
+The matched coefficients are
+
+\[
+\widehat c_M(t_N)=
+\widehat F_1^N(t_N)+
+\frac{t_N[\widehat F_1^N(t_N)+2\widehat F_2^N(t_N)]}
+{8m_N^2},
+\]
+
+\[
+\widehat c_{\Phi''}(t_N,Q_A^2)=
+\frac{Q_A^2[\widehat F_1^N(t_N)+2\widehat F_2^N(t_N)]}
+{4m_N^2}.
+\]
+
+## 3. A/B/C differential cross sections
+
+A is the zero-transfer effective-nucleon-current reference:
+
+\[
+K_A=L_C^{(3)}W_M^{\rm phys}(y_A).
+\]
+
+It is not a point nucleus. The same finite-size AFH \(W_M\) is retained
+in all three calculations.
+
+The adopted B production baseline is M-only:
+
+\[
+\boxed{
+\frac{d\sigma_B}{dE_R}
 =
 \frac{m_A(g_1g_2g_{VN})^2}
 {256\pi^3p_{\chi_1}^2(m_V^2-t_A)^2}
-L_C^{(3)}
+\,
+\widehat c_M(t_N)^2
+W_M^{\rm phys}(y_A)
+\,
+L_C^{(3)}.
+}
+\]
+
+C is a separate charge-multipole extension:
+
+\[
+K_C=L_C^{(3)}
 \left[
-c_M^2W_M+
-2c_Mc_{\Phi''}W_{M\Phi''}
-+c_{\Phi''}^2W_{\Phi''}
+\widehat c_M^2W_M^{\rm phys}
++2\widehat c_M\widehat c_{\Phi''}W_{M\Phi''}^{\rm phys}
++\widehat c_{\Phi''}^{\,2}W_{\Phi''}^{\rm phys}
 \right].
 \]
-Here \(Q_A^2=|\mathbf q_A|^2=2m_AE_R+E_R^2\) is the spatial momentum squared used in the AFH responses and static nucleon form factors, whereas the mediator propagator uses the Lorentz invariant \(t_A=q_A^2=-2m_AE_R\). Thus its denominator is \((m_V^2-t_A)^2=(m_V^2+2m_AE_R)^2\), not \((m_V^2+Q_A^2)^2\). The incident momentum is \(p_{\chi_1}=m_{\chi_1}\gamma v/c\). The continuity-reduced weight is
+
+B is the production baseline. C must not be substituted for B without
+explicitly identifying the additional \(\Phi''\) and signed
+\(M-\Phi''\) terms. The continuity-reduced weight
+
 \[
 L_C^{(3)}=
 L_{00}^{(3)}
 -\frac{E_R}{Q_A}(L_{03}^{(3)}+L_{30}^{(3)})
-+\left(\frac{E_R}{Q_A}\right)^2L_{33}^{(3)}.
++\left(\frac{E_R}{Q_A}\right)^2L_{33}^{(3)}
 \]
-This reduction is conditional on continuity of the complete nuclear one-body vector current. The DM transition current is not assumed to be conserved. The charge coefficients use the central finite-\(Q^2\) isoscalar-z-expansion diagnostic:
-\[
-c_M=F_1^V-\frac{Q_A^2(F_1^V+2F_2^V)}{8m_N^2},
-\qquad
-c_{\Phi''}=\frac{Q_A^2(F_1^V+2F_2^V)}{4m_N^2}.
-\]
-The kernel has units GeV\(^2\), the public prefactor GeV\(^{-5}\), and \(d\sigma/dE_R\) GeV\(^{-3}\). The exact distinction between \(Q_A^2\) and \(-t_A\) is retained in every recoil row. Conversion to cm\(^2\)/keV uses \(3.893793721\times10^{-34}\).
 
-## Numerical prescription
+is conditional on conservation of the complete nuclear one-body vector
+current; it is not a Ward identity imposed on the inelastic DM transition
+current.
 
-- Integrate the coherent two-diagram spin-resolved DM current over the complete \(2\to3\) phase space.
-- Use the zero-width prescription of the fixed benchmark; the \(\chi_2\) pole remains closed throughout the fixed-\(\Delta m=450\) keV interval.
-- Use the provenance-pinned 2,401-point native AFH v6.0 \(W_M,W_{\Phi''},W_{M\Phi''}\) archive with PCHIP interpolation.
-- Use a 2-keV global recoil grid and 0.5-keV refinement around the AFH response minima, including exact kinematic endpoints.
-- Compare the curve-order integral with independent higher-order anchors.
-- Cross-check the spin-resolved \(L_{00}^{(3)}\) against the legacy Eq. (6) integral.
+## 4. Expected fixed-speed A/B/C anchors
 
-## Explicit scope limits
+The adopted Bishara-linear prescription gives the following nuclear-kernel
+ratios, independent of the common three-body phase-space factor:
 
-This is an absolute **charge-sector** spectrum, not the final complete \(L_{\mu\nu}W_A^{\mu\nu}\) spectrum. Native transverse \(\Delta,\Sigma'\), and \(\Sigma'-\Delta\) response validation and the P3-C bound-nucleus amplitude-level contraction remain separate gates. The finite-\(Q^2\) \(F_1^V,F_2^V\) prescription is diagnostic, especially for \(F_2^V(Q^2)\). No halo average, isotope sum, detector response, exposure, event count or exclusion is included. The absolute normalization is the stated unit reference \((g_1g_2g_{VN})^2=1\); other coupling choices rescale the result linearly.
+| \(E_R\) | \(B/A\) | \(C/B\) | \(C/A\) |
+|---:|---:|---:|---:|
+| 200 keV | 0.7398828761 | 0.9969554024 | 0.7376302305 |
+| 267 keV | 0.6621749872 | 0.9146368782 | 0.6056496631 |
+
+These anchors are regression targets for the absolute-spectrum code.
+They are not themselves absolute cross sections or halo-averaged rates.
+
+## 5. Numerical prescription and scope
+
+- Integrate the coherent two-diagram spin-resolved DM current over the
+  complete three-body phase space.
+- Use the asymmetric pole-width prescription: the first \(p-k\)
+  propagator is zero-width and the second \(p'+k\) propagator carries
+  the constant pole width.
+- Use the native AFH v6.0 response archive and its provenance-pinned
+  2,401-point \(q_A\) grid with PCHIP interpolation.
+- Use the fixed \(\Delta m=450\) keV benchmark over the entire recoil
+  interval.
+- Compare medium/high quadrature orders and independently reproduce the
+  public Eq. (6) \(L_{00}\) integral.
+- Output A, B, and C separately in the CSV, metadata, and publication plot.
+  B is the central production curve.
+
+This remains a single-isotope, fixed-speed, coherent charge-sector
+calculation. It does not include the native transverse
+\(\Delta,\Sigma'\), and \(\Sigma'-\Delta\) sector, halo averaging,
+natural-xenon isotope summation, detector response, exposure, event
+counts, or an exclusion. It is not the complete
+\(L_{\mu\nu}^{(3)}W_A^{\mu\nu}\) prediction.
+
+## 6. Historical outputs
+
+The earlier absolute-spectrum output used the raw \(F_1^{uds}(0)=3\)
+normalization together with the external \(g_{VN}\) prefactor, giving
+a factor-nine absolute normalization error. Its static
+\(t_N=-Q_A^2\) and alternate isoscalar-z-exp form-factor inputs also
+differ from formal B. The earlier output is historical and must not be
+overwritten or cited as B. The corrected run will use distinct workflow
+artifacts and record its own CSV, metadata, SVG, PDF, and SHA-256 values.
+
