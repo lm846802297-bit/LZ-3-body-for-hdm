@@ -893,9 +893,9 @@ def fold(
                         form_factor_prescription,
                         tN_GeV2=tN_GeV2,
                     )
-                    # The mediator carries the nuclear four-transfer q_A^mu:
-                    # t_A=q_A^2=-2 m_A E_R exactly.  Spatial |q_A|^2 includes E_R^2
-                    # and is used separately by the static-impulse nucleon FF.
+                    # The mediator and the strict one-body nucleon impulse current
+                    # carry q_A^mu: t_A=t_N=E_R^2-|q_A|^2=-2 m_A E_R.
+                    # The AFH response still uses spatial Q_A^2=|q_A|^2.
                     denominator = mediator_denominator_squared_GeV4(mV, mA, ER_keV)
                     common = (
                         mA * coupling_product_squared
