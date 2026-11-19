@@ -1,0 +1,49 @@
+{
+  "source": {
+    "paper": "K. Borah, R. J. Hill, G. Lee, O. Tomalak, Phys. Rev. D 102, 074012 (2020)",
+    "doi": "10.1103/PhysRevD.102.074012",
+    "arxiv": "2003.13640",
+    "supplemental_files": [
+      "proton_coefs_kmax8.dat",
+      "GEn_coefs_kmax8.dat",
+      "GMn_coefs_kmax8.dat",
+      "proton_cov.dat",
+      "GEn_cov.dat",
+      "GMn_cov.dat"
+    ],
+    "reproducible_distribution": "GENIE-MC/Generator",
+    "genie_config": "config/ZExpELFormFactorModel.xml",
+    "genie_covariance": "data/covariances/FormFactor/Vector/ELZExpFF.dat",
+    "genie_commit": "e2e04f19e96d395ac646cf3382841646b60fa1b4"
+  },
+  "z_expansion": {
+    "m_pi_charged_GeV": 0.13957,
+    "t_cut_GeV2": 0.0779191396,
+    "t0_GeV2": -0.21,
+    "kmax": 8,
+    "n_free": 4,
+    "q4_limit": true,
+    "normalizations": {
+      "GEp_0": 1.0,
+      "GMp_0": 2.7928473508,
+      "GEn_0": 0.0,
+      "GMn_0": -1.9156796943025016
+    }
+  },
+  "free_coefficients": {
+    "A_P": [-1.485958065859, -0.096104515639, 1.823367310007, 1.287051328146],
+    "B_P_tilde": [-4.087902402976, 0.175515803136, 4.861856163076, -0.982798179847],
+    "A_N": [0.084252682465, -0.278572218873, -0.153916309312, 0.353999966588],
+    "B_N_tilde": [2.706784556423, -0.424305225602, -2.662453066640, 0.067583076040]
+  },
+  "covariance_ordering": {
+    "proton_8x8": ["A_P1", "A_P2", "A_P3", "A_P4", "B_P1_tilde", "B_P2_tilde", "B_P3_tilde", "B_P4_tilde"],
+    "neutron_GE_4x4": ["A_N1", "A_N2", "A_N3", "A_N4"],
+    "neutron_GM_4x4": ["B_N1_tilde", "B_N2_tilde", "B_N3_tilde", "B_N4_tilde"]
+  },
+  "conventions": {
+    "B_coefficients_are_magnetic_moment_weighted": true,
+    "constrained_coefficients": "a0 and a5..a8 are solved from G(0) normalization and four Q^4 asymptotic sum rules",
+    "magnetic_moment_neutron": "G_M^n(0) = mu_n * m_n/m_p, following the mass convention in the paper"
+  }
+}

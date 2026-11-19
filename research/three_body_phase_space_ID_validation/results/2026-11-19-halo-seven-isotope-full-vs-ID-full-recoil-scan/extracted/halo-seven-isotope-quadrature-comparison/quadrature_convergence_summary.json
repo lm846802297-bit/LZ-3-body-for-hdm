@@ -1,0 +1,29 @@
+{
+  "status": "COMPUTED",
+  "natural_xenon": {
+    "point_count": 208,
+    "active_point_count": 186,
+    "max_abs_full_rate_shift_all_pct": 9.886305796236172e-06,
+    "max_abs_ID_rate_shift_all_pct": 1.7092129689366686e-05,
+    "max_abs_approximation_error_shift_all_pp": 1.0792084781385824e-05,
+    "max_abs_full_rate_shift_active_pct": 9.886305796236172e-06,
+    "max_abs_ID_rate_shift_active_pct": 9.98728282297634e-06,
+    "max_abs_approximation_error_shift_active_pp": 2.9056682615546947e-06,
+    "support_mismatch_count": 0,
+    "active_support_mismatch_count": 0,
+    "activity_floor_relative_to_peak": 1e-08
+  },
+  "seven_isotopes": {
+    "point_count": 1456,
+    "active_point_count": 1269,
+    "max_abs_full_rate_shift_all_pct": 1.0108801395958267e-05,
+    "max_abs_ID_rate_shift_all_pct": 3.1057109528553895e-05,
+    "max_abs_approximation_error_shift_all_pp": 2.8424473530463956e-05,
+    "max_abs_full_rate_shift_active_pct": 1.0108801395958267e-05,
+    "max_abs_ID_rate_shift_active_pct": 3.1057109528553895e-05,
+    "max_abs_approximation_error_shift_active_pp": 2.8424473530463956e-05,
+    "support_mismatch_count": 0,
+    "active_support_mismatch_count": 0,
+    "activity_floor_relative_to_peak": 1e-08
+  }
+}
