@@ -73,11 +73,11 @@ class LeptonicMultipoleWeightTests(unittest.TestCase):
             expected / 100.0 - 1.0,
         )
         afh = weights.extract_afh_vector_coefficients(
-            L, 0.2, f1=3.0, f2=-0.552, mN_GeV=0.938918,
+            L, 0.2, f1=1.0, f2=-0.184, mN_GeV=0.938918,
             omega_GeV=0.01,
         )
         tN = 0.01**2 - 0.2**2
-        cM = 3.0 + tN * (3.0 + 2.0 * -0.552) / (8.0 * 0.938918**2)
+        cM = 1.0 + tN * (1.0 + 2.0 * -0.184) / (8.0 * 0.938918**2)
         self.assertAlmostEqual(afh["tN_GeV2"], tN, places=15)
         self.assertAlmostEqual(afh["C_M"], cM**2 * expected)
 
@@ -97,7 +97,7 @@ class LeptonicMultipoleWeightTests(unittest.TestCase):
         L = np.diag([100.0, 2.0, 6.0, 3.0]).astype(complex)
         leptonic = weights.extract_leptonic_weights(L)
         afh = weights.extract_afh_vector_coefficients(
-            L, 0.2, f1=3.0, f2=-0.552, mN_GeV=0.938918
+            L, 0.2, f1=1.0, f2=-0.184, mN_GeV=0.938918
         )
         self.assertEqual(
             leptonic["generic_transverse_helicity_odd_minus_2i_L12_minus_L21"],
@@ -115,10 +115,10 @@ class LeptonicMultipoleWeightTests(unittest.TestCase):
     def test_afh_spatial_coefficients_have_expected_q_squared_scaling(self):
         L = np.diag([100.0, 2.0, 6.0, 3.0]).astype(complex)
         at_q = weights.extract_afh_vector_coefficients(
-            L, 0.2, f1=3.0, f2=-0.552, mN_GeV=0.938918
+            L, 0.2, f1=1.0, f2=-0.184, mN_GeV=0.938918
         )
         at_2q = weights.extract_afh_vector_coefficients(
-            L, 0.4, f1=3.0, f2=-0.552, mN_GeV=0.938918
+            L, 0.4, f1=1.0, f2=-0.184, mN_GeV=0.938918
         )
         for key in ("C_Delta", "C_SigmaPrime", "C_SigmaPrimeDelta"):
             self.assertAlmostEqual(at_2q[key] / at_q[key], 4.0, places=12)
