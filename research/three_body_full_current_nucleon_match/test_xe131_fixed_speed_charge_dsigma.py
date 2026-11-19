@@ -33,6 +33,24 @@ class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
             places=13,
         )
 
+    def test_low_q2_and_zexp_form_factors_are_distinct_inputs(self):
+        f1_linear, f2_linear = charge_sector_kernels(
+            1.0, 0.22, {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3},
+            "bishara_linear",
+        )["F1V_finite_t"], charge_sector_kernels(
+            1.0, 0.22, {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3},
+            "bishara_linear",
+        )["F2V_finite_t"]
+        f1_zexp, f2_zexp = charge_sector_kernels(
+            1.0, 0.22, {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3},
+            "isoscalar_zexp",
+        )["F1V_finite_t"], charge_sector_kernels(
+            1.0, 0.22, {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3},
+            "isoscalar_zexp",
+        )["F2V_finite_t"]
+        self.assertNotAlmostEqual(f1_linear, f1_zexp, places=5)
+        self.assertNotAlmostEqual(f2_linear, f2_zexp, places=5)
+
     def test_interference_is_signed_and_retained(self):
         responses = {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3}
         out = charge_sector_kernels(1.0, 0.22, responses)
