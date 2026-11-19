@@ -33,8 +33,8 @@ class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
             places=13,
         )
         self.assertAlmostEqual(
-            a["full_charge_over_q0_M_reference"],
-            b["full_charge_over_q0_M_reference"],
+            a["full_charge_over_AFH_finite_size_M_baseline"],
+            b["full_charge_over_AFH_finite_size_M_baseline"],
             places=13,
         )
 
@@ -47,8 +47,10 @@ class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
             "bishara_linear", tN_GeV2=tN,
         )
         QN2 = -tN
-        self.assertAlmostEqual(result["F1V_finite_t"], 3.0 - 8.392 * QN2, places=13)
-        self.assertAlmostEqual(result["F2V_finite_t"], -0.552, places=13)
+        self.assertAlmostEqual(result["F1V_quark_finite_t"], 3.0 - 8.392 * QN2, places=13)
+        self.assertAlmostEqual(result["F2V_quark_finite_t"], -0.552, places=13)
+        self.assertAlmostEqual(result["F1N_effective_finite_t"], result["F1V_quark_finite_t"] / 3.0, places=14)
+        self.assertAlmostEqual(result["F2N_effective_finite_t"], result["F2V_quark_finite_t"] / 3.0, places=14)
         self.assertNotAlmostEqual(QN2, qA * qA, places=12)
 
     def test_low_q2_and_zexp_form_factors_are_distinct_inputs(self):
@@ -76,13 +78,13 @@ class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
         self.assertLess(terms["M_Phi_interference"], 0.0)
         self.assertGreater(terms["finite_t_M_plus_PhiPP"], 0.0)
         self.assertAlmostEqual(
-            terms["original_AFH_M_baseline"],
-            out["original_AFH_M_baseline_kernel"],
+            terms["AFH_finite_size_M_baseline"],
+            out["AFH_finite_size_M_baseline_kernel"],
             places=14,
         )
         self.assertAlmostEqual(
-            out["full_charge_over_original_AFH_M_baseline"],
-            out["full_charge_over_q0_M_reference"],
+            out["full_charge_over_AFH_finite_size_M_baseline"],
+            out["full_charge_over_nucleon_q0_M_only"],
             places=14,
         )
 
@@ -91,17 +93,33 @@ class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
         crlf = b"q,value\r\n0.1,2\r\n"
         self.assertEqual(canonical_sha256(lf), canonical_sha256(crlf))
 
-    def test_normalization_audit_distinguishes_cM_from_F1(self):
+    def test_gVN_basis_removes_the_quark_factor_three_from_absolute_kernel(self):
         responses = {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3}
-        out = charge_sector_kernels(1.0, 0.22, responses)
-        self.assertNotAlmostEqual(
-            out["full_charge_over_q0_M_reference"],
-            out["legacy_F1_squared_ratio_for_normalization_audit"],
-            places=6,
+        out = charge_sector_kernels(1.0, 0.22, responses, "q0_anchor")
+        self.assertAlmostEqual(
+            out["AFH_finite_size_M_baseline_kernel"],
+            1.0 * responses["M"],
+            places=14,
         )
         self.assertAlmostEqual(
+            out["nucleon_q0_M_only_kernel"],
+            out["AFH_finite_size_M_baseline_kernel"],
+            places=14,
+        )
+        self.assertAlmostEqual(
+            out["F1N_effective_finite_t"], 1.0, places=14
+        )
+        self.assertAlmostEqual(
+            out["F2N_effective_finite_t"], -0.184, places=14
+        )
+        self.assertAlmostEqual(
+            out["full_charge_over_nucleon_finite_t_M_only"],
             out["full_charge_over_finite_t_M"],
-            out["Q_PhiPP_relative_to_finite_t_M"],
+            places=14,
+        )
+        self.assertAlmostEqual(
+            out["full_charge_over_AFH_finite_size_M_baseline"],
+            out["full_charge_over_nucleon_q0_M_only"],
             places=14,
         )
 
