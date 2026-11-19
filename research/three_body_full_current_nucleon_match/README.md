@@ -415,82 +415,73 @@ are zero-momentum anchors rather than finite-\(t_N\) functions. No
 recoil-grid scan, natural-abundance sum, halo fold, detector response, or
 likelihood is included.
 
-## 7. Finite-\(t_N\) nucleon form factors and the correct AFH baseline
+## 7. Mandatory finite-size AFH baseline and nucleon-current corrections
 
-The original calculation already contains a finite-q nuclear form factor.
-The paper source writes
+The original calculation already contains the finite-size nuclear form factor:
 \[
-g_N\longrightarrow 3A g_{Vq}F_N(\boldsymbol q),\qquad F_N(0)=1,
+R_{A,M}^{\rm phys}(Q_A)
+=A^2\frac{W_M^{00}(y_A)}{W_M^{00}(0)},\qquad
+y_A=\left(\frac{Q_A b_A}{2}\right)^2,\qquad
+Q_A^2=2m_AE_R+E_R^2.
 \]
-and the archived Mathematica engine implements this through
-\[
-R_A(Q_A)=A^2\frac{W_M(y_A)}{W_M(0)},\qquad
-y_A=\left(\frac{Q_A b_A}{2}\right)^2.
-\]
-Thus \(W_M(Q_A)\) is the original finite nuclear shape factor. It must
-remain in all comparison denominators; it is not a point-nucleus result,
-and no additional Helm/AFH factor should be multiplied onto it.
+The native AFH equal-\(p=n\) response used by the Python engine has the raw-to-physical factor four applied exactly once and satisfies \(R_{A,M}^{\rm phys}(0)=A^2\). This finite-\(Q_A\) \(W_M(y_A)\) is mandatory in the baseline. Do not replace it by \(W_M(0)\), and do not multiply an additional Helm or other whole-nucleus form factor onto AFH.
 
-The separate new layer is the finite-momentum single-nucleon Dirac-Pauli
-current. For a fixed \(F_1(t_N),F_2(t_N)\) prescription, define
+The original paper and Mathematica benchmark use the effective nucleon coupling in the external prefactor:
 \[
-R_{\mathrm{AFH},M}^{(0)}\propto F_1^V(0)^2W_M(Q_A),\qquad
-R_{t_N,M}\propto c_M(t_N)^2W_M(Q_A),
+g_{VN}=3g_{Vq},\qquad (g_1g_2g_{VN})^2.
 \]
-and
+The full universal quark-current form factors obey \(F_1^{uds}(0)=3\) and \(F_2^{uds}(0)=-0.552\). Therefore the effective-nucleon coefficients in a \(g_{VN}\)-prefactor calculation must use
 \[
-R_{\rm charge}\propto c_M^2W_M+
-c_{\Phi''}^2W_{\Phi''}+2c_Mc_{\Phi''}W_{M\Phi''}.
+\widehat F_i(t_N)=F_i^{uds}(t_N)/3,\qquad
+\widehat F_1(0)=1,\quad \widehat F_2(0)=-0.184.
 \]
-The first ratio, \(R_{\rm charge}/R_{t_N,M}\), isolates the additional
-AFH charge multipoles at fixed nucleon form factors. The second,
-\(R_{\rm charge}/R_{\mathrm{AFH},M}^{(0)}\), is the direct comparison
-with the original AFH M-only calculation, retaining its finite-q nuclear
-form factor.
+The AFH factor four and the quark-current factor three are independent normalization ledgers. Never combine them.
+
+For every fixed-speed and halo-fold result, report the following A/B/C hierarchy, always retaining the same finite-size AFH \(W_M(Q_A)\):
+
+- **A — AFH finite-size M-only reference:** \(L_C^{(3)}W_M^{\rm phys}(Q_A)\), with \(\widehat F_1(0)=1\).
+- **B — finite-\(t_N\) nucleon M-only:** \(\widehat c_M(t_N)^2L_C^{(3)}W_M^{\rm phys}(Q_A)\).
+- **C — charge-response extension:** B plus \(\Phi''\) and the signed \(M-\Phi''\) interference.
+
+The three ratios answer different questions:
+\[
+B/A-1:\ \text{single-nucleon finite-}t_N\text{ correction},
+\]
+\[
+C/B-1:\ \text{additional AFH charge-response correction at fixed }\widehat F_i,
+\]
+\[
+C/A-1:\ \text{total change relative to the original finite-size AFH baseline}.
+\]
+The first ratio must not be called a nuclear-response correction; the second must not be called the total change.
 
 The current Python engine compares two finite-\(t_N\) prescriptions:
 
-- bishara_linear: \(F_1^{uds}(t_N)=3+8.392t_N\), equivalently
-  \(F_1^{uds}(Q_N^2)=3-8.392Q_N^2\) with \(Q_N^2=-t_N\), and
-  \(F_2^{uds}(0)=-0.552\). This explicitly sums the flavor-separated
-  first-order Dirac slopes from Bishara et al. Appendix A.1.
-- isoscalar_zexp: a central isoscalar electromagnetic Sachs \(z\)-expansion
-  reconstruction with the strange-current inputs, used as an alternative
-  sensitivity diagnostic.
+- **bishara_linear:** \(F_1^{uds}(t_N)=3+8.392t_N+O(t_N^2)\) and \(F_2^{uds}(0)=-0.552\), using the flavor-separated first-order Dirac slopes from Bishara et al. Appendix A.1.
+- **isoscalar_zexp:** a central isoscalar electromagnetic Sachs \(z\)-expansion reconstruction with strange-current inputs, used as an alternative sensitivity diagnostic.
 
-The Bishara slope is a local expansion about \(t_N=0\), not an all-orders
-fit; the quoted \(F_2(0)\) does not determine \(F_2(t_N)\). The formal
-calculation uses \(t_N=t_A\) and reports this low-order result separately
-from the z-exp sensitivity check. The archived Mathematica rate engine
-clearly contains the finite-q AFH nuclear factor; its stored production
-path does not by itself prove that the flavor-resolved single-nucleon
-Dirac-Pauli factor was already inserted.
+The full quark-current values are divided by three before they enter the \(g_{VN}\)-normalized current coefficients. The Bishara slope is a local expansion about \(t_N=0\), not an all-orders fit; the quoted \(F_2(0)\) does not determine \(F_2(t_N)\). The formal production path uses \(t_N=t_A=-2m_AE_R\) for the declared one-body impulse prescription. The static diagnostic \(q_N^0=0\), \(t_N=-Q_A^2\), is separate and must not be mixed into the formal curve.
 
 The Xe-131 fixed-speed Pole-width calculation gives:
 
-| \(E_R\) | Prescription | \(R_{t_N,M}/R_{\mathrm{AFH},M}^{(0)}\) | \(R_{\rm charge}/R_{t_N,M}\) | \(R_{\rm charge}/R_{\mathrm{AFH},M}^{(0)}\) |
+| \(E_R\) | Prescription | \(B/A\) | \(C/B\) | \(C/A\) |
 |---:|---|---:|---:|---:|
 | 200 keV | bishara_linear | 0.739883 | 0.996955 | 0.737630 |
 | 200 keV | isoscalar_zexp | 0.780997 | 0.996558 | 0.778309 |
 | 267 keV | bishara_linear | 0.662175 | 0.914637 | 0.605649 |
 | 267 keV | isoscalar_zexp | 0.721663 | 0.899610 | 0.649216 |
 
-The finite-\(Q_N^2\) single-nucleon normalization changes the \(M\)-only
-kernel by approximately 22–34% relative to the original AFH M-only baseline.
-This does not remove or replace the finite-q nuclear form factor: the same
-native \(W_M(Q_A)\) is present in both. Once the nucleon-current normalization
-effect is factored out, the additional \(\Phi''\) plus signed
-\(M-\Phi''\) interference changes the charge sector by only 0.30–0.34%
-at 200 keV, but by 8.54–10.04% at 267 keV. The larger effect near 267 keV
-is associated with the \(W_M\) diffraction minimum.
+The finite-\(Q_N^2\) single-nucleon normalization changes the M-only kernel by approximately 22–34% relative to A. Once that effect is factored out, the additional \(\Phi''\) plus signed \(M-\Phi''\) interference changes the charge sector by 0.30–0.34% at 200 keV and 8.54–10.04% at 267 keV, where \(W_M\) is near a diffraction minimum.
 
-These are fixed-speed Xe-131 charge-sector results. They do not include
-the validated spatial-current response or a natural-xenon halo fold.
+These are fixed-speed Xe-131 charge-sector results. They do not include the validated spatial-current response or a natural-xenon halo fold. The original Mathematica calculation contains the finite-size AFH response, but its recorded rate-engine path uses a constant effective nucleon coupling; it does not by itself establish a separate finite-\(t_N\) flavor-resolved Dirac-Pauli insertion.
 
+The canonical detailed policy is in NUCLEAR_FINITE_SIZE_BASELINE_POLICY.md.
 
 ## 8. Leading AFH response content and remaining work
 
-At leading static one-body vector-current order, the candidate response set
+Here “leading-static” refers to the leading nonrelativistic one-body current expansion; it does not mean the static-nucleon transfer choice q_N^0=0. The formal nucleon form-factor transfer remains t_N=t_A.
+
+At leading one-body vector-current order, the candidate response set
 is
 \[
 M,\quad \Phi'',\quad M\Phi'',\quad
