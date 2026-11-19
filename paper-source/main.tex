@@ -253,8 +253,10 @@ With $\delta=m_s$, the two processes have the same minimum
 incident speed $v_{\min}$ at each recoil energy, but they weight the
 incident speeds differently. For a single target isotope,
 let $\widetilde R_i(E_R)\equiv F_A^{-2}(q_A)\,dR_i/dE_R$ be the
-signal event rate spectrum after dividing out the common nuclear form
-factor squared, where $i=2-2,2-3$ labels the two channels. In the
+signal event rate spectrum after dividing out the common whole-nucleus
+density amplitude squared, where $F_A(0)=1$ and $F_A$ is distinct from
+the AFH response $W_M^{\mathrm{phys}}$. Here $i=2-2,2-3$ labels the
+two channels. In the
 constant-amplitude limit,
 \begin{align}
 \widetilde R_{\rm 2-2}(E_R)&\propto
@@ -521,6 +523,13 @@ package returns a raw isoscalar response whose zero-momentum
 normalization is approximately $A^2/4$. For equal proton and neutron
 couplings, define the physical response by
 \begin{equation}
+\mathcal R_{A,\mathrm{raw}}(E_R)=
+\frac{4\pi}{2J_A+1}W_M^{00,\mathrm{raw}}(y_A),
+\qquad
+C_0(A)=\frac{A^2}{4\mathcal R_{A,\mathrm{raw}}(0)},
+\end{equation}
+and define the physical response by
+\begin{equation}
 W_M^{00,\mathrm{phys}}(y_A)
 \equiv 4C_0(A)W_M^{00,\mathrm{raw}}(y_A),
 \qquad
@@ -528,9 +537,8 @@ W_M^{00,\mathrm{phys}}(y_A)
 \frac{4\pi}{2J_A+1}W_M^{00,\mathrm{phys}}(y_A),
 \label{eq:physical-AFH-M-response}
 \end{equation}
-where $C_0(A)=A^2/[4\mathcal R_{A,\mathrm{raw}}(0)]$ removes the
-small zero-momentum OBDME normalization offset. Thus
-$\mathcal R_A(0)=A^2$. The factor of four and $C_0(A)$
+where $C_0(A)$ removes the small zero-momentum OBDME normalization
+offset. Thus $\mathcal R_A(0)=A^2$. The factor of four and $C_0(A)$
 are included once in $W_M^{00,\mathrm{phys}}$ and are not repeated
 elsewhere.
 
