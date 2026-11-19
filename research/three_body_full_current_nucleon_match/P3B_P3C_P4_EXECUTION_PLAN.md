@@ -13,7 +13,7 @@
 | P3-C spatial amplitude subgate | PASS (provisional Python AFH) | Four Xe-131 Pole-width benchmarks; maximum helicity-vs-Cartesian residual \(6.09\times10^{-16}\) |
 | P3-C full covariant nuclear amplitude | OPEN | Charge multipoles are not yet rank-resolved; independent coordinate-space bound-nucleus current and native AFH comparison remain required |
 | P4 native seven-isotope halo fold | PREPARED / BLOCKED | Native production input still waits for local MMA comparison |
-| P4 provisional seven-isotope halo fold | IMPLEMENTED / WORKFLOW QUEUED | Explicit source-translated AFH-8 + P3-B loader, hash/C0/Cauchy gates, Pole-only halo integration, exact mediator q_A denominator; output remains provisional |
+| P4 provisional seven-isotope halo fold | PRIOR WORKFLOW PASS; CURRENT B/C0 HEAD UNVALIDATED | Explicit source-translated AFH-8 + P3-B loader, hash/C0/Cauchy gates, Pole-only halo integration, exact Lorentz-invariant t_A mediator denominator; output remains provisional |
 
 ## P3-B — native Wolfram AFH comparison
 
@@ -79,8 +79,10 @@ supports a provenance-checked native seven-isotope/eight-response bundle
 and a separate, explicitly provisional Python AFH bundle. The latter loads
 the AFH-8 charge responses and the P3-B spatial OBDME responses, applies the
 common C0 correction to charge responses exactly once, and never labels the
-result native. The engine
-uses isotope-specific exact q kinematics, applies the Pole-width three-body
+result native. The native path independently derives C0(A) from the raw
+M(q_A=0) anchor and applies the factor four and C0 once to all eight channels.
+The engine uses the exact spatial magnitude
+Q_A=sqrt(2*m_A*E_R+E_R^2), the invariant t_A=-2*m_A*E_R, applies the Pole-width three-body
 phase-space integral at each halo-speed node, and computes abundance-weighted
 rates.
 
@@ -122,7 +124,7 @@ energy resolution, exposure, and likelihood are a later detector-level stage.
   affected isotope/speed/recoil nodes only.
 
 
-## P3-C spatial amplitude-level subgate — completed locally
+## P3-C spatial amplitude-level subgate — previous provisional structural run
 
 The new reproducible calculation
 [`p3c_amplitude_level_helicity_crosscheck.py`](p3c_amplitude_level_helicity_crosscheck.py)
@@ -150,3 +152,24 @@ OPEN.
 The workflow now runs this subgate after the C0-consistent response
 contraction and appends its JSON result to the
 `full-three-body-current-nucleon-match-and-phase-space-tensor` artifact.
+
+## Latest-head validation boundary (2026-11-19)
+
+The prior workflow set at commit `cb89294c891cfa6ac7ffa52ba89065df84823c28`
+passed the full-current regression, provisional P4 halo fold, fixed-speed
+charge-sector, and continuous-spectrum jobs. PR #67 has since received
+additional changes to the adopted B finite-(t_N) form factors, explicit
+raw/effective field names, native AFH (C_0(A)) handling, and the Xe-131
+absolute A/B/C workflow. No workflow run is currently attached to the
+latest PR head. Therefore the earlier PASS is historical and does not
+validate the current B/C0 code; rerun all affected workflows before merge.
+
+The adopted production convention is B:
+[
+widehat F_{1,2}^{N}(t_N),W_M^{\rm phys}(y_A),qquad
+t_N=t_A=-2m_AE_R,qquad
+y_A=b_A^2Q_A^2/4.
+]
+A is the zero-transfer nucleon-current reference with the same finite-size
+AFH (W_M); C is a separate (Phi'') charge extension; D remains the
+full one-body-current target, not yet complete.
