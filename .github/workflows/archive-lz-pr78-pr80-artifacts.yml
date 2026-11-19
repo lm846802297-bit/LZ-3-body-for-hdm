@@ -96,8 +96,11 @@ jobs:
               )
               if item.get("extract"):
                   extract_path = root / item["extract_path"]
+                  if extract_path.exists():
+                      import shutil
+                      shutil.rmtree(extract_path)
                   extract_path.mkdir(parents=True, exist_ok=True)
-                  subprocess.run(["unzip", "-q", str(zip_path), "-d", str(extract_path)], check=True)
+                  subprocess.run(["unzip", "-oq", str(zip_path), "-d", str(extract_path)], check=True)
               print(f"Downloaded {key}: {zip_path.stat().st_size} bytes")
 
           print(f"Metadata directory: {meta_dir}")
