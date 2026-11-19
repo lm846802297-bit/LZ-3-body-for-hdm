@@ -664,6 +664,9 @@ def leading_static_vector_current_kernel_from_tensor(
     return {
         "F1V": F1,
         "F2V": F2,
+        "tN_GeV2": tN_GeV2,
+        "Q_N2_GeV2": -tN_GeV2,
+        "nucleon_transfer_scheme": "strict one-body impulse q_N^mu=q_A^mu",
         "L_C": coefficients["L_C_continuity_adjusted_charge_weight"],
         "L_T": float(np.real(L[1, 1] + L[2, 2])),
         "charge_sector": charge,
