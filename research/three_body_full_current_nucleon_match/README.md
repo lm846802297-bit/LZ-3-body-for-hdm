@@ -417,8 +417,8 @@ natural-xenon atom-fraction coverage. Its native_afh_validated flag is
 false, so the contraction is explicitly provisional. The spatial-to-charge values below also use the candidate \(C_{\Sigma'\Delta}\) sign; treat them as provisional until P3 confirms the particle-side phase.
 
 The 12 three-body tensors times seven isotopes give 84 fixed-speed
-benchmark/isotope contractions. Using the provisional anchors
-\(F_1^V(0)=3\), \(F_2^V(0)=-0.552\), and \(m_N=0.938918\) GeV:
+benchmark/isotope contractions. Using the historical raw flavor-summed anchors
+\\(F_1^{uds}(0)=3\\), \\(F_2^{uds}(0)=-0.552\\), and \\(m_N=0.938918\\) GeV. In the external-\\(g_{VN}=3g_{Vq}\\) basis the equivalent coefficient inputs are \\(\\widehat F_1^N=1\\), \\(\\widehat F_2^N=-0.184\\). The old spatial-to-charge ratios are unchanged by this common rescaling, but the old raw absolute coefficients are nine times too large at the kernel level if combined with the external-\\(g_{VN}\\) prefactor; the current P3-C workflow and all B production modules use \\(\\widehat F_i\\):
 
 - all 84 combined response kernels are non-negative;
 - all interpolated diagonal spatial responses are non-negative;
@@ -802,7 +802,7 @@ The full-recoil scan regression is included in the standard unittest discovery: 
 
 The 943-point native-grid charge-kernel figures are regenerated in a consistent serif/LaTeX-style publication format by the charge-scan plotting script. Both SVG and PDF versions are produced.
 
-The fixed-benchmark absolute charge-sector spectrum is calculated by the fixed-benchmark absolute-dsigma script, using one fixed \(\Delta m=450\) keV across the entire kinematic interval, the current bare-nucleus Xe-131 mass convention, the asymmetric Eq. (19) pole-width prescription (first propagator zero-width, second propagator constant pole-width), the exact invariant mediator denominator \(m_V^2-t_A\), with \(t_A=-2m_AE_R\), while keeping spatial \(Q_A^2=2m_AE_R+E_R^2\) separate for AFH responses and static nucleon form factors, the relativistic incident momentum, and the public Eq. (6) prefactor. It includes the coherent native-AFH \(M+\Phi''+M\Phi''\) charge sector and outputs the full pointwise CSV, metadata, SVG and PDF.
+The fixed-benchmark absolute charge-sector spectrum is calculated by the fixed-benchmark absolute-dsigma script, using one fixed \(\Delta m=450\) keV across the entire kinematic interval, the current bare-nucleus Xe-131 mass convention, the asymmetric Eq. (19) pole-width prescription (first propagator zero-width, second propagator constant pole-width), the exact invariant mediator denominator \(m_V^2-t_A\), with \(t_A=-2m_AE_R\), while keeping spatial \(Q_A^2=2m_AE_R+E_R^2\) separate for AFH responses for AFH y_A and using the formal one-body impulse t_N=t_A for nucleon form factors (the static q_N^0=0 choice is diagnostic only), the relativistic incident momentum, and the public Eq. (6) prefactor. It outputs the adopted B finite-t_N M-only baseline and the C coherent native-AFH M+Phi''+M-Phi'' charge-sector extension as separate curves, with the full pointwise CSV, metadata, SVG and PDF.
 
 - Method and scope: [XE131_FIXED_BENCHMARK_ABSOLUTE_DSIGMA.md](XE131_FIXED_BENCHMARK_ABSOLUTE_DSIGMA.md)
 - Calculation: xe131_fixed_benchmark_absolute_dsigma.py
