@@ -1,0 +1,209 @@
+{
+  "manifest_schema_version": 1,
+  "archive_generated_at_utc": "2026-11-19T17:48:41.978387+00:00",
+  "repository": "lm846802297-bit/LZ-3-body-for-hdm",
+  "archive_status": "ARCHIVED_AND_INTEGRITY_CHECKED",
+  "archive_validation_scope": "ZIP digest verification, run/artifact identity checks, extracted-member SHA matching, CSV schema/grid/row-count checks, metadata consistency checks, and SHA256SUMS self-check; this field describes archive integrity, not independent scientific validation.",
+  "study": "Halo-folded full three-body L00 vs I(D_NR), AFH seven-isotope natural xenon",
+  "integration_lineage": {
+    "pr_78": "Merged into the PR #74 research branch; its calculation and outputs are present in the PR #74 integration.",
+    "pr_74": {
+      "merged_to_main": true,
+      "merge_commit": "070dc89cc58699633d0009c1fbaea7fa400ee337"
+    },
+    "pr_82": "Current integration PR carrying the B baseline and this permanent output archive."
+  },
+  "source_workflow_runs": {
+    "pr78_original_run": {
+      "key": "halo_pr78_original",
+      "workflow_run": {
+        "id": 44560087038,
+        "name": "Three-body full integral vs I(D), halo and seven isotopes",
+        "conclusion": "success",
+        "head_branch": "research/halo-ID-approximation-seven-isotopes-20261119",
+        "head_sha": "9ca1801cdded7002c93776f8a0f5bce894135356",
+        "created_at": "2026-11-19T15:54:33Z",
+        "updated_at": "2026-11-19T16:16:51Z",
+        "url": "https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44560087038",
+        "workflow_id": 423958736,
+        "event": "pull_request"
+      },
+      "artifact": {
+        "id": 14551462445,
+        "name": "halo-seven-isotope-full-vs-ID-full-recoil-scan",
+        "size_in_bytes": 368745,
+        "digest": "sha256:6d3d711341cdd33200721fc9371c0dcac2ba3b0354043c09c903d89650b40103",
+        "digest_verified": true,
+        "created_at": "2026-11-19T16:16:47Z",
+        "expires_at_at_source": "2027-02-17T15:54:33Z",
+        "url": "https://api.github.com/repos/lm846802297-bit/LZ-3-body-for-hdm/actions/artifacts/14551462445"
+      },
+      "expected_sha256": "6d3d711341cdd33200721fc9371c0dcac2ba3b0354043c09c903d89650b40103"
+    },
+    "pr74_final_rerun": {
+      "key": "halo_pr74_final",
+      "workflow_run": {
+        "id": 44568592064,
+        "name": "Three-body full integral vs I(D), halo and seven isotopes",
+        "conclusion": "success",
+        "head_branch": "research/full-L00-vs-ID-validation-20261119",
+        "head_sha": "b6b1452b96c5e4697410c92a8ad3e4c358eed80c",
+        "created_at": "2026-11-19T16:39:39Z",
+        "updated_at": "2026-11-19T17:01:54Z",
+        "url": "https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44568592064",
+        "workflow_id": 423958736,
+        "event": "pull_request"
+      },
+      "artifact": {
+        "id": 14555201585,
+        "name": "halo-seven-isotope-full-vs-ID-full-recoil-scan",
+        "size_in_bytes": 368745,
+        "digest": "sha256:f89db448c83f6a7217c2ec7f4a046f8838e2069b671db2fff48bd94eef474da5",
+        "digest_verified": true,
+        "created_at": "2026-11-19T17:01:51Z",
+        "expires_at_at_source": "2027-02-17T16:39:40Z",
+        "url": "https://api.github.com/repos/lm846802297-bit/LZ-3-body-for-hdm/actions/artifacts/14555201585"
+      },
+      "expected_sha256": "f89db448c83f6a7217c2ec7f4a046f8838e2069b671db2fff48bd94eef474da5"
+    }
+  },
+  "payload_equivalence": {
+    "pr78_original_vs_pr74_final_rerun": "BYTE_IDENTICAL",
+    "member_file_count": 9,
+    "note": "The two ZIP containers have different archive-level SHA-256 values; every extracted member has the same path and SHA-256."
+  },
+  "result_summary": {
+    "status": "COMPUTED; quadrature-converged on the archived grid",
+    "benchmark": {
+      "mchi1_GeV": 1000.0,
+      "ms_keV": 300.0,
+      "Delta_m_MeV": 10.0,
+      "mV_GeV": 5.0,
+      "v0_km_s": 220.0,
+      "vE_km_s": 232.0,
+      "vesc_km_s": 544.0,
+      "speed_order_per_smooth_segment": 24,
+      "internal_quadrature_nw_nz_nphi": [
+        8,
+        4,
+        4
+      ]
+    },
+    "isotopes": [
+      128,
+      129,
+      130,
+      131,
+      132,
+      134,
+      136
+    ],
+    "natural_atom_fraction_AFH_coverage": 0.9981580000000001,
+    "abundances_not_renormalized": true,
+    "recoil_points": 208,
+    "row_counts": {
+      "baseline": {
+        "seven_isotope_rows": 1456,
+        "natural_xenon_rows": 208
+      },
+      "highorder": {
+        "seven_isotope_rows": 1456,
+        "natural_xenon_rows": 208
+      }
+    },
+    "max_abs_isotope_full_vs_ID_error_pct_highorder": 0.48654330616075825,
+    "max_abs_natural_xenon_full_vs_ID_error_pct_highorder": 0.3527618038037472,
+    "quadrature_convergence": {
+      "status": "COMPUTED",
+      "natural_xenon": {
+        "point_count": 208,
+        "active_point_count": 186,
+        "max_abs_full_rate_shift_all_pct": 9.886305796236172e-06,
+        "max_abs_ID_rate_shift_all_pct": 1.7092129689366686e-05,
+        "max_abs_approximation_error_shift_all_pp": 1.0792084781385824e-05,
+        "max_abs_full_rate_shift_active_pct": 9.886305796236172e-06,
+        "max_abs_ID_rate_shift_active_pct": 9.98728282297634e-06,
+        "max_abs_approximation_error_shift_active_pp": 2.9056682615546947e-06,
+        "support_mismatch_count": 0,
+        "active_support_mismatch_count": 0,
+        "activity_floor_relative_to_peak": 1e-08
+      },
+      "seven_isotopes": {
+        "point_count": 1456,
+        "active_point_count": 1269,
+        "max_abs_full_rate_shift_all_pct": 1.0108801395958267e-05,
+        "max_abs_ID_rate_shift_all_pct": 3.1057109528553895e-05,
+        "max_abs_approximation_error_shift_all_pp": 2.8424473530463956e-05,
+        "max_abs_full_rate_shift_active_pct": 1.0108801395958267e-05,
+        "max_abs_ID_rate_shift_active_pct": 3.1057109528553895e-05,
+        "max_abs_approximation_error_shift_active_pp": 2.8424473530463956e-05,
+        "support_mismatch_count": 0,
+        "active_support_mismatch_count": 0,
+        "activity_floor_relative_to_peak": 1e-08
+      }
+    },
+    "scope": "Halo-folded rate-ratio validation; no detector response, exposure, efficiency, or likelihood."
+  },
+  "file_inventory": [
+    {
+      "path": "README.md",
+      "size_bytes": 3927,
+      "sha256": "66d502e98e1c730b1a80720e81613b8ec51800f3f377d54648be7116e0022bf7"
+    },
+    {
+      "path": "extracted/halo-seven-isotope-baseline/metadata.json",
+      "size_bytes": 4035,
+      "sha256": "4b0c02554c490013e9e2ad4703fa0233a9612096df8110b201c1cb790c76e204"
+    },
+    {
+      "path": "extracted/halo-seven-isotope-baseline/natural_xenon_halo_comparison.csv",
+      "size_bytes": 13662,
+      "sha256": "7617af2fd26fc65de37096cf3cfc6e21661b270737f1bda363abec0f02d86695"
+    },
+    {
+      "path": "extracted/halo-seven-isotope-baseline/seven_isotope_halo_comparison.csv",
+      "size_bytes": 302211,
+      "sha256": "59dfc7f67ff33d68ad9f1bb5fa7c2afb8d02b2468a56fb0a8f5d0c7f9ace7d5b"
+    },
+    {
+      "path": "extracted/halo-seven-isotope-highorder/metadata.json",
+      "size_bytes": 4036,
+      "sha256": "40e022f187b45fafa229504654822864f7e47c146762278cece7701b7ef6269e"
+    },
+    {
+      "path": "extracted/halo-seven-isotope-highorder/natural_xenon_halo_comparison.csv",
+      "size_bytes": 13654,
+      "sha256": "ddc52c47137a67f7788881721d9d1a1640169066ce4e3d7bb117c60d7fd8c78c"
+    },
+    {
+      "path": "extracted/halo-seven-isotope-highorder/seven_isotope_halo_comparison.csv",
+      "size_bytes": 302130,
+      "sha256": "0756269b1a24a66f54b470e25c845082990c1f86d838c43ac5e6211b5290da9c"
+    },
+    {
+      "path": "extracted/halo-seven-isotope-quadrature-comparison/natural_xenon_quadrature_comparison.csv",
+      "size_bytes": 41328,
+      "sha256": "8917e477c3cb4a21866a5568533041065f22cefc692972f792a141a7ba06b19a"
+    },
+    {
+      "path": "extracted/halo-seven-isotope-quadrature-comparison/quadrature_convergence_summary.json",
+      "size_bytes": 1226,
+      "sha256": "a4c2e5c0ba81f3aea91925ad53bd9356e873118b8c72ce72a92b008f01de6d52"
+    },
+    {
+      "path": "extracted/halo-seven-isotope-quadrature-comparison/seven_isotope_quadrature_comparison.csv",
+      "size_bytes": 287074,
+      "sha256": "48a4a6c9b81552f7343abd49f47a0f7388e3f1b035e8c3debf3310c8c835ac8f"
+    },
+    {
+      "path": "source-artifact-pr74-final-rerun.zip",
+      "size_bytes": 368745,
+      "sha256": "f89db448c83f6a7217c2ec7f4a046f8838e2069b671db2fff48bd94eef474da5"
+    },
+    {
+      "path": "source-artifact-pr78-original.zip",
+      "size_bytes": 368745,
+      "sha256": "6d3d711341cdd33200721fc9371c0dcac2ba3b0354043c09c903d89650b40103"
+    }
+  ]
+}
