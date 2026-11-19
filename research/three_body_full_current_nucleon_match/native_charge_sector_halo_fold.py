@@ -744,6 +744,11 @@ def fold(
     include_leading_static_vector_candidate: bool = False,
     response_input: Path = HALO_INPUT / "natural_xenon_isotope_weights.csv",
 ) -> dict:
+    if width_scheme != "pole":
+        raise ValueError(
+            "formal natural-xenon production is pole-only: the first propagator "
+            "is zero-width and the second carries the constant pole width"
+        )
     native_bundle, native_gate = load_native_response_bundle(native_dir)
     isotope_data = load_isotope_inputs(response_input)
     mean_atomic_weight = mean_atomic_weight_from_input(response_input)
@@ -1100,8 +1105,9 @@ def main() -> None:
     )
     parser.add_argument(
         "--width-scheme",
-        choices=("zero", "pole", "running"),
+        choices=("pole",),
         default="pole",
+        help="formal production is fixed to the asymmetric pole-width prescription",
     )
     parser.add_argument(
         "--include-leading-static-vector-candidate",
