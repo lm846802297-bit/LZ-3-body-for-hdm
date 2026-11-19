@@ -98,13 +98,23 @@ The P4 branch now divides the raw flavor sum by three before constructing coeffi
 
 Plot labels, isotope rows, total-rate fields, workflow comparison keys, and P4 documentation were changed to A/B/C. The old pointlike_M field is not emitted by the corrected P4 path.
 
+### P0 — AFH common OBDME normalization C0 (corrected in P4 branch)
+
+The native Xe-131 and seven-isotope loaders now derive
+\(C_0(A)=A^2/[4R_{M,\rm raw}(0)]\) from the raw AFH M response, apply
+the same factor once to every response channel after the independent
+factor four, and enforce \(R_M^{\rm phys}(0)=A^2\). The Xe-131
+six-channel scan compares the native and P3-B C0 values and no longer
+applies C0 twice to the charge sector. The Xe-131 fixed-speed and absolute
+benchmark paths inherit the corrected native loader.
+
 ### P0 — PR #67 formal nucleon transfer (corrected in P4 branch)
 
 The previous P4 code evaluated bishara_linear at \(Q_A^2\), i.e. the static \(t_N=-Q_A^2\) diagnostic. The corrected production path passes \(t_N=t_A=-2m_AE_R\) into form-factor and current-coefficient routines. The static prescription is no longer the production path.
 
 ### P1 — Effective-nucleon labels in AFH coefficient extraction (corrected on P3/P4 branches)
 
-The P3 coefficient routine defaults were already \(\widehat F_1=1,\widehat F_2=-0.184\), but serialized fields were named F1V/F2V, which could be mistaken for the raw universal quark sum. They were renamed F1N_effective/F2N_effective (and corresponding input names). Regression examples now use effective values. The README spatial Eq. (107) coefficients were made consistent: every coefficient uses the same hatted effective nucleon form factors, rather than mixing raw \(F_1^V\) with hatted \(F_1,F_2\).
+The P3 coefficient routine defaults were already \(\widehat F_1=1,\widehat F_2=-0.184\), but serialized fields were named F1V/F2V, which could be mistaken for the raw universal quark sum. They were renamed F1N_effective/F2N_effective (and corresponding input names), and the P3-C consumer now reads those explicit keys. The nucleon form-factor module also exposes RAW_F1_UDS0/RAW_F2_UDS0; the older F1V0/F2V0 names remain only as documented backward-compatible raw aliases. Regression examples now use effective values. The README spatial Eq. (107) coefficients were made consistent: every coefficient uses the same hatted effective nucleon form factors, rather than mixing raw \(F_1^V\) with hatted \(F_1,F_2\).
 
 ### P1 — P4 plotting and workflow labels (corrected in P4 branch)
 
@@ -158,7 +168,11 @@ corrections:
    \(Q_A^2=2m_AE_R+E_R^2\), \(t_A=-2m_AE_R\), and the formal
    impulse prescription \(t_N=t_A\). It uses exact
    \(y_A=b_A^2Q_A^2/4\) in the AFH response.
-5. **Historical A versus B:** the Mathematica rate engine and its
+5. **Mediator mass notation:** the main model introduces the vector
+   mediator as \(A'_\mu\), while the current-matching and appendix
+   formulas use \(V_\mu\). The manuscript now states
+   \(m_V\equiv m_{A'}\) at the direct-detection matching section.
+6. **Historical A versus B:** the Mathematica rate engine and its
    archived outputs remain A-like if they use the constant nucleon
    coupling without the finite-\(t_N\) Dirac--Pauli insertion. They
    must not be relabelled as B. A separate Mathematica B implementation
