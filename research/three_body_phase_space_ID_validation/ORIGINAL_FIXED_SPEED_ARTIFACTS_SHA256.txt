@@ -1,0 +1,21 @@
+Original fixed-speed validation artifacts
+Generated locally: 2026-11-19
+Benchmark: Xe-131, m_chi1=1 TeV, m_s=300 keV, Delta_m=10 MeV, v=776 km/s
+Grid: 943 recoil-energy rows, 109.64--652.94 keV
+
+Original files in the working calculation bundle:
+- xe131_full_L00_vs_ID_776kms_943points.csv
+  bytes: 234575
+  SHA-256: 88dffd136cd4598b9055a9238f32d469ca0e5ef772348da4cbd58dac627636d2
+- xe131_full_L00_vs_ID_error_776kms.png
+  bytes: 110821
+  SHA-256: 55653e2c527b65b27d497df2a5b8764c862e02e7e8fcd237afcf5bec721ed9bc
+
+Values read directly from the original CSV:
+- Rows: 943
+- At E_R=248.0603821656 keV: total relative difference = 0.04941444961675%
+- Maximum absolute difference in 1 sigma window 215.5--280.5 keV: 0.05267696810027%
+- Maximum absolute difference in 2 sigma window 183--313 keV: 0.05420356675852%
+- Maximum absolute difference over the full sampled interval: 0.6846111261005%, at the high-energy kinematic endpoint where D_exact is 0.575790 keV.
+
+Important: the manifest records the exact original artifact fingerprints. The binary CSV and PNG are not embedded in this text manifest.
