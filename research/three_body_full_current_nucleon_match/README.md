@@ -725,7 +725,7 @@ A 943-point scan has been added using the native Xe-131 AFH v6.0 \(W_M\), \(W_{\
 - Correction-ratio curves: [xe131_charge_kernel_full_recoil_ratios.svg](results/2026-11-18/xe131_charge_kernel_full_recoil_ratios.svg)
 - Regeneration script: [build_xe131_full_recoil_charge_scan.py](build_xe131_full_recoil_charge_scan.py)
 
-At the exact benchmark recoils, the full charge-sector kernel relative to the finite-\(Q^2\) \(M\)-only kernel is 0.99655805 at 200 keV and 0.89961039 at 267 keV. This is **not** the same observable as the fixed-speed three-body cross-section ratio in Section 8, whose denominator is the original pointlike \(9W_M\) baseline. The present scan is not an absolute \(d\sigma/dE_R\), a halo-folded natural-xenon spectrum, or a detector prediction. Spatial multipoles remain outside this charge-sector plot.
+At the exact benchmark recoils, the full charge-sector kernel relative to the finite-\(Q^2\) \(M\)-only kernel is 0.99655805 at 200 keV and 0.89961039 at 267 keV for the isoscalar_zexp prescription. These are the same normalized charge-sector ratios reported in Section 8; the fixed-speed calculation additionally integrates the full \(2\to3\) phase space, whose common \(L_C^{(3)}\) factor cancels in the ratio. The present scan is not an absolute \(d\sigma/dE_R\), a halo-folded natural-xenon spectrum, or a detector prediction. Spatial multipoles remain outside this charge-sector plot.
 
 The full-recoil scan regression is included in the standard unittest discovery: `test_xe131_full_recoil_charge_scan.py`. Rebuilding its CSV and SVG plots requires Python 3.12+, NumPy, pandas, and Matplotlib.
 
@@ -761,7 +761,9 @@ minimum in \(W_M\) near \(q_A\simeq0.256\) GeV. It compares PCHIP with
 local degree-8 and degree-10 Chebyshev interpolation on the archived
 2,401-point AFH grid. The full charge-dominated kernel changes by at most
 1.6589% under this interpolation comparison; the normalized full /
-pointlike-\(M\) ratio changes by at most 0.1182%. The spatial kernel changes
+pointlike-\(M\) ratio changes by at most 0.1182%. This is the q=0-reference M-only ratio; the primary
+finite-\(t_N\) correction is also reported separately in the scan output.
+The spatial kernel changes
 by less than 1 ppm. These are interpolation diagnostics, not a dense native
 AFH validation.
 
