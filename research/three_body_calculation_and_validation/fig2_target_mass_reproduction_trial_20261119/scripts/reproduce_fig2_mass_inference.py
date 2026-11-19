@@ -9,7 +9,8 @@ import matplotlib.pyplot as plt
 ROOT = Path(__file__).resolve().parents[1]
 MS = 300.0
 MCHI = 1000.0
-V = 780.0 / 299792.458
+V_KMS = 780.0
+V = V_KMS / 299792.458
 META = json.loads((ROOT / "inputs/fig2_digitization_metadata.json").read_text())
 
 def trace():
@@ -68,20 +69,42 @@ def main():
     fit = minimize_scalar(objective, bounds=(118, 124), method="bounded",
                           options={"xatol": 1e-10})
     mu, mt, mc = invert(lo0, hi0)
+    masses = {
+        "endpoint_inversion": mt / 1e6,
+        "red_shape_fit": float(fit.x),
+        "A130_u_approximation": 130.0 * 0.93149410242,
+        "mT_122_GeV": 122.0,
+    }
+    cases = {}
+    for label, mass in masses.items():
+        _, _, _, lo, hi, peak = spectrum(mass)
+        cases[label] = {
+            "mT_GeV": float(mass), "ER_minus_keV": lo, "ER_plus_keV": hi,
+            "ER_peak_keV": peak,
+            "normalized_2to2_plateau_1e_3_per_keV": 1e3 / (hi - lo),
+        }
+
     result = {
         "status": "exploratory_reproduction_diagnostic",
         "source": {"file": META["source_file"], "sha256": META["source_sha256"],
                    "figure": "Fig. 2", "pdf_page": 3},
-        "fixed_inputs": {"mchi_GeV": MCHI, "v_km_per_s": 780, "ms_keV": MS,
+        "fixed_inputs": {"mchi_GeV": MCHI, "v_km_per_s": V_KMS, "ms_keV": MS,
                          "delta_iDM_keV": MS, "RA_included": False,
                          "nuclear_response_included": False},
-        "digitized_endpoints_keV": [lo0, hi0],
+        "digitized_figure": {
+            "red_points": len(ed), "red_endpoint_minus_keV": lo0,
+            "red_endpoint_plus_keV": hi0,
+            "red_peak_ER_keV": META["red_curve_peak"]["ER_keV"],
+            "red_peak_height_1e_3_per_keV": META["red_curve_peak"]["height_1e_3_per_keV"],
+            "blue_plateau_1e_3_per_keV": META["blue_curve"]["plateau_1e_3_per_keV"],
+        },
         "endpoint_inversion": {"mu_GeV": mu / 1e6, "mT_GeV": mt / 1e6,
                                "implied_mchi_GeV": mc / 1e9},
         "red_shape_fit": {"mT_GeV": float(fit.x),
                           "mean_squared_residual": float(fit.fun),
                           "fit_domain_keV": [120, 645],
-                          "fit_points": int(mask.sum())}
+                          "fit_points": int(mask.sum())},
+        "comparisons": cases,
     }
     (ROOT / "results").mkdir(exist_ok=True)
     (ROOT / "results/fig2_target_mass_inference.json").write_text(json.dumps(result, indent=2))
