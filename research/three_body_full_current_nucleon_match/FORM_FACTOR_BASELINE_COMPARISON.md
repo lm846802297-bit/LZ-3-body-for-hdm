@@ -2,43 +2,50 @@
 
 **Project:** LZ-3-body-for-hdm  
 **Updated:** 2026-11-19  
-**Status:** finite-\(Q_N^2\) diagnostics prepared; exact legacy form-factor provenance still to be pinned  
+**Status:** original finite-q AFH nuclear form factor retained; finite-\(t_N\) low-order nucleon-current diagnostics run in parallel; exact legacy flavor-resolved input still to be pinned  
 **Formal nuclear input:** AFH v6.0 only  
 **Formal width prescription:** asymmetric Pole width only
 
 ## 1. Comparison question
 
-The purpose of this comparison is to isolate the change caused by adding AFH nuclear responses without conflating it with the finite-momentum nucleon-current form factors.
-
-For a fixed form-factor prescription, define
-
+The original calculation is not a point-nucleus calculation. The paper source writes the coherent nuclear replacement as
 \[
-R_{q=0,M}\propto F_1^V(0)^2 W_M,
+g_N\longrightarrow 3A g_{Vq}F_N(\boldsymbol q),\qquad F_N(\boldsymbol 0)=1,
 \]
-
+and the archived Mathematica rate engine implements its finite-momentum nuclear shape through
 \[
-R_{t_N,M}\propto c_M(t_N)^2 W_M,
+R_A(Q_A)=A^2\frac{W_M(y_A)}{W_M(0)},\qquad
+y_A=\left(\frac{Q_A b_A}{2}\right)^2.
 \]
+Thus the original AFH \(W_M(Q_A)\) already contains the finite-q nuclear form factor. It must remain in every comparison denominator; do not multiply an additional Helm or AFH nuclear form factor on top of it.
 
+There is a second, distinct layer: the finite-momentum structure of the single-nucleon vector current, described by flavor-resolved \(F_1^{q/N}(t_N)\) and \(F_2^{q/N}(t_N)\). The current work adds this Dirac-Pauli layer while keeping the original AFH nuclear response unchanged.
+
+For a fixed finite-\(t_N\) prescription, define
+\[
+R_{\mathrm{AFH},M}^{(0)}
+\propto F_1^V(0)^2 L_C W_M(Q_A),
+\]
+\[
+R_{t_N,M}\propto c_M(t_N)^2 L_C W_M(Q_A),
+\]
 and
-
 \[
-R_{\mathrm{charge}}\propto
+R_{\mathrm{charge}}\propto L_C\left[
 c_M^2 W_M+c_{\Phi''}^2W_{\Phi''}
-+2c_Mc_{\Phi''}W_{M\Phi''}.
++2c_Mc_{\Phi''}W_{M\Phi''}\right].
 \]
+Here \(R_{\mathrm{AFH},M}^{(0)}\) is the original AFH M-only baseline: the nucleon-current normalization is frozen at zero transfer, but the full finite-q AFH nuclear response is retained. It is not a pointlike-nucleus result.
 
-The required comparison is
-
+Two ratios must be reported because they answer different questions:
 \[
-\boxed{
-\frac{R_{\mathrm{charge}}}{R_{t_N,M}}-1
-}
+\boxed{\frac{R_{\mathrm{charge}}}{R_{t_N,M}}-1}
 \]
-
-because numerator and denominator then use the same \(F_1^V(t_N),F_2^V(t_N)\). The \(q=0\) result is retained as a secondary normalization reference only.
-
-The AFH \(W_M\) response already contains finite nuclear structure. Thus “\(q=0\) nucleon form factors” must not be confused with a point-nucleus approximation.
+isolates the added \(\Phi''\) and signed \(M-\Phi''\) response at fixed nucleon form factors, whereas
+\[
+\boxed{\frac{R_{\mathrm{charge}}}{R_{\mathrm{AFH},M}^{(0)}}-1}
+\]
+is the total change relative to the original AFH M-only calculation, including the finite-\(t_N\) nucleon-current correction. The second ratio is the direct legacy comparison; the first is the clean response-only comparison.
 
 ## 2. Transfer variables: keep the invariants separate
 
@@ -115,7 +122,7 @@ The code provides three distinct inputs.
 
 | Prescription | Definition | Interpretation |
 |---|---|---|
-| \(q=0\) anchor | \(F_1^V=3,\ F_2^V=-0.552\) | Secondary normalization reference |
+| original AFH M-only baseline | \(F_1^V(0)=3\) normalization multiplying the finite-q AFH \(W_M(Q_A)\) | Direct comparison with the original nuclear-response calculation; not a point nucleus |
 | bishara_linear | \(F_1^V(Q_N^2)=3-(8.392\,{\rm GeV}^{-2})Q_N^2\), \(F_2^V=-0.552\) | First-order low-\(Q_N^2\) diagnostic from the flavor-separated Dirac slopes; \(F_2\) held at its zero-transfer value |
 | isoscalar_zexp | Isoscalar electromagnetic Sachs \(z\)-expansion plus the strange-current inputs | Finite-\(Q_N^2\) alternative diagnostic |
 
@@ -132,18 +139,18 @@ The following arithmetic uses the archived Xe-131 charge-response ratios at the 
 
 The corresponding form-factor and charge-sector diagnostics are:
 
-| \(E_R\) | Prescription | \(F_1^V\) | \(F_2^V\) | \(c_M\) | \(c_{\Phi''}\) | \(R_{t_N,M}/R_{q=0,M}\) | \(R_{\rm charge}/R_{t_N,M}\) | \(R_{\rm charge}/R_{q=0,M}\) |
+| \(E_R\) | Prescription | \(F_1^V\) | \(F_2^V\) | \(c_M\) | \(c_{\Phi''}\) | \(R_{t_N,M}/R_{\mathrm{AFH},M}^{(0)}\) | \(R_{\rm charge}/R_{t_N,M}\) | \(R_{\rm charge}/R_{\mathrm{AFH},M}^{(0)}\) |
 |---:|---|---:|---:|---:|---:|---:|---:|---:|
 | 200 keV | bishara_linear | 2.590773 | -0.552000 | 2.580493 | 0.020560 | 0.739883 | 0.996955 | 0.737630 |
 | 200 keV | isoscalar_zexp | 2.663163 | -0.468053 | 2.651222 | 0.023883 | 0.780997 | 0.996558 | 0.778309 |
 | 267 keV | bishara_linear | 2.453682 | -0.552000 | 2.441223 | 0.024917 | 0.662175 | 0.914637 | 0.605649 |
 | 267 keV | isoscalar_zexp | 2.563886 | -0.449775 | 2.548523 | 0.030726 | 0.721663 | 0.899610 | 0.649216 |
 
-All ratios in the table are dimensionless. The \(R_{\rm charge}/R_{t_N,M}\) column isolates the added \(\Phi''\) and signed \(M-\Phi''\) interference at fixed form-factor prescription.
+All ratios in the table are dimensionless. The first ratio column measures the finite-\(t_N\) single-nucleon normalization relative to the original AFH M-only baseline. The \(R_{\rm charge}/R_{t_N,M}\) column isolates the added \(\Phi''\) and signed \(M-\Phi''\) interference at fixed form-factor prescription. The last column gives the total shift relative to the original calculation while preserving its finite-q AFH nuclear shape.
 
 Two conclusions follow:
 
-1. The finite-\(Q_N^2\) nucleon-current normalization can change the \(M\)-only result by tens of percent relative to the \(q=0\) anchor.
+1. The finite-\(Q_N^2\) single-nucleon-current normalization can change the \(M\)-only result by tens of percent relative to the original AFH M-only baseline. This is an additional nucleon-current correction; the original finite-q nuclear response remains present in both numerator and denominator.
 2. The additional charge-sector correction is small at 200 keV but reaches several-to-ten percent at 267 keV, where the \(W_M\) response is near a diffraction minimum.
 
 These are selected-point charge-sector diagnostics. They are not a natural-xenon halo-integrated result, and they do not include the spatial-current candidate.
@@ -152,14 +159,14 @@ These are selected-point charge-sector diagnostics. They are not a natural-xenon
 
 Every fixed-speed and halo-fold result must retain, separately:
 
-1. the \(q=0\) nucleon-form-factor \(M\) reference;
-2. the finite-\(t_N\) \(M\)-only result;
+1. the original AFH M-only baseline, \(F_1^V(0)^2W_M(Q_A)\), which already includes the finite-q nuclear form factor;
+2. the finite-\(t_N\) M-only result with the chosen nucleon \(F_1,F_2\);
 3. the \(M+\Phi''+M\Phi''\) Coulomb-sector result;
 4. the leading-static full one-body candidate, with \(\Delta,\Sigma'\) and signed \(\Sigma'-\Delta\) interference.
 
-The primary response correction is always divided by item 2, using the same \(F_1,F_2\) prescription in numerator and denominator. Item 1 is a secondary normalization reference. Never compare a finite-\(t_N\) numerator to a \(q=0\) denominator and describe the whole difference as an AFH response correction.
+Always report both ratios: item 3/item 2 isolates the additional AFH multipoles at fixed nucleon form factors; item 3/item 1 compares with the original AFH calculation. Item 1 is not a point-nucleus baseline: it retains \(W_M(Q_A)\). Never multiply an extra nuclear form factor onto \(W_M\), and never describe the full item 3/item 1 difference as an AFH response correction alone.
 
-The Xe-131 fixed-speed charge-sector workflow and the P4 natural-xenon workflow now run bishara_linear and isoscalar_zexp separately. The Xe-131 comparison reports the finite-t_N M-only denominator as its primary ratio; P4 reports both the Coulomb and leading-static candidate outputs. The candidate remains unpromoted until P3-C passes.
+The Xe-131 fixed-speed charge-sector workflow and the P4 natural-xenon workflow run bishara_linear and isoscalar_zexp separately. The full six-channel fixed-speed recoil scan has now also been updated to evaluate both prescriptions after one shared three-body phase-space integration at each recoil point. Each row reports both the finite-\(t_N\) M-only denominator and the original AFH M-only baseline. The spatial candidate remains unpromoted until P3-C passes.
 
 The Xe-131 fixed-speed dual-form-factor workflow passed on 2026-11-19 (run 44443361283, artifact 14491448839; 7/7 regression tests). The measured primary ratios are:
 
@@ -171,7 +178,7 @@ The Xe-131 fixed-speed dual-form-factor workflow passed on 2026-11-19 (run 44443
 
 A provenance distinction remains important. The archived Mathematica rate engine calls the AFH nuclear response at finite spatial \(Q_A\) and multiplies it by a constant coupling-squared prefactor; its recorded production path does not explicitly evaluate \(F_1^{uds,N}(t_N)\) or \(F_2^{uds,N}(t_N)\). Thus the original calculation did include finite nuclear structure through AFH \(W_M(Q_A)\), but that fact alone does not establish that a finite-\(t_N\) single-nucleon Dirac-Pauli form factor was applied in the rate engine.
 
-The checked paper-source main.tex states the universal quark coupling and AFH \(W_M\), but does not itself spell out a finite-\(t_N\) flavor-resolved \(F_1^q/F_2^q\) low-order parameterization. The archived DMFormFactor-v6 file supplies the nuclear-response machinery; it is not, by itself, evidence for a particular quark-level shape-factor input. The longer quark-to-nucleon matching record lists the Bishara \(F_1\) slope as a low-\(Q_N^2\) diagnostic and explicitly marks the finite-\(t_N\) form-factor insertion into the old rate engine as pending. Therefore bishara_linear is treated as a low-\(Q_N^2\) diagnostic until the exact legacy expression and coefficients are identified.
+The checked paper-source main.tex explicitly contains the finite-q nuclear factor \(F_N(\boldsymbol q)\), and the archived Mathematica notebook realizes it with the AFH \(W_M(Q_A)\) response. That original nuclear shape factor is therefore included in the baseline used here. What is not explicit in the archived rate-engine path is a separate finite-\(t_N\), flavor-resolved single-nucleon \(F_1^{q/N},F_2^{q/N}\) insertion: the notebook uses a constant effective nucleon coupling. The low-order Bishara input supplies the flavor-summed first derivative of \(F_1\) and the zero-transfer \(F_2(0)\), which is the basis of bishara_linear. If a different low-order quark-shape prescription was used in an earlier local calculation, its exact function and coefficients still need to be recovered before we can claim byte-for-byte reproduction of that additional layer.
 
 ## 7. Validation boundary and next steps
 
