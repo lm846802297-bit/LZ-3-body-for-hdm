@@ -42,7 +42,7 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
         self.assertGreater(result["spatial_terms"]["SigmaPrimeDelta"], 0.0)
         self.assertAlmostEqual(
             result["D_full_six_channel_candidate"],
-            result["charge_only"] + result["spatial_candidate"],
+            result["C_charge_only"] + result["spatial_candidate"],
             places=10,
         )
 
