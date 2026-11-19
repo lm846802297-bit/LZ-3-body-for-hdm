@@ -28,8 +28,8 @@ class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
             places=13,
         )
         self.assertAlmostEqual(
-            a["full_charge_over_original_AFH_M_baseline"],
-            b["full_charge_over_original_AFH_M_baseline"],
+            a["full_charge_over_AFH_finite_size_M_baseline"],
+            b["full_charge_over_AFH_finite_size_M_baseline"],
             places=13,
         )
         self.assertAlmostEqual(
@@ -57,17 +57,17 @@ class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
         f1_linear, f2_linear = charge_sector_kernels(
             1.0, 0.22, {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3},
             "bishara_linear",
-        )["F1V_finite_t"], charge_sector_kernels(
+        )["F1V_quark_finite_t"], charge_sector_kernels(
             1.0, 0.22, {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3},
             "bishara_linear",
-        )["F2V_finite_t"]
+        )["F2V_quark_finite_t"]
         f1_zexp, f2_zexp = charge_sector_kernels(
             1.0, 0.22, {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3},
             "isoscalar_zexp",
-        )["F1V_finite_t"], charge_sector_kernels(
+        )["F1V_quark_finite_t"], charge_sector_kernels(
             1.0, 0.22, {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3},
             "isoscalar_zexp",
-        )["F2V_finite_t"]
+        )["F2V_quark_finite_t"]
         self.assertNotAlmostEqual(f1_linear, f1_zexp, places=5)
         self.assertNotAlmostEqual(f2_linear, f2_zexp, places=5)
 
@@ -84,7 +84,8 @@ class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
         )
         self.assertAlmostEqual(
             out["full_charge_over_AFH_finite_size_M_baseline"],
-            out["full_charge_over_nucleon_q0_M_only"],
+            out["kernels_with_common_LC"]["finite_t_M_plus_PhiPP"]
+            / out["kernels_with_common_LC"]["AFH_finite_size_M_baseline"],
             places=14,
         )
 
@@ -119,7 +120,8 @@ class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
         )
         self.assertAlmostEqual(
             out["full_charge_over_AFH_finite_size_M_baseline"],
-            out["full_charge_over_nucleon_q0_M_only"],
+            out["kernels_with_common_LC"]["finite_t_M_plus_PhiPP"]
+            / out["kernels_with_common_LC"]["AFH_finite_size_M_baseline"],
             places=14,
         )
 
