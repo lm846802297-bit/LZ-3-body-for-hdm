@@ -307,12 +307,12 @@ C_\Delta^{(3)}
 \]
 \[
 C_{\Sigma'}^{(3)}
-=\frac{(F_1^V+F_2^V)^2Q_A^2}{8m_N^2}(L^{11}+L^{22}),
+=\frac{(\\widehat F_1+\\widehat F_2)^2Q_A^2}{8m_N^2}(L^{11}+L^{22}),
 \]
 \[
 \boxed{
 C_{\Sigma'\Delta}^{(3)}
-=-\frac{F_1^V(F_1^V+F_2^V)Q_A^2}{2m_N^2}
+=-\frac{\\widehat F_1(\\widehat F_1+\\widehat F_2)Q_A^2}{2m_N^2}
 (L^{11}+L^{22}).
 }
 \]
@@ -323,10 +323,12 @@ extractor. This confirms the **particle-side** signed coefficient; it
 does not yet validate the complete many-body AFH OBDME contraction. The
 Cauchy--Schwarz check bounds response magnitude and is a separate test.
 
-For the provisional zero-momentum anchors \(F_1^V(0)=3\),
-\(F_2^V(0)=-0.552\), and \(m_N=0.938918\) GeV, the coefficient ratios
-relative to the leading charge coefficient \(C_M=F_1^2L^{00}\) over the
-12 archived benchmarks are:
+For the universal \(u+d+s\) current the raw quark-summed anchors are
+\(F_1^{uds}(0)=3\), \(F_2^{uds}(0)=-0.552\). In the external
+\(g_{VN}=3g_{Vq}\) rate convention the coefficients above use
+\(\widehat F_1(0)=1\), \(\widehat F_2(0)=-0.184\), and
+\(m_N=0.938918\) GeV. The coefficient ratios relative to
+\(C_M=\widehat F_1^2L^{00}\) over the 12 archived benchmarks are:
 
 | Spatial coefficient | Range relative to \(C_M\) |
 |---|---:|
@@ -359,10 +361,11 @@ is also consistent with zero at floating-point precision. It is a
 different multipole factor and does not set the AFH
 \(C_{\Sigma'\Delta}^{(3)}\) coefficient to zero.
 
-The coefficient ratios above use constant zero-momentum form-factor
-anchors. The final calculation must use finite-\(t_N\)
-\(F_1^V(t_N)\) and \(F_2^V(t_N)\), and must contract with the physical
-equal-\(p=n\) AFH response columns so the factor of four is applied once.
+The coefficient ratios above use constant zero-momentum effective
+form-factor anchors. The adopted B calculation uses finite-\(t_N\)
+\(\widehat F_1(t_N)\) and the leading Pauli value
+\(\widehat F_2(t_N)=-0.184+\mathcal O(t_N)\), and contracts with the
+physical equal-\(p=n\) AFH response columns so the factor of four is applied once.
 
 ## 6. Provisional seven-isotope AFH fixed-speed contraction (P0-C2)
 
