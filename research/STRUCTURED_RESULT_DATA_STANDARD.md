@@ -155,7 +155,9 @@ python research/schemas/validate_result_records.py --repo-root . <run_manifest.j
 
 ## 7. 历史结果迁移
 
-本规范从采用后的新运行开始执行。既有 JSON、CSV、日志、图像和历史运行记录保持原样，不为满足新格式而重写原始数据、改变精度或伪造缺失字段。旧文件可由新的索引/运行清单引用，并明确标记为 legacy；只有在能从原始记录中核实的字段才允许补充。
+本规范从采用后的新运行开始执行。既有 JSON、CSV、日志、图像和历史运行记录保持原样，不为满足新格式而重写原始数据、改变精度或伪造缺失字段。
+
+本仓库现有 `research/three_body_calculation_and_validation/results/metadata_user_dsigma_450kev.json` 可按 legacy result metadata 理解，`user_l00_benchmark_run_manifest.json` 可按 legacy run manifest 理解。它们尚不自动等同于 v1.0.0 Schema 记录；保留原始字节，后续如需迁移，只新增有来源依据的 sidecar。旧文件可由新的索引/运行清单引用，并明确标记为 legacy；只有在能从原始记录中核实的字段才允许补充。
 
 ---
 
