@@ -171,7 +171,7 @@ validate the current B/C0 code; rerun all affected workflows before merge.
 
 The adopted production convention is B:
 \[
-\widehat F_{1,2}^{N}(t_N)\,W_M^{\rm phys}(y_A),\qquad
+\widehat c_M(t_N)^2\,W_M^{\rm phys}(y_A),\qquad
 t_N=t_A=-2m_AE_R,\qquad
 y_A=b_A^2Q_A^2/4.
 \]
