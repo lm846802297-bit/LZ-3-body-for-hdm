@@ -21,7 +21,7 @@ from pathlib import Path
 import numpy as np
 from scipy.interpolate import PchipInterpolator
 
-from nucleon_vector_form_factors import F1V0, charge_coefficients, form_factor_values
+from nucleon_vector_form_factors import F1V0, bishara_linear, charge_coefficients, isoscalar_zexp
 from native_charge_sector_halo_fold import load_isotope_inputs
 from three_body_phase_space_tensor import integrate_spin_resolved_tensor
 
@@ -189,7 +189,13 @@ def charge_sector_kernels(
     form_factor_prescription: str = "isoscalar_zexp",
 ) -> dict:
     """Return finite-t_N M+Phi'' and q=0-reference M-only Coulomb kernels."""
-    F1, F2 = form_factor_values(qA_GeV, form_factor_prescription)
+    Q2 = qA_GeV * qA_GeV
+    if form_factor_prescription == "bishara_linear":
+        F1, F2 = bishara_linear(Q2)
+    elif form_factor_prescription == "isoscalar_zexp":
+        F1, F2 = isoscalar_zexp(Q2)
+    else:
+        raise ValueError(f"unknown form-factor prescription: {form_factor_prescription}")
     cM, cPhi = charge_coefficients(qA_GeV, F1=F1, F2=F2, mN_GeV=MN_GEV)
     WM, WPhi, WMPhi = responses["M"], responses["PhiPP"], responses["MPhiPP"]
     if WM <= 0.0:
