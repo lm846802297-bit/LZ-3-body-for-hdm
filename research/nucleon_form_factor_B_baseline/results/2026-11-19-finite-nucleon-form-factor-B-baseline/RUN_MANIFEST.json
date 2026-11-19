@@ -1,8 +1,9 @@
 {
   "manifest_schema_version": 1,
-  "archive_generated_at_utc": "2026-11-19T17:17:29.079485+00:00",
+  "archive_generated_at_utc": "2026-11-19T17:36:13.998886+00:00",
   "repository": "lm846802297-bit/LZ-3-body-for-hdm",
-  "archive_status": "ARCHIVED_AND_VALIDATED",
+  "archive_status": "ARCHIVED_AND_INTEGRITY_CHECKED",
+  "archive_validation_scope": "ZIP digest verification, run/artifact identity checks, extracted-member SHA matching, CSV schema/grid/row-count checks, metadata consistency checks, and SHA256SUMS self-check; this field describes archive integrity, not independent scientific validation.",
   "study": "Finite nucleon Dirac-Pauli form factors multiplied by finite-size AFH W_M",
   "integration_lineage": {
     "upstream_halo": {
@@ -104,6 +105,11 @@
       "path": "README.md",
       "size_bytes": 3545,
       "sha256": "322cf9c696004f0996ce552dddc8be2c2ed5983a566dbf8c0de09baeaae1026e"
+    },
+    {
+      "path": "RUN_MANIFEST.json",
+      "size_bytes": 9034,
+      "sha256": "8fd2a72fe5965ec616956a2d8aac8c1c6765841052ca044ce7c5945d0292f437"
     },
     {
       "path": "extracted/B-baseline/alexandrou2020_charge_weighted_converted/metadata.json",

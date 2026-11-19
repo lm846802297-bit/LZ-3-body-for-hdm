@@ -1,8 +1,9 @@
 {
   "manifest_schema_version": 1,
-  "archive_generated_at_utc": "2026-11-19T17:17:29.077039+00:00",
+  "archive_generated_at_utc": "2026-11-19T17:36:13.996872+00:00",
   "repository": "lm846802297-bit/LZ-3-body-for-hdm",
-  "archive_status": "ARCHIVED_AND_VALIDATED",
+  "archive_status": "ARCHIVED_AND_INTEGRITY_CHECKED",
+  "archive_validation_scope": "ZIP digest verification, run/artifact identity checks, extracted-member SHA matching, CSV schema/grid/row-count checks, metadata consistency checks, and SHA256SUMS self-check; this field describes archive integrity, not independent scientific validation.",
   "study": "Halo-folded full three-body L00 vs I(D_NR), AFH seven-isotope natural xenon",
   "integration_lineage": {
     "pr_78": "Merged into the PR #74 research branch; its calculation and outputs are present in the PR #74 integration.",
@@ -148,6 +149,11 @@
       "path": "README.md",
       "size_bytes": 3471,
       "sha256": "b82b576326a542dbf2f1b5a206499d2ee8ce22ee22bc8ef43ca14b05362a7b25"
+    },
+    {
+      "path": "RUN_MANIFEST.json",
+      "size_bytes": 8337,
+      "sha256": "3569e3da82b3b82d3b4f943601fba7d59686b1b92135aef8b6f5fb3755cadfec"
     },
     {
       "path": "extracted/halo-seven-isotope-baseline/metadata.json",
