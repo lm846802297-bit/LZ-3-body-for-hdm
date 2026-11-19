@@ -48,13 +48,16 @@ current comparison remains to be implemented. The direct many-body comparison
 \]
 remains the next physics gate.
 
-The P3-C amplitude subgate still uses constant \(q=0\) form-factor
-anchors at fixed-speed points. The P4 halo engine exposes two finite-\(Q_N^2\)
-diagnostics (bishara_linear and isoscalar_zexp) and reports the
-Coulomb/full-current candidate relative to the same finite-\(t_N\) M-only
-baseline. These are diagnostic prescriptions, not yet a pinned exact
-legacy form-factor input or a native-AFH production result. P1 does not
-claim a bound-nucleus/off-shell current.
+The adopted production baseline is **B**: the low-momentum flavor-resolved
+Bishara Dirac-Pauli current \(\widehat F_1(t_N),\widehat F_2(t_N)\)
+contracted with the native finite-size AFH \(W_M(y_A)\), and no additional
+AFH response. The external prefactor uses \((g_1g_2g_{VN})^2\), so the
+current coefficients use \(\widehat F_i=F_i^{uds}/3\). The
+isoscalar_zexp prescription is retained only as an alternative sensitivity
+model. C and D are separate nuclear-response extensions relative to B.
+The P3-C amplitude subgate still uses constant \(q=0\) anchors and does not
+validate the B bound-nucleus current. P1 does not claim a bound-nucleus or
+off-shell current.
 
 ## 1. Purpose and amplitude
 
@@ -460,7 +463,7 @@ The current Python engine compares two finite-\(t_N\) prescriptions:
 - **bishara_linear:** \(F_1^{uds}(t_N)=3+8.392t_N+O(t_N^2)\) and \(F_2^{uds}(0)=-0.552\), using the flavor-separated first-order Dirac slopes from Bishara et al. Appendix A.1.
 - **isoscalar_zexp:** a central isoscalar electromagnetic Sachs \(z\)-expansion reconstruction with strange-current inputs, used as an alternative sensitivity diagnostic.
 
-The full quark-current values are divided by three before they enter the \(g_{VN}\)-normalized current coefficients. The Bishara slope is a local expansion about \(t_N=0\), not an all-orders fit; the quoted \(F_2(0)\) does not determine \(F_2(t_N)\). The formal production path uses \(t_N=t_A=-2m_AE_R\) for the declared one-body impulse prescription. The static diagnostic \(q_N^0=0\), \(t_N=-Q_A^2\), is separate and must not be mixed into the formal curve.
+The full quark-current values are divided by three before they enter the \(g_{VN}\)-normalized current coefficients. The Bishara slope is a local expansion about \(t_N=0\), not an all-orders fit; the quoted \(F_2(0)\) does not determine an F2 slope. The adopted B truncation is \(F_2^{uds}(t_N)=F_2^{uds}(0)+\mathcal O(t_N)\). The formal production path uses \(t_N=t_A=-2m_AE_R\) for the declared one-body impulse prescription. The static diagnostic \(q_N^0=0\), \(t_N=-Q_A^2\), is separate and must not be mixed into the formal curve.
 
 The Xe-131 fixed-speed Pole-width calculation gives:
 
