@@ -10,6 +10,9 @@ Before substantive work:
 2. Read the relevant topic README, theory note, audit, scripts, tests, and input provenance. Use [the model and three-body amplitude note](research/docs/01_model_and_amplitude.md), [the LZ recast plan](research/docs/02_lz_recast.md), [the cosmology note](research/docs/03_cosmology.md), and [the audit/roadmap](research/docs/04_audit_and_roadmap.md) when relevant.
 3. Inspect the latest main SHA, open PRs touching the same paths, and the exact baseline data/code before changing a calculation.
 4. Do not infer that a planned task has run. Create a run record only after execution; preserve failed, partial, and blocked attempts honestly.
+5. Before starting or delegating any substantive research task, prepare and circulate a completed [Research Task Brief](research/_template/RESEARCH_TASK_BRIEF.md) under the [handoff standard](research/RESEARCH_TASK_HANDOFF_STANDARD.md). Pin the source revisions and baseline commit; chat history or a previous model summary is not a substitute.
+
+For a topic-specific task, store the filled brief at `research/<topic>/task_briefs/<task-id>.md`; for cross-topic work, use `research/docs/task_briefs/<task-id>.md`. Update the brief with a dated change-log entry if the scope, source revision, assumptions, or conventions change. A trivial editorial/maintenance task may omit a brief only when its PR explains why no scientific handoff is needed.
 
 ## 2. Scientific scope and model separation
 
