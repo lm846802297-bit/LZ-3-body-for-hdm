@@ -48,6 +48,6 @@
       "extract_path": "research/nucleon_form_factor_B_baseline/results/2026-11-19-finite-nucleon-form-factor-B-baseline/extracted"
     }
   ],
-  "archive_request_revision": "trigger-3",
-  "archive_request_note": "Final manifest integrity correction: exclude RUN_MANIFEST.json from its own embedded file_inventory to avoid self-reference; retain RUN_MANIFEST.json in SHA256SUMS. Re-extract the pinned source artifacts and regenerate both archives."
+  "archive_request_revision": "trigger-4",
+  "archive_request_note": "Final archive refresh after adding the final integrity-check notes to both study result READMEs. Re-download the pinned source ZIPs, re-extract native files, rebuild manifests and SHA256SUMS so the README hashes match the exact final archived documents."
 }
