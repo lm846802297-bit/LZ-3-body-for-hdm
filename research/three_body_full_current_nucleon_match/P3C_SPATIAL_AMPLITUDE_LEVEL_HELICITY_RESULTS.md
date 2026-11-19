@@ -156,7 +156,9 @@ those interpolated amplitudes.
 
 The standalone script is
 p3c_amplitude_level_helicity_crosscheck.py; its four unit tests are in
-test_p3c_amplitude_level_helicity_crosscheck.py.
+test_p3c_amplitude_level_helicity_crosscheck.py. The archived numerical
+summary is
+results/2026-11-19/p3c_spatial_amplitude_level_helicity_crosscheck.json.
 
 The full-current workflow now:
 1. generates the pole-only three-body tensor;
