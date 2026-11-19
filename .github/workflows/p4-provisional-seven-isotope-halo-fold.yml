@@ -1,0 +1,175 @@
+name: P4 provisional seven-isotope natural-xenon halo fold
+
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - .github/workflows/p4-provisional-seven-isotope-halo-fold.yml
+      - research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py
+      - research/three_body_full_current_nucleon_match/test_native_charge_sector_halo_fold.py
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  provisional-seven-isotope-halo-fold:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - name: Check out the P4 implementation
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install numerical dependencies
+        run: python -m pip install --upgrade numpy scipy sympy
+
+      - name: Download the pinned provisional AFH-8 charge archive
+        uses: actions/download-artifact@v4
+        with:
+          name: afh-v6-seven-isotope-eight-response
+          run-id: 44222087512
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: /tmp/p4/charge
+
+      - name: Download the pinned provisional AFH spatial OBDME archive
+        uses: actions/download-artifact@v4
+        with:
+          name: provisional-afh-spatial-obdme-responses
+          run-id: 44432440600
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: /tmp/p4/spatial
+
+      - name: Validate the provisional AFH input bundle and provenance
+        run: |
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, "research/three_body_full_current_nucleon_match")
+          import native_charge_sector_halo_fold as p4
+          bundle, gate = p4.load_provisional_response_bundle(
+              Path("/tmp/p4/charge"), Path("/tmp/p4/spatial")
+          )
+          assert tuple(sorted(bundle)) == p4.ISOTOPES
+          assert gate["comparison"]["native_afh_validated"] is False
+          assert gate["comparison"]["rows_compared"] == 16807
+          assert set(bundle[131]["physical"]) == set(p4.FULL_VECTOR_RESPONSE_NAMES)
+          print({
+              "status": gate["comparison"]["status"],
+              "native_afh_validated": gate["comparison"]["native_afh_validated"],
+              "isotopes": sorted(bundle),
+              "rows": gate["comparison"]["rows_compared"],
+              "max_charge_cauchy_excess": gate["comparison"]["max_charge_cauchy_excess"],
+              "max_spatial_cauchy_excess": gate["comparison"]["max_spatial_cauchy_excess"],
+          })
+          PY
+
+      - name: Run existing P4 kernel and three-body regression tests
+        run: |
+          python -m unittest research.three_body_full_current_nucleon_match.test_native_charge_sector_halo_fold -v
+          python -m unittest research.three_body_full_current_nucleon_match.test_p3c_amplitude_level_helicity_crosscheck -v
+
+      - name: Compute five-point seven-isotope Pole-width halo spectra
+        run: |
+          python research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py \
+            --provisional-charge-dir /tmp/p4/charge \
+            --provisional-spatial-dir /tmp/p4/spatial \
+            --out /tmp/p4/baseline-five-recoil.json \
+            --mchi-GeV 1000 \
+            --ms-keV 200 \
+            --delta-m-keV 1 \
+            --mV-GeV 10 \
+            --g2 1 \
+            --coupling-product-squared 1e-8 \
+            --rho-GeV-cm3 0.3 \
+            --ER-keV 150 200 267 350 400 \
+            --nv 8 --nw 8 --nz 6 --nphi 4 \
+            --form-factor pointlike \
+            --width-scheme pole \
+            --include-leading-static-vector-candidate
+
+      - name: Refine halo-speed quadrature at the two principal recoil points
+        run: |
+          python research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py \
+            --provisional-charge-dir /tmp/p4/charge \
+            --provisional-spatial-dir /tmp/p4/spatial \
+            --out /tmp/p4/speed-refined.json \
+            --mchi-GeV 1000 --ms-keV 200 --delta-m-keV 1 --mV-GeV 10 \
+            --g2 1 --coupling-product-squared 1e-8 --rho-GeV-cm3 0.3 \
+            --ER-keV 200 267 \
+            --nv 12 --nw 8 --nz 6 --nphi 4 \
+            --form-factor pointlike --width-scheme pole \
+            --include-leading-static-vector-candidate
+
+      - name: Refine three-body phase-space quadrature at the two principal recoil points
+        run: |
+          python research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py \
+            --provisional-charge-dir /tmp/p4/charge \
+            --provisional-spatial-dir /tmp/p4/spatial \
+            --out /tmp/p4/kernel-refined.json \
+            --mchi-GeV 1000 --ms-keV 200 --delta-m-keV 1 --mV-GeV 10 \
+            --g2 1 --coupling-product-squared 1e-8 --rho-GeV-cm3 0.3 \
+            --ER-keV 200 267 \
+            --nv 8 --nw 10 --nz 8 --nphi 6 \
+            --form-factor pointlike --width-scheme pole \
+            --include-leading-static-vector-candidate
+
+      - name: Compare speed and phase-space quadrature refinements
+        run: |
+          python - <<'PY'
+          import json, math
+          from pathlib import Path
+          root=Path("/tmp/p4")
+          base=json.loads((root/"baseline-five-recoil.json").read_text())
+          speed=json.loads((root/"speed-refined.json").read_text())
+          kernel=json.loads((root/"kernel-refined.json").read_text())
+          keys=(
+              "rate_charge_MplusPhi_events_kg_day_keV",
+              "rate_pointlike_M_events_kg_day_keV",
+              "rate_finite_t_M_events_kg_day_keV",
+              "rate_spatial_candidate_events_kg_day_keV",
+              "rate_leading_static_vector_candidate_events_kg_day_keV",
+          )
+          def index(doc):
+              return {(round(float(r["ER_keV"]),8),r["halo_model"]):r for r in doc["results"]}
+          b,s,k=map(index,(base,speed,kernel))
+          comparisons=[]
+          for name,other in (("speed",s),("phase_space",k)):
+              for key,row in other.items():
+                  ref=b[key]
+                  for field in keys:
+                      a=float(ref[field]); c=float(row[field])
+                      rel=abs(c-a)/max(abs(c),abs(a),1e-300)
+                      comparisons.append({"refinement":name,"ER_keV":key[0],"halo_model":key[1],
+                                          "quantity":field,"baseline":a,"refined":c,
+                                          "relative_difference":rel})
+          max_by={}
+          for x in comparisons:
+              max_by.setdefault(x["refinement"],0.0)
+              max_by[x["refinement"]]=max(max_by[x["refinement"]],x["relative_difference"])
+          out={
+              "status":"PROVISIONAL_P4_QUADRATURE_DIAGNOSTIC",
+              "native_afh_validated":False,
+              "formal_width_scheme":"pole",
+              "baseline_orders":{"nv":8,"nw":8,"nz":6,"nphi":4},
+              "speed_refined_orders":{"nv":12,"nw":8,"nz":6,"nphi":4},
+              "phase_space_refined_orders":{"nv":8,"nw":10,"nz":8,"nphi":6},
+              "maximum_relative_differences":max_by,
+              "comparisons":comparisons,
+              "interpretation":"Differences are reported, not hidden by an automatic PASS threshold; inspect before promotion."
+          }
+          (root/"quadrature-comparison.json").write_text(json.dumps(out,indent=2)+"\n")
+          print(json.dumps(max_by,indent=2))
+          PY
+
+      - name: Upload provisional P4 halo-fold results and diagnostics
+        uses: actions/upload-artifact@v4
+        with:
+          name: p4-provisional-seven-isotope-pole-halo-fold
+          path: /tmp/p4/
+          if-no-files-found: error
+          retention-days: 90
