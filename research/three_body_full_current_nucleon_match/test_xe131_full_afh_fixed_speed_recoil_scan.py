@@ -56,7 +56,7 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
             17.0 * self.L, self.q, self.ER, self.responses, self.F1, self.F2
         )
         for key in (
-            "finite_t_M_over_original_AFH_M_baseline",
+            "nucleon_finite_t_M_only_over_AFH_finite_size_M_baseline",
             "charge_only_over_finite_t_M",
             "full_over_finite_t_M",
             "PhiPP_over_finite_t_M_correction",
@@ -93,13 +93,15 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
         )
         LC = result["coefficients"]["L_C_continuity_adjusted_charge_weight"]
         self.assertAlmostEqual(
-            result["original_AFH_M_baseline"],
-            9.0 * LC * self.responses["M"],
+            result["AFH_finite_size_M_baseline"],
+            LC * self.responses["M"],
             places=12,
         )
         self.assertAlmostEqual(
-            result["q0_M_reference"], result["original_AFH_M_baseline"], places=14
+            result["nucleon_q0_M_only"], result["AFH_finite_size_M_baseline"], places=14
         )
+        self.assertAlmostEqual(result["F1N_effective"], 1.0, places=14)
+        self.assertAlmostEqual(result["F2N_effective"], -0.184, places=14)
 
     def test_low_order_form_factor_uses_full_one_body_tN(self):
         qA = 0.22
