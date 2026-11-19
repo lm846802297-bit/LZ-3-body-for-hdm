@@ -532,6 +532,7 @@ def charge_kernel_from_coulomb_weight(
 
     return {
         "form_factor_prescription": form_factor_prescription,
+        "form_factor_prescription_default": "bishara_linear",
         "F1V_quark_sum": F1_quark,
         "F2V_quark_sum": F2_quark,
         "F1N_effective": F1,
@@ -1101,9 +1102,11 @@ def fold(
             rows.append(row)
 
     return {
-        "reference_baseline": "A: external gVN coupling times physical equal-p=n AFH finite-size W_M(y_A)",
-        "nucleon_q0_M_only": "same finite-size AFH W_M(y_A) with Fhat_1(0)=1",
-        "charge_M_PhiPP": "nucleon_finite_t_M_only plus Phi'' and signed M-Phi'' charge responses at the same AFH W_M(y_A)",
+        "primary_baseline": "B: finite-t_N effective nucleon Dirac-Pauli current times finite-size AFH W_M(y_A), M response only",
+        "A_reference": "q=0 effective nucleon-current reference times the same finite-size AFH W_M(y_A)",
+        "C_extension": "B plus Phi'' diagonal and signed M-Phi'' interference at the same AFH W_M(y_A)",
+        "baseline_B_definition": "c_M(Fhat_1(t_N),Fhat_2(t_N))^2 * L_C * W_M(y_A); no additional AFH responses",
+        "baseline_A_reference_definition": "L_C * W_M(y_A), using Fhat_1(0)=1",
         "coupling_normalization": "coupling_product_squared=(g1*g2*gVN)^2; use Fhat_i=F_i^(u+d+s)/3 in all nucleon-current coefficients",
         "coupling_basis": "effective nucleon g_VN with g_VN=3*g_Vq",
         "nuclear_response_baseline": "finite-size native AFH W_M(y_A) at each recoil; no point-nucleus substitution",
@@ -1152,7 +1155,7 @@ def fold(
             "seven-isotope natural-xenon leading-static vector-current candidate; "
             "not promoted to a complete full-current prediction until P3 passes"
             if include_leading_static_vector_candidate
-            else "seven-isotope natural-xenon Coulomb-sector diagnostic using native AFH M/Phi''/M-Phi'' responses, nuclear-current continuity, and finite-t_N diagnostics; not the full L_mu_nu W_A^mu_nu contraction"
+            else "seven-isotope natural-xenon fold with B as the primary finite-t_N M-only baseline and C as a separate M/Phi'' charge-response extension; not the full L_mu_nu W_A^mu_nu contraction"
         ),
         "native_gate": native_gate["comparison"],
         "native_provenance": native_gate["provenance"],
@@ -1178,10 +1181,11 @@ def fold(
         "mediator_propagator_denominator": "(m_V^2-t_A)^2=(m_V^2+2 m_A E_R)^2; uses t_A, not spatial Q_A^2",
         "nucleon_form_factor_argument": "Q_N^2=-t_N with strict one-body impulse q_N^mu=q_A^mu, so t_N=t_A=-2 m_A E_R and Q_N^2=2 m_A E_R; static q_N^0=0 is a separate diagnostic",
         "nucleon_transfer_scheme": "full external four-momentum transfer q_N^mu=q_A^mu in formal P4; static q_N^0=0 retained only as optional diagnostic",
-        "nucleon_finite_t_M_only_definition": "c_M(Fhat_1(t_N),Fhat_2(t_N))^2 * L_C * W_M(y_A); this is the nucleon-current correction to the reference baseline",
-        "AFH_finite_size_M_baseline_definition": "L_C * W_M(y_A), using Fhat_1(0)=1; retains the physical finite-size AFH nuclear response",
+        "nucleon_finite_t_M_only_definition": "B = c_M(Fhat_1(t_N),Fhat_2(t_N))^2 * L_C * W_M(y_A); adopted primary baseline",
+        "AFH_finite_size_M_baseline_definition": "A = L_C * W_M(y_A), using Fhat_1(0)=1; historical finite-size AFH reference",
         "C_extension_definition": "B plus Phi'' diagonal and signed M-Phi'' interference",
         "form_factor_normalization": "Fhat_i=F_i^(u+d+s)/3 because coupling_product_squared uses external g_VN=3*g_Vq",
+        "primary_form_factor_prescription": "bishara_linear: F1^uds(t_N)=3+8.392*t_N+O(t_N^2), F2^uds(t_N)=-0.552+O(t_N); isoscalar_zexp is sensitivity-only",
         "response_comparison": (
             "A is the mandatory original finite-size AFH M-only reference; B/A isolates "
             "the single-nucleon finite-t_N correction at fixed W_M(Q_A); C/B isolates "
