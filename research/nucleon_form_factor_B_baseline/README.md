@@ -85,3 +85,12 @@ The Ye2020 proton/neutron coefficient covariance is propagated with correlated M
 ## Scope
 
 This is the rate-level B baseline. It includes the finite nucleon (F_1,F_2) and AFH finite-size (W_M) response. It does not yet include additional AFH responses, detector efficiency, energy resolution, exposure, analysis cuts or likelihood.
+
+
+## Permanent numerical-output archive
+
+The PR #80 baseline and higher-order output package is now preserved under [results/2026-11-19-finite-nucleon-form-factor-B-baseline/](results/2026-11-19-finite-nucleon-form-factor-B-baseline/README.md). It contains the original Actions artifact, extracted CSV/JSON tables for both strange-current scenarios, quadrature-comparison outputs, the run manifest, and SHA-256 checksums.
+
+The archive records 208 recoil points and 1,456 isotope-level rows per scenario. The maximum absolute B/A full-rate shift is 56.4346% for the Sufian unit-current input and 58.2429% for the Alexandrou charge-weighted input converted to unit current. The maximum absolute full-versus-\(I(D)\) difference in B is 0.3528% on the archived grid.
+
+The result is the selected B prescription \(F_1(t_N),F_2(t_N)\) multiplied by the finite-size AFH \(W_M(y_A)\) response. It is a rate-level nuclear-current correction, not a detector-level prediction. The 3,000-draw Ye2020 electromagnetic covariance is included; strange-lattice uncertainties are not sampled in this first pass.
