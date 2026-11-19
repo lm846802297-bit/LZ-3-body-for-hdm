@@ -42,6 +42,9 @@ class TestXe131FixedBenchmarkAbsoluteDsigmadER(unittest.TestCase):
         self.assertAlmostEqual(result["qA_GeV"], q, places=14)
         self.assertAlmostEqual(result["Q_A_squared_GeV2"], q*q, places=14)
         self.assertAlmostEqual(result["t_A_GeV2"], -minus_tA, places=14)
+        self.assertEqual(result["qA_four_vector_GeV"], result["qN_four_vector_GeV"])
+        self.assertAlmostEqual(result["tN_GeV2"], result["tA_GeV2"], places=16)
+        self.assertAlmostEqual(result["qN_four_vector_GeV"][0], er * 1.0e-6, places=18)
         self.assertNotAlmostEqual(result["mediator_denominator_GeV4"], (MV_GEV**2+q*q)**2, places=12)
 
     def test_B_baseline_uses_effective_form_factors_and_formal_tN(self):
@@ -49,6 +52,8 @@ class TestXe131FixedBenchmarkAbsoluteDsigmadER(unittest.TestCase):
         result = nuclear_charge_kernels(200.0, 1.0, responses)
         expected_tN = -2.0 * MA_XE131_GEV * 200.0e-6
         self.assertAlmostEqual(result["tN_GeV2"], expected_tN, places=15)
+        self.assertEqual(result["qA_four_vector_GeV"], result["qN_four_vector_GeV"])
+        self.assertAlmostEqual(result["tA_GeV2"], expected_tN, places=15)
         self.assertAlmostEqual(
             result["F1N_effective"], result["F1V_quark_sum"] / 3.0, places=14
         )
