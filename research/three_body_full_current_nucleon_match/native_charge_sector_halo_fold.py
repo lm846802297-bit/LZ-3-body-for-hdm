@@ -592,6 +592,7 @@ def load_provisional_response_bundle(
         bundle[A] = {
             "q": q,
             "physical": {name: np.asarray(values, dtype=float) for name, values in physical.items()},
+            "interpolation_mode": "linear_psd_preserving",
         }
 
     comparison = {
@@ -642,18 +643,33 @@ def interpolate_native_response(
         raise ValueError(f"q_A={q_GeV:.12g} GeV lies outside native AFH grid")
     out = {}
     linear = {}
+    pchip_values = {}
+    use_psd_preserving_linear = (
+        bundle_entry.get("interpolation_mode") == "linear_psd_preserving"
+    )
     for name in response_names:
         values = bundle_entry["physical"][name]
         pchip = PchipInterpolator(q, values, extrapolate=False)
-        out[name] = float(pchip(q_GeV))
+        pchip_values[name] = float(pchip(q_GeV))
         linear[name] = float(np.interp(q_GeV, q, values))
+        # A common linear interpolation of all response-matrix entries is a
+        # convex combination of the endpoint response matrices and therefore
+        # preserves their Cauchy-Schwarz/PSD constraints. Independent PCHIP
+        # curves do not guarantee this near response zeros.
+        out[name] = (
+            linear[name] if use_psd_preserving_linear else pchip_values[name]
+        )
     return {
         "physical_equal_pn": out,
         "linear_physical_equal_pn": linear,
+        "pchip_physical_equal_pn": pchip_values,
         "pchip_linear_relative_difference": {
-            name: abs(out[name] - linear[name]) / max(abs(out[name]), abs(linear[name]), 1.0e-300)
+            name: abs(pchip_values[name] - linear[name]) / max(abs(pchip_values[name]), abs(linear[name]), 1.0e-300)
             for name in response_names
         },
+        "interpolation_used": (
+            "linear_psd_preserving" if use_psd_preserving_linear else "pchip"
+        ),
     }
 
 
@@ -1304,7 +1320,9 @@ def fold(
             isotope_data[A]["abundance"] for A in ISOTOPES
         ),
         "response_interpolation": (
-            "PCHIP on native 0.25 MeV absolute response values; linear interpolation retained as diagnostic"
+            "common linear interpolation on provisional Python AFH response matrices to preserve PSD/Cauchy bounds; PCHIP retained as a diagnostic"
+            if afh_input_gate["comparison"].get("native_afh_validated") is False
+            else "PCHIP on native 0.25 MeV absolute response values; linear interpolation retained as a diagnostic"
         ),
         "recoil_momentum": "q_A=sqrt(2 m_A E_R + E_R^2), exact nuclear mass-shell relation",
         "coulomb_weight": "L_C=L00-(E_R/q_A)(L03+L30)+(E_R/q_A)^2 L33, conditional on conservation of the complete nuclear vector current",
