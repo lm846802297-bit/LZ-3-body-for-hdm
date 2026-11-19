@@ -5,7 +5,7 @@ The DM-side L_C is obtained from the full phase-space-integrated tensor using
 the nuclear-current continuity relation, conditional on conservation of the
 complete nuclear vector current. Native AFH M/Phi''/M-Phi'' responses are
 contracted with finite-t_N charge coefficients and compared with the original
-AFH M-only baseline, 9 W_M(Q_A), which retains the finite-q nuclear response.
+AFH M-only baseline, W_M(Q_A), which retains the finite-q nuclear response.
 The q=0 nucleon-current normalization is not a point-nucleus approximation.
 Transverse nuclear-current multipoles are not included in this restricted
 Coulomb-sector ratio.
@@ -194,7 +194,7 @@ def interpolate_responses(bundle: dict, qA_GeV: float) -> dict:
 
 def charge_sector_kernels(
     L_C: float, qA_GeV: float, responses: dict[str, float],
-    form_factor_prescription: str = "isoscalar_zexp",
+    form_factor_prescription: str = "bishara_linear",
     *,
     tN_GeV2: float | None = None,
 ) -> dict:
@@ -327,7 +327,7 @@ def integrate_LC(
         "quadrature_points": int(result["quadrature_points"]),
         "order": {"nw": nw, "nz": nz, "nphi": nphi},
     }
-def run(afh_csv: Path, form_factor_prescription: str = "isoscalar_zexp") -> dict:
+def run(afh_csv: Path, form_factor_prescription: str = "bishara_linear") -> dict:
     bundle, provenance = load_native_xe131_responses(afh_csv)
     results = []
     for ER_keV, (delta_m, medium_order, high_order) in BENCHMARKS.items():
@@ -432,7 +432,10 @@ def run(afh_csv: Path, form_factor_prescription: str = "isoscalar_zexp") -> dict
             },
         })
     return {
-        "status": "PASS_XE131_FIXED_SPEED_COULOMB_SECTOR_RATIO",
+        "status": "PASS_XE131_FIXED_SPEED_B_BASELINE_AND_C_OVER_B_RATIO",
+        "primary_baseline": "B: finite-t_N nucleon Dirac-Pauli current times the finite-size AFH W_M(y_A), with no additional AFH responses",
+        "A_reference": "q=0 effective nucleon-current normalization times the same finite-size AFH W_M(y_A)",
+        "C_extension": "M+Phi''+signed M-Phi'' charge-sector extension; ratio to B is the primary response-only diagnostic",
         "scope": (
             "fixed-speed Xe-131 differential cross-section ratio in the "
             "M+Phi''+M-Phi'' Coulomb sector; the complete 2->3 DM phase space "
@@ -440,8 +443,8 @@ def run(afh_csv: Path, form_factor_prescription: str = "isoscalar_zexp") -> dict
             "widths, while native AFH transverse-current responses are not included"
         ),
         "ratio_definition": (
-            "(dSigma/dER)_[finite-tN M+Phi'' Coulomb sector] / "
-            "(dSigma/dER)_[same finite-tN M-only with identical F1,F2]"
+            "(dSigma_C/dER)_[M+Phi'' charge extension] / "
+            "(dSigma_B/dER)_[finite-t_N M-only baseline with identical F1,F2]"
         ),
         "AFH_finite_size_M_baseline_definition": (
             "g_VN-prefactor times the physical equal-p=n finite-q AFH W_M(Q_A); "
@@ -487,7 +490,7 @@ def run(afh_csv: Path, form_factor_prescription: str = "isoscalar_zexp") -> dict
         "limitations": [
             "This is not the complete L_mu_nu W_A^mu_nu result because native Delta/Sigma transverse responses are not included.",
             "The spatial-current sector was previously found negligible in provisional fixed-speed contractions, but that does not replace native spatial-response validation.",
-            "The finite-Q2 form-factor prescription remains diagnostic, especially F2^V(Q2).",
+            "Bishara_linear is the adopted low-Q_N^2 B prescription: F1^uds(t_N)=3+8.392*t_N+O(t_N^2), F2^uds(t_N)=-0.552+O(t_N); no F2 slope is assumed.",
             "No halo velocity average, isotope sum, detector response, or absolute coupling normalization is included.",
             "The common phase-space factor in this ratio is L_C, not L00 alone.",
         ],
@@ -498,7 +501,7 @@ def main() -> None:
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument(
         "--form-factor", choices=("bishara_linear", "isoscalar_zexp"),
-        default="isoscalar_zexp",
+        default="bishara_linear",
     )
     args = parser.parse_args()
     result = run(args.afh_csv, args.form_factor)
