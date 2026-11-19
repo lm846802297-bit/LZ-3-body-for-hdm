@@ -6,6 +6,7 @@ from pathlib import Path
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.backends.backend_pdf import PdfPages
 
 RATE_FIELDS = (
     "rate_pointlike_M_events_kg_day_keV",
@@ -73,7 +74,7 @@ def export(data: dict, out_dir: Path) -> dict:
     write_csv(out_dir / "natural_xenon_isotope_contributions.csv", isotope_rows, list(isotope_rows[0]))
 
     pdf_path = out_dir / "p4_provisional_natural_xenon_spectra.pdf"
-    with matplotlib.backends.backend_pdf.PdfPages(pdf_path) as pdf:
+    with PdfPages(pdf_path) as pdf:
         for halo in ("shm_cutoff", "mb_untruncated"):
             subset = [r for r in spectra if r["halo_model"] == halo]
             subset.sort(key=lambda r: float(r["ER_keV"]))
