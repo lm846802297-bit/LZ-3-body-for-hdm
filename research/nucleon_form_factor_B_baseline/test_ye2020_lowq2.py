@@ -51,6 +51,13 @@ class Ye2020LowQ2Tests(unittest.TestCase):
         self.assertAlmostEqual(float(suf["GE_s_unit"][0]), 0.0, places=12)
         self.assertAlmostEqual(float(alt["GE_s_unit"][0]), 0.0, places=12)
 
+    def test_alexandrou2020_magnetic_radius_uses_normalized_GM(self):
+        q2 = np.asarray([0.0, 1.0e-5])
+        gm = ff._strange_sachs(q2, "alexandrou2020_charge_weighted_converted")[1]
+        measured = (float(gm[1] / gm[0]) - 1.0) / q2[1]
+        expected = -(-0.015) * ff.FM2_TO_GEVM2 / 6.0
+        self.assertAlmostEqual(measured, expected, places=8)
+
     def test_charge_normalized_B_factor_at_zero(self):
         for model in ("sufian2017_unit_current", "alexandrou2020_charge_weighted_converted"):
             result = ff.cM_and_factor(0.0, model)
