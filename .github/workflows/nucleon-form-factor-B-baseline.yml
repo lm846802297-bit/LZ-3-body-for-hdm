@@ -45,6 +45,13 @@ jobs:
               --efficiency-csv "$efficiency_csv" \
               --out-dir "artifacts/B-detector/$model" \
               --exposure-tonne-year 2.84 --integration-steps 10000
+            python research/nucleon_form_factor_B_baseline/propagate_B_covariance_to_lz_yields.py \
+              --source-dir "$source_dir" \
+              --b-spectrum-dir "artifacts/B-absolute/$model" \
+              --detector-yield-csv "artifacts/B-detector/$model/lz_2026_afh7_hybrid9_rate_level_event_yields.csv" \
+              --efficiency-csv "$efficiency_csv" \
+              --out-dir "artifacts/B-detector-covariance/$model" \
+              --strange-model "$model" --draws 3000
           done
       - name: Download halo/seven-isotope source artifact
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
