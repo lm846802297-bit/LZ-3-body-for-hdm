@@ -459,7 +459,7 @@ def form_factor_values(qA_GeV: float, prescription: str) -> tuple[float, float]:
     is distinct from the nuclear invariant t_A used by the vector propagator.
     """
     Q2 = qA_GeV * qA_GeV
-    if prescription == "pointlike":
+    if prescription in ("q0_anchor", "pointlike"):
         return F1V0, F2V0
     if prescription == "bishara_linear":
         return bishara_linear(Q2)
@@ -507,8 +507,9 @@ def charge_kernel_from_coulomb_weight(
         "L_C": float(L_C),
         "terms": terms,
         "charge_sector": charge,
+        "original_AFH_M_baseline": q0_M_reference,
         "q0_M_reference": q0_M_reference,
-        # Legacy alias: q=0 nucleon form factors, not a point-nucleus target.
+        # Legacy alias: AFH W_M(Q_A) is retained, so this is not a point nucleus.
         "pointlike_M": q0_M_reference,
         "finite_t_M": finite_t_M,
         "relative_charge_vs_q0_M_reference": relative_charge_vs_q0,
@@ -645,6 +646,7 @@ def leading_static_vector_current_kernel_from_tensor(
         "charge_sector": charge,
         "spatial_sector": spatial,
         "leading_static_vector_current_candidate": total,
+        "original_AFH_M_baseline": charge_check["original_AFH_M_baseline"],
         "pointlike_M": charge_check["pointlike_M"],
         "finite_t_M": charge_check["finite_t_M"],
         "charge_terms": charge_terms,
@@ -919,9 +921,14 @@ def fold(
                     "A": A, "abundance": xA, "open": True,
                     "mA_GeV": mA, "qA_GeV": qA, "vmin_km_s": vmin,
                     "charge_halo_integral": halo_charge,
+                    "original_AFH_M_halo_integral": halo_pointlike,
                     "pointlike_M_halo_integral": halo_pointlike,
                     "finite_t_M_halo_integral": halo_finite_t_M,
                     "q0_M_reference_halo_integral": halo_pointlike,
+                    "relative_charge_vs_original_AFH_M_baseline": halo_charge / halo_pointlike - 1.0
+                    if halo_pointlike else math.nan,
+                    "relative_finite_t_M_vs_original_AFH_M_baseline": halo_finite_t_M / halo_pointlike - 1.0
+                    if halo_pointlike else math.nan,
                     "relative_charge_vs_q0_M_reference": halo_charge / halo_pointlike - 1.0
                     if halo_pointlike else math.nan,
                     "relative_finite_t_M_vs_q0_M_reference": halo_finite_t_M / halo_pointlike - 1.0
@@ -944,6 +951,10 @@ def fold(
                         "leading_static_vector_candidate_halo_integral": halo_full_candidate,
                         "relative_spatial_candidate_vs_coulomb": (
                             halo_spatial_candidate / halo_charge if halo_charge else math.nan
+                        ),
+                        "relative_full_candidate_vs_original_AFH_M_baseline": (
+                            halo_full_candidate / halo_pointlike - 1.0
+                            if halo_pointlike else math.nan
                         ),
                         "relative_full_candidate_vs_q0_M_reference": (
                             halo_full_candidate / halo_pointlike - 1.0
@@ -991,8 +1002,13 @@ def fold(
                 "ER_keV": ER_keV,
                 "halo_model": halo_name,
                 "rate_charge_MplusPhi_events_kg_day_keV": total_rate,
+                "rate_original_AFH_M_events_kg_day_keV": point_rate,
                 "rate_pointlike_M_events_kg_day_keV": point_rate,
                 "rate_finite_t_M_events_kg_day_keV": finite_rate,
+                "relative_charge_vs_original_AFH_M_baseline": total_rate / point_rate - 1.0
+                if point_rate else math.nan,
+                "relative_finite_t_M_vs_original_AFH_M_baseline": finite_rate / point_rate - 1.0
+                if point_rate else math.nan,
                 "relative_charge_vs_q0_M_reference": total_rate / point_rate - 1.0
                 if point_rate else math.nan,
                 "relative_finite_t_M_vs_q0_M_reference": finite_rate / point_rate - 1.0
@@ -1027,6 +1043,9 @@ def fold(
                     "rate_leading_static_vector_candidate_events_kg_day_keV": full_rate,
                     "relative_spatial_candidate_vs_coulomb": (
                         total_spatial / total_charge if total_charge else math.nan
+                    ),
+                    "relative_full_candidate_vs_original_AFH_M_baseline": (
+                        full_rate / point_rate - 1.0 if point_rate else math.nan
                     ),
                     "relative_full_candidate_vs_q0_M_reference": (
                         full_rate / point_rate - 1.0 if point_rate else math.nan
@@ -1139,7 +1158,14 @@ def fold(
         "nuclear_transfer_invariant": "t_A=q_A^mu q_{A,mu}=-2 m_A E_R exactly for an initially resting on-shell target",
         "mediator_propagator_denominator": "(m_V^2-t_A)^2=(m_V^2+2 m_A E_R)^2; uses t_A, not spatial Q_A^2",
         "nucleon_form_factor_argument": "Q_N^2=-t_N=|bold(q_N)|^2; in static impulse q_N^0=0 and bold(q_N)=bold(q_A), so Q_N^2=Q_A^2=2 m_A E_R+E_R^2",
-        "form_factor_comparison": "Primary AFH correction is full/finite_t_M with the same F1,F2 prescription; q=0 M is secondary reference only",
+        "original_AFH_M_baseline_definition": (
+            "q=0 single-nucleon-current normalization times finite-q native AFH W_M(Q_A); "
+            "this preserves the original nuclear form factor and is not a point nucleus"
+        ),
+        "form_factor_comparison": (
+            "Report both full/finite_t_M (multipole correction at fixed F1,F2) and "
+            "full/original_AFH_M_baseline (total change relative to the original AFH M-only result)"
+        ),
         "coulomb_weight": "L_C=L00-(E_R/Q_A)(L03+L30)+(E_R/Q_A)^2 L33, conditional on conservation of the complete nuclear vector current",
         "transverse_weight": (
             "L_T=L11+L22 for the leading-static AFH Delta/SigmaPrime/SigmaPrimeDelta coefficients"
@@ -1170,7 +1196,7 @@ def main() -> None:
     parser.add_argument("--nphi", type=int, default=6)
     parser.add_argument(
         "--form-factor",
-        choices=("pointlike", "bishara_linear", "isoscalar_zexp"),
+        choices=("q0_anchor", "pointlike", "bishara_linear", "isoscalar_zexp"),
         required=True,
     )
     parser.add_argument(
