@@ -726,7 +726,7 @@ def form_factor_values(
     if QN2 < 0.0 or not math.isfinite(QN2):
         raise ValueError("nucleon invariant Q_N^2 must be finite and non-negative")
     if prescription == "q0_anchor":
-        raw = (RAW_F1_UDS0, F2V0)
+        raw = (RAW_F1_UDS0, RAW_F2_UDS0)
     elif prescription == "bishara_linear":
         raw = bishara_linear(QN2)
     elif prescription == "isoscalar_zexp":
@@ -769,7 +769,7 @@ def charge_kernel_from_coulomb_weight(
     if min(A_reference, B_baseline, C_extension) <= 0.0:
         raise ValueError("non-positive A/B/C charge kernel")
     raw_F1, raw_F2 = (
-        (RAW_F1_UDS0, F2V0) if prescription == "q0_anchor"
+        (RAW_F1_UDS0, RAW_F2_UDS0) if prescription == "q0_anchor"
         else (bishara_linear(-tN_GeV2) if prescription == "bishara_linear"
               else isoscalar_zexp(-tN_GeV2))
     )
