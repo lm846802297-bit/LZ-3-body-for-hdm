@@ -163,10 +163,12 @@ those interpolated amplitudes.
 
 The standalone script is
 p3c_amplitude_level_helicity_crosscheck.py; its five unit tests are in
-test_p3c_amplitude_level_helicity_crosscheck.py. The normalized result is
-archived in [workflow 44467028248](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44467028248),
+test_p3c_amplitude_level_helicity_crosscheck.py. The normalized result is permanently archived in
+\`results/2026-11-19/p3c_spatial_amplitude_level_helicity_crosscheck_gVN_normalized.json\`
+(SHA-256 \`a59a622f5fa2e88a60326af817e7dea4ca1847d1f6790b58e589044dd7d9cdaa\`),
+and was produced by [workflow 44467028248](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44467028248),
 artifact 14502132933. The older repository JSON at
-results/2026-11-19/p3c_spatial_amplitude_level_helicity_crosscheck.json is
+\`results/2026-11-19/p3c_spatial_amplitude_level_helicity_crosscheck.json\` is
 explicitly marked PRE_P0_RAW_FLAVOR_SUMMED_INPUTS and is retained only as
 historical provenance.
 
