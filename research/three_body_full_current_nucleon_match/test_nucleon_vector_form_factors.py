@@ -42,6 +42,13 @@ class VectorFormFactorTests(unittest.TestCase):
         )
         self.assertNotAlmostEqual(transfer["tN_GeV2"], transfer["tA_GeV2"], places=10)
 
+    def test_formal_qN_is_external_vertex_transfer_not_bound_state_reconstruction(self):
+        transfer = ff.recoil_transfer_kinematics(121.90971983538435, 200.0)
+        definition = transfer["qN_definition"]
+        self.assertIn("external four-momentum", definition)
+        self.assertIn("one-body nucleon-current vertex", definition)
+        self.assertIn("not a microscopic bound-nucleon", definition)
+
     def test_static_approximation_has_sub_ppm_effect_on_B_over_A(self):
         mA = 121.90971983538435
         for ER_keV in (200.0, 267.0):
