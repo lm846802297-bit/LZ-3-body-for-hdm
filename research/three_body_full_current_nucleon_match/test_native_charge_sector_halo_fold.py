@@ -45,7 +45,10 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
         expected = sum(result["terms"].values())
         self.assertAlmostEqual(result["charge_sector"], expected, places=14)
         self.assertAlmostEqual(
-            result["pointlike_M"], 9.0 * 2.5 * responses["M"], places=14
+            result["original_AFH_M_baseline"], 9.0 * 2.5 * responses["M"], places=14
+        )
+        self.assertAlmostEqual(
+            result["pointlike_M"], result["original_AFH_M_baseline"], places=14
         )
 
     def test_charge_kernel_uses_continuity_reduced_weight(self):
@@ -54,7 +57,8 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             2.4, 0.22, responses, "pointlike"
         )
         self.assertAlmostEqual(result["L_C"], 2.4)
-        self.assertAlmostEqual(result["pointlike_M"], 9.0 * 2.4 * 4.0)
+        self.assertAlmostEqual(result["original_AFH_M_baseline"], 9.0 * 2.4 * 4.0)
+        self.assertAlmostEqual(result["pointlike_M"], result["original_AFH_M_baseline"])
         self.assertAlmostEqual(
             result["charge_sector"],
             sum(result["terms"].values()),
@@ -185,6 +189,9 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
         )
         self.assertAlmostEqual(
             result["q0_M_reference"], result["pointlike_M"], places=14
+        )
+        self.assertAlmostEqual(
+            result["original_AFH_M_baseline"], result["pointlike_M"], places=14
         )
         self.assertNotEqual(
             result["relative_charge_vs_finite_t_M"],
@@ -371,6 +378,8 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             self.assertGreater(
                 mb["rate_leading_static_vector_candidate_events_kg_day_keV"], 0.0
             )
+            self.assertGreater(mb["rate_original_AFH_M_events_kg_day_keV"], 0.0)
+            self.assertIn("relative_full_candidate_vs_original_AFH_M_baseline", mb)
             self.assertIsNotNone(mb["minimum_spatial_candidate_kernel"])
             self.assertGreaterEqual(mb["minimum_spatial_candidate_kernel"], -1.0e-12)
             self.assertLess(mb["max_native_response_Cauchy_excess"], 1.0e-12)
