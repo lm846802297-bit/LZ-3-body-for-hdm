@@ -1,5 +1,7 @@
 # P3-B independent Python implementation cross-check
 
+> **Scope clarification (2026-11-19):** This PASS validates the internal Python translation of the AFH spatial OBDME response database only. It is not a B-baseline rate calculation and does not validate the nucleon form factors or native Mathematica AFH values.
+
 **Status: PASS — independent Python implementation consistency. Native AFH validation remains pending.**
 
 Date: 2026-11-18

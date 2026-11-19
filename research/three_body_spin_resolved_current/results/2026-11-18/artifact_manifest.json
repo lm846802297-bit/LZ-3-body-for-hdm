@@ -1,0 +1,11 @@
+{
+  "workflow_run_id": 44186889932,
+  "workflow_run_url": "https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44186889932",
+  "source_commit": "6892a56d50bb3472e48c358256d0c3e6a9b5c5a4",
+  "artifact_id": 14373814037,
+  "artifact_name": "finite-width-spin-current-recoil-spectrum",
+  "artifact_sha256": "ec9f5bbdf1e638d2f16a91d1408a10f133b71ed63f837c17fe098b7b9c6750e2",
+  "archive_file": "finite_width_spin_current_recoil_spectrum.zip",
+  "archive_sha256": "ec9f5bbdf1e638d2f16a91d1408a10f133b71ed63f837c17fe098b7b9c6750e2",
+  "status": "CI passed; finite-width Ward and fixed-speed recoil-kernel scan archived"
+}

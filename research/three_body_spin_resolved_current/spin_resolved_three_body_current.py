@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Spin-resolved 2x2 matrices for the coherent three-body dark-matter current."""
+"""Spin-resolved three-body DM current and finite-width Ward audit."""
 from __future__ import annotations
 
 import argparse
@@ -30,7 +30,7 @@ SPEED_KMS = 776.0
 
 
 def dirac_spinor_matrix(p4: np.ndarray, mass: float) -> np.ndarray:
-    """Return the 4x2 positive-energy Dirac spinors, normalized ubar u=2m."""
+    """4x2 positive-energy spinors, normalized by ubar_s u_s'=2m delta."""
     energy = float(p4[0])
     momentum = np.asarray(p4[1:], dtype=float)
     if energy + mass <= 0:
@@ -41,9 +41,13 @@ def dirac_spinor_matrix(p4: np.ndarray, mass: float) -> np.ndarray:
         + eq6.s3 * momentum[2]
     )
     root = math.sqrt(energy + mass)
-    upper = root * eq6.I2
-    lower = sigma_p / root
-    return np.vstack((upper, lower))
+    return np.vstack((root * eq6.I2, sigma_p / root))
+
+
+def external_spinor_pair(point: eq6.Point, mchi: float):
+    u_in = dirac_spinor_matrix(point.p, mchi)
+    u_out = dirac_spinor_matrix(point.p_prime, mchi)
+    return u_out.conj().T @ eq6.GAMMA[0], u_in
 
 
 def spin_resolved_diagram_currents(
@@ -52,69 +56,97 @@ def spin_resolved_diagram_currents(
     mchi2: float,
     denominator_imaginary_part: float = 0.0,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Return before, after, and coherent total T_3^mu as 4 arrays of 2x2 matrices.
-
-    Matrix row/column indices are outgoing/incoming external chi1 spin.
-    """
+    """Before, after, and coherent T3^mu as four 2x2 spin matrices."""
     before, after, total = vca.vector_current_vertices(
         point, mchi2, denominator_imaginary_part
     )
-    u_in = dirac_spinor_matrix(point.p, mchi)
-    u_out = dirac_spinor_matrix(point.p_prime, mchi)
-    ubar_out = u_out.conj().T @ eq6.GAMMA[0]
+    ubar_out, u_in = external_spinor_pair(point, mchi)
 
     def sandwich(vertices):
-        return np.asarray([
-            ubar_out @ vertex @ u_in for vertex in vertices
-        ], dtype=complex)
+        return np.asarray(
+            [ubar_out @ vertex @ u_in for vertex in vertices], dtype=complex
+        )
 
     return sandwich(before), sandwich(after), sandwich(total)
 
 
 def tensor_from_spin_matrices(current: np.ndarray) -> np.ndarray:
-    r"""Compute L^{mu nu}=1/2 Tr_2[T^mu T^{nu dagger}]."""
+    r"""L^{mu nu}=1/2 Tr_2[T^mu T^{nu dagger}]."""
     if current.shape != (4, 2, 2):
         raise ValueError(f"expected (4,2,2) current, got {current.shape}")
-    return np.asarray([
+    return np.asarray(
         [
-            0.5 * np.trace(current[mu] @ current[nu].conj().T)
-            for nu in range(4)
-        ]
-        for mu in range(4)
-    ], dtype=complex)
+            [
+                0.5 * np.trace(current[mu] @ current[nu].conj().T)
+                for nu in range(4)
+            ]
+            for mu in range(4)
+        ],
+        dtype=complex,
+    )
 
 
 def ward_lhs(point: eq6.Point, current: np.ndarray) -> np.ndarray:
-    """q_A_mu T_3^mu using metric (+---) and q_A=P'-P=p-p'-k_s."""
+    """q_A_mu T3^mu with metric (+---), q_A=P'-P=p-p'-k_s."""
     q = np.asarray(point.q_A, dtype=float)
     return q[0] * current[0] - np.einsum("i,ijk->jk", q[1:], current[1:])
 
 
-def ward_rhs(
-    point: eq6.Point, mchi: float, mchi2: float
+def ward_rhs_finite_width(
+    point: eq6.Point,
+    mchi: float,
+    mchi2: float,
+    denominator_imaginary_part: float = 0.0,
 ) -> np.ndarray:
-    r"""Exact zero-width identity:
-    q_A_mu T_3^mu = (mchi2-mchi) ubar'[
-      (slash(r_before)+mchi2)/D_before
-      -(slash(r_after)+mchi2)/D_after]u.
+    r"""Exact identity for the project's denominator-only width insertion.
+
+    Only the after-emission propagator has D2+i*a; the before propagator
+    remains D1. The extra i*a/(D2+i*a) ubar'u term is therefore mandatory.
     """
     r_before, r_after = eq6.chi2_internal_momenta(point)
-    d_before = eq6.dot(r_before, r_before) - mchi2 * mchi2
-    d_after = eq6.dot(r_after, r_after) - mchi2 * mchi2
-    if abs(d_before) < 1e-30 or abs(d_after) < 1e-30:
+    d1 = eq6.dot(r_before, r_before) - mchi2 * mchi2
+    d2 = eq6.dot(r_after, r_after) - mchi2 * mchi2
+    d2_complex = d2 + 1j * denominator_imaginary_part
+    if abs(d1) < 1e-30 or abs(d2_complex) < 1e-30:
         raise ZeroDivisionError("chi2 propagator pole in Ward identity")
-    u_in = dirac_spinor_matrix(point.p, mchi)
-    u_out = dirac_spinor_matrix(point.p_prime, mchi)
-    ubar_out = u_out.conj().T @ eq6.GAMMA[0]
+
+    ubar_out, u_in = external_spinor_pair(point, mchi)
     operator = (
-        (eq6.slash(r_before) + mchi2 * eq6.ID4) / d_before
-        - (eq6.slash(r_after) + mchi2 * eq6.ID4) / d_after
+        (eq6.slash(r_before) + mchi2 * eq6.ID4) / d1
+        - (eq6.slash(r_after) + mchi2 * eq6.ID4) / d2_complex
     )
-    return (mchi2 - mchi) * ubar_out @ operator @ u_in
+    scalar_bilinear = ubar_out @ u_in
+    return (
+        (mchi2 - mchi) * ubar_out @ operator @ u_in
+        + (1j * denominator_imaginary_part / d2_complex) * scalar_bilinear
+    )
+
+
+def transverse_project_current(point: eq6.Point, current: np.ndarray) -> np.ndarray:
+    """Project T^mu -> T^mu-q^mu(q.T)/q^2; valid for spacelike q_A^2 != 0."""
+    q = np.asarray(point.q_A, dtype=float)
+    q2 = eq6.dot(q, q)
+    if abs(q2) < 1e-30:
+        raise ZeroDivisionError("cannot project a null momentum transfer")
+    divergence = ward_lhs(point, current)
+    return current - q[:, None, None] * divergence[None, :, :] / q2
+
+
+def conserved_point_nucleus_current(point: eq6.Point, mA: float) -> np.ndarray:
+    """J_A^mu=(P+P')^mu with F_A(q_A^2) factored out."""
+    return np.r_[2.0 * mA + point.E_R, point.q_A[1:]]
+
+
+def contract_current_with_nucleus(current: np.ndarray, nucleus: np.ndarray) -> np.ndarray:
+    """Return the 2x2 matrix J_{A,mu} T^mu for every external spin pair."""
+    return nucleus[0] * current[0] - np.einsum(
+        "i,ijk->jk", nucleus[1:], current[1:]
+    )
 
 
 def relative_matrix_residual(a: np.ndarray, b: np.ndarray) -> float:
-    return float(np.linalg.norm(a - b) / max(np.linalg.norm(a), np.linalg.norm(b), 1.0))
+    scale = max(float(np.linalg.norm(a)), float(np.linalg.norm(b)), 1.0)
+    return float(np.linalg.norm(a - b) / scale)
 
 
 def scaled_ward_residual(point: eq6.Point, current: np.ndarray) -> float:
@@ -125,12 +157,24 @@ def scaled_ward_residual(point: eq6.Point, current: np.ndarray) -> float:
     return float(np.linalg.norm(ward_lhs(point, current)) / scale)
 
 
+def scaled_ward_identity_residual(
+    point: eq6.Point, current: np.ndarray, lhs: np.ndarray, rhs: np.ndarray
+) -> float:
+    """Scale the Ward-identity residual by |q| ||T||."""
+    q_norm = float(np.linalg.norm(np.asarray(point.q_A, dtype=float)))
+    current_norm = float(np.linalg.norm(current))
+    scale = max(q_norm * current_norm, 1.0)
+    return float(np.linalg.norm(lhs - rhs) / scale)
+
+
 def build_reference_point() -> eq6.Point:
     w_min, w_max = eq6.limits(
         MCHI_GEV, MS_GEV, M_A_GEV, ER_GEV, SPEED_KMS
     )
     if w_max <= w_min:
         raise RuntimeError("reference three-body phase space is closed")
+    # Cluster the reference point toward the upper W endpoint, near the
+    # Delta-m=362-keV propagator pole, without sitting on the pole.
     delta_w2 = 0.37 * (w_max - w_min)
     return vca.stable_build_point(
         MCHI_GEV, MS_GEV, M_A_GEV, ER_GEV, SPEED_KMS,
@@ -141,44 +185,53 @@ def build_reference_point() -> eq6.Point:
 def run_smoke_test() -> dict:
     point = build_reference_point()
     mchi2 = MCHI_GEV + 362.0e-6
-    before, after, total = spin_resolved_diagram_currents(
-        point, MCHI_GEV, mchi2, 0.0
-    )
-    matrix_tensor = tensor_from_spin_matrices(total)
-    trace_tensor = vca.dm_current_tensor(point, MCHI_GEV, mchi2, 0.0)
-    lhs = ward_lhs(point, total)
-    rhs = ward_rhs(point, MCHI_GEV, mchi2)
-    degenerate = spin_resolved_diagram_currents(
-        point, MCHI_GEV, MCHI_GEV, 0.0
-    )[2]
-    degenerate_divergence = ward_lhs(point, degenerate)
-    separate_tensor = (
-        tensor_from_spin_matrices(before) + tensor_from_spin_matrices(after)
-    )
-    return {
-        "status": "spin_resolved_three_body_current_diagnostic",
-        "current_shape": list(total.shape),
-        "spin_trace_relative_residual": relative_matrix_residual(
-            matrix_tensor, trace_tensor
-        ),
-        "ward_identity_relative_residual": relative_matrix_residual(lhs, rhs),
-        "mass_split_GeV": mchi2 - MCHI_GEV,
-        "nonconservation_norm_mass_split": float(np.linalg.norm(lhs)),
-        "degenerate_mass_divergence_norm": float(np.linalg.norm(degenerate_divergence)),
-        "degenerate_mass_divergence_scaled_residual": scaled_ward_residual(point, degenerate),
-        "coherent_interference_tensor_norm": float(
-            np.linalg.norm(matrix_tensor - separate_tensor)
-        ),
+    nucleus = conserved_point_nucleus_current(point, M_A_GEV)
+    qdotj = point.q_A[0] * nucleus[0] - np.dot(point.q_A[1:], nucleus[1:])
+    output = {
+        "status": "finite_width_spin_resolved_current_diagnostic",
         "qA_GeV": point.q_A.tolist(),
-        "r_before_GeV": eq6.chi2_internal_momenta(point)[0].tolist(),
-        "r_after_GeV": eq6.chi2_internal_momenta(point)[1].tolist(),
-        "interpretation": [
-            "The 2x2 spin matrices reproduce the existing spin-averaged L^{mu nu}.",
-            "The off-diagonal current is not conserved for mchi2 != mchi1.",
-            "The coherent two-diagram interference is retained before spin summation.",
-            "This is a current-level validation, not yet a nucleon or AFH response matching.",
-        ],
+        "qA2_GeV2": eq6.dot(point.q_A, point.q_A),
+        "pole_clearance_at_reference_point_keV": (
+            mchi2 - math.sqrt(point.W2)
+        ) * 1.0e6,
+        "nucleus_current_conservation_residual_GeV2": float(qdotj),
+        "width_schemes": [],
     }
+    for g2 in (0.1, 1.0):
+        imag = vca.width_imaginary_part(
+            point, MCHI_GEV, MS_GEV, 362.0e-6, g2, "pole"
+        )
+        before, after, total = spin_resolved_diagram_currents(
+            point, MCHI_GEV, mchi2, imag
+        )
+        matrix_tensor = tensor_from_spin_matrices(total)
+        trace_tensor = vca.dm_current_tensor(point, MCHI_GEV, mchi2, imag)
+        lhs = ward_lhs(point, total)
+        rhs = ward_rhs_finite_width(point, MCHI_GEV, mchi2, imag)
+        transverse = transverse_project_current(point, total)
+        amp = contract_current_with_nucleus(total, nucleus)
+        amp_transverse = contract_current_with_nucleus(transverse, nucleus)
+        output["width_schemes"].append({
+            "g2": g2,
+            "Gamma_pole_keV": imag / mchi2 * 1.0e6,
+            "denominator_imaginary_part_GeV2": imag,
+            "spin_trace_relative_residual": relative_matrix_residual(
+                matrix_tensor, trace_tensor
+            ),
+            "finite_width_ward_identity_relative_residual": relative_matrix_residual(
+                lhs, rhs
+            ),
+            "ward_divergence_norm": float(np.linalg.norm(lhs)),
+            "transverse_projection_amplitude_residual": relative_matrix_residual(
+                amp, amp_transverse
+            ),
+            "coherent_two_diagram_interference_norm": float(np.linalg.norm(
+                tensor_from_spin_matrices(total)
+                - tensor_from_spin_matrices(before)
+                - tensor_from_spin_matrices(after)
+            )),
+        })
+    return output
 
 
 def main() -> None:

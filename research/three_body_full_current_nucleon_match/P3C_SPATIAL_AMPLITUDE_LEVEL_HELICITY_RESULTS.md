@@ -44,9 +44,9 @@ We therefore use the right-handed AFH basis
 
 With
 \[
-\boldsymbol l_M=-F_1^V\boldsymbol{\mathcal T}_3,\qquad
+\boldsymbol l_M=-\widehat F_1^N\boldsymbol{\mathcal T}_3,\qquad
 \boldsymbol l_5=
-\frac{i(F_1^V+F_2^V)}{2m_N}
+\frac{i(\widehat F_1^N+\widehat F_2^N)}{2m_N}
 (\boldsymbol q_{\rm AFH}\times\boldsymbol{\mathcal T}_3),
 \]
 the helicity coefficients are chosen as
@@ -93,14 +93,19 @@ are each included exactly once.
 
 | Input | Provenance |
 |---|---|
-| Three-body tensor and response contraction | LZ workflow 44432440600, artifact 14486904025 |
-| AFH spatial response and signed multipole amplitudes | LZ workflow 44432440600, artifact 14486014588 |
+| Three-body tensor, weights, response contraction and normalized P3-C output | LZ workflow 44467028248, artifact 14502132933 |
+| AFH spatial response and signed multipole amplitudes | LZ workflow 44467028248, artifact 14502512261 |
 | AFH v6.0 source SHA-256 | dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372 |
 | Isotope | Xe-131, \(J_A=3/2\) |
 | \(C_0(131)\) | 1.0000825298069376 |
-| Form-factor anchors | \(F_1^V(0)=3,\ F_2^V(0)=-0.552\) |
+| Raw universal u+d+s anchors | \(F_1^{uds}(0)=3,\ F_2^{uds}(0)=-0.552\) |
+| Effective coefficient inputs | \(\widehat F_1^N(0)=1,\ \widehat F_2^N(0)=-0.184\) |
+| Coupling basis | external \(g_{VN}=3g_{Vq}\) |
 | Nucleon mass | \(m_N=0.938918\) GeV |
 | Width prescription | Pole only |
+
+The coefficient inputs for the external-\(g_{VN}=3g_{Vq}\) convention are
+\(\widehat F_1^N(0)=1\) and \(\widehat F_2^N(0)=-0.184\), obtained by dividing the raw universal u+d+s values by three. The earlier pre-P0 archive used the raw values; its dimensionless helicity-versus-Cartesian residuals are invariant under this common rescaling, but its absolute particle-side coefficients are not suitable for an external-\(g_{VN}\) rate without the division by three.
 
 The AFH amplitudes are still marked
 PROVISIONAL_SOURCE_TRANSLATED_AFH_SPATIAL_RESPONSES; native Wolfram
@@ -114,20 +119,22 @@ existing PSD tolerance \(-10^{-10}\). The stored \(L_{\mu\nu}\) is
 reconstructed from \(G_{\mu a,\nu b}\) with zero residual at the archived
 precision.
 
-| Benchmark | \(E_R\) | \(q_A\) (GeV) | \(K_{\rm helicity}\), PCHIP amplitudes | Relative amplitude/Cartesian residual |
+| Benchmark | \(E_R\) | \(q_A\) (GeV) | \(K_{\rm helicity}\), PCHIP amplitudes, normalized basis | Relative amplitude/Cartesian residual |
 |---|---:|---:|---:|---:|
-| green_450keV | 200 keV | 0.2209306022 | 0.00835366938272 | \(2.08\times10^{-16}\) |
-| green_1MeV | 200 keV | 0.2209306022 | 0.000514111110719 | \(4.22\times10^{-16}\) |
-| near_pole_362keV_g2_0p1 | 267 keV | 0.2552681134 | 0.610748897628 | \(5.45\times10^{-16}\) |
-| near_pole_362keV_g2_1 | 267 keV | 0.2552681134 | 0.136728078354 | \(6.09\times10^{-16}\) |
+| green_450keV | 200 keV | 0.2209306022 | 0.000928185486969 | \(2.34\times10^{-16}\) |
+| green_1MeV | 200 keV | 0.2209306022 | \(5.71234567466\times10^{-5}\) | \(3.56\times10^{-16}\) |
+| near_pole_362keV_g2_0p1 | 267 keV | 0.2552681134 | 0.0678609886254 | \(6.14\times10^{-16}\) |
+| near_pole_362keV_g2_1 | 267 keV | 0.2552681134 | 0.0151920087060 | \(4.57\times10^{-16}\) |
 
 The global residuals are
 \[
 \boxed{
-\max\delta_{\rm amp/cart}=6.09\times10^{-16},\qquad
-\max\delta_{C_{\rm Eq.(107)}}=8.53\times10^{-16}.
+\max\delta_{\rm amp/cart}=6.14\times10^{-16},\qquad
+\max\delta_{C_{\rm Eq.(107)}}=7.73\times10^{-16}.
 }
 \]
+Compared with the pre-P0 repository JSON (which used raw \(F_1^{uds}=3\), \(F_2^{uds}=-0.552\) with the external \(g_{VN}\) prefactor), the four absolute particle-side kernels above are smaller by exactly \(1/9\), as required by \(\widehat F_i=F_i^{uds}/3\). The helicity-versus-Cartesian and Eq. (107) relative residuals remain unchanged at machine precision because both sides of the structural identity use the same rescaled current.
+
 The deliberately reversed \(\Sigma'\) helicity phase flips the signed
 \(\Sigma'\)-\(\Delta\) coefficient while leaving the two diagonal
 coefficients unchanged. This is covered by a unit test.
@@ -155,10 +162,15 @@ those interpolated amplitudes.
 ## 6. Reproduction
 
 The standalone script is
-p3c_amplitude_level_helicity_crosscheck.py; its four unit tests are in
-test_p3c_amplitude_level_helicity_crosscheck.py. The archived numerical
-summary is
-results/2026-11-19/p3c_spatial_amplitude_level_helicity_crosscheck.json.
+p3c_amplitude_level_helicity_crosscheck.py; its five unit tests are in
+test_p3c_amplitude_level_helicity_crosscheck.py. The normalized result is permanently archived in
+\`results/2026-11-19/p3c_spatial_amplitude_level_helicity_crosscheck_gVN_normalized.json\`
+(SHA-256 \`a59a622f5fa2e88a60326af817e7dea4ca1847d1f6790b58e589044dd7d9cdaa\`),
+and was produced by [workflow 44467028248](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44467028248),
+artifact 14502132933. The older repository JSON at
+\`results/2026-11-19/p3c_spatial_amplitude_level_helicity_crosscheck.json\` is
+explicitly marked PRE_P0_RAW_FLAVOR_SUMMED_INPUTS and is retained only as
+historical provenance.
 
 The full-current workflow now:
 1. generates the pole-only three-body tensor;

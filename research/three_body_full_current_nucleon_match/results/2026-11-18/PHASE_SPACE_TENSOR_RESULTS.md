@@ -1,5 +1,7 @@
 # Phase-space-integrated spin-resolved three-body tensor — results
 
+> **Scope clarification (2026-11-19):** The DM-side phase-space tensor and Dirac-trace PASS remain independent numerical components. The static Dirac–Pauli matching in this artifact is a q=0 diagnostic, not the adopted B finite-(t_N) baseline and not an AFH nuclear-response calculation.
+
 **Status:** PASS for the DM-side spin-resolved tensor construction and the
 independent Dirac-trace contraction. AFH multipole coefficients remain open.
 

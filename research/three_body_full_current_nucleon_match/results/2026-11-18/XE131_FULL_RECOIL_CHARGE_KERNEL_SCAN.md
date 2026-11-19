@@ -1,5 +1,7 @@
 # Xe-131 full-recoil charge-sector kernel scan
 
+> **Baseline clarification (2026-11-19):** This is an alternate isoscalar_zexp charge-kernel diagnostic, not the adopted B baseline. B now uses the Bishara low-momentum flavor-separated prescription and only (W_M(y_A)); this scan's (M+Phi'') result is a C-type extension and must be reported relative to B if reused.
+
 **Status:** native-grid charge-sector kernel scan; not an absolute differential cross section.
 
 ## 1. Scope

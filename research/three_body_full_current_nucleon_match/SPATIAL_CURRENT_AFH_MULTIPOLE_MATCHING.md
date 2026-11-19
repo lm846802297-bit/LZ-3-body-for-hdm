@@ -7,6 +7,22 @@ This note fixes the operator-level bridge between the exact phase-space
 integrated three-body dark-matter current and the AFH nuclear response basis.
 It is deliberately not a numerical prediction for the spatial-current rate.
 
+**Transfer-slice warning (2026-11-19):** the static (q_N^0=0),
+(t_N=-Q_A^2) formulas below are retained as a diagnostic slice only.
+Formal fixed-speed/P4 production uses the energy-transfer-matched
+one-body impulse prescription (q_N^mu=q_A^mu), (t_N=t_A=-2m_AE_R).
+The AFH nuclear response always uses the spatial
+(Q_A^2=2m_AE_R+E_R^2) through (y_A=(b_AQ_A/2)^2). This is not a
+bound-nucleon many-body current calculation.
+
+The (F_1^V,F_2^V) symbols in this operator derivation denote the full
+universal (u+d+s) quark-current form factors. If the external rate
+prefactor is ((g_1g_2g_{VN})^2), use
+(widehat F_i^V=F_i^V/3) in all particle-side coefficients. The
+alternative is the full (F_i^V) with (g_{Vq}=g_{VN}/3). The AFH
+factor-four conversion is a separate operation. The finite-size AFH
+(W_M(y_A)) remains in the nuclear baseline in either convention.
+
 ## 1. Conventions that must remain separate
 
 The nuclear transfer and the one-nucleon transfer are
@@ -14,11 +30,13 @@ The nuclear transfer and the one-nucleon transfer are
 q_A^\mu=P_A'^\mu-P_A^\mu,\qquad
 q_N^\mu=k_N'^\mu-k_N^\mu.
 \]
-In the static one-body impulse approximation,
+For the static diagnostic slice only,
 \[
 q_N^0=0,\qquad \boldsymbol q_N=\boldsymbol q_A,\qquad
 t_N=-Q_A^2,\qquad Q_A=|\boldsymbol q_A|.
 \]
+The formal production slice instead sets \(q_N^\mu=q_A^\mu\), so
+\(t_N=t_A=-2m_AE_R\).
 The AFH Fourier convention in the current project is
 \(\boldsymbol q_{\rm AFH}=-\boldsymbol q_A\). The emitted scalar momentum
 is not part of the nuclear Fourier momentum:
@@ -315,12 +333,12 @@ is at most \(7.39\times10^{-16}\), but this does **not** set
 depends on the transverse-even trace \(L^{11}+L^{22}\). The two
 quantities must not be confused.
 
-The expressions above are leading static one-body coefficients before
-the common mediator/coupling factors. They are to be contracted with the
-physical equal-\(p=n\) AFH response columns, with the factor of four
-applied exactly once. \(F_1^V(t_N)\) and \(F_2^V(t_N)\) must ultimately
-be evaluated at finite \(t_N=-Q_A^2\); zero-momentum values are only
-benchmark anchors.
+The expressions above are leading nonrelativistic one-body coefficients
+before the common mediator/coupling factors. They are to be contracted with
+the physical equal-\(p=n\) AFH response columns, with the factor of four
+applied exactly once. In formal production use \(t_N=t_A\); the static
+diagnostic uses \(t_N=-Q_A^2\). If the external coupling is \(g_{VN}\),
+use \(\widehat F_i^V=F_i^V/3\) in these coefficients.
 
 ## 7. Mandatory next calculation
 

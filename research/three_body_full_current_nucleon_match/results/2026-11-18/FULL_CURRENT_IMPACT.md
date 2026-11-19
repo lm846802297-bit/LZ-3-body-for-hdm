@@ -1,5 +1,7 @@
 # Full-current impact on the old W_M-only baseline
 
+> **2026-11-19 baseline notice:** This is a pre-B fixed-speed current-impact diagnostic using the historical M-only reference. It is not the adopted B absolute rate. Recompute any physical rate with the B prescription in `NUCLEAR_FINITE_SIZE_BASELINE_POLICY.md`; keep the signed spatial contribution provisional until P3-C passes.
+
 **Status:** fixed-speed three-body current contraction completed. The matched-\(c_M\)
 Xe-131 charge ratios are updated below. The signed spatial-interference
 contribution remains provisional pending direct P3 phase validation, and

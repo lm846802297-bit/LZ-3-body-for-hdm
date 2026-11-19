@@ -1,0 +1,227 @@
+{
+  "status": "PASS_SPATIAL_AMPLITUDE_LEVEL_HELICITY_RECONSTRUCTION",
+  "P3C_overall_status": "OPEN_FULL_COVARIANT_NUCLEAR_AMPLITUDE_NOT_YET_VALIDATED",
+  "scope": "Xe-131 leading-static spatial sector; full complex three-body G^(3) contracted through signed AFH Delta_J/SigmaPrime_J amplitudes and compared with direct Cartesian Eq.(107)",
+  "native_afh_validated": false,
+  "full_covariant_nuclear_amplitude_validated": false,
+  "formal_width_scheme": "pole",
+  "AFH_source_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+  "AFH_native_status": "PROVISIONAL_SOURCE_TRANSLATED_AFH_SPATIAL_RESPONSES",
+  "spatial_source_run_id": 44467028248,
+  "spatial_source_artifact_id": 14502512261,
+  "coupling_basis": "external g_VN=3*g_Vq",
+  "form_factor_normalization": "Fhat_i=F_i^(u+d+s)/3",
+  "form_factor_input": {
+    "F1N_effective": 1.0,
+    "F2N_effective": -0.184,
+    "mN_GeV": 0.938918
+  },
+  "form_factor_status": "constant q=0 effective anchors in the external g_VN basis; finite-t_N dependence not included",
+  "benchmark_count": 4,
+  "max_amplitude_vs_cartesian_relative_residual": 6.135095327490302e-16,
+  "max_Eq107_vs_helicity_coefficient_relative_residual": 7.730070083412855e-16,
+  "results": [
+    {
+      "benchmark": "green_450keV",
+      "ER_keV": 200.0,
+      "qA_GeV": 0.22093060215101032,
+      "width_scheme": "pole",
+      "G_to_L_relative_residual": 0.0,
+      "G_hermiticity_relative_residual": 0.0,
+      "G_minimum_eigenvalue": -1.7171622678992956e-15,
+      "Eq107_vs_helicity_coefficient_relative_residuals": {
+        "C_Delta": 3.145660634640449e-16,
+        "C_SigmaPrime": 4.724235622477606e-16,
+        "C_SigmaPrimeDelta": 0.0
+      },
+      "K_cartesian_Eq107_PCHIP": 0.0009281854869693257,
+      "K_helicity_amplitude_PCHIP": 0.0009281854869693255,
+      "PCHIP_amplitude_vs_cartesian_relative_residual": 2.3361756625296916e-16,
+      "K_cartesian_Eq107_linear_amplitude": 0.0009281888086413021,
+      "K_helicity_amplitude_linear": 0.0009281888086413017,
+      "linear_amplitude_vs_cartesian_relative_residual": 3.504250953227643e-16,
+      "K_existing_linear_response_interpolation": 0.0009281906170049084,
+      "K_existing_P3C_stored": 0.0009281906170049084,
+      "PCHIP_amplitude_vs_linear_response_relative_difference": 5.526920320969592e-06,
+      "linear_amplitude_vs_linear_response_relative_difference": 1.9482674932448084e-06,
+      "PCHIP_vs_linear_amplitude_kernel_relative_difference": 3.5786726067631365e-06,
+      "rank_amplitudes_PCHIP": {
+        "1": {
+          "M_Delta_J": -0.030465496633478136,
+          "M_SigmaPrime_J": -0.007136300589380985
+        },
+        "2": {
+          "M_Delta_J": 0.0,
+          "M_SigmaPrime_J": 0.0
+        },
+        "3": {
+          "M_Delta_J": 0.014017403434394674,
+          "M_SigmaPrime_J": -0.039778408697849474
+        }
+      },
+      "rank_contributions_PCHIP": {
+        "1": 0.00042093960998451386,
+        "2": 0.0,
+        "3": 0.0005072458769848117
+      },
+      "rank_contributions_linear": {
+        "1": 0.0004209429387343663,
+        "2": 0.0,
+        "3": 0.0005072458699069355
+      }
+    },
+    {
+      "benchmark": "green_1MeV",
+      "ER_keV": 200.0,
+      "qA_GeV": 0.22093060215101032,
+      "width_scheme": "pole",
+      "G_to_L_relative_residual": 0.0,
+      "G_hermiticity_relative_residual": 0.0,
+      "G_minimum_eigenvalue": -1.9907761526405324e-25,
+      "Eq107_vs_helicity_coefficient_relative_residuals": {
+        "C_Delta": 4.791852453708216e-16,
+        "C_SigmaPrime": 2.398843220209883e-16,
+        "C_SigmaPrimeDelta": 3.9149121353825293e-16
+      },
+      "K_cartesian_Eq107_PCHIP": 5.712345674657561e-05,
+      "K_helicity_amplitude_PCHIP": 5.712345674657559e-05,
+      "PCHIP_amplitude_vs_cartesian_relative_residual": 3.5587465976176e-16,
+      "K_cartesian_Eq107_linear_amplitude": 5.712366117272548e-05,
+      "K_helicity_amplitude_linear": 5.712366117272546e-05,
+      "linear_amplitude_vs_cartesian_relative_residual": 3.5587338620742127e-16,
+      "K_existing_linear_response_interpolation": 5.7123772465114445e-05,
+      "K_existing_P3C_stored": 5.7123772465114445e-05,
+      "PCHIP_amplitude_vs_linear_response_relative_difference": 5.526920321133343e-06,
+      "linear_amplitude_vs_linear_response_relative_difference": 1.9482674932794707e-06,
+      "PCHIP_vs_linear_amplitude_kernel_relative_difference": 3.578672606892226e-06,
+      "rank_amplitudes_PCHIP": {
+        "1": {
+          "M_Delta_J": -0.030465496633478136,
+          "M_SigmaPrime_J": -0.007136300589380985
+        },
+        "2": {
+          "M_Delta_J": 0.0,
+          "M_SigmaPrime_J": 0.0
+        },
+        "3": {
+          "M_Delta_J": 0.014017403434394674,
+          "M_SigmaPrime_J": -0.039778408697849474
+        }
+      },
+      "rank_contributions_PCHIP": {
+        "1": 2.590594869392245e-05,
+        "2": 0.0,
+        "3": 3.121750805265314e-05
+      },
+      "rank_contributions_linear": {
+        "1": 2.5906153555667106e-05,
+        "2": 0.0,
+        "3": 3.1217507617058355e-05
+      }
+    },
+    {
+      "benchmark": "near_pole_362keV_g2_0p1",
+      "ER_keV": 267.0,
+      "qA_GeV": 0.2552681134213372,
+      "width_scheme": "pole",
+      "G_to_L_relative_residual": 0.0,
+      "G_hermiticity_relative_residual": 0.0,
+      "G_minimum_eigenvalue": -1.8378415743437288e-17,
+      "Eq107_vs_helicity_coefficient_relative_residuals": {
+        "C_Delta": 4.730802891048668e-16,
+        "C_SigmaPrime": 5.920703188888522e-16,
+        "C_SigmaPrimeDelta": 7.730070083412855e-16
+      },
+      "K_cartesian_Eq107_PCHIP": 0.06786098862537875,
+      "K_helicity_amplitude_PCHIP": 0.0678609886253787,
+      "PCHIP_amplitude_vs_cartesian_relative_residual": 6.135095327490302e-16,
+      "K_cartesian_Eq107_linear_amplitude": 0.06786103217314646,
+      "K_helicity_amplitude_linear": 0.06786103217314643,
+      "linear_amplitude_vs_cartesian_relative_residual": 4.090060926985454e-16,
+      "K_existing_linear_response_interpolation": 0.0678610658936915,
+      "K_existing_P3C_stored": 0.0678610658936915,
+      "PCHIP_amplitude_vs_linear_response_relative_difference": 1.138625097796184e-06,
+      "linear_amplitude_vs_linear_response_relative_difference": 4.969056206306749e-07,
+      "PCHIP_vs_linear_amplitude_kernel_relative_difference": 6.417202078442435e-07,
+      "rank_amplitudes_PCHIP": {
+        "1": {
+          "M_Delta_J": -0.025295216499928035,
+          "M_SigmaPrime_J": 0.0026808038327175853
+        },
+        "2": {
+          "M_Delta_J": 0.0,
+          "M_SigmaPrime_J": 0.0
+        },
+        "3": {
+          "M_Delta_J": 0.008867927105203038,
+          "M_SigmaPrime_J": -0.017962658795366453
+        }
+      },
+      "rank_contributions_PCHIP": {
+        "1": 0.04929214049267562,
+        "2": 0.0,
+        "3": 0.01856884813270309
+      },
+      "rank_contributions_linear": {
+        "1": 0.0492921529560769,
+        "2": 0.0,
+        "3": 0.018568879217069532
+      }
+    },
+    {
+      "benchmark": "near_pole_362keV_g2_1",
+      "ER_keV": 267.0,
+      "qA_GeV": 0.2552681134213372,
+      "width_scheme": "pole",
+      "G_to_L_relative_residual": 0.0,
+      "G_hermiticity_relative_residual": 0.0,
+      "G_minimum_eigenvalue": -3.195231835103928e-14,
+      "Eq107_vs_helicity_coefficient_relative_residuals": {
+        "C_Delta": 3.5219937818533593e-16,
+        "C_SigmaPrime": 6.611778263343272e-16,
+        "C_SigmaPrimeDelta": 4.316168850310489e-16
+      },
+      "K_cartesian_Eq107_PCHIP": 0.015192008705999904,
+      "K_helicity_amplitude_PCHIP": 0.015192008705999897,
+      "PCHIP_amplitude_vs_cartesian_relative_residual": 4.567463090754282e-16,
+      "K_cartesian_Eq107_linear_amplitude": 0.015192018455018887,
+      "K_helicity_amplitude_linear": 0.01519201845501888,
+      "linear_amplitude_vs_cartesian_relative_residual": 4.567460159722799e-16,
+      "K_existing_linear_response_interpolation": 0.015192026004021988,
+      "K_existing_P3C_stored": 0.015192026004021988,
+      "PCHIP_amplitude_vs_linear_response_relative_difference": 1.1386250975693504e-06,
+      "linear_amplitude_vs_linear_response_relative_difference": 4.96905620513392e-07,
+      "PCHIP_vs_linear_amplitude_kernel_relative_difference": 6.417202077346926e-07,
+      "rank_amplitudes_PCHIP": {
+        "1": {
+          "M_Delta_J": -0.025295216499928035,
+          "M_SigmaPrime_J": 0.0026808038327175853
+        },
+        "2": {
+          "M_Delta_J": 0.0,
+          "M_SigmaPrime_J": 0.0
+        },
+        "3": {
+          "M_Delta_J": 0.008867927105203038,
+          "M_SigmaPrime_J": -0.017962658795366453
+        }
+      },
+      "rank_contributions_PCHIP": {
+        "1": 0.0110350091071624,
+        "2": 0.0,
+        "3": 0.004156999598837497
+      },
+      "rank_contributions_linear": {
+        "1": 0.011035011897338383,
+        "2": 0.0,
+        "3": 0.004157006557680497
+      }
+    }
+  ],
+  "limitations": [
+    "Spatial AFH amplitudes are still source-translated Python; native Wolfram P3-B validation is pending.",
+    "Charge multipoles M and Phi'' are not rank-resolved in this archive, so the complete charge-plus-spatial nuclear amplitude is not validated at amplitude level.",
+    "The independent direct bound-nucleus coordinate-space current matrix element has not yet been implemented; the direct side is the Cartesian three-body tensor with AFH Eq.(107) coefficients.",
+    "Finite-t_N form factors and higher-order/two-body nuclear currents are not included."
+  ]
+}
