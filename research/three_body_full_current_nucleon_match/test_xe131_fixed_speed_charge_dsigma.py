@@ -73,6 +73,27 @@ class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
         self.assertLess(terms["M_Phi_interference"], 0.0)
         self.assertGreater(terms["C_M_plus_PhiPP"], 0.0)
 
+    def test_native_AFH_A_B_C_ratio_anchors(self):
+        # PCHIP response ratios from the provenance-pinned native AFH v6.0
+        # Xe-131 grid. The common C0 and factor-four normalizations cancel.
+        anchors = {
+            200.0: (0.036955940801758985, -0.19120929699010936,
+                    0.7398828761262942, 0.9969554024414953, 0.7376302305280606),
+            267.0: (19.84506258174282, -4.282964386166763,
+                    0.6621749872241893, 0.9146368782933962, 0.6056496631987021),
+        }
+        for er_keV, (wphi_over_wm, wmphi_over_wm, expected_ba,
+                     expected_cb, expected_ca) in anchors.items():
+            qA = exact_qA_GeV(MA_XE131_GEV, er_keV)
+            result = charge_sector_kernels(
+                1.0, qA,
+                {"M": 1.0, "PhiPP": wphi_over_wm, "MPhiPP": wmphi_over_wm},
+                ER_keV=er_keV,
+            )
+            self.assertAlmostEqual(result["B_over_A_reference"], expected_ba, places=11)
+            self.assertAlmostEqual(result["C_over_B_baseline"], expected_cb, places=11)
+            self.assertAlmostEqual(result["C_over_A_reference"], expected_ca, places=11)
+
     def test_native_C0_is_derived_from_raw_M_zero_anchor(self):
         raw_m_zero = 4289.895955714992
         c0 = xe131_common_matrix_normalization_c0(raw_m_zero)
