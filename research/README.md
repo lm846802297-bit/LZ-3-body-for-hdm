@@ -8,7 +8,7 @@ All research materials are kept under this directory so the repository root stay
 
 ## Research workflow
 
-Read [WORKFLOW.md](WORKFLOW.md) and the mandatory [research source hierarchy](RESEARCH_GOVERNANCE_AND_SOURCE_HIERARCHY.md) before starting a new study. Use [_template/README.md](_template/README.md) for each new topic, and follow the repository PR checklist. A successful software test or workflow run validates only the code paths and assertions that it actually covers.
+Read [WORKFLOW.md](WORKFLOW.md), the mandatory [research source hierarchy](RESEARCH_GOVERNANCE_AND_SOURCE_HIERARCHY.md), and the [Research Task Handoff Standard](RESEARCH_TASK_HANDOFF_STANDARD.md) before starting a new study. Use [_template/README.md](_template/README.md) for each new topic and [_template/RESEARCH_TASK_BRIEF.md](_template/RESEARCH_TASK_BRIEF.md) for each substantive task. A successful software test or workflow run validates only the code paths and assertions that it actually covers.
 
 ## Directory map
 
