@@ -32,6 +32,7 @@
 ## 贡献与研究规范
 
 - 仓库级强制任务规范：[AGENTS.md](AGENTS.md)
+- 结构化科研结果 JSON/CSV 规范：[research/STRUCTURED_RESULT_DATA_STANDARD.md](research/STRUCTURED_RESULT_DATA_STANDARD.md)
 - 科研任务交接规范与统一任务单：[research/RESEARCH_TASK_HANDOFF_STANDARD.md](research/RESEARCH_TASK_HANDOFF_STANDARD.md)；可复制模板：[research/_template/RESEARCH_TASK_BRIEF.md](research/_template/RESEARCH_TASK_BRIEF.md)
 - 研究依据优先级与论文草稿边界：[research/RESEARCH_GOVERNANCE_AND_SOURCE_HIERARCHY.md](research/RESEARCH_GOVERNANCE_AND_SOURCE_HIERARCHY.md)
 - 贡献入口：[CONTRIBUTING.md](CONTRIBUTING.md)
