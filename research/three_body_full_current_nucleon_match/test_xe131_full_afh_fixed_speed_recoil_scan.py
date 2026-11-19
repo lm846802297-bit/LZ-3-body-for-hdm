@@ -15,8 +15,8 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
     def setUp(self):
         self.q = 0.22
         self.ER = 200.0e-6
-        self.F1 = 2.66
-        self.F2 = -0.468
+        self.F1 = 2.66 / 3.0
+        self.F2 = -0.468 / 3.0
         self.L = np.diag([1.0e5, 1.0e-3, 1.0e-3, 1.0e-5]).astype(complex)
         self.responses = {
             "M": 100.0,
@@ -54,14 +54,32 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
             17.0 * self.L, self.q, self.ER, self.responses, self.F1, self.F2
         )
         for key in (
-            "finite_t_M_over_pointlike_M",
-            "charge_only_over_pointlike_M",
-            "PhiPP_over_finite_t_M_correction",
-            "full_over_charge_only",
+            "B_over_A_reference",
+            "C_over_A_reference",
+            "PhiPP_over_B_correction",
+            "D_over_C_charge_only",
             "spatial_over_charge_only",
-            "full_over_pointlike_M",
+            "D_over_A_reference",
         ):
             self.assertAlmostEqual(a[key], b[key], places=12, msg=key)
+
+    def test_A_B_C_D_hierarchy_is_normalized_to_effective_nucleon_current(self):
+        result = contract_six_channels(
+            self.L, self.q, self.ER, self.responses, self.F1, self.F2
+        )
+        self.assertAlmostEqual(
+            result["B_over_A_reference"],
+            result["coefficients"]["C_M"] * self.responses["M"] /
+            (result["A_reference_M"]),
+            places=13,
+        )
+        self.assertAlmostEqual(
+            result["D_over_A_reference"],
+            result["D_full_six_channel_candidate"] /
+            result["A_reference_M"],
+            places=13,
+        )
+        self.assertGreater(result["A_reference_M"], 0.0)
 
     def test_formal_six_channel_scan_uses_pole_width_only(self):
         self.assertEqual(FORMAL_WIDTH_SCHEMES, ("pole",))
