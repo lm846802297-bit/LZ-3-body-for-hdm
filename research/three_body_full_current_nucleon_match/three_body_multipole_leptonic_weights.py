@@ -217,8 +217,8 @@ def afh_eq107_spatial_coefficients_from_amplitudes(
         "spin_channel_count": int(amplitudes.shape[0]),
         "spin_average": True,
         "spin_average_denominator": float(spin_average_denominator),
-        "F1V": float(f1),
-        "F2V": float(f2),
+        "F1N_effective": float(f1),
+        "F2N_effective": float(f2),
         "mN_GeV": float(mN_GeV),
         "transverse_DM_norm_L_T": float(np.sum(
             np.sum(np.abs(amplitudes) ** 2, axis=1)
@@ -371,8 +371,8 @@ def extract_afh_vector_coefficients(
         "charge_continuity_relative_correction": float(
             L_C / max(abs(L00), 1.0e-300) - 1.0
         ),
-        "F1V_input": float(f1),
-        "F2V_input": float(f2),
+        "F1N_effective_input": float(f1),
+        "F2N_effective_input": float(f2),
         "mN_GeV": float(mN_GeV),
         "form_factor_status": (
             "constant provisional q=0 anchors; t_N uses the supplied energy transfer "
@@ -560,10 +560,10 @@ def analyze_tensor_archive(
         "calculation_role": "P3-C amplitude-level structural matching diagnostic with q=0 effective nucleon-current anchors; not the adopted B production rate",
         "primary_B_baseline_included": False,
         "form_factor_input": {
-            "F1V": f1,
-            "F2V": f2,
+            "F1N_effective": f1,
+            "F2N_effective": f2,
             "mN_GeV": mN_GeV,
-            "status": "constant provisional q=0 anchors; finite-t dependence not included",
+            "status": "constant effective-nucleon q=0 anchors (Fhat_1=1, Fhat_2=-0.184) in the external g_VN basis; finite-t dependence not included",
         },
         "benchmarks": rows,
         "summary": {
