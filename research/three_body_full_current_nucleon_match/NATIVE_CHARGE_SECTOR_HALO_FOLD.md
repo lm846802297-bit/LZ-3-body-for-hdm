@@ -1,6 +1,6 @@
 # Native-AFH finite-size charge-sector and full-current natural-xenon halo fold
 
-**Status:** charge-sector engine implemented; production promotion waits for the native seven-isotope AFH gate and P3-C amplitude-level acceptance.  
+**Status:** B is the adopted primary baseline; charge-sector C is a separate extension. Production promotion waits for the native seven-isotope AFH gate and P3-C amplitude-level acceptance.  
 **Formal nuclear input:** native AFH v6.0 only.  
 **Formal width:** asymmetric Pole width only.  
 **Coupling basis:** external \((g_1g_2g_{VN})^2\), with \(\widehat F_i=F_i^{uds}/3\).
@@ -67,6 +67,20 @@ Therefore the coefficients multiplying the external \(g_{VN}\) prefactor use
 \]
 The AFH factor four and the quark-current factor three are independent normalization operations. The code applies the former in the AFH response conversion and the latter in the definition of \(\widehat F_i\).
 
+The adopted B form-factor prescription is the Bishara et al. Appendix A.1
+low-momentum flavor sum:
+\[
+F_1^{uds,N}(t_N)=3+8.392t_N+\mathcal O(t_N^2),\qquad
+F_2^{uds,N}(t_N)=-0.552+\mathcal O(t_N).
+\]
+Only the first-order Dirac slope and leading Pauli constant are used; no
+unverified \(F_2'\) is introduced. In the external-\(g_{VN}\) basis this is
+\[
+\widehat F_1(t_N)=1+\frac{8.392}{3}t_N+\mathcal O(t_N^2),\qquad
+\widehat F_2(t_N)=-0.184+\mathcal O(t_N).
+\]
+The alternative isoscalar_zexp option is sensitivity-only, not the B default.
+
 ## 4. Coulomb-sector contraction
 
 For a conserved one-body nuclear vector current,
@@ -99,7 +113,10 @@ The invariant \(t_N\) and spatial \(Q_A^2\) are intentionally different.
 
 ## 5. A/B/C response hierarchy
 
-The engine records three nested charge-sector kernels, all retaining the same finite-\(Q_A\) AFH response.
+**B is the adopted production baseline.** The engine records three nested
+charge-sector kernels, all retaining the same finite-\(Q_A\) AFH response.
+B includes only the finite-\(t_N\) effective nucleon current and AFH
+\(W_M\); no additional AFH response is present in B.
 
 **A — original finite-size AFH M-only reference**
 \[
