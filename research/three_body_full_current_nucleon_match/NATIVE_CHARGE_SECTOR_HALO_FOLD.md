@@ -296,7 +296,7 @@ recoil grid is \(E_R=150,200,267,350,400\) keV, with separate speed and
 three-body phase-space refinement runs. The first production benchmark uses
 \(m_{\chi_1}=1\) TeV, \(m_s=200\) keV,
 \(\Delta m=1\) MeV, \(m_V=10\) GeV, and the formal Pole prescription.
-It records pointlike \(M\), finite-\(t_N\) \(M\), Coulomb \(M+\Phi''\),
+It records A (q=0 nucleon-current reference with finite-size AFH \\(W_M\\)), B (finite-\\(t_N\\) M-only baseline), C (charge-response extension),
 and the leading-static six-channel candidate. Both truncated SHM and
 untruncated Maxwellian folds are retained.
 
