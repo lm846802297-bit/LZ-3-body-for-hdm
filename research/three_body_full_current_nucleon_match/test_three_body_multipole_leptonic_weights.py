@@ -76,7 +76,9 @@ class LeptonicMultipoleWeightTests(unittest.TestCase):
             L, 0.2, f1=3.0, f2=-0.552, mN_GeV=0.938918,
             omega_GeV=0.01,
         )
-        cM = 3.0 + (-0.2**2) * (3.0 + 2.0 * -0.552) / (8.0 * 0.938918**2)
+        tN = 0.01**2 - 0.2**2
+        cM = 3.0 + tN * (3.0 + 2.0 * -0.552) / (8.0 * 0.938918**2)
+        self.assertAlmostEqual(afh["tN_GeV2"], tN, places=15)
         self.assertAlmostEqual(afh["C_M"], cM**2 * expected)
 
     def test_zero_transfer_limit_keeps_the_charge_weight(self):
