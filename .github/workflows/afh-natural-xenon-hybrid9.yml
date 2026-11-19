@@ -14,7 +14,7 @@ on:
       - research/afh_default_density_natural_xenon_halo/tests/test_afh7_hybrid9_continuous_spectrum.py
       - research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv
       - research/afh_default_density_natural_xenon_halo/results/full_afh_v6_default_7_isotope_response/**
-      - research/figure2_full_reproduction/eq6_kernel.py
+      - research/three_body_calculation_and_validation/eq6_kernel.py
       - v6/dmformfactor-V6.m
   pull_request:
     branches:
@@ -26,7 +26,7 @@ on:
       - research/afh_default_density_natural_xenon_halo/tests/test_afh7_hybrid9_continuous_spectrum.py
       - research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv
       - research/afh_default_density_natural_xenon_halo/results/full_afh_v6_default_7_isotope_response/**
-      - research/figure2_full_reproduction/eq6_kernel.py
+      - research/three_body_calculation_and_validation/eq6_kernel.py
       - v6/dmformfactor-V6.m
   workflow_dispatch:
 

@@ -7,7 +7,7 @@ HERE = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(HERE))
 from compute_four_benchmark_dsigma import build, validate
 
-BASE = HERE / "input" / "figure2_recalc_mV10_g2_1_v800_Xe131_full_5keV.csv"
+BASE = HERE / "input" / "recalc_mV10_g2_1_v800_Xe131_full_5keV.csv"
 AFH = HERE / "output" / "afh_default_xe131_WM00.csv"
 
 class TestFourBenchmarkDifferentialCrossSections(unittest.TestCase):

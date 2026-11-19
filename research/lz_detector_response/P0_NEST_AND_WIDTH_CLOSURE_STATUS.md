@@ -171,7 +171,7 @@ Until Tracks A and B pass their validation gates:
 
 - LZ Table S5 parameters: `lz_2026_extended_nr/lz_2026_nest_nr_mean_yield_parameters.json`
 - Public input audit: `LZ_2026_PUBLIC_INPUTS_AUDIT.md`
-- Existing finite-width audit: `research/figure2_full_reproduction/results/P0-4_PROPAGATOR_WIDTH_AUDIT_ZH.md`
+- Existing finite-width audit: `research/three_body_calculation_and_validation/results/P0-4_PROPAGATOR_WIDTH_AUDIT_ZH.md`
 - Conditional two-body width derivation: `research/docs/08_chi2_decay_width.md`
 
 ## 8. Sources

@@ -1104,12 +1104,12 @@ k^2=m_s^2.
 4. 一个关闭相空间的测试返回严格零；
 5. 提高 \(W^2,z,\phi_*\) 求积阶数后，reduced kernel 收敛。
 
-主要代码：**research/figure2_full_reproduction/eq6_kernel.py**。
+主要代码：**research/three_body_calculation_and_validation/eq6_kernel.py**。
 
 复现入口：
 
 ~~~bash
-python -m unittest discover -s research/figure2_full_reproduction/tests -v
+python -m unittest discover -s research/three_body_calculation_and_validation/tests -v
 ~~~
 
 上述检查验证的是当前 Dirac 基准实现和被测试点，不自动证明所有参数点、所有传播子方案或未定义的 Majorana 模型都已验证。

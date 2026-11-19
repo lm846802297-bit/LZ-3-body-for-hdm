@@ -1,0 +1,30 @@
+{
+  "artifact": "FeynRules UFO export snapshot",
+  "model": "InelasticScalarRadiation",
+  "source_model": "../ThreeBodyVV.fr",
+  "source_model_sha256": "ca06a6866fc7eb34bdb8ab985f6dc2b35553dbe031e929355c84586b62b5afd6",
+  "generator": {
+    "name": "FeynRules",
+    "version": "2.3.49",
+    "mathematica": "14.2.0 for Microsoft Windows (64-bit)"
+  },
+  "export_date_from_log": "2026-11-16",
+  "validation": {
+    "date": "2026-11-18",
+    "python": "3.14.7",
+    "check": "Imported object_library, particles, vertices, and couplings from this directory",
+    "counts": {
+      "particles_and_antiparticles": 8,
+      "vertices": 5,
+      "couplings": 3
+    },
+    "madgraph_process_generation": "not run",
+    "cross_section": "not calculated"
+  },
+  "notes": [
+    "The export script applies a Python 3 syntax adjustment to the generated object_library.py; it does not change the model vertices.",
+    "FeynRules reported undefined electric charge and assumed zero charge for this minimal model.",
+    "This UFO snapshot is not a complete Standard Model extension and has not been used to calculate a MadGraph cross section."
+  ],
+  "files_manifest": "SHA256SUMS.txt"
+}

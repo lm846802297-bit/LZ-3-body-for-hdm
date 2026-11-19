@@ -6,8 +6,8 @@ on:
       - research/ame2020-mass-exact-spatial-mainline
     paths:
       - .github/workflows/ame2020-xe131-exact-spatial.yml
-      - research/figure2_full_reproduction/isotope_mass_schemes.py
-      - research/figure2_full_reproduction/tests/test_isotope_mass_schemes.py
+      - research/three_body_calculation_and_validation/isotope_mass_schemes.py
+      - research/three_body_calculation_and_validation/tests/test_isotope_mass_schemes.py
       - research/afh_default_density_xe131/run_ame2020_xe131_halo_partial.py
       - research/afh_default_density_xe131/tests/test_ame2020_xe131_halo_partial.py
       - research/afh_default_density_xe131/audit/audit_xe131_only_ame2020_hybrid.py
@@ -45,7 +45,7 @@ jobs:
       - name: Test xenon nuclear-mass schemes
         run: |
           python -m unittest \
-            research/figure2_full_reproduction/tests/test_isotope_mass_schemes.py -v
+            research/three_body_calculation_and_validation/tests/test_isotope_mass_schemes.py -v
 
       - name: Test AFH Xe-131 partial-rate and q-convention implementation
         run: |

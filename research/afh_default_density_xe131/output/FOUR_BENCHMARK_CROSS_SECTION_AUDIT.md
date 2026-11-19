@@ -2,10 +2,10 @@
 
 Canonical filenames and the superseded historical CSV are indexed in
 [CROSS_SECTION_FILE_INDEX.md](CROSS_SECTION_FILE_INDEX.md). Use
-`figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv` for the canonical
-long-form table and `figure2_four_benchmarks_AFH_GCN_JJ55_wide_audit.csv` for
+`four_benchmarks_AFH_GCN_JJ55_corrected.csv` for the canonical
+long-form table and `four_benchmarks_AFH_GCN_JJ55_wide_audit.csv` for
 the wide comparison. Do not use the historical
-`figure2_four_benchmarks_dsigma_AFH_GCN_JJ55.csv`.
+`four_benchmarks_dsigma_AFH_GCN_JJ55.csv`.
 
 ## Fixed inputs
 

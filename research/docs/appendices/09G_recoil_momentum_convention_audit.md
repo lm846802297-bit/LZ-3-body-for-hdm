@@ -146,9 +146,9 @@ m_V^2-t=m_V^2+2m_AE_R
 
 当前统一约定：
 
-- research/figure2_full_reproduction/rate_kinematics.py：精确 \(q_{\rm exact}\)，用于三体运动学；
-- research/figure2_full_reproduction/eq6_kernel.py：精确 \(q_{\rm exact}\)，用于三体末态构造；
-- research/figure2_full_reproduction/joint_xe131.py：AFH 响应插值使用精确空间 \(q_{\rm exact}\)；
+- research/three_body_calculation_and_validation/rate_kinematics.py：精确 \(q_{\rm exact}\)，用于三体运动学；
+- research/three_body_calculation_and_validation/eq6_kernel.py：精确 \(q_{\rm exact}\)，用于三体末态构造；
+- research/three_body_calculation_and_validation/joint_xe131.py：AFH 响应插值使用精确空间 \(q_{\rm exact}\)；
 - research/afh_default_density_xe131/recompute_afh_four_benchmarks.py：固定速度四组 benchmark 使用精确空间 \(q_{\rm exact}\)；
 - research/afh_default_density_xe131/compute_four_benchmark_dsigma.py：同样使用精确空间 \(q_{\rm exact}\)；
 - research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py：默认 exact_spatial；nr_approx 仅用于近似对照；legacy_exact 保留为向后兼容别名。

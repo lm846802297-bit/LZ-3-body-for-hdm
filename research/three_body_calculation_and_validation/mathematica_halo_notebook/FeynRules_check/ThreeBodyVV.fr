@@ -1,0 +1,20 @@
+M$ModelName = "InelasticScalarRadiation";
+M$Information = {Authors -> {"Independent verification"}, Version -> "1.0"};
+M$Parameters = {
+ gX == {ParameterType -> External, ComplexParameter -> False, Value -> 1.0, InteractionOrder -> {NP,1}, Description -> "Off-diagonal vector coupling"},
+ gS == {ParameterType -> External, ComplexParameter -> False, Value -> 1.0, InteractionOrder -> {NP,1}, Description -> "Off-diagonal scalar coupling"},
+ gN == {ParameterType -> External, ComplexParameter -> False, Value -> 1.0, InteractionOrder -> {NP,1}, Description -> "Pointlike nucleon vector coupling"}
+};
+M$ClassesDescription = {
+ F[1] == {ClassName -> chiOne, AntiClassName -> chiOnebar, SelfConjugate -> False, Mass -> {MChiOne,1000.}, Width -> 0, PDG -> {9000001}},
+ F[2] == {ClassName -> chiTwo, AntiClassName -> chiTwobar, SelfConjugate -> False, Mass -> {MChiTwo,1000.001}, Width -> {WChiTwo,0.0001518239116}, PDG -> {9000002}},
+ F[3] == {ClassName -> nuc, AntiClassName -> nucbar, SelfConjugate -> False, Mass -> {MNuc,0.938272}, Width -> 0, PDG -> {9000003}},
+ V[1] == {ClassName -> med, SelfConjugate -> True, Mass -> {MMed,10.}, Width -> 0, PDG -> {9000004}},
+ S[1] == {ClassName -> scal, SelfConjugate -> True, Mass -> {MScal,0.0003}, Width -> 0, PDG -> {9000005}}
+};
+LX := gX med[mu] chiTwobar.Ga[mu].chiOne;
+LS := gS scal chiTwobar.chiOne;
+LN := gN med[mu] nucbar.Ga[mu].nuc;
+LInteraction := LX + HC[LX] + LS + HC[LS] + LN;
+
+

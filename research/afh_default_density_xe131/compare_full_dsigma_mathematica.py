@@ -10,7 +10,7 @@ from scipy.interpolate import PchipInterpolator
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
-sys.path.insert(0, str(REPO / "research" / "figure2_full_reproduction"))
+sys.path.insert(0, str(REPO / "research" / "three_body_calculation_and_validation"))
 import eq6_kernel  # noqa: E402
 import phase_space_convergence as psc  # noqa: E402
 
@@ -70,19 +70,23 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--mathematica-csv", type=Path, required=True)
     ap.add_argument("--afh-response-csv", type=Path,
-                    default=HERE / "output" / "afh_default_xe131_WM00.csv")
+                    default=HERE / "output" / "native_exports" / "afh_default_xe131_WM00_mathematica.csv")
     ap.add_argument("--out-csv", type=Path, required=True)
     ap.add_argument("--metadata", type=Path, required=True)
     ap.add_argument("--rtol", type=float, default=2e-7,
                     help="relative tolerance for independently recomputed I6 and dSigma")
-    ap.add_argument("--response-rtol", type=float, default=2e-8,
-                    help="response tolerance matching the archived 2401-node AFH Python/Mathematica audit")
+    ap.add_argument("--response-rtol", type=float, default=2e-10,
+                    help="response tolerance when both implementations use the same fixed native AFH table")
     ap.add_argument("--require-full-grid", action="store_true",
                     help="require all four benchmarks and the complete 5--800 keV grid plus explicit anchors")
     args = ap.parse_args()
 
     m = pd.read_csv(args.mathematica_csv)
     response = pd.read_csv(args.afh_response_csv)
+    package_column = next((c for c in ("R_AFH_package_4pi_over_2Jplus1", "R_AFH_4Pi_over_2Jplus1")
+                           if c in response.columns), None)
+    if package_column is None:
+        raise ValueError("AFH response table is missing the package-normalized response column")
     required = {"benchmark", "ER_keV", "q_GeV", "R_A_AFH_package", "R_A_physical_normalized",
                 "C0", "I6_GeV2", "width_scheme", "W2_mapping", "g2", "phase_space_open",
                 "nW", "nz", "nphi", "pchi_GeV", "mediator_denominator_GeV4",
@@ -113,7 +117,7 @@ def main() -> None:
             )
 
     q = response.q_GeV.to_numpy(float)
-    r_package = response.R_AFH_package_4pi_over_2Jplus1.to_numpy(float)
+    r_package = response[package_column].to_numpy(float)
     r_physical = response.R_equal_pn_normalized.to_numpy(float)
     if not np.all(np.isfinite(q)) or not np.all(np.diff(q) > 0):
         raise ValueError("AFH q grid must be finite and strictly increasing")
@@ -240,7 +244,7 @@ def main() -> None:
         "tolerances": {
             "I6_dsigma_and_cross_code_converted_dsigma": args.rtol,
             "PCHIP_response": args.response_rtol,
-            "response_tolerance_rationale": "The archived 2401-node native Mathematica/Python AFH comparison has a maximum relative difference of 3.59e-9; this comparison uses 2e-8 to preserve that independently established source-translation tolerance.",
+            "response_tolerance_rationale": "Both implementations interpolate the same fixed native Mathematica AFH response table; source-translation differences are audited separately.",
             "q_C0_per_code_unit_conversion_identities_factor4_pchi_and_mediator_denominator": CONVERSION_IDENTITY_RTOL,
             "unit_conversion_factor_GeVminus3_to_cm2_per_keV": GEV3_TO_CM2_PER_KEV,
         },

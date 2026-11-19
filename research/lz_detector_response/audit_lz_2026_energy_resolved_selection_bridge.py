@@ -494,7 +494,7 @@ def main() -> None:
     parser.add_argument("--efficiency-csv", type=Path, required=True)
     parser.add_argument("--reference-bridge-dir", type=Path)
     parser.add_argument("--spectrum-dir", type=Path, default=Path(
-        "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum"
+        "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum"
     ))
     parser.add_argument("--response-families", nargs="+", choices=RESPONSE_FAMILIES, default=list(RESPONSE_FAMILIES))
     parser.add_argument("--benchmarks", nargs="+", choices=BENCHMARKS, default=list(BENCHMARKS))

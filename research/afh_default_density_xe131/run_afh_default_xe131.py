@@ -342,7 +342,7 @@ def main() -> None:
     with (args.outdir/"minima.csv").open("w",newline="",encoding="utf-8") as f:
         w=csv.DictWriter(f,fieldnames=list(minima[0].keys()))
         w.writeheader(); w.writerows(minima)
-    with (args.outdir/"figure2_dip_check.csv").open("w",newline="",encoding="utf-8") as f:
+    with (args.outdir/"nuclear_response_dip_check.csv").open("w",newline="",encoding="utf-8") as f:
         w=csv.DictWriter(f,fieldnames=list(dip_checks[0].keys()))
         w.writeheader(); w.writerows(dip_checks)
 

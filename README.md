@@ -12,10 +12,10 @@
 - [研究文档索引](research/docs/README.md)：主报告、独立附录、公式索引和补充记录。
 - [公式—符号—正文—程序—结果交叉引用](research/docs/formula_symbol_code_cross_reference.md)：F1–F12 公式、单位、程序入口、输出和适用边界。
 - [研究目录索引](research/README.md)：各专题的内容和科学状态。
-- [Figure 2 数值结果总索引](research/docs/supplements/figure2_results_master_index_2026-11-16.md)：main 当前的 13 组结果、91 个已提交文件 SHA-256/大小记录及 1 个外部高阶谱归档校验项（共 92 项）；2026-11-13 旧索引保留为历史快照。
+- [Figure 2 数值结果总索引](research/docs/supplements/three_body_results_master_index_2026-11-16.md)：main 当前的 13 组结果、91 个已提交文件 SHA-256/大小记录及 1 个外部高阶谱归档校验项（共 92 项）；2026-11-13 旧索引保留为历史快照。
 - [Phase 1 科学内容审查](research/docs/supplements/scientific_content_audit_2026-11-16.md)：AFH-7 全网格、旧/新相空间积分差异、GCN/JJ55 数值精度边界。
-- [Figure 2 科学状态表](research/docs/supplements/figure2_scientific_status_2026-11-13.md)：明确各项验证的适用范围和未完成边界。
-- [Eq. (6) kernel 与 Figure 2 数值复现入口](research/figure2_full_reproduction/README.md)。
+- [Figure 2 科学状态表](research/docs/supplements/three_body_scientific_status_2026-11-13.md)：明确各项验证的适用范围和未完成边界。
+- [Eq. (6) kernel 与 Figure 2 数值复现入口](research/three_body_calculation_and_validation/README.md)。
 - [LZ detector-response 研究档案](research/lz_detector_response/README.md)，以及 [2026 NR/ER 响应、二维折叠与统计审计索引](research/lz_detector_response/lz_2026_extended_nr/README.md)。
 
 ## 论文源码
@@ -42,6 +42,7 @@
 - [完整文件分类与研究导航](research/FILE_MAP.md)：说明各目录的科学职责、数据状态和结果使用边界。
 - paper-source/：原始论文源码、工作稿和图件；
 - research/：研究文档、计算程序、单元测试、审计记录和数值结果；
+- `research/three_body_calculation_and_validation/mathematica_halo_notebook/FeynRules_check/`：随研究目录提供的 FeynCalc、FeynRules 2.3.49、FeynArts 3.12 源码副本；包含许可说明和逐文件 SHA-256 清单，运行仍需要 Mathematica。
 - v6/：已归档的 AFH DMFormFactor v6.0 Mathematica 源文件；原始 ZIP 仍只保留 SHA-256 provenance。
 - .github/workflows/：可选的计算调度与自动化验证。科学研究不以 CI 运行成功为前提。
 
@@ -64,5 +65,5 @@
 - **LZ 探测器响应：** 已归档公开 NEST `541b643` 的 EFT2024 配置候选、NR/ER 响应审计、三体二维响应折叠、Fig. S2 rate-level folds，以及十独立种子的 paired S1 响应和 100,000 次 seed-cluster bootstrap。1-keV 仍是全范围数值参考；独立全范围 1/5-keV 比较未通过 1% 二维 TV 门槛。黑色 360-keV benchmark 的点估计低于 1%，但 bootstrap 和 leave-one-out 不支持稳健等价性声明。以上均为中间 NEST 响应诊断，不是官方 waveform-level selected PDF、profile likelihood 或 90% CL exclusion。
 - **450 keV benchmark：** 已归档一个条件性 pointwise \(\mathcal L_{00}\)/\(I_6\) 验证，以及一个独立的 Xe-131 固定速度、零宽度、\(A u\) 质量近似曲线。后者只覆盖 130–650 keV 的内部网格，不能当作天然氙 halo rate。
 - **高能尾部核模型敏感性：** 225–269.9 keV 效率加权尾部已比较 AFH-7、Hybrid-9、GCN、JJ55 和 Helm-9。GCN/JJ55 的 8×8×4 linear-W² kernel 与 16×16×8 spot-check 最大差异为 $2.19\times10^{-4}$；AFH-7/Hybrid-9 使用 threshold-u²，二者尚未匹配数值积分方案。GCN/JJ55 的 12–19% 尾部变化远大于该差异，但 0.66–1.16% 的 Hybrid-9 变化应在统一积分后再作为精密结果。所有结果仍是 rate-level 诊断，不是 likelihood。
-- **完整 Eq. (6) 截面：** AFH Xe-131 response-level 原生 Mathematica/Python 验证已有 PASS；现已完成原生 Wolfram 14.2.0 与独立 Python 的 652 行 full Eq. (6) 逐点比较（500 open、152 closed）。最大相对差异：I6 = 1.34e-12、dσ = 2.58e-9、AFH response = 2.58e-9、factor-four mapping residual = 4.30e-16；Mathematica/Python 各自的单位转换恒等式残差分别为 4.44e-16 和 0。交叉代码的已转换 dσ 差异 2.58e-9 按 dσ 的 2e-7 观测量容差验收，而非误用 2e-12 的代数恒等式容差。**固定速度 Xe-131 full-cross-section cross-code gate 已 PASS_WITH_NOTES**；仍不是天然氙 halo fold 或 detector-level LZ likelihood，且 pole width 仅在条件性 Dirac / real-scalar / pure-scalar / single-channel 假设下成立。
+- **完整 Eq. (6) 截面：** AFH Xe-131 response-level 原生 Mathematica/Python 验证已有 PASS；现已完成原生 Wolfram 14.2.0 与独立 Python 的 652 行 full Eq. (6) 逐点比较（500 open、152 closed）。最大相对差异：I6 = 1.33872e-12、dσ = 1.33872e-12、已转换 dσ = 1.33857e-12；AFH physical/package response 分别为 3.36051e-16 / 3.76685e-16，factor-four mapping residual = 4.30300e-16。Mathematica/Python 各自的单位转换恒等式残差分别为 3.34766e-16 和 0。交叉代码的 dσ 比较按 2e-7 观测量容差验收；q、C0、响应归一化映射、动量和各自单位转换恒等式分别按其独立容差验收。**固定速度 Xe-131 full-cross-section cross-code gate 已 PASS_WITH_NOTES**；仍不是天然氙 halo fold 或 detector-level LZ likelihood，且 pole width 仅在条件性 Dirac / real-scalar / pure-scalar / single-channel 假设下成立。
 - **总体解释：** 代码、文档和归档完成不等于所有物理假设均已验证，更不代表模型已经解释 LZ 候选事件。

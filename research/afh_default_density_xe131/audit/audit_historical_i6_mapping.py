@@ -10,7 +10,7 @@ from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[2]
-FIGURE2 = REPO / "research" / "figure2_full_reproduction"
+FIGURE2 = REPO / "research" / "three_body_calculation_and_validation"
 sys.path.insert(0, str(FIGURE2))
 import eq6_kernel as eq6
 import phase_space_convergence as psc

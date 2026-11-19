@@ -21,7 +21,7 @@
 
 | 任务 | 主要程序/目录 | 作用 |
 |---|---|---|
-| Eq. (6) 三体 kernel | research/figure2_full_reproduction/eq6_kernel.py | 构造末态四动量、Dirac trace、\(I_6\) |
+| Eq. (6) 三体 kernel | research/three_body_calculation_and_validation/eq6_kernel.py | 构造末态四动量、Dirac trace、\(I_6\) |
 | AFH Xe-131 响应 | research/afh_default_density_xe131/run_afh_default_xe131.py | 解析密度矩阵并计算 \(W_M^{00}\) |
 | AFH Xe-131 Mathematica runner | research/afh_default_density_xe131/run_afh_default_xe131.wls | 调用官方 AFH 包生成原生响应 |
 | AFH mpmath full-grid validation | research/afh_default_density_xe131/verify_afh_mpmath_full_grid.py | 独立 60 位精度有限和对照全部 2401 个 q 节点 |
@@ -38,7 +38,7 @@
 - afh_default_xe131_density_matrix.csv：67 项官方内置矩阵提取结果；
 - output/afh_default_xe131_WM00.csv：2401 点响应网格；
 - output/minima.csv：细化极小值；
-- output/figure2_dip_check.csv：101、267、542 keV 参考点；
+- output/nuclear_response_dip_check.csv：101、267、542 keV 参考点；
 - output/metadata.json：源文件哈希、质量、\(b_A\)、归一化和限制；
 - output/mpmath_full_grid_summary.json：2401 点、60 位精度 mpmath 全网格验证汇总；
 - CI artifact afh-xe131-mpmath-full-grid-validation：完整逐点比较 CSV 和 JSON summary。
@@ -47,8 +47,8 @@
 
 ### 四 benchmark 截面对照
 
-- output/figure2_four_benchmarks_AFH_GCN_JJ55_corrected.csv；
-- output/figure2_four_benchmarks_AFH_GCN_JJ55_wide_audit.csv；
+- output/four_benchmarks_AFH_GCN_JJ55_corrected.csv；
+- output/four_benchmarks_AFH_GCN_JJ55_wide_audit.csv；
 - FOUR_BENCHMARK_CROSS_SECTION_AUDIT.md。
 
 四组 benchmark 各有 160 个反冲能量点；三种核响应模型共形成 1920 行 long table 和 640 行 wide table。该对照固定同一组 \(I_6(E_R)\) 网格，只替换 \(R_A(E_R)\) 并重新计算 Eq. (6) 的截面前因子。因此它是受控的核响应替换比较，**不是重新独立计算 4×160 个三体积分**。该脚本采用固定 \(v=800\) km/s；这一速度高于截断 SHM 的 776 km/s 端点，所以这组结果是固定速度截面诊断，不能直接当作截断 SHM 支持区间内的 halo 事件率。
@@ -133,14 +133,14 @@ Eq. (6) kernel 测试：
 
 ~~~bash
 python -m unittest discover \
-  -s research/figure2_full_reproduction/tests -v
+  -s research/three_body_calculation_and_validation/tests -v
 ~~~
 
 四 benchmark 截面对照脚本需要归档的 GCN/JJ55 基础 CSV 和 AFH response CSV。当前归档输入的调用形式为：
 
 ~~~bash
 python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
-  --base-csv research/afh_default_density_xe131/input/figure2_recalc_mV10_g2_1_v800_Xe131_full_5keV.csv \
+  --base-csv research/afh_default_density_xe131/input/recalc_mV10_g2_1_v800_Xe131_full_5keV.csv \
   --afh-response-csv research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv \
   --outdir research/afh_default_density_xe131/output
 ~~~
@@ -158,7 +158,7 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 | mpmath 独立有限和 | 已完成全网格 | 60 位精度、2401 个 q 节点；最大振幅绝对差 \(3.98\times10^{-14}\)，最大响应绝对差除以 \(A^2\) 为 \(1.22\times10^{-15}\) | 无；原生 Mathematica 对照另有独立 PASS 记录 |
 | AFH 原生 Mathematica | 已完成（Xe-131 response-level） | Wolfram 14.0.0 原生执行；2401 个 q 节点；四种响应量与 Python 逐点比较通过，最大相对差异 3.59e-9；SHA-256 manifest 已归档 | 此层不单独验证完整 Eq. (6)；完整截面由下方独立 652 行 cross-code 结果覆盖 |
 | Python-only full Xe-131 Eq. (6) and factor-four ledger | PASS_WITH_NOTES | GitHub Actions run 43591097068; v=800 km/s fixed-speed; 652 rows (500 open, 152 closed), 16 high-order anchors; max I6 relative difference 1.6636692e-11; factor-four mapping residual 3.5567862e-16; physical/no-factor-four ratio residual 0; artifact 14112736343 | Python-only internal result under conditional Dirac / real-scalar / pure-scalar / single-channel pole-width assumptions; separate native Mathematica/Python full-grid result is recorded below |
-| Native Mathematica/Python full Xe-131 Eq. (6) | PASS_WITH_NOTES | Wolfram 14.2.0; 652 rows (500 open, 152 closed); max I6 difference 1.33872e-12; dσ difference 2.57632e-9; AFH response difference 2.57510e-9; factor-four mapping residual 4.30300e-16; comparison JSON PASS; SHA-256 archive committed | Fixed-speed Xe-131; conditional Dirac / real-scalar / pure-scalar / single-channel pole-width; converted cross-code dσ uses 2e-7 observable tolerance, each unit-conversion identity uses 2e-12 |
+| Native Mathematica/Python full Xe-131 Eq. (6) | PASS | Wolfram 14.2.0; 652 rows (500 open, 152 closed); max I6 difference 1.33872e-12; dσ difference 1.33872e-12; AFH response difference 3.36051e-16; factor-four mapping residual 4.30300e-16; comparison JSON PASS; SHA-256 archive committed | Fixed-speed Xe-131; conditional Dirac / real-scalar / pure-scalar / single-channel pole-width; converted cross-code dσ uses 2e-7 observable tolerance, each unit-conversion identity uses 2e-12 |
 | GCN/JJ55 对照 | 已完成归档 | 三种响应、四 benchmark、1920 行 long table | 对照共享既有 \(I_6\)，不是 640 次独立重算 |
 | 三体运动学/Dirac trace | 已完成代表性检查 | 壳条件、四动量闭合、显式自旋求和、干涉分解 | 扩展到更宽的参数和质量网格 |
 | 450 keV pointwise \(\mathcal L_{00}\)/\(I_6\) benchmark | 已完成本地验收 | 六项 regression tests、显式自旋求和、四动量闭合、三阶求积对照；见 local validation record | 仅覆盖指定诊断运动学点；pole width 依赖 Dirac / pure-scalar / single-channel 假设 |
@@ -216,17 +216,17 @@ python research/afh_default_density_xe131/recompute_afh_four_benchmarks.py \
 从仓库根目录复现：
 
 ~~~bash
-python research/figure2_full_reproduction/run_user_l00_benchmark.py \
+python research/three_body_calculation_and_validation/run_user_l00_benchmark.py \
   --nw 48 --nz 40 --nphi 24 \
   --output /tmp/USER_L00_BENCHMARK_450KEV_48x40x24.json
 python -m unittest discover \
-  -s research/figure2_full_reproduction/tests \
+  -s research/three_body_calculation_and_validation/tests \
   -p test_user_l00_benchmark.py -v
 ~~~
 
 本地验收记录位于：
 
-- research/figure2_full_reproduction/research/figure2_full_reproduction/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md；
+- research/three_body_calculation_and_validation/research/three_body_calculation_and_validation/results/USER_L00_BENCHMARK_450KEV_LOCAL_2026-11-13/LOCAL_VALIDATION_2026-11-13.md；
 - 同目录的 JSON、quadrature convergence CSV、run manifest、validation log 和 SHA256SUMS。
 
 该结果比较 zero-width 与条件性 pole-width；后者只在 Dirac 费米子、实标量、纯 scalar off-diagonal Yukawa 且仅 \(\chi_2\to\chi_1s\) 通道开放的假设下成立。它不是完整 vector-plus-scalar self-energy，也不是 halo-folded 或 detector-level prediction。该本地验收没有使用 GitHub Actions；不能将未运行的 CI 描述为通过。
@@ -238,25 +238,25 @@ python -m unittest discover \
 从仓库根目录复现：
 
 ~~~bash
-python research/figure2_full_reproduction/run_user_dsigma_curve.py \
+python research/three_body_calculation_and_validation/run_user_dsigma_curve.py \
   --step-keV 5 --nw 20 --nz 16 --nphi 12 \
   --output /tmp/xe131_dsigma_450kev.csv
-python research/figure2_full_reproduction/plot_user_dsigma_curve.py
+python research/three_body_calculation_and_validation/plot_user_dsigma_curve.py
 python -m unittest discover \
-  -s research/figure2_full_reproduction/tests \
+  -s research/three_body_calculation_and_validation/tests \
   -p test_user_dsigma_curve.py -v
 ~~~
 
 结果与 provenance：
 
-- research/figure2_full_reproduction/results/fixed_speed_xe131_dsigma_450kev.csv；
-- research/figure2_full_reproduction/results/local_minima_refinement_1keV.csv；
-- research/figure2_full_reproduction/results/kernel_quadrature_convergence_450kev.csv；
-- research/figure2_full_reproduction/results/metadata_user_dsigma_450kev.json；
-- research/figure2_full_reproduction/results/USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md；
-- research/figure2_full_reproduction/results/SHA256SUMS_user_dsigma_450kev.txt；
-- research/figure2_full_reproduction/results/plots/fixed_speed_xe131_dsigma_450kev.svg；
-- research/figure2_full_reproduction/results/plots/xe131_gcn_jj55_response_ratio_450kev.svg。
+- research/three_body_calculation_and_validation/results/fixed_speed_xe131_dsigma_450kev.csv；
+- research/three_body_calculation_and_validation/results/local_minima_refinement_1keV.csv；
+- research/three_body_calculation_and_validation/results/kernel_quadrature_convergence_450kev.csv；
+- research/three_body_calculation_and_validation/results/metadata_user_dsigma_450kev.json；
+- research/three_body_calculation_and_validation/results/USER_DSIGMA_CURVE_450KEV_LOCAL_2026-11-13.md；
+- research/three_body_calculation_and_validation/results/SHA256SUMS_user_dsigma_450kev.txt；
+- research/three_body_calculation_and_validation/results/plots/fixed_speed_xe131_dsigma_450kev.svg；
+- research/three_body_calculation_and_validation/results/plots/xe131_gcn_jj55_response_ratio_450kev.svg。
 
 开放反冲区间约为 109.150286–654.955583 keV；当前曲线只覆盖 130–650 keV。两端的 kinematic bracket tests 不等于端点附近的高阶积分收敛，故当前归档只能称为内部网格 fixed-speed diagnostic。它不是天然氙 halo-folded spectrum、事件率、LZ detector-level prediction 或 exclusion。
 

@@ -171,12 +171,24 @@ This is a kinematic consistency check, not proof of which unit was used to gener
 
 ## 6. Use in the Breit--Wigner propagator
 
-The working manuscript uses
+The formal three-body amplitude contains two internal \(\chi_2\) propagators with **different width prescriptions**, matching the working manuscript's Eq. (19):
 
 \[
-\frac{1}{W^2-m_{\chi_2}^2+i m_{\chi_2}\Gamma_{\chi_2}},
-\qquad W^2=(p'+k)^2.
+\boxed{D_{\rm before}=(p-k)^2-m_{\chi_2}^2+i0^+}
 \]
+
+for scalar emission before vector scattering, and
+
+\[
+\boxed{D_{\rm after}=W^2-m_{\chi_2}^2+i m_{\chi_2}\Gamma_{\chi_2}^{\rm pole},
+\qquad W^2=(p'+k)^2}
+\]
+
+for scalar emission after vector scattering. Thus the first diagram is zero-width, while the second carries the constant pole width. The two amplitudes must be added coherently before squaring, including their interference.
+
+This is the **mandatory project-wide prescription for formal three-body cross sections, integrated tensors, AFH contractions, and recoil spectra**. The pole width is evaluated at \(m_{\chi_2}\), not at the running virtuality \(W\). For the conditional single-channel model above, it is the width in Eq. (1) or Eq. (2). If additional \(\chi_2\) decay channels are open, replace it by the total pole width. A running-width ansatz is not the formal baseline and may be used only as a separately labelled diagnostic.
+
+The both-propagators-zero-width treatment is retained only as a far-off-pole approximation or numerical cross-check (as in the explicitly approximate Appendix C derivation); it must not be confused with the formal Eq. (19) prescription.
 
 For each parameter point, the pole width must be recomputed using that point's \(m_s,\Delta m,g_2\). The condition \(W_{\max}<m_{\chi_2}\) excludes an on-shell intermediate \(\chi_2\), but it does not by itself prove that the finite-width term is numerically irrelevant near the pole.
 
@@ -184,21 +196,23 @@ The plotted coupling combination \((g_1g_2g_{VN})^2\) does **not** determine \(|
 
 ## 7. Reproducibility
 
+**Implementation note:** the existing kernel exposes zero, pole, and running modes for audits. Formal production must implement the asymmetric pair above: D_before has no finite-width term and D_after uses m_chi2 * Gamma_pole. A zero mode that removes the width from both diagrams is a diagnostic/approximation, not the formal production mode.
+
 Implementation:
 
-- research/figure2_full_reproduction/chi2_decay_width.py
-- research/figure2_full_reproduction/tests/test_chi2_decay_width.py
+- research/three_body_calculation_and_validation/chi2_decay_width.py
+- research/three_body_calculation_and_validation/tests/test_chi2_decay_width.py
 
 Run the eight standard-library unit tests from the repository root:
 
 ~~~bash
-python -m unittest discover -s research/figure2_full_reproduction/tests -p 'test_chi2_decay_width.py' -v
+python -m unittest discover -s research/three_body_calculation_and_validation/tests -p 'test_chi2_decay_width.py' -v
 ~~~
 
 Run the reference benchmark:
 
 ~~~bash
-python research/figure2_full_reproduction/chi2_decay_width.py \
+python research/three_body_calculation_and_validation/chi2_decay_width.py \
   --mchi1 1000 --delta-m 0.001 --ms 0.0003 --g2 1
 ~~~
 

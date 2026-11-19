@@ -306,7 +306,7 @@ The legacy result with \(m_A=A\times0.9315\;\mathrm{GeV}\) differs from the arch
 At fixed mass input, the linear-\(W^2\) 16×16×8 result is about \(3.156\times10^{-5}\) above the high-order threshold-\(u^2\) reference. In contrast, the threshold-\(u^2\) 8×8×4, 16×16×8 and 24×24×12 values agree with the 48×40×24 reference at approximately \(10^{-11}\)–\(10^{-12}\) relative precision for this point. The historical archive offset and the quadrature-mapping offset are therefore distinct effects: the former is dominated by the mass convention; the latter is the measured legacy linear-\(W^2\) quadrature error.
 
 The exact CI-generated 18-row table is archived at:
-research/figure2_full_reproduction/results/phase_space_historical_800_anchor.csv
+research/three_body_calculation_and_validation/results/phase_space_historical_800_anchor.csv
 
 The P1 workflow uploads its independent reproduction directory as the short-lived artifact p1-phase-space-reproduction; the repository CSV is compared row-by-row against that fresh output.
 
@@ -339,7 +339,7 @@ The baseline spectrum, high-order audit, metadata and summary CSVs are committed
 
 ### 12.1 GCN/JJ55 remain on the legacy linear-(W^2) path
 
-The GCN/JJ55 84-point spectra in `research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum/` still use the legacy linear-(W^2), (8\times8\times4) kernel. Across the four benchmark metadata files, the (16\times16\times8) spot-check reaches a maximum kernel-order difference of (2.18895\times10^{-4}); the maximum speed-quadrature difference is (1.60401\times10^{-6}).
+The GCN/JJ55 84-point spectra in `research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum/` still use the legacy linear-(W^2), (8\times8\times4) kernel. Across the four benchmark metadata files, the (16\times16\times8) spot-check reaches a maximum kernel-order difference of (2.18895\times10^{-4}); the maximum speed-quadrature difference is (1.60401\times10^{-6}).
 
 Thus the current AFH-7/Hybrid-9 and GCN/JJ55 full-range spectra are not matched in their phase-space mapping or integration error. The 12–19% GCN/JJ55 tail differences are much larger than the reported kernel difference, but the 0.66–1.16% Hybrid-9 shifts have less margin. Recompute GCN/JJ55 with threshold-(u^2), common speed nodes and a common (10^{-5}) acceptance target before precision cross-model comparisons or downstream rate-level tables are frozen.
 

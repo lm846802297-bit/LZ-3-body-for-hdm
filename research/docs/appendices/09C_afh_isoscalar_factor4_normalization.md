@@ -225,7 +225,7 @@ https://www.escholarship.org/content/qt3ns8f1r8/qt3ns8f1r8.pdf
 
 - research/afh_default_density_xe131/AFH_COUPLING_NORMALIZATION_MAPPING.md
 - research/afh_default_density_xe131/AFH_DEFAULT_XE131_NORMALIZATION_AUDIT.md
-- research/figure2_full_reproduction/ANAND_WM_RESPONSE_AUDIT.md
+- research/three_body_calculation_and_validation/ANAND_WM_RESPONSE_AUDIT.md
 
 最终论文 Eq. (6) 的选择是：前因子保留物理单核子耦合 \(g_{VN}\)，核响应使用 \(16\pi W_{M,\rm AFH}^{00}/(2J_A+1)\)，因子 4 只出现一次。
 

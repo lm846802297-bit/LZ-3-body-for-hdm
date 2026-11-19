@@ -582,7 +582,7 @@ def main() -> None:
     parser.add_argument("--benchmarks", nargs="+", default=list(BENCHMARKS))
     parser.add_argument(
         "--spectrum-dir", type=Path,
-        default=Path("research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum"),
+        default=Path("research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum"),
     )
     parser.add_argument("--bootstrap-replicates", type=int, default=base.BOOTSTRAP_REPLICATES_DEFAULT)
     parser.add_argument("--out-dir", type=Path, required=True)

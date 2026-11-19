@@ -245,7 +245,7 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--response-dir", type=Path, required=True)
     ap.add_argument("--spectrum-dir", type=Path, default=Path(
-        "research/figure2_full_reproduction/results/natural_xenon_continuous_spectrum"
+        "research/three_body_calculation_and_validation/results/natural_xenon_continuous_spectrum"
     ))
     ap.add_argument("--binned-intensity", type=Path, required=True)
     ap.add_argument("--grid-summary", type=Path, required=True)

@@ -1,0 +1,70 @@
+name: Figure 2 xenon isotope mass-scheme audit
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - 'research/**'
+    paths:
+      - .github/workflows/isotope-mass-scheme-audit.yml
+      - research/three_body_calculation_and_validation/isotope_mass_schemes.py
+      - research/three_body_calculation_and_validation/run_isotope_mass_scheme_audit.py
+      - research/three_body_calculation_and_validation/tests/test_isotope_mass_schemes.py
+      - "research/three_body_calculation_and_validation/results/anand_wm_response/xe*_GCN_WM.csv"
+      - "research/three_body_calculation_and_validation/results/anand_wm_response/xe*_JJ55_WM.csv"
+
+permissions:
+  contents: write
+
+jobs:
+  isotope-mass-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out source branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install numerical dependencies
+        run: python -m pip install --upgrade numpy scipy
+
+      - name: Test isotope mass prescriptions
+        run: |
+          python -m unittest \
+            research/three_body_calculation_and_validation/tests/test_isotope_mass_schemes.py -v
+
+      - name: Compute isotope mass-scheme sensitivity
+        run: |
+          python research/three_body_calculation_and_validation/run_isotope_mass_scheme_audit.py \
+            --response-dir research/three_body_calculation_and_validation/results/anand_wm_response \
+            --out-dir /tmp/isotope_mass_scheme_audit \
+            --mchi-GeV 1000 \
+            --ms-MeV 0.3 \
+            --vesc-lab-km-s 776
+
+      - name: Upload isotope mass-scheme audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: xenon-isotope-mass-scheme-audit
+          path: /tmp/isotope_mass_scheme_audit/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Archive mass-scheme audit under research/
+        run: |
+          mkdir -p research/three_body_calculation_and_validation/results/isotope_mass_scheme_audit
+          cp -r /tmp/isotope_mass_scheme_audit/* research/three_body_calculation_and_validation/results/isotope_mass_scheme_audit/
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/three_body_calculation_and_validation/results/isotope_mass_scheme_audit
+          if ! git diff --cached --quiet; then
+            git commit -m "Archive xenon isotope mass-scheme sensitivity audit"
+            git push
+          fi
