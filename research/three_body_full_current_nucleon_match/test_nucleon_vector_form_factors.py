@@ -15,6 +15,15 @@ class VectorFormFactorTests(unittest.TestCase):
         self.assertAlmostEqual(f1, 3.0, places=10)
         self.assertAlmostEqual(f2, -0.552, places=10)
 
+    def test_effective_nucleon_form_factors_remove_quark_charge_factor_once(self):
+        f1, f2 = ff.effective_nucleon_form_factors(ff.F1V0, ff.F2V0)
+        self.assertAlmostEqual(f1, 1.0, places=15)
+        self.assertAlmostEqual(f2, -0.184, places=15)
+        # g_Vq^2 * F_i^2 == g_VN^2 * Fhat_i^2 when g_VN=3*g_Vq.
+        g_vn, g_vq = 0.7, 0.7 / 3.0
+        self.assertAlmostEqual((g_vq * ff.F1V0)**2, (g_vn * f1)**2, places=15)
+        self.assertAlmostEqual((g_vq * ff.F2V0)**2, (g_vn * f2)**2, places=15)
+
     def test_bishara_flavor_components_sum_to_universal_current(self):
         q2 = 0.047
         components = ff.bishara_flavor_components(q2)
