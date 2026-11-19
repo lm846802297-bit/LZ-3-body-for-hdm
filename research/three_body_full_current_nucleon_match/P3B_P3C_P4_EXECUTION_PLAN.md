@@ -86,14 +86,18 @@ Formal P4 requirements:
   outside the AFH default-density set;
 - use native AFH response columns only; no GCN/JJ55 substitution;
 - use `width_scheme="pole"` only;
-- report separately the q=0 nucleon-form-factor \(M\) reference,
-  finite-\(t_N\) \(M\), Coulomb \(M+\Phi''\), and the full matched-current result;
-- use finite-\(t_N\) \(M\)-only with the same \(F_1,F_2\) prescription as
-  the primary denominator for every AFH correction; the q=0 reference is
-  secondary normalization only and does not mean a point-nucleus target;
+- report separately the original AFH M-only baseline \(F_1(0)^2W_M(Q_A)\),
+  finite-\(t_N\) M-only, Coulomb \(M+\Phi''\), and the full matched-current
+  candidate;
+- preserve the original finite-q AFH nuclear shape factor \(W_M(Q_A)\) in
+  every denominator; never add an extra nuclear form factor on top of AFH;
+- report both \(R_{\rm charge}/R_{t_N,M}\) (multipole correction at fixed
+  nucleon form factors) and \(R_{\rm charge}/R_{\mathrm{AFH},M}^{(0)}\)
+  (total change relative to the original AFH M-only calculation);
 - run the first-order low-\(Q_N^2\) bishara_linear diagnostic and the
-  isoscalar_zexp alternative side by side; do not identify either with the
-  original calculation until its exact form-factor source is pinned;
+  isoscalar_zexp alternative side by side; neither replaces the AFH nuclear
+  form factor, and neither is silently identified with an unverified
+  model-specific finite-\(t_N\) input;
 - include both the truncated SHM and untruncated Maxwellian halo scenarios;
 - run speed, three-body phase-space, and recoil-grid convergence;
 - verify positivity, both response Cauchy-Schwarz inequalities, and the
