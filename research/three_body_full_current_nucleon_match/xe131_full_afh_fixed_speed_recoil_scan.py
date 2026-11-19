@@ -454,7 +454,7 @@ def run(native_charge_csv: Path, outdir: Path) -> dict:
         ]
         if len(match) != 1:
             raise RuntimeError(f"missing unique anchor point {(case_name, ER_keV)}")
-        actual = float(match[0]["charge_only_over_original_AFH_M_baseline"])
+        actual = float(match[0]["charge_only_over_AFH_finite_size_M_baseline"])
         residual = abs(actual - expected)
         anchor_checks.append({
             "form_factor_prescription": form_factor,
@@ -505,22 +505,26 @@ def run(native_charge_csv: Path, outdir: Path) -> dict:
         "nucleon_transfer_scheme": (
             "strict one-body impulse q_N^mu=q_A^mu; t_N=t_A=E_R^2-Q_A^2=-2m_AE_R"
         ),
+        "nuclear_response_baseline": "AFH finite-size W_M(y_A), physical equal-p=n response; AFH factor four applied once",
+        "coupling_basis": "external (g1*g2*gVN)^2; effective form factors Fhat_i=F_i^(u+d+s)/3",
         "primary_ratio_definition": (
             "charge_only and full_six_channel_candidate divided by the same finite-t_N "
-            "M-only kernel; isolates added AFH multipoles at fixed F1,F2"
+            "M-only kernel; isolates added AFH multipoles at fixed Fhat_1,Fhat_2"
         ),
-        "original_AFH_baseline_definition": (
-            "q=0 single-nucleon-current normalization times the finite-q AFH W_M response; "
-            "the AFH nuclear form factor is retained, so this is not a point nucleus"
+        "AFH_finite_size_M_baseline_definition": (
+            "external (g1*g2*gVN)^2 prefactor times the physical equal-p=n finite-q AFH W_M(Q_A); "
+            "Fhat_1(0)=1 and no extra factor nine"
         ),
-        "secondary_reference_definition": (
-            "q=0 nucleon-current M-only reference with the same AFH W_M(q_A); "
-            "identical to the original AFH M-only baseline in this normalization"
+        "nucleon_q0_M_only_definition": (
+            "same finite-size AFH W_M(Q_A) with the nucleon current frozen at t_N=0; "
+            "this equals the AFH finite-size M baseline"
         ),
+        "coupling_basis": "effective nucleon g_VN; g_VN=3*g_Vq",
+        "nucleon_form_factor_normalization": "full universal u+d+s F1,F2 divided by three before entering current coefficients",
         "form_factor_prescriptions": list(FORM_FACTOR_PRESCRIPTIONS),
         "formal_width_prescription": "Eq. (19) asymmetric: first p-k propagator remains zero-width (+i0+); second p'+k propagator uses the constant pole width evaluated at m_chi2. Running width is not a production input.",
         "response_metadata": response_bundle["metadata"],
-        "anchor_checks_against_previous_original_AFH_M_baseline": anchor_checks,
+        "anchor_checks_against_previous_AFH_finite_size_M_baseline": anchor_checks,
         "accepted_recoil_rows": len(accepted),
         "all_rows_including_closed_or_on_shell": len(rows),
         "maximum_absolute_spatial_over_charge_candidate": max_spatial_fraction,
@@ -534,7 +538,7 @@ def run(native_charge_csv: Path, outdir: Path) -> dict:
             "The finite-Q_N^2 bishara_linear and isoscalar_zexp prescriptions are controlled diagnostics; the former uses the first-order flavor-summed F1 slope and F2(0), not an all-orders fit.",
             "Spatial Delta/Sigma'/Sigma'-Delta nuclear responses are source-translated Python AFH data, not native-Wolfram validated.",
             "The signed Sigma'-Delta particle-side phase remains a candidate pending P3-C amplitude-level validation.",
-            "The static impulse matching uses q_N^0=0 and q_N spatial equal to q_A; bound-nucleon off-shell and interaction-current effects are not included.",
+            "The formal one-body impulse transfer is q_N^mu=q_A^mu, t_N=t_A; the static q_N^0=0 prescription is a separate diagnostic and is not used for this production scan. Bound-nucleon off-shell and interaction-current effects are not included.",
             "This is fixed-speed and isotope-specific; no halo average, natural-xenon isotope sum, detector response, or absolute event rate is included.",
             "The common mediator, flux, and coupling prefactors cancel in the reported response ratios.",
         ],
@@ -572,7 +576,7 @@ def main() -> None:
         "all_rows": result["all_rows_including_closed_or_on_shell"],
         "max_abs_spatial_over_charge_candidate": result["maximum_absolute_spatial_over_charge_candidate"],
         "max_pchip_linear_difference": result["maximum_PCHIP_vs_linear_response_difference"],
-        "anchor_checks": result["anchor_checks_against_previous_finite_tN_charge_only"],
+        "anchor_checks": result["anchor_checks_against_previous_AFH_finite_size_M_baseline"],
         "output": str(args.outdir),
     }, indent=2))
 
