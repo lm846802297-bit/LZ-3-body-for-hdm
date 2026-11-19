@@ -29,6 +29,23 @@ jobs:
         run: python -m pip install --upgrade numpy
       - name: Run B-baseline regression tests
         run: python -m unittest discover -s research/nucleon_form_factor_B_baseline -v
+      - name: Apply B to the committed absolute AFH-7/Hybrid-9 spectra and fold through LZ efficiency
+        run: |
+          set -euo pipefail
+          source_dir="research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14"
+          efficiency_csv="research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv"
+          for model in sufian2017_unit_current alexandrou2020_charge_weighted_converted alexandrou2026_continuum_unit_current; do
+            python research/nucleon_form_factor_B_baseline/apply_B_to_afh_hybrid9_continuous_spectrum.py \
+              --source-dir "$source_dir" \
+              --out-dir "artifacts/B-absolute/$model" \
+              --strange-model "$model" --draws 3000
+            python research/three_body_calculation_and_validation/fold_lz_2026_afh_hybrid9_rate_level.py \
+              --spectrum-csv "artifacts/B-absolute/$model/afh_hybrid9_B_natural_xenon_spectrum.csv" \
+              --spectrum-metadata "artifacts/B-absolute/$model/metadata.json" \
+              --efficiency-csv "$efficiency_csv" \
+              --out-dir "artifacts/B-detector/$model" \
+              --exposure-tonne-year 2.84 --integration-steps 10000
+          done
       - name: Download halo/seven-isotope source artifact
         if: github.event_name == 'workflow_dispatch' || github.event_name == 'pull_request'
         uses: actions/download-artifact@v4
