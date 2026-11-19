@@ -62,8 +62,8 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
             "PhiPP_over_finite_t_M_correction",
             "full_over_charge_only",
             "spatial_over_charge_only",
-            "charge_only_over_original_AFH_M_baseline",
-            "full_over_original_AFH_M_baseline",
+            "charge_only_over_AFH_finite_size_M_baseline",
+            "full_over_AFH_finite_size_M_baseline",
         ):
             self.assertAlmostEqual(a[key], b[key], places=12, msg=key)
 
@@ -78,18 +78,18 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
         )
         self.assertAlmostEqual(
             result["full_over_finite_t_M"],
-            result["full_six_channel_candidate"] / result["finite_t_M"],
+            result["full_six_channel_candidate"] / result["nucleon_finite_t_M_only"],
             places=14,
         )
         self.assertNotAlmostEqual(
             result["full_over_finite_t_M"],
-            result["full_over_original_AFH_M_baseline"],
+            result["full_over_AFH_finite_size_M_baseline"],
             places=6,
         )
 
     def test_original_afh_baseline_retains_finite_q_nuclear_response(self):
         result = contract_six_channels(
-            self.L, self.q, self.ER, self.responses, self.F1, self.F2
+            self.L, self.q, self.ER, self.responses, 3.0, -0.552
         )
         LC = result["coefficients"]["L_C_continuity_adjusted_charge_weight"]
         self.assertAlmostEqual(
