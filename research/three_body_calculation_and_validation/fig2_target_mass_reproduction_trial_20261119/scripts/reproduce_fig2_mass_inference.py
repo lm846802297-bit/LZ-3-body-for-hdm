@@ -1,0 +1,87 @@
+#!/usr/bin/env python3
+"""Reproduce the normalized fixed-speed phase-space shape of source-paper Fig. 2."""
+import csv, json, math
+from pathlib import Path
+import numpy as np
+from scipy.optimize import minimize_scalar
+import matplotlib.pyplot as plt
+
+ROOT=Path(__file__).resolve().parents[1]
+MS=300.0
+MCHI=1000.0
+V=780.0/299792.458
+META=json.loads((ROOT/"inputs/fig2_digitization_metadata.json").read_text())
+
+def trace():
+    with (ROOT/"inputs/fig2_red_curve_digitized.csv").open() as f:
+        rows=list(csv.DictReader(f))
+    e=np.array([float(r["ER_keV"]) for r in rows])
+    y=np.array([float(r["normalized_dsigma_dER_1e-3_per_keV"]) for r in rows])
+    i=np.argsort(e)
+    return e[i],y[i]
+
+def integ(y,x):
+    return float(np.sum(.5*(y[1:]+y[:-1])*np.diff(x)))
+
+def phase_I(d):
+    out=np.zeros_like(d); ok=d>0; x=d[ok]
+    root=np.sqrt(x*(x+2*MS))
+    out[ok]=.5*((MS+x)*root-MS**2*np.log((MS+x+root)/MS))
+    return out
+
+def spectrum(mt_GeV,n=7001):
+    mt,mc=mt_GeV*1e6,MCHI*1e6
+    mu=mc*mt/(mc+mt)
+    disc=V**2-2*MS/mu
+    if disc<0: raise ValueError("No phase space at this speed.")
+    root=math.sqrt(disc)
+    lo=mu**2/(2*mt)*(V-root)**2
+    hi=mu**2/(2*mt)*(V+root)**2
+    peak=mu**2*V**2/(2*mt)
+    e=np.linspace(0,700,n); q=np.sqrt(2*mt*e)
+    d=V*q-q**2/(2*mu)-MS
+    raw=phase_I(d); y23=1e3*raw/integ(raw,e)
+    y22=np.where((e>=lo)&(e<=hi),1e3/(hi-lo),0.)
+    return e,y22,y23,lo,hi,peak
+
+def invert(lo,hi):
+    s,p=lo+hi,math.sqrt(lo*hi)
+    mu=MS*(1+s/(2*p))/V**2
+    mt=mu*MS/p
+    mc=mu*mt/(mt-mu)
+    return mu,mt,mc
+
+def main():
+    ed,yd=trace(); lo0,hi0=META["red_curve_endpoints_keV"]
+    mask=(ed>120)&(ed<645)&(yd>.05)
+    def objective(mt):
+        e,_,y,*_=spectrum(float(mt))
+        return float(np.mean((np.interp(ed[mask],e,y)-yd[mask])**2))
+    fit=minimize_scalar(objective,bounds=(118,124),method="bounded",options={"xatol":1e-10})
+    mu,mt,mc=invert(lo0,hi0)
+    result={"status":"exploratory_reproduction_diagnostic",
+      "source":{"file":META["source_file"],"sha256":META["source_sha256"],"figure":"Fig. 2","pdf_page":3},
+      "fixed_inputs":{"mchi_GeV":MCHI,"v_km_per_s":780,"ms_keV":MS,"delta_iDM_keV":MS,"RA_included":False,"nuclear_response_included":False},
+      "digitized_endpoints_keV":[lo0,hi0],
+      "endpoint_inversion":{"mu_GeV":mu/1e6,"mT_GeV":mt/1e6,"implied_mchi_GeV":mc/1e9},
+      "red_shape_fit":{"mT_GeV":float(fit.x),"mean_squared_residual":float(fit.fun),"fit_domain_keV":[120,645],"fit_points":int(mask.sum())}}
+    (ROOT/"results").mkdir(exist_ok=True)
+    (ROOT/"results/fig2_target_mass_inference.json").write_text(json.dumps(result,indent=2))
+    e,y22,y23,*_=spectrum(mt/1e6,1401)
+    e122,_,y122,*_=spectrum(122.,1401)
+    fig,ax=plt.subplots(figsize=(8.4,5.2),constrained_layout=True)
+    ax.scatter(ed[::3],yd[::3],color="tab:red",s=8,alpha=.65,label="Paper Fig. 2 red trace (digitized)")
+    ax.plot(e,y23,color="black",lw=1.6,label=fr"Recomputed $2\\to3$, $m_T={mt/1e6:.3f}$ GeV")
+    ax.plot(e122,y122,color="0.45",ls="--",lw=1.1,label=r"$2\\to3$ with $m_T=122$ GeV")
+    blue=META["blue_curve"]
+    ax.hlines(blue["plateau_1e_3_per_keV"],*blue["ER_interval_keV"],color="tab:blue",ls="--",label="Paper Fig. 2 blue plateau")
+    ax.hlines(1e3/(108.45484153176777*0+660.3121607506413-108.45484153176777),108.45484153176777,660.3121607506413,color="tab:blue",ls=":",label="Recomputed normalized $2\\to2$")
+    ax.set(xlim=(0,700),ylim=(0,5),xlabel=r"$E_R$ [keV]",ylabel=r"$(1/\\sigma)\\,d\\sigma/dE_R$ [$10^{-3}\\,\\mathrm{keV}^{-1}$]",title=r"Fig. 2 reproduction: $v=780$ km/s, $m_s=\\delta=300$ keV")
+    ax.grid(alpha=.2); ax.legend(fontsize=8)
+    (ROOT/"figures").mkdir(exist_ok=True)
+    plt.rcParams["svg.fonttype"]="none"
+    fig.savefig(ROOT/"figures/fig2_target_mass_inference.svg",format="svg")
+    plt.close(fig)
+    print(json.dumps(result,indent=2))
+
+if __name__=="__main__": main()
