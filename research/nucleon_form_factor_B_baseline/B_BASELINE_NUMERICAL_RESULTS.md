@@ -134,10 +134,10 @@ The implementation now includes the factor \(\mu_s\) multiplying the slope. A re
 ## Reproducibility
 
 - PR: [#85](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/pull/85)
-- B-baseline and LZ detector-fold workflow: [run 44584187532](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44584187532)
+- B-baseline, LZ detector fold and electromagnetic covariance workflow: [run 44587255746](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44587255746)
 - Source halo/high-order workflow: [run 44560087038](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44560087038)
 - B spectra, detector yields and quadrature outputs: artifact finite-nucleon-form-factor-B-baseline
-- Regression tests: 10 passed.
+- Regression tests: 14 passed in the latest complete workflow.
 - Repository layout and Figure 2 benchmark manifest checks: passed.
 
 ## LZ 2026 detector-efficiency fold of the absolute B spectra
@@ -192,11 +192,34 @@ The expected yields are all below one event at the reference coupling product sq
 
 ### Detector-level scope
 
-The fold applies the published NR efficiency and the \(2.84\) tonne-year exposure. It does not apply energy-resolution smearing, an event-level S1c/\(\log_{10}S2_c\) signal PDF, a background model, a profile likelihood, or a confidence-level construction. The efficiency gray envelope is not assigned a confidence level by LZ. The electromagnetic form-factor covariance percentiles are present in the B recoil-spectrum output but are not yet propagated through the detector event-yield integration.
+The fold applies the published NR efficiency and the \(2.84\) tonne-year exposure. It does not apply energy-resolution smearing, an event-level S1c/\(\log_{10}S2_c\) signal PDF, a background model, a profile likelihood, or a confidence-level construction. The efficiency gray envelope is not assigned a confidence level by LZ.
+
+### Propagated electromagnetic form-factor covariance
+
+The Borah et al. (2020) proton/neutron coefficient covariance has now been propagated through the complete isotope-resolved B spectrum and the LZ efficiency integral. The calculation uses 3000 correlated draws (seed 20261119), with the same draw applied consistently across recoil energies and isotopes. This preserves the induced cross-recoil and cross-isotope correlations.
+
+For the historical Sufian 2017 unit-current benchmark, the detector-level 16th--84th percentile intervals are:
+
+| Benchmark | Central events | EM-covariance p16--p84 | Half-width |
+|---|---:|---:|---:|
+| \(m_s=200\) keV, \(\Delta m=1\) MeV | 0.266263 | [0.265358, 0.267155] | 0.3375% |
+| \(m_s=300\) keV, \(\Delta m=1\) MeV | \(1.10267\times10^{-3}\) | [\(1.09727\times10^{-3}\), \(1.10809\times10^{-3}\)] | 0.4906% |
+| \(m_s=360\) keV, \(\Delta m=1\) MeV | \(2.07412\times10^{-9}\) | [\(2.06049\times10^{-9}\), \(2.08769\times10^{-9}\)] | 0.6559% |
+| \(m_s=300\) keV, \(\Delta m=10\) MeV | \(9.02733\times10^{-6}\) | [\(8.98313\times10^{-6}\), \(9.07165\times10^{-6}\)] | 0.4904% |
+
+Across the three strange-current scenarios, the electromagnetic-covariance half-width is 0.337--0.660% for these four benchmarks. The central-yield versus Monte Carlo median difference is below 0.01%.
+
+The numerical closure checks are:
+
+- Maximum reconstructed-A-spectrum relative difference: \(5.55\times10^{-16}\).
+- Maximum central detector-yield closure difference against the independent central B fold: zero at stored precision.
+- Non-finite covariance draws: zero.
+- The vectorized draw integration agrees with the scalar exact piecewise-linear integral in the regression tests.
+
+These intervals quantify the Borah electromagnetic fit covariance only. Strange-lattice uncertainties and the LZ gray efficiency envelope remain separate and are not sampled or combined here.
 
 ## Remaining work
 
 1. Decide whether the 2026 strange-current slope-only cross-check should be replaced by a reconstruction of its full published \(z\)-expansion.
 2. Propagate the strange-lattice input uncertainties once a usable coefficient covariance or joint fit information is available.
-3. Add energy-resolution smearing and the two-dimensional S1c/log10(S2c) response, then build the background likelihood if a formal LZ exclusion is required.
-4. Propagate the Borah electromagnetic covariance percentiles through the detector fold; the present detector yields use the central B spectrum.
+3. Add energy-resolution smearing and the two-dimensional S1c/\(\log_{10}S2_c\) response, then build the background likelihood if a formal LZ exclusion is required.
