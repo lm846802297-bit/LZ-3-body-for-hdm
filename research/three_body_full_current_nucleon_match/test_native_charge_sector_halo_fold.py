@@ -55,7 +55,7 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             2.5, qA, responses, "bishara_linear", tN_GeV2=tN
         )
         expected_cM = f1hat + tN * (f1hat + 2.0 * f2hat) / (
-            8.0 * fold.M_N_GEV**2
+            8.0 * fold.DEFAULT_MN_GEV**2
         )
         self.assertAlmostEqual(result["cM"], expected_cM, places=14)
         self.assertAlmostEqual(result["tN_GeV2"], tN, places=15)
