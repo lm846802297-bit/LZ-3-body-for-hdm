@@ -27,7 +27,7 @@ if str(CALC_DIR) not in sys.path:
     sys.path.insert(0, str(CALC_DIR))
 import eq6_kernel  # noqa: E402
 from nucleon_vector_form_factors import (
-    F1V0, F2V0, bishara_linear, charge_coefficients,
+    RAW_F1_UDS0, RAW_F2_UDS0, bishara_linear, charge_coefficients,
     effective_nucleon_form_factors,
 )
 from three_body_phase_space_tensor import eq6, integrate_spin_resolved_tensor
@@ -130,7 +130,7 @@ def nuclear_charge_kernels(ER_keV: float, LC: float, responses: dict[str, float]
     # public prefactor is already expressed with g_VN=3*g_Vq.
     F1_raw, F2_raw = bishara_linear(-tN_GeV2)
     F1, F2 = effective_nucleon_form_factors(F1_raw, F2_raw)
-    F1hat0, _ = effective_nucleon_form_factors(F1V0, F2V0)
+    F1hat0, _ = effective_nucleon_form_factors(RAW_F1_UDS0, RAW_F2_UDS0)
     cM, cPhi = charge_coefficients(
         qA, F1=F1, F2=F2, tN_GeV2=tN_GeV2, mN_GeV=MN_GEV
     )
