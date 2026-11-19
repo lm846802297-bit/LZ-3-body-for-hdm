@@ -176,6 +176,24 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
                 out["pchip_linear_relative_difference"][name], 0.0, places=12
             )
 
+    def test_formal_halo_fold_rejects_non_pole_width_before_loading_inputs(self):
+        with self.assertRaisesRegex(ValueError, "pole-only"):
+            fold.fold(
+                native_dir=Path("does-not-need-to-exist"),
+                mchi=1000.0, ms=0.00045, delta_m=0.00045, mV=0.1,
+                g2=1.0, coupling_product_squared=1e-8, rho=0.3,
+                ER_values_keV=[200.0], nv=2, nw=2, nz=2, nphi=2,
+                form_factor_prescription="pointlike", width_scheme="running",
+            )
+        with self.assertRaisesRegex(ValueError, "pole-only"):
+            fold.fold(
+                native_dir=Path("does-not-need-to-exist"),
+                mchi=1000.0, ms=0.00045, delta_m=0.00045, mV=0.1,
+                g2=1.0, coupling_product_squared=1e-8, rho=0.3,
+                ER_values_keV=[200.0], nv=2, nw=2, nz=2, nphi=2,
+                form_factor_prescription="pointlike", width_scheme="zero",
+            )
+
     def test_native_gate_rejects_unvalidated_archive(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
