@@ -1,6 +1,6 @@
 # Native AFH gate and Coulomb-sector halo-fold dependency
 
-**Updated: 2026-11-18**
+**Updated: 2026-11-19**
 
 ## 1. Acceptance state
 
@@ -217,7 +217,7 @@ The formal three-body pipeline has been refreshed to the asymmetric Pole
 prescription: the first \(p-k\) propagator is zero-width and the second
 \(p'+k\) propagator carries the constant \(\Gamma_{\chi_2}(m_{\chi_2})\).
 The latest full-current workflow is
-[44336328314](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44337928314)
+[44337928314](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44337928314)
 (artifact 14442826214), and its seven-isotope response-level contraction
 contains 28 rows (four benchmarks × seven isotopes), all positive. Its
 maximum spatial/charge ratio is \(7.0304970964\times10^{-9}\). This does
@@ -261,3 +261,31 @@ leading-static full-vector candidate. The full-vector result must remain a
 candidate until P3-C passes. The seven-isotope set covers 99.8158% of the
 natural xenon atom fraction; the omitted Xe-124/Xe-126 abundance must remain
 explicit in every rate table.
+
+
+## 2026-11-19 update: P3-C spatial amplitude-level subgate
+
+The new Xe-131 spatial amplitude-level calculation is recorded in
+[P3_C_C0_CONSISTENT_CONTRACTION.md](P3_C_C0_CONSISTENT_CONTRACTION.md)
+and its detailed report
+[P3C_SPATIAL_AMPLITUDE_LEVEL_HELICITY_RESULTS.md](P3C_SPATIAL_AMPLITUDE_LEVEL_HELICITY_RESULTS.md).
+Using the pole-only full-current artifact 14442826214 and spatial response
+artifact 14443055701, the Cartesian Eq. (107) contraction and the
+helicity-resolved \(\Delta_J+\Sigma'_J\) amplitude reconstruction agree
+to a maximum relative residual of \(6.09\times10^{-16}\) over four Xe-131
+benchmarks. The maximum Eq. (107)-coefficient residual is
+\(8.53\times10^{-16}\).
+
+The selected-point interpolation comparison finds at most
+\(5.53\times10^{-6}\) relative difference between PCHIP interpolation of
+signed rank amplitudes and the existing linear interpolation of total
+responses. This supports interpolating signed multipole amplitudes before
+reconstructing responses, but is not a global interpolation acceptance.
+
+This is a **spatial amplitude-level subgate PASS only**. The calculation
+still uses provisional Python AFH amplitudes, does not rank-resolve the
+charge \(M,\Phi''\) amplitudes, and does not yet compare against an
+independently integrated coordinate-space bound-nucleus current. Full
+P3-C remains OPEN. The full-current workflow now runs this check and
+archives its JSON output; the CI rerun on the new PR branch will provide
+the reproducible hosted test result.
