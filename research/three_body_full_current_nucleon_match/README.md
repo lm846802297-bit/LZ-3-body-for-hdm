@@ -621,7 +621,7 @@ For \(m_{\chi_1}=1000\) GeV, \(m_s=300\) keV, \(v_\chi=776\) km/s and
 | 267 keV | 362 keV | 0.64921591 (-35.0784%) |
 
 The formal fixed-speed result uses the pole-width prescription only. The
-normalized AFH-to-legacy q=0 ratio is independent of the common
+normalized C/A ratio is independent of the common
 \(L_C^{(3)}\) phase-space factor because it cancels between numerator and
 denominator. The earlier pole/running comparison remains a historical
 sensitivity diagnostic and is not part of routine production.
