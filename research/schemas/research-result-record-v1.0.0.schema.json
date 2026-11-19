@@ -97,6 +97,16 @@
         "source_run_id": {
           "type": "string",
           "minLength": 1
+        },
+        "uri": {
+          "type": "string",
+          "format": "uri"
+        },
+        "version": {
+          "type": "string"
+        },
+        "access": {
+          "type": "string"
         }
       }
     },
