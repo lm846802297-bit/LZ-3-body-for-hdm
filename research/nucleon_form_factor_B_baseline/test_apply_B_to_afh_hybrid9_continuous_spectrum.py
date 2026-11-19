@@ -6,7 +6,6 @@ import unittest
 from pathlib import Path
 
 from apply_B_to_afh_hybrid9_continuous_spectrum import rate_prefactor, run
-from borah2020_lowq2 import cM_and_factor
 
 
 class ApplyBToAbsoluteAFHSpectrumTests(unittest.TestCase):
@@ -135,7 +134,7 @@ class ApplyBToAbsoluteAFHSpectrumTests(unittest.TestCase):
                 and int(row["A"]) == 124 and float(row["ER_keV"]) == 100.0
             )
             self.assertGreater(float(hybrid_100["rate_B_contribution_events_kg_day_keV"]), 0.0)
-            self.assertFalse((out / "metadata.json").read_text().find('"detector_response_applied": false') < 0)
+            self.assertIn('"detector_response_applied": false', (out / "metadata.json").read_text())
 
 
 if __name__ == "__main__":
