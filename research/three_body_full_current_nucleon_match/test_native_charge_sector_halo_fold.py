@@ -308,9 +308,16 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
                 for i in range(2401):
                     q = 0.6 * i / 2400.0
                     row = {"A": A, "q_GeV": q, "y": q * q}
-                    for column in fold.NATIVE_RESPONSE_W_COLUMNS.values():
+                    for name, column in fold.NATIVE_RESPONSE_W_COLUMNS.items():
                         row[column] = 1.0
                         row[f"Im_{column}"] = 0.0
+                    if i == 0:
+                        conversion = 4.0 * math.pi / (2.0 * fold.J_BY_A[A] + 1.0)
+                        # Deliberately offset the raw package normalization so
+                        # the loader must derive and apply C0(A)=0.999.
+                        row[fold.NATIVE_RESPONSE_W_COLUMNS["M"]] = (
+                            A * A / (4.0 * 0.999 * conversion)
+                        )
                     writer.writerow(row)
         files = [
             root / "native-comparison.json",
@@ -338,10 +345,21 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
                 fold.NATIVE_AFH_SOURCE_COMMIT,
             )
             self.assertAlmostEqual(
-                bundle[131]["physical"]["M"][0],
-                4.0 * math.pi / 4.0 * 4.0,
+                bundle[131]["common_matrix_normalization_C0"],
+                0.999,
                 places=12,
             )
+            self.assertAlmostEqual(
+                bundle[131]["physical"]["M"][0], 131.0**2, places=10
+            )
+            self.assertEqual(
+                gate["provenance"]["physical_zero_momentum_M_anchor"],
+                "M(q_A=0)=A^2",
+            )
+            for A in fold.ISOTOPES:
+                self.assertAlmostEqual(
+                    bundle[A]["physical"]["M"][0], float(A * A), places=10
+                )
 
     def test_gated_leading_static_vector_candidate_fold_end_to_end(self):
         with tempfile.TemporaryDirectory() as tmp:
