@@ -121,6 +121,10 @@ jobs:
               "propagate_B_covariance_to_lz_yields.py": "research/nucleon_form_factor_B_baseline/propagate_B_covariance_to_lz_yields.py",
               "compare_B_quadrature.py": "research/nucleon_form_factor_B_baseline/compare_B_quadrature.py",
               "strange_current_convention_audit.md": "research/nucleon_form_factor_B_baseline/strange_current_convention_audit.md",
+              "test_borah2020_lowq2.py": "research/nucleon_form_factor_B_baseline/test_borah2020_lowq2.py",
+              "test_apply_nucleon_form_factors_B.py": "research/nucleon_form_factor_B_baseline/test_apply_nucleon_form_factors_B.py",
+              "test_apply_B_to_afh_hybrid9_continuous_spectrum.py": "research/nucleon_form_factor_B_baseline/test_apply_B_to_afh_hybrid9_continuous_spectrum.py",
+              "test_propagate_B_covariance_to_lz_yields.py": "research/nucleon_form_factor_B_baseline/test_propagate_B_covariance_to_lz_yields.py",
               "fold_lz_2026_afh_hybrid9_rate_level.py": "research/three_body_calculation_and_validation/fold_lz_2026_afh_hybrid9_rate_level.py",
           }
           input_files = {
