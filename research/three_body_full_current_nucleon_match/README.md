@@ -1,7 +1,9 @@
 # Full three-body current × nucleon Dirac–Pauli matching
 
-**Status as of 2026-11-18:** P0, P1, P2, and P3-A are complete at their
-stated scopes. P0 includes the 12 phase-space-integrated DM tensors and
+**Status as of 2026-11-19:** P0, P1, P2, and P3-A are complete at their
+stated scopes. A new Xe-131 spatial amplitude-level helicity reconstruction
+subgate of P3-C also passes at \(6.09\times10^{-16}\) relative residual;
+full P3-C remains open. P0 includes the 12 phase-space-integrated DM tensors and
 nine component-wise medium-to-high quadrature comparisons. P1 validates
 the free on-shell one-body Dirac--Pauli current in the impulse
 approximation. P2 fixes the particle-side AFH Eq. (107) coefficients and
@@ -903,3 +905,30 @@ or a final detector prediction. The separate one-point
 `full_current_nucleon_match.json` retains zero/pole/running width controls
 as a current-matching sensitivity diagnostic; those controls are not used
 in the formal pole-only phase-space tensor or AFH contraction.
+
+
+## 2026-11-19 P3-C spatial amplitude-level subgate
+
+The new
+[`p3c_amplitude_level_helicity_crosscheck.py`](p3c_amplitude_level_helicity_crosscheck.py)
+uses the full complex three-body Gram tensor and signed Xe-131
+\(\Delta_J,\Sigma'_J\) amplitudes. It compares the direct Cartesian
+Eq. (107) contraction with a helicity-amplitude reconstruction before
+summing over the two transverse polarizations and multipole ranks.
+
+Four Pole-width benchmarks pass:
+- maximum amplitude-kernel relative residual:
+  \(6.09\times10^{-16}\);
+- maximum Eq. (107) coefficient relative residual:
+  \(8.53\times10^{-16}\);
+- maximum PCHIP-amplitude versus linear-response interpolation difference:
+  \(5.53\times10^{-6}\).
+
+Four unit tests pass, including a test that deliberately reverses the
+\(\Sigma'\) helicity phase and verifies that the signed
+\(\Sigma'\)-\(\Delta\) interference changes sign.
+
+This is a spatial-sector subgate only. Native Wolfram AFH validation,
+rank-resolved charge multipoles, and the independent direct
+coordinate-space bound-nucleus current comparison remain open. The
+full-current workflow now runs and archives the subgate JSON result.
