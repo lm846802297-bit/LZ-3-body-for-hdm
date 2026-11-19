@@ -75,7 +75,7 @@ jobs:
             --g2 1 --coupling-product-squared 1e-8 --rho-GeV-cm3 0.3 \
             --ER-keV $ER_ARGS \
             --nv 24 --nw 8 --nz 6 --nphi 4 \
-            --form-factor q0_anchor --width-scheme pole \
+            --form-factor bishara_linear --width-scheme pole \
             --include-leading-static-vector-candidate
 
       - name: Export CSV tables and paper-style PDF/PNG figures
