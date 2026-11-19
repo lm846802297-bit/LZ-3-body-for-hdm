@@ -360,6 +360,15 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
                 self.assertAlmostEqual(
                     bundle[A]["physical"]["M"][0], float(A * A), places=10
                 )
+                c0 = bundle[A]["common_matrix_normalization_C0"]
+                conversion = 4.0 * math.pi / (2.0 * fold.J_BY_A[A] + 1.0)
+                expected_nonzero_q = 4.0 * c0 * conversion
+                for name in fold.NATIVE_RESPONSE_W_COLUMNS:
+                    self.assertAlmostEqual(
+                        bundle[A]["physical"][name][1],
+                        expected_nonzero_q,
+                        places=10,
+                    )
 
     def test_gated_leading_static_vector_candidate_fold_end_to_end(self):
         with tempfile.TemporaryDirectory() as tmp:
