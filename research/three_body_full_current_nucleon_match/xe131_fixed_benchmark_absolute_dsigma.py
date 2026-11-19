@@ -26,7 +26,10 @@ if str(HERE) not in sys.path:
 if str(CALC_DIR) not in sys.path:
     sys.path.insert(0, str(CALC_DIR))
 import eq6_kernel  # noqa: E402
-from nucleon_vector_form_factors import F1V0, charge_coefficients, isoscalar_zexp
+from nucleon_vector_form_factors import (
+    F1V0, F2V0, bishara_linear, charge_coefficients,
+    effective_nucleon_form_factors,
+)
 from three_body_phase_space_tensor import eq6, integrate_spin_resolved_tensor
 from xe131_fixed_speed_charge_dsigma import (
     G2, MA_XE131_GEV, MCHI_GEV, MN_GEV, MS_GEV, MV_GEV, SPEED_KM_S,
@@ -119,29 +122,57 @@ def phase_space_integral(ER_keV: float, order: tuple[int, int, int]) -> dict:
 
 def nuclear_charge_kernels(ER_keV: float, LC: float, responses: dict[str, float]) -> dict:
     qA = exact_qA_GeV(MA_XE131_GEV, ER_keV)
-    F1, F2 = isoscalar_zexp(qA * qA)
-    cM, cPhi = charge_coefficients(qA, F1=F1, F2=F2, mN_GeV=MN_GEV)
+    ER_GeV = ER_keV * 1.0e-6
+    tN_GeV2 = -2.0 * MA_XE131_GEV * ER_GeV
+    Q_A2_GeV2 = qA * qA
+
+    # Raw universal u+d+s form factors are divided by three because the
+    # public prefactor is already expressed with g_VN=3*g_Vq.
+    F1_raw, F2_raw = bishara_linear(-tN_GeV2)
+    F1, F2 = effective_nucleon_form_factors(F1_raw, F2_raw)
+    F1hat0, _ = effective_nucleon_form_factors(F1V0, F2V0)
+    cM, cPhi = charge_coefficients(
+        qA, F1=F1, F2=F2, tN_GeV2=tN_GeV2, mN_GeV=MN_GEV
+    )
     WM, WPhi, WMPhi = (
         float(responses["M"]), float(responses["PhiPP"]), float(responses["MPhiPP"])
     )
-    if min(WM, WPhi) < -1.0e-12:
-        raise ArithmeticError("negative diagonal AFH charge response")
-    terms = {
-        "pointlike_M": F1V0**2 * LC * WM,
-        "finite_t_M": cM**2 * LC * WM,
-        "M_Phi_interference": 2.0 * cM * cPhi * LC * WMPhi,
-        "PhiPP_diagonal": cPhi**2 * LC * WPhi,
-    }
-    terms["full_charge"] = (
-        terms["finite_t_M"] + terms["M_Phi_interference"] + terms["PhiPP_diagonal"]
-    )
-    if terms["full_charge"] <= 0.0 or terms["pointlike_M"] <= 0.0:
-        raise ArithmeticError("non-positive coherent charge kernel")
+    if WM <= 0.0 or WPhi < -1.0e-12:
+        raise ArithmeticError("invalid diagonal AFH charge response")
+    if not math.isfinite(LC) or LC <= 0.0:
+        raise ArithmeticError("invalid continuity-adjusted Coulomb weight")
+
+    A_reference = F1hat0**2 * LC * WM
+    B_baseline = cM**2 * LC * WM
+    M_Phi_interference = 2.0 * cM * cPhi * LC * WMPhi
+    PhiPP_diagonal = cPhi**2 * LC * WPhi
+    C_extension = B_baseline + M_Phi_interference + PhiPP_diagonal
+    if min(A_reference, B_baseline, C_extension) <= 0.0:
+        raise ArithmeticError("non-positive A/B/C coherent charge kernel")
+
+    C_over_B = C_extension / B_baseline
+    B_over_A = B_baseline / A_reference
+    C_over_A = C_extension / A_reference
+    if not math.isclose(C_over_A, B_over_A * C_over_B, rel_tol=2.0e-13, abs_tol=2.0e-15):
+        raise ArithmeticError("A/B/C charge ratios do not factorize")
+
     return {
-        "F1V": F1, "F2V": F2, "cM": cM, "cPhiPP": cPhi,
-        **terms,
-        "full_charge_over_pointlike_M": terms["full_charge"] / terms["pointlike_M"],
-        "full_charge_over_finite_t_M": terms["full_charge"] / terms["finite_t_M"],
+        "F1V_quark_sum": F1_raw,
+        "F2V_quark_sum": F2_raw,
+        "F1N_effective": F1,
+        "F2N_effective": F2,
+        "tN_GeV2": tN_GeV2,
+        "Q_A2_GeV2": Q_A2_GeV2,
+        "cM": cM,
+        "cPhiPP": cPhi,
+        "A_reference_M": A_reference,
+        "B_finite_tN_M": B_baseline,
+        "M_Phi_interference": M_Phi_interference,
+        "PhiPP_diagonal": PhiPP_diagonal,
+        "C_MplusPhiPP": C_extension,
+        "B_over_A_reference": B_over_A,
+        "C_over_B_baseline": C_over_B,
+        "C_over_A_reference": C_over_A,
     }
 
 def make_recoil_grid(ER_min: float, ER_max: float) -> np.ndarray:
@@ -190,36 +221,48 @@ def calculate_row(ER_keV: float, response_bundle: dict,
     if not phase["phase_space_open"]:
         return {
             **base,
-            "pointlike_M_GeVminus3": 0.0, "finite_t_M_GeVminus3": 0.0,
+            "A_reference_M_GeVminus3": 0.0, "B_finite_tN_M_GeVminus3": 0.0,
             "M_Phi_interference_GeVminus3": 0.0, "PhiPP_diagonal_GeVminus3": 0.0,
-            "full_charge_GeVminus3": 0.0, "pointlike_M_cm2_per_keV": 0.0,
-            "finite_t_M_cm2_per_keV": 0.0, "full_charge_cm2_per_keV": 0.0,
-            "full_charge_over_pointlike_M": 0.0,
+            "C_MplusPhiPP_GeVminus3": 0.0, "A_reference_M_cm2_per_keV": 0.0,
+            "B_finite_tN_M_cm2_per_keV": 0.0, "C_MplusPhiPP_cm2_per_keV": 0.0,
+            "B_over_A_reference": 0.0, "C_over_B_baseline": 0.0,
+            "C_over_A_reference": 0.0,
         }
     kernels = nuclear_charge_kernels(ER_keV, phase["L_C_GeV2"], responses)
     prefactor = kin["public_prefactor_GeVminus5"]
-    values = {key: prefactor * kernels[key] for key in
-              ("pointlike_M", "finite_t_M", "M_Phi_interference", "PhiPP_diagonal", "full_charge")}
+    values = {
+        key: prefactor * kernels[key]
+        for key in (
+            "A_reference_M", "B_finite_tN_M", "M_Phi_interference",
+            "PhiPP_diagonal", "C_MplusPhiPP",
+        )
+    }
     return {
         **base,
-        "F1V": kernels["F1V"], "F2V": kernels["F2V"],
-        "cM": kernels["cM"], "cPhiPP": kernels["cPhiPP"],
+        "F1V_quark_sum": kernels["F1V_quark_sum"],
+        "F2V_quark_sum": kernels["F2V_quark_sum"],
+        "F1N_effective": kernels["F1N_effective"],
+        "F2N_effective": kernels["F2N_effective"],
+        "tN_GeV2": kernels["tN_GeV2"],
+        "cM": kernels["cM"],
+        "cPhiPP": kernels["cPhiPP"],
         "L_C_over_L00_minus_one": phase["L_C_over_L00_minus_one"],
-        "pointlike_M_kernel_GeV2": kernels["pointlike_M"],
-        "finite_t_M_kernel_GeV2": kernels["finite_t_M"],
+        "A_reference_M_kernel_GeV2": kernels["A_reference_M"],
+        "B_finite_tN_M_kernel_GeV2": kernels["B_finite_tN_M"],
         "M_Phi_interference_kernel_GeV2": kernels["M_Phi_interference"],
         "PhiPP_diagonal_kernel_GeV2": kernels["PhiPP_diagonal"],
-        "full_charge_kernel_GeV2": kernels["full_charge"],
-        "pointlike_M_GeVminus3": values["pointlike_M"],
-        "finite_t_M_GeVminus3": values["finite_t_M"],
+        "C_MplusPhiPP_kernel_GeV2": kernels["C_MplusPhiPP"],
+        "A_reference_M_GeVminus3": values["A_reference_M"],
+        "B_finite_tN_M_GeVminus3": values["B_finite_tN_M"],
         "M_Phi_interference_GeVminus3": values["M_Phi_interference"],
         "PhiPP_diagonal_GeVminus3": values["PhiPP_diagonal"],
-        "full_charge_GeVminus3": values["full_charge"],
-        "pointlike_M_cm2_per_keV": values["pointlike_M"] * GEV_MINUS3_TO_CM2_PER_KEV,
-        "finite_t_M_cm2_per_keV": values["finite_t_M"] * GEV_MINUS3_TO_CM2_PER_KEV,
-        "full_charge_cm2_per_keV": values["full_charge"] * GEV_MINUS3_TO_CM2_PER_KEV,
-        "full_charge_over_pointlike_M": kernels["full_charge_over_pointlike_M"],
-        "full_charge_over_finite_t_M": kernels["full_charge_over_finite_t_M"],
+        "C_MplusPhiPP_GeVminus3": values["C_MplusPhiPP"],
+        "A_reference_M_cm2_per_keV": values["A_reference_M"] * GEV_MINUS3_TO_CM2_PER_KEV,
+        "B_finite_tN_M_cm2_per_keV": values["B_finite_tN_M"] * GEV_MINUS3_TO_CM2_PER_KEV,
+        "C_MplusPhiPP_cm2_per_keV": values["C_MplusPhiPP"] * GEV_MINUS3_TO_CM2_PER_KEV,
+        "B_over_A_reference": kernels["B_over_A_reference"],
+        "C_over_B_baseline": kernels["C_over_B_baseline"],
+        "C_over_A_reference": kernels["C_over_A_reference"],
     }
 
 def plot_absolute(rows: list[dict], outdir: Path) -> None:
@@ -230,13 +273,14 @@ def plot_absolute(rows: list[dict], outdir: Path) -> None:
     opened = [row for row in rows if row["phase_space_open"]]
     er = np.asarray([row["ER_keV"] for row in opened])
     fig, ax = plt.subplots(figsize=(6.8, 4.45))
-    ax.semilogy(er, [r["pointlike_M_cm2_per_keV"] for r in opened],
-                linestyle="--", label=r"Pointlike $9W_M$")
-    ax.semilogy(er, [r["finite_t_M_cm2_per_keV"] for r in opened],
-                linestyle="-.", label=r"Finite-$Q^2$ $M$ only")
-    ax.semilogy(er, [r["full_charge_cm2_per_keV"] for r in opened],
-                linestyle="-", linewidth=1.9,
-                label=r"Coherent $M+\Phi''$ charge sector")
+    ax.semilogy(er, [r["A_reference_M_cm2_per_keV"] for r in opened],
+                linestyle="--", label=r"A: finite-size AFH $W_M$ reference")
+    ax.semilogy(er, [r["B_finite_tN_M_cm2_per_keV"] for r in opened],
+                linestyle="-", linewidth=2.0,
+                label=r"B: finite-$t_N$ $M$-only baseline")
+    ax.semilogy(er, [r["C_MplusPhiPP_cm2_per_keV"] for r in opened],
+                linestyle="-.", linewidth=1.5,
+                label=r"C: $M+\\Phi''$ charge extension")
     ax.axvline(200.0, color="0.45", linestyle="--", linewidth=0.85,
                label=r"$E_R=200~\mathrm{keV}$")
     ax.axvline(267.0, color="0.60", linestyle=":", linewidth=1.0,
@@ -287,12 +331,12 @@ def run(afh_csv: Path, outdir: Path) -> dict:
         high = calculate_row(ER, response_bundle, HIGH_ORDER)
         if not high["phase_space_open"]:
             raise RuntimeError(f"high-order convergence anchor ER={ER} is closed")
-        relative = abs(high["full_charge_GeVminus3"] - medium["full_charge_GeVminus3"]) / max(abs(high["full_charge_GeVminus3"]), 1.0e-300)
+        relative = abs(high["C_MplusPhiPP_GeVminus3"] - medium["C_MplusPhiPP_GeVminus3"]) / max(abs(high["C_MplusPhiPP_GeVminus3"]), 1.0e-300)
         anchors.append({
             "ER_keV": ER, "medium_grid_nearest_ER_keV": medium["ER_keV"],
             "high_order": list(HIGH_ORDER), "medium_order": list(CURVE_ORDER),
-            "high_full_charge_GeVminus3": high["full_charge_GeVminus3"],
-            "medium_full_charge_GeVminus3": medium["full_charge_GeVminus3"],
+            "high_full_charge_GeVminus3": high["C_MplusPhiPP_GeVminus3"],
+            "medium_full_charge_GeVminus3": medium["C_MplusPhiPP_GeVminus3"],
             "relative_difference": relative,
         })
     max_anchor_difference = max(item["relative_difference"] for item in anchors)
@@ -325,17 +369,17 @@ def run(afh_csv: Path, outdir: Path) -> dict:
     # calculation, although the full absolute curve keeps Delta m=450 keV
     # fixed at every recoil.
     expected_charge_ratios = {
-        200.0: 0.778309339441481,
-        267.0: 0.649215910707624,
+        200.0: 0.7376302304925361,
+        267.0: 0.6056496631467666,
     }
     ratio_checks = []
     for ER, expected in expected_charge_ratios.items():
         row = min(rows, key=lambda item: abs(item["ER_keV"] - ER))
-        residual = abs(row["full_charge_over_pointlike_M"] - expected)
+        residual = abs(row["C_over_A_reference"] - expected)
         ratio_checks.append({
             "ER_keV": ER,
             "fixed_Delta_m_keV": DELTA_M_GEV * 1.0e6,
-            "ratio": row["full_charge_over_pointlike_M"],
+            "ratio": row["C_over_A_reference"],
             "previous_validated_ratio": expected,
             "absolute_difference": residual,
         })
@@ -350,8 +394,8 @@ def run(afh_csv: Path, outdir: Path) -> dict:
     metadata_path = outdir / "xe131_fixed_benchmark_absolute_dsigma_450keV_metadata.json"
     write_csv(csv_path, rows)
     summary = {
-        "status": "PASS_XE131_FIXED_BENCHMARK_ABSOLUTE_CHARGE_SECTOR_DSIGMA",
-        "scope": "absolute fixed-speed, single-isotope Xe-131 differential cross section in the coherent M+Phi''+M-Phi'' charge sector",
+        "status": "PASS_XE131_FIXED_BENCHMARK_ABSOLUTE_ABC_CHARGE_SECTOR",
+        "scope": "absolute fixed-speed, single-isotope Xe-131 A/B/C differential cross sections in the coherent charge sector; B is the adopted M-only production baseline and C is a separate Phi'' extension",
         "benchmark": {
             "mchi1_GeV": MCHI_GEV, "mchi2_GeV": MCHI_GEV + DELTA_M_GEV,
             "delta_m_keV": DELTA_M_GEV * 1.0e6, "ms_keV": MS_GEV * 1.0e6,
@@ -379,16 +423,17 @@ def run(afh_csv: Path, outdir: Path) -> dict:
             "responses": ["M", "PhiPP", "MPhiPP"],
             "normalization": "physical equal-proton/neutron; factor four applied exactly once",
             "interpolation": "PCHIP on provenance-pinned 2401-point q grid",
-            "finite_Q2_form_factors": "central isoscalar_zexp diagnostic; not final model-specific universal u+d+s form factors",
+            "finite_tN_form_factors": "adopted Bishara-linear raw u+d+s F1 slope plus constant raw F2 anchor; both divided by three in the external-gVN effective nucleon basis",
             "native_provenance": provenance,
         },
-        "formula": "dSigma/dER = mA*(g1*g2*gVN)^2/[256*pi^3*pchi^2*(mV^2-t_A)^2] * L_C^(3) * [cM^2*W_M + 2*cM*cPhiPP*W_MPhiPP + cPhiPP^2*W_PhiPP], with t_A=-2*mA*ER and Q_A^2=2*mA*ER+ER^2 used only in AFH/nucleon form factors",
+        "formula": "B: dSigma_B/dER = mA*(g1*g2*gVN)^2/[256*pi^3*pchi^2*(mV^2-t_A)^2] * L_C^(3) * cMhat(tN)^2 * W_M_phys(yA); C adds 2*cMhat*cPhihat*W_MPhiPP_phys + cPhihat^2*W_PhiPP_phys. A is the q=0 effective-nucleon-current reference. tN=tA=-2*mA*ER; Q_A^2=2*mA*ER+ER^2 enters AFH yA and cPhihat only.",
         "definitions": {
-            "Q_A_squared_GeV2": "2*mA*ER+ER^2; spatial momentum squared used in AFH response and static nucleon form factors",
+            "Q_A_squared_GeV2": "2*mA*ER+ER^2; exact spatial momentum squared used in AFH yA and cPhiPP",
             "t_A_GeV2": "-2*mA*ER; Lorentz-invariant transfer used in the mediator propagator",
             "L_C_GeV2": "L00-(ER/Q_A)*(L03+L30)+(ER/Q_A)^2*L33",
-            "cM": "F1V-Q_A^2*(F1V+2*F2V)/(8*mN^2)",
-            "cPhiPP": "Q_A^2*(F1V+2*F2V)/(4*mN^2)",
+            "t_N_GeV2": "-2*mA*ER; formal one-body impulse invariant used in finite nucleon form factors and cM",
+            "cM": "F1hat+t_N*(F1hat+2*F2hat)/(8*mN^2)",
+            "cPhiPP": "Q_A^2*(F1hat+2*F2hat)/(4*mN^2)",
             "units": "kernel L_C*W has GeV^2; public prefactor GeV^-5; dSigma/dER GeV^-3",
             "conversion_GeVminus3_to_cm2_per_keV": GEV_MINUS3_TO_CM2_PER_KEV,
         },
@@ -410,7 +455,7 @@ def run(afh_csv: Path, outdir: Path) -> dict:
         "limitations": [
             "Charge-sector result only; native transverse Delta, SigmaPrime and SigmaPrime-Delta responses are not included in the central absolute curve.",
             "Continuity reduction is conditional on conservation of the complete nuclear one-body vector current.",
-            "Finite-Q2 isoscalar_zexp F1/F2 is diagnostic, especially for F2V(Q2), not a final model-specific universal form-factor determination.",
+            "B uses the available low-momentum F1 slope and constant F2 anchor; no unsupported F2 slope is assumed.",
             "Single isotope and fixed incident speed only; no halo average, isotope sum, detector response, exposure, event count or exclusion.",
             "Coupling-product-squared is the unit reference normalization; results scale linearly with this quantity.",
             "The six-channel spatial OBDME candidate remains provisional pending native-Wolfram spatial-response validation and P3-C amplitude-level matching.",
