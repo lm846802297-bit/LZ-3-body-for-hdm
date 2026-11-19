@@ -343,7 +343,8 @@ def run(afh_csv: Path) -> dict:
                     "atomic_mass_u": XE131_MASS_RECORD["atomic_mass_u"],
                     "ER_keV": ER_keV,
                     "qA_exact_GeV": qA,
-                    "tN_GeV2_formal": -2.0 * MA_XE131_GEV * ER_keV * 1.0e-6,\n                    "tN_GeV2_static_diagnostic": -(qA * qA),
+                    "tN_GeV2_formal": -2.0 * MA_XE131_GEV * ER_keV * 1.0e-6,
+                    "tN_GeV2_static_diagnostic": -(qA * qA),
                 },
                 "native_AFH_responses_pchip": high_response,
                 "native_AFH_responses_linear_check": linear_response,
@@ -373,7 +374,7 @@ def run(afh_csv: Path) -> dict:
                 "mV_GeV_common_prefactor_only": MV_GEV,
                 "target": "Xe-131",
             },
-            "fixed_speed_differential_cross_section_ratio": (
+            "extension_C_over_A_reference": (
                 width_rows[0]["finite_tN_form_factors_and_charge_kernels"][
                     "C_over_A_reference"
                 ]
@@ -391,7 +392,7 @@ def run(afh_csv: Path) -> dict:
             },
         })
     return {
-        "status": "PASS_XE131_FIXED_SPEED_COULOMB_SECTOR_RATIO",
+        "status": "PASS_XE131_FIXED_SPEED_ABC_CHARGE_SECTOR",
         "scope": (
             "fixed-speed Xe-131 A/B/C comparison in the M+Phi''+M-Phi'' Coulomb sector; "
             "B is the adopted finite-t_N M-only production baseline, C is a separate "
@@ -431,7 +432,7 @@ def run(afh_csv: Path) -> dict:
         "limitations": [
             "This is not the complete L_mu_nu W_A^mu_nu result because native Delta/Sigma transverse responses are not included.",
             "The spatial-current sector was previously found negligible in provisional fixed-speed contractions, but that does not replace native spatial-response validation.",
-            "The finite-Q2 form-factor prescription remains diagnostic, especially F2^V(Q2).",
+            "B uses the adopted low-momentum Bishara F1 slope and constant F2 anchor; no unsupported F2 slope is assumed.",
             "No halo velocity average, isotope sum, detector response, or absolute coupling normalization is included.",
             "The common phase-space factor in this ratio is L_C, not L00 alone.",
         ],
@@ -450,7 +451,7 @@ def main() -> None:
         "results": [
             {
                 "ER_keV": row["ER_keV"],
-                "ratio": row["fixed_speed_differential_cross_section_ratio"],
+                "ratio": row["extension_C_over_A_reference"],
                 "relative_C_vs_A_percent": row["relative_C_vs_A_percent"],
             }
             for row in result["results"]
