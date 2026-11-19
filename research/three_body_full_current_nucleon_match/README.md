@@ -1,31 +1,51 @@
 # Full three-body current × nucleon Dirac–Pauli matching
 
-**Status as of 2026-11-18:** P0 is complete. The convention-fixing
-gate, 12 phase-space-integrated DM tensors, and nine component-wise
-medium-to-high quadrature comparisons have passed. P1 is complete for the
-free on-shell one-body impulse approximation: the exact Dirac--Pauli
-current is decomposed into charge, longitudinal convection, transverse
-convection, and magnetization terms, with a pointwise NR-expansion audit.
-P2 is complete at the particle-side AFH Eq. (107) coefficient and signed
-phase level, including an independent complex-amplitude regression.
+**Status as of 2026-11-18:** P0, P1, P2, and P3-A are complete at their
+stated scopes. P0 includes the 12 phase-space-integrated DM tensors and
+nine component-wise medium-to-high quadrature comparisons. P1 validates
+the free on-shell one-body Dirac--Pauli current in the impulse
+approximation. P2 fixes the particle-side AFH Eq. (107) coefficients and
+the signed \(\Sigma'\)-\(\Delta\) coefficient. P3-A passes the direct
+covariant versus q-frame spin-amplitude comparison and the particle-side
+Eq. (107) projection.
 
-P3-A has now passed pointwise: direct covariant and q-aligned (4\times4)
-spin-amplitude contractions agree, and the actual three-body DM current
-reproduces the AFH Eq. (107) spatial coefficients in both lab and q-aligned
-frames. The full-current job of workflow 44295391452 passed 92 tests,
-including all four P3-A tests. P3-B, the bound-nucleus AFH OBDME/multipole
-contraction, remains open.
+P3-B now has a seven-isotope spatial-response grid, a rank-resolved
+multipole archive, and an independent Python-to-Python comparison over
+all 16,807 isotope/\(q_A\) points. The rank archive contains 9,604
+multipole rows and reconstructs all three spatial responses to
+\(2.22\times10^{-16}\) or better. These are source-translated Python
+results; the native Wolfram AFH comparison and the selected-point
+many-body covariant-versus-AFH amplitude comparison remain open.
 
-The main branch already archives seven AFH default-density OBDME tables
-(16,807 response-grid rows are for the (M)-channel only). Those OBDME
-tables are the inputs for P3-B; the (M)-only grid must not be mistaken for
-an eight-response native AFH result.
+P3-C has passed as a **provisional fixed-speed response contraction**:
+workflow 44305980766 passed 100 full-current tests and 16 native
+charge-engine tests, then contracted 12 three-body coefficient sets
+with seven isotopes (84 rows). All total kernels are positive and the
+maximum rank-sum reconstruction residual is \(1.11\times10^{-16}\).
+The corrected contraction applies the common \(C_0(A)\) normalization
+to AFH-8 charge responses while using the already-\(C_0\)-corrected
+P3-B spatial responses; the AFH factor four is applied once. The
+maximum spatial/charge ratio in these 84 fixed-speed rows is
+\(7.09596\times10^{-9}\). This is not a global halo-integrated bound.
 
-The native seven-isotope/eight-response AFH input gate is a separate nuclear
-input acceptance task, not the definition of P0. The full many-body AFH
-OBDME contraction, pointwise P3 comparison (direct covariant vs q-frame vs
-AFH multipoles), finite-t_N form-factor fold, and natural-xenon halo/detector
-prediction remain open. P1 does not claim a bound-nucleus/off-shell current.
+The native seven-isotope/eight-response gate remains separate. Its latest
+private workflow is 44306907993, currently queued on the
+self-hosted Windows/X64/research-gpu runner, with no native artifact
+available. P3-B is therefore not promoted to native validation, and
+P3 as a whole is not passed. The direct many-body comparison
+\[
+\mathcal A_{\rm cov}^{\rm nuclear}
+\stackrel{?}{=}
+\mathcal A_{q\text{-frame}}^{\rm nuclear}
+\stackrel{?}{=}
+\mathcal A_{\rm AFH\ multipoles}^{\rm nuclear}
+\]
+remains the next physics gate.
+
+Finite-\(t_N\) form factors, a continuous recoil/halo fold, natural-xenon
+spectra, and detector-level predictions remain downstream tasks. The
+current P3-C result uses constant \(q=0\) form-factor anchors and fixed
+speed points only. P1 does not claim a bound-nucleus/off-shell current.
 
 ## 1. Purpose and amplitude
 
@@ -693,7 +713,7 @@ archive before upload using
 [validate_afh_spatial_multipole_archive.py](validate_afh_spatial_multipole_archive.py).
 
 
-Latest rank-resolved artifact: workflow 44305662906, artifact 14427554198.
+Latest rank-resolved artifact: workflow 44305980766, artifact 14428386181.
 It contains 16,807 total-response rows and 9,604 rank-resolved multipole rows.
 The archive validator passed; rank sums reconstruct the raw responses exactly
 and the physical equal-p/n responses to at most 2.22e-16 absolute residual.
@@ -706,6 +726,92 @@ A second native gate is prepared for the rank-resolved amplitudes themselves:
 It compares all 9,604 Xe-129/Xe-131 \((A,q_A,J)\) rows for native AFH DeltaJ
 and SigmaPJ amplitudes, after the full seven-isotope ResponseNuclear native
 gate passes. The corresponding WLS export is pinned to native source commit
-e1e9c85530a7d609561b34e2c2df5ab36e5c5b89. This is the P3-B2 amplitude-level
+aa493b2b76727da2fd51609fe87c647910f7e456. This is the P3-B2 amplitude-level
 acceptance gate; it remains pending until the private Windows Wolfram runner
 executes the native workflow.
+
+
+## 12. P3-C provisional C0-consistent response contraction
+
+Workflow 44305980766 passed the fixed-speed AFH response-basis contraction:
+84/84 positive kernels, with rankwise spatial contributions reconstructing
+the total spatial sector to a maximum absolute residual of 1.11e-16. The
+largest spatial/charge ratio in the selected benchmarks is
+7.10e-9 (Xe-131, 267 keV, 776 km/s, near-pole running-width benchmark).
+This is a provisional fixed-speed result, not the final P3-C covariant
+equivalence test or a halo-folded prediction.
+
+Detailed normalization, rankwise contributions, provenance and limitations:
+[P3_C_C0_CONSISTENT_CONTRACTION.md](P3_C_C0_CONSISTENT_CONTRACTION.md).
+
+## 12. Xe-131 full-recoil charge-sector kernel scan (2026-11-18)
+
+A 943-point scan has been added using the native Xe-131 AFH v6.0 \(W_M\), \(W_{\Phi''}\), and signed \(W_{M\Phi''}\) responses over the fixed-speed recoil window 109.64–652.94 keV. It compares the finite-\(Q^2\) matched \(M\)-only charge kernel with the coherent \(M+\Phi''\) charge kernel.
+
+- Detailed method, benchmark, numerical results and limitations: [XE131_FULL_RECOIL_CHARGE_KERNEL_SCAN.md](results/2026-11-18/XE131_FULL_RECOIL_CHARGE_KERNEL_SCAN.md)
+- 943-point native-grid data: [xe131_charge_kernel_full_recoil_scan.csv](results/2026-11-18/xe131_charge_kernel_full_recoil_scan.csv)
+- Normalized kernel curves: [xe131_charge_kernel_full_recoil_curves.svg](results/2026-11-18/xe131_charge_kernel_full_recoil_curves.svg)
+- Correction-ratio curves: [xe131_charge_kernel_full_recoil_ratios.svg](results/2026-11-18/xe131_charge_kernel_full_recoil_ratios.svg)
+- Regeneration script: [build_xe131_full_recoil_charge_scan.py](build_xe131_full_recoil_charge_scan.py)
+
+At the exact benchmark recoils, the full charge-sector kernel relative to the finite-\(Q^2\) \(M\)-only kernel is 0.99655805 at 200 keV and 0.89961039 at 267 keV. This is **not** the same observable as the fixed-speed three-body cross-section ratio in Section 8, whose denominator is the original pointlike \(9W_M\) baseline. The present scan is not an absolute \(d\sigma/dE_R\), a halo-folded natural-xenon spectrum, or a detector prediction. Spatial multipoles remain outside this charge-sector plot.
+
+The full-recoil scan regression is included in the standard unittest discovery: `test_xe131_full_recoil_charge_scan.py`. Rebuilding its CSV and SVG plots requires Python 3.12+, NumPy, pandas, and Matplotlib.
+
+## Xe-131 publication figures and fixed-benchmark absolute spectrum (2026-11-18)
+
+The 943-point native-grid charge-kernel figures are regenerated in a consistent serif/LaTeX-style publication format by the charge-scan plotting script. Both SVG and PDF versions are produced.
+
+The fixed-benchmark absolute charge-sector spectrum is calculated by the fixed-benchmark absolute-dsigma script, using one fixed \(\Delta m=450\) keV across the entire kinematic interval, the current bare-nucleus Xe-131 mass convention, the zero-width prescription, the exact invariant mediator denominator \(m_V^2-t_A\), with \(t_A=-2m_AE_R\), while keeping spatial \(Q_A^2=2m_AE_R+E_R^2\) separate for AFH responses and static nucleon form factors, the relativistic incident momentum, and the public Eq. (6) prefactor. It includes the coherent native-AFH \(M+\Phi''+M\Phi''\) charge sector and outputs the full pointwise CSV, metadata, SVG and PDF.
+
+- Method and scope: [XE131_FIXED_BENCHMARK_ABSOLUTE_DSIGMA.md](XE131_FIXED_BENCHMARK_ABSOLUTE_DSIGMA.md)
+- Calculation: xe131_fixed_benchmark_absolute_dsigma.py
+- Shared plot style: paper_plot_style.py
+- Charge-figure plotting: build_xe131_full_recoil_charge_scan.py
+- Regression tests: test_xe131_fixed_benchmark_absolute_dsigma.py
+- CI workflow: [xe131-fixed-benchmark-absolute-dsigma.yml](../../.github/workflows/xe131-fixed-benchmark-absolute-dsigma.yml)
+
+Important: the absolute spectrum is charge-sector only. It is not labelled as the complete six-channel \(L_{\mu\nu}W_A^{\mu\nu}\) result while native spatial AFH response validation and P3-C matching remain open.
+
+
+
+## 13. Xe-131 six-channel fixed-speed recoil scan and interpolation audit
+
+The fixed-speed Xe-131 six-channel scan now compares the coherent charge
+responses \(M,\Phi'',M\Phi''\) with the leading-static spatial responses
+\(\Delta,\Sigma',\Sigma'\Delta\), at identical recoil points and with the
+full integrated three-body phase-space tensor. The scan contains 140
+accepted recoil/width rows across the \(\Delta m=450\) keV off-pole and
+\(\Delta m=362\) keV near-pole benchmarks.
+
+A separate interpolation audit was added after finding a diffraction
+minimum in \(W_M\) near \(q_A\simeq0.256\) GeV. It compares PCHIP with
+local degree-8 and degree-10 Chebyshev interpolation on the archived
+2,401-point AFH grid. The full charge-dominated kernel changes by at most
+1.6589% under this interpolation comparison; the normalized full /
+pointlike-\(M\) ratio changes by at most 0.1182%. The spatial kernel changes
+by less than 1 ppm. These are interpolation diagnostics, not a dense native
+AFH validation.
+
+- Full method and numerical audit:
+  [XE131_SIX_CHANNEL_INTERPOLATION_AUDIT.md](results/2026-11-18/XE131_SIX_CHANNEL_INTERPOLATION_AUDIT.md)
+- Reproducible interpolation audit:
+  [audit_xe131_six_channel_interpolation.py](audit_xe131_six_channel_interpolation.py)
+- Regression tests:
+  [test_audit_xe131_six_channel_interpolation.py](test_audit_xe131_six_channel_interpolation.py)
+
+The next required calculation is a direct native Wolfram Xe-131 export of
+AFH indices 1, 4, and 7 on \(0.2545\le q_A\le0.2575\) GeV with
+\(0.000025\) GeV spacing, followed by a rerun of the fixed-speed
+contraction. Until then, keep the result labelled
+\`PASS_LOCAL_INTERPOLATION_STABILITY_DIAGNOSTIC\`; do not promote
+\`native_afh_validated\` or claim a final continuous \(d\sigma/dE_R\).
+
+
+The dense native export and overlap validator are now prepared in
+[draft PR #63](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/pull/63).
+The private native workflow has been updated to include this 121-point
+Xe-131 charge scan. The old queued run 44306907993 predates that update;
+a fresh workflow dispatch is required after the Windows/Wolfram runner is
+online. Until that run returns its artifact and validation PASS, the
+diffraction-minimum interpolation gate remains open.

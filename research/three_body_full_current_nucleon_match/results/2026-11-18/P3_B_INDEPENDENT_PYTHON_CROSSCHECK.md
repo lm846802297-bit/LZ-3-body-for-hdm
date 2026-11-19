@@ -213,8 +213,8 @@ The new validator is
 The CI workflow runs it before uploading the P3-B artifact.
 
 **Current status: PASS — refreshed rank-resolved archive.** Workflow
-[44305662906](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44305662906)
-completed the spatial-response job and uploaded artifact 14427554198,
+[44305980766](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44305980766)
+completed the spatial-response job and uploaded artifact 14428386181,
 provisional-afh-spatial-obdme-responses. The archive contains:
 
 | File | Rows | SHA-256 |
@@ -240,3 +240,54 @@ maximum relative differences remain 3.20e-14 for Delta,
 
 This archive remains provisional Python output. It does not promote
 native_afh_validated and does not replace the queued native Wolfram gate.
+
+
+## 9. Native rank-amplitude gate prepared
+
+The private native-control workflow has been extended with a Wolfram v6.0
+export of the raw Xe-129/Xe-131 rank-resolved amplitudes. The WLS source is
+pinned to LZ repository commit
+aa493b2b76727da2fd51609fe87c647910f7e456 and directly evaluates AFH DeltaJ
+and SigmaPJ for the isoscalar T=0 OBDME rows. It exports real and imaginary
+parts before the physical equal-p/n factor-four conversion and C0 response
+normalization.
+
+The corresponding pointwise comparator is
+[compare_p3_multipoles_vs_native.py](../../../afh_response_crosschecks/compare_p3_multipoles_vs_native.py).
+It requires the full seven-isotope native ResponseNuclear gate to pass,
+checks the source and artifact hashes, and compares all 9,604 Xe-129/Xe-131
+\((A,q_A,J)\) rows for both amplitudes.
+
+The control workflow remains manual-dispatch only. The latest queued native
+attempt has no assigned runner (runner_id=0) and requires the Windows
+self-hosted runner with labels self-hosted, Windows, X64, research-gpu to be
+online. No native multipole PASS is claimed until that job completes and the
+direct comparator returns PASS_NATIVE_AFH_MULTIPOLE_AMPLITUDE_CROSSCHECK.
+
+
+## 9. Downstream P3-C response contraction
+
+The rank-resolved P3-B archive was consumed by the fixed-speed
+three-body response contraction in workflow 44305980766 (artifact
+14428247140). This run corrected the common OBDME normalization mismatch:
+\(C_0(A)\) is applied to the AFH-8 charge responses, while the P3-B spatial
+responses are used as already corrected. The AFH equal-\(p=n\) factor four
+is applied once and is not folded into \(C_0\).
+
+The contraction covers 12 particle-side benchmark/width sets and seven
+isotopes, for 84 rows. All 84 total kernels are positive; rankwise
+\(\Delta,\Sigma',\Sigma'\Delta\) contributions reconstruct the total
+spatial sector to at most \(1.11\times10^{-16}\). The maximum spatial to
+charge ratio is \(7.0959581690\times10^{-9}\), at Xe-131,
+\(E_R=267\) keV, \(v_\chi=776\) km/s, \(m_s=362\) keV,
+\(g_2=1\), running-width scheme.
+
+The full details, including per-isotope \(C_0\), coefficient hierarchy,
+rankwise contributions, and exact limitations, are in
+[P3_C_C0_CONSISTENT_CONTRACTION.md](../../P3_C_C0_CONSISTENT_CONTRACTION.md).
+
+This is a downstream **provisional response-level contraction**, not a
+native AFH validation and not the direct covariant/q-frame/AFH
+many-body-amplitude comparison. The latter remains the P3-B promotion
+gate; the native seven-isotope/eight-response workflow 44306907993 is
+currently queued and has no artifact.

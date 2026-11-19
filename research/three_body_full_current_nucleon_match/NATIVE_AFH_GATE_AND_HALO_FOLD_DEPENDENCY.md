@@ -184,3 +184,28 @@ provenance-shaped fixture to test the loader and computation path; this is
 not a native AFH calculation. The native 16,807-point runner remains queued,
 and P3 has not passed. No real native seven-isotope candidate halo result is
 claimed. See NATIVE_LEADING_STATIC_VECTOR_CURRENT_HALO_CANDIDATE.md.
+
+
+## 2026-11-18 update: C0-consistent P3-C response contraction
+
+The latest P3-C fixed-speed response contraction is recorded in
+[P3_C_C0_CONSISTENT_CONTRACTION.md](P3_C_C0_CONSISTENT_CONTRACTION.md).
+Workflow 44305980766 passed 100 full-current tests and 16 native
+charge-engine tests, generated the seven-isotope spatial archive, and
+contracted 12 particle-side benchmark/width sets with seven isotopes
+(84 rows). All total kernels are positive and the maximum spatial/charge
+ratio is \(7.0959581690\times10^{-9}\). The corrected normalization applies
+the P3-B common \(C_0(A)\) to the AFH-8 charge responses; P3-B spatial
+responses already contain \(C_0(A)\). The equal-\(p=n\) factor four is
+applied once.
+
+This remains a provisional Python response-level result. It does not
+promote native_afh_validated, and it does not close the P3-B direct
+many-body covariant/q-frame/AFH amplitude comparison.
+
+The earlier private run 44222502400 attempt 2 was cancelled without an
+artifact. A newer native workflow,
+[44306907993](https://github.com/lm846802297-bit/research-compute-control/actions/runs/44306907993),
+is currently queued on the self-hosted Windows/X64/research-gpu runner.
+Until it uploads a native comparison artifact with all 16,807 rows passing,
+the seven-isotope native gate remains OPEN.

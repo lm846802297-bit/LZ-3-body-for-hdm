@@ -1,30 +1,27 @@
 {
-  "status": "spin_resolved_current_and_ward_identity_diagnostic",
-  "baseline_pr": 53,
-  "baseline_branch": "research/vector-current-response-audit-20261118",
-  "baseline_head": "a56e9c4a1df3ee9777d12d5e8093b4ac4ad78fad",
+  "status": "finite_width_spin_resolved_current_and_fixed_speed_recoil_spectrum_diagnostic",
+  "base_three_body_current_pr": 53,
+  "base_commit": "a56e9c4a1df3ee9777d12d5e8093b4ac4ad78fad",
   "metric": "(+---)",
-  "spinor_normalization": "ubar(p,s)u(p,s')=2*mchi*delta_ss'",
-  "reference_point": {
+  "width_insertion": "only D_after = W^2-mchi2^2+i*mchi2*Gamma; numerator remains slash(r_after)+mchi2",
+  "finite_width_ward_identity": "qA_mu*T3^mu = (mchi2-mchi1)*ubar'*(N_before/D_before-N_after/(D_after+i*a))*u + i*a/(D_after+i*a)*ubar'*u",
+  "reference_spectrum_parameters": {
     "mchi_GeV": 1000.0,
-    "mchi2_minus_mchi_keV": 362.0,
     "ms_keV": 300.0,
-    "ER_keV": 200.0,
+    "mA_GeV": 122.02572741702,
     "speed_km_s": 776.0,
-    "target": "Xe-131 with mA=131*u"
+    "mV_reference_GeV": 10.0
   },
-  "ward_identity": "qA_mu T3^mu=(mchi2-mchi1)*ubar'[ (slash(r1)+mchi2)/D1 - (slash(r2)+mchi2)/D2 ]u, for zero width",
-  "checks": [
-    "spin-resolved 2x2 matrices reproduce the PR #53 L^{mu nu} trace",
-    "before/after scalar-emission orderings interfere coherently",
-    "non-degenerate mass splitting gives nonzero qA_mu T3^mu",
-    "degenerate-mass limit gives zero qA_mu T3^mu",
-    "momentum routing qA=r1-p'=p-r2 is checked"
+  "width_models": [
+    "zero diagnostic",
+    "pole width as in manuscript",
+    "running scalar-channel absorptive width diagnostic"
   ],
-  "scope_limitations": [
-    "No nucleon Dirac-Pauli current contraction.",
-    "No AFH nuclear response coefficients.",
-    "Ward identity regression is zero-width; finite-width self-energy terms are not included in that identity.",
-    "No absolute cross section, halo fold, isotope sum, detector response, or likelihood."
+  "limitations": [
+    "Point-nucleus current only; internal nuclear spin and orbital responses are not included.",
+    "No AFH Sigma', Sigma'', Delta matching.",
+    "Fixed-speed reduced kernel, not a halo-folded event rate.",
+    "Conditional scalar-only width; no complete vector-sector self-energy.",
+    "On-shell chi2-accessible recoil points excluded from off-shell near-pole scan."
   ]
 }

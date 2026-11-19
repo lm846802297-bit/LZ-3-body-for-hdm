@@ -72,7 +72,7 @@ The WLS export is
 research/afh_full_response_database/run_afh_spatial_multipoles_native.wls
 on the pinned native source branch
 research/afh-native-spatial-multipoles-20261118 (source commit
-e1e9c85530a7d609561b34e2c2df5ab36e5c5b89).
+aa493b2b76727da2fd51609fe87c647910f7e456).
 
 After downloading the P3-B and native artifacts, run:
 

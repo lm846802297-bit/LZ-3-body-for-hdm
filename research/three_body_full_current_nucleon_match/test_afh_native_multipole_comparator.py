@@ -43,16 +43,17 @@ def synthetic_provenance():
     }
     nmeta = {
         "AFH_source_sha256": comparator.EXPECTED_AFH_SOURCE_SHA256,
-        "source_commit": comparator.EXPECTED_NATIVE_SOURCE_COMMIT,
+        "source_commit": sorted(comparator.EXPECTED_NATIVE_SOURCE_COMMITS)[-1],
         "rows": "9604",
         "isotopes": "129,131",
         "q_grid": "2401 uniform nodes from 0 to 0.6 GeV, step 0.00025 GeV",
         "normalization": "raw AFH package amplitudes; no equal-p/n factor-four conversion",
+        "rank_map": "129=1;131=1,2,3",
         "imaginary_parts": "exported separately for both amplitude channels",
         "max_imaginary_residual": "0",
     }
     manifest = {
-        "source_commit": comparator.EXPECTED_NATIVE_SOURCE_COMMIT,
+        "source_commit": sorted(comparator.EXPECTED_NATIVE_SOURCE_COMMITS)[-1],
         "comparison": {
             "status": "PASS", "native_afh_validated": True,
             "rows_compared": 16807,

@@ -1,5 +1,8 @@
 # Provisional three-body × AFH fixed-speed response contraction
 
+> **Superseded normalization record (2026-11-18).** This initial fixed-speed contraction predates the common-\(C_0(A)\) correction applied to the AFH-8 charge responses. Use [P3_C_C0_CONSISTENT_CONTRACTION.md](P3_C_C0_CONSISTENT_CONTRACTION.md) for the current 84-row result and corrected normalization policy.
+
+
 **Status: preliminary Python contraction; native AFH validation and finite-\(t_N\) form factors pending.**
 
 ## 1. Inputs and provenance

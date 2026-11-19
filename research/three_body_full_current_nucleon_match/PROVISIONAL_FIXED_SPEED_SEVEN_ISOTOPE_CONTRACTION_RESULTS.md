@@ -1,5 +1,8 @@
 # Provisional fixed-speed seven-isotope AFH contraction results
 
+> **Superseded normalization record (2026-11-18).** The contraction below predates the common-\(C_0(A)\) correction to the charge sector. Its qualitative benchmark conclusion is retained as historical context, but its charge-kernel numbers must not be used as the current result. The canonical corrected result is [P3_C_C0_CONSISTENT_CONTRACTION.md](P3_C_C0_CONSISTENT_CONTRACTION.md), based on workflow 44305980766 and artifact 14428247140.
+
+
 **Workflow:** [44267886404](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44267886404)  
 **Source commit:** eb1e598391a3e1aae41e07e3a8f78409f2c54007  
 **Artifact:** full-three-body-current-nucleon-match-and-phase-space-tensor  
