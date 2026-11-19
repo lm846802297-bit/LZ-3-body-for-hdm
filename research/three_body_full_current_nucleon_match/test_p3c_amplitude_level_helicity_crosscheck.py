@@ -11,7 +11,7 @@ class P3CAmplitudeLevelTests(unittest.TestCase):
         rng=np.random.default_rng(20261119)
         c=rng.normal(size=(4,4))+1j*rng.normal(size=(4,4))
         self.G=np.einsum("ma,nb->manb",c,c.conj())
-        self.Q=.2552681134213372; self.f1=3.; self.f2=-.552; self.mN=.938918
+        self.Q=.2552681134213372; self.f1=1.; self.f2=-.184; self.mN=.938918
     def test_afh_q_minus_axis_basis_is_right_handed(self):
         e=p3c.basis()
         self.assertEqual(set(e),{-1,1})
