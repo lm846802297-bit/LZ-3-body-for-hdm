@@ -5,6 +5,10 @@ on:
     paths:
       - "research/three_body_full_current_nucleon_match/xe131_fixed_benchmark_absolute_dsigma.py"
       - "research/three_body_full_current_nucleon_match/test_xe131_fixed_benchmark_absolute_dsigma.py"
+      - "research/three_body_full_current_nucleon_match/test_xe131_fixed_speed_charge_dsigma.py"
+      - "research/three_body_full_current_nucleon_match/test_native_charge_sector_halo_fold.py"
+      - "research/three_body_full_current_nucleon_match/test_nucleon_vector_form_factors.py"
+      - "research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py"
       - "research/three_body_full_current_nucleon_match/paper_plot_style.py"
       - "research/three_body_full_current_nucleon_match/build_xe131_full_recoil_charge_scan.py"
       - "research/three_body_full_current_nucleon_match/xe131_fixed_speed_charge_dsigma.py"
@@ -47,16 +51,25 @@ jobs:
             research/three_body_full_current_nucleon_match/test_xe131_fixed_benchmark_absolute_dsigma.py \
             research/three_body_full_current_nucleon_match/paper_plot_style.py \
             research/three_body_full_current_nucleon_match/build_xe131_full_recoil_charge_scan.py
-      - name: Run absolute cross-section benchmark tests
+      - name: Run B form-factor, C0, and A/B/C regression tests
         run: |
           python -m unittest discover \
             -s research/three_body_full_current_nucleon_match \
+            -p 'test_nucleon_vector_form_factors.py' -v
+          python -m unittest discover \
+            -s research/three_body_full_current_nucleon_match \
+            -p 'test_xe131_fixed_speed_charge_dsigma.py' -v
+          python -m unittest discover \
+            -s research/three_body_full_current_nucleon_match \
+            -p 'test_native_charge_sector_halo_fold.py' -v
+          python -m unittest discover \
+            -s research/three_body_full_current_nucleon_match \
             -p 'test_xe131_fixed_benchmark_absolute_dsigma.py' -v
-      - name: Rebuild publication-style charge-kernel figures
+      - name: Rebuild historical charge-kernel diagnostic figures (not B production)
         run: |
           python research/three_body_full_current_nucleon_match/build_xe131_full_recoil_charge_scan.py \
             --csv research/three_body_full_current_nucleon_match/results/2026-11-18/xe131_charge_kernel_full_recoil_scan.csv \
-            --outdir /tmp/xe131-absolute-dsigma
+            --outdir /tmp/xe131-absolute-dsigma/historical-charge-kernel
       - name: Compute fixed Delta m=450 keV absolute dSigma/dER curve
         run: |
           python research/three_body_full_current_nucleon_match/xe131_fixed_benchmark_absolute_dsigma.py \
