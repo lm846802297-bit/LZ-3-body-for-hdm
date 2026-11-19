@@ -101,6 +101,16 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
             result["q0_M_reference"], result["original_AFH_M_baseline"], places=14
         )
 
+    def test_low_order_form_factor_uses_full_one_body_tN(self):
+        qA = 0.22
+        omega = 200.0e-6
+        tN = omega * omega - qA * qA
+        f1, f2 = nucleon_form_factors(
+            qA, "bishara_linear", tN_GeV2=tN
+        )
+        self.assertAlmostEqual(f1, 3.0 - 8.392 * (-tN), places=13)
+        self.assertAlmostEqual(f2, -0.552, places=13)
+
     def test_both_low_order_and_zexp_form_factor_inputs_are_available(self):
         self.assertEqual(FORM_FACTOR_PRESCRIPTIONS, ("bishara_linear", "isoscalar_zexp"))
         f1_linear, f2_linear = nucleon_form_factors(self.q, "bishara_linear")
