@@ -44,9 +44,9 @@ We therefore use the right-handed AFH basis
 
 With
 \[
-\boldsymbol l_M=-F_1^V\boldsymbol{\mathcal T}_3,\qquad
+\boldsymbol l_M=-\widehat F_1^N\boldsymbol{\mathcal T}_3,\qquad
 \boldsymbol l_5=
-\frac{i(F_1^V+F_2^V)}{2m_N}
+\frac{i(\widehat F_1^N+\widehat F_2^N)}{2m_N}
 (\boldsymbol q_{\rm AFH}\times\boldsymbol{\mathcal T}_3),
 \]
 the helicity coefficients are chosen as
@@ -104,8 +104,8 @@ are each included exactly once.
 | Nucleon mass | \(m_N=0.938918\) GeV |
 | Width prescription | Pole only |
 
-The coefficient inputs for the external-\\(g_{VN}=3g_{Vq}\\) convention are
-\\(\\widehat F_1^N(0)=1\\) and \\(\\widehat F_2^N(0)=-0.184\\), obtained by dividing the raw universal u+d+s values by three. The earlier pre-P0 archive used the raw values; its dimensionless helicity-versus-Cartesian residuals are invariant under this common rescaling, but its absolute particle-side coefficients are not suitable for an external-\\(g_{VN}\\) rate without the division by three.
+The coefficient inputs for the external-\(g_{VN}=3g_{Vq}\) convention are
+\(\widehat F_1^N(0)=1\) and \(\widehat F_2^N(0)=-0.184\), obtained by dividing the raw universal u+d+s values by three. The earlier pre-P0 archive used the raw values; its dimensionless helicity-versus-Cartesian residuals are invariant under this common rescaling, but its absolute particle-side coefficients are not suitable for an external-\(g_{VN}\) rate without the division by three.
 
 The AFH amplitudes are still marked
 PROVISIONAL_SOURCE_TRANSLATED_AFH_SPATIAL_RESPONSES; native Wolfram
