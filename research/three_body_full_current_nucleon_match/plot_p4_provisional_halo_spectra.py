@@ -15,9 +15,9 @@ RATE_FIELDS = (
     "rate_leading_static_vector_candidate_events_kg_day_keV",
 )
 RATE_LABELS = {
-    RATE_FIELDS[0]: r"A: q=0 nucleon current $\\times W_M$",
-    RATE_FIELDS[1]: r"B: finite-$t_N$ nucleon current $\\times W_M$",
-    RATE_FIELDS[2]: r"C: $M+\\Phi''$ charge extension",
+    RATE_FIELDS[0]: r"A: q=0 nucleon current $\times W_M$",
+    RATE_FIELDS[1]: r"B: finite-$t_N$ nucleon current $\times W_M$",
+    RATE_FIELDS[2]: r"C: $M+\Phi''$ charge extension",
     RATE_FIELDS[3]: "D candidate: leading-static six-channel current",
 }
 HALO_LABELS = {
@@ -45,7 +45,7 @@ def export(data: dict, out_dir: Path) -> dict:
             "ER_keV", "halo_model", *RATE_FIELDS,
             "relative_C_vs_A",
             "relative_B_vs_A",
-            "relative_phi_vs_finite_t_M",
+            "relative_C_vs_B",
             "relative_full_candidate_vs_A",
             "relative_spatial_candidate_vs_coulomb",
             "open_abundance_fraction",
@@ -100,6 +100,7 @@ def export(data: dict, out_dir: Path) -> dict:
             ratio_fields = (
                 ("relative_B_vs_A", r"B/A: finite-$t_N$ nucleon-current correction"),
                 ("relative_C_vs_A", r"C/A: total charge-sector change"),
+                ("relative_C_vs_B", r"C/B: additional AFH charge-response correction"),
                 ("relative_full_candidate_vs_A", "D candidate/A: provisional full-current change"),
                 ("relative_spatial_candidate_vs_coulomb", "Spatial candidate/Coulomb sector"),
             )
