@@ -406,24 +406,36 @@ likelihood is included.
 
 ## 7. Finite-\(t_N\) nucleon form factors and the correct AFH baseline
 
-The coherent nuclear response \(W_M\) already contains finite nuclear structure.
-A calculation with \(F_1^V(0),F_2^V(0)\) is therefore a **zero-transfer
-nucleon-current anchor**, not a point-nucleus calculation and not necessarily
-the original physical benchmark.
-
-For a consistent response comparison, hold the finite-\(t_N\) nucleon
-form factors fixed in numerator and denominator:
-
+The original calculation already contains a finite-q nuclear form factor.
+The paper source writes
 \[
-R_{t_N,M}\propto c_M(t_N)^2W_M,
-\qquad
+g_N\longrightarrow 3A g_{Vq}F_N(\boldsymbol q),\qquad F_N(0)=1,
+\]
+and the archived Mathematica engine implements this through
+\[
+R_A(Q_A)=A^2\frac{W_M(y_A)}{W_M(0)},\qquad
+y_A=\left(\frac{Q_A b_A}{2}\right)^2.
+\]
+Thus \(W_M(Q_A)\) is the original finite nuclear shape factor. It must
+remain in all comparison denominators; it is not a point-nucleus result,
+and no additional Helm/AFH factor should be multiplied onto it.
+
+The separate new layer is the finite-momentum single-nucleon Dirac-Pauli
+current. For a fixed \(F_1(t_N),F_2(t_N)\) prescription, define
+\[
+R_{\mathrm{AFH},M}^{(0)}\propto F_1^V(0)^2W_M(Q_A),\qquad
+R_{t_N,M}\propto c_M(t_N)^2W_M(Q_A),
+\]
+and
+\[
 R_{\rm charge}\propto c_M^2W_M+
 c_{\Phi''}^2W_{\Phi''}+2c_Mc_{\Phi''}W_{M\Phi''}.
 \]
-
-The primary correction is \(R_{\rm charge}/R_{t_N,M}-1\). The
-\(F_1^V(0)=3,\ F_2^V(0)=-0.552\) \(M\)-only result is retained as a
-secondary normalization reference only.
+The first ratio, \(R_{\rm charge}/R_{t_N,M}\), isolates the additional
+AFH charge multipoles at fixed nucleon form factors. The second,
+\(R_{\rm charge}/R_{\mathrm{AFH},M}^{(0)}\), is the direct comparison
+with the original AFH M-only calculation, retaining its finite-q nuclear
+form factor.
 
 The current Python engine compares two finite-\(Q_N^2\) diagnostics:
 
@@ -439,19 +451,21 @@ pinned.
 
 The Xe-131 fixed-speed Pole-width calculation gives:
 
-| \(E_R\) | Prescription | \(R_{t_N,M}/R_{q=0,M}\) | \(R_{\rm charge}/R_{t_N,M}\) | \(R_{\rm charge}/R_{q=0,M}\) |
+| \(E_R\) | Prescription | \(R_{t_N,M}/R_{\mathrm{AFH},M}^{(0)}\) | \(R_{\rm charge}/R_{t_N,M}\) | \(R_{\rm charge}/R_{\mathrm{AFH},M}^{(0)}\) |
 |---:|---|---:|---:|---:|
 | 200 keV | bishara_linear | 0.739883 | 0.996955 | 0.737630 |
 | 200 keV | isoscalar_zexp | 0.780997 | 0.996558 | 0.778309 |
 | 267 keV | bishara_linear | 0.662175 | 0.914637 | 0.605649 |
 | 267 keV | isoscalar_zexp | 0.721663 | 0.899610 | 0.649216 |
 
-The finite-\(Q_N^2\) normalization changes the \(M\)-only kernel by
-approximately 22–34% relative to the \(q=0\) reference. Once that effect is
-factored out, the additional \(\Phi''\) plus signed \(M-\Phi''\)
-interference changes the charge sector by only 0.30–0.34% at 200 keV,
-but by 8.54–10.04% at 267 keV. The larger effect near 267 keV is associated
-with the \(W_M\) diffraction minimum.
+The finite-\(Q_N^2\) single-nucleon normalization changes the \(M\)-only
+kernel by approximately 22–34% relative to the original AFH M-only baseline.
+This does not remove or replace the finite-q nuclear form factor: the same
+native \(W_M(Q_A)\) is present in both. Once the nucleon-current normalization
+effect is factored out, the additional \(\Phi''\) plus signed
+\(M-\Phi''\) interference changes the charge sector by only 0.30–0.34%
+at 200 keV, but by 8.54–10.04% at 267 keV. The larger effect near 267 keV
+is associated with the \(W_M\) diffraction minimum.
 
 These are fixed-speed Xe-131 charge-sector results. They do not include
 the validated spatial-current response or a natural-xenon halo fold.
@@ -590,8 +604,9 @@ The \(q=0\) \(M\)-only reference is reported separately:
 The Xe-131 dual-form-factor workflow passed on 2026-11-19
 (run 44443361283, artifact 14491448839; 7/7 regression tests). The common
 continuity-adjusted \(L_C^{(3)}\), propagator, flux, and phase-space factors
-cancel in each normalized ratio. The q=0 reference is not called the
-original physical baseline.
+cancel in each normalized ratio. Here the q=0 single-nucleon-current
+reference is the original AFH M-only baseline because it retains the same
+finite-q native \(W_M(Q_A)\); it is not a point-nucleus approximation.
 
 The earlier \(-21.48\%\) and \(-34.24\%\) numbers are historical
 \(F_1^2\)-normalization diagnostics. The updated matched-\(c_M\) result
