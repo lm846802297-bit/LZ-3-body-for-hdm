@@ -28,8 +28,16 @@ m_A=(M_{\rm atom}-54m_e)u
 \]
 
 The response input is the provenance-pinned native AFH v6.0 Xe-131
-\(W_M,W_{\Phi''},W_{M\Phi''}\) archive. The physical equal-proton,
-equal-neutron AFH normalization includes the factor of four exactly once.
+\(W_M,W_{\Phi''},W_{M\Phi''}\) archive. The native export already
+contains the equal-proton/equal-neutron factor four, while its metadata
+records \(\texttt{shape\_renormalization\_applied=false}\). The loader
+therefore derives
+\[
+C_0(131)=\frac{131^2}{4R_{M,\rm raw}(0)}
+=1.0000825298069376
+\]
+and applies this common OBDME correction exactly once to all three
+physical charge responses. Thus \(R_M^{\rm phys}(0)=131^2\).
 
 ## 2. Formal B kinematics and form factors
 
