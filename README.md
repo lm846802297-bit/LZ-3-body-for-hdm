@@ -42,6 +42,7 @@
 - [完整文件分类与研究导航](research/FILE_MAP.md)：说明各目录的科学职责、数据状态和结果使用边界。
 - paper-source/：原始论文源码、工作稿和图件；
 - research/：研究文档、计算程序、单元测试、审计记录和数值结果；
+- `research/three_body_calculation_and_validation/mathematica_halo_notebook/FeynRules_check/`：随研究目录提供的 FeynCalc、FeynRules 2.3.49、FeynArts 3.12 源码副本；包含许可说明和逐文件 SHA-256 清单，运行仍需要 Mathematica。
 - v6/：已归档的 AFH DMFormFactor v6.0 Mathematica 源文件；原始 ZIP 仍只保留 SHA-256 provenance。
 - .github/workflows/：可选的计算调度与自动化验证。科学研究不以 CI 运行成功为前提。
 

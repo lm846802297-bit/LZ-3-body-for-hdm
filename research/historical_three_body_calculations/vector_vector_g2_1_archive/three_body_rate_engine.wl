@@ -1,3 +1,10 @@
+(* AME2020 xenon nuclear masses: atomic mass minus electron masses plus total electronic binding energy. *)
+Global`ame2020XenonAtomicMassU = <|124->123905885174/10^9,126->125904297422/10^9,128->12790353075341/10^11,129->12890478085742/10^11,130->129903509346/10^9,131->13090508412808/10^11,132->13190415508346/10^11,134->133905393030/10^9,136->135907214474/10^9|>;
+Global`xenonZ=54;
+Global`xenonAtomicMassUnitGeV=93149410372/10^11;
+Global`electronMassU=5485799090441/10^16;
+Global`xenonElectronBindingEnergyGeV=N[(144381/10^4 Global`xenonZ^(239/100)+155468/10^11 Global`xenonZ^(535/100))10^-9,30];
+Global`xenonNuclearMassGeV[A_Integer]:=Module[{mAtom=Lookup[Global`ame2020XenonAtomicMassU,A,Null]},If[mAtom===Null,Return[$Failed]];N[(mAtom-Global`xenonZ Global`electronMassU)Global`xenonAtomicMassUnitGeV+Global`xenonElectronBindingEnergyGeV,20]];
 (* Figure 2 2->3 nuclear recoil rate. All energies/masses GeV, speed km/s. *)
 (* Scope: Dirac vector-vector benchmark, AFH response, off-shell pole-width or zero-width. *)
 ClearAll["Fig2`*"];
@@ -92,7 +99,7 @@ Rate[erKeV_?NumericQ,ms_?NumericQ,dm_?NumericQ,p_Association]:=Module[
  mode=Lookup[p,"widthMode","zero"];
  width=Which[mode==="zero",0.,mode==="pole" && KeyExistsQ[p,"g2"],Chi2Width[m,ms,dm,p["g2"]],True,Throw["Select widthMode zero or pole; pole requires g2"]];
  vmax=ve+vesc;
- Do[mA=a 0.93149410242;vmin=VMin[m,ms,mA,er];
+ Do[mA=Global`xenonNuclearMassGeV[a];vmin=VMin[m,ms,mA,er];
  If[vmin<vmax,acc=0.;Do[v=(vmax+vmin)/2+(vmax-vmin)node[[1]]/2;w=node[[2]](vmax-vmin)/2;
  pchi=m(v/cKm)/Sqrt[1-(v/cKm)^2];
  acc+=w SpeedPDF[v,v0,ve,vesc] (v/cKm) mA coupling/(256 Pi^3 pchi^2) I6[m,ms,dm,mA,er,v,order,width],{node,gl[nv]}];

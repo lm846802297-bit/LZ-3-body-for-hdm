@@ -192,7 +192,7 @@ def main() -> None:
         "abundance_source": "NIST xenon isotopic compositions as recorded in run_anand_wm_response.py",
         "abundance_convention": "atomic amount fractions; not mass fractions",
         "abundance_renormalization": "none; missing 124/126 fraction is left missing",
-        "mA_prescription": "A * 0.93149410242 GeV",
+        "mA_prescription": "AME2020 atomic isotope masses converted to bare nuclear masses with CODATA-2022 constants and AME electron-binding correction",
         "mchi_GeV": args.mchi_GeV,
         "ms_MeV": args.ms_MeV,
         "delta_m_MeV": args.delta_m_MeV,
