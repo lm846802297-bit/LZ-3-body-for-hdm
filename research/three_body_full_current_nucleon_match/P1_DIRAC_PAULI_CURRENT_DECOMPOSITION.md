@@ -136,6 +136,45 @@ Errors are Frobenius-norm relative differences, with the exact normalized spinor
 
 For all eight points, the exact free-nucleon Ward residual is below \(2\times10^{-12}\), the exact longitudinal-current/continuity residual is below \(2\times10^{-12}\), and \(|q_N^0-E_R|<2\times10^{-13}\) GeV. The corresponding regression is implemented in run_one_body_nr_matching_scan and test_one_body_nr_current_expansion.py.
 
+
+## Production convention used downstream (2026-11-19)
+
+The formal fixed-speed and P4 production slice is the energy-transfer-matched
+one-body impulse prescription
+\[
+q_N^\mu=q_A^\mu=(E_R,\boldsymbol q_A),\qquad
+t_N=t_A=-2m_AE_R.
+\]
+The static slice \(q_N^0=0\), \(t_N=-Q_A^2\), remains a diagnostic for
+isolating transverse convection and magnetization operators; it is not the
+formal production transfer. Neither slice is a complete bound-nucleon
+many-body current.
+
+Keep
+\[
+Q_A^2=|\boldsymbol q_A|^2=2m_AE_R+E_R^2,\qquad
+t_A=-2m_AE_R
+\]
+separate. AFH \(y_A=(b_AQ_A/2)^2\) uses the spatial \(Q_A\), while the
+mediator and formal nucleon form-factor arguments use \(t_A=t_N\).
+
+The \(F_1^V,F_2^V\) symbols in the Pauli-reduction equations denote the
+full universal \(u+d+s\) quark-current form factors:
+\(F_1^V(0)=3\), \(F_2^V(0)=-0.552\). When these coefficients multiply the
+paper's external \((g_1g_2g_{VN})^2\) prefactor, use
+\[
+\widehat F_i^V(t_N)=F_i^V(t_N)/3,\qquad
+\widehat F_1^V(0)=1,\quad \widehat F_2^V(0)=-0.184.
+\]
+Equivalently, keep the full \(F_i^V\) and use \(g_{Vq}=g_{VN}/3\).
+Do not combine full \(F_i^V(0)=3\) with an external \(g_{VN}\) prefactor.
+This quark-current factor three is independent of the AFH raw-to-physical
+response factor four.
+
+The nuclear baseline remains the finite-size native AFH \(W_M(y_A)\);
+the Dirac--Pauli nucleon form factors are an additional one-body current
+layer and never replace or multiply away the AFH nuclear response.
+
 ## 5. What this closes, and what it does not
 
 **Closed for P1:** the on-shell one-body Dirac--Pauli current has been decomposed into:
