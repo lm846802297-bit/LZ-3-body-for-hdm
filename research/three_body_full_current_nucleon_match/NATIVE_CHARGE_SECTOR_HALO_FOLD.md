@@ -196,7 +196,10 @@ The external rate prefactor uses \((g_1g_2g_{VN})^2\), with
 \(g_{VN}=3g_{Vq}\). Therefore the full universal quark-current form
 factors must be divided by three before they enter the nucleon-current
 coefficients: \(\widehat F_i=F_i^{uds}/3\). The AFH raw-to-physical
-factor four is independent and is applied exactly once.
+factor four is independent of the common OBDME correction \(C_0(A)\);
+each is applied exactly once. The native loader derives \(C_0(A)\) from
+\(R_{M,\rm raw}(0)\), while the provisional path imports the matched
+P3-B value and applies it to charge responses only once.
 
 For the formal one-body impulse prescription,
 \[
@@ -299,7 +302,9 @@ Coulomb-sector diagnostic, not the final natural-xenon spectrum.
 ## 8. Separate Xe-131 native fixed-speed diagnostic
 
 A separate native AFH v6.0 / Wolfram 14.2.0 Xe-131 archive has passed its
-three-response integrity and response-level checks. It supports the
+three-response integrity and response-level checks. Its factor-four
+physical columns are additionally corrected by the loader's common
+\(C_0(131)\), enforcing \(R_M^{\rm phys}(0)=131^2\). It supports the
 fixed-speed Coulomb-sector benchmark in
 \`XE131_FIXED_SPEED_CHARGE_DSIGMA_RESULTS.md\`, but does not replace the
 seven-isotope/eight-response gate or validate transverse multipoles.
@@ -324,7 +329,7 @@ A provisional P4 workflow is defined in
 recoil grid is \(E_R=150,200,267,350,400\) keV, with separate speed and
 three-body phase-space refinement runs. The first production benchmark uses
 \(m_{\chi_1}=1\) TeV, \(m_s=200\) keV,
-\(\Delta m=1\) MeV, \(m_V=10\) GeV, and the formal Pole prescription.
+\(\Delta m=1\) keV, \(m_V=10\) GeV, and the formal Pole prescription.
 It records A (q=0 nucleon-current reference with finite-size AFH \(W_M\)), B (finite-\(t_N\) M-only baseline), C (charge-response extension),
 and the leading-static six-channel candidate. Both truncated SHM and
 untruncated Maxwellian folds are retained.
