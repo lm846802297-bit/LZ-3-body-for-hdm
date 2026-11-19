@@ -1227,7 +1227,7 @@ def fold(
                     })
                 isotope_rows.append(isotope_row)
             total_charge = sum(
-                r.get("abundance", 0.0) * r.get("charge_halo_integral", 0.0)
+                r.get("abundance", 0.0) * r.get("extension_C_MplusPhiPP_halo_integral", 0.0)
                 for r in isotope_rows
             )
             total_A_reference = sum(
