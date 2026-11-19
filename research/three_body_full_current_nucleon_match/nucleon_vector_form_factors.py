@@ -50,14 +50,14 @@ def effective_nucleon_form_factors(F1_quark: float, F2_quark: float) -> tuple[fl
         raise ArithmeticError("universal u+d+s normalization changed; revisit g_VN=3*g_Vq")
     return F1_quark / F1V0, F2_quark / F1V0
 
-# Bishara et al., Appendix A.1, Eqs. (78)-(85):
+# Bishara et al., Appendix A.1, Eqs. (A6)-(A8):
 # flavor-separated proton Dirac slopes in GeV^{-2}.
 BISHARA_F1_SLOPES = {"u": 5.57, "d": 2.84, "s": -0.018}
 BISHARA_F1_SLOPE_ERRORS = {"u": 0.09, "d": 0.05, "s": 0.009}
 F1_SLOPE_BISHARA = sum(BISHARA_F1_SLOPES.values())
 F1_SLOPE_BISHARA_ERR = math.sqrt(sum(x * x for x in BISHARA_F1_SLOPE_ERRORS.values()))
 
-# Bishara et al. Eqs. (80)-(82): F2^{u/p}(0), F2^{d/p}(0), F2^{s/p}(0).
+# Bishara et al., Appendix A.1, Eqs. (A3)-(A5): F2^{s/p}(0), F2^{u/p}(0), F2^{d/p}(0).
 BISHARA_F2_ZERO = {"u": 1.609, "d": -2.097, "s": -0.064}
 F2S0 = BISHARA_F2_ZERO["s"]
 
