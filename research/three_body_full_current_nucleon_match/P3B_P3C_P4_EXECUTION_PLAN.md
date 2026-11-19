@@ -86,14 +86,30 @@ Formal P4 requirements:
   outside the AFH default-density set;
 - use native AFH response columns only; no GCN/JJ55 substitution;
 - use `width_scheme="pole"` only;
-- report separately pointlike \(M\), finite-\(t_N\) \(M\), Coulomb
-  \(M+\Phi''\), and the full matched-current result;
+- report separately the q=0 nucleon-form-factor \(M\) reference,
+  finite-\(t_N\) \(M\), Coulomb \(M+\Phi''\), and the full matched-current result;
+- use finite-\(t_N\) \(M\)-only with the same \(F_1,F_2\) prescription as
+  the primary denominator for every AFH correction; the q=0 reference is
+  secondary normalization only and does not mean a point-nucleus target;
+- run the first-order low-\(Q_N^2\) bishara_linear diagnostic and the
+  isoscalar_zexp alternative side by side; do not identify either with the
+  original calculation until its exact form-factor source is pinned;
 - include both the truncated SHM and untruncated Maxwellian halo scenarios;
 - run speed, three-body phase-space, and recoil-grid convergence;
 - verify positivity, both response Cauchy-Schwarz inequalities, and the
   signed \(M\)-\(\Phi''\) and \(\Sigma'\)-\(\Delta\) interference;
 - retain the seven-isotope abundance coverage and the isotope-by-isotope
   contributions in the output.
+
+For exact recoil kinematics, keep the two momentum invariants separate:
+\[
+t_A=q_A^\mu q_{A,\mu}=-2m_AE_R,\qquad
+Q_A^2=|\boldsymbol q_A|^2=2m_AE_R+E_R^2.
+\]
+The vector-mediator propagator uses \((m_V^2-t_A)^2\), whereas the static
+one-body impulse form-factor diagnostic uses
+\(Q_N^2=-t_N=|\boldsymbol q_N|^2\simeq Q_A^2\). Do not substitute the
+spatial \(Q_A^2\) into the invariant mediator propagator.
 
 The Coulomb-sector halo result can be reported after native P3-B validation
 as a separately labelled baseline. The full-vector halo spectrum must not
