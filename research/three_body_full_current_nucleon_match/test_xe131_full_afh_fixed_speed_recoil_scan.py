@@ -3,10 +3,12 @@ import unittest
 import numpy as np
 
 from xe131_full_afh_fixed_speed_recoil_scan import (
-    EXPECTED_CHARGE_RATIOS,
+    EXPECTED_ORIGINAL_AFH_RATIOS,
     FORMAL_WIDTH_SCHEMES,
+    FORM_FACTOR_PRESCRIPTIONS,
     RESPONSE_NAMES,
     contract_six_channels,
+    nucleon_form_factors,
     recoil_cases,
 )
 
@@ -54,14 +56,14 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
             17.0 * self.L, self.q, self.ER, self.responses, self.F1, self.F2
         )
         for key in (
-            "finite_t_M_over_q0_M_reference",
+            "finite_t_M_over_original_AFH_M_baseline",
             "charge_only_over_finite_t_M",
             "full_over_finite_t_M",
             "PhiPP_over_finite_t_M_correction",
             "full_over_charge_only",
             "spatial_over_charge_only",
-            "charge_only_over_q0_M_reference",
-            "full_over_q0_M_reference",
+            "charge_only_over_original_AFH_M_baseline",
+            "full_over_original_AFH_M_baseline",
         ):
             self.assertAlmostEqual(a[key], b[key], places=12, msg=key)
 
@@ -81,9 +83,30 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
         )
         self.assertNotAlmostEqual(
             result["full_over_finite_t_M"],
-            result["full_over_q0_M_reference"],
+            result["full_over_original_AFH_M_baseline"],
             places=6,
         )
+
+    def test_original_afh_baseline_retains_finite_q_nuclear_response(self):
+        result = contract_six_channels(
+            self.L, self.q, self.ER, self.responses, self.F1, self.F2
+        )
+        LC = result["coefficients"]["L_C_continuity_adjusted_charge_weight"]
+        self.assertAlmostEqual(
+            result["original_AFH_M_baseline"],
+            9.0 * LC * self.responses["M"],
+            places=12,
+        )
+        self.assertAlmostEqual(
+            result["q0_M_reference"], result["original_AFH_M_baseline"], places=14
+        )
+
+    def test_both_low_order_and_zexp_form_factor_inputs_are_available(self):
+        self.assertEqual(FORM_FACTOR_PRESCRIPTIONS, ("bishara_linear", "isoscalar_zexp"))
+        f1_linear, f2_linear = nucleon_form_factors(self.q, "bishara_linear")
+        f1_zexp, f2_zexp = nucleon_form_factors(self.q, "isoscalar_zexp")
+        self.assertNotAlmostEqual(f1_linear, f1_zexp, places=5)
+        self.assertNotAlmostEqual(f2_linear, f2_zexp, places=5)
 
     def test_formal_six_channel_scan_uses_pole_width_only(self):
         self.assertEqual(FORMAL_WIDTH_SCHEMES, ("pole",))
@@ -92,8 +115,14 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
         cases = {case["name"]: case for case in recoil_cases()}
         self.assertEqual(cases["off_pole_dm450"]["delta_m_GeV"], 450.0e-6)
         self.assertEqual(cases["near_pole_dm362"]["delta_m_GeV"], 362.0e-6)
-        self.assertIn(("off_pole_dm450", 200.0), EXPECTED_CHARGE_RATIOS)
-        self.assertIn(("near_pole_dm362", 267.0), EXPECTED_CHARGE_RATIOS)
+        self.assertIn(
+            ("isoscalar_zexp", "off_pole_dm450", 200.0),
+            EXPECTED_ORIGINAL_AFH_RATIOS,
+        )
+        self.assertIn(
+            ("isoscalar_zexp", "near_pole_dm362", 267.0),
+            EXPECTED_ORIGINAL_AFH_RATIOS,
+        )
 
 
 if __name__ == "__main__":
