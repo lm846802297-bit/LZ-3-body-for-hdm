@@ -74,6 +74,19 @@ class TestXe131FixedBenchmarkAbsoluteDsigmadER(unittest.TestCase):
             out["C_charge_extension"] / out["B_baseline_M_only"],
             places=14,
         )
+        self.assertAlmostEqual(
+            out["AFH_finite_size_M_baseline"],
+            out["A_original_AFH_M_reference"], places=14
+        )
+        self.assertAlmostEqual(
+            out["nucleon_q0_M_only"], out["AFH_finite_size_M_baseline"], places=14
+        )
+        self.assertAlmostEqual(
+            out["nucleon_finite_t_M_only"], out["B_baseline_M_only"], places=14
+        )
+        self.assertAlmostEqual(
+            out["charge_M_PhiPP"], out["C_charge_extension"], places=14
+        )
 
     def test_write_csv_unions_open_and_closed_row_fields(self):
         with tempfile.TemporaryDirectory() as directory:
