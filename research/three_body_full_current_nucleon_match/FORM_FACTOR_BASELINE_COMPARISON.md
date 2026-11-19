@@ -105,8 +105,9 @@ With metric \((+---)\), the four-vector components are
 \boxed{q_A^\mu=(E_R,0,0,Q_A).}
 \]
 
-The formal B one-body impulse-current prescription routes the external
-nuclear transfer through the one-body nucleon-current vertex:
+The formal B one-body impulse-current external-transfer prescription
+routes the external nuclear transfer through the one-body nucleon-current
+vertex:
 \[
 q_{\rm 1B}^\mu\equiv q_N^\mu=q_A^\mu.
 \]
