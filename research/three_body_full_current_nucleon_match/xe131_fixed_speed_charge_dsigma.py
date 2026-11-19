@@ -22,7 +22,13 @@ from pathlib import Path
 import numpy as np
 from scipy.interpolate import PchipInterpolator
 
-from nucleon_vector_form_factors import F1V0, bishara_linear, charge_coefficients, isoscalar_zexp
+from nucleon_vector_form_factors import (
+    F1V0,
+    bishara_linear,
+    charge_coefficients,
+    effective_nucleon_form_factors,
+    isoscalar_zexp,
+)
 from native_charge_sector_halo_fold import load_isotope_inputs
 from three_body_phase_space_tensor import integrate_spin_resolved_tensor
 
@@ -202,8 +208,13 @@ def charge_sector_kernels(
         F1, F2 = isoscalar_zexp(Q2)
     else:
         raise ValueError(f"unknown form-factor prescription: {form_factor_prescription}")
+    F1_effective, F2_effective = effective_nucleon_form_factors(F1, F2)
     cM, cPhi = charge_coefficients(
-        qA_GeV, F1=F1, F2=F2, mN_GeV=MN_GEV, tN_GeV2=tN_GeV2
+        qA_GeV,
+        F1=F1_effective,
+        F2=F2_effective,
+        mN_GeV=MN_GEV,
+        tN_GeV2=tN_used,
     )
     WM, WPhi, WMPhi = responses["M"], responses["PhiPP"], responses["MPhiPP"]
     if WM <= 0.0:
@@ -215,7 +226,7 @@ def charge_sector_kernels(
     interference_kernel = 2.0 * cM * cPhi * L_C * WMPhi
     phi_kernel = cPhi * cPhi * L_C * WPhi
     full_charge_kernel = finite_t_M_kernel + interference_kernel + phi_kernel
-    original_AFH_M_baseline_kernel = F1V0 * F1V0 * L_C * WM
+    original_AFH_M_baseline_kernel = L_C * WM
     if original_AFH_M_baseline_kernel <= 0.0 or full_charge_kernel <= 0.0:
         raise ValueError("non-positive numerator or denominator kernel")
 
@@ -223,15 +234,16 @@ def charge_sector_kernels(
     Qphi = 1.0 + 2.0 * eta * (WMPhi / WM) + eta * eta * (WPhi / WM)
     ratio_direct = full_charge_kernel / original_AFH_M_baseline_kernel
     ratio_finite_t_M = full_charge_kernel / finite_t_M_kernel
-    ratio_factorized = (cM * cM / (F1V0 * F1V0)) * Qphi
-    ratio_legacy_F1_squared = (F1 * F1 / (F1V0 * F1V0)) * Qphi
+    ratio_factorized = (cM * cM) * Qphi
     if not math.isclose(ratio_direct, ratio_factorized, rel_tol=2e-13, abs_tol=2e-15):
         raise AssertionError("direct and factorized Coulomb-sector ratios disagree")
 
     return {
         "form_factor_prescription": form_factor_prescription,
-        "F1V_finite_t": F1,
-        "F2V_finite_t": F2,
+        "F1V_quark_finite_t": F1,
+        "F2V_quark_finite_t": F2,
+        "F1N_effective_finite_t": F1_effective,
+        "F2N_effective_finite_t": F2_effective,
         "tN_GeV2": tN_used,
         "Q_N2_GeV2": -tN_used,
         "nucleon_transfer_scheme": (
@@ -243,26 +255,20 @@ def charge_sector_kernels(
         "W_PhiPP_over_W_M": WPhi / WM,
         "W_MPhiPP_over_W_M": WMPhi / WM,
         "Q_PhiPP_relative_to_finite_t_M": Qphi,
-        "finite_t_M_only_over_q0_M_reference": (cM * cM) / 9.0,
+        "nucleon_finite_t_M_only_over_AFH_finite_size_M_baseline": cM * cM,
         "full_charge_over_finite_t_M": ratio_finite_t_M,
         "relative_change_vs_finite_t_M_percent": 100.0 * (ratio_finite_t_M - 1.0),
-        "original_AFH_M_baseline_kernel": original_AFH_M_baseline_kernel,
-        "q0_M_reference_kernel": original_AFH_M_baseline_kernel,
-        "full_charge_over_original_AFH_M_baseline": ratio_direct,
-        "relative_change_vs_original_AFH_M_baseline_percent": 100.0 * (ratio_direct - 1.0),
-        "full_charge_over_q0_M_reference": ratio_direct,
-        "relative_change_vs_q0_M_reference_percent": 100.0 * (ratio_direct - 1.0),
-        # Legacy aliases: AFH W_M(Q_A) remains finite-q; this is not a point nucleus.
-        "finite_t_M_only_over_pointlike_M": (cM * cM) / 9.0,
-        "full_charge_over_pointlike_M": ratio_direct,
-        "relative_change_percent": 100.0 * (ratio_direct - 1.0),
-        "legacy_F1_squared_ratio_for_normalization_audit": ratio_legacy_F1_squared,
-        "legacy_F1_squared_relative_change_percent": 100.0 * (ratio_legacy_F1_squared - 1.0),
+        "AFH_finite_size_M_baseline_kernel": original_AFH_M_baseline_kernel,
+        "nucleon_q0_M_only_kernel": original_AFH_M_baseline_kernel,
+        "full_charge_over_AFH_finite_size_M_baseline": ratio_direct,
+        "relative_change_vs_AFH_finite_size_M_baseline_percent": 100.0 * (ratio_direct - 1.0),
+        "full_charge_over_nucleon_finite_t_M_only": ratio_finite_t_M,
+        "relative_change_vs_nucleon_finite_t_M_only_percent": 100.0 * (ratio_finite_t_M - 1.0),
+        "nucleon_finite_t_M_only_over_AFH_finite_size_M_baseline": cM * cM,
         "kernels_with_common_LC": {
-            "original_AFH_M_baseline": original_AFH_M_baseline_kernel,
-            "q0_M_reference": original_AFH_M_baseline_kernel,
-            "pointlike_M_only": original_AFH_M_baseline_kernel,
-            "finite_t_M_only": finite_t_M_kernel,
+            "AFH_finite_size_M_baseline": original_AFH_M_baseline_kernel,
+            "nucleon_q0_M_only": original_AFH_M_baseline_kernel,
+            "nucleon_finite_t_M_only": finite_t_M_kernel,
             "M_Phi_interference": interference_kernel,
             "PhiPP_diagonal": phi_kernel,
             "finite_t_M_plus_PhiPP": full_charge_kernel,
@@ -363,7 +369,8 @@ def run(afh_csv: Path, form_factor_prescription: str = "isoscalar_zexp") -> dict
                     "atomic_mass_u": XE131_MASS_RECORD["atomic_mass_u"],
                     "ER_keV": ER_keV,
                     "qA_exact_GeV": qA,
-                    "tN_GeV2_static": -(qA * qA),
+                    "tN_GeV2": tN_GeV2,
+                "nucleon_transfer_scheme": "strict one-body impulse q_N^mu=q_A^mu",
                 },
                 "native_AFH_responses_pchip": high_response,
                 "native_AFH_responses_linear_check": linear_response,
@@ -375,11 +382,11 @@ def run(afh_csv: Path, form_factor_prescription: str = "isoscalar_zexp") -> dict
                     kernels["full_charge_over_finite_t_M"]
                     - linear_kernels["full_charge_over_finite_t_M"]
                 ),
-                "linear_interpolation_ratio_vs_q0_reference": (
-                    linear_kernels["full_charge_over_q0_M_reference"]
+                "linear_interpolation_ratio_vs_AFH_finite_size_baseline": (
+                    linear_kernels["full_charge_over_AFH_finite_size_M_baseline"]
                 ),
-                "pchip_ratio_vs_q0_reference": (
-                    kernels["full_charge_over_q0_M_reference"]
+                "pchip_ratio_vs_AFH_finite_size_baseline": (
+                    kernels["full_charge_over_AFH_finite_size_M_baseline"]
                 ),
             })
         ratios = [
@@ -409,9 +416,9 @@ def run(afh_csv: Path, form_factor_prescription: str = "isoscalar_zexp") -> dict
                     "relative_change_vs_finite_t_M_percent"
                 ]
             ),
-            "legacy_ratio_vs_q0_M_reference": (
+            "ratio_vs_AFH_finite_size_M_baseline": (
                 width_rows[0]["finite_tN_form_factors_and_charge_kernels"][
-                    "full_charge_over_q0_M_reference"
+                    "full_charge_over_AFH_finite_size_M_baseline"
                 ]
             ),
             "width_scenarios": width_rows,
@@ -433,13 +440,18 @@ def run(afh_csv: Path, form_factor_prescription: str = "isoscalar_zexp") -> dict
             "(dSigma/dER)_[finite-tN M+Phi'' Coulomb sector] / "
             "(dSigma/dER)_[same finite-tN M-only with identical F1,F2]"
         ),
-        "original_AFH_baseline_definition": (
-            "q=0 single-nucleon-current normalization times the finite-q AFH W_M(Q_A) response; "
-            "the nuclear form factor is retained and this is not a point nucleus"
+        "AFH_finite_size_M_baseline_definition": (
+            "g_VN-prefactor times the physical equal-p=n finite-q AFH W_M(Q_A); "
+            "the nucleon q=0 normalization is Fhat_1(0)=1, with no extra factor nine"
         ),
-        "secondary_reference_definition": (
-            "(dSigma/dER)_[finite-tN M+Phi'' Coulomb sector] / "
-            "(dSigma/dER)_[original AFH M-only baseline with the same W_M(Q_A)]"
+        "nucleon_form_factor_normalization": "Fhat_i=F_i^(u+d+s)/3 for the external g_VN coupling basis",
+        "primary_response_ratio_definition": (
+            "(dSigma/dER)_[M+Phi'' charge sector with finite-t nucleon current] / "
+            "(dSigma/dER)_[M-only with the same finite-t nucleon current and same AFH W_M(Q_A)]"
+        ),
+        "total_ratio_definition": (
+            "(dSigma/dER)_[M+Phi'' charge sector with finite-t nucleon current] / "
+            "(dSigma/dER)_[original finite-size AFH M-only baseline]"
         ),
         "factorization": (
             "The same continuity-adjusted L_C^(3), propagator, flux, and phase-space "
@@ -459,12 +471,11 @@ def run(afh_csv: Path, form_factor_prescription: str = "isoscalar_zexp") -> dict
             "mass_record": XE131_MASS_RECORD,
             "AFH_native_provenance": provenance,
             "recoil_momentum_convention": "q_A=sqrt(2*m_A*E_R+E_R^2)",
-            "nucleon_invariant_convention": "t_N=-|q_A|^2 in the static impulse matching",
+            "nucleon_invariant_convention": "strict one-body impulse q_N^mu=q_A^mu, t_N=t_A=E_R^2-Q_A^2=-2*m_A*E_R",
         },
         "form_factor_prescription": form_factor_prescription,
         "form_factor_status": (
-            "bishara_linear uses F1^uds(t_N)=3+8.392 t_N and F2^uds(0)=-0.552; "
-            "isoscalar_zexp is an alternative sensitivity diagnostic"
+            "full quark-current form factors are computed first, then divided by three before entering coefficients with the external g_VN prefactor; bishara_linear uses F1^uds(t_N)=3+8.392 t_N and F2^uds(0)=-0.552"
         ),
         "nucleon_transfer_scheme": (
             "strict one-body impulse q_N^mu=q_A^mu, t_N=t_A=E_R^2-Q_A^2=-2m_AE_R"
