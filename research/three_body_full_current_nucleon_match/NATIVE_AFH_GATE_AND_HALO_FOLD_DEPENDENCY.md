@@ -83,32 +83,64 @@ validate the three-body particle-side coefficients or the full
 
 ## 4. What the current halo engine computes
 
-The engine consumes the complete native artifact root but, in its current
-restricted mode, reads the three charge-sector responses \(W_M\),
-\(W_{\Phi''}\), and signed \(W_{M\Phi''}\). Its leptonic Coulomb weight is
+The adopted primary output is **B**, the finite-\(t_N\) nucleon-current
+correction contracted with the native finite-size AFH M response only:
+\[
+R_B(E_R)=
+\mathcal P_3(E_R)\,
+\widehat c_M(t_N)^2\,
+L_C^{(3)}\,
+W_M^{\rm phys}(y_A).
+\]
+The B baseline does not include \(W_{\Phi''}\), \(W_\Delta\),
+\(W_{\Sigma'}\), \(W_{\Sigma''}\), or any additional AFH interference.
+
+The same fold also reports a separate **C extension**,
+\[
+R_C=\mathcal P_3L_C^{(3)}
+\left[
+\widehat c_M^2W_M+
+\widehat c_{\Phi''}^2W_{\Phi''}+
+2\widehat c_M\widehat c_{\Phi''}W_{M\Phi''}
+\right],
+\]
+so that C/B isolates the additional charge multipoles at fixed nucleon
+form factors. A is retained as a reference:
+\[
+R_A=\mathcal P_3L_C^{(3)}W_M^{\rm phys}(y_A),
+\]
+with \(\widehat F_1(0)=1\). All three use the same finite-size AFH
+\(W_M(y_A)\); no extra Helm or whole-nucleus form factor is multiplied.
+
+The leptonic Coulomb weight is
 \[
 L_C^{(3)}=L_{00}^{(3)}
 -\frac{E_R}{Q_A}(L_{03}^{(3)}+L_{30}^{(3)})
 +\left(\frac{E_R}{Q_A}\right)^2L_{33}^{(3)}.
 \]
-Thus it includes the nuclear longitudinal current through the conserved
-one-body nuclear-current relation, conditional on that continuity
+Thus the engine includes the nuclear longitudinal current through the
+conserved one-body nuclear-current relation, conditional on that continuity
 assumption. It is not an \(L_{00}\)-only calculation.
 
-The engine computes \(M+\Phi''+M\Phi''\) with exact isotope-specific
-\(q_A(E_R)\), finite-\(t_N\) form factors, and the full three-body
-phase-space tensor. It omits the transverse \(\Delta\), \(\Sigma'\), and
-\(\Sigma'\)-\(\Delta\) multipoles. Its status is
-\`COMPUTED_WITHIN_COULOMB_SECTOR_APPROXIMATION\`, with
-\`full_current_complete=false\`.
-
-The provisional fixed-speed Python AFH contraction gives
+The adopted default nucleon form-factor prescription is the first-order
+Bishara flavor-separated low-\(Q_N^2\) expansion:
 \[
-\max |R_{\rm spatial}/R_{\rm Coulomb}|=7.09596\times10^{-9}
+F_1^{uds}(t_N)=3+8.392t_N+\mathcal O(t_N^2),\qquad
+F_2^{uds}(t_N)=-0.552+\mathcal O(t_N).
 \]
-over 84 tested rows only. This is not a global halo-integrated bound and is
-not a reason to omit the spatial terms from the final kernel.
+Because the public prefactor uses \((g_1g_2g_{VN})^2\) with
+\(g_{VN}=3g_{Vq}\), the coefficients use
+\(\widehat F_i=F_i^{uds}/3\). The isoscalar_zexp prescription is
+retained only as a sensitivity model. The formal one-body impulse
+prescription is \(t_N=t_A=-2m_AE_R\), while AFH \(y_A\) uses
+\(Q_A^2=2m_AE_R+E_R^2\).
 
+The engine omits the transverse \(\Delta\), \(\Sigma'\), and
+\(\Sigma'\)-\(\Delta\) multipoles from B and C. Its full-vector
+candidate remains provisional until the native spatial-response and P3-C
+amplitude-level gates pass. The natural-xenon halo fold is still blocked
+from production promotion by the seven-isotope/eight-response native
+AFH gate.
 ## 5. Separate single-isotope Xe-131 native charge archive
 
 The independent Xe-131 archive used for the fixed-speed diagnostic is
