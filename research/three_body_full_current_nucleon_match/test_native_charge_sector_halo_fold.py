@@ -97,7 +97,9 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
                 for name in fold.FULL_VECTOR_RESPONSE_NAMES
             },
         }
-        out = fold.interpolate_native_response(entry, 0.5)
+        out = fold.interpolate_native_response(
+            entry, 0.5, response_names=fold.FULL_VECTOR_RESPONSE_NAMES
+        )
         self.assertEqual(out["interpolation_used"], "linear_psd_preserving")
         for name in fold.FULL_VECTOR_RESPONSE_NAMES:
             self.assertAlmostEqual(out["physical_equal_pn"][name], 1.5)
