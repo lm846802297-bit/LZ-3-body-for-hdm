@@ -59,6 +59,38 @@ The P3-C amplitude subgate still uses constant \(q=0\) anchors and does not
 validate the B bound-nucleus current. P1 does not claim a bound-nucleus or
 off-shell current.
 
+## Adopted production baseline B (2026-11-19)
+
+The primary fixed-speed and natural-xenon calculation is now
+[
+\frac{d\sigma_B}{dE_R}\propto
+\mathcal P_3L_C^{(3)}
+\widehat c_M(t_N)^2W_M^{\rm phys}(y_A),
+]
+with the finite-(t_N) effective nucleon Dirac–Pauli current and the
+native finite-size AFH (M) response only. B contains no
+(Phi''), (Delta), (Sigma'), (Sigma''), or response interference.
+A is retained only as the q=0-current reference; C and D are separate
+nuclear-response extensions.
+
+The default B nucleon form-factor prescription is the Bishara et al.
+Appendix A.1 low-momentum flavor sum:
+[
+F_1^{uds,N}(t_N)=3+8.392t_N+mathcal O(t_N^2),qquad
+F_2^{uds,N}(t_N)=-0.552+mathcal O(t_N).
+]
+With the external ((g_1g_2g_{VN})^2) prefactor and
+(g_{VN}=3g_{Vq}), all current coefficients use
+(widehat F_i=F_i^{uds}/3). The (F_2) input is leading-order constant;
+no unverified Pauli slope is assumed. The isoscalar_zexp model is
+sensitivity-only.
+
+Formal one-body impulse uses (t_N=t_A=-2m_AE_R); AFH (y_A) uses
+(Q_A^2=2m_AE_R+E_R^2). The AFH factor four and the quark-current factor
+three are independent normalization ledgers. See
+[NUCLEAR_FINITE_SIZE_BASELINE_POLICY.md](NUCLEAR_FINITE_SIZE_BASELINE_POLICY.md)
+for the single source of truth.
+
 ## 1. Purpose and amplitude
 
 This study combines the spin-resolved three-body DM current with the
