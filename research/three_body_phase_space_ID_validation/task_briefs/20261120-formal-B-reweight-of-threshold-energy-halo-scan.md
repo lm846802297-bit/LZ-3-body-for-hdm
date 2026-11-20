@@ -2,7 +2,7 @@
 
 **Date:** 2026-11-20  
 **Owner:** LZ-3-body-for-hdm research  
-**Status:** local computation complete; independent PR workflow validation PASS (19 tests; artifact comparison agrees to floating-point precision)
+**Status:** local computation complete; formal-B and independent high-order halo GitHub workflows PASS
 
 ## Objective
 
@@ -84,3 +84,14 @@ This task produces a B-reweighted halo rate-ratio archive. It does not rerun pha
 - All numerical gates passed for the three strange-current scenarios.
 - Downloaded GitHub CSV outputs agree with the local outputs to below (4.6\times10^{-13}) maximum relative difference in finite numeric fields.
 - The downloaded artifact's SHA256SUMS verification passed.
+
+
+## Independent high-order halo validation
+
+- Workflow run: 44673037709 (success).
+- Artifact ID: 14602217987; SHA-256: eb8926b395cde165dc1f483644c999756129ca626edb78ac1b95160f642a3d9d.
+- 1,456 isotope-energy rows and 208 natural-xenon recoil points; zero support mismatches.
+- Natural-xenon maximum full/(I(D_{NR})) discrepancy: 0.0355190413% in 180–320 keV and 0.3527618038% over the full supported scan.
+- Baseline-to-high-order maximum natural-xenon approximation-error shift: (1.0792\times10^{-5}) percentage points.
+- GitHub versus archived local full halo kernel: maximum relative difference (2.82\times10^{-8}); the (I(D_{NR})) kernel is identical.
+- Derived isotope relative-error maximum absolute difference: (2.83\times10^{-6}) percentage points.
