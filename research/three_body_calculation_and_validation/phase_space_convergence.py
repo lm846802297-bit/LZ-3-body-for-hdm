@@ -291,9 +291,6 @@ def run_mapping_scan(output_dir: Path, nref: int = 32):
             ("threshold-u2", "threshold_u2", 12, 12, 6),
             ("threshold-u2", "threshold_u2", 16, 16, 8),
             ("threshold-u2", "threshold_u2", 24, 24, 12),
-            ("threshold-energy-u2", "threshold_energy_u2", 8, 8, 4),
-            ("threshold-energy-u2", "threshold_energy_u2", 12, 12, 6),
-            ("threshold-energy-u2", "threshold_energy_u2", 24, 24, 12),
         )
         for method, mapping, nW, nz, nphi in configs:
             value = integrate_i6(
