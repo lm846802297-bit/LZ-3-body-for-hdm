@@ -604,14 +604,17 @@ def run_scan(
         else:
             raise ValueError(f"unknown scan mode: {mode}")
     output_dir.mkdir(parents=True, exist_ok=True)
-    output_names = [
-        "phase_space_mapping_convergence.csv",
-        "phase_space_angular_convergence.csv",
-        "phase_space_threshold_convergence.csv",
-        "phase_space_li_prefactor_crosscheck.csv",
-        "phase_space_historical_800_anchor.csv",
-        "phase_space_near_pole_convergence.csv",
-    ]
+    mode_output_names = {
+        "mapping": "phase_space_mapping_convergence.csv",
+        "angular": "phase_space_angular_convergence.csv",
+        "threshold": "phase_space_threshold_convergence.csv",
+        "prefactor": "phase_space_li_prefactor_crosscheck.csv",
+        "historical_800": "phase_space_historical_800_anchor.csv",
+        "near_pole": "phase_space_near_pole_convergence.csv",
+    }
+    # Only record files produced by this invocation; old files in a reused
+    # output directory must not be mistaken for outputs of the current run.
+    output_names = [mode_output_names[mode] for mode in results]
     output_records = {}
     for name in output_names:
         path = output_dir / name
