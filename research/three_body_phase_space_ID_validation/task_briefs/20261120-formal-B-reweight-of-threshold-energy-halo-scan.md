@@ -2,7 +2,7 @@
 
 **Date:** 2026-11-20  
 **Owner:** LZ-3-body-for-hdm research  
-**Status:** local computation complete; independent PR workflow validation pending
+**Status:** local computation complete; independent PR workflow validation PASS (19 tests; artifact comparison agrees to floating-point precision)
 
 ## Objective
 
@@ -73,3 +73,14 @@ Across 180--320 keV the suppression is about 20.4--33.8%. The isotope-level full
 ## Scope boundary
 
 This task produces a B-reweighted halo rate-ratio archive. It does not rerun phase space, change AFH nuclear responses, add \(W_{\Phi''}\) or \(W_{M\Phi''}\), apply detector response, or produce an LZ likelihood/exclusion. The next detector step should consume the resulting B spectrum through the existing LZ rate-level fold.
+
+
+## Independent reproduction completed
+
+- GitHub workflow run: 44672770451 (success).
+- Uploaded artifact ID: 14599834070.
+- Artifact SHA-256: 05368fa13890932bed0124a651de53a998570524a70d3fe33a6992d1610f1bd9.
+- All 19 B-baseline regression tests passed.
+- All numerical gates passed for the three strange-current scenarios.
+- Downloaded GitHub CSV outputs agree with the local outputs to below (4.6\times10^{-13}) maximum relative difference in finite numeric fields.
+- The downloaded artifact's SHA256SUMS verification passed.
