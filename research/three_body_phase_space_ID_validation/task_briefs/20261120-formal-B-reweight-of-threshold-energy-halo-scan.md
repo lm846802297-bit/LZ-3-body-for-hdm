@@ -2,7 +2,7 @@
 
 **Date:** 2026-11-20  
 **Owner:** LZ-3-body-for-hdm research  
-**Status:** local computation complete; formal-B and independent high-order halo GitHub workflows PASS
+**Status:** high-order Halo validation PASS; formal-B reweight rerun is pinned to the accepted PR #93 high-order artifact
 
 ## Objective
 
@@ -14,11 +14,11 @@ Do not rerun the three-body phase-space or halo integrations. Reweight each isot
 
 ## Frozen input
 
-- Workflow run: 44655861356.
-- Artifact ID: 14595907606.
+- Workflow run: 44681433965.
+- Artifact ID: 14607350801.
 - Artifact name: halo-seven-isotope-full-vs-ID-full-recoil-scan.
-- Artifact SHA-256: 05ceeea175e39ed658b0bfab4a15f6f654e1a49a9508c147291ef58c622471f8.
-- Source commit: c0b58c14362ab0acc70abdfb56ed10943420a294.
+- Artifact SHA-256: a570bbf81119e8b7b87526c51b7012d056c0c07e290618bb7e12469b43571194.
+- Source commit: aabaf2f2c8ecb1b9de28cf29c13cc1f92fa10f83.
 - Input files: halo-seven-isotope-highorder/seven_isotope_halo_comparison.csv and natural_xenon_halo_comparison.csv.
 - Expected input dimensions: 1,456 isotope rows and 208 natural-xenon recoil points.
 
@@ -95,3 +95,10 @@ This task produces a B-reweighted halo rate-ratio archive. It does not rerun pha
 - Baseline-to-high-order maximum natural-xenon approximation-error shift: (1.0792\times10^{-5}) percentage points.
 - GitHub versus archived local full halo kernel: maximum relative difference (2.82\times10^{-8}); the (I(D_{NR})) kernel is identical.
 - Derived isotope relative-error maximum absolute difference: (2.83\times10^{-6}) percentage points.
+
+
+## Accepted high-order convergence inputs
+
+The pinned high-order artifact metadata records speed quadrature order 32 and internal quadrature (12,4,4), with 1,456 isotope-energy rows and 208 natural-xenon recoil points. The natural-xenon maximum Full/I(D_NR) discrepancy is 0.0355190413% in 180--320 keV and 0.3527618038% over 5--800 keV. Baseline-to-high-order active-support shifts are 9.8863e-6% (Full), 9.9873e-6% (I(D_NR)), and 2.9057e-6 percentage points (approximation error).
+
+The formal-B workflow input has been updated to this accepted artifact and verifies the metadata quadrature settings before applying the nucleon form factors.
