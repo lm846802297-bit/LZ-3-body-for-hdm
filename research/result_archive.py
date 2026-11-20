@@ -35,7 +35,9 @@ def csv_units(column: str) -> str:
     if column in labels:
         return "label"
     exact = {
-        "A": "1", "nv_low": "1", "nv_final": "1",
+        "A": "1", "J_A": "1", "T_iso": "1", "y": "1", "W_M00_AFH_package": "1",
+        "R_AFH_isoscalar_4pi_over_2Jplus1": "1", "R_equal_pn_normalized": "1", "R_over_A2": "1",
+        "nv_low": "1", "nv_final": "1",
         "speed_quadrature_relative_difference": "1",
         "kernel_order_relative_difference": "1",
         "available_atom_fraction": "1", "missing_atom_fraction": "1",
