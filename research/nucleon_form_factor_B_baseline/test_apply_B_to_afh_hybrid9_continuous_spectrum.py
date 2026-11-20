@@ -127,6 +127,17 @@ class ApplyBToAbsoluteAFHSpectrumTests(unittest.TestCase):
             self.assertEqual(len(rates), 4)
             self.assertEqual(len(isotope_rates), 10)
             self.assertTrue(all(0.0 < float(row["B_over_P0_rate"]) < 1.0 for row in rates))
+            self.assertTrue(all("c_M_raw" in row and "c_M_hat" in row for row in isotope_rates))
+            self.assertAlmostEqual(
+                float(isotope_rates[0]["c_M_hat"]),
+                float(isotope_rates[0]["c_M_raw"])/3.0,
+                places=12,
+            )
+            self.assertAlmostEqual(
+                float(isotope_rates[0]["F_M"]),
+                float(isotope_rates[0]["c_M_hat"]),
+                places=12,
+            )
             self.assertTrue(all(float(row["nucleon_FF_rate_multiplier"]) > 0.0
                                 for row in isotope_rates))
             transfer_row = isotope_rates[0]
