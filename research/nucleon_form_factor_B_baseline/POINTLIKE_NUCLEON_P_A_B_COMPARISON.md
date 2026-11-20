@@ -185,13 +185,13 @@ The pull-request workflow completed successfully:
 
 The B values were also independently recalculated by the existing B-baseline workflow after changing its form-factor argument to \(-t_N=2m_AE_R\). Its LZ detector yields agree with the B column in the P/A/B artifact exactly at stored precision for all four benchmarks and both AFH-7/Hybrid-9 scenarios.
 
-- P/A/B workflow: [run 44653142263](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44653142263)
-- P/A/B numerical artifact: [download artifact 14590934148](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44653142263/artifacts/14590934148)
-- Independent B-baseline workflow: [run 44653142064](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44653142064)
-- Repository layout and benchmark-manifest check: [run 44653142113](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44653142113)
+- P/A/B workflow: [run 44653693048](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44653693048)
+- P/A/B numerical artifact: [download artifact 14591842651](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44653693048/artifacts/14591842651)
+- Independent B-baseline workflow: [run 44653693016](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44653693016)
+- Repository layout and benchmark-manifest check: [run 44653692995](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44653692995)
 
 The uploaded P/A/B artifact ZIP SHA-256 is:
 
 \[
-\texttt{85685c9cb9684d0ad7290e937e5d4b4cd2b505a6f5b93050c08ffbd977d21fac}.
+\texttt{50ed0dc042a93d92464a2ae657b8192ece5ec512ecf0d6b872178e3c13c9c3b6}.
 \]
