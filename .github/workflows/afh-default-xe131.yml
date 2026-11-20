@@ -46,7 +46,84 @@ jobs:
           python -m pip install -r research/afh_default_density_xe131/requirements.txt
 
       - name: Verify committed native full-dsigma archive SHA-256 checksums
-        run: sha256sum --check research/afh_default_density_xe131/output/full_dsigma_mathematica/SHA256SUMS.txt
+        run: |
+          # The native archive is a frozen 2026-11-16 result. Its manifest
+          # records the historical phase-space source; do not compare that
+          # historical source hash against the actively developed main file.
+          grep -v 'phase_space_convergence.py
+
+      - name: Verify committed Green high-order archive SHA-256 checksums
+        run: sha256sum --check research/afh_default_density_xe131/output/full_dsigma_mathematica/green_high_order_SHA256SUMS.txt
+
+      - name: Compile Python implementations and comparators
+        run: |
+          python -m py_compile research/three_body_calculation_and_validation/eq6_kernel.py
+          python -m py_compile research/three_body_calculation_and_validation/phase_space_convergence.py
+          python -m py_compile research/afh_default_density_xe131/compare_afh_mathematica_python.py
+          python -m py_compile research/afh_default_density_xe131/compare_full_dsigma_mathematica.py
+          python -m py_compile research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py
+
+      - name: Run Xe-131 AFH and three-body regression tests
+        run: |
+          python -m unittest discover -s research/afh_default_density_xe131/tests -p 'test_*.py' -v
+          python -m unittest discover -s research/three_body_calculation_and_validation/tests -p 'test_eq6_kernel.py' -v
+          python -m unittest discover -s research/three_body_calculation_and_validation/tests -p 'test_phase_space_convergence.py' -v
+          python -m unittest discover -s research/three_body_calculation_and_validation/tests -p 'test_user_l00_benchmark.py' -v
+
+      - name: Recompute and validate the native Mathematica/Python full-grid comparison
+        run: |
+          mkdir -p "$RUNNER_TEMP/full_dsigma_crosscheck"
+          python research/afh_default_density_xe131/compare_full_dsigma_mathematica.py \
+            --mathematica-csv research/afh_default_density_xe131/output/full_dsigma_mathematica/mathematica_full_dsigma_xe131.csv \
+            --out-csv "$RUNNER_TEMP/full_dsigma_crosscheck/comparison.csv" \
+            --metadata "$RUNNER_TEMP/full_dsigma_crosscheck/comparison.json" \
+            --require-full-grid
+          python - <<'PY'
+          import json, os
+          from pathlib import Path
+          p = Path(os.environ["RUNNER_TEMP"]) / "full_dsigma_crosscheck" / "comparison.json"
+          meta = json.loads(p.read_text())
+          assert meta["status"] == "PASS", meta
+          assert meta["rows"] == 652
+          assert meta["open_phase_space_rows"] == 500
+          maxima = meta["max_relative_differences"]
+          assert maxima["dsigma_conversion"] <= 2e-7
+          assert maxima["dsigma_conversion_identity_Mathematica"] <= 2e-12
+          assert maxima["dsigma_conversion_identity_Python"] <= 2e-12
+          print("PASS: native 652-row Mathematica/Python Eq. (6) comparison and per-code unit-conversion identities.")
+          PY
+
+      - name: Upload recomputed Mathematica/Python cross-check
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-xe131-full-dsigma-crosscheck
+          path: ${{ runner.temp }}/full_dsigma_crosscheck/
+          if-no-files-found: error
+          retention-days: 90
+
+      - name: Run natural-xenon target and archived-data checks
+        run: |
+          python -m unittest discover -s research/afh_default_density_natural_xenon_halo -p 'test_*.py' -v
+          python research/afh_default_density_natural_xenon_halo/validate_archived_results.py
+
+      - name: Validate Figure 2 source/output manifest
+        run: python research/docs/supplements/validate_three_body_results_manifest.py
+
+      - name: Remove Python bytecode caches created by tests
+        run: find research -type d -name __pycache__ -prune -exec rm -rf {} +
+
+      - name: Verify no generated calculation outputs are being committed by CI
+        run: |
+          git status --short
+          test -z "$(git status --porcelain)"
+ \
+            research/afh_default_density_xe131/output/full_dsigma_mathematica/SHA256SUMS.txt \
+            > "$RUNNER_TEMP/full_dsigma_immutable_files.SHA256SUMS"
+          sha256sum --check "$RUNNER_TEMP/full_dsigma_immutable_files.SHA256SUMS"
+          git show 8f73c26d89605300b6539d6ca2cbd3ab5ceffcbe:research/three_body_calculation_and_validation/phase_space_convergence.py \
+            > "$RUNNER_TEMP/phase_space_convergence_at_archive_revision.py"
+          printf '7396b06fb2ea4bc4f857463ea63c48cc60d118ce286a12915cbb7a7a387217b7  %s\n' \
+            "$RUNNER_TEMP/phase_space_convergence_at_archive_revision.py" | sha256sum --check
 
       - name: Verify committed Green high-order archive SHA-256 checksums
         run: sha256sum --check research/afh_default_density_xe131/output/full_dsigma_mathematica/green_high_order_SHA256SUMS.txt
