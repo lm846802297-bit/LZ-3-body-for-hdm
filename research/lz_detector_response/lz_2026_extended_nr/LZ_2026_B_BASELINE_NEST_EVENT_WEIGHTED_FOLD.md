@@ -1,6 +1,6 @@
 # LZ 2026 formal B baseline: event-weighted NEST NR response fold
 
-**Status:** local full calculation completed and checksum-verified; GitHub reproduction workflow corrected and awaiting its rerun.  
+**Status:** local calculation and independent GitHub reproduction both PASS; downloaded GitHub artifact matches the local outputs exactly.  
 **Date:** 2026-11-20  
 **Primary nuclear response:** AFH-7.  
 **Diagnostic nuclear response:** Hybrid-9 (AFH-7 plus Helm fallback for Xe-124/Xe-126).
@@ -135,3 +135,18 @@ The output artifact contains the 2D intensity, fold comparison, per-bin acceptan
 
 
 The complete local rerun used the pinned 1.06-million-event sample for each of the four NEST response families and the vectorized B-specific kernel. It reproduced all 192 comparisons, 25,440 per-bin diagnostics, and 120,000 nonzero 2D cells. The maximum raw-rate closure residual is (7.77\times10^{-16}); the maximum split-replica accepted-rate difference is (0.4144\%), and the maximum split-replica 2D TV distance is (3.8592\%). All seven local output files pass SHA256SUMS. The three new regression tests cover formal-B column selection, transfer provenance, and event-weight normalization; two additional guards test zero-rate strata and reject positive-rate bins with zero sampled support.
+
+
+## 8. Independent GitHub reproduction: PASS
+
+The corrected workflow [44680838189](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44680838189) completed successfully after fixing the downloaded-artifact root path and adding the pinned NumPy 2.3.5 dependency.
+
+- Five regression tests passed, including the zero-rate and zero-sampled-support guards.
+- The full fold completed for all 192 comparisons, 25,440 energy-bin rows, 192 replica checks, and 120,000 nonzero 2D cells.
+- Maximum raw-rate closure residual: (7.771561172376096\times10^{-16}).
+- All seven files in the GitHub output artifact passed SHA256SUMS verification.
+- GitHub artifact: ID 14603649214, `lz-2026-formal-B-baseline-nest-fold`, SHA-256 `ff078d772a212a8bb25c8e61b99732e94f0983798659124b7027f5a0b6a310aa`.
+
+I downloaded the GitHub artifact and compared it with the local 4.24-million-event fold. The four CSV tables have identical dimensions and every numeric field is exactly equal; the summary JSON is also identical. This establishes bit-for-bit numerical agreement for the archived fold outputs.
+
+The two vector figures are archived in [B_BASELINE_RECOIL_FIGURES.md](B_BASELINE_RECOIL_FIGURES.md), with their normalization and selection conventions documented.
