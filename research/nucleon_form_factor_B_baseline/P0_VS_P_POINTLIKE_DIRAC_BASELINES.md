@@ -48,8 +48,7 @@ J_N^\mu=
 F_1^V(t_N)\gamma^\mu
 +\frac{iF_2^V(t_N)}{2m_N}
 \sigma^{\mu\nu}q_{N,\nu}
-\right]
-u_N(p_N),
+\right]u_N(p_N),
 \]
 
 其中
