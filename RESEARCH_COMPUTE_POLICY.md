@@ -8,7 +8,7 @@
 
 The project uses a three-part architecture with strictly separated responsibilities:
 
-1. **Primary computation — the current ChatGPT-provided Linux Python environment, when available.** Run the main scientific calculations directly in the active research session using the available local Python runtime and scientific libraries (for example Python, NumPy, SciPy, SymPy, and project-specific tools). This means the session's Linux compute environment; it does **not** mean the user's Windows desktop.
+1. **Primary computation — selected by the active ChatGPT work mode.** In ordinary GPT chat mode, use the ChatGPT-provided Linux Python environment. In Codex mode and ChatGPT Work mode, use the user's Windows local computer/workspace as the primary environment. Use the runtime, filesystem, CPU/GPU, and installed scientific tools actually exposed by that mode; record the exact OS, runtime, and hardware for each run.
 2. **GitHub — canonical source and research archive.** Store versioned source code, input-data provenance, run manifests, native numerical outputs, plots, validation reports, and pull-request history. GitHub is the durable record, not the primary numerical execution engine.
 3. **GitHub Actions — independent verification.** Use Actions for CI, regression tests, selected independent recalculations, cross-platform checks, and reproducibility checks against the primary results. Actions must not silently replace the primary computation or become a prerequisite for continuing research.
 
@@ -16,11 +16,12 @@ This division is normative for this project. Do not reopen it for each task.
 
 ## 2. Primary computation / 主计算环境
 
-- Start the main calculation in the current ChatGPT Linux compute environment whenever the required source, inputs, dependencies, memory, CPU time, and storage are available.
-- Execute the actual scientific program in that environment. Do not describe a result as locally recomputed merely because a GitHub Actions artifact was downloaded or inspected.
-- The term **local computation** in this policy means execution in the active ChatGPT Linux session/container, not execution on the user's physical computer.
-- The user's Windows workstation/GPU is a separate machine. Do not claim access to its filesystem, CPU, GPU, or installed software unless an explicitly authorized connection/runner has actually been established and verified.
-- If the active Linux environment cannot perform a task (for example, unavailable dependency, inaccessible input, resource limit, or incompatible native software), state the exact blocker. Continue with feasible CPU/local alternatives where scientifically sound. Do not silently move the primary workload to Actions.
+- Select the primary environment from the active mode before running: (a) ordinary GPT chat mode → the ChatGPT Linux Python environment; (b) Codex mode or ChatGPT Work mode → the user's Windows local environment. Run the main scientific program in that mode's available runtime when the required tools and resources are present.
+- Execute the actual scientific program in the selected primary environment. Do not describe a result as locally recomputed merely because a GitHub Actions artifact was downloaded or inspected.
+- The term **local computation** means execution in the active mode's primary environment: ChatGPT Linux in ordinary GPT chat mode, and the user's Windows computer/workspace in Codex or Work mode.
+- In ordinary GPT chat mode, the Windows workstation/GPU is a separate machine; do not claim access to its filesystem, CPU, GPU, or installed software unless an authorized connection has actually been established and verified. In Codex/Work mode, use the Windows local files, CPU/GPU, and installed tools exposed by that mode, and verify their availability before relying on them.
+- A Windows self-hosted GitHub Actions runner remains an Actions execution even if it is hosted on the same physical PC. It is distinct from direct Windows execution in Codex/Work and remains an independent-verification or explicitly authorized runner path.
+- If the selected primary environment cannot perform a task (for example, unavailable dependency, inaccessible input, resource limit, or incompatible native software), state the exact blocker. Continue with feasible alternatives in that mode where scientifically sound. Do not silently move the primary workload to Actions.
 - Do not redesign a validated numerical method merely to use a GPU. Introduce GPU acceleration only when a measured performance need justifies it and the accelerated implementation is independently checked against the established reference.
 
 ## 3. GitHub repository responsibilities / GitHub 归档职责
@@ -73,11 +74,11 @@ Report four statuses separately: **computed**, **archived**, **numerically valid
 
 ## 6. Failure and fallback rules / 失败与备用规则
 
-- A GitHub outage, Actions queue, CI failure, or artifact-download failure must not stop a feasible primary calculation in the current Linux environment.
+- A GitHub outage, Actions queue, CI failure, or artifact-download failure must not stop a feasible primary calculation in the active mode's primary environment.
 - A primary-environment limitation must be reported specifically; do not claim that a calculation ran if it did not.
 - If a primary result cannot be reproduced in Actions, first compare source SHA, input hashes, dependency versions, floating-point precision, conventions, and tolerances. Diagnose the discrepancy rather than tuning the primary result to force agreement.
 - If Actions cannot run, record it as unavailable/blocked/unrun and proceed with the scientific checks that can be performed locally.
-- If the ChatGPT Linux environment is unavailable or insufficient, do not silently treat Actions as the replacement primary environment. State the blocker and use an explicitly approved alternative execution environment, recording that change in the run manifest.
+- If the selected mode's primary environment is unavailable or insufficient, state the exact blocker. An explicitly approved switch to the other direct execution environment (ChatGPT Linux or Windows local) may be used and must be recorded in the run manifest; GitHub Actions must not silently become the replacement primary environment.
 
 ## 7. Security and scope / 安全与适用范围
 
@@ -92,8 +93,8 @@ Report four statuses separately: **computed**, **archived**, **numerically valid
 
 本项目固定采用：
 
-- **主计算：** 当前 ChatGPT 会话提供的 Linux Python 计算环境；直接运行主积分、扫描、收敛分析和作图。这里的“本地”不是用户的 Windows 电脑。
+- **主计算：** 按当前工作模式选择：普通 GPT 聊天模式使用 ChatGPT 提供的 Linux Python 环境；Codex 和 ChatGPT Work 模式使用用户的 Windows 本地计算环境。每次运行记录真实的操作系统、运行时和硬件。
 - **GitHub：** 保存源码、输入来源、运行清单、原生结果、图表、审计记录和校验和，作为长期、可追溯的研究档案。
 - **GitHub Actions：** 仅承担 CI、回归测试、选定基准点独立复算和跨平台交叉验证，不替代主计算，也不作为继续科研的前置条件。
 
-每项重要计算都必须记录精确源码版本、输入及哈希、命令、参数、环境、输出和实际执行的验证。分别报告计算完成、结果归档、数值验证和物理验证状态。Actions 失败不应阻断可行的主计算；主计算环境不可用时，必须明确说明并记录经批准的备用环境，不能悄悄把 Actions 改作主计算环境。
+每项重要计算都必须记录精确源码版本、输入及哈希、命令、参数、环境、输出和实际执行的验证。分别报告计算完成、结果归档、数值验证和物理验证状态。Actions 失败不应阻断当前模式下可行的主计算；所选主计算环境不可用时，可以明确记录并经批准切换到另一直接执行环境，但不能悄悄把 Actions 改作主计算环境。
