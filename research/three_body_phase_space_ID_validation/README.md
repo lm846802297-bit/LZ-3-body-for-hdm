@@ -110,3 +110,8 @@ The local calculation covers all 1,456 isotope-energy rows and 208 natural-xenon
 The source AFH isotope set covers 99.8158% of natural xenon atom abundance; Xe-124 and Xe-126 remain absent and the seven isotope abundances are not renormalized. These outputs are B-reweighted relative rates, not detector-folded event yields.
 
 The independent GitHub reproduction passed in [workflow run 44672770451](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44672770451): all 19 B-baseline regression tests and all numerical gates passed. Artifact 14599834070 (SHA-256 `05368fa13890932bed0124a651de53a998570524a70d3fe33a6992d1610f1bd9`) was downloaded and verified; its numeric CSV outputs agree with the local calculation to below (4.6\times10^{-13}) maximum relative difference.
+
+
+### Independent high-order halo scan validation
+
+The full baseline/high-order halo scan was independently regenerated in [workflow run 44673037709](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44673037709). It completed all 1,456 isotope-energy rows and 208 natural-xenon recoil points with zero support mismatches. The natural-xenon Full/(I(D_{NR})) discrepancy is 0.0355190413% in 180–320 keV and 0.3527618038% over the full supported scan. The baseline-to-high-order maximum natural-xenon approximation-error shift is (1.0792\times10^{-5}) percentage points. The GitHub artifact was downloaded and compared with the archived local scan; the full halo kernel agrees within (2.82\times10^{-8}) relative and the (I(D_{NR})) kernel is identical.
