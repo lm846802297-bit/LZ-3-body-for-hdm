@@ -6,6 +6,7 @@ import unittest
 from pathlib import Path
 
 from apply_B_to_afh_hybrid9_continuous_spectrum import rate_prefactor
+from borah2020_lowq2 import MAVG_GEV
 from compare_pointlike_A_B_nucleon_baselines import (
     MODELS,
     leading_order_pointlike_cM_hat,
@@ -52,12 +53,12 @@ class PointlikeABComparisonTests(unittest.TestCase):
         p_over_p0 = (cM_P / cM_P0) ** 2
         self.assertAlmostEqual(
             p_over_p0,
-            (1.0 - q2 / (8.0 * 0.938919**2)) ** 2,
+            (1.0 - q2 / (8.0 * MAVG_GEV**2)) ** 2,
             places=14,
         )
 
         # Verify the leading small-Q_N^2 expansion of the rate correction.
-        epsilon = q2 / (8.0 * 0.938919**2)
+        epsilon = q2 / (8.0 * MAVG_GEV**2)
         exact_delta = p_over_p0 - 1.0
         leading_delta = -2.0 * epsilon
         self.assertAlmostEqual(exact_delta, leading_delta + epsilon**2, places=14)
