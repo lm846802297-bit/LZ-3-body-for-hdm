@@ -41,23 +41,42 @@ F_i^{\mathrm{EM},p}(t_N)
 \right].
 \]
 
-The charge-like NR coefficient used by this B rate-level implementation is
+The charge-like NR coefficient used by this B rate-level implementation is the raw flavor-summed coefficient
 
 \[
-c_M(t_N)=F_1^{uds,N}(t_N)
+c_M^{\rm raw}(t_N)=F_1^{uds,N}(t_N)
 +\frac{t_N}{8m_N^2}
 \left[F_1^{uds,N}(t_N)+2F_2^{uds,N}(t_N)\right].
 \]
 
-Since the equal-coupling pointlike normalization is \(c_M(0)=3\), define
+For the universal unit \(u,d,s\) current, \(F_1^{uds,N}(0)=3\), so
+\(c_M^{\rm raw}(0)=3\). The external coupling convention in this project is
+\(g_{VN}=3g_{Vq}\). Therefore the coefficient paired with the external
+nucleon coupling is normalized as
 
 \[
-F_M(t_N)=\frac{c_M(t_N)}{3},
+\widehat c_M(t_N)\equiv F_M(t_N)
+=\frac{c_M^{\rm raw}(t_N)}{3},
 \qquad
-\mathcal C_N(t_N)=|F_M(t_N)|^2.
+g_{Vq}c_M^{\rm raw}=g_{VN}\widehat c_M.
 \]
 
-Each isotope's already-computed three-body rate contribution is multiplied by \(\mathcal C_N\), then the natural-xenon sum is reconstructed. The finite-size AFH \(W_M(y_A)\) response is retained unchanged; it is not replaced by a point-nucleus response.
+The rate multiplier is
+
+\[
+\mathcal C_N(t_N)=|\widehat c_M(t_N)|^2=|F_M(t_N)|^2.
+\]
+
+Thus \(c_M^{\rm raw}(0)=3\), while \(\widehat c_M(0)=F_M(0)=1\).
+The factor three is counted exactly once: do not combine the already
+three-valence-quark-normalized coupling \(g_{VN}\) with the unnormalized
+\(c_M^{\rm raw}\).
+
+Each isotope's already-computed three-body rate contribution is multiplied
+by \(\mathcal C_N\), then the natural-xenon sum is reconstructed. The finite-size
+AFH \(W_M(y_A)\) response is retained unchanged; it is not replaced by a
+point-nucleus response. The full derivation and naming convention are in
+[CM_RAW_NORMALIZATION_AND_AFH_M_RESPONSE.md](CM_RAW_NORMALIZATION_AND_AFH_M_RESPONSE.md).
 
 ## Electromagnetic proton and neutron inputs
 
@@ -144,6 +163,8 @@ The detector fold reports the central B event yield. The separate covariance pro
       --strange-model sufian2017_unit_current --draws 3000
 
 ## P0 versus P: pointlike Dirac nucleon precision levels
+
+The raw-versus-normalized coefficient convention and its relation to the external coupling and AFH (W_M) are fixed in [CM_RAW_NORMALIZATION_AND_AFH_M_RESPONSE.md](CM_RAW_NORMALIZATION_AND_AFH_M_RESPONSE.md).
 
 P0 and P use the same pointlike Dirac form factors, \(\widehat F_1=1\) and \(\widehat F_2=0\). Their difference is the matching order:
 
