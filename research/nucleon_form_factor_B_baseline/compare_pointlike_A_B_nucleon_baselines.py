@@ -79,8 +79,19 @@ def qA2_spatial_from_recoil(mA_GeV: float, ER_keV: float) -> float:
     return 2.0 * mA_GeV * ER + ER * ER
 
 
+def leading_order_pointlike_cM_hat() -> float:
+    """P0: leading-order point-nucleon charge coefficient; omit finite-t_N terms."""
+    return 1.0
+
+
 def pointlike_dirac_cM_hat(q2_form_factor_GeV2: float) -> float:
-    """P: Fhat_1=1, Fhat_2=0, retaining the formal c_M recoil term."""
+    """P: pointlike Dirac charge with the project's finite-transfer M-only match.
+
+    P and P0 both use Fhat_1=1 and Fhat_2=0. P0 truncates c_M to 1,
+    whereas P retains c_M=1-Q_N^2/(8*m_N^2), with Q_N^2=-t_N.
+    The argument is -t_N=2*m_A*E_R under the formal impulse prescription;
+    it is not the AFH spatial Fourier variable Q_A^2.
+    """
     if not math.isfinite(q2_form_factor_GeV2) or q2_form_factor_GeV2 < 0.0:
         raise ValueError("invalid -t_N")
     return 1.0 - q2_form_factor_GeV2 / (8.0 * MAVG_GEV**2)
@@ -239,11 +250,13 @@ def run(
                             prefactor * atom_fraction * kernel * response / denominator
                         )
 
-                    # P0 is the archived leading-order charge-only baseline.
-                    # It is not the zero-transfer Dirac-Pauli A0 approximation.
-                    P0_contribution = base_contribution
+                    # P0 and P share Fhat_1=1, Fhat_2=0. P0 is the
+                    # leading-order charge-only truncation cM=1; it is not A0.
+                    cM_P0 = leading_order_pointlike_cM_hat()
+                    P0_multiplier = cM_P0 * cM_P0
+                    P0_contribution = base_contribution * P0_multiplier
 
-                    # P: pointlike Dirac current, including its recoil term.
+                    # P retains the finite-transfer M-only matching term.
                     cM_P = pointlike_dirac_cM_hat(q2_form_factor)
                     P_multiplier = cM_P * cM_P
                     P_contribution = base_contribution * P_multiplier
@@ -301,8 +314,8 @@ def run(
                             "rate_P0_contribution_events_kg_day_keV": P0_contribution,
                             "F1hat_P0": 1.0,
                             "F2hat_P0": 0.0,
-                            "cMhat_P0": 1.0,
-                            "P0_rate_multiplier": 1.0,
+                            "cMhat_P0": cM_P0,
+                            "P0_rate_multiplier": P0_multiplier,
                             "rate_P_contribution_events_kg_day_keV": P_contribution,
                             "F1hat_P": 1.0,
                             "F2hat_P": 0.0,
@@ -428,8 +441,8 @@ def run(
         "status": "PASS",
         "calculation": "four-level P0/P/A0/B nucleon-current comparison applied to archived AFH-7/Hybrid-9 three-body halo kernels",
         "baseline_definitions": {
-            "P0": "archived leading-order charge-only baseline: Fhat_1=1, Fhat_2=0, cMhat=1; the legacy source spectrum labelled A is P0",
-            "P": "pointlike Dirac nucleon: Fhat_1=1, Fhat_2=0, cMhat=1+t_N/(8*m_N^2)",
+            "P0": "leading-order point-nucleon charge: Fhat_1=1, Fhat_2=0, cMhat=1; omit the finite-t_N/m_N^2 matching term; legacy source spectrum label A maps to P0",
+            "P": "finite-transfer pointlike Dirac charge (M-only): Fhat_1=1, Fhat_2=0, cMhat=1+t_N/(8*m_N^2); same pointlike form factors as P0, but retain the finite-transfer matching term",
             "A0": "zero-transfer form factors frozen at Fhat_1(0)=1 and model-specific Fhat_2(0), retaining the physical t_N recoil term",
             "B": "finite Borah-2020 proton/neutron Dirac-Pauli form factors plus the selected unit-strange-current input, evaluated at t_N=t_A",
         },
@@ -442,7 +455,7 @@ def run(
         "momentum_transfer": {
             "t_N_GeV2": "-2*m_A*E_R",
             "t_A_GeV2": "-2*m_A*E_R",
-            "Q2_form_factor_GeV2": "2*m_A*E_R=-t_N",
+            "Q2_form_factor_GeV2": "Q_N^2=2*m_A*E_R=-t_N; used in P finite-transfer c_M and B nucleon form factors",
             "Q_A2_spatial_GeV2": "2*m_A*E_R+E_R^2; used for AFH y_A only",
             "mediator_denominator_squared_GeV4": "(m_V^2-t_A)^2",
         },
