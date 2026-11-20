@@ -13,11 +13,19 @@ import csv
 import hashlib
 import json
 import math
+import sys
+import time
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable
 
 import numpy as np
 from numpy.polynomial.legendre import leggauss
+
+RESEARCH_DIR = Path(__file__).resolve().parents[1]
+ROOT = RESEARCH_DIR.parent
+sys.path.insert(0, str(RESEARCH_DIR))
+from result_archive import write_result_records  # noqa: E402
 
 try:
     import eq6_kernel as eq6
@@ -669,9 +677,137 @@ def main():
         "--mode", choices=("all", "mapping", "angular", "threshold", "prefactor", "historical_800", "near_pole"),
         default="all",
     )
+    parser.add_argument(
+        "--no-standard-archive", action="store_true",
+        help="skip v1.0.0 run/result/validation JSON generation (default: generate it)",
+    )
     args = parser.parse_args()
+    started_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    started_monotonic = time.monotonic()
     modes = ("mapping", "angular", "threshold", "prefactor", "historical_800", "near_pole") if args.mode == "all" else (args.mode,)
     results = run_scan(args.output_dir, args.reference_order, modes)
+    print("completed:", ", ".join(results))
+    if not args.no_standard_archive:
+        mode_files = {
+            "mapping": "phase_space_mapping_convergence.csv",
+            "angular": "phase_space_angular_convergence.csv",
+            "threshold": "phase_space_threshold_convergence.csv",
+            "prefactor": "phase_space_li_prefactor_crosscheck.csv",
+            "historical_800": "phase_space_historical_800_anchor.csv",
+            "near_pole": "phase_space_near_pole_convergence.csv",
+        }
+        output_dir = args.output_dir.resolve()
+        metadata_path = output_dir / "phase_space_convergence_metadata.json"
+        metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+        output_paths = [
+            (output_dir / mode_files[mode], f"three-body phase-space {mode} audit")
+            for mode in results
+        ]
+        output_paths += [
+            (metadata_path, "phase-space convergence run metadata"),
+            (output_dir / "SHA256SUMS.txt", "original phase-space output checksums"),
+        ]
+        checks = []
+        prefactor_path = output_dir / mode_files["prefactor"]
+        if "prefactor" in results:
+            with prefactor_path.open("r", newline="", encoding="utf-8") as handle:
+                prefactor_rows = list(csv.DictReader(handle))
+            prefactor_error = max(abs(float(row["direct_over_eq6"]) - 1.0) for row in prefactor_rows)
+            prefactor_status = "passed" if prefactor_error <= 1.0e-12 else "failed"
+            prefactor_observed = prefactor_error
+        else:
+            prefactor_status, prefactor_observed = "not_run", None
+        checks.append({
+            "check_id": "EQ6-RAW-LI-PREFACTOR",
+            "name": "Direct Lorentz-invariant phase-space prefactor reconstruction",
+            "category": "analytic",
+            "status": prefactor_status,
+            "method": "Maximum absolute deviation of direct dPhi3 cross section divided by Eq. (6) cross section from unity.",
+            "observed": prefactor_observed,
+            "threshold": 1.0e-12,
+            "unit": "1",
+            "evidence_path": prefactor_path.relative_to(ROOT).as_posix() if "prefactor" in results else metadata_path.relative_to(ROOT).as_posix(),
+        })
+        near_path = output_dir / mode_files["near_pole"]
+        if "near_pole" in results:
+            with near_path.open("r", newline="", encoding="utf-8") as handle:
+                near_rows = list(csv.DictReader(handle))
+            offshell_ok = bool(near_rows) and all(row["pole_inside_phase_space"].lower() == "false" for row in near_rows)
+            checks.append({
+                "check_id": "EQ6-NEAR-POLE-OFFSHELL",
+                "name": "Selected chi2 poles remain outside the three-body phase space",
+                "category": "analytic",
+                "status": "passed" if offshell_ok else "failed",
+                "method": "Check every recorded pole_inside_phase_space flag in the near-pole scan.",
+                "observed": len(near_rows),
+                "threshold": "all selected rows off shell",
+                "unit": "rows",
+                "evidence_path": near_path.relative_to(ROOT).as_posix(),
+            })
+        else:
+            checks.append({
+                "check_id": "EQ6-NEAR-POLE-OFFSHELL",
+                "name": "Selected chi2 poles remain outside the three-body phase space",
+                "category": "analytic", "status": "not_run",
+                "method": "Near-pole scan was not selected in this run.",
+                "observed": None, "threshold": "all selected rows off shell",
+                "unit": "rows", "evidence_path": metadata_path.relative_to(ROOT).as_posix(),
+            })
+        hash_matches = all(
+            (output_dir / name).is_file()
+            and hashlib.sha256((output_dir / name).read_bytes()).hexdigest() == item["sha256"]
+            and (output_dir / name).stat().st_size == item["bytes"]
+            for name, item in metadata.get("outputs", {}).items()
+        )
+        checks.append({
+            "check_id": "EQ6-PHASESPACE-OUTPUT-HASHES",
+            "name": "Phase-space output hashes match run metadata",
+            "category": "integrity",
+            "status": "passed" if hash_matches else "failed",
+            "method": "Recompute SHA-256 and byte size for every output listed in phase_space_convergence_metadata.json.",
+            "observed": len(metadata.get("outputs", {})),
+            "threshold": "all listed output hashes and sizes match",
+            "unit": "files",
+            "evidence_path": metadata_path.relative_to(ROOT).as_posix(),
+        })
+        observables = [
+            {"name": f"{mode}_rows", "value": len(rows), "unit": "rows",
+             "status": "computed", "definition": f"Rows produced by the {mode} phase-space audit."}
+            for mode, rows in results.items()
+        ]
+        observables.append({
+            "name": "max_prefactor_ratio_deviation", "value": prefactor_observed,
+            "unit": "1", "status": "computed" if prefactor_observed is not None else "not_computed",
+            "definition": "Maximum absolute deviation of direct Lorentz-invariant dPhi3 prefactor ratio from unity.",
+        })
+        archive_metadata = dict(metadata)
+        archive_metadata["quadrature"] = metadata.get("reference_quadrature", {})
+        archive_metadata["particle_parameters"] = {
+            "g2": metadata.get("g2"), "width_scheme": metadata.get("width_scheme"),
+        }
+        archive_metadata["not_included"] = [
+            "halo fold", "full model scan", "detector likelihood",
+        ]
+        write_result_records(
+            repo_root=ROOT, out_dir=output_dir, metadata=archive_metadata,
+            source_script=Path(__file__).resolve(), started_at=started_at,
+            started_monotonic=started_monotonic,
+            input_paths=[(
+                Path(__file__).resolve().with_name("eq6_kernel.py"),
+                "Eq. (6) committed Dirac-trace amplitude implementation",
+                "unchanged matrix-element baseline used by the independent phase-space audit",
+            )],
+            output_paths=output_paths, checks=checks, observables=observables,
+            scope_included=[f"independent {mode} phase-space audit" for mode in results],
+            scope_excluded=archive_metadata["not_included"],
+            assumptions=[
+                "The committed eq6_kernel.py matrix element is reused; this audit independently changes phase-space mappings and measures.",
+                "The near-pole width comparison is a diagnostic Breit-Wigner prescription, not a full self-energy.",
+            ],
+            scientific_status="diagnostic",
+            interpretation=metadata["scope"],
+            extension_name="three_body_phase_space",
+        )
     print("completed:", ", ".join(results))
     for mode, rows in results.items():
         print(f"{mode}: {len(rows)} rows")
