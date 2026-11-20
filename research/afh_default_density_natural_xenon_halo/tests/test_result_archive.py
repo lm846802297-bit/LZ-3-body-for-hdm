@@ -1,9 +1,11 @@
 from __future__ import annotations
 
 import json
+import subprocess
 import tempfile
 import time
 import unittest
+from jsonschema import Draft202012Validator, FormatChecker
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -108,6 +110,22 @@ class StructuredResultArchiveTests(unittest.TestCase):
             self.assertEqual(len(manifest["outputs"]), len(output_paths) + 4)
             self.assertEqual(len(summary["data_files"]), 5)
             self.assertEqual(manifest["archive"]["status"], "local_only")
+            schema = json.loads((
+                ROOT / "research" / "schemas" /
+                "research-result-record-v1.0.0.schema.json"
+            ).read_text(encoding="utf-8"))
+            Draft202012Validator.check_schema(schema)
+            validator = Draft202012Validator(schema, format_checker=FormatChecker())
+            for record_path in records.values():
+                record = json.loads(record_path.read_text(encoding="utf-8"))
+                errors = list(validator.iter_errors(record))
+                self.assertFalse(errors, [error.message for error in errors])
+            validator_script = ROOT / "research" / "schemas" / "validate_result_records.py"
+            subprocess.run([
+                sys.executable, str(validator_script), "--repo-root", str(ROOT),
+                str(records["run_manifest"]), str(records["result_summary"]),
+                str(records["validation_report"]),
+            ], check=True, cwd=ROOT)
         for path, _ in output_paths:
             self.assertEqual(path.read_bytes(), before[path])
 
