@@ -8,6 +8,7 @@ from pathlib import Path
 from apply_B_to_afh_hybrid9_continuous_spectrum import rate_prefactor
 from compare_pointlike_A_B_nucleon_baselines import (
     MODELS,
+    leading_order_pointlike_cM_hat,
     pointlike_dirac_cM_hat,
     q2_form_factor_from_recoil,
     qA2_spatial_from_recoil,
@@ -34,6 +35,32 @@ class PointlikeABComparisonTests(unittest.TestCase):
         self.assertAlmostEqual(qA2 - q2_ff, (ER * 1.0e-6) ** 2, places=16)
         self.assertEqual(pointlike_dirac_cM_hat(0.0), 1.0)
         self.assertLess(pointlike_dirac_cM_hat(q2_ff), 1.0)
+
+    def test_P0_and_P_share_pointlike_form_factors_but_differ_by_matching_order(self):
+        # Both baselines use Fhat_1=1 and Fhat_2=0. Their distinction is
+        # exclusively the retained finite-transfer term in c_M.
+        cM_P0 = leading_order_pointlike_cM_hat()
+        self.assertEqual(cM_P0, 1.0)
+        self.assertEqual(pointlike_dirac_cM_hat(0.0), cM_P0)
+
+        q2 = q2_form_factor_from_recoil(121.933, 200.0)
+        cM_P = pointlike_dirac_cM_hat(q2)
+        self.assertLess(cM_P, cM_P0)
+
+        # At fixed isotope and recoil, the M-only differential-rate ratio
+        # is the square of the pointlike Dirac charge matching coefficient.
+        p_over_p0 = (cM_P / cM_P0) ** 2
+        self.assertAlmostEqual(
+            p_over_p0,
+            (1.0 - q2 / (8.0 * 0.938919**2)) ** 2,
+            places=14,
+        )
+
+        # Verify the leading small-Q_N^2 expansion of the rate correction.
+        epsilon = q2 / (8.0 * 0.938919**2)
+        exact_delta = p_over_p0 - 1.0
+        leading_delta = -2.0 * epsilon
+        self.assertAlmostEqual(exact_delta, leading_delta + epsilon**2, places=14)
 
     def test_zero_transfer_pauli_inputs(self):
         expected = {
