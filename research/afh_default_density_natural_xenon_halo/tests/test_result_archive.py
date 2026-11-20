@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import shutil
 import subprocess
 import tempfile
 import time
@@ -55,7 +56,7 @@ class StructuredResultArchiveTests(unittest.TestCase):
         )
         metadata_path = result_dir / "metadata.json"
         metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
-        output_paths = [
+        source_output_paths = [
             (result_dir / "afh_hybrid9_response_model_comparison.csv", "AFH response comparison"),
             (result_dir / "afh_hybrid9_isotope_kernel_integrals.csv", "three-body isotope kernel integrals"),
             (result_dir / "afh_hybrid9_natural_xenon_spectrum.csv", "natural-xenon pre-detector spectrum"),
@@ -63,7 +64,7 @@ class StructuredResultArchiveTests(unittest.TestCase):
             (metadata_path, "original run metadata"),
             (result_dir / "SHA256SUMS.txt", "original output checksums"),
         ]
-        before = {path: path.read_bytes() for path, _ in output_paths}
+        before = {path: path.read_bytes() for path, _ in source_output_paths}
         response_inputs = [
             HERE / "results" / "full_afh_v6_default_7_isotope_response"
             / f"afh_default_xe{A}_response_2401.csv"
@@ -88,6 +89,11 @@ class StructuredResultArchiveTests(unittest.TestCase):
         tick = time.monotonic()
         with tempfile.TemporaryDirectory(prefix="lz-result-archive-", dir=ROOT) as temp:
             out_dir = Path(temp)
+            output_paths = []
+            for source_path, role in source_output_paths:
+                target_path = out_dir / source_path.name
+                shutil.copyfile(source_path, target_path)
+                output_paths.append((target_path, role))
             records = write_result_records(
                 repo_root=ROOT, out_dir=out_dir, metadata=metadata,
                 source_script=HERE / "run_afh7_hybrid9_continuous_spectrum.py",
@@ -130,9 +136,8 @@ class StructuredResultArchiveTests(unittest.TestCase):
                 str(records["run_manifest"]), str(records["result_summary"]),
                 str(records["validation_report"]),
             ], check=True, cwd=ROOT)
-        for path, _ in output_paths:
-            if path.name != "SHA256SUMS.txt":
-                self.assertEqual(path.read_bytes(), before[path])
+        for path, _ in source_output_paths:
+            self.assertEqual(path.read_bytes(), before[path])
 
 
 if __name__ == "__main__":
