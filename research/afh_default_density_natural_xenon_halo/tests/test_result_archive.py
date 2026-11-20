@@ -116,7 +116,7 @@ class StructuredResultArchiveTests(unittest.TestCase):
             ).read_text(encoding="utf-8"))
             Draft202012Validator.check_schema(schema)
             validator = Draft202012Validator(schema, format_checker=FormatChecker())
-            for record_path in records.values():
+            for record_path in (records["run_manifest"], records["result_summary"], records["validation_report"]):
                 record = json.loads(record_path.read_text(encoding="utf-8"))
                 errors = list(validator.iter_errors(record))
                 self.assertFalse(errors, [error.message for error in errors])
