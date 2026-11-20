@@ -192,8 +192,8 @@ def run(
     output_spectrum_rows: list[dict] = []
     output_isotope_rows: list[dict] = []
     output_detector_rows: list[dict] = []
-    max_A_closure = 0.0
-    max_A_closure_key = None
+    max_P0_closure = 0.0
+    max_P0_closure_key = None
 
     benchmarks = sorted(particle["benchmarks"])
     for benchmark in benchmarks:
@@ -320,9 +320,9 @@ def run(
                     if source_P0 > 0.0
                     else (0.0 if isotope_P0_sum == 0.0 else math.inf)
                 )
-                if closure > max_A_closure:
-                    max_A_closure = closure
-                    max_A_closure_key = (benchmark, scenario, ER)
+                if closure > max_P0_closure:
+                    max_P0_closure = closure
+                    max_P0_closure_key = (benchmark, scenario, ER)
                 if closure > closure_tolerance:
                     raise ArithmeticError(
                         f"P0 reconstruction failed for {benchmark}/{scenario}/{ER}: "
@@ -469,8 +469,8 @@ def run(
             "efficiency_sha256": sha256(efficiency_csv),
         },
         "validation": {
-            "maximum_P0_reconstruction_relative_difference": max_A_closure,
-            "maximum_P0_reconstruction_key": list(max_A_closure_key) if max_A_closure_key else None,
+            "maximum_P0_reconstruction_relative_difference": max_P0_closure,
+            "maximum_P0_reconstruction_key": list(max_P0_closure_key) if max_P0_closure_key else None,
             "P0_reconstruction_tolerance": closure_tolerance,
             "recoil_points_per_benchmark_scenario": len({
                 number(row, "ER_keV") for row in source_spectrum
