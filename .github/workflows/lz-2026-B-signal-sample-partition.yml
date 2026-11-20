@@ -41,8 +41,11 @@ jobs:
               "alexandrou2020_charge_weighted_converted",
               "alexandrou2026_continuum_unit_current",
           ]
+          import subprocess
           for model in models:
-              p = root / model / "lz_2026_afh7_hybrid9_rate_level_metadata.json"
+              model_root = root / model
+              subprocess.run(["sha256sum", "--check", "SHA256SUMS.txt"], cwd=model_root, check=True)
+              p = model_root / "lz_2026_afh7_hybrid9_rate_level_metadata.json"
               d = json.loads(p.read_text())
               assert d["status"] == "PASS", (model, d["status"])
               assert d["detector_level_scope"]["efficiency_applied"] is True
