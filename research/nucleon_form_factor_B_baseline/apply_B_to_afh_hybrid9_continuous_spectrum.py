@@ -235,8 +235,10 @@ def run(
                         "Q2_form_factor_GeV2": q2_form_factor,
                         "t_N_GeV2": tA_GeV2,
                         "t_A_GeV2": tA_GeV2,
-                        "c_M": float(central_ff["cM"][idx]),
-                        "F_M": float(central_ff["F_M"][idx]),
+                        "c_M_raw": float(central_ff["cM_raw"][idx]),
+                        "c_M_hat": float(central_ff["cM_hat"][idx]),
+                        "c_M": float(central_ff["cM_raw"][idx]),  # Legacy raw-coefficient alias.
+                        "F_M": float(central_ff["cM_hat"][idx]),  # Normalized-coefficient alias.
                         "nucleon_FF_rate_multiplier": ff_multiplier,
                         "rate_P0_contribution_events_kg_day_keV": p0_contribution,
                         "rate_B_contribution_events_kg_day_keV": b_contribution,
@@ -316,9 +318,12 @@ def run(
         "strange_input_metadata": central_ff["strange_metadata"],
         "matching": {
             "F_i_uds": "3*(F_i_EM,p+F_i_EM,n+F_i_s,unit)",
-            "c_M": "F1_uds+t_N/(8*m_N^2)*(F1_uds+2*F2_uds)",
-            "F_M": "c_M/3",
-            "rate_multiplier": "|F_M|^2",
+            "c_M_raw": "F1_uds+t_N/(8*m_N^2)*(F1_uds+2*F2_uds)",
+            "c_M_hat": "c_M_raw/3 = F_M; normalized coefficient paired with g_VN=3*g_Vq",
+            "c_M": "legacy alias for c_M_raw",
+            "F_M": "alias for c_M_hat",
+            "coupling_normalization": "g_Vq*c_M_raw = g_VN*c_M_hat; factor three is counted exactly once",
+            "rate_multiplier": "|c_M_hat|^2",
             "Q_A2": "q_exact_spatial_GeV^2 = 2*m_A*E_R+E_R^2 (AFH only)",
             "Q2_form_factor": "2*m_A*E_R = -t_N",
             "t_N": "-2*m_A*E_R = t_A (formal impulse matching)",
