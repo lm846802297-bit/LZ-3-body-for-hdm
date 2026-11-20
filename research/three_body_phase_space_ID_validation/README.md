@@ -97,7 +97,7 @@ The PR #74 integration (including the PR #78 dependency) is merged into main at 
 
 ## Formal B reweighting of the PR86 seven-isotope halo scan
 
-The adopted formal B nucleon baseline has now been applied to the PR86 high-order halo-folded seven-isotope scan. This is a post-processing reweighting of the completed full three-body and (I(D_{NR})) isotope contributions; it does not rerun phase-space or halo integration.
+The adopted formal B nucleon baseline is being rerun on the newly accepted PR #93 high-order halo-folded seven-isotope scan. This is a post-processing reweighting of the completed full three-body and (I(D_{NR})) isotope contributions; it does not rerun phase-space or halo integration.
 
 - [Formal B numerical report](FORMAL_B_REWEIGHT_OF_THRESHOLD_ENERGY_HALO_SCAN.md)
 - [Task brief and frozen inputs](task_briefs/20261120-formal-B-reweight-of-threshold-energy-halo-scan.md)
@@ -115,3 +115,13 @@ The independent GitHub reproduction passed in [workflow run 44672770451](https:/
 ### Independent high-order halo scan validation
 
 The full baseline/high-order halo scan was independently regenerated in [workflow run 44673037709](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44673037709). It completed all 1,456 isotope-energy rows and 208 natural-xenon recoil points with zero support mismatches. The natural-xenon Full/(I(D_{NR})) discrepancy is 0.0355190413% in 180–320 keV and 0.3527618038% over the full supported scan. The baseline-to-high-order maximum natural-xenon approximation-error shift is (1.0792\times10^{-5}) percentage points. The GitHub artifact was downloaded and compared with the archived local scan; the full halo kernel agrees within (2.82\times10^{-8}) relative and the (I(D_{NR})) kernel is identical.
+
+
+### Accepted PR #93 high-order Halo source and B reweight update
+
+The PR #93 higher-order Halo validation passed in [workflow run 44681433965](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44681433965), artifact 14607350801 (SHA-256 `a570bbf81119e8b7b87526c51b7012d056c0c07e290618bb7e12469b43571194`). It contains 1,456 isotope-energy rows and 208 natural-xenon recoil points, with speed quadrature order 32 and internal quadrature (12,4,4). Zero support mismatches were found. The active-support maximum quadrature shifts are 9.8863e-6% in the natural-xenon Full rate, 9.9873e-6% in the I(D_NR) rate, and 2.9057e-6 percentage points in the approximation-error curve.
+
+The earlier formal-B output artifact was generated from a prior Halo source artifact and remains a historical reproduction. The current formal-B workflow is pinned to artifact 14607350801 and verifies the high-order metadata before reweighting. The new high-order-B output is the one to freeze as the formal comparison baseline.
+
+
+The formal-B high-order reweight is now complete and independently reproduced in [workflow run 44689438445](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44689438445). Its output artifact is 14608091362 (SHA-256 `b9d261a68a73e480a6e4d84c3aef9c57a0fc5fc80aa1be7079170d0305b6c6c5`). All 19 baseline regression tests and all numerical gates passed. The downloaded artifact ZIP and all nine native output-file checksums were verified. This is the canonical B reweight of the accepted high-order Halo source.

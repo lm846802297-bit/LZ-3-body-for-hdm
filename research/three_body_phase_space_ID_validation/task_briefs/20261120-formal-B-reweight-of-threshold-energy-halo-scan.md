@@ -2,7 +2,7 @@
 
 **Date:** 2026-11-20  
 **Owner:** LZ-3-body-for-hdm research  
-**Status:** local computation complete; formal-B and independent high-order halo GitHub workflows PASS
+**Status:** high-order Halo validation PASS; formal-B reweight on the accepted high-order artifact PASS; native output checksums verified
 
 ## Objective
 
@@ -14,11 +14,11 @@ Do not rerun the three-body phase-space or halo integrations. Reweight each isot
 
 ## Frozen input
 
-- Workflow run: 44655861356.
-- Artifact ID: 14595907606.
+- Workflow run: 44681433965.
+- Artifact ID: 14607350801.
 - Artifact name: halo-seven-isotope-full-vs-ID-full-recoil-scan.
-- Artifact SHA-256: 05ceeea175e39ed658b0bfab4a15f6f654e1a49a9508c147291ef58c622471f8.
-- Source commit: c0b58c14362ab0acc70abdfb56ed10943420a294.
+- Artifact SHA-256: a570bbf81119e8b7b87526c51b7012d056c0c07e290618bb7e12469b43571194.
+- Source commit: aabaf2f2c8ecb1b9de28cf29c13cc1f92fa10f83.
 - Input files: halo-seven-isotope-highorder/seven_isotope_halo_comparison.csv and natural_xenon_halo_comparison.csv.
 - Expected input dimensions: 1,456 isotope rows and 208 natural-xenon recoil points.
 
@@ -95,3 +95,26 @@ This task produces a B-reweighted halo rate-ratio archive. It does not rerun pha
 - Baseline-to-high-order maximum natural-xenon approximation-error shift: (1.0792\times10^{-5}) percentage points.
 - GitHub versus archived local full halo kernel: maximum relative difference (2.82\times10^{-8}); the (I(D_{NR})) kernel is identical.
 - Derived isotope relative-error maximum absolute difference: (2.83\times10^{-6}) percentage points.
+
+
+## Accepted high-order convergence inputs
+
+The pinned high-order artifact metadata records speed quadrature order 32 and internal quadrature (12,4,4), with 1,456 isotope-energy rows and 208 natural-xenon recoil points. The natural-xenon maximum Full/I(D_NR) discrepancy is 0.0355190413% in 180--320 keV and 0.3527618038% over 5--800 keV. Baseline-to-high-order active-support shifts are 9.8863e-6% (Full), 9.9873e-6% (I(D_NR)), and 2.9057e-6 percentage points (approximation error).
+
+The formal-B workflow input has been updated to this accepted artifact and verifies the metadata quadrature settings before applying the nucleon form factors.
+
+
+## Final high-order B reproduction
+
+- Reweight workflow: 44689438445 (success).
+- Output artifact: 14608091362.
+- Output artifact SHA-256: b9d261a68a73e480a6e4d84c3aef9c57a0fc5fc80aa1be7079170d0305b6c6c5.
+- All 19 regression tests passed; all three strange-current scenarios passed every numerical gate.
+- Downloaded artifact ZIP digest and all nine native output-file checksums verified.
+- Candidate-window maximum natural-xenon Full/I(D_NR) discrepancy: 0.0355092%.
+- Full-range maximum discrepancy: 0.3527618%.
+- Maximum isotope A/B ratio difference: 2.22e-14 percentage points.
+- Maximum candidate-window B-induced error-curve change: 1.60e-5 percentage points.
+- Maximum 68% covariance interval width: 5.2531e-9 in ratio units.
+
+This artifact supersedes the earlier formal-B output as the canonical B reweight of the accepted high-order Halo input.
