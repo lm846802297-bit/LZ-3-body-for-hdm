@@ -129,6 +129,13 @@ class ApplyBToAbsoluteAFHSpectrumTests(unittest.TestCase):
             self.assertTrue(all(0.0 < float(row["B_over_A_rate"]) < 1.0 for row in rates))
             self.assertTrue(all(float(row["nucleon_FF_rate_multiplier"]) > 0.0
                                 for row in isotope_rates))
+            transfer_row = isotope_rates[0]
+            q2_ff = 2.0 * float(transfer_row["mA_GeV"]) * float(transfer_row["ER_keV"]) * 1.0e-6
+            qA2 = q2_ff + (float(transfer_row["ER_keV"]) * 1.0e-6) ** 2
+            self.assertAlmostEqual(float(transfer_row["Q2_form_factor_GeV2"]), q2_ff, places=16)
+            self.assertAlmostEqual(float(transfer_row["Q_A2_GeV2"]), qA2, places=16)
+            self.assertAlmostEqual(float(transfer_row["t_N_GeV2"]), -q2_ff, places=16)
+            self.assertAlmostEqual(float(transfer_row["t_A_GeV2"]), -q2_ff, places=16)
             hybrid_100 = next(
                 row for row in isotope_rates
                 if row["scenario"] == "Hybrid-9 (AFH-7 + Helm-2)"
