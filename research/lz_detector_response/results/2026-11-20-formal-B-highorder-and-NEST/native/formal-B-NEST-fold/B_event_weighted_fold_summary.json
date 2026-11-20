@@ -1,0 +1,52 @@
+{
+  "status": "COMPUTED",
+  "study": "formal B finite-nucleon spectra event-weighted NEST NR response fold",
+  "response_nest_commit": "541b6430dae6ea289cf110c99f174a9187f7fdee",
+  "response_sampling": "1-keV true-energy strata, two replicas, 2,000 events per replica per bin",
+  "response_families": [
+    "eft2024",
+    "tableS5",
+    "ws2024",
+    "generic"
+  ],
+  "benchmarks": [
+    "red_ms200_dm1",
+    "green_ms300_dm1",
+    "black_ms360_dm1",
+    "blue_ms300_dm10"
+  ],
+  "strange_models": [
+    "sufian2017_unit_current",
+    "alexandrou2020_charge_weighted_converted",
+    "alexandrou2026_continuum_unit_current"
+  ],
+  "nuclear_scenarios": [
+    "AFH-7",
+    "Hybrid-9 (AFH-7 + Helm-2)"
+  ],
+  "acceptance_modes": [
+    "nest",
+    "ws_roi"
+  ],
+  "roi_keV": [
+    5.4,
+    269.9
+  ],
+  "exposure_kg_day": 1037310.0,
+  "figS2_policy": "Fig. S2 final efficiency remains a separate rate-level expected-event count; it is not multiplied into the NEST or NEST+WS-ROI 2D intensity.",
+  "spatial_prior": "uniform active-TPC cylinder volume proxy; not the official calibration-source or fiducial-volume distribution",
+  "scope": "NEST S1-coincidence and S2-threshold response, plus published WS observable ROI; excludes trigger, SS reconstruction, analysis cuts, fiducial-volume mask, veto, background likelihood, and official waveform-level response.",
+  "row_counts": {
+    "comparisons": 192,
+    "per_bin": 25440,
+    "two_d_cells": 120000,
+    "replica_checks": 192
+  },
+  "diagnostics": {
+    "max_raw_rate_closure_relative_difference": 7.771561172376096e-16,
+    "max_replica_relative_rate_difference": 0.004143588453686564,
+    "max_replica_tv_distance": 0.03859233033897659,
+    "formal_pass": null,
+    "status": "DIAGNOSTIC_ONLY_NO_PREDECLARED_TOLERANCE"
+  }
+}
