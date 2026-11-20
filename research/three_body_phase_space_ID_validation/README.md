@@ -93,3 +93,12 @@ The fixed-speed Xe-131 diagnostic above remains a separate result layer. The lat
 The archive contains 208 recoil points and 1,456 isotope-level rows per scan. Baseline and higher-order quadrature runs agree at the \(10^{-5}\%\) level in the active natural-xenon region, with zero support mismatches. The maximum absolute full-versus-\(I(D_{NR})\) difference in the higher-order natural-xenon rate is 0.352762% on this grid.
 
 The PR #74 integration (including the PR #78 dependency) is merged into main at commit 070dc89cc58699633d0009c1fbaea7fa400ee337. This remains a halo-folded rate-ratio calculation, not a detector-level LZ prediction.
+
+
+## 2026-11-20 threshold-variable unification
+
+The follow-up task brief is [20261120-threshold-energy-u2-unification](task_briefs/20261120-threshold-energy-u2-unification.md). It aligns the halo runner with the fixed-speed transformation
+`epsilon = W - W_min = D_exact*u^2` and its Jacobian
+`dW^2/du = 4*W*D_exact*u`. The original PR #78 archive is preserved unchanged; the new full-range scan will be archived as a separate version after its baseline/high-order comparison completes.
+
+The detector-level work is a separate layer: PR #85 now supplies the B-corrected, Fig. S2 efficiency/exposure-weighted rate-level event yields. The existing NEST two-dimensional response archive uses earlier GCN/JJ55 spectra, so the B-corrected NEST event-weighted fold remains to be connected to the adopted B baseline.
