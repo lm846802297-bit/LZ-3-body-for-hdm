@@ -156,3 +156,11 @@ The runner preserves its original physics CSVs, metadata and SHA-256 file, then 
 For a temporary smoke run outside the repository, pass `--no-standard-archive`; such a run is not treated as a repository archive. The generated manifest starts with `archive.status=local_only` and must only be updated after the files are actually committed and verified.
 
 Implementation task brief: [2026-11-20 LZ structured result archive](../docs/task_briefs/20261120-lz-standard-result-archive.md). Validation-only workflow: `.github/workflows/lz-structured-result-archive-validation.yml`.
+
+The standalone seven-isotope response-grid generator is also wired to the same writer:
+
+```powershell
+python research/afh_default_density_natural_xenon_halo/run_afh_default_xenon_responses.py --matrix-dir research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices --out-dir research/afh_default_density_natural_xenon_halo/output/afh_default_xenon_responses
+```
+
+It archives the 16,807-row AFH response grid, selected-sample regression CSV, interpolation diagnostic, matrix-input hashes, and the native-Mathematica re-execution state. A pending native Mathematica cross-check remains `not_run`, so the standard validation status stays `partial` rather than promoting the Python translation to independently validated.
