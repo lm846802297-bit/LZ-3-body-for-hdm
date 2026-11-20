@@ -93,3 +93,18 @@ The fixed-speed Xe-131 diagnostic above remains a separate result layer. The lat
 The archive contains 208 recoil points and 1,456 isotope-level rows per scan. Baseline and higher-order quadrature runs agree at the \(10^{-5}\%\) level in the active natural-xenon region, with zero support mismatches. The maximum absolute full-versus-\(I(D_{NR})\) difference in the higher-order natural-xenon rate is 0.352762% on this grid.
 
 The PR #74 integration (including the PR #78 dependency) is merged into main at commit 070dc89cc58699633d0009c1fbaea7fa400ee337. This remains a halo-folded rate-ratio calculation, not a detector-level LZ prediction.
+
+
+## Formal B reweighting of the PR86 seven-isotope halo scan
+
+The adopted formal B nucleon baseline has now been applied to the PR86 high-order halo-folded seven-isotope scan. This is a post-processing reweighting of the completed full three-body and (I(D_{NR})) isotope contributions; it does not rerun phase-space or halo integration.
+
+- [Formal B numerical report](FORMAL_B_REWEIGHT_OF_THRESHOLD_ENERGY_HALO_SCAN.md)
+- [Task brief and frozen inputs](task_briefs/20261120-formal-B-reweight-of-threshold-energy-halo-scan.md)
+- Implementation: [apply_nucleon_form_factors_B.py](../nucleon_form_factor_B_baseline/apply_nucleon_form_factors_B.py)
+- Electromagnetic form-factor model: [borah2020_lowq2.py](../nucleon_form_factor_B_baseline/borah2020_lowq2.py)
+- Reproduction workflow: [pr86-halo-formal-B-reweight.yml](../../.github/workflows/pr86-halo-formal-B-reweight.yml)
+
+The local calculation covers all 1,456 isotope-energy rows and 208 natural-xenon recoil points for three separate strange-current inputs, with 3,000 Borah2020 electromagnetic covariance draws per input. At 248 keV, the formal B correction suppresses the uncorrected natural-xenon rate by 26.4--27.3%. The isotope-level full/(I(D_{NR})) ratio is unchanged to (2.23\times10^{-14}) percentage points; the maximum natural-xenon ratio change in 180--320 keV is (1.60\times10^{-5}) percentage points.
+
+The source AFH isotope set covers 99.8158% of natural xenon atom abundance; Xe-124 and Xe-126 remain absent and the seven isotope abundances are not renormalized. These outputs are B-reweighted relative rates, not detector-folded event yields.
