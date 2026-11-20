@@ -26,6 +26,9 @@ from fold_lz_2026_three_body_event_weighted_response import (  # noqa: E402
     FAMILIES,
     MODES,
     read_event_sample,
+)
+from fold_lz_2026_three_body_B_event_weighted_kernel import (  # noqa: E402
+    prepare_event_sample,
     weighted_fold_all_replicas,
 )
 
@@ -155,9 +158,9 @@ def main() -> None:
         wi.writeheader(); wc.writeheader(); wb.writeheader(); wr.writeheader()
 
         for family in FAMILIES:
-            events = read_event_sample(args.response_dir / f"{family}.csv")
-            n_events = sum(len(record["energy"]) for record in events.values())
-            print(f"Loaded {family}: {n_events} events across {len(events)//2} energy bins", flush=True)
+            events = prepare_event_sample(read_event_sample(args.response_dir / f"{family}.csv"))
+            n_events = len(events["energy"])
+            print(f"Loaded {family}: {n_events} events across {len(events['bins'])} energy bins", flush=True)
             for strange_model in STRANGE_MODELS:
                 absolute_dir = args.b_absolute_root / strange_model
                 detector_dir = args.b_detector_root / strange_model
