@@ -99,6 +99,9 @@ dependent; it must not be summarized by a single detector-efficiency factor.
 The current maps are an intermediate NEST/WS-ROI proxy, not the official LZ
 waveform-level selected-event PDF or a background likelihood.
 
+The formal-B event-weighted NEST fold has now passed independent GitHub reproduction in [run 44680838189](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44680838189). All five regression tests passed; the 192 comparison rows, 25,440 per-bin rows, 120,000 2D cells, and all SHA256SUMS checks passed. The downloaded GitHub output matches the local numerical CSVs and summary JSON exactly.
+
+
 
 ### Formal-B recoil and event-spectrum figures
 
