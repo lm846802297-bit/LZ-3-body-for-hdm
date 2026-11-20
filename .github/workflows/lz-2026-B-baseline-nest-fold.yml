@@ -1,6 +1,14 @@
 name: LZ 2026 formal B-baseline event-weighted NEST fold
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - research/lz_detector_response/fold_lz_2026_three_body_B_event_weighted_response.py
+      - research/lz_detector_response/tests/test_lz_2026_B_event_weighted_fold.py
+      - .github/workflows/lz-2026-B-baseline-nest-fold.yml
+      - research/lz_detector_response/lz_2026_extended_nr/LZ_2026_B_BASELINE_NEST_EVENT_WEIGHTED_FOLD.md
   pull_request:
     branches:
       - main
@@ -15,7 +23,7 @@ on:
         description: Immutable NEST response-production workflow run ID
         required: false
         default: "43697104437"
-      B_run_id:
+      b_run_id:
         description: Formal P0/P/A0/B source workflow run ID
         required: false
         default: "44662497177"
@@ -49,7 +57,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: finite-nucleon-form-factor-B-baseline
-          run-id: \${{ github.event.inputs.B_run_id || '44662497177' }}
+          run-id: \${{ github.event.inputs.b_run_id || '44662497177' }}
           github-token: \${{ secrets.GITHUB_TOKEN }}
           path: B-artifact
 
