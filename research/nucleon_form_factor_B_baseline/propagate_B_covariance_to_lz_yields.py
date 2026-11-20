@@ -2,7 +2,8 @@
 """Propagate the Borah electromagnetic coefficient covariance to LZ event yields.
 
 The same correlated F_M(-t_N) draws used in the formal B recoil spectra are
-applied isotope by isotope, then folded through the LZ 2026 NR efficiency.
+applied isotope by isotope to the archived leading-order P0 reference rate,
+then folded through the LZ 2026 NR efficiency.
 The formal impulse prescription is t_N=t_A=-2*m_A*E_R; AFH continues to use
 the exact spatial Q_A^2 separately. Cross-recoil and cross-isotope
 correlations induced by the shared fit coefficients are retained.
@@ -261,19 +262,19 @@ def run(
                     mA = number(row, "mA_GeV")
                     tA = -2.0*mA*ER*1.0e-6
                     denominator = (mV*mV - tA)**2
-                    a_contribution = (
+                    p0_contribution = (
                         prefactor * atom_fraction * base_kernel * R_A / denominator
                     )
-                    reconstructed_P0_rate += a_contribution
+                    reconstructed_P0_rate += p0_contribution
                     stored_key = (benchmark, scenario, ER, A)
                     stored_isotope = b_isotope_lookup[stored_key]
                     stored_P0_contribution = number(
                         stored_isotope, "rate_P0_contribution_events_kg_day_keV"
                     )
                     isotope_closure = (
-                        abs(a_contribution/stored_P0_contribution-1.0)
+                        abs(p0_contribution/stored_P0_contribution-1.0)
                         if stored_P0_contribution > 0.0 else (
-                            0.0 if a_contribution == 0.0 else math.inf
+                            0.0 if p0_contribution == 0.0 else math.inf
                         )
                     )
                     max_isotope_P0_contribution_closure = max(
@@ -287,7 +288,7 @@ def run(
                     q2 = 2.0*mA*ER*1.0e-6
                     idx = q2_index_for_row[(benchmark, ER, A)]
                     draw_rates[:, energy_index[ER]] += (
-                        a_contribution * multiplier_draws[:, idx]
+                        p0_contribution * multiplier_draws[:, idx]
                     )
 
                 source_P0_rate = number(
@@ -374,7 +375,8 @@ def run(
     write_csv(output_csv, output_rows)
     metadata = {
         "status": "PASS",
-        "calculation": "correlated Borah electromagnetic form-factor covariance propagated through the isotope-resolved B recoil spectra and LZ 2026 NR efficiency",
+        "calculation": "correlated Borah electromagnetic form-factor covariance propagated through isotope-resolved B recoil spectra and LZ 2026 NR efficiency",
+        "reference_baseline": "P0: archived leading-order charge-only spectrum; legacy source rate_events_kg_day_keV column is interpreted as P0",
         "strange_form_factor_model": strange_model,
         "n_draws": n_draws,
         "seed": seed,
