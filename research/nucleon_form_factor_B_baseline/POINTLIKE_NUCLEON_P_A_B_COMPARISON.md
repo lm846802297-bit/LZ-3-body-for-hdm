@@ -172,3 +172,26 @@ The program writes:
 - SHA256SUMS.txt
 
 The workflow .github/workflows/pointlike-nucleon-A-P-B.yml runs the complete regression suite and uploads the numerical outputs as the pointlike-A-P-B-natural-xenon-and-LZ artifact.
+
+
+### Completed GitHub validation
+
+The pull-request workflow completed successfully:
+
+- P/A/B regression suite: **17 tests passed**.
+- A-spectrum reconstruction: maximum relative difference \(5.5511\times10^{-16}\), against the required \(2\times10^{-11}\) tolerance.
+- Output rows: 2,016 natural-xenon spectrum rows, 18,144 isotope-contribution rows, and 24 detector-yield rows.
+- All four files in the artifact SHA-256 manifest passed checksum verification.
+
+The B values were also independently recalculated by the existing B-baseline workflow after changing its form-factor argument to \(-t_N=2m_AE_R\). Its LZ detector yields agree with the B column in the P/A/B artifact exactly at stored precision for all four benchmarks and both AFH-7/Hybrid-9 scenarios.
+
+- P/A/B workflow: [run 44653142263](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44653142263)
+- P/A/B numerical artifact: [download artifact 14590934148](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44653142263/artifacts/14590934148)
+- Independent B-baseline workflow: [run 44653142064](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44653142064)
+- Repository layout and benchmark-manifest check: [run 44653142113](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44653142113)
+
+The uploaded P/A/B artifact ZIP SHA-256 is:
+
+\[
+\texttt{85685c9cb9684d0ad7290e937e5d4b4cd2b505a6f5b93050c08ffbd977d21fac}.
+\]
