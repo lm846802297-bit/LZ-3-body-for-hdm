@@ -15,7 +15,7 @@ For a target isotope with recoil energy \(E_R\),
 \[
 Q_A^2\equiv |\mathbf q_A|^2=2m_AE_R+E_R^2,
 \qquad
-t_N=-Q_A^2.
+t_N=t_A=-2m_AE_R.
 \]
 
 The same calculation also keeps the invariant transfer in the mediator propagator separate:
@@ -27,7 +27,7 @@ t_A=q_A^2=-2m_AE_R,
 =\frac{1}{(m_V^2+2m_AE_R)^2}.
 \]
 
-Thus \(Q_A^2\) is used for the AFH spatial momentum and the finite nucleon form factors, while \(t_A\) is used in the mediator propagator.
+Thus \(Q_A^2\) is used for the AFH spatial momentum only. The nucleon form factors use \(-t_N=2m_AE_R\), with the formal impulse identification \(t_N=t_A\); the same invariant \(t_A\) enters the mediator propagator.
 
 For universal unit \(u,d,s\) vector coupling, the flavor sum is reconstructed as
 
@@ -54,7 +54,7 @@ Since the equal-coupling pointlike normalization is \(c_M(0)=3\), define
 \[
 F_M(t_N)=\frac{c_M(t_N)}{3},
 \qquad
-\mathcal C_N(Q_A^2)=|F_M(t_N)|^2.
+\mathcal C_N(t_N)=|F_M(t_N)|^2.
 \]
 
 Each isotope's already-computed three-body rate contribution is multiplied by \(\mathcal C_N\), then the natural-xenon sum is reconstructed. The finite-size AFH \(W_M(y_A)\) response is retained unchanged; it is not replaced by a point-nucleus response.
@@ -142,6 +142,21 @@ The detector fold reports the central B event yield. The separate covariance pro
       --efficiency-csv research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv \
       --out-dir results/B-detector-covariance/sufian2017_unit_current \
       --strange-model sufian2017_unit_current --draws 3000
+
+## Pointlike-nucleon P versus A/B comparison
+
+The additional pointlike Dirac benchmark P is now implemented alongside the existing zero-transfer A reference and finite-form-factor B baseline. The comparison uses the same finite-size AFH response in all three cases and applies the formal transfer \(t_N=t_A=-2m_AE_R\).
+
+See [POINTLIKE_NUCLEON_P_A_B_COMPARISON.md](POINTLIKE_NUCLEON_P_A_B_COMPARISON.md) for the definitions, detector-level event yields, three strange-current scenarios, AFH-7/Hybrid-9 comparison, and numerical interpretation.
+
+Run the calculation with:
+
+    python research/nucleon_form_factor_B_baseline/compare_pointlike_A_B_nucleon_baselines.py \\
+      --source-dir research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14 \\
+      --efficiency-csv research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv \\
+      --out-dir results/pointlike-A-P-B
+
+The workflow [.github/workflows/pointlike-nucleon-A-P-B.yml](../../.github/workflows/pointlike-nucleon-A-P-B.yml) runs the regression suite and uploads the numerical outputs.
 
 ## Validation and scope
 
