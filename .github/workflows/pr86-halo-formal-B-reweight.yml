@@ -125,12 +125,28 @@ jobs:
               ]
               max_candidate = max(abs(float(r["full_vs_I_D_error_B_pct"])) for r in candidate)
               max_full = max(abs(float(r["full_vs_I_D_error_B_pct"])) for r in full)
+              max_natural_delta_pp = max(
+                  abs(float(r["full_vs_I_D_error_A_pct"]) -
+                      float(r["full_vs_I_D_error_B_pct"]))
+                  for r in candidate
+                  if r["full_vs_I_D_error_A_pct"] and r["full_vs_I_D_error_B_pct"]
+              )
+              ratio_widths = [
+                  float(r["full_over_I_D_B_p84"]) - float(r["full_over_I_D_B_p16"])
+                  for r in candidate
+                  if r["full_over_I_D_B_p84"] and r["full_over_I_D_B_p16"]
+              ]
+              max_covariance_ratio_width = max(ratio_widths)
               assert 0.0354 < max_candidate < 0.0357, (model, max_candidate)
               assert 0.3526 < max_full < 0.3529, (model, max_full)
+              assert max_natural_delta_pp < 2e-5, (model, max_natural_delta_pp)
+              assert max_covariance_ratio_width < 6e-9, (model, max_covariance_ratio_width)
               print(model, {
                   "max_isotope_ratio_difference_pp": max_iso_delta,
                   "candidate_max_error_pct": max_candidate,
                   "full_scan_max_error_pct": max_full,
+                  "max_natural_error_curve_change_pp": max_natural_delta_pp,
+                  "max_covariance_ratio_width": max_covariance_ratio_width,
               })
           PY
           python - <<'PY'
