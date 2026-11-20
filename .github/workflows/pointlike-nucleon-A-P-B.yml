@@ -11,7 +11,7 @@ permissions:
   contents: read
 
 jobs:
-  pointlike-A-P-B:
+  nucleon-P0-P-A0-B:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -30,7 +30,7 @@ jobs:
             --efficiency-csv research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv \
             --out-dir artifacts/nucleon-P0-P-A0-B \
             --roi-min-keV 5.4 --roi-max-keV 269.9 --exposure-tonne-year 2.84
-      - name: Upload P/A/B numerical outputs
+      - name: Upload P0/P/A0/B numerical outputs
         uses: actions/upload-artifact@v4
         with:
           name: nucleon-P0-P-A0-B-natural-xenon-and-LZ
