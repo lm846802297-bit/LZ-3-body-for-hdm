@@ -50,8 +50,8 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: halo-seven-isotope-full-vs-ID-full-recoil-scan
-          run-id: \${{ github.event.inputs.source_run_id || '44655861356' }}
-          github-token: \${{ secrets.GITHUB_TOKEN }}
+          run-id: 44655861356
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           path: halo-artifact
 
       - name: Verify high-order native inputs
@@ -76,8 +76,8 @@ jobs:
           python research/nucleon_form_factor_B_baseline/apply_nucleon_form_factors_B.py \
             --input-dir halo-artifact/halo-seven-isotope-highorder \
             --out-dir formal-B-output \
-            --draws \${{ github.event.inputs.draws || '3000' }} \
-            --seed \${{ github.event.inputs.seed || '20261119' }}
+            --draws "$B_DRAWS" \
+            --seed "$B_SEED"
 
       - name: Validate isotope cancellation and natural-xenon reweighting
         run: |
@@ -140,12 +140,12 @@ jobs:
               "seed": int(os.environ["B_SEED"]),
               "status": "COMPUTED_AND_VALIDATED",
           }
-          (root/"RUN_MANIFEST.json").write_text(json.dumps(manifest, indent=2)+"\\n")
+          (root/"RUN_MANIFEST.json").write_text(json.dumps(manifest, indent=2)+"\n")
           files = sorted(p for p in root.rglob("*") if p.is_file() and p.name != "SHA256SUMS")
           with (root/"SHA256SUMS").open("w") as f:
               for p in files:
                   h = hashlib.sha256(p.read_bytes()).hexdigest()
-                  f.write(f"{h}  {p.relative_to(root).as_posix()}\\n")
+                  f.write(f"{h}  {p.relative_to(root).as_posix()}\n")
           PY
 
       - name: Upload formal B halo-reweight outputs
