@@ -1,6 +1,6 @@
 # Formal B reweight of the PR86 threshold-energy seven-isotope halo scan
 
-**Status:** local numerical calculation completed; GitHub artifact reproduction is added as a workflow and will run on merge.  
+**Status:** local numerical calculation completed and checksum-verified; independent GitHub reproduction is configured to run on this pull request.  
 **Date:** 2026-11-20  
 **Input:** PR86 high-order 5--800 keV scan using the unified exact threshold-energy \(u^2\) map.  
 **Output:** formal B finite-nucleon correction applied to all seven isotope contributions and the natural-xenon total.
@@ -126,6 +126,8 @@ The B correction therefore matters for absolute event rates, while it does not m
 
 The 3,000-draw Borah2020 covariance propagation gives a maximum 68% interval width in the natural-xenon full/\(I(D_{NR})\) ratio of \(5.26\times10^{-9}\) in ratio units over 180--320 keV (about \(5.26\times10^{-7}\) percentage points). This is negligible relative to the central \(3.55\times10^{-2}\%\) discrepancy.
 
+For the Sufian 2017 input at 248 keV, the B-corrected natural-xenon full rate is \(9.06064\times10^{-5}\) at the covariance median, with p16/p84 values \(9.00426\times10^{-5}\) and \(9.11894\times10^{-5}\). This corresponds to approximately \(-0.622\%\) and \(+0.643\%\) relative to the median. The three strange-current alternatives remain separate central-value scenarios; their lattice uncertainties are not sampled.
+
 This statement concerns the correlated electromagnetic z-expansion coefficient covariance only. The three strange-current alternatives remain separate central-value scenarios.
 
 ## 7. Reproduction and outputs
@@ -142,7 +144,7 @@ For each strange-current input the output contains:
 - natural_xenon_B_baseline.csv (208 rows);
 - metadata.json (transfer, normalization, covariance, and result provenance).
 
-The workflow additionally writes RUN_MANIFEST.json and SHA256SUMS and uploads the output artifact as pr86-formal-B-halo-reweight.
+The workflow additionally writes RUN_MANIFEST.json and SHA256SUMS and uploads the output artifact as pr86-formal-B-halo-reweight. The local run independently verified all 11 generated CSV/JSON/checksum files against SHA256SUMS; the three models each contain 1,456 isotope rows and 208 natural-xenon rows.
 
 ## 8. Physical interpretation
 
