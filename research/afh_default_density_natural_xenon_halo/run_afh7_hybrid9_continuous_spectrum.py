@@ -865,9 +865,10 @@ def run(args: argparse.Namespace) -> dict:
                     len(quadrature_rows) == metadata["row_counts"]["quadrature_crosschecks"],
                 ]) else "failed",
                 "method": "Compare in-memory row counts with the recorded metadata counts.",
-                "observed": metadata["row_counts"],
-                "threshold": "exact row-count equality",
+                "observed": sum(metadata["row_counts"].values()),
+                "threshold": "exact per-table row-count equality",
                 "unit": "rows",
+                "notes": json.dumps(metadata["row_counts"], sort_keys=True),
                 "evidence_path": relative_to_root(metadata_path),
             },
         ]
