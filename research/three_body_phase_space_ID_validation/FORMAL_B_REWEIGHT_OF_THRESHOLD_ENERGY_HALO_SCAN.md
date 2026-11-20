@@ -180,3 +180,21 @@ The latest PR #93 validation [run 44681433965](https://github.com/lm846802297-bi
 - Seven-isotope active-support maximum shifts: Full rate 1.0109e-5%; I(D_NR) rate 3.1057e-5%; approximation-error curve 2.8424e-5 percentage points.
 
 The downloaded artifact ZIP hash was independently recomputed and matches the GitHub artifact digest. Per-file SHA-256 hashes for all nine extracted files are recorded in the high-order freeze archive manifest. The formal B reweight is being rerun against this exact source artifact; the earlier B artifact used the previous source run and is retained only as a historical result.
+
+
+### Formal B reweight on the accepted high-order Halo artifact: PASS
+
+The independent reweight workflow completed in [run 44689438445](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44689438445). All 19 B-baseline regression tests passed. The workflow downloaded and SHA-256-verified the accepted high-order Halo source artifact (run 44681433965, artifact 14607350801), checked the high-order metadata, and produced the three strange-current scenarios.
+
+- Output artifact: ID 14608091362, SHA-256 `b9d261a68a73e480a6e4d84c3aef9c57a0fc5fc80aa1be7079170d0305b6c6c5`.
+- The downloaded output ZIP was independently hashed; the digest matches the GitHub artifact digest.
+- All nine native CSV/JSON files and the run manifest pass the artifact's SHA256SUMS.
+- All 1,456 isotope-energy rows and 208 natural-xenon recoil points are present for each of the three strange-current scenarios.
+- Maximum isotope-level A/B ratio difference: (2.22\times10^{-14}) percentage points.
+- Maximum natural-xenon Full/(I(D_{NR})) discrepancy: 0.0355092% in 180--320 keV and 0.3527618% over 5--800 keV.
+- Maximum B-induced change in the natural-xenon Full/(I(D_{NR})) error curve in 180--320 keV: (1.60\times10^{-5}) percentage points.
+- Maximum 68% covariance interval width in the candidate window: (5.2531\times10^{-9}) in ratio units.
+
+The 248-keV natural-xenon Full-rate B/A changes are (-26.4442\%) (Sufian 2017), (-27.2648\%) (Alexandrou 2020 converted), and (-26.3949\%) (Alexandrou 2026 continuum). At 180, 267, 320, and 695 keV the corresponding values are retained in the three native natural-xenon CSV files and the archived summary.
+
+This is the canonical formal-B reweight of the accepted high-order Halo source. The prior B artifact based on the earlier source remains historical and is superseded for the frozen baseline.
