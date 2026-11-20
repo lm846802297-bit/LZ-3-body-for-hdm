@@ -134,7 +134,7 @@ def write_result_records(*, repo_root: Path, out_dir: Path, metadata: dict[str, 
         raise ValueError(f"invalid source commit: {commit}")
     branch = os.environ.get("GITHUB_REF_NAME") or git_value(root, "branch", "--show-current")
     now = utc_now()
-    run_id = f"LZ-AFH-{now[:10].replace('-', '')}-{now[11:19].replace(':', '')}-{commit[:8]}"
+    run_id = f"LZ-AFH-{now[:10].replace('-', '')}-{now[11:19].replace(':', '')}-{os.getpid()}-{commit[:8]}"
     vstatus = validation_status(checks)
     inputs = [input_record(root, p, n, s, commit) for p, n, s in input_paths]
     preserved_output_paths = []
