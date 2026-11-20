@@ -1,5 +1,7 @@
 # B baseline numerical results
 
+> **Historical transfer-convention note:** The numerical tables in this PR85 record preserve the original static diagnostic \(t_N=-Q_A^2\). The formal impulse prescription is now \(t_N=t_A=-2m_AE_R\). The updated formal B results and the added pointlike P comparison are documented in [POINTLIKE_NUCLEON_P_A_B_COMPARISON.md](POINTLIKE_NUCLEON_P_A_B_COMPARISON.md). Re-evaluating the detector-level B yields with the formal transfer changes them by only \(1.1\times10^{-5}\%\) to \(3.1\times10^{-5}\%\); the convention is nevertheless kept explicit and consistent in the production code.
+
 ## Executive result
 
 The selected B baseline has now been applied to the converged seven-isotope halo-folded three-body calculation:
