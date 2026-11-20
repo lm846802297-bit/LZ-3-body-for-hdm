@@ -1,6 +1,6 @@
 # LZ 2026 formal B baseline: event-weighted NEST NR response fold
 
-**Status:** local full calculation completed; GitHub artifact reproduction pending.  
+**Status:** local full calculation completed and checksum-verified; GitHub reproduction workflow corrected and awaiting its rerun.  
 **Date:** 2026-11-20  
 **Primary nuclear response:** AFH-7.  
 **Diagnostic nuclear response:** Hybrid-9 (AFH-7 plus Helm fallback for Xe-124/Xe-126).
@@ -127,6 +127,11 @@ The repository workflow downloads the immutable NEST and formal-B source artifac
 
 - Workflow: .github/workflows/lz-2026-B-baseline-nest-fold.yml
 - Implementation: research/lz_detector_response/fold_lz_2026_three_body_B_event_weighted_response.py
+- Vectorized repeated-spectrum kernel: research/lz_detector_response/fold_lz_2026_three_body_B_event_weighted_kernel.py
+- Event reader: research/lz_detector_response/fold_lz_2026_three_body_event_weighted_response.py
 - Tests: research/lz_detector_response/tests/test_lz_2026_B_event_weighted_fold.py
 
 The output artifact contains the 2D intensity, fold comparison, per-bin acceptance, replica stability, summary, run manifest, and SHA256SUMS files. The numerical values above were first computed locally from the exact two source artifacts. GitHub Actions is the independent reproducibility check.
+
+
+The complete local rerun used the pinned 1.06-million-event sample for each of the four NEST response families and the vectorized B-specific kernel. It reproduced all 192 comparisons, 25,440 per-bin diagnostics, and 120,000 nonzero 2D cells. The maximum raw-rate closure residual is (7.77\times10^{-16}); the maximum split-replica accepted-rate difference is (0.4144\%), and the maximum split-replica 2D TV distance is (3.8592\%). All seven local output files pass SHA256SUMS. The three new regression tests cover formal-B column selection, transfer provenance, and event-weight normalization; two additional guards test zero-rate strata and reject positive-rate bins with zero sampled support.
