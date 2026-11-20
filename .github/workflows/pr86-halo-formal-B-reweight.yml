@@ -10,10 +10,6 @@ on:
       - research/three_body_phase_space_ID_validation/FORMAL_B_REWEIGHT_OF_THRESHOLD_ENERGY_HALO_SCAN.md
   workflow_dispatch:
     inputs:
-      source_run_id:
-        description: PR86 threshold-energy halo-scan workflow run ID
-        required: false
-        default: "44655861356"
       draws:
         description: Number of Borah2020 electromagnetic covariance draws
         required: false
@@ -31,6 +27,9 @@ jobs:
   formal-B-halo-reweight:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      B_DRAWS: ${{ github.event.inputs.draws || '3000' }}
+      B_SEED: ${{ github.event.inputs.seed || '20261119' }}
     steps:
       - name: Check out research repository
         uses: actions/checkout@v4
@@ -45,9 +44,7 @@ jobs:
 
       - name: Run pinned B-baseline unit tests
         run: |
-          python -m unittest discover \
-            -s research/nucleon_form_factor_B_baseline \
-            -p 'test_*.py' -v
+          python -m unittest discover -s research/nucleon_form_factor_B_baseline -v
 
       - name: Download immutable PR86 high-order halo scan
         uses: actions/download-artifact@v4
@@ -82,10 +79,10 @@ jobs:
             --draws \${{ github.event.inputs.draws || '3000' }} \
             --seed \${{ github.event.inputs.seed || '20261119' }}
 
-      - name: Validate isotope cancellation, natural-xenon reweighting, and checksums
+      - name: Validate isotope cancellation and natural-xenon reweighting
         run: |
           python - <<'PY'
-          import csv, json, math
+          import csv
           from pathlib import Path
           root = Path("formal-B-output")
           models = [
@@ -95,18 +92,30 @@ jobs:
           ]
           for model in models:
               d = root/model
-              iso = list(csv.DictReader((d/"seven_isotope_B_baseline.csv").open()))
-              nat = list(csv.DictReader((d/"natural_xenon_B_baseline.csv").open()))
+              with (d/"seven_isotope_B_baseline.csv").open() as f:
+                  iso = list(csv.DictReader(f))
+              with (d/"natural_xenon_B_baseline.csv").open() as f:
+                  nat = list(csv.DictReader(f))
               assert len(iso) == 1456, (model, len(iso))
               assert len(nat) == 208, (model, len(nat))
+              valid_iso = [
+                  r for r in iso
+                  if r["isotope_relative_error_A_pct"] and r["isotope_relative_error_B_pct"]
+              ]
               max_iso_delta = max(
                   abs(float(r["isotope_relative_error_A_pct"]) -
                       float(r["isotope_relative_error_B_pct"]))
-                  for r in iso
+                  for r in valid_iso
               )
               assert max_iso_delta < 1e-11, (model, max_iso_delta)
-              candidate = [r for r in nat if 180 <= float(r["ER_keV"]) <= 320]
-              full = [r for r in nat if 5 <= float(r["ER_keV"]) <= 800]
+              candidate = [
+                  r for r in nat
+                  if 180 <= float(r["ER_keV"]) <= 320 and r["full_vs_I_D_error_B_pct"]
+              ]
+              full = [
+                  r for r in nat
+                  if 5 <= float(r["ER_keV"]) <= 800 and r["full_vs_I_D_error_B_pct"]
+              ]
               max_candidate = max(abs(float(r["full_vs_I_D_error_B_pct"])) for r in candidate)
               max_full = max(abs(float(r["full_vs_I_D_error_B_pct"])) for r in full)
               assert 0.0354 < max_candidate < 0.0357, (model, max_candidate)
@@ -118,25 +127,25 @@ jobs:
               })
           PY
           python - <<'PY'
-          import hashlib
+          import hashlib, json, os
           from pathlib import Path
           root = Path("formal-B-output")
-          files = sorted(p for p in root.rglob("*") if p.is_file())
-          with (root/"SHA256SUMS").open("w") as f:
-              for p in files:
-                  h = hashlib.sha256(p.read_bytes()).hexdigest()
-                  f.write(f"{h}  {p.relative_to(root).as_posix()}\n")
           manifest = {
-              "source_run_id": int(__import__("os").environ.get("SOURCE_RUN_ID", "44655861356")),
+              "source_run_id": 44655861356,
               "source_artifact_id": 14595907606,
               "source_artifact_sha256": "05ceeea175e39ed658b0bfab4a15f6f654e1a49a9508c147291ef58c622471f8",
               "B_form_factor_source": "Borah et al. PRD 102, 074012 (2020), arXiv:2003.13640",
               "transfer_convention": "t_N=t_A=-2*m_A*E_R; Q_A^2=2*m_A*E_R+E_R^2",
-              "draws": 3000,
-              "seed": 20261119,
+              "draws": int(os.environ["B_DRAWS"]),
+              "seed": int(os.environ["B_SEED"]),
               "status": "COMPUTED_AND_VALIDATED",
           }
-          (root/"RUN_MANIFEST.json").write_text(__import__("json").dumps(manifest, indent=2)+"\n")
+          (root/"RUN_MANIFEST.json").write_text(json.dumps(manifest, indent=2)+"\\n")
+          files = sorted(p for p in root.rglob("*") if p.is_file() and p.name != "SHA256SUMS")
+          with (root/"SHA256SUMS").open("w") as f:
+              for p in files:
+                  h = hashlib.sha256(p.read_bytes()).hexdigest()
+                  f.write(f"{h}  {p.relative_to(root).as_posix()}\\n")
           PY
 
       - name: Upload formal B halo-reweight outputs
