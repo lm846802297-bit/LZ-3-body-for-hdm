@@ -83,7 +83,7 @@ This is floating-point closure of the same piecewise-linear rate integral.
 
 The maximum split-replica accepted-rate difference is \(0.4144\%\), and the maximum split-replica 2D total-variation distance is \(3.8592\%\). These are within-stream split diagnostics from the existing two-replica sample, not independent-seed confidence intervals or a formal equivalence test.
 
-Within the generated sample, all NEST S1-coincidence and S2-threshold flags pass, so the weighted NEST-level acceptance is 100%. The WS observable ROI supplies the additional event rejection shown below.
+The raw response samples do contain NEST-level failures: 1,095 (EFT2024), 1,276 (Table S5), 1,805 (WS2024), and 1,356 (generic) events fail at least one of the S1-coincidence/S2-threshold flags. Every such failure lies in the first 11 true-energy strata, 5.4--16.4 keV. All four B spectra have zero support there: their first nonzero AFH-7 recoil points are 35 keV (red), 101 keV (green), 210 keV (black), and 101 keV (blue). Therefore the B-weighted NEST-level acceptance is exactly 100% on the physical support of these four benchmarks. The WS observable ROI supplies the additional event rejection shown below.
 
 ## 5. Primary AFH-7 event yields
 
