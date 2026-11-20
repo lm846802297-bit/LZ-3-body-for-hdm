@@ -3,9 +3,10 @@
 
 Input rows already contain the full three-body phase-space and halo integrals,
 the isotope abundance, the AFH W_M response, the nuclear mass and mediator
-factor.  This postprocessor multiplies each isotope contribution by
-|c_M(t_N)/3|^2, with t_N=-Q_A^2 and Q_A^2=2 m_A E_R+E_R^2, then re-sums
-natural xenon.  No three-body integral is re-evaluated.
+factor. This postprocessor multiplies each isotope contribution by
+|c_M(t_N)/3|^2 using the formal impulse prescription t_N=t_A=-2*m_A*E_R.
+The exact spatial Q_A^2=2*m_A*E_R+E_R^2 remains separate for AFH.
+No three-body integral is re-evaluated.
 """
 from __future__ import annotations
 
@@ -44,8 +45,14 @@ def write_csv(path: Path, rows: list[dict]) -> None:
         w.writerows(rows)
 
 
-def qA2_from_recoil(mA_GeV: float, ER_keV: float) -> float:
-    ER = ER_keV*1e-6
+def q2_form_factor_from_recoil(mA_GeV: float, ER_keV: float) -> float:
+    """Return -t_N=-t_A=2*m_A*E_R for the formal impulse prescription."""
+    return 2.0*mA_GeV*ER_keV*1.0e-6
+
+
+def qA2_spatial_from_recoil(mA_GeV: float, ER_keV: float) -> float:
+    """Return exact spatial Q_A^2=2*m_A*E_R+E_R^2 for AFH."""
+    ER = ER_keV*1.0e-6
     return 2.0*mA_GeV*ER + ER*ER
 
 
@@ -66,7 +73,7 @@ def process_one(input_dir: Path, output_dir: Path, model: str,
     natural_rows = read_csv(input_dir/"natural_xenon_halo_comparison.csv")
 
     q2 = np.asarray([
-        qA2_from_recoil(_float(r,"mA_GeV"),_float(r,"ER_keV"))
+        q2_form_factor_from_recoil(_float(r,"mA_GeV"),_float(r,"ER_keV"))
         for r in isotope_rows
     ], dtype=float)
     q2_unique, inverse = np.unique(q2, return_inverse=True)
@@ -82,8 +89,12 @@ def process_one(input_dir: Path, output_dir: Path, model: str,
         by_energy.setdefault(E,[]).append(i)
         enriched.append({
             **row,
-            "Q_A2_GeV2": q2[i],
+            "Q_A2_GeV2": qA2_spatial_from_recoil(
+                _float(row,"mA_GeV"),_float(row,"ER_keV")
+            ),
+            "Q2_form_factor_GeV2": q2[i],
             "t_N_GeV2": -q2[i],
+            "t_A_GeV2": -q2[i],
             "F1_uds": float(central["F1uds"][i]),
             "F2_uds": float(central["F2uds"][i]),
             "F1s_unit": float(central["F1s_unit"][i]),
@@ -156,8 +167,10 @@ def process_one(input_dir: Path, output_dir: Path, model: str,
         "electromagnetic_form_factor_source":"Borah et al., Phys. Rev. D 102, 074012 (2020), arXiv:2003.13640; pinned coefficients/covariance distributed by GENIE",
         "strange_input_convention":"model-specific; see strange_current_convention_audit.md",
         "momentum_transfer":{
-            "Q_A2_GeV2":"2*m_A*E_R+E_R^2",
-            "t_N_GeV2":"-Q_A^2",
+            "Q_A2_GeV2":"2*m_A*E_R+E_R^2 (exact spatial transfer; AFH only)",
+            "Q2_form_factor_GeV2":"2*m_A*E_R=-t_N",
+            "t_N_GeV2":"-2*m_A*E_R",
+            "t_A_GeV2":"-2*m_A*E_R",
             "q_NR_used_for_FF":False,
         },
         "matching":{
