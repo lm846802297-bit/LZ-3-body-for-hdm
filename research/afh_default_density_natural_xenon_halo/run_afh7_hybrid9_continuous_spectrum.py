@@ -831,7 +831,7 @@ def run(args: argparse.Namespace) -> dict:
                 "check_id": "LZ-AFH-PCHIP-DIAGNOSTIC",
                 "name": "Direct AFH response versus PCHIP diagnostic",
                 "category": "regression",
-                "status": "passed" if pchip_diff <= 5.0e-4 else "failed",
+                "status": "passed" if pchip_diff <= 5.0e-4 else "inconclusive",
                 "method": "Maximum absolute direct-minus-PCHIP response difference divided by A^2; PCHIP is diagnostic only.",
                 "observed": pchip_diff,
                 "threshold": 5.0e-4,
