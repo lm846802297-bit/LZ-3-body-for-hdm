@@ -38,6 +38,12 @@ def csv_units(column: str) -> str:
     exact = {
         "A": "1", "J_A": "1", "T_iso": "1", "y": "1", "W_M00_AFH_package": "1",
         "nW_or_nu": "1", "nz": "1", "nphi": "1", "nW": "1", "order": "1",
+        "y_AFH": "1", "package_R0": "1", "package_R_at_q": "1",
+        "normalization_factor_to_A2": "1", "R_A_archived_28_sample": "1",
+        "R_A_direct_AFH": "1", "R_A_PCHIP_from_2401_grid": "1",
+        "direct_vs_archived_relative_difference": "1",
+        "PCHIP_vs_direct_relative_difference": "1",
+        "PCHIP_vs_archived_relative_difference": "1",
         "fixed_nW": "1", "fixed_other_order": "1", "g2": "1", "sine2_reference_nW": "1",
         "raw_over_2pi_I6": "1", "direct_over_eq6": "1", "v_kms": "km s^-1",
         "relative_difference": "1", "relative_difference_to_threshold_reference": "1",
