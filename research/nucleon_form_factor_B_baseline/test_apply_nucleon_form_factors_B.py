@@ -66,6 +66,17 @@ class ApplyNucleonFormFactorsBTests(unittest.TestCase):
             self.assertEqual(len(result),2)
             self.assertEqual(len(total),1)
             self.assertTrue(all(float(r["nucleon_FF_rate_multiplier"])>0 for r in result))
+            self.assertTrue(all("c_M_raw" in r and "c_M_hat" in r for r in result))
+            self.assertAlmostEqual(
+                float(result[0]["c_M_hat"]),
+                float(result[0]["c_M_raw"])/3.0,
+                places=12,
+            )
+            self.assertAlmostEqual(
+                float(result[0]["F_M_normalized"]),
+                float(result[0]["c_M_hat"]),
+                places=12,
+            )
             first = result[0]
             q2_ff = 2.0 * float(first["mA_GeV"]) * float(first["ER_keV"]) * 1.0e-6
             qA2 = q2_ff + (float(first["ER_keV"]) * 1.0e-6) ** 2
