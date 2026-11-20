@@ -3,7 +3,10 @@ from __future__ import annotations
 import csv
 import tempfile
 import unittest
+import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lz_2026_extended_nr"))
 
 from partition_lz_2026_signal_samples import (
     DELAYED_FRACTION,
