@@ -2,8 +2,9 @@
 """Apply the formal finite-nucleon B factor to archived absolute AFH-7/Hybrid-9 rates.
 
 The archived isotope-resolved three-body kernels are reused. This script
-reconstructs the zero-transfer A spectrum first and requires machine-precision
-closure before multiplying each isotope by |c_M(t_N)/3|^2. The formal impulse
+reconstructs the archived leading-order P0 spectrum first and requires machine-precision
+closure before multiplying each isotope by |c_M(t_N)/3|^2. The source spectrum's
+legacy rate column is interpreted as P0, not zero-transfer Dirac-Pauli A0. The formal impulse
 prescription is t_N=t_A=-2*m_A*E_R; the exact spatial Q_A^2 is retained for
 AFH and is never substituted into the nucleon form factors.
 """
@@ -127,7 +128,7 @@ def run(
 
     source_meta = json.loads(source_meta_path.read_text(encoding="utf-8"))
     if source_meta.get("status") != "PASS":
-        raise ValueError("archived A spectrum metadata is not PASS")
+        raise ValueError("archived P0 spectrum metadata is not PASS")
     if source_meta.get("detector_response_applied") is not False:
         raise ValueError("source spectrum must be pre-detector")
     particle = source_meta["particle_parameters"]
@@ -139,14 +140,14 @@ def run(
     source_spectrum = read_csv(spectrum_path)
     isotope_rows = read_csv(isotope_path)
     if not source_spectrum or not isotope_rows:
-        raise ValueError("empty A-spectrum or isotope-kernel input")
+        raise ValueError("empty P0-spectrum or isotope-kernel input")
 
     expected_benchmarks = set(particle["benchmarks"])
     spectrum_groups: dict[tuple[str, str, float], dict] = {}
     for row in source_spectrum:
         key = (row["benchmark"], row["scenario"], number(row, "ER_keV"))
         if key in spectrum_groups:
-            raise ValueError(f"duplicate A spectrum key {key}")
+            raise ValueError(f"duplicate P0 spectrum key {key}")
         spectrum_groups[key] = row
 
     isotope_groups: dict[tuple[str, float], list[dict[str, str]]] = defaultdict(list)
@@ -180,7 +181,7 @@ def run(
 
     output_rows: list[dict] = []
     isotope_output_rows: list[dict] = []
-    max_a_closure = 0.0
+    max_p0_closure = 0.0
     max_ff_multiplier = 0.0
     min_ff_multiplier = math.inf
 
@@ -190,7 +191,7 @@ def run(
         }):
             rows = isotope_groups[(benchmark, ER)]
             for scenario in SCENARIOS:
-                weighted_A = 0.0
+                weighted_P0 = 0.0
                 weighted_B = 0.0
                 draw_rate = np.zeros(n_draws, dtype=float)
                 isotope_contributions = []
@@ -211,15 +212,15 @@ def run(
                     # in the nucleon form factors and mediator propagator.
                     tA_GeV2 = -2.0*mA*ER*1.0e-6
                     denominator = (mV*mV - tA_GeV2)**2
-                    a_contribution = (
+                    p0_contribution = (
                         prefactor * atom_fraction * base_kernel * R_A / denominator
                     )
                     idx = q2_index_for_row[(benchmark, ER, A)]
                     ff_multiplier = float(central_multipliers[idx])
-                    b_contribution = a_contribution * ff_multiplier
-                    weighted_A += a_contribution
+                    b_contribution = p0_contribution * ff_multiplier
+                    weighted_P0 += p0_contribution
                     weighted_B += b_contribution
-                    draw_rate += a_contribution * multiplier_draws[:, idx]
+                    draw_rate += p0_contribution * multiplier_draws[:, idx]
                     max_ff_multiplier = max(max_ff_multiplier, ff_multiplier)
                     min_ff_multiplier = min(min_ff_multiplier, ff_multiplier)
                     isotope_contributions.append({
@@ -237,39 +238,39 @@ def run(
                         "c_M": float(central_ff["cM"][idx]),
                         "F_M": float(central_ff["F_M"][idx]),
                         "nucleon_FF_rate_multiplier": ff_multiplier,
-                        "rate_A_contribution_events_kg_day_keV": a_contribution,
+                        "rate_P0_contribution_events_kg_day_keV": p0_contribution,
                         "rate_B_contribution_events_kg_day_keV": b_contribution,
                     })
-                if weighted_A == 0.0 and weighted_B == 0.0:
+                if weighted_P0 == 0.0 and weighted_B == 0.0:
                     pass
-                elif weighted_A <= 0.0:
+                elif weighted_P0 <= 0.0:
                     raise ArithmeticError(f"non-positive A rate for {benchmark}/{scenario}/{ER}")
-                reconstructed_A = weighted_A
+                reconstructed_P0 = weighted_P0
                 original = spectrum_groups[(benchmark, scenario, ER)]
-                original_A = number(original, "rate_events_kg_day_keV")
-                closure = abs(reconstructed_A/original_A - 1.0) if original_A > 0 else (
-                    0.0 if reconstructed_A == 0.0 else math.inf
+                original_P0 = number(original, "rate_events_kg_day_keV")
+                closure = abs(reconstructed_P0/original_P0 - 1.0) if original_P0 > 0 else (
+                    0.0 if reconstructed_P0 == 0.0 else math.inf
                 )
-                max_a_closure = max(max_a_closure, closure)
+                max_p0_closure = max(max_p0_closure, closure)
                 if closure > closure_tolerance:
                     raise ArithmeticError(
-                        f"A-spectrum reconstruction failed for {benchmark}/{scenario}/{ER}: "
+                        f"P0-spectrum reconstruction failed for {benchmark}/{scenario}/{ER}: "
                         f"{closure:.6e} > {closure_tolerance:.6e}"
                     )
-                if weighted_A > 0.0:
-                    b_over_a = weighted_B / weighted_A
+                if weighted_P0 > 0.0:
+                    b_over_p0 = weighted_B / weighted_P0
                 else:
-                    b_over_a = 1.0
+                    b_over_p0 = 1.0
                 output_rows.append({
                     "benchmark": benchmark,
                     "scenario": scenario,
                     "ER_keV": ER,
                     "rate_events_kg_day_keV": weighted_B,
-                    "rate_A_events_kg_day_keV": reconstructed_A,
+                    "rate_P0_events_kg_day_keV": reconstructed_P0,
                     "rate_B_events_kg_day_keV": weighted_B,
-                    "B_over_A_rate": b_over_a,
-                    "B_over_A_rate_shift_pct": (b_over_a-1.0)*100.0,
-                    "nucleon_FF_rate_multiplier": b_over_a,
+                    "B_over_P0_rate": b_over_p0,
+                    "B_over_P0_rate_shift_pct": (b_over_p0-1.0)*100.0,
+                    "nucleon_FF_rate_multiplier": b_over_p0,
                     "rate_B_p16": float(np.percentile(draw_rate, 16)),
                     "rate_B_p50": float(np.percentile(draw_rate, 50)),
                     "rate_B_p84": float(np.percentile(draw_rate, 84)),
@@ -286,7 +287,7 @@ def run(
                     "vmax_km_s": float(source_meta["halo"]["vmax_lab_km_s"]),
                     "available_atom_fraction": float(source_meta["natural_atom_fraction_AFH7"]),
                     "missing_atom_fraction": float(source_meta["natural_atom_fraction_missing"]),
-                    "A2_weighted_AFH_coverage_at_q0": float(source_meta["A2_weighted_AFH_coverage_at_q0"]),
+                    "A2_weighted_P0FH_coverage_at_q0": float(source_meta["A2_weighted_P0FH_coverage_at_q0"]),
                     "mass_scheme": source_meta["nuclear_mass_scheme"],
                     "response_q_convention": "exact spatial q",
                     "width_scheme": "conditional Dirac pure-scalar pole width",
@@ -309,7 +310,7 @@ def run(
     metadata = {
         "status": "PASS",
         "calculation": "absolute natural-xenon rate-level B baseline applied to archived isotope-resolved AFH-7/Hybrid-9 three-body kernels",
-        "baseline": "B = finite nucleon F1(t_N), F2(t_N) times finite-size nuclear response",
+        "baseline": "B = finite nucleon F1(t_N), F2(t_N) times finite-size nuclear response; reference spectrum is legacy P0 leading-order charge-only baseline",
         "nucleon_form_factor_model": "Borah et al. (2020) separate proton/neutron low-Q2 z-expansion; correlated coefficient covariance",
         "strange_form_factor_model": strange_model,
         "strange_input_metadata": central_ff["strange_metadata"],
@@ -330,14 +331,14 @@ def run(
             "strange_lattice_uncertainties_sampled": False,
         },
         "source_files": {
-            "A_spectrum_csv": source_label(spectrum_path),
-            "A_spectrum_sha256": sha256(spectrum_path),
+            "P0_spectrum_csv": source_label(spectrum_path),
+            "P0_spectrum_sha256": sha256(spectrum_path),
             "isotope_kernel_csv": source_label(isotope_path),
             "isotope_kernel_sha256": sha256(isotope_path),
             "source_metadata_json": source_label(source_meta_path),
             "source_metadata_sha256": sha256(source_meta_path),
         },
-        "source_A_metadata": source_meta,
+        "source_P0_metadata": source_meta,
         "particle_parameters": particle,
         "halo": source_meta["halo"],
         "recoil_grid_keV": source_meta["recoil_grid_keV"],
@@ -346,7 +347,7 @@ def run(
         "afh_source_sha256": source_meta["afh_source_sha256"],
         "natural_atom_fraction_AFH7": source_meta["natural_atom_fraction_AFH7"],
         "natural_atom_fraction_missing": source_meta["natural_atom_fraction_missing"],
-        "A2_weighted_AFH_coverage_at_q0": source_meta["A2_weighted_AFH_coverage_at_q0"],
+        "A2_weighted_P0FH_coverage_at_q0": source_meta["A2_weighted_P0FH_coverage_at_q0"],
         "nuclear_mass_scheme": source_meta["nuclear_mass_scheme"],
         "detector_response_applied": False,
         "row_counts": {
@@ -354,8 +355,8 @@ def run(
             "isotope_contributions": len(isotope_output_rows),
         },
         "validation": {
-            "maximum_A_reconstruction_relative_difference": max_a_closure,
-            "A_reconstruction_tolerance": closure_tolerance,
+            "maximum_P0_reconstruction_relative_difference": max_p0_closure,
+            "P0_reconstruction_tolerance": closure_tolerance,
             "minimum_central_isotope_FF_rate_multiplier": min_ff_multiplier,
             "maximum_central_isotope_FF_rate_multiplier": max_ff_multiplier,
         },
