@@ -1,0 +1,9 @@
+check,quantity,max_relative_difference,compared_open_isotope_rows,worst_benchmark,worst_A,worst_ER_keV
+all_axes,B_time,4.558575739110893e-13,127,green,136,101
+all_axes,C_time,4.563016631209393e-13,127,blue,136,101
+all_axes,D,4.558575739110893e-13,127,green,136,101
+all_axes,space_delta,4.558575739110893e-13,127,blue,136,101
+speed_only,B_time,4.549693954913892e-13,127,green,136,101
+speed_only,C_time,4.549693954913892e-13,127,green,136,101
+speed_only,D,4.547473508864641e-13,127,green,136,101
+speed_only,space_delta,4.547473508864641e-13,127,blue,136,101

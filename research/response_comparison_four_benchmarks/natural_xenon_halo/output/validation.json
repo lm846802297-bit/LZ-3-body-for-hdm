@@ -1,0 +1,203 @@
+{
+  "native_reference": {
+    "128": {
+      "source_sha256": "7c492562fca01cdfd2a185e671755c84b04bf6b5e34cc1a313f8e76b628a8abb",
+      "max_abs_vs_reference_interpolant": 1.1368683772161603e-13,
+      "common_C0": 1.0000924953327088
+    },
+    "129": {
+      "source_sha256": "80684a3f1201bc312c1c60af3b5b263e1480ab5a05874743a738cce9b86dc532",
+      "max_abs_vs_reference_interpolant": 1.7053025658242404e-13,
+      "common_C0": 1.0001103230777202
+    },
+    "130": {
+      "source_sha256": "36534761e2b061e4e3cff14d3f3ec0f679f68fa3455f8596e23a654f21cbe44a",
+      "max_abs_vs_reference_interpolant": 1.1368683772161603e-13,
+      "common_C0": 1.0001260610682263
+    },
+    "131": {
+      "source_sha256": "585ab0f483be0d8131566cefc4cb420c6db7e07bebbcd2b887da568cda2f4ffb",
+      "max_abs_vs_reference_interpolant": 4.547473508864641e-13,
+      "common_C0": 1.0000825298069378
+    },
+    "132": {
+      "source_sha256": "7f03e4a14c1e646e624b2d53f8c5ca42f0538c45f4670c524d9a1e39fe8d768e",
+      "max_abs_vs_reference_interpolant": 1.2756462552943049e-13,
+      "common_C0": 1.0000445028489864
+    },
+    "134": {
+      "source_sha256": "031b30c6b7b0e9e720b155979fc7c9ab37665303e7c9fbf8678bde78f39f3885",
+      "max_abs_vs_reference_interpolant": 8.905376436274537e-14,
+      "common_C0": 1.0002068258192742
+    },
+    "136": {
+      "source_sha256": "c00ec4ce6c55fd7fa925a2bf2c3436057a3f54ad31710e1c8f555d7622c7dea4",
+      "max_abs_vs_reference_interpolant": 9.869882688917642e-14,
+      "common_C0": 1.000001506359772
+    }
+  },
+  "tensor": {
+    "fixed_spinor_L00_deltaLC_LT_max_relative": 8.881784197001252e-16,
+    "independent_gamma0_trace_max_relative": 6.617074221892949e-09
+  },
+  "stored_rates": {
+    "microscopic_rows": 96732,
+    "isotope_rows": 14840,
+    "natural_sum_rows": 2120,
+    "open_rows": 8061,
+    "phase_space_closed_isotope_rows": 6779
+  },
+  "archive": {
+    "open_anchor_rows": 30,
+    "max_rel_at_archived_quadrature": 1.3752551548673608e-06,
+    "max_rel_refined_vs_old_order": 0.00025192461736156524
+  },
+  "quadrature": {
+    "base": [
+      12,
+      12,
+      4,
+      4
+    ],
+    "refined_all": [
+      22,
+      20,
+      8,
+      8
+    ],
+    "refined_speed": [
+      22,
+      12,
+      4,
+      4
+    ],
+    "checks": [
+      {
+        "check": "all_axes",
+        "quantity": "B_time",
+        "max_relative_difference": 4.558575739110893e-13,
+        "compared_open_isotope_rows": 127,
+        "worst_benchmark": "green",
+        "worst_A": 136,
+        "worst_ER_keV": 101
+      },
+      {
+        "check": "all_axes",
+        "quantity": "C_time",
+        "max_relative_difference": 4.563016631209393e-13,
+        "compared_open_isotope_rows": 127,
+        "worst_benchmark": "blue",
+        "worst_A": 136,
+        "worst_ER_keV": 101
+      },
+      {
+        "check": "all_axes",
+        "quantity": "D",
+        "max_relative_difference": 4.558575739110893e-13,
+        "compared_open_isotope_rows": 127,
+        "worst_benchmark": "green",
+        "worst_A": 136,
+        "worst_ER_keV": 101
+      },
+      {
+        "check": "all_axes",
+        "quantity": "space_delta",
+        "max_relative_difference": 4.558575739110893e-13,
+        "compared_open_isotope_rows": 127,
+        "worst_benchmark": "blue",
+        "worst_A": 136,
+        "worst_ER_keV": 101
+      },
+      {
+        "check": "speed_only",
+        "quantity": "B_time",
+        "max_relative_difference": 4.549693954913892e-13,
+        "compared_open_isotope_rows": 127,
+        "worst_benchmark": "green",
+        "worst_A": 136,
+        "worst_ER_keV": 101
+      },
+      {
+        "check": "speed_only",
+        "quantity": "C_time",
+        "max_relative_difference": 4.549693954913892e-13,
+        "compared_open_isotope_rows": 127,
+        "worst_benchmark": "green",
+        "worst_A": 136,
+        "worst_ER_keV": 101
+      },
+      {
+        "check": "speed_only",
+        "quantity": "D",
+        "max_relative_difference": 4.547473508864641e-13,
+        "compared_open_isotope_rows": 127,
+        "worst_benchmark": "green",
+        "worst_A": 136,
+        "worst_ER_keV": 101
+      },
+      {
+        "check": "speed_only",
+        "quantity": "space_delta",
+        "max_relative_difference": 4.547473508864641e-13,
+        "compared_open_isotope_rows": 127,
+        "worst_benchmark": "blue",
+        "worst_A": 136,
+        "worst_ER_keV": 101
+      }
+    ]
+  },
+  "computed_locally": true,
+  "one_body_matching": "leading-static conditional candidate",
+  "source_revision_qN": "c9cf4b86babd3b29fbe6a80a2b2a7be647677e9c",
+  "native_AFH_source_revision": "dcefbeb7ad705b6c03f2b4689200eb1d9252e67b",
+  "local_repository_base": "7456b7743adbed46b09b430ea2a54e8d0545aaa6",
+  "runtime": {
+    "python": "3.14.7",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "pandas": "3.1.1"
+  },
+  "molar_mass_g_mol": 131.29276127759826,
+  "targets_kg": 4.586803340411977e+24,
+  "atom_coverage": 0.9981580000000001,
+  "halo": {
+    "v0": 220.0,
+    "vE": 232.0,
+    "vesc": 544.0,
+    "rho": 0.3,
+    "integral": 1.0
+  },
+  "widths_keV": {
+    "red": 155.93912633420229,
+    "green": 151.82391157482436,
+    "black": 148.48374798964613,
+    "blue": 1590.809210318448
+  },
+  "sha256": {
+    "research/afh_default_density_xe131/output/ame2020_exact_spatial_xe131_partial/xenon_isotope_ame2020_masses.csv": "81502f862963ac47e582fc17a49a97e8d9610fca1242be52bc8d14f602b9138f",
+    "research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv": "fd1bb996e5f582c74c3c86d129f1d2dded510c65237d0a7b2ba08861f1d8c991",
+    "v6/dmformfactor-V6.m": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+    "research/response_comparison_four_benchmarks/compare_responses.py": "37687620f4a4b3b310f7814090f259df6b149170f35f3c04de17b2370666e23a",
+    "research/response_comparison_four_benchmarks/inputs/upstream/research/three_body_calculation_and_validation/eq6_kernel.py": "3cdc33ded7bcebc19bba15487de0234a140f13a161f42db5b7bc81163da01619",
+    "research/response_comparison_four_benchmarks/inputs/upstream/research/three_body_full_current_nucleon_match/nucleon_vector_form_factors.py": "b9fa7a2df366c6b7413158ad1d9b44d2dda3a1c2ae1f88844f573ce758bec09b",
+    "research/three_body_calculation_and_validation/rate_kinematics.py": "9a8e9f8d710f5b0afd8c6d69aa18a1c064bbb8d64931950cb1b27007c5f35367",
+    "research/three_body_calculation_and_validation/run_natural_xenon_halo_fold.py": "d7e9850b00932f550e15b09a8ed2db3d7e2f1a5859365e9f254f8f1302b24919",
+    "research/afh_default_density_natural_xenon_halo/output/ame2020_direct_exactq_fold/seven_isotope_contributions.csv": "e7dad4fd0a8e1b28ff65a4d86173479d51f9c065f6e69852b3d36b8a9393e684",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/make_figures.py": "1362c1f156ae2d5191abad4d7c65a0717d1b42ead519d60a5d24e904e7390074",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/run_fold.py": "325c06b05a993b8a12f1a627f7fe9c5808ca29a291158fb7f2830e6152ccf451",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/three_body_tensor.py": "72de0cea40def052e1f9e5e84b2d94376f240dfb82f04c8a868afbe32b8da350",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/validate.py": "10331c1502eb163f96c3911b8a066f340cdafd6180d6c08afedf917afbc92cb6",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/native_recoil_responses.wls": "3a4292aa6f239efa12c85d57662fb77a71033db795033600f52866b8b1b23c73",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/output/archived_M_only_crosscheck.csv": "f37ebf9597df7b4445f7e906476d8d1a90de20022a326584bf04e98360061058",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/output/halo_spectra.csv": "e1b272df6f48eb7f9b4c08994f7cf1171520f924ed41697835f67c26078a77c9",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/output/isotope_contributions.csv.gz": "1454b88b7863462c99ac197cac82f80e7ca648bdff2fb8bd1ddce907bcd304bd",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/output/kinematic_endpoints.csv": "dcc49817eea5bfac423b3b2d6d352b439f3b875bb3687d157bb21d714fe9d69f",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/output/microscopic_cross_sections.csv.gz": "894ecb14e8ee8859aae598e7a677c0097fee8a3ff1ed6c628a41b8b0565e8509",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/output/native_recoil_responses.csv": "b3cc0341a4f4751924f6d4e7ac1466809749b481c4c032def2ae1489b0248b7a",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/output/quadrature_checks.csv": "610c06c591468f00e9ee9d89dcb606d77ea188510847fbc40f9f0963ae263b0b"
+  },
+  "figure_outputs_sha256": {
+    "pdf/xenon_halo_spectra_and_ratios.pdf": "550c799e30d9138718077bd5e4e05b116aebc1621165fc072ce00b01e35b643a",
+    "benchmark_summary.csv": "f58efa77e0f68ec01ff08b805319a60eca68bad253d89215d3a9450f9457a02d"
+  }
+}

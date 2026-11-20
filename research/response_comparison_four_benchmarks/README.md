@@ -28,3 +28,7 @@ python -B research/response_comparison_four_benchmarks/validate_outputs.py
 图件：`results/differential_cross_sections.{png,pdf,svg}`、`results/cross_section_ratios.{png,pdf,svg}`。逐点数据见 `results/differential_cross_sections.csv`；精确 200/267/269/300/500 keV 节点见 `results/selected_energy_comparison.csv`。
 
 本次产物为本地文件，尚未提交或上传 GitHub；保留此前已有的未提交研究文件。
+
+## 天然氙 halo 与事件数
+
+[天然氙七同位素谱、六通道对照及事件数](natural_xenon_halo/README.md)归档了已有本地计算；结果为探测器响应之前的理论谱，束缚核完整电流匹配仍待独立验证。
