@@ -4,10 +4,21 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from apply_nucleon_form_factors_B import process_one
+from apply_nucleon_form_factors_B import (
+    process_one,
+    q2_form_factor_from_recoil,
+    qA2_spatial_from_recoil,
+)
 
 
 class ApplyNucleonFormFactorsBTests(unittest.TestCase):
+    def test_spatial_and_invariant_transfers_are_distinct(self):
+        mA, ER = 120.0, 248.0
+        q2_ff = q2_form_factor_from_recoil(mA, ER)
+        qA2 = qA2_spatial_from_recoil(mA, ER)
+        self.assertAlmostEqual(q2_ff, 2.0*mA*ER*1.0e-6, places=16)
+        self.assertAlmostEqual(qA2-q2_ff, (ER*1.0e-6)**2, places=16)
+
     def test_postprocessor_multiplies_each_isotope_and_resums(self):
         with tempfile.TemporaryDirectory() as tmp:
             root=Path(tmp)
@@ -55,6 +66,13 @@ class ApplyNucleonFormFactorsBTests(unittest.TestCase):
             self.assertEqual(len(result),2)
             self.assertEqual(len(total),1)
             self.assertTrue(all(float(r["nucleon_FF_rate_multiplier"])>0 for r in result))
+            first = result[0]
+            q2_ff = 2.0 * float(first["mA_GeV"]) * float(first["ER_keV"]) * 1.0e-6
+            qA2 = q2_ff + (float(first["ER_keV"]) * 1.0e-6) ** 2
+            self.assertAlmostEqual(float(first["Q2_form_factor_GeV2"]), q2_ff, places=16)
+            self.assertAlmostEqual(float(first["Q_A2_GeV2"]), qA2, places=16)
+            self.assertAlmostEqual(float(first["t_N_GeV2"]), -q2_ff, places=16)
+            self.assertAlmostEqual(float(first["t_A_GeV2"]), -q2_ff, places=16)
             self.assertAlmostEqual(
                 float(total[0]["natural_xenon_full_B_relative_rate"]),
                 sum(float(r["full_contribution_B_relative_units"]) for r in result),
