@@ -32,7 +32,7 @@
 
 ## 贡献与研究规范
 
-- 科研计算执行规范：[RESEARCH_COMPUTE_POLICY.md](RESEARCH_COMPUTE_POLICY.md)：普通 GPT 聊天模式使用 ChatGPT Linux 主计算；Codex/Work 模式使用 Windows 本地环境；GitHub 负责归档，Actions 只做独立验证。
+- 科研计算执行规范：[RESEARCH_COMPUTE_POLICY.md](RESEARCH_COMPUTE_POLICY.md)：普通 GPT 聊天模式使用 ChatGPT Linux；Codex/Work 可使用 Windows 本地环境或 GPT 管理的云端计算机；GitHub 负责归档，Actions 只做独立验证。
 - 仓库级强制任务规范：[AGENTS.md](AGENTS.md)
 - 科研任务交接规范与统一任务单：[research/RESEARCH_TASK_HANDOFF_STANDARD.md](research/RESEARCH_TASK_HANDOFF_STANDARD.md)；可复制模板：[research/_template/RESEARCH_TASK_BRIEF.md](research/_template/RESEARCH_TASK_BRIEF.md)
 - 研究依据优先级与论文草稿边界：[research/RESEARCH_GOVERNANCE_AND_SOURCE_HIERARCHY.md](research/RESEARCH_GOVERNANCE_AND_SOURCE_HIERARCHY.md)
