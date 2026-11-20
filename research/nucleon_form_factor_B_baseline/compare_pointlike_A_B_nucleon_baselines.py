@@ -80,15 +80,15 @@ def qA2_spatial_from_recoil(mA_GeV: float, ER_keV: float) -> float:
 
 
 def leading_order_pointlike_cM_hat() -> float:
-    """P0: leading-order point-nucleon charge coefficient; omit finite-t_N terms."""
+    """P0: normalized coefficient cM_hat=1; omit finite-t_N terms (raw cM=3)."""
     return 1.0
 
 
 def pointlike_dirac_cM_hat(q2_form_factor_GeV2: float) -> float:
-    """P: pointlike Dirac charge with the project's finite-transfer M-only match.
+    """P: normalized coefficient cM_hat for the finite-transfer M-only match.
 
-    P and P0 both use Fhat_1=1 and Fhat_2=0. P0 truncates c_M to 1,
-    whereas P retains c_M=1-Q_N^2/(8*m_N^2), with Q_N^2=-t_N.
+    P and P0 both use Fhat_1=1 and Fhat_2=0. P0 truncates cM_hat to 1,
+    whereas P retains cM_hat=1-Q_N^2/(8*m_N^2), with Q_N^2=-t_N.
     The argument is -t_N=2*m_A*E_R under the formal impulse prescription;
     it is not the AFH spatial Fourier variable Q_A^2.
     """
