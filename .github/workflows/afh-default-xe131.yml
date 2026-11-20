@@ -50,7 +50,10 @@ jobs:
           # The native archive is a frozen 2026-11-16 result. Its manifest
           # records the historical phase-space source; do not compare that
           # historical source hash against the actively developed main file.
-          grep -v 'phase_space_convergence.py
+          grep -v 'phase_space_convergence.py$' research/afh_default_density_xe131/output/full_dsigma_mathematica/SHA256SUMS.txt > "$RUNNER_TEMP/full_dsigma_immutable_files.SHA256SUMS"
+          sha256sum --check "$RUNNER_TEMP/full_dsigma_immutable_files.SHA256SUMS"
+          git show 8f73c26d89605300b6539d6ca2cbd3ab5ceffcbe:research/three_body_calculation_and_validation/phase_space_convergence.py > "$RUNNER_TEMP/phase_space_convergence_at_archive_revision.py"
+          printf '7396b06fb2ea4bc4f857463ea63c48cc60d118ce286a12915cbb7a7a387217b7  %s\n' "$RUNNER_TEMP/phase_space_convergence_at_archive_revision.py" | sha256sum --check
 
       - name: Verify committed Green high-order archive SHA-256 checksums
         run: sha256sum --check research/afh_default_density_xe131/output/full_dsigma_mathematica/green_high_order_SHA256SUMS.txt
