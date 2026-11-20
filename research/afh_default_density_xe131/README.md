@@ -466,3 +466,20 @@ full Mathematica/Python \(d\sigma_A/dE_R\) comparison. See
 [the full mapping audit](output/HISTORICAL_I6_MAPPING_AUDIT.md) and the
 [archived CSV/metadata/checksums](output/historical_i6_mapping_audit/).
 
+
+
+## Frozen full Eq. (6) archive source provenance
+
+The native full-differential-cross-section archive under
+`output/full_dsigma_mathematica/` is a frozen 2026-11-16 result. Its
+`SHA256SUMS.txt` intentionally records the phase-space implementation used
+for that historical calculation, rather than the actively developed version
+of `phase_space_convergence.py`.
+
+The archived source snapshot is pinned at commit
+`8f73c26d89605300b6539d6ca2cbd3ab5ceffcbe`. The read-only validation workflow
+checks the immutable output files in the current checkout and separately
+checks the historical phase-space source hash
+`7396b06fb2ea4bc4f857463ea63c48cc60d118ce286a12915cbb7a7a387217b7` from
+that commit. This preserves the original archive provenance while allowing
+later numerical-method improvements to the shared integration module.
