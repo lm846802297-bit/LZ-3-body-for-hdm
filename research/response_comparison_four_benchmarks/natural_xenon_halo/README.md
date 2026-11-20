@@ -4,6 +4,8 @@
 
 [两页合订图，第一页为绝对反冲率，第二页为比值](output/pdf/xenon_halo_spectra_and_ratios.pdf) · [各能量的总谱及六项分解](output/halo_spectra.csv) · [四组基准摘要](output/benchmark_summary.csv)
 
+按新版正文基准的 2.84 吨·年曝光重算后，215.5–280.5 keV 候选窗的论文红线积分为 0.974 例，B 为 0.14250 例，六通道候选 D 为 0.14154 例。绝对谱、累计事例数、同包四组质量点的对照以及逐步复算命令见[事例数计算记录](event_counts/README.md)和[三页合订图](event_counts/output/pdf/xenon_count_spectra_vs_recoil.pdf)。
+
 ## 从粒子振幅到微观截面
 
 过程为矢量中介子介导的 $\chi_1 A\to\chi_1 A s$。采用 Dirac $\chi_{1,2}$、实的 CP 偶标量 $s$、纯标量非对角 Yukawa 耦合以及等质子／中子矢量耦合。计算使用树级有效相互作用。$m_{\chi_1}=1000$ GeV，$m_V=10$ GeV，$g_2=1$，$(g_1g_2g_{VN})^2=10^{-8}$，$g_{VN}=3g_{Vq}$。$m_2=m_{\chi_1}+\Delta m$。两张标量辐射图先在振幅层相加，再对初始暗费米子的两种自旋取平均并对末态自旋求和。前辐射传播子取实分母，后辐射传播子包含 $+i m_2\Gamma_2$，其中极点宽度按唯一开放的 $\chi_2\to\chi_1s$ 道计算。按表中次序，宽度约为 155.94、151.82、148.48、1590.81 keV。
@@ -88,13 +90,13 @@ $v$ 和 $dv$ 以 km/s 计，$10^5v$ 为 cm/s。$x_A$ 为天然原子丰度。用
 ```powershell
 wolframscript -file native_recoil_responses.wls
 python -B run_fold.py
-python -B validate.py
+python -B validate.py --native-archive inputs/afh_v6
 python -B make_figures.py
 ```
 
 本地原生数据已逐通道与此前通过独立检查的七同位素网格核对。D 的束缚核振幅、横向相对相位与相互作用电流仍待独立物理验证。该结果给出探测器响应之前的理论核反冲谱，未施加效率、分辨率或曝光量。[此前的 P4 研究记录](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/pull/67)
 
-## 2026-11-20 本地归档说明
+## 首次归档记录（提交 3a629fe2）
 
 本目录归档已有本地计算及其记录，未为本次归档重新运行数值积分。`output/validation.json` 和 `event_counts/count_validation.json` 保留原有输入与输出哈希；2026-11-20 归档时分别核对了其中 21 和 10 项，均一致。以下 CSV 是同目录 `.csv.gz` 按 `gzip -dc` 解压得到的原生文件；压缩版本供既有复现脚本和原始哈希记录使用。
 

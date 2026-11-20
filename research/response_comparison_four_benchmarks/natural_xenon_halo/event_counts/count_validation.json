@@ -58,6 +58,16 @@
     "trace_ER_keV": 267.0,
     "trace_speed_km_s": 750.0
   },
+  "independent_published_curve_readout": {
+    "segments": 392,
+    "visible_red_ER_keV": [
+      90.99616867737352,
+      796.0016460408278
+    ],
+    "red_curve_events_per_keV_at_750": 1.35439537094994e-07,
+    "minimum_speed_km_s_at_750": 787.7481968927507,
+    "previous_halo_vmax_km_s": 776.0
+  },
   "max_relative_difference_for_summed_rates_and_space_correction": {
     "coarse": 7.054159675502321e-08,
     "recoil_grid": 2.5507653844728164e-07
@@ -81,9 +91,10 @@
     "research/response_comparison_four_benchmarks/natural_xenon_halo/output/benchmark_summary.csv": "f58efa77e0f68ec01ff08b805319a60eca68bad253d89215d3a9450f9457a02d",
     "paper-source/main.tex": "d3dec8809b8bb33256c4f7941b7c739c729e3ceaba7549117de4120d3639dbc8",
     "paper-source/figures/DM_signal_v2.pdf": "4f8d91b56dc504ea0d1f32ce4ae617de3d6887add9199f7aa44db91a9ee49c97",
-    "research/response_comparison_four_benchmarks/natural_xenon_halo/event_counts/integrate_event_counts.py": "0798ab210ae7dce283666fa626c4797ce61b5b66202bc79569d94acd64cfd94b",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/event_counts/integrate_event_counts.py": "b7a90f80fdc57960aa4b17ebdee04e3f162a9cc585a414c1d734e09aedfe834b",
     "research/response_comparison_four_benchmarks/natural_xenon_halo/event_counts/event_counts.csv": "209d1fcc3f163771a239814ddc64e3a82985c3a0c6c50b6927e811c377c50cba",
     "research/response_comparison_four_benchmarks/natural_xenon_halo/event_counts/isotope_event_counts.csv": "7ac7dbc600129be9cadbd17b5ec3a10be40ebe37212e36225e0533bd0cf5b564",
-    "research/response_comparison_four_benchmarks/natural_xenon_halo/event_counts/energy_integration_checks.csv": "f04094c65474617a9145a686d72a94d4f92565be4d8bf9ad45c1e04a5a8ba0cd"
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/event_counts/energy_integration_checks.csv": "f04094c65474617a9145a686d72a94d4f92565be4d8bf9ad45c1e04a5a8ba0cd",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/event_counts/manuscript_figure_comparison.csv": "bde019fcbca93dba1f9617a8b4f3d87abf4cee1356112baaa09a05f5ff2e355e"
   }
 }

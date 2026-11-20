@@ -1,0 +1,89 @@
+{
+  "status": "PASS",
+  "scope": "pointwise Python versus native AFH v6.0 ResponseNuclear comparison",
+  "native_afh_validated": true,
+  "isotopes": [
+    128,
+    129,
+    130,
+    131,
+    132,
+    134,
+    136
+  ],
+  "expected_points_per_isotope": 2401,
+  "expected_rows": 16807,
+  "python_rows": 16807,
+  "native_rows": 16807,
+  "rows_compared": 16807,
+  "rtol": 5e-07,
+  "atol": 2e-12,
+  "imaginary_atol": 2e-12,
+  "max_differences": {
+    "M": {
+      "max_abs": 2.0463630789890885e-12,
+      "max_rel": 6.27818232427859e-06,
+      "worst_key": {
+        "A": 131,
+        "q_GeV": 0.021
+      }
+    },
+    "SigmaDoublePrime": {
+      "max_abs": 1.4051260155412137e-16,
+      "max_rel": 1.562895916084343e-13,
+      "worst_key": {
+        "A": 129,
+        "q_GeV": 0.0155
+      }
+    },
+    "SigmaPrime": {
+      "max_abs": 2.949029909160572e-16,
+      "max_rel": 2.1979761662964989e-07,
+      "worst_key": {
+        "A": 129,
+        "q_GeV": 0.0155
+      }
+    },
+    "PhiPP": {
+      "max_abs": 8.526512829121202e-14,
+      "max_rel": 6.00127421681661e-07,
+      "worst_key": {
+        "A": 131,
+        "q_GeV": 0.01075
+      }
+    },
+    "PhiTildePrime": {
+      "max_abs": 1.5959455978986625e-16,
+      "max_rel": 9.145634128837647e-10,
+      "worst_key": {
+        "A": 131,
+        "q_GeV": 0.016
+      }
+    },
+    "Delta": {
+      "max_abs": 2.0816681711721685e-16,
+      "max_rel": 4.20565849988141e-09,
+      "worst_key": {
+        "A": 131,
+        "q_GeV": 0.00425
+      }
+    },
+    "MPhiPP": {
+      "max_abs": 3.126388037344441e-13,
+      "max_rel": 1.2914805490797328e-09,
+      "worst_key": {
+        "A": 131,
+        "q_GeV": 0.00075
+      }
+    },
+    "SigmaPrimeDelta": {
+      "max_abs": 1.6306400674181987e-16,
+      "max_rel": 1.8856824944082545e-10,
+      "worst_key": {
+        "A": 131,
+        "q_GeV": 0.0085
+      }
+    }
+  },
+  "failures": []
+}

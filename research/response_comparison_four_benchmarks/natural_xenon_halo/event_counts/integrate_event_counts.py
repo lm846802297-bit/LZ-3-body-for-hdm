@@ -146,6 +146,49 @@ def figure_width_and_trace():
                 trace_Xe=131,trace_ER_keV=er,trace_speed_km_s=speed)
 
 
+def displayed_curve_counts(figure_pdf, total):
+    """Integrate the published red vector path using the tick labels in its upper panel."""
+    import pymupdf
+    with pymupdf.open(figure_pdf) as doc:
+        paths=doc[0].get_drawings()
+    frames=sorted((p["rect"] for p in paths if p["color"]==(0.,0.,0.) and len(p["items"])==1
+                   and p["rect"].width>250 and p["rect"].height<1e-4),key=lambda r:r.y0)
+    if len(frames)!=4 or not np.allclose([frames[0].x0,frames[0].x1],[frames[1].x0,frames[1].x1]):
+        raise ValueError("unexpected plot axes in the paper figure")
+    curves=[p for p in paths if p["color"]==(1.,0.,0.) and len(p["items"])>10]
+    if len(curves)!=1 or any(s[0]!="l" for s in curves[0]["items"]):
+        raise ValueError("cannot identify radiative signal polyline")
+    segments=np.array([[tuple(s[1]),tuple(s[2])] for s in curves[0]["items"]])
+    np.testing.assert_allclose(segments[:-1,1],segments[1:,0],rtol=0,atol=1e-6)
+    points=np.vstack([segments[0,0],segments[:,1]])
+    # Axes in this specific figure read 0 to 800 keV and 10^4 to 10^-12 events/keV.
+    energy=800*(points[:,0]-frames[0].x0)/frames[0].width
+    log_rate=(4-16*(points[:,1]-frames[0].y0)/(frames[1].y0-frames[0].y0))*np.log(10)
+    if np.any(np.diff(energy)<=0):
+        raise ValueError("red curve is not single-valued in recoil energy")
+    figure=total[total.benchmark==FIGURE].set_index("window")
+    rows=[]
+    for w in ("candidate","lower"):
+        lo,hi=WINDOWS[w]
+        if not energy[0]<=lo<hi<=energy[-1]:
+            raise ValueError("window outside the plotted radiative curve")
+        x=np.r_[lo,energy[(energy>lo)&(energy<hi)],hi]
+        y=np.interp(x,energy,log_rate)
+        dy=np.diff(y)
+        # Straight segments on a logarithmic y-axis give an exponential in physical units.
+        ratio=np.divide(np.expm1(dy),dy,out=np.ones_like(dy),where=dy!=0)
+        shown=float(np.sum(np.diff(x)*np.exp(y[:-1])*ratio))
+        rows.append(dict(window=w,ER_min_keV=lo,ER_max_keV=hi,paper_red_curve_events=shown,
+                         current_M0=figure.at[w,"M0_time"],current_B=figure.at[w,"B_time"],
+                         current_C=figure.at[w,"C_time"],current_D=figure.at[w,"D"]))
+    pd.DataFrame(rows).to_csv(HERE/"manuscript_figure_comparison.csv",index=False)
+    return dict(segments=len(segments),visible_red_ER_keV=[energy[0],energy[-1]],
+                red_curve_events_per_keV_at_750=float(np.exp(np.interp(750.,energy,log_rate))),
+                minimum_speed_km_s_at_750=min(fold.vmin_three_body_km_s(
+                    fold.fixed.MCHI,300e-6,fold.isotope_input(a)[0],750e-6) for a in fold.SPIN),
+                previous_halo_vmax_km_s=fold.VMAX)
+
+
 def decorate(frame):
     b,c,d=frame.B_time,frame.C_time,frame.D
     def delta_pct(num,den):
@@ -245,6 +288,8 @@ def main():
     total.to_csv(HERE/"event_counts.csv",index=False)
     iso.to_csv(HERE/"isotope_event_counts.csv",index=False)
     checks.to_csv(HERE/"energy_integration_checks.csv",index=False)
+    fig_pdf=fold.RESEARCH.parent/"paper-source/figures/DM_signal_v2.pdf"
+    displayed=displayed_curve_counts(fig_pdf,total)
     audit=dict(exposure_tonne_years=EXPOSURE_TONNE_YR,exposure_kg_days=EXPOSURE_KG_DAY,
                efficiency=1,energy="true recoil keV",process="radiative tree-level signal only",
                windows_keV=WINDOWS,maximum_energy_panel_keV=MAX_PANEL_KEV,energy_orders=[BASE_ORDER,FINE_ORDER],
@@ -254,13 +299,15 @@ def main():
                manuscript_figure_parameters=dict(mchi_GeV=fold.fixed.MCHI,ms_keV=300,delta_m_MeV=10,
                    mV_GeV=FIGURE_MV,g1=FIGURE_G1,g2=FIGURE_G2,gVN=FIGURE_GVN,
                    coupling_product_squared=FIGURE_PRODUCT2,**figure_validation),
+               independent_published_curve_readout=displayed,
                max_relative_difference_for_summed_rates_and_space_correction=diffs,
                full_support_max_relative_difference_vs_previous_summary=old_total_diff,
                isotope_rows=len(iso),benchmark_window_rows=len(total),
                native_sha256={a:v["source_sha256"] for a,v in upstream["native_reference"].items()})
     files=[RUN,SPECTRUM,SUPPORT,PREVIOUS,fold.RESEARCH.parent/"paper-source/main.tex",
-           fold.RESEARCH.parent/"paper-source/figures/DM_signal_v2.pdf",Path(__file__).resolve(),
-           *(HERE/s for s in ("event_counts.csv","isotope_event_counts.csv","energy_integration_checks.csv"))]
+           fig_pdf,Path(__file__).resolve(),
+           *(HERE/s for s in ("event_counts.csv","isotope_event_counts.csv","energy_integration_checks.csv",
+                              "manuscript_figure_comparison.csv"))]
     audit["sha256"]={p.relative_to(fold.RESEARCH.parent).as_posix():sha256(p) for p in files}
     (HERE/"count_validation.json").write_text(json.dumps(audit,indent=2,allow_nan=False),encoding="utf-8")
     print(total[["benchmark","window","B_time","D","D_vs_B_percent","D_vs_C_ppm"]].to_string(index=False))
