@@ -49,7 +49,7 @@ Three strange-current scenarios are retained separately:
 
 ## Natural-xenon B/A rate ratio
 
-The following table reports the change in the full halo-folded natural-xenon rate after applying the finite nucleon form factor, relative to the existing pointlike-nucleon A baseline:
+The following table reports the change in the full halo-folded natural-xenon rate after applying the finite nucleon form factor, relative to the existing zero-transfer A reference baseline:
 
 \[
 \Delta_B(E_R)=100\left[\frac{(dR/dE_R)_B}{(dR/dE_R)_A}-1\right].
