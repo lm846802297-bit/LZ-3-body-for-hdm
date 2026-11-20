@@ -2,7 +2,7 @@
 
 **Date:** 2026-11-20  
 **Owner:** LZ-3-body-for-hdm research  
-**Status:** high-order Halo validation PASS; formal-B reweight rerun is pinned to the accepted PR #93 high-order artifact
+**Status:** high-order Halo validation PASS; formal-B reweight on the accepted high-order artifact PASS; native output checksums verified
 
 ## Objective
 
@@ -102,3 +102,19 @@ This task produces a B-reweighted halo rate-ratio archive. It does not rerun pha
 The pinned high-order artifact metadata records speed quadrature order 32 and internal quadrature (12,4,4), with 1,456 isotope-energy rows and 208 natural-xenon recoil points. The natural-xenon maximum Full/I(D_NR) discrepancy is 0.0355190413% in 180--320 keV and 0.3527618038% over 5--800 keV. Baseline-to-high-order active-support shifts are 9.8863e-6% (Full), 9.9873e-6% (I(D_NR)), and 2.9057e-6 percentage points (approximation error).
 
 The formal-B workflow input has been updated to this accepted artifact and verifies the metadata quadrature settings before applying the nucleon form factors.
+
+
+## Final high-order B reproduction
+
+- Reweight workflow: 44689438445 (success).
+- Output artifact: 14608091362.
+- Output artifact SHA-256: b9d261a68a73e480a6e4d84c3aef9c57a0fc5fc80aa1be7079170d0305b6c6c5.
+- All 19 regression tests passed; all three strange-current scenarios passed every numerical gate.
+- Downloaded artifact ZIP digest and all nine native output-file checksums verified.
+- Candidate-window maximum natural-xenon Full/I(D_NR) discrepancy: 0.0355092%.
+- Full-range maximum discrepancy: 0.3527618%.
+- Maximum isotope A/B ratio difference: 2.22e-14 percentage points.
+- Maximum candidate-window B-induced error-curve change: 1.60e-5 percentage points.
+- Maximum 68% covariance interval width: 5.2531e-9 in ratio units.
+
+This artifact supersedes the earlier formal-B output as the canonical B reweight of the accepted high-order Halo input.
