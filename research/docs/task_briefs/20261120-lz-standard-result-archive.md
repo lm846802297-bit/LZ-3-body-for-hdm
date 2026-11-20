@@ -98,3 +98,12 @@ N/A — no physics formula or amplitude is changed. The implementation must pres
 ## 10. Unresolved questions
 
 - None for the archive interface. Any missing or unavailable input metadata must remain explicitly missing/partial rather than inferred.
+
+## Implementation addendum — 2026-11-20
+
+The archive writer is wired into three entry points:
+- `research/three_body_calculation_and_validation/phase_space_convergence.py`
+- `research/afh_default_density_natural_xenon_halo/run_afh_default_xenon_responses.py`
+- `research/afh_default_density_natural_xenon_halo/run_afh7_hybrid9_continuous_spectrum.py`
+
+The standalone AFH response-grid archive deliberately records native Mathematica re-execution as `not_run`; its report therefore remains `partial`. The phase-space scan archive records mode-specific scan evidence and the direct Lorentz-invariant prefactor/off-shell checks without claiming a universal scan-wide convergence tolerance.
