@@ -162,7 +162,7 @@ def velocity_weighted_kernels(ER: float, mA: float, mchi: float, ms: float,
             Jfull = psc.integrate_i6(
                 mchi, ms, delta_m, mA, ER, float(v),
                 nW=nw, nz=nz, nphi=nphi,
-                mapping="threshold_u2", width_scheme="zero"
+                mapping="threshold_energy_u2", width_scheme="zero"
             )
             full += common*Jfull
             L0 = threshold_l00(ER, float(v), mchi, ms, delta_m, mA)
@@ -300,7 +300,7 @@ def run(args):
             "unique_energy_count": len(energies),
             "energies_keV": energies,
         },
-        "phase_space_mapping": "threshold_u2 (delta_W2 = (Wmax2-Wmin2)*u^2)",
+        "phase_space_mapping": "threshold_energy_u2 (epsilon = W-Wmin = D_exact*u^2; dW2/du = 4*W*D_exact*u)",
         "outputs": ["seven_isotope_halo_comparison.csv","natural_xenon_halo_comparison.csv"],
         "scope": "Rate ratios only; detector response, exposure, efficiency and likelihood are not applied.",
     }
