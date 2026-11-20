@@ -192,7 +192,7 @@ def write_result_records(*, repo_root: Path, out_dir: Path, metadata: dict[str, 
     checksum_paths = [root / x["path"] for x in outputs] + [summary_path, report_path, readme_path]
     sums_path = out / "SHA256SUMS.txt"
     sums_path.write_text("".join(
-        f"{sha256_file(p)}  {relative_path(root, p)}\n"
+        f"{sha256_file(p)}  {p.resolve().relative_to(out).as_posix()}\n"
         for p in sorted(checksum_paths, key=lambda x: x.as_posix())
     ), encoding="utf-8")
     generated = outputs + [
