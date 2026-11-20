@@ -16,7 +16,7 @@ class ApplyBToAbsoluteAFHSpectrumTests(unittest.TestCase):
             writer.writeheader()
             writer.writerows(rows)
 
-    def test_exact_A_closure_and_isotope_level_B_resummation(self):
+    def test_exact_P0_closure_and_isotope_level_B_resummation(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             source = root / "source"
@@ -111,7 +111,7 @@ class ApplyBToAbsoluteAFHSpectrumTests(unittest.TestCase):
             )
             self.assertEqual(result["status"], "PASS")
             self.assertLessEqual(
-                result["validation"]["maximum_A_reconstruction_relative_difference"],
+                result["validation"]["maximum_P0_reconstruction_relative_difference"],
                 2.0e-11,
             )
 
@@ -126,7 +126,7 @@ class ApplyBToAbsoluteAFHSpectrumTests(unittest.TestCase):
 
             self.assertEqual(len(rates), 4)
             self.assertEqual(len(isotope_rates), 10)
-            self.assertTrue(all(0.0 < float(row["B_over_A_rate"]) < 1.0 for row in rates))
+            self.assertTrue(all(0.0 < float(row["B_over_P0_rate"]) < 1.0 for row in rates))
             self.assertTrue(all(float(row["nucleon_FF_rate_multiplier"]) > 0.0
                                 for row in isotope_rates))
             transfer_row = isotope_rates[0]
