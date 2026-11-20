@@ -235,25 +235,36 @@ def flavor_sum_form_factors(q2_GeV2, strange_model: str = "sufian2017_unit_curre
 
 
 def cM_and_factor(q2_GeV2, strange_model: str = "sufian2017_unit_current"):
-    """Return c_M(t_N), F_M=c_M/3, and its rate multiplier |F_M|^2.
+    """Return raw/normalized M coefficients and the corresponding rate factor.
+
+    cM_raw is the coefficient of the unit flavor-summed u+d+s current:
+        cM_raw = F1uds + t_N/(8*m_N^2) * (F1uds + 2*F2uds).
+    At zero transfer cM_raw=3. The normalized coefficient is
+        cM_hat = F_M = cM_raw/3,
+    which is paired with the project's external nucleon coupling
+    g_VN=3*g_Vq. The identity g_Vq*cM_raw = g_VN*cM_hat counts
+    the common factor three exactly once.
 
     q2_GeV2 is -t_N. In the adopted formal impulse prescription,
     t_N=t_A=-2*m_A*E_R; the exact spatial Q_A^2 is retained separately
     for the AFH Fourier variable and is not substituted into this argument.
-    The NR charge coefficient is c_M=F1+t_N/(8*m_N^2)*(F1+2F2).
+    The matching coefficient is the current M-only rate-level prescription,
+    not the full set of three-body nuclear-current responses.
     """
     q2 = np.asarray(q2_GeV2, dtype=float)
     f = flavor_sum_form_factors(q2, strange_model)
     tN = -q2
-    cM = f["F1uds"] + tN/(8.0*MAVG_GEV**2)*(f["F1uds"]+2.0*f["F2uds"])
-    fm = cM/3.0
+    cM_raw = f["F1uds"] + tN/(8.0*MAVG_GEV**2)*(f["F1uds"]+2.0*f["F2uds"])
+    cM_hat = cM_raw/3.0
     return {
         **f,
         "Q2_GeV2": q2,
         "tN_GeV2": tN,
-        "cM": cM,
-        "F_M": fm,
-        "rate_multiplier": fm*fm,
+        "cM_raw": cM_raw,
+        "cM_hat": cM_hat,
+        "cM": cM_raw,  # Backward-compatible alias: raw flavor-summed coefficient.
+        "F_M": cM_hat,  # Normalized nucleon charge factor.
+        "rate_multiplier": cM_hat*cM_hat,
     }
 
 
