@@ -1,6 +1,13 @@
 name: Formal B reweight of PR86 seven-isotope halo scan
 
 on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/pr86-halo-formal-B-reweight.yml
+      - research/three_body_phase_space_ID_validation/FORMAL_B_REWEIGHT_OF_THRESHOLD_ENERGY_HALO_SCAN.md
+      - research/three_body_phase_space_ID_validation/task_briefs/20261120-formal-B-reweight-of-threshold-energy-halo-scan.md
   push:
     branches:
       - main
