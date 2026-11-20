@@ -133,8 +133,8 @@ The LZ 2026 likelihood is an unbinned extended maximum likelihood in the three s
 \prod_k g_k(\phi_k\mid\nu_{\phi_k}).
 \]
 
-The paper reports:
-| Sample | Expected total background | Observed events |
+The paper reports the following post-fit total counts and observed sample sizes (the component pre-fit expectations are listed separately in Table I and Supplemental Tables S1–S2):
+| Sample | Post-fit total counts | Observed events |
 |---|---:|---:|
 | Science | \(1713\pm39\) | 1710 |
 | Prompt veto | \(69.4\pm11.7\) | 66 |
