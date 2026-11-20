@@ -40,7 +40,7 @@ def csv_units(column: str) -> str:
         "kernel_order_relative_difference": "1",
         "available_atom_fraction": "1", "missing_atom_fraction": "1",
         "natural_atom_fraction": "1", "A2_weighted_AFH_coverage_at_q0": "1",
-        "coupling_product_sq": "1", "g2_for_pole_width": "1",
+        "coupling_product_sq": "1", "g2_for_pole_width": "1", "rhoDM_GeV_cm3": "GeV cm^-3",
         "relative_shift_vs_AFH7": "1",
         "R_AFH_direct_exact_q": "1", "R_AFH_PCHIP_grid": "1", "R_Helm": "1",
         "R_AFH_over_A2": "1", "R_Helm_over_A2": "1",
