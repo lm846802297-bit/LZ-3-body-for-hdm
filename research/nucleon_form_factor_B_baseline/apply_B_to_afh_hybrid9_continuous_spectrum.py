@@ -287,7 +287,7 @@ def run(
                     "vmax_km_s": float(source_meta["halo"]["vmax_lab_km_s"]),
                     "available_atom_fraction": float(source_meta["natural_atom_fraction_AFH7"]),
                     "missing_atom_fraction": float(source_meta["natural_atom_fraction_missing"]),
-                    "A2_weighted_P0FH_coverage_at_q0": float(source_meta["A2_weighted_P0FH_coverage_at_q0"]),
+                    "A2_weighted_AFH_coverage_at_q0": float(source_meta["A2_weighted_AFH_coverage_at_q0"]),
                     "mass_scheme": source_meta["nuclear_mass_scheme"],
                     "response_q_convention": "exact spatial q",
                     "width_scheme": "conditional Dirac pure-scalar pole width",
@@ -347,7 +347,7 @@ def run(
         "afh_source_sha256": source_meta["afh_source_sha256"],
         "natural_atom_fraction_AFH7": source_meta["natural_atom_fraction_AFH7"],
         "natural_atom_fraction_missing": source_meta["natural_atom_fraction_missing"],
-        "A2_weighted_P0FH_coverage_at_q0": source_meta["A2_weighted_P0FH_coverage_at_q0"],
+        "A2_weighted_AFH_coverage_at_q0": source_meta["A2_weighted_AFH_coverage_at_q0"],
         "nuclear_mass_scheme": source_meta["nuclear_mass_scheme"],
         "detector_response_applied": False,
         "row_counts": {
