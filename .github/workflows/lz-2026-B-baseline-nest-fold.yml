@@ -67,8 +67,8 @@ jobs:
           test -s response-artifact/response-output/tableS5.csv
           test -s response-artifact/response-output/ws2024.csv
           test -s response-artifact/response-output/generic.csv
-          test -s B-artifact/pr87-formal-B-artifact/B-absolute/sufian2017_unit_current/afh_hybrid9_B_natural_xenon_spectrum.csv
-          test -s B-artifact/pr87-formal-B-artifact/B-detector/sufian2017_unit_current/lz_2026_afh7_hybrid9_rate_level_event_yields.csv
+          test -s B-artifact/pr87-formal-B-artifact/pr87-formal-B-artifact/B-absolute/sufian2017_unit_current/afh_hybrid9_B_natural_xenon_spectrum.csv
+          test -s B-artifact/pr87-formal-B-artifact/pr87-formal-B-artifact/B-detector/sufian2017_unit_current/lz_2026_afh7_hybrid9_rate_level_event_yields.csv
 
       - name: Test B spectrum selection and event-weight normalization
         run: |
@@ -79,8 +79,8 @@ jobs:
         run: |
           python research/lz_detector_response/fold_lz_2026_three_body_B_event_weighted_response.py \
             --response-dir response-artifact/response-output \
-            --b-absolute-root B-artifact/B-absolute \
-            --b-detector-root B-artifact/B-detector \
+            --b-absolute-root B-artifact/pr87-formal-B-artifact/B-absolute \
+            --b-detector-root B-artifact/pr87-formal-B-artifact/B-detector \
             --out-dir B-NEST-output
           sha256sum --check B-NEST-output/SHA256SUMS
 
