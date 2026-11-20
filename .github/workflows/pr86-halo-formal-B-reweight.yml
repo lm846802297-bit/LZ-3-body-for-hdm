@@ -57,7 +57,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: halo-seven-isotope-full-vs-ID-full-recoil-scan
-          run-id: 44655861356
+          run-id: 44681433965
           github-token: ${{ secrets.GITHUB_TOKEN }}
           path: halo-artifact
 
@@ -75,7 +75,14 @@ jobs:
               n_nat = sum(1 for _ in csv.DictReader(f))
           assert n_iso == 1456, n_iso
           assert n_nat == 208, n_nat
-          print({"isotope_rows": n_iso, "natural_xenon_rows": n_nat})
+          import json
+          meta = json.loads((p/"metadata.json").read_text())
+          assert meta["benchmark"]["speed_order_per_smooth_segment"] == 32, meta["benchmark"]
+          assert meta["benchmark"]["internal_quadrature_nw_nz_nphi"] == [12, 4, 4], meta["benchmark"]
+          assert meta["recoil_grid"]["unique_energy_count"] == 208, meta["recoil_grid"]
+          print({"isotope_rows": n_iso, "natural_xenon_rows": n_nat,
+                 "speed_order": meta["benchmark"]["speed_order_per_smooth_segment"],
+                 "internal_quadrature": meta["benchmark"]["internal_quadrature_nw_nz_nphi"]})
           PY
 
       - name: Apply formal B baseline to all three strange-current inputs
@@ -154,9 +161,9 @@ jobs:
           from pathlib import Path
           root = Path("formal-B-output")
           manifest = {
-              "source_run_id": 44655861356,
-              "source_artifact_id": 14595907606,
-              "source_artifact_sha256": "05ceeea175e39ed658b0bfab4a15f6f654e1a49a9508c147291ef58c622471f8",
+              "source_run_id": 44681433965,
+              "source_artifact_id": 14607350801,
+              "source_artifact_sha256": "a570bbf81119e8b7b87526c51b7012d056c0c07e290618bb7e12469b43571194",
               "B_form_factor_source": "Borah et al. PRD 102, 074012 (2020), arXiv:2003.13640",
               "transfer_convention": "t_N=t_A=-2*m_A*E_R; Q_A^2=2*m_A*E_R+E_R^2",
               "draws": int(os.environ["B_DRAWS"]),
