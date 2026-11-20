@@ -11,6 +11,8 @@ from compare_pointlike_A_B_nucleon_baselines import (
     pointlike_dirac_cM_hat,
     q2_form_factor_from_recoil,
     qA2_spatial_from_recoil,
+    zero_transfer_pauli_hat,
+    zero_transfer_pauli_cM_hat,
     run,
 )
 
@@ -33,7 +35,20 @@ class PointlikeABComparisonTests(unittest.TestCase):
         self.assertEqual(pointlike_dirac_cM_hat(0.0), 1.0)
         self.assertLess(pointlike_dirac_cM_hat(q2_ff), 1.0)
 
-    def test_A_P_B_spectra_and_detector_fold(self):
+    def test_zero_transfer_pauli_inputs(self):
+        expected = {
+            MODELS[0]: -0.1868323435025,
+            MODELS[1]: -0.0718323435025,
+            MODELS[2]: -0.1407523435025,
+        }
+        for model, value in expected.items():
+            self.assertAlmostEqual(zero_transfer_pauli_hat(model), value, places=11)
+            self.assertLess(
+                zero_transfer_pauli_cM_hat(0.01, value),
+                1.0,
+            )
+
+    def test_four_baseline_P0_P_A0_B_spectra_and_detector_fold(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             source = root / "source"
@@ -143,19 +158,17 @@ class PointlikeABComparisonTests(unittest.TestCase):
                 2.0e-11,
             )
 
-            with (out / "pointlike_A_B_detector_yields.csv").open(
+            with (out / "nucleon_P0_P_A0_B_detector_yields.csv").open(
                 newline="", encoding="utf-8"
             ) as handle:
                 detector_rows = list(csv.DictReader(handle))
             self.assertEqual(len(detector_rows), 2 * len(MODELS))
-            self.assertTrue(all(
-                float(row["P_expected_events"]) < float(row["A_expected_events"])
-                for row in detector_rows
-            ))
-            self.assertTrue(all(
-                float(row["B_expected_events"]) > 0.0
-                for row in detector_rows
-            ))
+            for row in detector_rows:
+                self.assertGreater(float(row["P0_expected_events"]), 0.0)
+                self.assertLess(float(row["P_expected_events"]), float(row["P0_expected_events"]))
+                self.assertGreater(float(row["A0_expected_events"]), float(row["P_expected_events"]))
+                self.assertGreater(float(row["B_expected_events"]), 0.0)
+                self.assertLess(float(row["B_expected_events"]), float(row["A0_expected_events"]))
             afh = next(row for row in detector_rows
                        if row["scenario"] == "AFH-7"
                        and row["strange_form_factor_model"] == MODELS[0])
@@ -163,8 +176,8 @@ class PointlikeABComparisonTests(unittest.TestCase):
                           if row["scenario"] == "Hybrid-9 (AFH-7 + Helm-2)"
                           and row["strange_form_factor_model"] == MODELS[0])
             self.assertGreater(
-                float(hybrid["A_expected_events"]),
-                float(afh["A_expected_events"]),
+                float(hybrid["P0_expected_events"]),
+                float(afh["P0_expected_events"]),
             )
             self.assertTrue((out / "SHA256SUMS.txt").is_file())
 
