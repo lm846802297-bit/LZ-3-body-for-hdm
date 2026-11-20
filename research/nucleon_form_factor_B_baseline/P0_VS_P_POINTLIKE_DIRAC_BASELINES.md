@@ -1,6 +1,6 @@
 # P0 与 P：点状 Dirac 核子的领先阶基准和有限动量基准
 
-**用途：** 固定三体 VV 暗物质散射中 P0 与 P 两组点状核子基准的物理定义、匹配阶数、变量约定、数值关系和代码实现。本文是四级 P0/P/A0/B 比较的补充规范；完整四级结果见 [POINTLIKE_NUCLEON_P_A_B_COMPARISON.md](POINTLIKE_NUCLEON_P_A_B_COMPARISON.md)。
+**用途：** 固定三体 VV 暗物质散射中 P0 与 P 两组点状核子基准的物理定义、匹配阶数、变量约定、数值关系和代码实现。本文是四级 P0/P/A0/B 比较的补充规范；完整四级结果见 [POINTLIKE_NUCLEON_P_A_B_COMPARISON.md](POINTLIKE_NUCLEON_P_A_B_COMPARISON.md)。原始系数与归一化系数、因子 3 的来源及 AFH \(W_M\) 的层次区分，以 [CM_RAW_NORMALIZATION_AND_AFH_M_RESPONSE.md](CM_RAW_NORMALIZATION_AND_AFH_M_RESPONSE.md) 为统一记号规范。
 
 ## 1. 结论先行
 
