@@ -1,0 +1,100 @@
+name: LZ 2026 formal B-baseline event-weighted NEST fold
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - research/lz_detector_response/fold_lz_2026_three_body_B_event_weighted_response.py
+      - research/lz_detector_response/tests/test_lz_2026_B_event_weighted_fold.py
+      - .github/workflows/lz-2026-B-baseline-nest-fold.yml
+      - research/lz_detector_response/lz_2026_extended_nr/LZ_2026_B_BASELINE_NEST_EVENT_WEIGHTED_FOLD.md
+  workflow_dispatch:
+    inputs:
+      response_run_id:
+        description: Immutable NEST response-production workflow run ID
+        required: false
+        default: "43697104437"
+      B_run_id:
+        description: Formal P0/P/A0/B source workflow run ID
+        required: false
+        default: "44662497177"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  formal-B-nest-fold:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Download immutable stratified NEST response artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: lz-2026-three-body-response-grid-convergence
+          run-id: \${{ github.event.inputs.response_run_id || '43697104437' }}
+          github-token: \${{ secrets.GITHUB_TOKEN }}
+          path: response-artifact
+
+      - name: Download formal B spectra and Fig. S2 rate-level counts
+        uses: actions/download-artifact@v4
+        with:
+          name: finite-nucleon-form-factor-B-baseline
+          run-id: \${{ github.event.inputs.B_run_id || '44662497177' }}
+          github-token: \${{ secrets.GITHUB_TOKEN }}
+          path: B-artifact
+
+      - name: Verify source artifact structure
+        run: |
+          test -s response-artifact/response-output/eft2024.csv
+          test -s response-artifact/response-output/tableS5.csv
+          test -s response-artifact/response-output/ws2024.csv
+          test -s response-artifact/response-output/generic.csv
+          test -s B-artifact/B-absolute/sufian2017_unit_current/afh_hybrid9_B_natural_xenon_spectrum.csv
+          test -s B-artifact/B-detector/sufian2017_unit_current/lz_2026_afh7_hybrid9_rate_level_event_yields.csv
+
+      - name: Test B spectrum selection and event-weight normalization
+        run: |
+          python -m unittest \
+            research.lz_detector_response.tests.test_lz_2026_B_event_weighted_fold -v
+
+      - name: Fold all formal B spectra through the NEST response
+        run: |
+          python research/lz_detector_response/fold_lz_2026_three_body_B_event_weighted_response.py \
+            --response-dir response-artifact/response-output \
+            --b-absolute-root B-artifact/B-absolute \
+            --b-detector-root B-artifact/B-detector \
+            --out-dir B-NEST-output
+          sha256sum --check B-NEST-output/SHA256SUMS
+
+      - name: Validate row counts and exact raw-rate closure
+        run: |
+          python - <<'PY'
+          import json
+          p = "B-NEST-output/B_event_weighted_fold_summary.json"
+          s = json.load(open(p, encoding="utf-8"))
+          assert s["row_counts"]["comparisons"] == 192, s["row_counts"]
+          assert s["row_counts"]["per_bin"] == 25440, s["row_counts"]
+          assert s["row_counts"]["replica_checks"] == 192, s["row_counts"]
+          assert s["row_counts"]["two_d_cells"] > 0, s["row_counts"]
+          assert s["diagnostics"]["max_raw_rate_closure_relative_difference"] < 2e-10
+          assert s["diagnostics"]["formal_pass"] is None
+          print(json.dumps(s["diagnostics"], indent=2))
+          PY
+
+      - name: Upload formal B NEST-fold outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-formal-B-baseline-nest-fold
+          path: B-NEST-output/
+          if-no-files-found: error
+          retention-days: 90
