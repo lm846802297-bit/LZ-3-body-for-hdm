@@ -13,12 +13,18 @@ import hashlib
 import json
 import math
 import sys
+import time
+from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
 from scipy.interpolate import PchipInterpolator
 
 HERE = Path(__file__).resolve().parent
+ROOT = HERE.parents[1]
+sys.path.insert(0, str(ROOT / "research"))
+from result_archive import write_result_records  # noqa: E402
+
 sys.path.insert(0, str(HERE.parent / "afh_default_density_xe131"))
 sys.path.insert(0, str(HERE.parent / "three_body_calculation_and_validation"))
 
@@ -125,7 +131,13 @@ def main() -> None:
         default=5.0e-7,
         help="PCHIP-from-grid versus archived historical PCHIP sample tolerance",
     )
+    parser.add_argument(
+        "--no-standard-archive", action="store_true",
+        help="skip v1.0.0 result records for temporary outputs outside the repository",
+    )
     args = parser.parse_args()
+    started_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    started_monotonic = time.monotonic()
     args.out_dir.mkdir(parents=True, exist_ok=True)
 
     q_grid = np.arange(EXPECTED_GRID_POINTS, dtype=float) * Q_STEP_GEV
@@ -390,6 +402,144 @@ def main() -> None:
     }
     metadata_path = args.out_dir / "afh_xe_isotope_response_metadata.json"
     metadata_path.write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
+
+    if not args.no_standard_archive:
+        matrix_inputs = [
+            args.matrix_dir / f"afh_default_xe{A}_density_matrix.csv"
+            for A in ISOTOPES
+        ]
+        input_paths = [
+            (path, f"AFH Xe-{A} default density matrix", "AFH v6.0 default-density OBDME input")
+            for A, path in zip(ISOTOPES, matrix_inputs)
+        ] + [
+            (args.xe131_reference, "Archived Xe-131 AFH reference grid", "historical 2401-node regression reference"),
+            (args.selected_samples, "Archived selected AFH response samples", "historical PCHIP regression points"),
+        ]
+        max_q0_error = max(
+            float(item["package_R0_relative_error"])
+            for item in per_isotope.values()
+        )
+        matrix_hashes_match = all(
+            sha256(path) == per_isotope[A]["matrix_sha256"]
+            for A, path in zip(ISOTOPES, matrix_inputs)
+        )
+        checks = [
+            {
+                "check_id": "AFH-XE131-FULL-GRID",
+                "name": "Generic Xe-131 response reproduces archived 2401-node grid",
+                "category": "regression",
+                "status": "passed" if max_xe131_grid_difference <= args.max_relative_xe131_grid_difference else "failed",
+                "method": "Pointwise relative comparison on the identical q grid.",
+                "observed": max_xe131_grid_difference,
+                "threshold": args.max_relative_xe131_grid_difference,
+                "unit": "1",
+                "evidence_path": response_path.relative_to(ROOT).as_posix(),
+            },
+            {
+                "check_id": "AFH-SELECTED-PCHIP-ARCHIVE",
+                "name": "Regenerated PCHIP samples reproduce the archived 28 points",
+                "category": "regression",
+                "status": "passed" if max_pchip_archive_difference <= args.max_relative_selected_sample_difference else "failed",
+                "method": "Pointwise relative comparison of regenerated PCHIP values with the historical sample table.",
+                "observed": max_pchip_archive_difference,
+                "threshold": args.max_relative_selected_sample_difference,
+                "unit": "1",
+                "evidence_path": regression_path.relative_to(ROOT).as_posix(),
+            },
+            {
+                "check_id": "AFH-Q0-NORMALIZATION",
+                "name": "All seven isotope package q=0 normalizations",
+                "category": "normalization",
+                "status": "passed" if max_q0_error <= 5.0e-4 else "failed",
+                "method": "Compare raw AFH package R(0) with A^2/4 before the one physical equal-pn normalization.",
+                "observed": max_q0_error,
+                "threshold": 5.0e-4,
+                "unit": "1",
+                "evidence_path": metadata_path.relative_to(ROOT).as_posix(),
+            },
+            {
+                "check_id": "AFH-MATRIX-INPUT-HASHES",
+                "name": "Seven AFH density-matrix input hashes",
+                "category": "integrity",
+                "status": "passed" if matrix_hashes_match else "failed",
+                "method": "Recompute each density-matrix SHA-256 and compare with per-isotope metadata.",
+                "observed": "all seven match" if matrix_hashes_match else "one or more mismatches",
+                "threshold": "exact SHA-256 match",
+                "unit": "sha256",
+                "evidence_path": metadata_path.relative_to(ROOT).as_posix(),
+            },
+            {
+                "check_id": "AFH-NATIVE-MATHEMATICA-REEXECUTION",
+                "name": "Native Mathematica AFH v6.0 re-execution",
+                "category": "independent",
+                "status": "not_run",
+                "method": "The current implementation is a Python translation of the AFH package; native Mathematica execution is a separate independent check.",
+                "observed": "pending",
+                "threshold": "independent native AFH v6.0 execution",
+                "unit": "status",
+                "evidence_path": metadata_path.relative_to(ROOT).as_posix(),
+            },
+        ]
+        archive_metadata = dict(metadata)
+        archive_metadata["particle_parameters"] = {
+            "isotopes": list(ISOTOPES),
+            "q_grid_points_per_isotope": EXPECTED_GRID_POINTS,
+        }
+        archive_metadata["quadrature"] = {
+            "q_grid_points_per_isotope": EXPECTED_GRID_POINTS,
+            "q_min_GeV": float(q_grid[0]),
+            "q_max_GeV": float(q_grid[-1]),
+            "q_step_GeV": Q_STEP_GEV,
+        }
+        archive_metadata["not_included"] = [
+            "native Mathematica re-execution",
+            "non-M response channels",
+            "three-body phase-space and halo folding",
+            "detector response and event likelihood",
+        ]
+        observables = [
+            {"name": "AFH_response_rows", "value": len(response_rows), "unit": "rows",
+             "status": "computed", "definition": "Seven isotope response curves on the 2401-node spatial-q grid."},
+            {"name": "Xe131_max_grid_relative_difference", "value": max_xe131_grid_difference, "unit": "1",
+             "status": "computed", "definition": "Maximum pointwise relative difference from the archived Xe-131 grid."},
+            {"name": "selected_sample_max_PCHIP_archive_difference", "value": max_pchip_archive_difference, "unit": "1",
+             "status": "computed", "definition": "Maximum relative difference between regenerated and archived PCHIP samples."},
+            {"name": "selected_sample_max_direct_vs_PCHIP_difference", "value": max_pchip_difference, "unit": "1",
+             "status": "computed", "definition": "Interpolation diagnostic only; direct exact-q values remain primary."},
+            {"name": "max_package_q0_normalization_error", "value": max_q0_error, "unit": "1",
+             "status": "computed", "definition": "Maximum raw AFH package q=0 relative offset from A^2/4."},
+        ]
+        write_result_records(
+            repo_root=ROOT, out_dir=args.out_dir, metadata=archive_metadata,
+            source_script=Path(__file__).resolve(), started_at=started_at,
+            started_monotonic=started_monotonic, input_paths=input_paths,
+            output_paths=[
+                (response_path, "seven-isotope AFH default-density response grid"),
+                (regression_path, "selected-sample AFH response regression"),
+                (diagnostic_path, "selected-sample interpolation diagnostic"),
+                (metadata_path, "original AFH response calculation metadata"),
+            ],
+            checks=checks, observables=observables,
+            scope_included=[
+                "AFH v6.0 default-density W_M^00 response for seven supported xenon isotopes",
+                "raw q=0 package normalization and physical equal-pn normalization",
+                "Xe-131 2401-node full-grid regression",
+                "28 selected historical PCHIP sample regression",
+            ],
+            scope_excluded=archive_metadata["not_included"],
+            assumptions=[
+                "AFH v6.0 default density matrices are used exactly as supplied by the repository input files.",
+                "The raw package q=0 normalization is A^2/4; the equal-pn physical response normalization is applied once.",
+                "Spatial momentum q=sqrt(2*m_A*E_R+E_R^2) is kept distinct from invariant transfer.",
+                "The Python translation has not yet been independently re-executed in native Mathematica.",
+            ],
+            scientific_status="provisional",
+            interpretation=(
+                "This run archives the seven-isotope AFH W_M^00 response grid and its historical regression checks. "
+                "Native Mathematica re-execution remains not_run; the response table is not a complete three-body or detector prediction."
+            ),
+            extension_name="afh_nuclear_response",
+        )
 
     print(json.dumps({
         "isotopes": list(ISOTOPES),
