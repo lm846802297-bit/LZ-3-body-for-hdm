@@ -155,4 +155,4 @@ The runner preserves its original physics CSVs, metadata and SHA-256 file, then 
 
 For a temporary smoke run outside the repository, pass `--no-standard-archive`; such a run is not treated as a repository archive. The generated manifest starts with `archive.status=local_only` and must only be updated after the files are actually committed and verified.
 
-Implementation task brief: [2026-11-20 LZ structured result archive](../../docs/task_briefs/20261120-lz-standard-result-archive.md). Validation-only workflow: `.github/workflows/lz-structured-result-archive-validation.yml`.
+Implementation task brief: [2026-11-20 LZ structured result archive](../docs/task_briefs/20261120-lz-standard-result-archive.md). Validation-only workflow: `.github/workflows/lz-structured-result-archive-validation.yml`.
