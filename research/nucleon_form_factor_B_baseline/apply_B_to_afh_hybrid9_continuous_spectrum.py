@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
-"""Apply the finite-nucleon B factor to archived absolute AFH-7/Hybrid-9 rates.
+"""Apply the formal finite-nucleon B factor to archived absolute AFH-7/Hybrid-9 rates.
 
-The archived isotope-resolved three-body kernels are reused.  This script
-reconstructs the published A spectrum first and requires machine-precision
-closure before multiplying each isotope by |c_M(t_N)/3|^2.
+The archived isotope-resolved three-body kernels are reused. This script
+reconstructs the zero-transfer A spectrum first and requires machine-precision
+closure before multiplying each isotope by |c_M(t_N)/3|^2. The formal impulse
+prescription is t_N=t_A=-2*m_A*E_R; the exact spatial Q_A^2 is retained for
+AFH and is never substituted into the nucleon form factors.
 """
 from __future__ import annotations
 
@@ -153,12 +155,16 @@ def run(
         isotope_groups[key].append(row)
 
     q2_values = sorted({
-        number(row, "q_exact_spatial_GeV") ** 2 for row in isotope_rows
+        2.0 * number(row, "mA_GeV") * number(row, "ER_keV") * 1.0e-6
+        for row in isotope_rows
     })
     q2_index = {format(q2, ".17g"): i for i, q2 in enumerate(q2_values)}
     q2_index_for_row = {
         (row["benchmark"], number(row, "ER_keV"), int(row["A"])):
-            q2_index[format(number(row, "q_exact_spatial_GeV") ** 2, ".17g")]
+            q2_index[format(
+                2.0 * number(row, "mA_GeV") * number(row, "ER_keV") * 1.0e-6,
+                ".17g",
+            )]
         for row in isotope_rows
     }
 
@@ -194,14 +200,15 @@ def run(
                     base_kernel = number(row, "kernel_halo_integral_GeV")
                     mA = number(row, "mA_GeV")
                     q = number(row, "q_exact_spatial_GeV")
-                    q2 = q*q
+                    q2_spatial = q*q
+                    q2_form_factor = 2.0*mA*ER*1.0e-6
                     R_A = response_for_scenario(row, scenario)
                     if R_A == 0.0 or base_kernel == 0.0:
                         continue
-                    # Keep the two transfers distinct:
-                    # Q_A^2=|q_A|^2=2*m_A*E_R+E_R^2 enters t_N=-Q_A^2
-                    # in the finite nucleon form factor, while the mediator
-                    # propagator uses the invariant t_A=-2*m_A*E_R.
+                    # Keep all transfer conventions distinct:
+                    # Q_A^2=|q_A|^2=2*m_A*E_R+E_R^2 enters AFH.
+                    # Formal impulse matching uses t_N=t_A=-2*m_A*E_R
+                    # in the nucleon form factors and mediator propagator.
                     tA_GeV2 = -2.0*mA*ER*1.0e-6
                     denominator = (mV*mV - tA_GeV2)**2
                     a_contribution = (
@@ -223,8 +230,9 @@ def run(
                         "natural_atom_fraction": atom_fraction,
                         "mA_GeV": mA,
                         "q_A_GeV": q,
-                        "Q_A2_GeV2": q2,
-                        "t_N_GeV2": -q2,
+                        "Q_A2_GeV2": q2_spatial,
+                        "Q2_form_factor_GeV2": q2_form_factor,
+                        "t_N_GeV2": tA_GeV2,
                         "t_A_GeV2": tA_GeV2,
                         "c_M": float(central_ff["cM"][idx]),
                         "F_M": float(central_ff["F_M"][idx]),
@@ -310,8 +318,9 @@ def run(
             "c_M": "F1_uds+t_N/(8*m_N^2)*(F1_uds+2*F2_uds)",
             "F_M": "c_M/3",
             "rate_multiplier": "|F_M|^2",
-            "Q_A2": "q_exact_spatial_GeV^2 = 2*m_A*E_R+E_R^2",
-            "t_N": "-Q_A2 = -(2*m_A*E_R+E_R^2)",
+            "Q_A2": "q_exact_spatial_GeV^2 = 2*m_A*E_R+E_R^2 (AFH only)",
+            "Q2_form_factor": "2*m_A*E_R = -t_N",
+            "t_N": "-2*m_A*E_R = t_A (formal impulse matching)",
             "t_A": "-2*m_A*E_R (invariant transfer used in mediator propagator)",
             "nuclear_response": "archived direct AFH v6.0 W_M for seven isotopes; Helm fallback only for Hybrid-9 Xe-124/Xe-126",
         },
