@@ -98,3 +98,11 @@ The black (m_s=360) keV high-tail benchmark is strongly response-family
 dependent; it must not be summarized by a single detector-efficiency factor.
 The current maps are an intermediate NEST/WS-ROI proxy, not the official LZ
 waveform-level selected-event PDF or a background likelihood.
+
+
+### Formal-B recoil and event-spectrum figures
+
+- [Natural-xenon relative differential recoil spectrum](B_BASELINE_RECOIL_FIGURES.md) — compares pointlike A with the three finite-nucleon B strange-current inputs over 5–800 keV; the 180–320 keV candidate interval is marked.
+- [Expected event spectrum](B_BASELINE_RECOIL_FIGURES.md) — four Sufian-input AFH-7 benchmark curves, in expected rate-level events per 1 keV bin for 2.84 tonne-year.
+
+The first figure uses relative-rate normalization and is not an absolute cross-section plot. The event-count figure is before WS-ROI; the report records the exposure, NEST family, and selection convention.
