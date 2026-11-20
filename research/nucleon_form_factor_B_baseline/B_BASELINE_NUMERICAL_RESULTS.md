@@ -1,10 +1,12 @@
 # B baseline numerical results
 
-> **Historical transfer-convention note:** The numerical tables in this PR85 record preserve the original static diagnostic \(t_N=-Q_A^2\). The formal impulse prescription is now \(t_N=t_A=-2m_AE_R\). The updated formal B results and the added pointlike P comparison are documented in [POINTLIKE_NUCLEON_P_A_B_COMPARISON.md](POINTLIKE_NUCLEON_P_A_B_COMPARISON.md). Re-evaluating the detector-level B yields with the formal transfer changes them by only \(1.1\times10^{-5}\%\) to \(3.1\times10^{-5}\%\); the convention is nevertheless kept explicit and consistent in the production code.
+> **Historical transfer-convention note:** The numerical tables in this PR85 record preserve the original static diagnostic \(t_N=-Q_A^2\). The formal impulse prescription is now \(t_N=t_A=-2m_AE_R\). The updated formal B results and the four-level P0/P/A0/B comparison are documented in [POINTLIKE_NUCLEON_P_A_B_COMPARISON.md](POINTLIKE_NUCLEON_P_A_B_COMPARISON.md). Re-evaluating the detector-level B yields with the formal transfer changes them by only \(1.1\times10^{-5}\%\) to \(3.1\times10^{-5}\%\); the convention is nevertheless kept explicit and consistent in the production code.
+
+> **Baseline-name correction:** Every historical PR85 result labelled A refers to the archived leading-order charge-only reference, now named P0. It is not the zero-transfer Dirac–Pauli approximation A0. Consequently, the historical B/A ratios in this file must be read as B/P0. The separate A0 results and the four-level P0/P/A0/B comparison are documented in [POINTLIKE_NUCLEON_P_A_B_COMPARISON.md](POINTLIKE_NUCLEON_P_A_B_COMPARISON.md).
 
 ## Executive result
 
-The selected B baseline has now been applied to the converged seven-isotope halo-folded three-body calculation:
+The selected B baseline has now been applied to the converged seven-isotope halo-folded three-body calculation. In this historical PR85 archive, the source rate called A is the leading-order P0 reference:
 
 \[
 F_1^{uds}(t_N),\quad F_2^{uds}(t_N),\quad W_M(y_A),
@@ -47,12 +49,12 @@ Three strange-current scenarios are retained separately:
 2. Alexandrou 2020, charge-weighted result converted to the unit strange current.
 3. Alexandrou 2026, continuum-limit physical-point result, represented by its published electric and magnetic slopes. This third scenario is slope-only; the full published \(z\)-expansion coefficient covariance is not reconstructed.
 
-## Natural-xenon B/A rate ratio
+## Historical natural-xenon B/P0 rate ratio
 
-The following table reports the change in the full halo-folded natural-xenon rate after applying the finite nucleon form factor, relative to the existing zero-transfer A reference baseline:
+The following table reports the change in the full halo-folded natural-xenon rate after applying the finite nucleon form factor, relative to the archived leading-order P0 reference baseline:
 
 \[
-\Delta_B(E_R)=100\left[\frac{(dR/dE_R)_B}{(dR/dE_R)_A}-1\right].
+\Delta_B(E_R)=100\left[\frac{(dR/dE_R)_B}{(dR/dE_R)_{P0}}-1\right].
 \]
 
 | \(E_R\) [keV] | Sufian 2017 | Alexandrou 2020 converted | Alexandrou 2026 slope-only |
@@ -99,7 +101,7 @@ After applying the same \(\mathcal C_N(Q_A^2)\) to the full three-body rate and 
 
 Thus the B correction changes the absolute recoil rate substantially, while the full three-body versus \(I(D)\) approximation remains accurate at the few-\(10^{-2}\)% level in the candidate region.
 
-Across the complete 208-point grid, the largest full-versus-\(I(D)\) difference reaches 0.3528% near 695 keV. At that energy the A-baseline rate is only \(7.59\times10^{-9}\) of its grid maximum, below the \(10^{-8}\) active-region threshold used in the convergence audit.
+Across the complete 208-point grid, the largest full-versus-\(I(D)\) difference reaches 0.3528% near 695 keV. At that energy the P0-baseline rate is only \(7.59\times10^{-9}\) of its grid maximum, below the \(10^{-8}\) active-region threshold used in the convergence audit.
 
 ## Electromagnetic fit uncertainty
 
@@ -145,7 +147,7 @@ The implementation now includes the factor \(\mu_s\) multiplying the slope. A re
 
 ## LZ 2026 detector-efficiency fold of the absolute B spectra
 
-The B correction was also applied to the archived 84-point absolute AFH-7/Hybrid-9 natural-xenon spectra and passed through the existing LZ 2026 final-WIMP-search-ROI NR efficiency fold. The A-spectrum reconstruction from isotope-resolved kernels closes against the archived A spectrum at the configured \(2\times10^{-11}\) relative tolerance.
+The B correction was also applied to the archived 84-point absolute AFH-7/Hybrid-9 natural-xenon spectra and passed through the existing LZ 2026 final-WIMP-search-ROI NR efficiency fold. The P0-spectrum reconstruction from isotope-resolved kernels closes against the archived source spectrum at the configured \(2\times10^{-11}\) relative tolerance.
 
 Detector-fold configuration:
 
@@ -169,11 +171,11 @@ Central efficiency-weighted expected events in the \(2.84\) tonne-year exposure:
 
 For Hybrid-9, the corresponding Sufian 2017 yields are \(0.266932\), \(1.10469\times10^{-3}\), \(2.07412\times10^{-9}\), and \(9.04390\times10^{-6}\). The difference from AFH-7 is due only to the explicitly labelled Helm fallback for Xe-124 and Xe-126; the seven AFH isotope contributions are unchanged.
 
-### Detector-level A/B comparison
+### Detector-level B/P0 comparison
 
-Using the archived A detector-fold results as the denominator, the Sufian 2017 B/A event-yield ratios are:
+Using the archived P0 detector-fold results as the denominator, the Sufian 2017 B/P0 event-yield ratios are:
 
-| Benchmark | A AFH-7 events | B AFH-7 events | B/A | Change |
+| Benchmark | P0 AFH-7 events | B AFH-7 events | B/P0 | Change |
 |---|---:|---:|---:|---:|
 | \(m_s=200\) keV, \(\Delta m=1\) MeV | 0.317278 | 0.266263 | 0.83921 | \(-16.08\%\) |
 | \(m_s=300\) keV, \(\Delta m=1\) MeV | \(1.39790\times10^{-3}\) | \(1.10267\times10^{-3}\) | 0.78881 | \(-21.12\%\) |
