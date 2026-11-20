@@ -148,9 +148,9 @@ The detector fold reports the central B event yield. The separate covariance pro
 P0 and P use the same pointlike Dirac form factors, \(\widehat F_1=1\) and \(\widehat F_2=0\). Their difference is the matching order:
 
 \[
-c_M^{P0}=1,\qquad
-c_M^P=1+\frac{t_N}{8m_N^2}
-=1-\frac{Q_N^2}{8m_N^2}.
+\widehat c_M^{P0}=F_M^{P0}=1,\qquad
+\widehat c_M^P=F_M^P=1+\frac{t_N}{8m_N^2}
+=1-\frac{Q_N^2}{8m_N^2},\qquad c_M^{\rm raw}=3\widehat c_M.
 \]
 
 P0 is the archived leading-order charge-only spectrum. P retains the finite-transfer correction in the current M-only charge matching prescription. Both retain the same finite-size AFH \(W_M\), three-body/halo kernels and isotope sum. Thus P0 is the leading-order approximation to P, not a different nucleon-structure model.
@@ -161,13 +161,13 @@ The detailed derivation, momentum-transfer definitions, fixed-isotope rate ratio
 
 The original PR85 source spectrum labelled A is the leading-order charge-only reference P0:
 \[
-\widehat F_1=1,\qquad \widehat F_2=0,\qquad c_M=1.
+\widehat F_1=1,\qquad \widehat F_2=0,\qquad \widehat c_M=F_M=1 \ (c_M^{\rm raw}=3).
 \]
 It is not the zero-transfer Dirac–Pauli approximation.
 
 The four comparisons are:
 
-- P0: archived leading-order charge-only rate, \(c_M=1\).
+- P0: archived leading-order charge-only rate, \(\widehat c_M=F_M=1\) (raw \(c_M^{\rm raw}=3\)).
 - P: pointlike Dirac nucleon, \(\widehat F_1=1\), \(\widehat F_2=0\), retaining the finite-transfer recoil matching term.
 - A0: freeze \(\widehat F_1(0)=1\) and the model-specific \(\widehat F_2(0)\), while retaining the actual recoil matching term.
 - B: finite-momentum Borah proton/neutron Dirac–Pauli form factors plus the selected unit-strange-current input.
