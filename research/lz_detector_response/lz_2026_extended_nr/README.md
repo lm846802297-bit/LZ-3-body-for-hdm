@@ -86,6 +86,7 @@ and both NEST-level and NEST+WS-ROI selections are retained.
 
 - [Formal B NEST-fold report](LZ_2026_B_BASELINE_NEST_EVENT_WEIGHTED_FOLD.md)
 - Implementation: [fold_lz_2026_three_body_B_event_weighted_response.py](../fold_lz_2026_three_body_B_event_weighted_response.py)
+- Vectorized kernel: [fold_lz_2026_three_body_B_event_weighted_kernel.py](../fold_lz_2026_three_body_B_event_weighted_kernel.py)
 - Regression tests: [test_lz_2026_B_event_weighted_fold.py](../tests/test_lz_2026_B_event_weighted_fold.py)
 - Workflow: [lz-2026-B-baseline-nest-fold.yml](../../../.github/workflows/lz-2026-B-baseline-nest-fold.yml)
 
