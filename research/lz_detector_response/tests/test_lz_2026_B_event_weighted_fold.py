@@ -87,5 +87,40 @@ class TestBEventWeightedNESTFold(unittest.TestCase):
         )
 
 
+    def _two_replica_events(self, energies=(5.6, 6.2)):
+        return {
+            (0, 0): {
+                "lo": 5.4, "hi": 6.4,
+                "energy": array.array("d", list(energies)),
+                "s1_bin": array.array("i", [1, 1]),
+                "log_s2_bin": array.array("i", [150, 150]),
+                "nest_pass": bytearray([1, 1]),
+                "roi_pass": bytearray([1, 1]),
+            },
+            (0, 1): {
+                "lo": 5.4, "hi": 6.4,
+                "energy": array.array("d", list(energies)),
+                "s1_bin": array.array("i", [1, 1]),
+                "log_s2_bin": array.array("i", [150, 150]),
+                "nest_pass": bytearray([1, 1]),
+                "roi_pass": bytearray([1, 1]),
+            },
+        }
+
+    def test_zero_rate_stratum_is_handled_without_division_by_zero(self):
+        folded = fold_one_spectrum(self._two_replica_events(), [5.4, 6.4], [0.0, 0.0])
+        self.assertEqual(folded[None]["raw_rate"], 0.0)
+        self.assertEqual(folded[None]["accepted_rate"]["nest"], 0.0)
+        self.assertEqual(folded[None]["accepted_rate"]["ws_roi"], 0.0)
+        self.assertEqual(
+            folded[None]["bin_rows"][0]["nest_acceptance_weighted_replica0"], 0.0
+        )
+
+    def test_positive_rate_with_zero_sampled_weight_is_rejected(self):
+        events = self._two_replica_events(energies=(6.4, 6.4))
+        with self.assertRaisesRegex(ValueError, "zero sampled spectrum weight"):
+            fold_one_spectrum(events, [5.4, 6.4], [1.0, 0.0])
+
+
 if __name__ == "__main__":
     unittest.main()
