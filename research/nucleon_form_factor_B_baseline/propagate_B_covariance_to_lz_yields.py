@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 """Propagate the Borah electromagnetic coefficient covariance to LZ event yields.
 
-The same correlated F_M(Q_A^2) draws used in the B recoil spectra are applied
-isotope by isotope, then folded through the LZ 2026 NR efficiency. This retains
-the cross-recoil and cross-isotope correlations induced by the shared fit
-coefficients.
+The same correlated F_M(-t_N) draws used in the formal B recoil spectra are
+applied isotope by isotope, then folded through the LZ 2026 NR efficiency.
+The formal impulse prescription is t_N=t_A=-2*m_A*E_R; AFH continues to use
+the exact spatial Q_A^2 separately. Cross-recoil and cross-isotope
+correlations induced by the shared fit coefficients are retained.
 """
 from __future__ import annotations
 
@@ -209,8 +210,8 @@ def run(
         benchmark = row["benchmark"]
         ER = number(row, "ER_keV")
         A = int(row["A"])
-        q = number(row, "q_exact_spatial_GeV")
-        q2 = q*q
+        mA = number(row, "mA_GeV")
+        q2 = 2.0*mA*ER*1.0e-6
         q2_values_set.add(q2)
         isotope_groups[(benchmark, ER)].append(row)
 
@@ -218,7 +219,10 @@ def run(
     q2_index = {format(q2, ".17g"): i for i, q2 in enumerate(q2_values)}
     q2_index_for_row = {
         (row["benchmark"], number(row, "ER_keV"), int(row["A"])):
-            q2_index[format(number(row, "q_exact_spatial_GeV")**2, ".17g")]
+            q2_index[format(
+                2.0*number(row, "mA_GeV")*number(row, "ER_keV")*1.0e-6,
+                ".17g",
+            )]
         for row in isotope_rows
     }
 
@@ -280,7 +284,7 @@ def run(
                             f"{benchmark}/{scenario}/{ER}/Xe-{A}: isotope A contribution "
                             f"does not close ({isotope_closure:.6e})"
                         )
-                    q2 = number(row, "q_exact_spatial_GeV")**2
+                    q2 = 2.0*mA*ER*1.0e-6
                     idx = q2_index_for_row[(benchmark, ER, A)]
                     draw_rates[:, energy_index[ER]] += (
                         a_contribution * multiplier_draws[:, idx]
