@@ -30,7 +30,7 @@ def csv_units(column: str) -> str:
     labels = {"benchmark", "scenario", "isotope", "halo_model", "mass_scheme",
               "response_q_convention", "width_scheme", "kernel_order_low", "kernel_order_high",
               "case", "mapping", "dimension", "implementation"}
-    booleans = {"AFH_default_available", "speed_phase_space_open", "detector_response_applied"}
+    booleans = {"AFH_default_available", "speed_phase_space_open", "detector_response_applied", "pole_inside_phase_space"}
     if column in booleans:
         return "boolean"
     if column in labels:
@@ -38,11 +38,16 @@ def csv_units(column: str) -> str:
     exact = {
         "A": "1", "J_A": "1", "T_iso": "1", "y": "1", "W_M00_AFH_package": "1",
         "nW_or_nu": "1", "nz": "1", "nphi": "1", "nW": "1", "order": "1",
-        "fixed_nW": "1", "fixed_other_order": "1", "g2": "1",
+        "fixed_nW": "1", "fixed_other_order": "1", "g2": "1", "sine2_reference_nW": "1",
         "raw_over_2pi_I6": "1", "direct_over_eq6": "1",
         "relative_difference": "1", "relative_difference_to_threshold_reference": "1",
         "relative_to_archived": "1", "relative_to_high_order_reference": "1",
+        "relative_to_sine2_reference": "1",
         "Delta_m_MeV": "MeV", "delta_W2_GeV2": "GeV^2",
+        "Wmin_GeV": "GeV", "Wmax_GeV": "GeV", "pole_mass_GeV": "GeV",
+        "sine2_reference_GeV2": "GeV^2", "pole_gap_keV": "keV",
+        "pole_edge_delta_m_keV": "keV", "Gamma_pole_keV": "keV",
+        "Gamma_at_Wmax_keV": "keV",
         "I6_GeV2": "GeV^2", "reference_I6_GeV2": "GeV^2",
         "raw_phi_integral_GeV2": "GeV^2", "archived_I6_GeV2": "GeV^2",
         "dsigma_dER_eq6_GeV_minus3": "GeV^-3",
