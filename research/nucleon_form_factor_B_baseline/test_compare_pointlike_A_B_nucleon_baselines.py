@@ -154,7 +154,7 @@ class PointlikeABComparisonTests(unittest.TestCase):
             )
             self.assertEqual(result["status"], "PASS")
             self.assertLessEqual(
-                result["validation"]["maximum_A_reconstruction_relative_difference"],
+                result["validation"]["maximum_P0_reconstruction_relative_difference"],
                 2.0e-11,
             )
 
