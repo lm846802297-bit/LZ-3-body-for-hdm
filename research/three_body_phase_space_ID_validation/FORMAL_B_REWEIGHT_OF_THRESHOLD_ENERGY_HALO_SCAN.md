@@ -167,3 +167,18 @@ The workflow uploaded artifact 14599834070, pr86-formal-B-halo-reweight, with SH
 05368fa13890932bed0124a651de53a998570524a70d3fe33a6992d1610f1bd9.
 
 I downloaded the GitHub artifact and compared all six numeric CSV outputs against the local 3,000-draw calculation. The largest relative difference in any finite numeric CSV field is below (4.6\times10^{-13}); the largest absolute difference in the exact spatial-transfer column is (1.11\times10^{-16}\,\mathrm{GeV}^2). The independently generated artifact's own SHA256SUMS check also passes. The local calculation and GitHub reproduction therefore agree to floating-point precision.
+
+
+### Independent high-order halo rerun: PASS
+
+The full high-order halo validation workflow [44673037709](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44673037709) completed successfully. It regenerated the baseline and high-order scans, compared all 1,456 isotope-energy rows and 208 natural-xenon points, found zero support mismatches, and uploaded artifact 14602217987 (`halo-seven-isotope-full-vs-ID-full-recoil-scan`; SHA-256 `eb8926b395cde165dc1f483644c999756129ca626edb78ac1b95160f642a3d9d`).
+
+For the independently regenerated high-order natural-xenon spectrum:
+- maximum (|mathrm{Full}/I(D_{NR})-1|) over 180–320 keV: (0.0355190413\%), at 320 keV;
+- maximum over the full supported 5–800 keV grid: (0.3527618038\%), at 695 keV;
+- the 208-point natural-xenon grid and 1,456 isotope-energy rows are complete;
+- AFH isotope abundance coverage remains 99.8158%, with Xe-124/Xe-126 absent and no abundance renormalization.
+
+The baseline-to-high-order quadrature comparison gives zero support mismatches. The maximum natural-xenon full-rate shift is (9.8863\times10^{-6}\%), the maximum (I(D_{NR})) rate shift is (1.7092\times10^{-5}\%), and the maximum approximation-error shift is (1.0792\times10^{-5}) percentage points. At isotope level, the maximum approximation-error shift is (2.8425\times10^{-5}) percentage points.
+
+I downloaded the high-order GitHub artifact and compared it with the archived local scan. The full halo kernel agrees to a maximum relative difference of (2.82\times10^{-8}); the (I(D_{NR})) kernel is identical. The maximum absolute difference in the derived isotope relative-error column is (2.83\times10^{-6}) percentage points, and the maximum natural-xenon relative-error difference is (1.75\times10^{-6}) percentage points. These small differences do not change the convergence conclusion or any acceptance result.
