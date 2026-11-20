@@ -72,3 +72,31 @@ python -B plot_recoil_event_spectra.py
 逐能量程序重新计算 5 组参数 × 7 种同位素，每组每核取 530 个真实反冲能节点。每核在其物理端点补零，用保形分段三次插值在 0.5 keV 网格输出绝对谱，并用相同插值的原函数得到累计曲线。静态电荷另用独立能量求积节点直接收缩 $L_{00}W_M^{00}(y_p)$。对六种重算处方、五组参数和三个能区，绘图曲线与独立能量积分的最大相对差为 $6.49\times10^{-6}$，关闭能窗的事例数为零。[逐窗积分核对](output/recoil_curves/window_integral_checks.csv)
 
 本次运行环境为 Windows、Python 3.14.7、NumPy 2.5.4、SciPy 1.18.1、pandas 3.1.1、Matplotlib 3.11.2、PyMuPDF 1.28.2。图件使用微软雅黑，绘图程序亦支持 Noto Sans CJK SC 和黑体。原始数表和代码按字节核验。若 Git 会自动转换换行符，可用 `git clone -c core.autocrlf=false` 检出。校验清单里的路径相对于仓库根目录。[程序、原图、核响应、数表与图件 SHA-256](SHA256SUMS.txt)
+
+## 干净检出复算记录
+
+2026-11-20 在独立检出运行下列完整流程。先核对归档的 61 项 SHA-256，再用仓库内的原生网格计算。七个 Python 入口均正常退出。[实际命令及控制台输出](reproduction_log.txt) · [复算使用的源码提交](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/commit/bac73b47076885b2f748aee43ba7b4d2e3cbfeef)
+
+```powershell
+git clone -c core.autocrlf=false https://github.com/lm846802297-bit/LZ-3-body-for-hdm.git
+cd LZ-3-body-for-hdm
+git checkout --detach bac73b47076885b2f748aee43ba7b4d2e3cbfeef
+cd research/response_comparison_four_benchmarks/natural_xenon_halo
+python -B run_fold.py
+python -B validate.py --native-archive inputs/afh_v6
+python -B make_figures.py
+cd event_counts
+python -B integrate_event_counts.py --native-archive ../inputs/afh_v6
+python -B event_spectra.py --native-archive ../inputs/afh_v6
+python -B plot_event_counts.py
+python -B plot_recoil_event_spectra.py
+```
+
+| 复核对象 | 干净检出的结果 |
+|---|---|
+| 事例数目录的 10 份 CSV | 全部重新生成，与归档逐字节一致。五组基准共 10,005 行逐能量数据、105 行同位素能窗贡献、90 个独立积分对照 |
+| 上游 10 份 CSV 和 CSV.gz | 所有输入、数表和解压副本与归档逐字节一致。两个解压副本另与各自的 gzip 内容核对 |
+| 两能窗与原图可见段 | 候选窗的论文红线、B、D 分别为 0.973617662、0.142496519、0.141542067 例。90 项中非零积分的最大相对差为 $6.49001\times10^{-6}$ |
+| 5 张 PNG 与 3 份 PDF | PNG 的 RGB 像素完全一致。PDF 共 7 页，在相同的 PyMuPDF 渲染设置下逐页像素一致。重新导出的 PDF 带有本次创建时间，运行清单记录本次提交及产物哈希 |
+
+原生核响应用随仓库提交的 Wolfram 导出表及其上游验收记录；本次干净检出重新执行了 Python 的逐核核对、三体与晕积分、计数和作图。

@@ -1,0 +1,185 @@
+Clean-checkout reproduction on Windows, 2026-11-20
+Source commit bac73b47076885b2f748aee43ba7b4d2e3cbfeef
+Working directories below are relative to research/response_comparison_four_benchmarks/natural_xenon_halo.
+Output paths use <checkout> for the temporary checkout root. Each command exited with code 0.
+
+[.] python -B run_fold.py
+Natural Xe 131.292761277598 g/mol, 4.58680334e+24 atoms/kg, halo integral 1.0000000000000000
+red  Xe-128  451 open recoil energies
+red  Xe-129  456 open recoil energies
+red  Xe-130  460 open recoil energies
+red  Xe-131  465 open recoil energies
+red  Xe-132  469 open recoil energies
+red  Xe-134  478 open recoil energies
+red  Xe-136  487 open recoil energies
+green  Xe-128  282 open recoil energies
+green  Xe-129  288 open recoil energies
+green  Xe-130  294 open recoil energies
+green  Xe-131  300 open recoil energies
+green  Xe-132  306 open recoil energies
+green  Xe-134  317 open recoil energies
+green  Xe-136  330 open recoil energies
+black  Xe-128  0 open recoil energies
+black  Xe-129  0 open recoil energies
+black  Xe-130  50 open recoil energies
+black  Xe-131  87 open recoil energies
+black  Xe-132  112 open recoil energies
+black  Xe-134  144 open recoil energies
+black  Xe-136  168 open recoil energies
+blue  Xe-128  282 open recoil energies
+blue  Xe-129  288 open recoil energies
+blue  Xe-130  294 open recoil energies
+blue  Xe-131  300 open recoil energies
+blue  Xe-132  306 open recoil energies
+blue  Xe-134  317 open recoil energies
+blue  Xe-136  330 open recoil energies
+benchmark  ER_keV       B_time            D  D_over_B_time  Xe131_fraction_of_D
+      red     267 6.937197e-12 6.988230e-12       1.007356             0.020368
+    green     267 1.789459e-13 1.811785e-13       1.012476             0.017454
+    black     267 1.622280e-16 1.659528e-16       1.022960             0.000006
+     blue     267 1.450588e-15 1.468604e-15       1.012420             0.017497
+
+[.] python -B validate.py --native-archive inputs/afh_v6
+{
+  "tensor": {
+    "fixed_spinor_L00_deltaLC_LT_max_relative": 8.881784197001252e-16,
+    "independent_gamma0_trace_max_relative": 6.617074221892949e-09
+  },
+  "stored_rates": {
+    "microscopic_rows": 96732,
+    "isotope_rows": 14840,
+    "natural_sum_rows": 2120,
+    "open_rows": 8061,
+    "phase_space_closed_isotope_rows": 6779
+  },
+  "archive": {
+    "open_anchor_rows": 30,
+    "max_rel_at_archived_quadrature": 1.3752551548673608e-06,
+    "max_rel_refined_vs_old_order": 0.00025192461736156524
+  },
+  "quadrature": {
+    "base": [
+      12,
+      12,
+      4,
+      4
+    ],
+    "refined_all": [
+      22,
+      20,
+      8,
+      8
+    ],
+    "refined_speed": [
+      22,
+      12,
+      4,
+      4
+    ],
+    "checks": [
+      {
+        "check": "all_axes",
+        "quantity": "B_time",
+        "max_relative_difference": 4.558575739110893e-13,
+        "compared_open_isotope_rows": 127,
+        "worst_benchmark": "green",
+        "worst_A": 136,
+        "worst_ER_keV": 101
+      },
+      {
+        "check": "all_axes",
+        "quantity": "C_time",
+        "max_relative_difference": 4.563016631209393e-13,
+        "compared_open_isotope_rows": 127,
+        "worst_benchmark": "blue",
+        "worst_A": 136,
+        "worst_ER_keV": 101
+      },
+      {
+        "check": "all_axes",
+        "quantity": "D",
+        "max_relative_difference": 4.558575739110893e-13,
+        "compared_open_isotope_rows": 127,
+        "worst_benchmark": "green",
+        "worst_A": 136,
+        "worst_ER_keV": 101
+      },
+      {
+        "check": "all_axes",
+        "quantity": "space_delta",
+        "max_relative_difference": 4.558575739110893e-13,
+        "compared_open_isotope_rows": 127,
+        "worst_benchmark": "blue",
+        "worst_A": 136,
+        "worst_ER_keV": 101
+      },
+      {
+        "check": "speed_only",
+        "quantity": "B_time",
+        "max_relative_difference": 4.549693954913892e-13,
+        "compared_open_isotope_rows": 127,
+        "worst_benchmark": "green",
+        "worst_A": 136,
+        "worst_ER_keV": 101
+      },
+      {
+        "check": "speed_only",
+        "quantity": "C_time",
+        "max_relative_difference": 4.549693954913892e-13,
+        "compared_open_isotope_rows": 127,
+        "worst_benchmark": "green",
+        "worst_A": 136,
+        "worst_ER_keV": 101
+      },
+      {
+        "check": "speed_only",
+        "quantity": "D",
+        "max_relative_difference": 4.547473508864641e-13,
+        "compared_open_isotope_rows": 127,
+        "worst_benchmark": "green",
+        "worst_A": 136,
+        "worst_ER_keV": 101
+      },
+      {
+        "check": "speed_only",
+        "quantity": "space_delta",
+        "max_relative_difference": 4.547473508864641e-13,
+        "compared_open_isotope_rows": 127,
+        "worst_benchmark": "blue",
+        "worst_A": 136,
+        "worst_ER_keV": 101
+      }
+    ]
+  }
+}
+
+[.] python -B make_figures.py
+
+[event_counts] python -B integrate_event_counts.py --native-archive ../inputs/afh_v6
+        benchmark      window       B_time            D  D_vs_B_percent  D_vs_C_ppm
+              red   candidate 9.808298e-03 9.744688e-03       -0.648529   -3.878867
+              red       lower 1.653343e-01 1.651453e-01       -0.114298   -3.224275
+              red all_recoils 2.819497e-01 2.814807e-01       -0.166351   -3.075602
+            green   candidate 1.624972e-04 1.614087e-04       -0.669871   -4.479503
+            green       lower 7.642961e-04 7.625601e-04       -0.227144   -3.950478
+            green all_recoils 1.423548e-03 1.420508e-03       -0.213528   -4.387151
+            black   candidate 7.613409e-09 7.700249e-09        1.140623   -5.005677
+            black       lower 0.000000e+00 0.000000e+00             NaN         NaN
+            black all_recoils 2.893497e-07 2.901005e-07        0.259473   -5.559535
+             blue   candidate 1.323618e-06 1.314752e-06       -0.669790   -4.478141
+             blue       lower 6.268172e-06 6.253959e-06       -0.226743   -3.949410
+             blue all_recoils 1.162854e-05 1.160367e-05       -0.213855   -4.383204
+manuscript_figure   candidate 1.424965e-01 1.415421e-01       -0.669807   -4.478113
+manuscript_figure       lower 6.753910e-01 6.738598e-01       -0.226714   -3.949365
+manuscript_figure all_recoils 1.252011e+00 1.249332e+00       -0.213982   -4.382487
+Maximum integration differences {'coarse': 7.054159675502321e-08, 'recoil_grid': 2.5507653844728164e-07} previous full-support comparison 2.566523598090953e-07
+
+[event_counts] python -B event_spectra.py --native-archive ../inputs/afh_v6
+Recomputed 7 isotope spectra at the main figure point and 28 for the four-point comparison.
+Main figure: 393 vertices. Four-point figure: 501 displayed points.
+Largest relative count discrepancy: 6.4900075594787054e-06
+
+[event_counts] python -B plot_event_counts.py
+
+[event_counts] python -B plot_recoil_event_spectra.py
+<checkout>\research\response_comparison_four_benchmarks\natural_xenon_halo\event_counts\output\pdf\xenon_count_spectra_vs_recoil.pdf
