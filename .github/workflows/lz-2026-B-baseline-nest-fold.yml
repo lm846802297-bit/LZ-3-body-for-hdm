@@ -49,16 +49,16 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: lz-2026-three-body-response-grid-convergence
-          run-id: \${{ github.event.inputs.response_run_id || '43697104437' }}
-          github-token: \${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.inputs.response_run_id || '43697104437' }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           path: response-artifact
 
       - name: Download formal B spectra and Fig. S2 rate-level counts
         uses: actions/download-artifact@v4
         with:
           name: finite-nucleon-form-factor-B-baseline
-          run-id: \${{ github.event.inputs.b_run_id || '44662497177' }}
-          github-token: \${{ secrets.GITHUB_TOKEN }}
+          run-id: ${{ github.event.inputs.b_run_id || '44662497177' }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
           path: B-artifact
 
       - name: Verify source artifact structure
@@ -67,8 +67,8 @@ jobs:
           test -s response-artifact/response-output/tableS5.csv
           test -s response-artifact/response-output/ws2024.csv
           test -s response-artifact/response-output/generic.csv
-          test -s B-artifact/B-absolute/sufian2017_unit_current/afh_hybrid9_B_natural_xenon_spectrum.csv
-          test -s B-artifact/B-detector/sufian2017_unit_current/lz_2026_afh7_hybrid9_rate_level_event_yields.csv
+          test -s B-artifact/pr87-formal-B-artifact/B-absolute/sufian2017_unit_current/afh_hybrid9_B_natural_xenon_spectrum.csv
+          test -s B-artifact/pr87-formal-B-artifact/B-detector/sufian2017_unit_current/lz_2026_afh7_hybrid9_rate_level_event_yields.csv
 
       - name: Test B spectrum selection and event-weight normalization
         run: |
