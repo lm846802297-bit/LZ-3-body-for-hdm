@@ -28,7 +28,8 @@ def relative_path(root: Path, path: Path) -> str:
 def csv_units(column: str) -> str:
     """Strict unit map for the AFH-7/Hybrid-9 and Eq. (6) output tables."""
     labels = {"benchmark", "scenario", "isotope", "halo_model", "mass_scheme",
-              "response_q_convention", "width_scheme", "kernel_order_low", "kernel_order_high"}
+              "response_q_convention", "width_scheme", "kernel_order_low", "kernel_order_high",
+              "case", "mapping", "dimension", "implementation"}
     booleans = {"AFH_default_available", "speed_phase_space_open", "detector_response_applied"}
     if column in booleans:
         return "boolean"
@@ -36,6 +37,16 @@ def csv_units(column: str) -> str:
         return "label"
     exact = {
         "A": "1", "J_A": "1", "T_iso": "1", "y": "1", "W_M00_AFH_package": "1",
+        "nW_or_nu": "1", "nz": "1", "nphi": "1", "nW": "1", "order": "1",
+        "fixed_nW": "1", "fixed_other_order": "1", "g2": "1",
+        "raw_over_2pi_I6": "1", "direct_over_eq6": "1",
+        "relative_difference": "1", "relative_difference_to_threshold_reference": "1",
+        "relative_to_archived": "1", "relative_to_high_order_reference": "1",
+        "Delta_m_MeV": "MeV", "delta_W2_GeV2": "GeV^2",
+        "I6_GeV2": "GeV^2", "reference_I6_GeV2": "GeV^2",
+        "raw_phi_integral_GeV2": "GeV^2", "archived_I6_GeV2": "GeV^2",
+        "dsigma_dER_eq6_GeV_minus3": "GeV^-3",
+        "dsigma_dER_direct_LI_GeV_minus3": "GeV^-3",
         "R_AFH_isoscalar_4pi_over_2Jplus1": "1", "R_equal_pn_normalized": "1", "R_over_A2": "1",
         "nv_low": "1", "nv_final": "1",
         "speed_quadrature_relative_difference": "1",
