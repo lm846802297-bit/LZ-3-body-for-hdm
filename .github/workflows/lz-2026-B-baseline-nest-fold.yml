@@ -84,7 +84,7 @@ jobs:
             --b-absolute-root B-artifact/pr87-formal-B-artifact/B-absolute \
             --b-detector-root B-artifact/pr87-formal-B-artifact/B-detector \
             --out-dir B-NEST-output
-          sha256sum --check B-NEST-output/SHA256SUMS
+          (cd B-NEST-output && sha256sum --check SHA256SUMS)
 
       - name: Validate row counts and exact raw-rate closure
         run: |
