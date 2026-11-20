@@ -469,6 +469,18 @@ def main() -> None:
                 "evidence_path": metadata_path.relative_to(ROOT).as_posix(),
             },
             {
+                "check_id": "AFH-PCHIP-DIRECT-INTERPOLATION-DIAGNOSTIC",
+                "name": "PCHIP interpolation versus direct exact-q response",
+                "category": "independent",
+                "status": "inconclusive",
+                "method": "Compare PCHIP interpolation with direct finite-sum AFH response at the selected high-q recoil samples; PCHIP is diagnostic only.",
+                "observed": max_pchip_difference,
+                "threshold": 5.0e-4,
+                "unit": "1",
+                "evidence_path": regression_path.relative_to(ROOT).as_posix(),
+                "notes": "A larger difference does not alter the direct exact-q response used in the rate; it records that PCHIP is not an acceptable substitute in this region.",
+            },
+            {
                 "check_id": "AFH-NATIVE-MATHEMATICA-REEXECUTION",
                 "name": "Native Mathematica AFH v6.0 re-execution",
                 "category": "independent",
