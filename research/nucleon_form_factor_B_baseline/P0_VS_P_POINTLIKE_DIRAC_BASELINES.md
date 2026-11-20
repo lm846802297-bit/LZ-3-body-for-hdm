@@ -12,16 +12,16 @@ P0 与 P **不是两种不同的核子内部结构模型**。两者均采用点�
 
 两者的区别是对同一个点状 Dirac 核子电荷流采用不同的匹配精度：
 
-- **P0：领先阶点核子电荷基准。** 只保留领先阶电荷项，令 \(c_M^{P0}=1\)，舍去有限动量的 \(1/m_N^2\) 匹配修正。
+- **P0：领先阶点核子电荷基准。** 只保留领先阶电荷项，令归一化系数 \(\widehat c_M^{P0}=F_M^{P0}=1\)（原始未归一化系数 \(c_M^{\rm raw,P0}=3\)，舍去有限动量的 \(1/m_N^2\) 匹配修正。
 - **P：有限动量点状 Dirac 电荷基准。** 仍取 \(\widehat F_1=1,\widehat F_2=0\)，但保留当前 M-only 匹配方案中的有限转移动力学修正。
 
 在本仓库采用的匹配约定下，
 
 \[
 \boxed{
-c_M^{P0}=1,
+\widehat c_M^{P0}=1,
 \qquad
-c_M^P=1+\frac{t_N}{8m_N^2}
+\widehat c_M^P=1+\frac{t_N}{8m_N^2}
 =1-\frac{Q_N^2}{8m_N^2},
 }
 \qquad Q_N^2\equiv -t_N.
@@ -35,7 +35,28 @@ P0=\lim_{Q_N^2/m_N^2\to0}P.
 }
 \]
 
-仅写出 \(F_1=1,F_2=0\) 不能区分 P0 和 P；必须同时说明是否保留 \(c_M\) 中的有限转移项。
+仅写出 \(\widehat F_1=1,\widehat F_2=0\) 不能区分 P0 和 P；必须同时说明是否保留 \(\widehat c_M\) 中的有限转移项。
+
+
+### 2.0 Raw and normalized coefficient: why the reference value is one
+
+The repository's flavor-summed current is normalized for universal unit \(u,d,s\) vector couplings:
+\[
+F_i^{uds,N}=3\left(F_i^{\mathrm{EM},p}+F_i^{\mathrm{EM},n}+F_i^{s,N,\mathrm{unit}}\right).
+\]
+At zero transfer, \(F_1^{\mathrm{EM},p}(0)=1\), \(F_1^{\mathrm{EM},n}(0)=0\), and the net strange vector charge is zero. Hence \(F_1^{uds,N}(0)=3\) for either nucleon. The raw coefficient therefore obeys \(c_M^{\rm raw}(0)=3\).
+
+The rate postprocessor factors out this common charge normalization and defines
+\[
+F_M(t_N)=\frac{c_M^{\rm raw}(t_N)}{3}
+\equiv \widehat c_M(t_N).
+\]
+Thus the pointlike leading-order reference is
+\[
+c_M^{\rm raw,P0}=3,\qquad
+\widehat c_M^{P0}=F_M^{P0}=1.
+\]
+The value one is the normalized unit vector charge of a nucleon, not an arbitrary fit parameter and not a statement that the nuclear response \(W_M\) equals one.
 
 ## 2. 从核子矢量流定义两组基准
 
@@ -72,7 +93,7 @@ q_N^\mu=p_N'^\mu-p_N^\mu,\qquad t_N=q_N^2.
 并且在领先阶近似中直接取
 
 \[
-\boxed{c_M^{P0}=1.}
+\boxed{\widehat c_M^{P0}=F_M^{P0}=1,\qquad c_M^{\rm raw,P0}=3.}
 \]
 
 P0 的含义是：在核子电荷响应中只保留零阶电荷耦合。它不保留当前匹配系数中的有限转移项
@@ -96,7 +117,7 @@ P 仍然采用点状 Dirac 形状因子：
 但 P 保留当前项目采用的电荷型匹配系数：
 
 \[
-c_M(t_N)=
+\widehat c_M(t_N)\equiv F_M(t_N)=\frac{c_M^{\rm raw}(t_N)}{3}=
 \widehat F_1(t_N)
 +\frac{t_N}{8m_N^2}
 \left[\widehat F_1(t_N)+2\widehat F_2(t_N)\right].
@@ -106,8 +127,8 @@ c_M(t_N)=
 
 \[
 \boxed{
-c_M^P(t_N)=1+\frac{t_N}{8m_N^2}
-=1-\frac{Q_N^2}{8m_N^2}.
+\widehat c_M^P(t_N)=1+\frac{t_N}{8m_N^2}
+=1-\frac{Q_N^2}{8m_N^2},\qquad c_M^{\rm raw,P}=3\widehat c_M^P.
 }
 \]
 
@@ -127,8 +148,8 @@ P 因而检验有限动量转移下、当前 M-only 匹配处方中的 Dirac 电
 
 当前 P0/P 的区别出现在后续的核子流约化和 M-only rate-level 匹配中：
 
-- P0 将电荷匹配系数截断为 \(c_M=1\)；
-- P 保留项目当前匹配公式中的有限 \(t_N/m_N^2\) 项。
+- P0 将归一化电荷匹配系数截断为 \(\widehat c_M=F_M=1\)（原始系数 \(c_M^{\rm raw}=3\)）；
+- P 保留项目当前匹配公式中的有限 \(t_N/m_N^2\) 项，即 \(\widehat c_M=1+t_N/(8m_N^2)\)。
 
 因此，不能仅凭两组的 \(F_1,F_2\) 数值判断其计算精度；还必须检查 \(c_M\) 的定义和保留阶数。
 
@@ -171,7 +192,7 @@ y_A=\frac{b_A^2Q_A^2}{4},
 而 P 的匹配系数为
 
 \[
-c_M^P=1-\frac{Q_N^2}{8m_N^2}.
+\widehat c_M^P=1-\frac{Q_N^2}{8m_N^2}.
 \]
 
 在当前形式冲量约定下，\(Q_N^2\) 与 \(Q_A^2\) 相差 \(E_R^2\)。不能把 AFH 空间动量平方直接替换进 P 的 \(c_M\)，也不能把 P 的核子有限转移修正误称为 AFH 核有限尺寸修正。
@@ -184,7 +205,7 @@ c_M^P=1-\frac{Q_N^2}{8m_N^2}.
 
 \[
 \frac{\mathcal M_P}{\mathcal M_{P0}}
-=c_M^P
+=\frac{\widehat c_M^P}{\widehat c_M^{P0}}
 =1-\frac{Q_N^2}{8m_N^2}.
 \]
 
@@ -227,7 +248,7 @@ c_M^P=1-\frac{Q_N^2}{8m_N^2}.
 
 ### 4.1 天然氙同位素求和
 
-上面的简单比值是单个同位素、固定反冲能量下的关系。天然氙总谱需要先逐同位素乘上各自的 \(c_M^2\)，再求和：
+上面的简单比值是单个同位素、固定反冲能量下的关系。天然氙总谱需要先逐同位素乘上各自的 \(\widehat c_M^2=|F_M|^2，再求和：
 
 \[
 \frac{dR_P}{dE_R}
@@ -243,7 +264,7 @@ c_M^P=1-\frac{Q_N^2}{8m_N^2}.
 \sum_A\eta_A\frac{dR_{P0,A}}{dE_R}.
 \]
 
-因此天然氙总谱的比值是以各同位素 P0 贡献为权重的比值，不应直接使用某一个同位素的 \(c_M^2\) 代替。
+因此天然氙总谱的比值是以各同位素 P0 贡献为权重的比值，不应直接使用某一个同位素的 \(\widehat c_M^2 代替。
 
 探测器级事例数还要继续乘以能量依赖的探测效率并在 ROI 内积分：
 
@@ -268,7 +289,7 @@ m_A(^{131}\mathrm{Xe})=121.933\ \mathrm{GeV},
 
 以及 \(Q_N^2=2m_AE_R\)，得到：
 
-| \(E_R\) (keV) | \(Q_N\) (MeV) | \(c_M^P\) | \((d\sigma_P/dE_R)/(d\sigma_{P0}/dE_R)\) |
+| \(E_R\) (keV) | \(Q_N\) (MeV) | \(\widehat c_M^P=F_M^P\) | \((d\sigma_P/dE_R)/(d\sigma_{P0}/dE_R)\) |
 |---:|---:|---:|---:|
 | 5.4 | 36.29 | 0.9998133 | 0.9996266 |
 | 50 | 110.42 | 0.9982711 | 0.9965451 |
@@ -295,10 +316,10 @@ m_A(^{131}\mathrm{Xe})=121.933\ \mathrm{GeV},
 
 四组基准必须按以下顺序区分：
 
-| 基准 | \(\widehat F_1\) | \(\widehat F_2\) | \(c_M\) 的处理 | 所隔离的效应 |
+| 基准 | \(\widehat F_1\) | \(\widehat F_2\) | 归一化系数 \(\widehat c_M=F_M\) 的处理 | 所隔离的效应 |
 |---|---:|---:|---|---|
-| P0 | 1 | 0 | \(c_M=1\) | 领先阶点核子电荷基准 |
-| P | 1 | 0 | \(c_M=1+t_N/(8m_N^2)\) | 点状 Dirac 电荷流的有限转移匹配修正 |
+| P0 | 1 | 0 | \(\widehat c_M=1\)（原始 \(c_M^{\rm raw}=3\)） | 领先阶点核子电荷基准 |
+| P | 1 | 0 | \(\widehat c_M=1+t_N/(8m_N^2)\) | 点状 Dirac 电荷流的有限转移匹配修正 |
 | A0 | 1 | \(\widehat F_2(0)\) | 保留 \(t_N\) 项 | 静态 Pauli 磁矩贡献 |
 | B | \(\widehat F_1(t_N)\) | \(\widehat F_2(t_N)\) | 完整使用有限转移形状因子 | 核子有限动量内部结构 |
 
@@ -340,10 +361,10 @@ P 的定义没有自动包含：
 
 回归测试至少检查：
 
-1. \(c_M^{P0}=1\)；
-2. \(c_M^P(Q_N^2=0)=1\)，即零转移极限下 P 与 P0 闭合；
-3. 对正的类空间转移，当前约定下 \(c_M^P<1\)；
-4. 单同位素固定反冲能量的 P/P0 微分率比等于 \((c_M^P)^2\)；
+1. \(\widehat c_M^{P0}=1\)（原始 \(c_M^{\rm raw,P0}=3\)）；
+2. \(\widehat c_M^P(Q_N^2=0)=1\)，即零转移极限下 P 与 P0 闭合；
+3. 对正的类空间转移，当前约定下 \(\widehat c_M^P<1\)；
+4. 单同位素固定反冲能量的 P/P0 微分率比等于 \((\widehat c_M^P)^2\)；
 5. 完整天然氙谱和探测器折叠中，P0 重建与历史源谱闭合；
 6. P、A0、B 的输出使用同一三体/halo 输入和相同的 AFH 响应。
 
@@ -372,7 +393,7 @@ python research/nucleon_form_factor_B_baseline/compare_pointlike_A_B_nucleon_bas
 后续项目中凡使用 P0 或 P，必须同时报告：
 
 - 点状形状因子条件：\(\widehat F_1=1,\widehat F_2=0\)；
-- 电荷匹配系数：P0 为 \(1\)，P 为 \(1+t_N/(8m_N^2)\)；
+- 归一化电荷匹配系数：P0 为 \(\widehat c_M=F_M=1\)，P 为 \(\widehat c_M=1+t_N/(8m_N^2)\)；原始系数在零转移时为 \(c_M^{\rm raw}=3\)。
 - 采用的 \(t_N\) 约定；
 - AFH 核响应是否保留；
 - 是否仅为 M-only rate-level 结果。
