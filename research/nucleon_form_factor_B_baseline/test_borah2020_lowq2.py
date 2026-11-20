@@ -2,10 +2,10 @@ import math
 import unittest
 import numpy as np
 
-import ye2020_lowq2 as ff
+import borah2020_lowq2 as ff
 
 
-class Ye2020LowQ2Tests(unittest.TestCase):
+class Borah2020LowQ2Tests(unittest.TestCase):
     def test_sachs_normalizations(self):
         s = ff.sachs_form_factors(0.0)
         self.assertAlmostEqual(float(s["GEp"]), 1.0, places=12)
@@ -46,13 +46,31 @@ class Ye2020LowQ2Tests(unittest.TestCase):
         q2 = np.asarray([0.0, 0.1])
         suf = ff.flavor_sum_form_factors(q2, "sufian2017_unit_current")
         alt = ff.flavor_sum_form_factors(q2, "alexandrou2020_charge_weighted_converted")
+        latest = ff.flavor_sum_form_factors(q2, "alexandrou2026_continuum_unit_current")
         self.assertAlmostEqual(float(suf["GM_s_unit"][0]), -0.064, places=12)
         self.assertAlmostEqual(float(alt["GM_s_unit"][0]), 0.051, places=12)
+        self.assertAlmostEqual(float(latest["GM_s_unit"][0]), -0.01792, places=12)
         self.assertAlmostEqual(float(suf["GE_s_unit"][0]), 0.0, places=12)
         self.assertAlmostEqual(float(alt["GE_s_unit"][0]), 0.0, places=12)
+        self.assertAlmostEqual(float(latest["GE_s_unit"][0]), 0.0, places=12)
+
+    def test_magnetic_radius_uses_normalized_GM_expansion(self):
+        q2 = np.asarray([0.0, 1e-5])
+        for model, rM2 in (
+            ("alexandrou2020_charge_weighted_converted", -0.015),
+            ("alexandrou2026_continuum_unit_current", -0.01212),
+        ):
+            gm = ff._strange_sachs(q2, model)[1]
+            measured = (float(gm[1]/gm[0])-1.0)/q2[1]
+            expected = -rM2*ff.FM2_TO_GEVM2/6.0
+            self.assertAlmostEqual(measured, expected, delta=2e-8)
 
     def test_charge_normalized_B_factor_at_zero(self):
-        for model in ("sufian2017_unit_current", "alexandrou2020_charge_weighted_converted"):
+        for model in (
+            "sufian2017_unit_current",
+            "alexandrou2020_charge_weighted_converted",
+            "alexandrou2026_continuum_unit_current",
+        ):
             result = ff.cM_and_factor(0.0, model)
             self.assertAlmostEqual(float(result["F1uds"]), 3.0, places=10)
             self.assertAlmostEqual(float(result["F_M"]), 1.0, places=10)

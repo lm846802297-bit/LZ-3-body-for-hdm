@@ -1,96 +1,157 @@
 # B baseline: finite nucleon form factors × finite-size AFH charge response
 
-## Definition
+## Adopted definition
 
-This stage implements the previously selected B baseline:
+The project baseline is
 
-[
-F_1(t_N),quad F_2(t_N),quad W_M(y_A),
-]
+\[
+\boxed{F_1(t_N),\quad F_2(t_N),\quad W_M(y_A)}
+\]
 
-with the nucleon form factors and nuclear response kept as separate physical ingredients.
+with nucleon structure and nuclear finite-size structure kept as distinct ingredients.
 
-For each isotope and recoil energy,
+For a target isotope with recoil energy \(E_R\),
 
-[
-Q_A^2=|mathbf q_A|^2=2m_AE_R+E_R^2,qquad t_N=-Q_A^2.
-]
+\[
+Q_A^2\equiv |\mathbf q_A|^2=2m_AE_R+E_R^2,
+\qquad
+t_N=-Q_A^2.
+\]
 
-The quark-flavor sum for universal (u,d,s) vector coupling is reconstructed as
+The same calculation also keeps the invariant transfer in the mediator propagator separate:
 
-[
-F_i^{uds,N}(t_N)=3left[
-F_i^{mathrm{EM},p}(t_N)+F_i^{mathrm{EM},n}(t_N)+F_i^{s,N}(t_N)
-ight],
-]
+\[
+t_A=q_A^2=-2m_AE_R,
+\qquad
+\frac{1}{(m_V^2-t_A)^2}
+=\frac{1}{(m_V^2+2m_AE_R)^2}.
+\]
 
-where (F_i^{s,N}) is the matrix element of the unit strange current (ar sgamma^mu s). The corresponding charge-like NR coefficient is
+Thus \(Q_A^2\) is used for the AFH spatial momentum and the finite nucleon form factors, while \(t_A\) is used in the mediator propagator.
 
-[
+For universal unit \(u,d,s\) vector coupling, the flavor sum is reconstructed as
+
+\[
+F_i^{uds,N}(t_N)
+=
+3\left[
+F_i^{\mathrm{EM},p}(t_N)
++F_i^{\mathrm{EM},n}(t_N)
++F_i^{s,N,\mathrm{unit}}(t_N)
+\right].
+\]
+
+The charge-like NR coefficient used by this B rate-level implementation is
+
+\[
 c_M(t_N)=F_1^{uds,N}(t_N)
-+rac{t_N}{8m_N^2}left[F_1^{uds,N}(t_N)+2F_2^{uds,N}(t_N)ight].
-]
++\frac{t_N}{8m_N^2}
+\left[F_1^{uds,N}(t_N)+2F_2^{uds,N}(t_N)\right].
+\]
 
-The pointlike equal-(u,d,s) normalization is (c_M(0)=3), so define
+Since the equal-coupling pointlike normalization is \(c_M(0)=3\), define
 
-[
-F_M(t_N)=c_M(t_N)/3,qquad
-mathcal C_N(Q_A^2)=|F_M(t_N)|^2.
-]
+\[
+F_M(t_N)=\frac{c_M(t_N)}{3},
+\qquad
+\mathcal C_N(Q_A^2)=|F_M(t_N)|^2.
+\]
 
-The postprocessor multiplies each isotope's already-computed full and (I(D)) rate contribution by (mathcal C_N(Q_A^2)), then re-sums the seven AFH isotopes. This leaves the AFH finite-size (W_M(y_A)) response intact; it does not replace it with a point-nucleus response.
+Each isotope's already-computed three-body rate contribution is multiplied by \(\mathcal C_N\), then the natural-xenon sum is reconstructed. The finite-size AFH \(W_M(y_A)\) response is retained unchanged; it is not replaced by a point-nucleus response.
 
-## Electromagnetic proton/neutron input
+## Electromagnetic proton and neutron inputs
 
-The primary (G_E^{p,n}), (G_M^{p,n}) input is the low-(Q^2) z-expansion of Borah, Hill, Lee and Tomalak, Phys. Rev. D 102, 074012 (2020), arXiv:2003.13640. It is optimized for (Q^2lesssim) a few GeV(^2), includes the proton and neutron data/radius constraints, and supplies the free-coefficient covariance matrices.
+The electromagnetic input is the separate proton and neutron low-\(Q^2\) \(z\)-expansion of Borah, Hill, Lee and Tomalak, Phys. Rev. D 102, 074012 (2020), arXiv:2003.13640. The pinned coefficients and free-coefficient covariance matrices are under data/borah2020/.
 
-The exact central coefficients and covariance matrix are pinned under `data/ye2020/`. The source copy is the GENIE-MC/Generator distribution of the Ye et al. supplemental data:
-- `config/ZExpELFormFactorModel.xml`
-- `data/covariances/FormFactor/Vector/ELZExpFF.dat`
-- pinned source commit: `e2e04f19e96d395ac646cf3382841646b60fa1b4`
+The source data are the GENIE-MC/Generator distribution of the Borah et al. supplemental data:
 
-The four free coefficients for each Sachs form factor are completed by (G(0)) normalization and the four (Q^4) asymptotic sum rules, matching GENIE's `Q4limit` implementation. The full (G_E,G_M) are converted to (F_1,F_2) with
-[
-F_1=rac{G_E+	au G_M}{1+	au},qquad
-F_2=rac{G_M-G_E}{1+	au},qquad 	au=Q^2/(4m_N^2).
-]
+- config/ZExpELFormFactorModel.xml
+- data/covariances/FormFactor/Vector/ELZExpFF.dat
+- pinned source commit: e2e04f19e96d395ac646cf3382841646b60fa1b4
 
-## Strange-current input
+The four free coefficients of each Sachs form factor are completed by the \(G(0)\) normalization and four \(Q^4\) asymptotic sum rules, following GENIE's Q4limit implementation. The full Sachs form factors are converted using
 
-Two separately labelled strange-current scenarios are implemented. Their current conventions are not interchangeable; see `strange_current_convention_audit.md`.
+\[
+F_1=\frac{G_E+\tau G_M}{1+\tau},
+\qquad
+F_2=\frac{G_M-G_E}{1+\tau},
+\qquad
+\tau=\frac{Q^2}{4m_N^2}.
+\]
 
-1. `sufian2017_unit_current` (primary): directly uses the unit-current matrix element (ar sgamma^mu s), with (G_M^s(0)=-0.064) and (langle r_E^2angle_s=-0.0043,mathrm{fm}^2). The magnetic form factor is frozen at its quoted zero-momentum value because this source does not provide a magnetic radius in the cited result.
-2. `alexandrou2020_charge_weighted_converted` (alternative): uses the published 2020 (e_sar sgamma^mu s) form factors after dividing the reported Sachs functions and slopes by (e_s=-1/3), as required to convert to a unit-current matrix element. The published magnetic and electric radii are used in a first-order low-(Q^2) expansion.
+The electromagnetic coefficient covariance is propagated using correlated Monte Carlo draws. It is kept distinct from the strange-current scenario dependence.
 
-The two scenarios are both calculated and retained; they are not averaged.
+## Strange-current scenarios
 
-## Applying B to a halo/isotope artifact
+Three separately labelled strange-current inputs are implemented. Their current conventions are documented in strange_current_convention_audit.md.
 
-The input is the isotope-level CSV from the halo workflow. No phase-space integral is rerun.
+1. sufian2017_unit_current — historical primary benchmark. This is already the unit-current matrix element \(\bar s\gamma^\mu s\), with \(G_M^s(0)=-0.064\) and \(\langle r_E^2\rangle_s=-0.0043\,\mathrm{fm}^2\). The magnetic form factor is frozen at zero momentum because the cited physical-point result does not provide a magnetic radius.
+2. alexandrou2020_charge_weighted_converted — Alexandrou et al. (2020). The published charge-weighted form factors are divided by \(e_s=-1/3\) to convert to the unit strange current. The magnetic-radius expansion includes its \(G_M^s(0)=\mu_s\) normalization.
+3. alexandrou2026_continuum_unit_current — Alexandrou et al., arXiv:2603.26600 (2026). The reported form factors already use the unit-current convention. The current implementation uses the published electric and magnetic slopes as a low-\(Q^2\) expansion; it is not a reconstruction of the full \(z\)-expansion.
 
-```bash
-python research/nucleon_form_factor_B_baseline/apply_nucleon_form_factors_B.py \
-  --input-dir path/to/halo-seven-isotope-highorder \
-  --out-dir results/nucleon-form-factor-B \
-  --draws 3000
-```
+The three scenarios are calculated separately and never averaged. The 2026 source uncertainties are recorded in metadata but are not yet sampled.
 
-Outputs per strange-current scenario:
-- `seven_isotope_B_baseline.csv`
-- `natural_xenon_B_baseline.csv`
-- `metadata.json`
+## Applying B to the halo/isotope artifact
 
-The Ye2020 proton/neutron coefficient covariance is propagated with correlated Monte Carlo draws across the complete (Q_A^2) grid. The strange-current scenario uncertainty is kept separate from the Ye2020 electromagnetic fit covariance.
+This postprocessor uses the isotope-level CSV from the seven-isotope halo workflow. It does not rerun the three-body phase-space integration.
 
-## Scope
+    python research/nucleon_form_factor_B_baseline/apply_nucleon_form_factors_B.py \
+      --input-dir path/to/halo-seven-isotope-highorder \
+      --out-dir results/nucleon-form-factor-B \
+      --draws 3000
 
-This is the rate-level B baseline. It includes the finite nucleon (F_1,F_2) and AFH finite-size (W_M) response. It does not yet include additional AFH responses, detector efficiency, energy resolution, exposure, analysis cuts or likelihood.
+## Applying B to the archived absolute AFH-7/Hybrid-9 spectra
+
+The absolute-spectrum postprocessor reconstructs the published A spectrum from the isotope-resolved three-body kernels before applying B. It requires the reconstructed A spectrum to close against the archived natural-xenon A spectrum at relative tolerance \(2\times10^{-11}\).
+
+    for model in sufian2017_unit_current alexandrou2020_charge_weighted_converted alexandrou2026_continuum_unit_current; do
+      python research/nucleon_form_factor_B_baseline/apply_B_to_afh_hybrid9_continuous_spectrum.py \
+        --source-dir research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14 \
+        --out-dir results/B-absolute/$model \
+        --strange-model $model --draws 3000
+    done
+
+It writes:
+
+- afh_hybrid9_B_natural_xenon_spectrum.csv
+- afh_hybrid9_B_isotope_contributions.csv
+- metadata.json
+- SHA256SUMS.txt
+
+The isotope output records \(Q_A^2\), \(t_N\), \(t_A\), \(c_M\), \(F_M\), and the individual A/B rate contributions. The metadata records the exact source-file hashes and the electromagnetic covariance sampling seed.
+
+## LZ 2026 efficiency fold
+
+The B spectra can be passed directly to the existing rate-level LZ efficiency fold:
+
+    python research/three_body_calculation_and_validation/fold_lz_2026_afh_hybrid9_rate_level.py \
+      --spectrum-csv results/B-absolute/sufian2017_unit_current/afh_hybrid9_B_natural_xenon_spectrum.csv \
+      --spectrum-metadata results/B-absolute/sufian2017_unit_current/metadata.json \
+      --efficiency-csv research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv \
+      --out-dir results/B-detector/sufian2017_unit_current \
+      --exposure-tonne-year 2.84 --integration-steps 10000
+
+This applies the digitized LZ 2026 Fig. S2 final-WIMP-search-ROI NR efficiency over \(5.4\)–\(269.9\) keV and reports efficiency-weighted expected event yields for AFH-7 and Hybrid-9.
+
+The detector fold reports the central B event yield. The separate covariance propagator applies the same 3000 correlated Borah coefficient draws to every isotope and recoil energy, then integrates each draw through the LZ central efficiency curve. It writes the p16, median and p84 detector event yields and checks the central event yield against the existing detector fold. The strange-lattice uncertainties and the LZ gray efficiency envelope are not sampled or combined with the electromagnetic covariance. The gray envelope has no confidence level assigned by LZ.
+
+    python research/nucleon_form_factor_B_baseline/propagate_B_covariance_to_lz_yields.py \
+      --source-dir research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14 \
+      --b-spectrum-dir results/B-absolute/sufian2017_unit_current \
+      --detector-yield-csv results/B-detector/sufian2017_unit_current/lz_2026_afh7_hybrid9_rate_level_event_yields.csv \
+      --efficiency-csv research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv \
+      --out-dir results/B-detector-covariance/sufian2017_unit_current \
+      --strange-model sufian2017_unit_current --draws 3000
+
+## Validation and scope
+
+Regression tests cover zero-momentum normalization, Sachs-to-Dirac/Pauli conversion, the \(z\)-expansion sum rules, covariance properties, strange-current conventions, magnetic-radius normalization, exact A-spectrum closure, isotope-level B multiplication, and natural-xenon resummation.
+
+This stage includes finite nucleon \(F_1,F_2\), the finite-size AFH \(W_M\) response, the three-body/halo spectrum, and the LZ NR efficiency fold. It does not include additional AFH responses such as \(W_{\Phi''}\) or \(W_{M\Phi''}\), energy-resolution smearing, S1c/\(\log_{10}S2_c\) signal PDFs, background likelihood, or a confidence-level exclusion.
 
 
-## Permanent numerical-output archive
+## Permanent numerical archive
 
-The PR #80 baseline and higher-order output package is now preserved under [results/2026-11-19-finite-nucleon-form-factor-B-baseline/](results/2026-11-19-finite-nucleon-form-factor-B-baseline/README.md). It contains the original Actions artifact, extracted CSV/JSON tables for both strange-current scenarios, quadrature-comparison outputs, the run manifest, and SHA-256 checksums.
+The current PR85 result has a permanent native-output archive at [results/2026-11-20-B-baseline-PR85/README.md](results/2026-11-20-B-baseline-PR85/README.md). It contains the original pinned Actions artifact, all extracted CSV/JSON outputs, source-code and source-input snapshots, the run manifest, and a SHA-256 checksum list.
 
-The archive records 208 recoil points and 1,456 isotope-level rows per scenario. The maximum absolute B/A full-rate shift is 56.4346% for the Sufian unit-current input and 58.2429% for the Alexandrou charge-weighted input converted to unit current. The maximum absolute full-versus-\(I(D)\) difference in B is 0.3528% on the archived grid.
-
-The result is the selected B prescription \(F_1(t_N),F_2(t_N)\) multiplied by the finite-size AFH \(W_M(y_A)\) response. It is a rate-level nuclear-current correction, not a detector-level prediction. The 3,000-draw Ye2020 electromagnetic covariance is included; strange-lattice uncertainties are not sampled in this first pass.
+The archive workflow [44593911420](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44593911420) passed artifact identity/digest verification, extraction checks, B-baseline and detector-scope validations, correlated-covariance checks, and the complete archive checksum self-check. The archived source calculation is pinned to commit f6a01b7735c2373848510657826503484dd118d5.
