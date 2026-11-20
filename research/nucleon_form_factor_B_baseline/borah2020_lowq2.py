@@ -237,7 +237,10 @@ def flavor_sum_form_factors(q2_GeV2, strange_model: str = "sufian2017_unit_curre
 def cM_and_factor(q2_GeV2, strange_model: str = "sufian2017_unit_current"):
     """Return c_M(t_N), F_M=c_M/3, and its rate multiplier |F_M|^2.
 
-    t_N=-Q_A^2=-Q^2 and c_M=F1+t_N/(8 m_N^2)*(F1+2F2).
+    q2_GeV2 is -t_N. In the adopted formal impulse prescription,
+    t_N=t_A=-2*m_A*E_R; the exact spatial Q_A^2 is retained separately
+    for the AFH Fourier variable and is not substituted into this argument.
+    The NR charge coefficient is c_M=F1+t_N/(8*m_N^2)*(F1+2F2).
     """
     q2 = np.asarray(q2_GeV2, dtype=float)
     f = flavor_sum_form_factors(q2, strange_model)
