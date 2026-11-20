@@ -240,8 +240,8 @@ def run(
 
     output_rows = []
     max_central_closure = 0.0
-    max_A_spectrum_closure = 0.0
-    max_isotope_A_contribution_closure = 0.0
+    max_P0_spectrum_closure = 0.0
+    max_isotope_P0_contribution_closure = 0.0
     max_draw_nonfinite = 0
     for benchmark, energies in energies_by_benchmark.items():
         if len(energies) < 2:
@@ -250,7 +250,7 @@ def run(
             draw_rates = np.zeros((n_draws, len(energies)), dtype=float)
             energy_index = {energy: i for i, energy in enumerate(energies)}
             for ER in energies:
-                reconstructed_A_rate = 0.0
+                reconstructed_P0_rate = 0.0
                 for row in isotope_groups[(benchmark, ER)]:
                     R_A = response_for_scenario(row, scenario)
                     base_kernel = number(row, "kernel_halo_integral_GeV")
@@ -264,24 +264,24 @@ def run(
                     a_contribution = (
                         prefactor * atom_fraction * base_kernel * R_A / denominator
                     )
-                    reconstructed_A_rate += a_contribution
+                    reconstructed_P0_rate += a_contribution
                     stored_key = (benchmark, scenario, ER, A)
                     stored_isotope = b_isotope_lookup[stored_key]
-                    stored_A_contribution = number(
-                        stored_isotope, "rate_A_contribution_events_kg_day_keV"
+                    stored_P0_contribution = number(
+                        stored_isotope, "rate_P0_contribution_events_kg_day_keV"
                     )
                     isotope_closure = (
-                        abs(a_contribution/stored_A_contribution-1.0)
-                        if stored_A_contribution > 0.0 else (
+                        abs(a_contribution/stored_P0_contribution-1.0)
+                        if stored_P0_contribution > 0.0 else (
                             0.0 if a_contribution == 0.0 else math.inf
                         )
                     )
-                    max_isotope_A_contribution_closure = max(
-                        max_isotope_A_contribution_closure, isotope_closure
+                    max_isotope_P0_contribution_closure = max(
+                        max_isotope_P0_contribution_closure, isotope_closure
                     )
                     if isotope_closure > closure_tolerance:
                         raise ArithmeticError(
-                            f"{benchmark}/{scenario}/{ER}/Xe-{A}: isotope A contribution "
+                            f"{benchmark}/{scenario}/{ER}/Xe-{A}: isotope P0 contribution "
                             f"does not close ({isotope_closure:.6e})"
                         )
                     q2 = 2.0*mA*ER*1.0e-6
@@ -290,20 +290,20 @@ def run(
                         a_contribution * multiplier_draws[:, idx]
                     )
 
-                source_A_rate = number(
+                source_P0_rate = number(
                     source_spectrum_lookup[(benchmark, scenario, ER)],
                     "rate_events_kg_day_keV",
                 )
                 spectrum_closure = (
-                    abs(reconstructed_A_rate/source_A_rate-1.0)
-                    if source_A_rate > 0.0 else (
-                        0.0 if reconstructed_A_rate == 0.0 else math.inf
+                    abs(reconstructed_P0_rate/source_P0_rate-1.0)
+                    if source_P0_rate > 0.0 else (
+                        0.0 if reconstructed_P0_rate == 0.0 else math.inf
                     )
                 )
-                max_A_spectrum_closure = max(max_A_spectrum_closure, spectrum_closure)
+                max_P0_spectrum_closure = max(max_P0_spectrum_closure, spectrum_closure)
                 if spectrum_closure > closure_tolerance:
                     raise ArithmeticError(
-                        f"{benchmark}/{scenario}/{ER}: reconstructed A spectrum "
+                        f"{benchmark}/{scenario}/{ER}: reconstructed P0 spectrum "
                         f"does not close ({spectrum_closure:.6e})"
                     )
 
@@ -392,8 +392,8 @@ def run(
         },
         "validation": {
             "maximum_central_detector_yield_closure_relative_difference": max_central_closure,
-            "maximum_A_spectrum_reconstruction_relative_difference": max_A_spectrum_closure,
-            "maximum_isotope_A_contribution_relative_difference": max_isotope_A_contribution_closure,
+            "maximum_P0_spectrum_reconstruction_relative_difference": max_P0_spectrum_closure,
+            "maximum_isotope_P0_contribution_relative_difference": max_isotope_P0_contribution_closure,
             "central_detector_yield_closure_tolerance": closure_tolerance,
             "nonfinite_draw_count": max_draw_nonfinite,
         },
