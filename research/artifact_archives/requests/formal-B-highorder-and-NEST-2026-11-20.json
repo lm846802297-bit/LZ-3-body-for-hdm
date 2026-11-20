@@ -40,5 +40,6 @@
     "halo_highorder_commit": "aabaf2f2c8ecb1b9de28cf29c13cc1f92fa10f83",
     "formal_B_reweight_commit": "9a9a17467d903eb9059704337c9cbe05bcabbafc",
     "NEST_commit": "541b6430dae6ea289cf110c99f174a9187f7fdee"
-  }
+  },
+  "archive_version": 2
 }
