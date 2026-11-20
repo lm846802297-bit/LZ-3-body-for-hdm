@@ -6,6 +6,7 @@ on:
       - main
     paths:
       - research/lz_detector_response/fold_lz_2026_three_body_B_event_weighted_response.py
+      - research/lz_detector_response/fold_lz_2026_three_body_B_event_weighted_kernel.py
       - research/lz_detector_response/tests/test_lz_2026_B_event_weighted_fold.py
       - .github/workflows/lz-2026-B-baseline-nest-fold.yml
       - research/lz_detector_response/lz_2026_extended_nr/LZ_2026_B_BASELINE_NEST_EVENT_WEIGHTED_FOLD.md
@@ -14,6 +15,7 @@ on:
       - main
     paths:
       - research/lz_detector_response/fold_lz_2026_three_body_B_event_weighted_response.py
+      - research/lz_detector_response/fold_lz_2026_three_body_B_event_weighted_kernel.py
       - research/lz_detector_response/tests/test_lz_2026_B_event_weighted_fold.py
       - .github/workflows/lz-2026-B-baseline-nest-fold.yml
       - research/lz_detector_response/lz_2026_extended_nr/LZ_2026_B_BASELINE_NEST_EVENT_WEIGHTED_FOLD.md
