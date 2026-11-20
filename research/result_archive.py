@@ -186,6 +186,8 @@ def write_result_records(*, repo_root: Path, out_dir: Path, metadata: dict[str, 
         f"- Validation status: **{vstatus.upper()}**\n"
         f"- Scientific status: **{scientific_status}**\n\n"
         "Original physics CSV and metadata files are preserved byte-for-byte. "
+        "The pre-standard checksum list is retained as SHA256SUMS.physics-<run_id>.txt. "
+        "Run sha256sum -c SHA256SUMS.txt from this directory to verify the complete archive. "
         "These records document provenance, results, and checks; they do not alter "
         "the amplitude, phase-space integration, AFH responses, isotope weights, or halo fold.\n\n"
         f"Interpretation: {interpretation}\n", encoding="utf-8")
