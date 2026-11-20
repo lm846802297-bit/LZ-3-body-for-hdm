@@ -1,6 +1,6 @@
 # Formal B reweight of the PR86 threshold-energy seven-isotope halo scan
 
-**Status:** local numerical calculation completed and checksum-verified; independent GitHub reproduction is configured to run on this pull request.  
+**Status:** local calculation and independent GitHub reproduction both PASS; native GitHub artifact downloaded and compared against local outputs.  
 **Date:** 2026-11-20  
 **Input:** PR86 high-order 5--800 keV scan using the unified exact threshold-energy \(u^2\) map.  
 **Output:** formal B finite-nucleon correction applied to all seven isotope contributions and the natural-xenon total.
@@ -157,3 +157,13 @@ The workflow additionally writes RUN_MANIFEST.json and SHA256SUMS and uploads th
 3. The natural-xenon ratio changes only through isotope reweighting, by at most \(1.61\times10^{-5}\) percentage points in the candidate interval.
 4. The three-body phase-space comparison remains a robust statement; the important B effect is the absolute rate normalization.
 5. This is a zero-width numerical-comparison benchmark. It does not replace the formal finite-pole-width production calculation or the separate NEST detector-response fold.
+
+
+### Independent GitHub reproduction: PASS
+
+The independent workflow [44672770451](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44672770451) completed successfully. All 19 existing B-baseline regression tests passed. The three model reweightings, row-count checks, isotope cancellation, natural-xenon error shifts, and covariance-width gates also passed.
+
+The workflow uploaded artifact 14599834070, pr86-formal-B-halo-reweight, with SHA-256:
+05368fa13890932bed0124a651de53a998570524a70d3fe33a6992d1610f1bd9.
+
+I downloaded the GitHub artifact and compared all six numeric CSV outputs against the local 3,000-draw calculation. The largest relative difference in any finite numeric CSV field is below (4.6\times10^{-13}); the largest absolute difference in the exact spatial-transfer column is (1.11\times10^{-16}\,\mathrm{GeV}^2). The independently generated artifact's own SHA256SUMS check also passes. The local calculation and GitHub reproduction therefore agree to floating-point precision.
