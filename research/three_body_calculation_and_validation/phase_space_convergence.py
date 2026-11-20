@@ -763,6 +763,18 @@ def main():
             for name, item in metadata.get("outputs", {}).items()
         )
         checks.append({
+            "check_id": "EQ6-PHASESPACE-SCAN-ACCEPTANCE",
+            "name": "Mode-specific phase-space quadrature acceptance",
+            "category": "convergence",
+            "status": "inconclusive",
+            "method": "Archive the mode-resolved mapping, angular, threshold, historical-anchor and near-pole scans without collapsing different benchmarks/orders into one tolerance.",
+            "observed": len(results),
+            "threshold": "review mode-specific residuals and the dedicated regression suite",
+            "unit": "modes",
+            "evidence_path": metadata_path.relative_to(ROOT).as_posix(),
+            "notes": "The scan output is retained as numerical evidence; this run does not execute the independent unittest suite or assign a universal tolerance to every scan row.",
+        })
+        checks.append({
             "check_id": "EQ6-PHASESPACE-OUTPUT-HASHES",
             "name": "Phase-space output hashes match run metadata",
             "category": "integrity",
