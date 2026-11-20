@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
-"""Compare pointlike Dirac P, zero-transfer A, and finite-form-factor B.
+"""Compare four nucleon-current baselines P0, P, A0 and B.
 
-All three baselines use the same isotope-resolved three-body/halo kernels and
-the same finite-size AFH W_M response. The formal impulse prescription is
-q_N^mu=q_A^mu and t_N=t_A=-2*m_A*E_R. The exact spatial Q_A^2 remains the
-AFH Fourier variable and is not substituted into the nucleon form factors.
+All four use the same isotope-resolved three-body/halo kernels and finite-size
+AFH W_M response. P0 is the archived leading-order charge-only rate; P is
+pointlike Dirac with the recoil matching term; A0 freezes F1,F2 at zero
+transfer while retaining F2(0); B uses finite Borah/strange form factors.
+The formal impulse prescription is t_N=t_A=-2*m_A*E_R. Exact spatial Q_A^2
+is retained separately for the AFH Fourier variable.
 """
 from __future__ import annotations
 
@@ -54,10 +56,6 @@ TONNE_YEAR_TO_KG_DAY = 1000.0 * 365.25
 DEFAULT_ROI_MIN_KEV = 5.4
 DEFAULT_ROI_MAX_KEV = 269.9
 DEFAULT_EXPOSURE_TONNE_YEAR = 2.84
-A_ZERO_TRANSFER_F1_HAT = 1.0
-A_ZERO_TRANSFER_F2_HAT = -0.184
-
-
 def write_csv(path: Path, rows: list[dict]) -> None:
     if not rows:
         raise ValueError(f"refusing to write empty CSV: {path}")
@@ -86,6 +84,23 @@ def pointlike_dirac_cM_hat(q2_form_factor_GeV2: float) -> float:
     if not math.isfinite(q2_form_factor_GeV2) or q2_form_factor_GeV2 < 0.0:
         raise ValueError("invalid -t_N")
     return 1.0 - q2_form_factor_GeV2 / (8.0 * MAVG_GEV**2)
+
+
+def zero_transfer_pauli_hat(strange_model: str) -> float:
+    """A0: return F2hat(0) for the selected unit-strange-current input."""
+    ff0 = cM_and_factor(np.asarray([0.0]), strange_model)
+    return float(ff0["F2uds"][0] / 3.0)
+
+
+def zero_transfer_pauli_cM_hat(
+    q2_form_factor_GeV2: float, f2hat0: float
+) -> float:
+    """A0: freeze F1,F2 at zero transfer, but retain the actual t_N recoil term."""
+    if not math.isfinite(q2_form_factor_GeV2) or q2_form_factor_GeV2 < 0.0:
+        raise ValueError("invalid -t_N")
+    if not math.isfinite(f2hat0):
+        raise ValueError("invalid zero-transfer Pauli form factor")
+    return 1.0 - q2_form_factor_GeV2 / (8.0 * MAVG_GEV**2) * (1.0 + 2.0*f2hat0)
 
 
 def read_keyed_spectrum(rows: list[dict[str, str]]) -> dict[tuple[str, str, float], dict]:
@@ -162,6 +177,10 @@ def run(
         model: cM_and_factor(np.asarray(q2_values), model)
         for model in MODELS
     }
+    zero_transfer_f2hat = {
+        model: zero_transfer_pauli_hat(model)
+        for model in MODELS
+    }
 
     efficiency_x, efficiency_central, efficiency_lower, efficiency_upper = (
         read_efficiency_curves(efficiency_csv)
@@ -188,12 +207,13 @@ def run(
                 raise ValueError(f"{benchmark}/{scenario}: incomplete recoil grid")
 
             rate_series = {
-                model: {"A": [], "P": [], "B": []}
+                model: {"P0": [], "P": [], "A0": [], "B": []}
                 for model in MODELS
             }
             for ER in energies:
-                isotope_A_sum = 0.0
+                isotope_P0_sum = 0.0
                 isotope_P_sum = 0.0
+                isotope_A0_sums = {model: 0.0 for model in MODELS}
                 isotope_B_sums = {model: 0.0 for model in MODELS}
 
                 rows = isotope_groups.get((benchmark, ER), [])
@@ -219,12 +239,11 @@ def run(
                             prefactor * atom_fraction * kernel * response / denominator
                         )
 
-                    # A is the zero-transfer nucleon-current reference:
-                    # Fhat_1(0)=1, Fhat_2(0)=-0.184, hence cM(0)=1.
-                    A_contribution = base_contribution
+                    # P0 is the archived leading-order charge-only baseline.
+                    # It is not the zero-transfer Dirac-Pauli A0 approximation.
+                    P0_contribution = base_contribution
 
-                    # P is a pointlike Dirac nucleon at the physical transfer:
-                    # Fhat_1=1, Fhat_2=0, with the same formal c_M matching.
+                    # P: pointlike Dirac current, including its recoil term.
                     cM_P = pointlike_dirac_cM_hat(q2_form_factor)
                     P_multiplier = cM_P * cM_P
                     P_contribution = base_contribution * P_multiplier
@@ -236,9 +255,23 @@ def run(
                         cM_B_hat = float(ff["F_M"][index])
                         B_multiplier = cM_B_hat * cM_B_hat
                         B_contribution = base_contribution * B_multiplier
+
+                        f2hat0 = zero_transfer_f2hat[model]
+                        cM_A0 = zero_transfer_pauli_cM_hat(
+                            q2_form_factor, f2hat0
+                        )
+                        A0_multiplier = cM_A0 * cM_A0
+                        A0_contribution = base_contribution * A0_multiplier
+
+                        isotope_A0_sums[model] += A0_contribution
                         isotope_B_sums[model] += B_contribution
                         isotope_model_records.append({
                             "strange_form_factor_model": model,
+                            "F1hat_A0": 1.0,
+                            "F2hat_A0": f2hat0,
+                            "cMhat_A0": cM_A0,
+                            "A0_rate_multiplier": A0_multiplier,
+                            "rate_A0_contribution_events_kg_day_keV": A0_contribution,
                             "F1hat_B": float(ff["F1uds"][index] / 3.0),
                             "F2hat_B": float(ff["F2uds"][index] / 3.0),
                             "cMhat_B": cM_B_hat,
@@ -246,7 +279,7 @@ def run(
                             "rate_B_contribution_events_kg_day_keV": B_contribution,
                         })
 
-                    isotope_A_sum += A_contribution
+                    isotope_P0_sum += P0_contribution
                     isotope_P_sum += P_contribution
 
                     for model_record in isotope_model_records:
@@ -265,59 +298,68 @@ def run(
                             "AFH_response_model": scenario,
                             "AFH_response_value": response,
                             "kernel_halo_integral_GeV": kernel,
-                            "rate_A_contribution_events_kg_day_keV": A_contribution,
+                            "rate_P0_contribution_events_kg_day_keV": P0_contribution,
+                            "F1hat_P0": 1.0,
+                            "F2hat_P0": 0.0,
+                            "cMhat_P0": 1.0,
+                            "P0_rate_multiplier": 1.0,
+                            "rate_P_contribution_events_kg_day_keV": P_contribution,
                             "F1hat_P": 1.0,
                             "F2hat_P": 0.0,
                             "cMhat_P": cM_P,
                             "P_rate_multiplier": P_multiplier,
-                            "rate_P_contribution_events_kg_day_keV": P_contribution,
-                            "F1hat_A": A_ZERO_TRANSFER_F1_HAT,
-                            "F2hat_A": A_ZERO_TRANSFER_F2_HAT,
-                            "cMhat_A": 1.0,
                             **model_record,
                         })
 
-                source_A = number(
+                source_P0 = number(
                     spectrum_lookup[(benchmark, scenario, ER)],
                     "rate_events_kg_day_keV",
                 )
                 closure = (
-                    abs(isotope_A_sum / source_A - 1.0)
-                    if source_A > 0.0
-                    else (0.0 if isotope_A_sum == 0.0 else math.inf)
+                    abs(isotope_P0_sum / source_P0 - 1.0)
+                    if source_P0 > 0.0
+                    else (0.0 if isotope_P0_sum == 0.0 else math.inf)
                 )
                 if closure > max_A_closure:
                     max_A_closure = closure
                     max_A_closure_key = (benchmark, scenario, ER)
                 if closure > closure_tolerance:
                     raise ArithmeticError(
-                        f"A reconstruction failed for {benchmark}/{scenario}/{ER}: "
+                        f"P0 reconstruction failed for {benchmark}/{scenario}/{ER}: "
                         f"{closure:.6e} > {closure_tolerance:.6e}"
                     )
 
                 for model in MODELS:
+                    P0_rate = isotope_P0_sum
+                    P_rate = isotope_P_sum
+                    A0_rate = isotope_A0_sums[model]
                     B_rate = isotope_B_sums[model]
-                    rate_series[model]["A"].append(isotope_A_sum)
-                    rate_series[model]["P"].append(isotope_P_sum)
+                    rate_series[model]["P0"].append(P0_rate)
+                    rate_series[model]["P"].append(P_rate)
+                    rate_series[model]["A0"].append(A0_rate)
                     rate_series[model]["B"].append(B_rate)
                     output_spectrum_rows.append({
                         "benchmark": benchmark,
                         "scenario": scenario,
                         "strange_form_factor_model": model,
                         "ER_keV": ER,
-                        "rate_A_events_kg_day_keV": isotope_A_sum,
-                        "rate_P_events_kg_day_keV": isotope_P_sum,
+                        "rate_P0_events_kg_day_keV": P0_rate,
+                        "rate_P_events_kg_day_keV": P_rate,
+                        "rate_A0_events_kg_day_keV": A0_rate,
                         "rate_B_events_kg_day_keV": B_rate,
-                        "P_over_A_rate": isotope_P_sum / isotope_A_sum if isotope_A_sum > 0 else 1.0,
-                        "B_over_A_rate": B_rate / isotope_A_sum if isotope_A_sum > 0 else 1.0,
-                        "B_over_P_rate": B_rate / isotope_P_sum if isotope_P_sum > 0 else 1.0,
+                        "P_over_P0_rate": P_rate / P0_rate if P0_rate > 0 else 1.0,
+                        "A0_over_P_rate": A0_rate / P_rate if P_rate > 0 else 1.0,
+                        "B_over_A0_rate": B_rate / A0_rate if A0_rate > 0 else 1.0,
+                        "B_over_P0_rate": B_rate / P0_rate if P0_rate > 0 else 1.0,
+                        "B_over_P_rate": B_rate / P_rate if P_rate > 0 else 1.0,
+                        "F2hat_A0": zero_transfer_f2hat[model],
                         "coupling_product_squared": coupling_sq,
                     })
 
             for model in MODELS:
                 series = rate_series[model]
                 detector_integrals = {}
-                for baseline in ("A", "P", "B"):
+                for baseline in ("P0", "P", "A0", "B"):
                     raw, weighted = integrate_piecewise_linear_product(
                         energies,
                         series[baseline],
@@ -332,29 +374,42 @@ def run(
                         "expected_events": weighted * exposure_kg_day,
                     }
 
-                A_events = detector_integrals["A"]["expected_events"]
-                P_events = detector_integrals["P"]["expected_events"]
-                B_events = detector_integrals["B"]["expected_events"]
+                events = {
+                    baseline: detector_integrals[baseline]["expected_events"]
+                    for baseline in ("P0", "P", "A0", "B")
+                }
+                p0_events = events["P0"]
+                p_events = events["P"]
+                a0_events = events["A0"]
+                b_events = events["B"]
                 output_detector_rows.append({
                     "benchmark": benchmark,
                     "scenario": scenario,
                     "strange_form_factor_model": model,
+                    "F2hat_A0": zero_transfer_f2hat[model],
                     "roi_min_keV": roi_min_keV,
                     "roi_max_keV": roi_max_keV,
                     "exposure_tonne_year": exposure_tonne_year,
                     "exposure_kg_day": exposure_kg_day,
-                    "A_expected_events": A_events,
-                    "P_expected_events": P_events,
-                    "B_expected_events": B_events,
-                    "P_over_A_events": P_events / A_events if A_events > 0 else 1.0,
-                    "B_over_A_events": B_events / A_events if A_events > 0 else 1.0,
-                    "B_over_P_events": B_events / P_events if P_events > 0 else 1.0,
-                    "A_raw_integral_events_kg_day": detector_integrals["A"]["raw_integral_events_kg_day"],
-                    "P_raw_integral_events_kg_day": detector_integrals["P"]["raw_integral_events_kg_day"],
-                    "B_raw_integral_events_kg_day": detector_integrals["B"]["raw_integral_events_kg_day"],
-                    "A_efficiency_weighted_integral_events_kg_day": detector_integrals["A"]["efficiency_weighted_integral_events_kg_day"],
-                    "P_efficiency_weighted_integral_events_kg_day": detector_integrals["P"]["efficiency_weighted_integral_events_kg_day"],
-                    "B_efficiency_weighted_integral_events_kg_day": detector_integrals["B"]["efficiency_weighted_integral_events_kg_day"],
+                    "P0_expected_events": p0_events,
+                    "P_expected_events": p_events,
+                    "A0_expected_events": a0_events,
+                    "B_expected_events": b_events,
+                    "P_over_P0_events": p_events / p0_events if p0_events > 0 else 1.0,
+                    "A0_over_P_events": a0_events / p_events if p_events > 0 else 1.0,
+                    "B_over_A0_events": b_events / a0_events if a0_events > 0 else 1.0,
+                    "B_over_P0_events": b_events / p0_events if p0_events > 0 else 1.0,
+                    "B_over_P_events": b_events / p_events if p_events > 0 else 1.0,
+                    **{
+                        f"{baseline}_raw_integral_events_kg_day":
+                            detector_integrals[baseline]["raw_integral_events_kg_day"]
+                        for baseline in ("P0", "P", "A0", "B")
+                    },
+                    **{
+                        f"{baseline}_efficiency_weighted_integral_events_kg_day":
+                            detector_integrals[baseline]["efficiency_weighted_integral_events_kg_day"]
+                        for baseline in ("P0", "P", "A0", "B")
+                    },
                     "coupling_product_squared": coupling_sq,
                     "detector_efficiency_curve": "LZ 2026 Fig. S2 central final-WIMP-search-ROI NR efficiency",
                     "energy_resolution_smearing_applied": False,
@@ -362,21 +417,23 @@ def run(
                 })
 
     out_dir.mkdir(parents=True, exist_ok=True)
-    spectrum_out = out_dir / "pointlike_A_B_natural_xenon_spectrum.csv"
-    isotope_out = out_dir / "pointlike_A_B_isotope_contributions.csv"
-    detector_out = out_dir / "pointlike_A_B_detector_yields.csv"
+    spectrum_out = out_dir / "nucleon_P0_P_A0_B_natural_xenon_spectrum.csv"
+    isotope_out = out_dir / "nucleon_P0_P_A0_B_isotope_contributions.csv"
+    detector_out = out_dir / "nucleon_P0_P_A0_B_detector_yields.csv"
     write_csv(spectrum_out, output_spectrum_rows)
     write_csv(isotope_out, output_isotope_rows)
     write_csv(detector_out, output_detector_rows)
 
     metadata = {
         "status": "PASS",
-        "calculation": "pointlike Dirac P versus zero-transfer A and finite-form-factor B, applied to archived AFH-7/Hybrid-9 three-body halo kernels",
+        "calculation": "four-level P0/P/A0/B nucleon-current comparison applied to archived AFH-7/Hybrid-9 three-body halo kernels",
         "baseline_definitions": {
+            "P0": "archived leading-order charge-only baseline: Fhat_1=1, Fhat_2=0, cMhat=1; the legacy source spectrum labelled A is P0",
             "P": "pointlike Dirac nucleon: Fhat_1=1, Fhat_2=0, cMhat=1+t_N/(8*m_N^2)",
-            "A": "zero-transfer nucleon-current reference: Fhat_1(0)=1, Fhat_2(0)=-0.184, t_N=0 and cMhat=1",
+            "A0": "zero-transfer form factors frozen at Fhat_1(0)=1 and model-specific Fhat_2(0), retaining the physical t_N recoil term",
             "B": "finite Borah-2020 proton/neutron Dirac-Pauli form factors plus the selected unit-strange-current input, evaluated at t_N=t_A",
         },
+        "zero_transfer_pauli_inputs": zero_transfer_f2hat,
         "normalization": {
             "raw_universal_uds_form_factors_divided_by": 3,
             "external_coupling_convention": "g_VN=3*g_Vq",
@@ -412,9 +469,9 @@ def run(
             "efficiency_sha256": sha256(efficiency_csv),
         },
         "validation": {
-            "maximum_A_reconstruction_relative_difference": max_A_closure,
-            "maximum_A_reconstruction_key": list(max_A_closure_key) if max_A_closure_key else None,
-            "A_reconstruction_tolerance": closure_tolerance,
+            "maximum_P0_reconstruction_relative_difference": max_A_closure,
+            "maximum_P0_reconstruction_key": list(max_A_closure_key) if max_A_closure_key else None,
+            "P0_reconstruction_tolerance": closure_tolerance,
             "recoil_points_per_benchmark_scenario": len({
                 number(row, "ER_keV") for row in source_spectrum
                 if row["benchmark"] == benchmarks[0] and row["scenario"] == SCENARIOS[0]
