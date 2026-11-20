@@ -14,6 +14,8 @@ import hashlib
 import json
 import math
 import sys
+import time
+from datetime import datetime, timezone
 from pathlib import Path
 
 import numpy as np
@@ -25,6 +27,8 @@ ROOT = HERE.parents[1]
 FIG_DIR = ROOT / "research" / "three_body_calculation_and_validation"
 sys.path.insert(0, str(FIG_DIR))
 sys.path.insert(0, str(HERE))
+sys.path.insert(0, str(ROOT / "research"))
+from result_archive import write_result_records  # noqa: E402
 
 import eq6_kernel as eq6  # noqa: E402
 from generate_afh_default_xenon_response_grid import (  # noqa: E402
@@ -455,7 +459,13 @@ def build_response_tables(
     return response_lookup, response_rows, response_summaries
 
 
+def relative_to_root(path: Path) -> str:
+    return path.resolve().relative_to(ROOT.resolve()).as_posix()
+
+
 def run(args: argparse.Namespace) -> dict:
+    started_at = datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    started_monotonic = time.monotonic()
     args.outdir.mkdir(parents=True, exist_ok=True)
     energies = recoil_grid(
         args.er_min_keV, args.er_max_keV, args.er_step_keV,
@@ -778,6 +788,138 @@ def run(args: argparse.Namespace) -> dict:
         f"{sha256_file(path)}  {path.name}\n" for path in output_files
     )
     (args.outdir / "SHA256SUMS.txt").write_text(manifest, encoding="utf-8")
+    if getattr(args, "standard_archive", False):
+        response_inputs = [
+            args.response_dir / f"afh_default_xe{A}_response_2401.csv"
+            for A in AFH_ISOTOPES
+        ]
+        input_paths = [
+            (args.afh_source, "Official AFH v6.0 source package", "AFH v6.0 source file"),
+            (args.weights, "Natural-xenon isotope weights", "Repository isotope-abundance input"),
+        ] + [
+            (path, f"AFH Xe-{A} response grid", "Precomputed AFH response input grid")
+            for A, path in zip(AFH_ISOTOPES, response_inputs)
+        ]
+        speed_diff = metadata["quadrature"].get("max_speed_relative_difference")
+        kernel_diff = metadata["quadrature"].get("max_kernel_relative_difference")
+        tolerance = float(metadata["quadrature"]["relative_tolerance"])
+        pchip_diff = float(metadata["AFH_PCHIP_comparison"]["max_absolute_direct_minus_PCHIP_over_A2"])
+        checks = [
+            {
+                "check_id": "LZ-AFH-SPEED-QUADRATURE",
+                "name": "Halo-speed quadrature refinement",
+                "category": "convergence",
+                "status": "not_run" if speed_diff is None else ("passed" if speed_diff <= tolerance else "failed"),
+                "method": "Compare configured low/final speed quadrature orders.",
+                "observed": speed_diff,
+                "threshold": tolerance,
+                "unit": "1",
+                "evidence_path": relative_to_root(check_path),
+            },
+            {
+                "check_id": "LZ-EQ6-KERNEL-QUADRATURE",
+                "name": "Three-body kernel quadrature refinement",
+                "category": "convergence",
+                "status": "not_run" if kernel_diff is None else ("passed" if kernel_diff <= tolerance else "failed"),
+                "method": "Compare configured low/high W^2, z and phi quadrature orders.",
+                "observed": kernel_diff,
+                "threshold": tolerance,
+                "unit": "1",
+                "evidence_path": relative_to_root(check_path),
+            },
+            {
+                "check_id": "LZ-AFH-PCHIP-DIAGNOSTIC",
+                "name": "Direct AFH response versus PCHIP diagnostic",
+                "category": "regression",
+                "status": "passed" if pchip_diff <= 5.0e-4 else "failed",
+                "method": "Maximum absolute direct-minus-PCHIP response difference divided by A^2; PCHIP is diagnostic only.",
+                "observed": pchip_diff,
+                "threshold": 5.0e-4,
+                "unit": "1",
+                "evidence_path": relative_to_root(response_path),
+            },
+            {
+                "check_id": "LZ-AFH-INPUT-HASHES",
+                "name": "AFH source and isotope input provenance",
+                "category": "integrity",
+                "status": "passed" if (
+                    sha256_file(args.afh_source) == metadata["afh_source_sha256"]
+                    and sha256_file(args.weights) == metadata["isotope_weights_sha256"]
+                    and all(sha256_file(path) == metadata["response_grid_files"][str(A)]
+                            for A, path in zip(AFH_ISOTOPES, response_inputs))
+                ) else "failed",
+                "method": "Recompute SHA-256 for AFH source, isotope weights and all seven AFH response grids.",
+                "observed": "all input hashes match",
+                "threshold": "exact SHA-256 match",
+                "unit": "sha256",
+                "evidence_path": relative_to_root(metadata_path),
+            },
+            {
+                "check_id": "LZ-AFH-OUTPUT-ROWS",
+                "name": "Output row counts match run metadata",
+                "category": "integrity",
+                "status": "passed" if all([
+                    len(response_rows) == metadata["row_counts"]["response_model_comparison"],
+                    len(kernel_rows) == metadata["row_counts"]["isotope_kernel_integrals"],
+                    len(spectrum_rows) == metadata["row_counts"]["natural_xenon_spectra"],
+                    len(quadrature_rows) == metadata["row_counts"]["quadrature_crosschecks"],
+                ]) else "failed",
+                "method": "Compare in-memory row counts with the recorded metadata counts.",
+                "observed": metadata["row_counts"],
+                "threshold": "exact row-count equality",
+                "unit": "rows",
+                "evidence_path": relative_to_root(metadata_path),
+            },
+        ]
+        observables = [
+            {"name": "response_model_comparison_rows", "value": len(response_rows), "unit": "rows",
+             "status": "computed", "definition": "Rows in the isotope/recoil AFH-vs-Helm response comparison table."},
+            {"name": "isotope_kernel_integral_rows", "value": len(kernel_rows), "unit": "rows",
+             "status": "computed", "definition": "Rows in the isotope-resolved three-body kernel and halo integral table."},
+            {"name": "natural_xenon_spectrum_rows", "value": len(spectrum_rows), "unit": "rows",
+             "status": "computed", "definition": "Rows in the pre-detector natural-xenon recoil spectra."},
+            {"name": "max_speed_quadrature_relative_difference", "value": speed_diff, "unit": "1",
+             "status": "computed" if speed_diff is not None else "not_computed",
+             "definition": "Maximum speed-order refinement difference."},
+            {"name": "max_kernel_quadrature_relative_difference", "value": kernel_diff, "unit": "1",
+             "status": "computed" if kernel_diff is not None else "not_computed",
+             "definition": "Maximum three-body kernel-order refinement difference."},
+            {"name": "AFH7_natural_abundance_coverage", "value": metadata["natural_atom_fraction_AFH7"], "unit": "1",
+             "status": "computed", "definition": "Natural atom-fraction coverage of the seven AFH-supported isotopes; no renormalization."},
+        ]
+        write_result_records(
+            repo_root=ROOT, out_dir=args.outdir, metadata=metadata,
+            source_script=Path(__file__).resolve(), started_at=started_at,
+            started_monotonic=started_monotonic, input_paths=input_paths,
+            output_paths=[
+                (response_path, "AFH and Helm isotope-response comparison"),
+                (kernel_path, "isotope-resolved three-body kernel and halo integrals"),
+                (spectrum_path, "pre-detector natural-xenon recoil spectra"),
+                (check_path, "three-body and halo quadrature crosschecks"),
+                (metadata_path, "original AFH-7/Hybrid-9 calculation metadata"),
+                (args.outdir / "SHA256SUMS.txt", "original output SHA-256 manifest"),
+            ],
+            checks=checks, observables=observables,
+            scope_included=[
+                "three-body Eq. (6) phase-space kernel",
+                "direct AFH v6.0 finite-sum responses at exact spatial q",
+                "seven-isotope AFH natural-xenon rate and separately labelled Helm diagnostics",
+                "truncated Standard Halo Model fold",
+            ],
+            scope_excluded=metadata["not_included"],
+            assumptions=[
+                "Xe-124 and Xe-126 are omitted from AFH-7 because default AFH matrices are unavailable.",
+                "The seven-isotope AFH natural abundances are not renormalized.",
+                "Helm fallback contributions are kept in the separately labelled Hybrid-9 scenario.",
+                "Detector response, energy smearing, exposure and likelihood are not included.",
+            ],
+            scientific_status="provisional",
+            interpretation=(
+                "This is a pre-detector natural-xenon theory-rate calculation. "
+                "AFH-7 and Hybrid-9 remain distinct nuclear-response scenarios; "
+                "the archive does not promote rate-level output to a detector likelihood."
+            ),
+        )
     print(json.dumps(metadata, indent=2))
     return metadata
 
@@ -822,7 +964,12 @@ def main() -> None:
     parser.add_argument("--nphi-high", type=int, default=8)
     parser.add_argument("--max-relative-check", type=float, default=5.0e-3)
     parser.add_argument("--skip-crosschecks", action="store_true")
+    parser.add_argument(
+        "--no-standard-archive", action="store_true",
+        help="skip v1.0.0 run/result/validation JSON generation (default: generate it)",
+    )
     args = parser.parse_args()
+    args.standard_archive = not args.no_standard_archive
     run(args)
 
 
