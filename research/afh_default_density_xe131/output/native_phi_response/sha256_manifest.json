@@ -1,0 +1,22 @@
+{
+  "run_date_local": "2026-11-18 Asia/Shanghai",
+  "engine": "WolframScript 1.12.0 for Microsoft Windows (64-bit)",
+  "files": {
+    "runner_wls": {
+      "path": "research/afh_default_density_xe131/run_native_phi_responses_xe131.wls",
+      "sha256": "b4bc19ea352143e5ddefd2cdb461f2e0dea34cacda7747c29b036b31b1b286a8"
+    },
+    "native_csv": {
+      "path": "research/afh_default_density_xe131/output/native_phi_response/afh_xe131_phi_responses_native.csv",
+      "sha256": "99c6e7989c296a2bb4bb3848375ed1090d81a7c549b268397ea812ba23127ddd"
+    },
+    "metadata": {
+      "path": "research/afh_default_density_xe131/output/native_phi_response/metadata.txt",
+      "sha256": "29d3a4e5ab29a20bae937a7367f7158b44b5e38a276c288e92cc4b2353ece1bf"
+    },
+    "afh_source": {
+      "path": "v6/dmformfactor-V6.m",
+      "sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372"
+    }
+  }
+}

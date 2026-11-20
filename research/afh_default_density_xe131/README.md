@@ -6,6 +6,7 @@
 - `audit/`: normalization, momentum-convention, and AME2020 audit reports/scripts.
 - `tests/`: Xe-131 response, four-benchmark, and AME2020 regression tests.
 - `output/`: response grids, canonical cross sections, native Mathematica audit, and historical diagnostics.
+- [`output/native_phi_response/`](output/native_phi_response/README.md): preserved local 2026-11-18 raw Phi response export, its comparison to the existing grid, and a runner provenance discrepancy.
 - Study-root Python/Wolfram files remain stable calculation entry points because existing workflows call these paths directly.
 
 ## Adopted source input

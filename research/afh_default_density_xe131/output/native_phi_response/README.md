@@ -1,0 +1,9 @@
+# Historical local Xe-131 native Phi response export
+
+This directory preserves the locally delivered raw AFH Xe-131 response table and its original metadata and SHA-256 manifest. The manifest records a 2026-11-18 run using WolframScript 1.12.0 and AFH v6.0. The recorded CSV, metadata and AFH-source hashes match the preserved files.
+
+The recorded runner hash (`b4bc19ea352143e5ddefd2cdb461f2e0dea34cacda7747c29b036b31b1b286a8`) does **not** match the currently delivered `../../run_native_phi_responses_xe131.wls` (`c9e3f63a4d168e6dd055232a366d1dc3a8570a7361b3fd22cf359ed6495fb4cc`). The exact runner used for the table is not established. In the delivered runner, `ClearAll["Global`*"]` follows the definition of the xenon-mass function, so the script must be corrected and separately checked before attempting reproduction. The legacy recoil-energy column is labelled with the historical A-times-u convention; do not infer that the table was generated with the AME2020 mass function in the delivered script.
+
+The 2,401 q, y, W_M, W_PhiPP and W_M_PhiPP values match the corresponding columns in the existing `../phi_response_native/afh_default_xe131_M_PhiPP_native.csv` exactly as CSV strings. This is a consistency comparison of stored data, not an independent native calculation. The existing archive also records physical normalization and a separate validation. The local export adds a legacy recoil-energy and Cauchy-Schwarz excess column; no new full-current or detector-level validation is implied.
+
+Two other locally delivered files, `../../run_afh_phi_response_xe131.wls` and `../../validate_afh_phi_response.py`, are byte-identical to their Git history versions in commits `eda910ce` and `1281086d`, respectively. They target the existing `phi_response_native` output format, rather than this seven-column historical table.
