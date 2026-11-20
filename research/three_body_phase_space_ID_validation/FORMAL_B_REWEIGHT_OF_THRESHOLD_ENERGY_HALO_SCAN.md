@@ -28,6 +28,8 @@ This separation is exact at the isotope level because the finite-nucleon factor 
 | Electromagnetic form-factor source | Borah et al., Phys. Rev. D 102, 074012 (2020), arXiv:2003.13640 |
 | Strange-current alternatives | Sufian 2017; Alexandrou 2020 charge-weighted converted to unit current; Alexandrou 2026 continuum unit-current slope-only |
 
+The seven-isotope AFH input covers 99.8158% of natural xenon atom abundance. Xe-124 and Xe-126 are absent from this AFH source set; the seven isotope abundances are retained without renormalization. The source rate has nonzero support from 105 to 695 keV for this benchmark. The input is in relative-rate units, so this reweighting reports B/source-rate ratios and B-corrected relative rates rather than a newly normalized detector event rate.
+
 The input is the PR86 numerical-comparison benchmark:
 \[
 m_{\chi_1}=1\ {\rm TeV},\quad m_s=300\ {\rm keV},\quad
@@ -129,6 +131,8 @@ The 3,000-draw Borah2020 covariance propagation gives a maximum 68% interval wid
 For the Sufian 2017 input at 248 keV, the B-corrected natural-xenon full rate is \(9.06064\times10^{-5}\) at the covariance median, with p16/p84 values \(9.00426\times10^{-5}\) and \(9.11894\times10^{-5}\). This corresponds to approximately \(-0.622\%\) and \(+0.643\%\) relative to the median. The three strange-current alternatives remain separate central-value scenarios; their lattice uncertainties are not sampled.
 
 This statement concerns the correlated electromagnetic z-expansion coefficient covariance only. The three strange-current alternatives remain separate central-value scenarios.
+
+For the Sufian 2017 input at 248 keV, the B-corrected natural-xenon full rate is \(9.06064\times10^{-5}\) at the covariance median, with p16/p84 values \(9.00426\times10^{-5}\) and \(9.11894\times10^{-5}\). This is approximately \(-0.622\%\) and \(+0.643\%\) relative to the median. The three strange-current alternatives remain separate central-value scenarios; their lattice uncertainties are not sampled.
 
 ## 7. Reproduction and outputs
 
