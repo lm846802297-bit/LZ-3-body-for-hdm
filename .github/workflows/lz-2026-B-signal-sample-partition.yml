@@ -61,7 +61,7 @@ jobs:
         run: |
           set -euo pipefail
           python research/lz_detector_response/lz_2026_extended_nr/partition_lz_2026_signal_samples.py --input-root B-source --output-dir output
-          python -m unittest research/lz_detector_response.tests.test_lz_2026_B_signal_sample_partition -v
+          python -m unittest discover -s research/lz_detector_response/tests -p 'test_lz_2026_B_signal_sample_partition.py' -v
           python - <<'PY'
           import csv
           from pathlib import Path
