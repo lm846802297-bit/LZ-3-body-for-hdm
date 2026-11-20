@@ -1,6 +1,6 @@
 # Repository instructions — LZ three-body dark-matter research
 
-> **Compute execution standard:** Follow [RESEARCH_COMPUTE_POLICY.md](RESEARCH_COMPUTE_POLICY.md). Ordinary GPT chat uses ChatGPT Linux for primary calculations; Codex and ChatGPT Work use the user's Windows local environment. Use GitHub as the canonical source/result archive; reserve GitHub Actions for independent verification and CI. “Local computation” means the active mode's primary environment.
+> **Compute execution standard:** Follow [RESEARCH_COMPUTE_POLICY.md](RESEARCH_COMPUTE_POLICY.md). Ordinary GPT chat uses ChatGPT Linux; Codex/Work may use the user's Windows local environment or a GPT-managed cloud computer. Use GitHub as the canonical source/result archive; reserve GitHub Actions for independent verification and CI. “Local computation” means the active mode's primary environment.
 >
 > **Research communication standard:** Follow the canonical [project-wide decision policy](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/blob/main/AGENTS.md#research-communication-and-decision-policy) and [research reporting workflow](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/blob/main/research/WORKFLOW.md#9-research-reporting-and-communication-standard). These are maintained on `main`; do not fork or duplicate the policy text.
 
