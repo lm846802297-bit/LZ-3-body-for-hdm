@@ -449,7 +449,7 @@ def main() -> None:
             {
                 "check_id": "AFH-Q0-NORMALIZATION",
                 "name": "All seven isotope package q=0 normalizations",
-                "category": "normalization",
+                "category": "analytic",
                 "status": "passed" if max_q0_error <= 5.0e-4 else "failed",
                 "method": "Compare raw AFH package R(0) with A^2/4 before the one physical equal-pn normalization.",
                 "observed": max_q0_error,
