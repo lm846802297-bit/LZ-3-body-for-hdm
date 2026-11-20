@@ -8,7 +8,7 @@
 
 The project uses a three-part architecture with strictly separated responsibilities:
 
-1. **Primary computation — selected by the active ChatGPT work mode.** In ordinary GPT chat mode, use the ChatGPT-provided Linux Python environment. In Codex mode and ChatGPT Work mode, use the user's Windows local computer/workspace as the primary environment. Use the runtime, filesystem, CPU/GPU, and installed scientific tools actually exposed by that mode; record the exact OS, runtime, and hardware for each run.
+1. **Primary computation — selected by the actual execution target.** Ordinary GPT chat mode uses the ChatGPT-provided Linux Python environment. Codex and ChatGPT Work may execute either directly on the user's Windows computer/workspace or on a GPT-managed cloud computer (for example, a Codex cloud computer or a Work cloud computer). Identify which machine actually runs the code; do not infer it from the product or mode name alone. Use only the filesystem, CPU/GPU, memory, storage, and software actually exposed by that execution target, and record the exact environment for every run.
 2. **GitHub — canonical source and research archive.** Store versioned source code, input-data provenance, run manifests, native numerical outputs, plots, validation reports, and pull-request history. GitHub is the durable record, not the primary numerical execution engine.
 3. **GitHub Actions — independent verification.** Use Actions for CI, regression tests, selected independent recalculations, cross-platform checks, and reproducibility checks against the primary results. Actions must not silently replace the primary computation or become a prerequisite for continuing research.
 
@@ -16,13 +16,16 @@ This division is normative for this project. Do not reopen it for each task.
 
 ## 2. Primary computation / 主计算环境
 
-- Select the primary environment from the active mode before running: (a) ordinary GPT chat mode → the ChatGPT Linux Python environment; (b) Codex mode or ChatGPT Work mode → the user's Windows local environment. Run the main scientific program in that mode's available runtime when the required tools and resources are present.
+- Select the primary environment from the actual execution target before running: (a) ordinary GPT chat session → ChatGPT Linux; (b) Codex/Work local execution → the user's Windows environment; (c) Codex/Work cloud computer → the GPT-managed cloud environment assigned to that task. Work mode or Codex cloud mode is not automatically a compute environment: verify that an actual command/runtime environment is available. A browser-only session does not count as local scientific computation. Run the main program in the selected environment when its required tools and resources are available.
 - Execute the actual scientific program in the selected primary environment. Do not describe a result as locally recomputed merely because a GitHub Actions artifact was downloaded or inspected.
-- The term **local computation** means execution in the active mode's primary environment: ChatGPT Linux in ordinary GPT chat mode, and the user's Windows computer/workspace in Codex or Work mode.
-- In ordinary GPT chat mode, the Windows workstation/GPU is a separate machine; do not claim access to its filesystem, CPU, GPU, or installed software unless an authorized connection has actually been established and verified. In Codex/Work mode, use the Windows local files, CPU/GPU, and installed tools exposed by that mode, and verify their availability before relying on them.
-- A Windows self-hosted GitHub Actions runner remains an Actions execution even if it is hosted on the same physical PC. It is distinct from direct Windows execution in Codex/Work and remains an independent-verification or explicitly authorized runner path.
+- The term **primary computation** means execution on the machine that actually runs the scientific program. Reserve **local Windows execution** for processes running on the user's physical Windows computer. A GPT-managed cloud computer is a separate remote execution environment, even if accessed through Codex or Work.
+- In ordinary GPT chat mode, the Windows workstation/GPU is a separate machine; do not claim access to it unless an authorized connection has actually been established and verified. In Codex/Work local execution, use the Windows files, CPU/GPU, and installed tools exposed by the local integration. In Codex/Work cloud execution, use only the resources exposed by that cloud computer; do not claim access to the user's Windows disks, RTX 5060, or local software from the cloud session unless an explicit connection is established and tested.
+- A GPT-managed cloud computer is distinct from both ChatGPT's ordinary Linux chat container and the user's Windows PC. Record whether it is ephemeral or persistent and how outputs were exported. A Windows self-hosted GitHub Actions runner remains an Actions execution even if hosted on the same physical PC; it is distinct from direct Codex/Work execution and from a GPT-managed cloud computer.
 - If the selected primary environment cannot perform a task (for example, unavailable dependency, inaccessible input, resource limit, or incompatible native software), state the exact blocker. Continue with feasible alternatives in that mode where scientifically sound. Do not silently move the primary workload to Actions.
 - Do not redesign a validated numerical method merely to use a GPU. Introduce GPU acceleration only when a measured performance need justifies it and the accelerated implementation is independently checked against the established reference.
+- For a GPT-managed cloud run, record the platform/mode (Work cloud computer or Codex cloud computer), execution date, OS/image, CPU/GPU model and availability, RAM, disk/storage limits, runtime and dependency versions, workspace/source revision, input hashes, command, output paths, and whether the machine is ephemeral. Export all required native outputs, logs, and manifests before the cloud workspace expires. Do not claim GPU acceleration unless a GPU was actually exposed and used.
+- If Work/Codex exposes only a browser or remote web interface without a usable command/runtime environment, use it for web interaction only; do not report it as a scientific compute run.
+
 
 ## 3. GitHub repository responsibilities / GitHub 归档职责
 
@@ -78,7 +81,7 @@ Report four statuses separately: **computed**, **archived**, **numerically valid
 - A primary-environment limitation must be reported specifically; do not claim that a calculation ran if it did not.
 - If a primary result cannot be reproduced in Actions, first compare source SHA, input hashes, dependency versions, floating-point precision, conventions, and tolerances. Diagnose the discrepancy rather than tuning the primary result to force agreement.
 - If Actions cannot run, record it as unavailable/blocked/unrun and proceed with the scientific checks that can be performed locally.
-- If the selected mode's primary environment is unavailable or insufficient, state the exact blocker. An explicitly approved switch to the other direct execution environment (ChatGPT Linux or Windows local) may be used and must be recorded in the run manifest; GitHub Actions must not silently become the replacement primary environment.
+- If the selected primary environment is unavailable or insufficient, state the exact blocker. An explicitly approved switch among ChatGPT Linux, Windows local, and a GPT-managed cloud computer may be used and must be recorded in the run manifest, including why the execution target changed. GitHub Actions must not silently become the replacement primary environment.
 
 ## 7. Security and scope / 安全与适用范围
 
@@ -93,8 +96,8 @@ Report four statuses separately: **computed**, **archived**, **numerically valid
 
 本项目固定采用：
 
-- **主计算：** 按当前工作模式选择：普通 GPT 聊天模式使用 ChatGPT 提供的 Linux Python 环境；Codex 和 ChatGPT Work 模式使用用户的 Windows 本地计算环境。每次运行记录真实的操作系统、运行时和硬件。
+- **主计算：** 按实际执行位置选择：普通 GPT 聊天模式使用 ChatGPT Linux；Codex/Work 的本地执行使用用户的 Windows 电脑；Codex Cloud/Work 云电脑使用 GPT 管理的云端计算环境。不能仅凭模式名称推断运行位置；每次运行记录实际操作系统、CPU/GPU、内存、存储、运行时和依赖。
 - **GitHub：** 保存源码、输入来源、运行清单、原生结果、图表、审计记录和校验和，作为长期、可追溯的研究档案。
 - **GitHub Actions：** 仅承担 CI、回归测试、选定基准点独立复算和跨平台交叉验证，不替代主计算，也不作为继续科研的前置条件。
 
-每项重要计算都必须记录精确源码版本、输入及哈希、命令、参数、环境、输出和实际执行的验证。分别报告计算完成、结果归档、数值验证和物理验证状态。Actions 失败不应阻断当前模式下可行的主计算；所选主计算环境不可用时，可以明确记录并经批准切换到另一直接执行环境，但不能悄悄把 Actions 改作主计算环境。
+每项重要计算都必须记录精确源码版本、输入及哈希、命令、参数、环境、输出和实际执行的验证。分别报告计算完成、结果归档、数值验证和物理验证状态。Actions 失败不应阻断当前执行环境中可行的主计算；所选环境不可用时，可以明确记录并经批准切换到 ChatGPT Linux、Windows 本地或 GPT 云端计算机，但不能悄悄把 Actions 改作主计算环境。
