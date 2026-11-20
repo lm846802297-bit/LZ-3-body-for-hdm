@@ -31,6 +31,36 @@ class PhaseSpaceConvergenceTests(unittest.TestCase):
         )
         self.assertLess(abs(mapped / reference - 1.0), 2e-6)
 
+    def test_threshold_energy_u2_matches_threshold_w2_map(self):
+        energy_map = psc.integrate_i6(
+            self.mchi, self.ms, self.dm, self.mA, self.ER, self.speed,
+            nW=48, nz=8, nphi=8, mapping="threshold_energy_u2",
+        )
+        w2_map = psc.integrate_i6(
+            self.mchi, self.ms, self.dm, self.mA, self.ER, self.speed,
+            nW=48, nz=8, nphi=8, mapping="threshold_u2",
+        )
+        self.assertGreater(energy_map, 0.0)
+        self.assertLess(abs(energy_map / w2_map - 1.0), 2e-8)
+
+    def test_threshold_energy_u2_endpoints_and_jacobian(self):
+        wmin2, wmax2 = eq6.limits(
+            self.mchi, self.ms, self.mA, self.ER, self.speed
+        )
+        wmin, wmax = math.sqrt(wmin2), math.sqrt(wmax2)
+        dexact = wmax - wmin
+        u = np.asarray([0.0, 0.25, 1.0])
+        epsilon = dexact * u * u
+        w = wmin + epsilon
+        delta_w2 = epsilon * (2.0 * wmin + epsilon)
+        w2 = wmin2 + delta_w2
+        jacobian = 4.0 * w * dexact * u
+        self.assertAlmostEqual(w2[0], wmin2, places=12)
+        self.assertAlmostEqual(w2[-1], wmax2, delta=2e-10)
+        self.assertEqual(jacobian[0], 0.0)
+        self.assertAlmostEqual(jacobian[-1], 4.0 * wmax * dexact, places=12)
+        self.assertTrue(np.all(np.diff(w2) > 0.0))
+
     def test_w_and_w2_jacobians_agree(self):
         w2 = psc.integrate_i6(
             self.mchi, self.ms, self.dm, self.mA, self.ER, self.speed,
