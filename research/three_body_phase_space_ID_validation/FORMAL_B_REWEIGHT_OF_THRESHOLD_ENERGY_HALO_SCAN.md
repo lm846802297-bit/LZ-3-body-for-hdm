@@ -1,6 +1,6 @@
 # Formal B reweight of the PR86 threshold-energy seven-isotope halo scan
 
-**Status:** local calculation and independent GitHub reproduction both PASS; native GitHub artifact downloaded and compared against local outputs.  
+**Status:** PR #93 higher-order Halo convergence PASS; formal B reweight is being rerun against the newly accepted immutable high-order artifact.  
 **Date:** 2026-11-20  
 **Input:** PR86 high-order 5--800 keV scan using the unified exact threshold-energy \(u^2\) map.  
 **Output:** formal B finite-nucleon correction applied to all seven isotope contributions and the natural-xenon total.
@@ -21,8 +21,8 @@ This separation is exact at the isotope level because the finite-nucleon factor 
 
 | Item | Source |
 |---|---|
-| Halo high-order input | [PR86 workflow run 44655861356](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44655861356) |
-| Halo artifact | ID 14595907606; SHA-256 `05ceeea175e39ed658b0bfab4a15f6f654e1a49a9508c147291ef58c622471f8` |
+| Halo high-order input | [PR #93 accepted workflow run 44681433965](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44655861356) |
+| Halo artifact | ID 14607350801; SHA-256 `a570bbf81119e8b7b87526c51b7012d056c0c07e290618bb7e12469b43571194` |
 | Input rows | 1,456 isotope-energy rows and 208 natural-xenon recoil points |
 | B form-factor implementation | research/nucleon_form_factor_B_baseline/apply_nucleon_form_factors_B.py |
 | Electromagnetic form-factor source | Borah et al., Phys. Rev. D 102, 074012 (2020), arXiv:2003.13640 |
@@ -136,7 +136,7 @@ For the Sufian 2017 input at 248 keV, the B-corrected natural-xenon full rate is
 
 ## 7. Reproduction and outputs
 
-The new workflow downloads the exact PR86 high-order artifact and runs the existing formal B postprocessor without repeating the Halo scan:
+The formal B workflow is pinned to the newly accepted PR #93 high-order artifact (run 44681433965, artifact 14607350801, SHA-256 `a570bbf81119e8b7b87526c51b7012d056c0c07e290618bb7e12469b43571194`). The input has speed quadrature order 32, internal quadrature (12,4,4), 1,456 isotope-energy rows and 208 natural-xenon recoil points. The workflow applies the B multiplier without repeating the Halo scan:
 
 - Workflow: .github/workflows/pr86-halo-formal-B-reweight.yml
 - B implementation: research/nucleon_form_factor_B_baseline/apply_nucleon_form_factors_B.py
@@ -169,16 +169,14 @@ The workflow uploaded artifact 14599834070, pr86-formal-B-halo-reweight, with SH
 I downloaded the GitHub artifact and compared all six numeric CSV outputs against the local 3,000-draw calculation. The largest relative difference in any finite numeric CSV field is below (4.6\times10^{-13}); the largest absolute difference in the exact spatial-transfer column is (1.11\times10^{-16}\,\mathrm{GeV}^2). The independently generated artifact's own SHA256SUMS check also passes. The local calculation and GitHub reproduction therefore agree to floating-point precision.
 
 
-### Independent high-order halo rerun: PASS
+### PR #93 accepted high-order Halo rerun: PASS
 
-The full high-order halo validation workflow [44673037709](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44673037709) completed successfully. It regenerated the baseline and high-order scans, compared all 1,456 isotope-energy rows and 208 natural-xenon points, found zero support mismatches, and uploaded artifact 14602217987 (`halo-seven-isotope-full-vs-ID-full-recoil-scan`; SHA-256 `eb8926b395cde165dc1f483644c999756129ca626edb78ac1b95160f642a3d9d`).
+The latest PR #93 validation [run 44681433965](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44681433965) completed both baseline and higher-order scans, pointwise comparison, and artifact upload. It passed six regression tests and nine phase-space convergence tests. The high-order setting is speed order 32 with internal quadrature (12,4,4).
 
-For the independently regenerated high-order natural-xenon spectrum:
-- maximum (|mathrm{Full}/I(D_{NR})-1|) over 180–320 keV: (0.0355190413\%), at 320 keV;
-- maximum over the full supported 5–800 keV grid: (0.3527618038\%), at 695 keV;
-- the 208-point natural-xenon grid and 1,456 isotope-energy rows are complete;
-- AFH isotope abundance coverage remains 99.8158%, with Xe-124/Xe-126 absent and no abundance renormalization.
+- Source artifact: ID 14607350801; SHA-256 a570bbf81119e8b7b87526c51b7012d056c0c07e290618bb7e12469b43571194.
+- 1,456 isotope-energy rows and 208 natural-xenon recoil points; zero support mismatches.
+- Natural-xenon maximum full/I(D_NR) discrepancy: 0.0355190413% in 180--320 keV and 0.3527618038% over 5--800 keV, at 320 and 695 keV.
+- Active-support baseline-to-high-order maximum shifts: Full rate 9.8863e-6%; I(D_NR) rate 9.9873e-6%; approximation-error curve 2.9057e-6 percentage points.
+- Seven-isotope active-support maximum shifts: Full rate 1.0109e-5%; I(D_NR) rate 3.1057e-5%; approximation-error curve 2.8424e-5 percentage points.
 
-The baseline-to-high-order quadrature comparison gives zero support mismatches. The maximum natural-xenon full-rate shift is (9.8863\times10^{-6}\%), the maximum (I(D_{NR})) rate shift is (1.7092\times10^{-5}\%), and the maximum approximation-error shift is (1.0792\times10^{-5}) percentage points. At isotope level, the maximum approximation-error shift is (2.8425\times10^{-5}) percentage points.
-
-I downloaded the high-order GitHub artifact and compared it with the archived local scan. The full halo kernel agrees to a maximum relative difference of (2.82\times10^{-8}); the (I(D_{NR})) kernel is identical. The maximum absolute difference in the derived isotope relative-error column is (2.83\times10^{-6}) percentage points, and the maximum natural-xenon relative-error difference is (1.75\times10^{-6}) percentage points. These small differences do not change the convergence conclusion or any acceptance result.
+The downloaded artifact ZIP hash was independently recomputed and matches the GitHub artifact digest. Per-file SHA-256 hashes for all nine extracted files are recorded in the high-order freeze archive manifest. The formal B reweight is being rerun against this exact source artifact; the earlier B artifact used the previous source run and is retained only as a historical result.
