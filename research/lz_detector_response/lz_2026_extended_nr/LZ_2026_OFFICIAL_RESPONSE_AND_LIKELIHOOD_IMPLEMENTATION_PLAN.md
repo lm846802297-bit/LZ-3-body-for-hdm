@@ -167,3 +167,21 @@ Therefore:
 - LZ_2026_B_BASELINE_NEST_EVENT_WEIGHTED_FOLD.md: current event-weighted NEST diagnostic and explicit scope.
 - HEPDATA_V1_ARCHIVE_AUDIT.md: audit of public data-release contents.
 - partition_lz_2026_signal_samples.py: current formal-B rate-level sample-partition implementation.
+
+
+### 2.2.1 Independent reproduction: PASS
+
+The sample-partition workflow [44693403267](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44693403267) passed. It verified the pinned input artifact's per-model SHA256SUMS, ran all six unit tests, generated 24 rows, checked exact sample-sum closure, and uploaded artifact 14610035783 (SHA-256 `8840fbdd0f3201942f74210ac53c55447822936bde8ab1ae45b41d2c56ae8cb3`). The maximum absolute sample-sum closure residual is (5.55\times10^{-17}) events.
+
+For the Sufian 2017, AFH-7 scenario, the Fig. S2-folded pre-veto expected counts and the three sample partitions are:
+
+| Benchmark | Before veto | Science | Prompt veto | Delayed veto |
+|---|---:|---:|---:|---:|
+| Red: 200 keV / 1 MeV | 0.266263 | 0.258621 | (2.663\times10^{-5}) | (7.615\times10^{-3}) |
+| Green: 300 keV / 1 MeV | (1.10267\times10^{-3}) | (1.07103\times10^{-3}) | (1.103\times10^{-7}) | (3.154\times10^{-5}) |
+| Black: 360 keV / 1 MeV | (2.07413\times10^{-9}) | (2.01460\times10^{-9}) | (2.074\times10^{-13}) | (5.932\times10^{-11}) |
+| Blue: 300 keV / 10 MeV | (9.02734\times10^{-6}) | (8.76825\times10^{-6}) | (9.027\times10^{-10}) | (2.582\times10^{-7}) |
+
+All three strange-current inputs and both AFH-7/Hybrid-9 scenarios are preserved in the 24-row output. The sample partition is central-value bookkeeping from the published random-coincidence fractions; it does not supply uncertainty on those fractions or replace the official veto simulation.
+
+The published fit-specific signal-yield ratios provide a consistency check: the partition gives prompt/science (1.0295\times10^{-4}) versus the rounded Table S1 value (10^{-4}), and delayed/science (2.9445\times10^{-2}) versus the rounded Table S2 value (3.1\times10^{-2}). The latter differs by about 5%; it is retained as a fit-specific cross-check, not forced into the rate-level fractions.
