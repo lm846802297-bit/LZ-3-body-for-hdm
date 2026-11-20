@@ -302,3 +302,14 @@ The runner writes mapping, angular, threshold-neighborhood, raw-\(d\Phi_3\) pref
 
 The audit covers four fixed-speed benchmarks, five v_min-offset checks, the historical 800 km/s mass-convention anchor, and an off-shell near-pole scan at E_R=267 keV and v=776 km/s. The latter compares zero-width, constant pole-width and diagnostic running-width prescriptions for g2=0.1,1, while keeping the chi2 pole above Wmax. The sine-squared map provides a second endpoint-focused quadrature check. This P1 audit is not a full continuous-grid convergence proof for GCN/JJ55 or a full Mathematica/Python cross-section validation; the separate AFH-7/Hybrid-9 84-point grid has its own high-order convergence audit. It is not a complete halo fold for all nuclear models or a detector likelihood. The nine-test module reuses the existing Dirac spin trace and is not an independent second amplitude calculation.
 
+## Structured phase-space result records
+
+The independent Eq. (6) phase-space audit writes standard v1.0.0 records after each selected run. Example:
+
+```powershell
+python research/three_body_calculation_and_validation/phase_space_convergence.py --mode all --output-dir research/three_body_calculation_and_validation/results/phase_space_convergence_2026-11-14
+```
+
+The archive contains the mode-specific CSV tables, the original phase-space metadata and checksum file, plus `run_manifest.json`, `result_summary.json`, and `validation_report.json`. The raw Lorentz-invariant phase-space prefactor reconstruction and off-shell near-pole condition are recorded as explicit checks when those modes are run. A subset run records only the modes executed in that invocation; stale CSVs in a reused output directory are excluded from the run manifest.
+
+Use `--no-standard-archive` only for temporary diagnostic runs whose output directory is outside the repository. The common writer is `research/result_archive.py`, and the validator is `research/schemas/validate_result_records.py`. This packaging layer does not change the Eq. (6) amplitude, phase-space measure, width prescription, or numerical outputs.
