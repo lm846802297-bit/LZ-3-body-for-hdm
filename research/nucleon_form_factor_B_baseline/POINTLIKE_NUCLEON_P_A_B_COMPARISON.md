@@ -4,7 +4,7 @@
 
 The original PR85 source spectrum was labelled A. Its actual content is the leading-order charge-only baseline P0, not the zero-transfer Dirac–Pauli approximation A0. This distinction is now explicit in the calculation and output metadata.
 
-> **P0/P distinction:** P0 and P share the same pointlike Dirac form factors, \(\widehat F_1=1,\widehat F_2=0\). P0 uses the normalized leading-order coefficient \(\widehat c_M=F_M=1\), while P retains \(\widehat c_M=1+t_N/(8m_N^2)\). The raw flavor-summed coefficient is three times this normalized quantity. Their difference is the retained matching order, not a difference in nucleon structure. The detailed derivation and numerical P0/P validation are documented in [P0_VS_P_POINTLIKE_DIRAC_BASELINES.md](P0_VS_P_POINTLIKE_DIRAC_BASELINES.md).
+> **P0/P distinction:** P0 and P share the same pointlike Dirac form factors, \(\widehat F_1=1,\widehat F_2=0\). P0 uses the normalized leading-order coefficient \(\widehat c_M=F_M=1\), while P retains \(\widehat c_M=1+t_N/(8m_N^2)\). The raw flavor-summed coefficient is three times this normalized quantity. Their difference is the retained matching order, not a difference in nucleon structure. The raw/normalized convention, external-coupling factor of three and distinction from AFH \(W_M\) are fixed in [CM_RAW_NORMALIZATION_AND_AFH_M_RESPONSE.md](CM_RAW_NORMALIZATION_AND_AFH_M_RESPONSE.md); the numerical P0/P validation is documented in [P0_VS_P_POINTLIKE_DIRAC_BASELINES.md](P0_VS_P_POINTLIKE_DIRAC_BASELINES.md).
 
 ## 1. Four baseline definitions
 
