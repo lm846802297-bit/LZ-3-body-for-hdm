@@ -26,6 +26,12 @@ class StructuredResultArchiveTests(unittest.TestCase):
             "benchmark": "label",
             "R_AFH_direct_exact_q": "1",
             "weighted_cross_section_integral_GeVminus3": "GeV^-3",
+            "Wmin_GeV": "GeV",
+            "pole_gap_keV": "keV",
+            "v_kms": "km s^-1",
+            "dsigma_dER_eq6_GeV_minus3": "GeV^-3",
+            "pole_inside_phase_space": "boolean",
+            "relative_to_sine2_reference": "1",
         }
         for column, expected in cases.items():
             with self.subTest(column=column):
