@@ -110,6 +110,10 @@ class StructuredResultArchiveTests(unittest.TestCase):
             self.assertEqual(len(manifest["outputs"]), len(output_paths) + 4)
             self.assertEqual(len(summary["data_files"]), 5)
             self.assertEqual(manifest["archive"]["status"], "local_only")
+            preserved_checksums = list(out_dir.glob("SHA256SUMS.physics-*.txt"))
+            self.assertEqual(len(preserved_checksums), 1)
+            original_checksum_path = result_dir / "SHA256SUMS.txt"
+            self.assertEqual(preserved_checksums[0].read_bytes(), before[original_checksum_path])
             schema = json.loads((
                 ROOT / "research" / "schemas" /
                 "research-result-record-v1.0.0.schema.json"
@@ -127,7 +131,8 @@ class StructuredResultArchiveTests(unittest.TestCase):
                 str(records["validation_report"]),
             ], check=True, cwd=ROOT)
         for path, _ in output_paths:
-            self.assertEqual(path.read_bytes(), before[path])
+            if path.name != "SHA256SUMS.txt":
+                self.assertEqual(path.read_bytes(), before[path])
 
 
 if __name__ == "__main__":
