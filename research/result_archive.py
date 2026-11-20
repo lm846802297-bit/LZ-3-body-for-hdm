@@ -137,7 +137,15 @@ def write_result_records(*, repo_root: Path, out_dir: Path, metadata: dict[str, 
     run_id = f"LZ-AFH-{now[:10].replace('-', '')}-{now[11:19].replace(':', '')}-{commit[:8]}"
     vstatus = validation_status(checks)
     inputs = [input_record(root, p, n, s, commit) for p, n, s in input_paths]
-    outputs = [file_record(root, p, role) for p, role in output_paths]
+    preserved_output_paths = []
+    for path, role in output_paths:
+        if path.name == "SHA256SUMS.txt":
+            preserved = path.with_name(f"SHA256SUMS.physics-{run_id}.txt")
+            shutil.copyfile(path, preserved)
+            preserved_output_paths.append((preserved, f"original physics checksum manifest preserved from {path.name}"))
+        else:
+            preserved_output_paths.append((path, role))
+    outputs = [file_record(root, p, role) for p, role in preserved_output_paths]
     csv_records = [x for x in outputs if x["format"] == "csv"]
     if not csv_records:
         raise ValueError("the archive must include at least one native CSV table")
