@@ -102,7 +102,7 @@ This postprocessor uses the isotope-level CSV from the seven-isotope halo workfl
 
 ## Applying B to the archived absolute AFH-7/Hybrid-9 spectra
 
-The absolute-spectrum postprocessor reconstructs the published A spectrum from the isotope-resolved three-body kernels before applying B. It requires the reconstructed A spectrum to close against the archived natural-xenon A spectrum at relative tolerance \(2\times10^{-11}\).
+The absolute-spectrum postprocessor reconstructs the archived leading-order P0 spectrum from the isotope-resolved three-body kernels before applying B. It requires the reconstructed A spectrum to close against the archived natural-xenon P0 spectrum at relative tolerance \(2\times10^{-11}\).
 
     for model in sufian2017_unit_current alexandrou2020_charge_weighted_converted alexandrou2026_continuum_unit_current; do
       python research/nucleon_form_factor_B_baseline/apply_B_to_afh_hybrid9_continuous_spectrum.py \
@@ -118,7 +118,7 @@ It writes:
 - metadata.json
 - SHA256SUMS.txt
 
-The isotope output records \(Q_A^2\), \(t_N\), \(t_A\), \(c_M\), \(F_M\), and the individual A/B rate contributions. The metadata records the exact source-file hashes and the electromagnetic covariance sampling seed.
+The isotope output records \(Q_A^2\), \(t_N\), \(t_A\), \(c_M\), \(F_M\), and the individual P0/B rate contributions. The metadata records the exact source-file hashes and the electromagnetic covariance sampling seed.
 
 ## LZ 2026 efficiency fold
 
@@ -143,24 +143,39 @@ The detector fold reports the central B event yield. The separate covariance pro
       --out-dir results/B-detector-covariance/sufian2017_unit_current \
       --strange-model sufian2017_unit_current --draws 3000
 
-## Pointlike-nucleon P versus A/B comparison
+## Four-level P0/P/A0/B nucleon-current comparison
 
-The additional pointlike Dirac benchmark P is now implemented alongside the existing zero-transfer A reference and finite-form-factor B baseline. The comparison uses the same finite-size AFH response in all three cases and applies the formal transfer \(t_N=t_A=-2m_AE_R\).
+The original PR85 source spectrum labelled A is the leading-order charge-only reference P0:
+\[
+\widehat F_1=1,\qquad \widehat F_2=0,\qquad c_M=1.
+\]
+It is not the zero-transfer Dirac–Pauli approximation.
 
-See [POINTLIKE_NUCLEON_P_A_B_COMPARISON.md](POINTLIKE_NUCLEON_P_A_B_COMPARISON.md) for the definitions, detector-level event yields, three strange-current scenarios, AFH-7/Hybrid-9 comparison, and numerical interpretation.
+The four comparisons are:
+
+- P0: archived leading-order charge-only rate, \(c_M=1\).
+- P: pointlike Dirac nucleon, \(\widehat F_1=1\), \(\widehat F_2=0\), retaining the finite-transfer recoil matching term.
+- A0: freeze \(\widehat F_1(0)=1\) and the model-specific \(\widehat F_2(0)\), while retaining the actual recoil matching term.
+- B: finite-momentum Borah proton/neutron Dirac–Pauli form factors plus the selected unit-strange-current input.
+
+All four retain the same finite-size AFH \(W_M(y_A)\) response and the same three-body/halo kernels. The formal impulse prescription is \(t_N=t_A=-2m_AE_R\); \(Q_A^2=2m_AE_R+E_R^2\) remains the AFH spatial Fourier variable.
+
+See [POINTLIKE_NUCLEON_P_A_B_COMPARISON.md](POINTLIKE_NUCLEON_P_A_B_COMPARISON.md) for the formulas, detector-level event yields, three strange-current scenarios, AFH-7/Hybrid-9 comparison, and numerical interpretation.
 
 Run the calculation with:
 
-    python research/nucleon_form_factor_B_baseline/compare_pointlike_A_B_nucleon_baselines.py \\
-      --source-dir research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14 \\
-      --efficiency-csv research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv \\
-      --out-dir results/pointlike-A-P-B
+~~~bash
+python research/nucleon_form_factor_B_baseline/compare_pointlike_A_B_nucleon_baselines.py \
+  --source-dir research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14 \
+  --efficiency-csv research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv \
+  --out-dir results/nucleon-P0-P-A0-B
+~~~
 
-The workflow [.github/workflows/pointlike-nucleon-A-P-B.yml](../../.github/workflows/pointlike-nucleon-A-P-B.yml) runs the regression suite and uploads the numerical outputs.
+The workflow [.github/workflows/pointlike-nucleon-A-P-B.yml](../../.github/workflows/pointlike-nucleon-A-P-B.yml) runs the regression suite and uploads the four-baseline spectra and detector yields.
 
 ## Validation and scope
 
-Regression tests cover zero-momentum normalization, Sachs-to-Dirac/Pauli conversion, the \(z\)-expansion sum rules, covariance properties, strange-current conventions, magnetic-radius normalization, exact A-spectrum closure, isotope-level B multiplication, and natural-xenon resummation.
+Regression tests cover zero-momentum normalization, Sachs-to-Dirac/Pauli conversion, the \(z\)-expansion sum rules, covariance properties, strange-current conventions, magnetic-radius normalization, exact P0-spectrum closure, model-dependent \(\widehat F_2(0)\) inputs, four-level P0/P/A0/B spectra, isotope-level B multiplication, and natural-xenon resummation.
 
 This stage includes finite nucleon \(F_1,F_2\), the finite-size AFH \(W_M\) response, the three-body/halo spectrum, and the LZ NR efficiency fold. It does not include additional AFH responses such as \(W_{\Phi''}\) or \(W_{M\Phi''}\), energy-resolution smearing, S1c/\(\log_{10}S2_c\) signal PDFs, background likelihood, or a confidence-level exclusion.
 
