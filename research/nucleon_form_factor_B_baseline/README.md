@@ -102,7 +102,7 @@ This postprocessor uses the isotope-level CSV from the seven-isotope halo workfl
 
 ## Applying B to the archived absolute AFH-7/Hybrid-9 spectra
 
-The absolute-spectrum postprocessor reconstructs the archived leading-order P0 spectrum from the isotope-resolved three-body kernels before applying B. It requires the reconstructed A spectrum to close against the archived natural-xenon P0 spectrum at relative tolerance \(2\times10^{-11}\).
+The absolute-spectrum postprocessor reconstructs the archived leading-order P0 spectrum from the isotope-resolved three-body kernels before applying B. It requires the reconstructed P0 spectrum to close against the archived natural-xenon P0 spectrum at relative tolerance \(2\times10^{-11}\).
 
     for model in sufian2017_unit_current alexandrou2020_charge_weighted_converted alexandrou2026_continuum_unit_current; do
       python research/nucleon_form_factor_B_baseline/apply_B_to_afh_hybrid9_continuous_spectrum.py \
@@ -142,6 +142,20 @@ The detector fold reports the central B event yield. The separate covariance pro
       --efficiency-csv research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv \
       --out-dir results/B-detector-covariance/sufian2017_unit_current \
       --strange-model sufian2017_unit_current --draws 3000
+
+## P0 versus P: pointlike Dirac nucleon precision levels
+
+P0 and P use the same pointlike Dirac form factors, \(\widehat F_1=1\) and \(\widehat F_2=0\). Their difference is the matching order:
+
+\[
+c_M^{P0}=1,\qquad
+c_M^P=1+\frac{t_N}{8m_N^2}
+=1-\frac{Q_N^2}{8m_N^2}.
+\]
+
+P0 is the archived leading-order charge-only spectrum. P retains the finite-transfer correction in the current M-only charge matching prescription. Both retain the same finite-size AFH \(W_M\), three-body/halo kernels and isotope sum. Thus P0 is the leading-order approximation to P, not a different nucleon-structure model.
+
+The detailed derivation, momentum-transfer definitions, fixed-isotope rate ratio, natural-xenon folding, Xe-131 numerical check and detector-level comparison are recorded in [P0_VS_P_POINTLIKE_DIRAC_BASELINES.md](P0_VS_P_POINTLIKE_DIRAC_BASELINES.md). The full four-level P0/P/A0/B numerical comparison remains in [POINTLIKE_NUCLEON_P_A_B_COMPARISON.md](POINTLIKE_NUCLEON_P_A_B_COMPARISON.md).
 
 ## Four-level P0/P/A0/B nucleon-current comparison
 
