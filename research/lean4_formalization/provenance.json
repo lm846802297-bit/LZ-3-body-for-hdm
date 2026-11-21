@@ -31,5 +31,14 @@
     "status": "NOT_RUN",
     "reason": "Pending Lean compiler execution."
   },
-  "sha256": "PENDING_AFTER_COMMIT"
+  "formalization_git_blob_shas": {
+    "lean-toolchain": "00f848359b1cdaf7c12cd6b7acc5b4364752e154",
+    "lakefile.toml": "d0d36049d3028d12dc440a1d0e8775cdeebc8643",
+    "ThreeBody.lean": "0a54a69372f9f042d8e3c43bf3d4c7056f8e0d0a",
+    "ThreeBody/Kinematics.lean": "5b5836d88c4c709b00d739fdf643ac68d9292a5b",
+    "ThreeBody/NucleonCurrent/Normalization.lean": "597eb95c2e5088f06c638eedb959874d9fd90c89",
+    "README.md": "07fe5c2a3bc18872fbe015fccb8e406d53d363c8",
+    "task_briefs/20261121-lean4-p0-formalization.md": "957a1ac3cca4a3df001e59e2790c7965b21e7457"
+  },
+  "content_identity": "Git blob object IDs are recorded for all source and formalization files. No numerical input datasets are consumed in this first algebraic formalization slice."
 }
