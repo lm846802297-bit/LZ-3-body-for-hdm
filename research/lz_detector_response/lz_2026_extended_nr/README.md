@@ -75,3 +75,37 @@ The dedicated workflow is [lz-2026-paired-s1-bootstrap.yml](../../../.github/wor
 3. A rate-level Fig. S2 efficiency fold is not the same object as a two-dimensional S1c/log10(S2c) response map.
 4. A NEST/WS-ROI map is not the official LZ selected-event PDF. Do not multiply the full Fig. S2 efficiency into an existing 2D map as an extra scalar correction.
 5. A successful software workflow validates only the assertions it executes. It does not by itself validate the physical model or authorize a final likelihood.
+
+## Formal finite-nucleon B baseline: event-weighted NEST fold (2026-11-20)
+
+The formal B spectra from PR #87 have now been folded through the immutable
+one-keV, two-replica NEST event samples. AFH-7 is the primary nuclear response;
+Hybrid-9 remains a separately labelled Helm fallback diagnostic. Three
+strange-current inputs, four NEST response families, four Fig. 2 benchmarks,
+and both NEST-level and NEST+WS-ROI selections are retained.
+
+- [Formal B NEST-fold report](LZ_2026_B_BASELINE_NEST_EVENT_WEIGHTED_FOLD.md)
+- Implementation: [fold_lz_2026_three_body_B_event_weighted_response.py](../fold_lz_2026_three_body_B_event_weighted_response.py)
+- Vectorized kernel: [fold_lz_2026_three_body_B_event_weighted_kernel.py](../fold_lz_2026_three_body_B_event_weighted_kernel.py)
+- Regression tests: [test_lz_2026_B_event_weighted_fold.py](../tests/test_lz_2026_B_event_weighted_fold.py)
+- Workflow: [lz-2026-B-baseline-nest-fold.yml](../../../.github/workflows/lz-2026-B-baseline-nest-fold.yml)
+
+The local result has 192 comparison rows, 25,440 per-energy-bin rows, and
+120,000 nonzero 2D cells. The maximum event-weighted raw-rate closure residual
+is (7.77\times10^{-16}). The Fig. S2 final efficiency remains a separate
+rate-level expected-count result and is not multiplied into the NEST 2D maps.
+The black (m_s=360) keV high-tail benchmark is strongly response-family
+dependent; it must not be summarized by a single detector-efficiency factor.
+The current maps are an intermediate NEST/WS-ROI proxy, not the official LZ
+waveform-level selected-event PDF or a background likelihood.
+
+The formal-B event-weighted NEST fold has now passed independent GitHub reproduction in [run 44680838189](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44680838189). All five regression tests passed; the 192 comparison rows, 25,440 per-bin rows, 120,000 2D cells, and all SHA256SUMS checks passed. The downloaded GitHub output matches the local numerical CSVs and summary JSON exactly.
+
+
+
+### Formal-B recoil and event-spectrum figures
+
+- [Natural-xenon relative differential recoil spectrum](B_BASELINE_RECOIL_FIGURES.md) — compares pointlike A with the three finite-nucleon B strange-current inputs over 5–800 keV; the 180–320 keV candidate interval is marked.
+- [Expected event spectrum](B_BASELINE_RECOIL_FIGURES.md) — four Sufian-input AFH-7 benchmark curves, in expected rate-level events per 1 keV bin for 2.84 tonne-year.
+
+The first figure uses relative-rate normalization and is not an absolute cross-section plot. The event-count figure is before WS-ROI; the report records the exposure, NEST family, and selection convention.

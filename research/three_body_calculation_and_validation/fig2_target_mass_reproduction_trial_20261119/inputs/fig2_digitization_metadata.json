@@ -1,0 +1,40 @@
+{
+  "source_file": "3body_for_HDM(2).pdf",
+  "source_sha256": "b4fc7bd73265df2bc2ce1640cbf8847b63323ec1dda220f9e7903f4620b871bb",
+  "source_pages": 18,
+  "figure": "Fig. 2",
+  "pdf_page": 3,
+  "digitization_method": "PyMuPDF extraction of vector line paths embedded in the supplied PDF; no external webpage image used.",
+  "axes_pdf_points": {
+    "x_min": 89.29635620117188,
+    "x_max": 282.033935546875,
+    "y_min": 193.21514892578125,
+    "y_max": 62.1549072265625
+  },
+  "axis_ranges": {
+    "ER_keV": [
+      0,
+      700
+    ],
+    "normalized_dsigma_dER_1e_3_per_keV": [
+      0,
+      5
+    ]
+  },
+  "red_curve_endpoints_keV": [
+    108.45828401781296,
+    660.2604492825334
+  ],
+  "red_curve_peak": {
+    "ER_keV": 326.42158931222167,
+    "height_1e_3_per_keV": 3.0931007953742644
+  },
+  "blue_curve": {
+    "ER_interval_keV": [
+      108.45828401781296,
+      660.2604492825334
+    ],
+    "plateau_1e_3_per_keV": 1.8125821092716357
+  },
+  "red_point_count": 199
+}

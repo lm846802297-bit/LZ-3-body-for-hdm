@@ -1,5 +1,9 @@
 # Repository instructions — LZ three-body dark-matter research
 
+> **Compute execution standard:** Follow [RESEARCH_COMPUTE_POLICY.md](RESEARCH_COMPUTE_POLICY.md). Ordinary GPT chat uses ChatGPT Linux; Codex/Work may use the user's Windows local environment or a GPT-managed cloud computer. Use GitHub as the canonical source/result archive; reserve GitHub Actions for independent verification and CI. “Local computation” means the active mode's primary environment.
+>
+> **Research communication standard:** Follow the canonical [project-wide decision policy](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/blob/main/AGENTS.md#research-communication-and-decision-policy) and [research reporting workflow](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/blob/main/research/WORKFLOW.md#9-research-reporting-and-communication-standard). These are maintained on `main`; do not fork or duplicate the policy text.
+
 These instructions are mandatory for all agents and contributors. They complement [CONTRIBUTING.md](CONTRIBUTING.md), [research/WORKFLOW.md](research/WORKFLOW.md), and the research-result archival policy.
 
 ## 1. Minimal preflight
@@ -10,6 +14,10 @@ Before substantive work:
 2. Read the relevant topic README, theory note, audit, scripts, tests, and input provenance. Use [the model and three-body amplitude note](research/docs/01_model_and_amplitude.md), [the LZ recast plan](research/docs/02_lz_recast.md), [the cosmology note](research/docs/03_cosmology.md), and [the audit/roadmap](research/docs/04_audit_and_roadmap.md) when relevant.
 3. Inspect the latest main SHA, open PRs touching the same paths, and the exact baseline data/code before changing a calculation.
 4. Do not infer that a planned task has run. Create a run record only after execution; preserve failed, partial, and blocked attempts honestly.
+5. For numerical work, apply [RESEARCH_COMPUTE_POLICY.md](RESEARCH_COMPUTE_POLICY.md) and state the primary execution environment in the run brief.
+6. Before starting or delegating any substantive research task, prepare and circulate a completed [Research Task Brief](research/_template/RESEARCH_TASK_BRIEF.md) under the [handoff standard](research/RESEARCH_TASK_HANDOFF_STANDARD.md). Pin the source revisions and baseline commit; chat history or a previous model summary is not a substitute.
+
+For a topic-specific task, store the filled brief at `research/<topic>/task_briefs/<task-id>.md`; for cross-topic work, use `research/docs/task_briefs/<task-id>.md`. Update the brief with a dated change-log entry if the scope, source revision, assumptions, or conventions change. A trivial editorial/maintenance task may omit a brief only when its PR explains why no scientific handoff is needed.
 
 ## 2. Scientific scope and model separation
 
@@ -36,7 +44,15 @@ For every amplitude implementation:
 6. Distinguish the dimensionless kinematic lambda in the phase-space expression from the dimensionful Källén function used in decay-width formulas.
 7. Check the propagator denominator, mediator momentum transfer, overall dimensions, symmetry factors, and limiting cases independently of the final spectrum.
 
-For an internal `chi_2` propagator, justify the width prescription from its momentum and kinematics. A statement that the physical on-shell pole is outside the integration range does not by itself prove that finite-width effects are negligible near the endpoint. Record the minimum pole detuning and compare finite-width and zero-width results; if the model or open channels change, rederive the width and propagator treatment.
+For the two internal chi_2 propagators in the coherent three-body amplitude, the current working production convention is asymmetric, as listed below. **The manuscript's Eq. (19) is not the authority for this prescription.** The prescription must be supported by an independently documented physical derivation in the research archive. If that derivation is absent, incomplete, or in conflict with the prescription, mark results using it as provisional and reopen the derivation before describing them as validated formal-production results. The manuscript may describe the prescription after the research record has established it:
+
+- Scalar emission before vector scattering, with internal momentum r_before = p-k: D_before = (p-k)^2 - m_chi2^2 + i 0^+. Do not insert a finite width in this propagator.
+- Scalar emission after vector scattering, with internal momentum r_after = p'+k and W^2 = (p'+k)^2: D_after = W^2 - m_chi2^2 + i m_chi2 Gamma_chi2^pole, where Gamma_chi2^pole is evaluated at the pole mass.
+- Add the two diagram amplitudes coherently before squaring; retain their interference.
+- Use the pole width for all formal three-body cross sections and spectra. Do not use a running-width ansatz as the standard prescription. Running width may appear only in a clearly labelled diagnostic/sensitivity study.
+- The zero-width treatment of both diagrams is permitted only as the far-off-pole approximation or a numerical cross-check (including the approximation explicitly used in Appendix C); it is not the formal production default.
+
+The pole width must be recomputed for each parameter point. Under the currently documented Dirac, pure-scalar Yukawa, single-open-channel assumption, Gamma_chi2^pole = Gamma(chi_2 -> chi_1 s)|_{m_chi2}. If other decay channels are open, use the total pole width (sum of all open partial widths); if the fermion nature or chiral/CP structure changes, rederive the width. A statement that the physical on-shell pole is outside the integration range does not by itself prove that finite-width effects are negligible near the endpoint. Record the minimum pole detuning and compare the formal asymmetric prescription against the zero-width approximation; if the model or open channels change, rederive the width and propagator treatment.
 
 ## 4. Nuclear response and natural xenon
 
@@ -97,7 +113,7 @@ Continuous integration (CI) is optional supporting infrastructure. It is not a p
 
 - Do not require a CI run to start, continue, or complete a calculation; perform numerical or scientific validation; prepare or archive results; commit or push research files; open or update a pull request; mark a pull request ready for review; or merge a pull request.
 - If the calculation can be run directly on an available local machine or an approved compute runner, proceed. Do not pause research solely because GitHub Actions is queued, unavailable, disabled, blocked by account/billing limits, or failing for infrastructure reasons.
-- GitHub Actions may still be used when useful as an optional compute, dispatch, or artifact-handoff mechanism. A workflow that actually executes a research calculation is an execution run: record its exact source commit, inputs, settings, environment, logs, and outputs. Its use does not make a separate CI status check mandatory.
+- For this project, GitHub Actions is reserved for independent verification, regression testing, and CI; it must not silently replace the primary calculation. If an explicitly approved independent Actions run executes a calculation, record its exact source commit, inputs, settings, environment, logs, and outputs.
 - This policy does not waive scientific or numerical validation. Perform the checks appropriate to the claim—such as analytic identities, dimensional and unit checks, limiting cases, independent implementations, convergence, uncertainty estimates, provenance, and output-integrity checks—locally or on an approved runner, and record exactly what was performed. CI neither substitutes for these checks nor adds a mandatory gate.
 - If CI is run, report its exact commit SHA and actual result. If it is not run, queued, blocked, cancelled, or failed, record that status truthfully and distinguish infrastructure failure from a scientific or numerical failure. Never describe an unrun check as passed.
 - Base review and merge decisions on the actual diff, reproducibility, scientific evidence, scope, and the checks that are genuinely relevant to the change—not on whether a CI badge is green. Do not configure CI status checks as required branch-protection gates under this repository policy. Do not change repository protection settings without explicit authorization.
@@ -106,3 +122,37 @@ Continuous integration (CI) is optional supporting infrastructure. It is not a p
 ## 9. PR merge strategy and history preservation
 
 For research and substantive repository changes, use **Create a merge commit** by default. Preserve meaningful topic-branch commits so later reviewers can trace derivations, implementation changes, numerical corrections, tests, and result provenance. Squash merge is reserved for trivial, indivisible maintenance/documentation batches with no useful per-commit research history. Rebase and merge is allowed only when linear history is explicitly desired and commits are already meaningful and reviewable. Follow [research/WORKFLOW.md](research/WORKFLOW.md#6-merge-strategy-and-commit-history-policy); do not rewrite reviewed history merely to shorten the log. Merge strategy is independent of scientific validation.
+
+
+## Research communication and decision policy
+
+Research communication must be direct, evidence-led, and useful for advancing the work. Scientific rigor is expressed through derivations, quantitative checks, explicit assumptions, and accurate status labels—not through defensive or repetitive caveats.
+
+### Required answer structure
+
+For research questions, calculation reports, reviews, and task handoffs, use this structure unless the task clearly calls for another format:
+
+1. **Conclusion** — answer the question directly and state the current judgment.
+2. **Evidence** — give the equations, derivation, code path, data, or validation that supports it.
+3. **Results** — report numerical values, units, precision, comparison, and physical interpretation.
+4. **Remaining work** — list only tasks that materially affect the next research step.
+
+### Evidence and status rules
+
+- **Completed calculations:** report the actual result, units, numerical precision, parameter point, and checks performed. Do not bury a completed result under generic warnings.
+- **Established formulas or derivations:** state the formula and give the derivation or a precise derivation reference. Do not weaken a proven result with unnecessary hedging.
+- **Explicit approximations:** state the approximation and its domain of validity once where it is introduced. Do not repeat the same limitation in every paragraph or use it to obscure results obtained within that approximation.
+- **Unfinished calculations:** label the specific item as pending, blocked, or in progress and identify what remains. Its status does not downgrade independent completed calculations or results.
+- **Physics or implementation errors:** identify the incorrect statement, equation, sign, normalization, variable, or code path directly; provide the corrected version and explain the impact on affected results.
+- **Alternative theoretical or numerical schemes:** compare them quantitatively under matched assumptions and benchmarks, then state a recommended scheme and why. Preserve a decision once the project owner has adopted it unless new evidence materially changes the comparison.
+- **Settled research direction:** execute the adopted direction. Do not repeatedly ask for confirmation or reopen a settled choice. Ask a question only when a genuinely missing input prevents the next concrete action.
+- **Unavailable resources:** state the exact resource, attempted access route, and resulting limitation, then continue with available alternatives where possible. Avoid generic capability disclaimers.
+
+### Style
+
+- Do not turn each progress report into a disclaimer.
+- Avoid unnecessary defensive phrases, repetitive caveats, generic risk warnings, and formulaic “however” paragraphs.
+- Do not treat work that remains for a later phase as evidence against a result already established in the current phase.
+- Distinguish clearly between a result's scientific scope, its validation status, and work not yet performed.
+- Be candid when evidence is insufficient, but make the limitation specific and proportional to the claim.
+- This policy governs communication and task execution; it does not lower scientific acceptance criteria or permit claims beyond the evidence.
