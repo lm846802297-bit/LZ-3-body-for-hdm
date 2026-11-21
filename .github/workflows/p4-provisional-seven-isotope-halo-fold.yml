@@ -121,6 +121,19 @@ jobs:
             --form-factor bishara_linear --width-scheme pole \
             --include-leading-static-vector-candidate
 
+      - name: Refine halo-speed quadrature to 48 nodes at the two principal recoil points
+        run: |
+          python research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py \
+            --provisional-charge-dir /tmp/p4/charge \
+            --provisional-spatial-dir /tmp/p4/spatial \
+            --out /tmp/p4/speed-48.json \
+            --mchi-GeV 1000 --ms-keV 200 --delta-m-keV 1 --mV-GeV 10 \
+            --g2 1 --coupling-product-squared 1e-8 --rho-GeV-cm3 0.3 \
+            --ER-keV 200 267 \
+            --nv 48 --nw 8 --nz 6 --nphi 4 \
+            --form-factor bishara_linear --width-scheme pole \
+            --include-leading-static-vector-candidate
+
       - name: Refine three-body phase-space quadrature at the two principal recoil points
         run: |
           python research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py \
@@ -143,6 +156,7 @@ jobs:
           base=json.loads((root/"baseline-five-recoil.json").read_text())
           speed=json.loads((root/"speed-refined.json").read_text())
           speed24=json.loads((root/"speed-ultra-refined.json").read_text())
+          speed48=json.loads((root/"speed-48.json").read_text())
           kernel=json.loads((root/"kernel-refined.json").read_text())
           keys=(
               "rate_C_charge_extension_events_kg_day_keV",
@@ -153,12 +167,15 @@ jobs:
           )
           def index(doc):
               return {(round(float(r["ER_keV"]),8),r["halo_model"]):r for r in doc["results"]}
-          b,s,s24,k=map(index,(base,speed,speed24,kernel))
+          b,s,s24,s48,k=map(index,(base,speed,speed24,speed48,kernel))
           comparisons=[]
           for name,left,right in (
               ("speed_8_to_12",b,s),
               ("speed_12_to_24",s,s24),
               ("speed_8_to_24",b,s24),
+              ("speed_24_to_48",s24,s48),
+              ("speed_12_to_48",s,s48),
+              ("speed_8_to_48",b,s48),
               ("phase_space_8x6x4_to_10x8x6",b,k),
           ):
               for key,row in right.items():
@@ -180,6 +197,7 @@ jobs:
               "baseline_orders":{"nv":8,"nw":8,"nz":6,"nphi":4},
               "speed_refined_orders":{"nv":12,"nw":8,"nz":6,"nphi":4},
               "speed_ultra_refined_orders":{"nv":24,"nw":8,"nz":6,"nphi":4},
+              "speed_high_refined_orders":{"nv":48,"nw":8,"nz":6,"nphi":4},
               "phase_space_refined_orders":{"nv":8,"nw":10,"nz":8,"nphi":6},
               "maximum_relative_differences":max_by,
               "comparisons":comparisons,
