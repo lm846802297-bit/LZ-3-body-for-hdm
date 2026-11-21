@@ -5,6 +5,8 @@ on:
     paths:
       - .github/workflows/afh-natural-xenon-halo-archive.yml
       - research/afh_default_density_natural_xenon_halo/**
+      - research/schemas/**
+      - research/result_archive.py
   push:
     branches:
       - research/afh-default-density-xe131-mainline
@@ -30,7 +32,8 @@ jobs:
           python-version: "3.12"
 
       - name: Install numerical dependency
-        run: python -m pip install --upgrade numpy scipy sympy
+        run: python -m pip install numpy==2.5.5 scipy==1.18.1 sympy==1.14.0
+          python -m pip install -r research/schemas/requirements-result-validation.txt
 
       - name: Run natural-xenon regression tests
         run: python -m unittest discover -s research/afh_default_density_natural_xenon_halo/tests -p 'test_*.py' -v
