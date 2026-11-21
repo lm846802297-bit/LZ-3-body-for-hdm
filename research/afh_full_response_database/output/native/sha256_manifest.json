@@ -83,6 +83,10 @@
       "path": "research/afh_full_response_database/output/native/PROVENANCE.md",
       "sha256": "1e08e7a6a2f69c4c225bb8896bfb9ffe170a19bd3520a28c9bbb61816b8bdf2f"
     },
+    "native_gate_manifest": {
+      "path": "research/afh_full_response_database/output/native/native_gate_manifest.json",
+      "sha256": "60559dd940ad2248b7bbdff2c97d3de9412019a6526d86ba372976706a9d9230"
+    },
     "afh_source": {
       "path": "v6/dmformfactor-V6.m",
       "sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372"

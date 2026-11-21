@@ -39,11 +39,13 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--validation", type=Path, default=DEFAULT_DIR / "spatial_multipoles_validation.json")
+    parser.add_argument("--crosscheck", type=Path, default=DEFAULT_DIR / "native_crosscheck.json")
     parser.add_argument("--metadata", type=Path, default=DEFAULT_DIR / "native_spatial_multipole_metadata.txt")
     args = parser.parse_args()
 
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
     validation = json.loads(args.validation.read_text(encoding="utf-8"))
+    crosscheck = json.loads(args.crosscheck.read_text(encoding="utf-8"))
     metadata = parse_metadata(args.metadata)
     failures = []
 
@@ -66,6 +68,12 @@ def main() -> None:
         failures.append("spatial metadata rank map mismatch")
     if "q=0 value is the analytic y=0 limit" not in metadata.get("q_grid", ""):
         failures.append("spatial metadata does not document the q=0 analytic limit")
+    if crosscheck.get("status") != "PASS_NATIVE_AFH_SPATIAL_MULTIPOLE_CROSSCHECK":
+        failures.append("P3 native crosscheck status is not PASS")
+    if not crosscheck.get("native_afh_validated"):
+        failures.append("P3 native crosscheck did not assert native_afh_validated")
+    if crosscheck.get("rank_resolved_multipole_comparison", {}).get("rows_compared") != 9604:
+        failures.append("P3 native crosscheck did not cover 9604 rank rows")
 
     summary = {
         "status": "PASS_PROVENANCE_NATIVE_AFH_SPATIAL" if not failures else "FAIL_PROVENANCE",
