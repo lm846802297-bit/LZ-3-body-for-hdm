@@ -77,6 +77,107 @@ jobs:
             --scan-json /tmp/xe131-full-afh-recoil-scan/xe131_six_channel_fixed_speed_recoil_scan.json \
             --out-csv /tmp/xe131-full-afh-recoil-scan/xe131_six_channel_interpolation_audit.csv \
             --out-json /tmp/xe131-full-afh-recoil-scan/xe131_six_channel_interpolation_audit.json
+      - name: Record source, input, environment, and hardware provenance
+        env:
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: |
+          python - <<'PY'
+          import hashlib
+          import os
+          import platform
+          import subprocess
+          import sys
+          from pathlib import Path
+          import numpy
+          import scipy
+          import sympy
+
+          def sha256(path):
+              raw = Path(path).read_bytes()
+              return hashlib.sha256(raw).hexdigest()
+
+          def canonical_sha256(path):
+              raw = Path(path).read_bytes().replace(b"\r\n", b"\n")
+              return hashlib.sha256(raw).hexdigest()
+
+          def git_head(path="."):
+              return subprocess.check_output(
+                  ["git", "-C", path, "rev-parse", "HEAD"], text=True
+              ).strip()
+
+          def cpu_model():
+              try:
+                  for line in Path("/proc/cpuinfo").read_text().splitlines():
+                      if line.lower().startswith("model name"):
+                          return line.split(":", 1)[1].strip()
+              except OSError:
+                  pass
+              return platform.processor() or "unavailable"
+
+          out = Path("/tmp/xe131-full-afh-recoil-scan")
+          inputs = {
+              "native_xe131_charge_csv": "afh-native/research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_native.csv",
+              "native_xe131_metadata_json": "afh-native/research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_metadata.json",
+              "native_xe131_validation_json": "afh-native/research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_validation.json",
+              "afh_v6_source": "afh-native/v6/dmformfactor-V6.m",
+              "xe131_spatial_density_matrix": "research/afh_default_density_natural_xenon_halo/results/full_afh_v6_default_7_isotope_response/density_matrices/afh_default_xe131_density_matrix.csv",
+              "spatial_response_metadata": "research/afh_default_density_natural_xenon_halo/results/full_afh_v6_default_7_isotope_response/metadata.json",
+          }
+          sources = {
+              "six_channel_scan": "research/three_body_full_current_nucleon_match/xe131_full_afh_fixed_speed_recoil_scan.py",
+              "interpolation_audit": "research/three_body_full_current_nucleon_match/audit_xe131_six_channel_interpolation.py",
+              "spatial_obdme": "research/three_body_full_current_nucleon_match/afh_spatial_obdme_responses.py",
+              "three_body_tensor": "research/three_body_full_current_nucleon_match/three_body_phase_space_tensor.py",
+              "multipole_weights": "research/three_body_full_current_nucleon_match/three_body_multipole_leptonic_weights.py",
+              "nucleon_form_factors": "research/three_body_full_current_nucleon_match/nucleon_vector_form_factors.py",
+          }
+          lines = [
+              "record=xe131_fixed_speed_six_channel_recoil_scan",
+              f"github_run_id={os.environ.get('GITHUB_RUN_ID', 'unknown')}",
+              f"github_run_attempt={os.environ.get('GITHUB_RUN_ATTEMPT', 'unknown')}",
+              f"pull_request_head_sha={os.environ.get('PR_HEAD_SHA', 'unknown')}",
+              f"checked_out_repository_sha={git_head('.')}",
+              f"pinned_afh_repository_sha={git_head('afh-native')}",
+              f"python={sys.version.replace(chr(10), ' ')}",
+              f"numpy={numpy.__version__}",
+              f"scipy={scipy.__version__}",
+              f"sympy={sympy.__version__}",
+              f"platform={platform.platform()}",
+              f"machine={platform.machine()}",
+              f"cpu_count={os.cpu_count()}",
+              f"cpu_model={cpu_model()}",
+          ]
+          try:
+              gpu = subprocess.check_output(
+                  ["nvidia-smi", "--query-gpu=name,driver_version,memory.total",
+                   "--format=csv,noheader"], text=True, stderr=subprocess.STDOUT
+              ).strip().replace("\n", " | ")
+          except Exception:
+              gpu = "not exposed to this runner"
+          lines.append(f"gpu={gpu}")
+          for name, path in inputs.items():
+              lines.append(f"input.{name}.sha256={sha256(path)}")
+          lines.append(
+              "input.native_xe131_charge_csv.canonical_lf_sha256="
+              + canonical_sha256(inputs["native_xe131_charge_csv"])
+          )
+          lines.append(
+              "input.native_xe131_metadata_json.canonical_lf_sha256="
+              + canonical_sha256(inputs["native_xe131_metadata_json"])
+          )
+          lines.append(
+              "input.native_xe131_validation_json.canonical_lf_sha256="
+              + canonical_sha256(inputs["native_xe131_validation_json"])
+          )
+          for name, path in sources.items():
+              lines.append(f"source.{name}.sha256={sha256(path)}")
+          (out / "provenance.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
+          PY
+      - name: Finalize and verify SHA-256 manifest for every output
+        run: |
+          cd /tmp/xe131-full-afh-recoil-scan
+          sha256sum *.csv *.json provenance.txt > SHA256SUMS.txt
+          sha256sum -c SHA256SUMS.txt
       - name: Upload response grid, pointwise kernels and interpolation audit
         uses: actions/upload-artifact@v4
         with:
