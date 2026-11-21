@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Ye et al. low-Q2 electromagnetic proton/neutron form factors.
+"""Borah et al. low-Q2 electromagnetic proton/neutron form factors.
 
-The central values and covariance matrix are pinned from the Ye et al.
+The central values and covariance matrix are pinned from Borah et al.
 supplemental material as redistributed in GENIE-MC/Generator.  The four
 unconstrained coefficients for each Sachs form factor are completed with
 G(0) normalization and the four Q^4 asymptotic sum rules, matching GENIE's
@@ -16,7 +16,7 @@ from pathlib import Path
 import numpy as np
 
 HERE = Path(__file__).resolve().parent
-DATA = HERE / "data" / "ye2020"
+DATA = HERE / "data" / "borah2020"
 PARAMS = json.loads((DATA / "parameters.json").read_text(encoding="utf-8"))
 COV_FULL = np.loadtxt(DATA / "ELZExpFF.dat", comments="%")
 
@@ -161,7 +161,11 @@ def _strange_sachs(q2_GeV2, model: str) -> tuple[np.ndarray, np.ndarray, dict]:
         rE2_weighted_fm2 = -0.0048
         rM2_weighted_fm2 = -0.015
         ge_weighted = -(rE2_weighted_fm2 * FM2_TO_GEVM2) * q2 / 6.0
-        gm_weighted = mu_weighted - (rM2_weighted_fm2 * FM2_TO_GEVM2) * q2 / 6.0
+        # The magnetic radius is normalized by G_M^s(0):
+        # G_M(Q^2)=mu_s*[1-r_M^2 Q^2/6+O(Q^4)].
+        gm_weighted = mu_weighted * (
+            1.0 - (rM2_weighted_fm2 * FM2_TO_GEVM2) * q2 / 6.0
+        )
         return ge_weighted/e_s, gm_weighted/e_s, {
             "model": model,
             "source_current": "e_s*sbar gamma_mu s with e_s=-1/3",
@@ -170,6 +174,31 @@ def _strange_sachs(q2_GeV2, model: str) -> tuple[np.ndarray, np.ndarray, dict]:
             "rE2_charge_weighted_fm2": rE2_weighted_fm2,
             "rM2_charge_weighted_fm2": rM2_weighted_fm2,
             "GM_s_Q2_dependence": "linear low-Q2 expansion from the published magnetic radius",
+        }
+
+    if model == "alexandrou2026_continuum_unit_current":
+        # Alexandrou et al. (arXiv:2603.26600) report the strange Sachs
+        # form factors without multiplying by e_s=-1/3. The quoted values
+        # therefore already correspond to the unit current sbar gamma_mu s.
+        # This is a slope-only low-Q2 representation of their published
+        # continuum-limit z-expansion result, not a reconstruction of its
+        # full fitted z curve.
+        mu_s = -0.01792
+        rE2_fm2 = -0.00545
+        rM2_fm2 = -0.01212
+        ge = -(rE2_fm2 * FM2_TO_GEVM2) * q2 / 6.0
+        gm = mu_s * (1.0 - (rM2_fm2 * FM2_TO_GEVM2) * q2 / 6.0)
+        return ge, gm, {
+            "model": model,
+            "source": "Alexandrou et al., arXiv:2603.26600 (2026), continuum limit at physical quark masses",
+            "current": "unit strange current sbar gamma_mu s; e_s=-1/3 is explicitly not included in reported results",
+            "mu_s_unit": mu_s,
+            "mu_s_errors": [0.00195, 0.00018],
+            "rE2_unit_fm2": rE2_fm2,
+            "rE2_errors_fm2": [0.00049, 0.00026],
+            "rM2_unit_fm2": rM2_fm2,
+            "rM2_errors_fm2": [0.00280, 0.00072],
+            "Q2_dependence": "slope-only expansion from published radii; full z-expansion coefficients/covariance not used",
         }
 
     raise ValueError(f"unknown strange form-factor model: {model}")
@@ -264,7 +293,7 @@ def sample_cM_draws(q2_GeV2, n_draws: int = 5000, seed: int = 20261119,
 
 def sample_cM_factors(q2_GeV2, n_draws: int = 5000, seed: int = 20261119,
                       strange_model: str = "sufian2017_unit_current"):
-    """Summarize Ye2020 coefficient-covariance draws for F_M and |F_M|^2."""
+    """Summarize Borah2020 coefficient-covariance draws for F_M and |F_M|^2."""
     fm = sample_cM_draws(q2_GeV2, n_draws, seed, strange_model)
     fm2 = fm*fm
     return {

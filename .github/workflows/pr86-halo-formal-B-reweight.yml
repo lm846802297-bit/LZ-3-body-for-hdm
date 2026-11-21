@@ -1,0 +1,187 @@
+name: Formal B reweight of PR86 seven-isotope halo scan
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - .github/workflows/pr86-halo-formal-B-reweight.yml
+      - research/three_body_phase_space_ID_validation/FORMAL_B_REWEIGHT_OF_THRESHOLD_ENERGY_HALO_SCAN.md
+      - research/three_body_phase_space_ID_validation/task_briefs/20261120-formal-B-reweight-of-threshold-energy-halo-scan.md
+  push:
+    branches:
+      - main
+    paths:
+      - .github/workflows/pr86-halo-formal-B-reweight.yml
+      - research/three_body_phase_space_ID_validation/task_briefs/20261120-formal-B-reweight-of-threshold-energy-halo-scan.md
+      - research/three_body_phase_space_ID_validation/FORMAL_B_REWEIGHT_OF_THRESHOLD_ENERGY_HALO_SCAN.md
+  workflow_dispatch:
+    inputs:
+      draws:
+        description: Number of Borah2020 electromagnetic covariance draws
+        required: false
+        default: "3000"
+      seed:
+        description: Deterministic covariance-draw seed
+        required: false
+        default: "20261119"
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  formal-B-halo-reweight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      B_DRAWS: ${{ github.event.inputs.draws || '3000' }}
+      B_SEED: ${{ github.event.inputs.seed || '20261119' }}
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install numerical dependency
+        run: python -m pip install --upgrade numpy
+
+      - name: Run pinned B-baseline unit tests
+        run: |
+          python -m unittest discover -s research/nucleon_form_factor_B_baseline -v
+
+      - name: Download immutable PR86 high-order halo scan
+        uses: actions/download-artifact@v4
+        with:
+          name: halo-seven-isotope-full-vs-ID-full-recoil-scan
+          run-id: 44681433965
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: halo-artifact
+
+      - name: Verify high-order native inputs
+        run: |
+          test -s halo-artifact/halo-seven-isotope-highorder/seven_isotope_halo_comparison.csv
+          test -s halo-artifact/halo-seven-isotope-highorder/natural_xenon_halo_comparison.csv
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          p = Path("halo-artifact/halo-seven-isotope-highorder")
+          with (p/"seven_isotope_halo_comparison.csv").open() as f:
+              n_iso = sum(1 for _ in csv.DictReader(f))
+          with (p/"natural_xenon_halo_comparison.csv").open() as f:
+              n_nat = sum(1 for _ in csv.DictReader(f))
+          assert n_iso == 1456, n_iso
+          assert n_nat == 208, n_nat
+          import json
+          meta = json.loads((p/"metadata.json").read_text())
+          assert meta["benchmark"]["speed_order_per_smooth_segment"] == 32, meta["benchmark"]
+          assert meta["benchmark"]["internal_quadrature_nw_nz_nphi"] == [12, 4, 4], meta["benchmark"]
+          assert meta["recoil_grid"]["unique_energy_count"] == 208, meta["recoil_grid"]
+          print({"isotope_rows": n_iso, "natural_xenon_rows": n_nat,
+                 "speed_order": meta["benchmark"]["speed_order_per_smooth_segment"],
+                 "internal_quadrature": meta["benchmark"]["internal_quadrature_nw_nz_nphi"]})
+          PY
+
+      - name: Apply formal B baseline to all three strange-current inputs
+        run: |
+          python research/nucleon_form_factor_B_baseline/apply_nucleon_form_factors_B.py \
+            --input-dir halo-artifact/halo-seven-isotope-highorder \
+            --out-dir formal-B-output \
+            --draws "$B_DRAWS" \
+            --seed "$B_SEED"
+
+      - name: Validate isotope cancellation and natural-xenon reweighting
+        run: |
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          root = Path("formal-B-output")
+          models = [
+              "sufian2017_unit_current",
+              "alexandrou2020_charge_weighted_converted",
+              "alexandrou2026_continuum_unit_current",
+          ]
+          for model in models:
+              d = root/model
+              with (d/"seven_isotope_B_baseline.csv").open() as f:
+                  iso = list(csv.DictReader(f))
+              with (d/"natural_xenon_B_baseline.csv").open() as f:
+                  nat = list(csv.DictReader(f))
+              assert len(iso) == 1456, (model, len(iso))
+              assert len(nat) == 208, (model, len(nat))
+              valid_iso = [
+                  r for r in iso
+                  if r["isotope_relative_error_A_pct"] and r["isotope_relative_error_B_pct"]
+              ]
+              max_iso_delta = max(
+                  abs(float(r["isotope_relative_error_A_pct"]) -
+                      float(r["isotope_relative_error_B_pct"]))
+                  for r in valid_iso
+              )
+              assert max_iso_delta < 1e-11, (model, max_iso_delta)
+              candidate = [
+                  r for r in nat
+                  if 180 <= float(r["ER_keV"]) <= 320 and r["full_vs_I_D_error_B_pct"]
+              ]
+              full = [
+                  r for r in nat
+                  if 5 <= float(r["ER_keV"]) <= 800 and r["full_vs_I_D_error_B_pct"]
+              ]
+              max_candidate = max(abs(float(r["full_vs_I_D_error_B_pct"])) for r in candidate)
+              max_full = max(abs(float(r["full_vs_I_D_error_B_pct"])) for r in full)
+              max_natural_delta_pp = max(
+                  abs(float(r["full_vs_I_D_error_A_pct"]) -
+                      float(r["full_vs_I_D_error_B_pct"]))
+                  for r in candidate
+                  if r["full_vs_I_D_error_A_pct"] and r["full_vs_I_D_error_B_pct"]
+              )
+              ratio_widths = [
+                  float(r["full_over_I_D_B_p84"]) - float(r["full_over_I_D_B_p16"])
+                  for r in candidate
+                  if r["full_over_I_D_B_p84"] and r["full_over_I_D_B_p16"]
+              ]
+              max_covariance_ratio_width = max(ratio_widths)
+              assert 0.0354 < max_candidate < 0.0357, (model, max_candidate)
+              assert 0.3526 < max_full < 0.3529, (model, max_full)
+              assert max_natural_delta_pp < 2e-5, (model, max_natural_delta_pp)
+              assert max_covariance_ratio_width < 6e-9, (model, max_covariance_ratio_width)
+              print(model, {
+                  "max_isotope_ratio_difference_pp": max_iso_delta,
+                  "candidate_max_error_pct": max_candidate,
+                  "full_scan_max_error_pct": max_full,
+                  "max_natural_error_curve_change_pp": max_natural_delta_pp,
+                  "max_covariance_ratio_width": max_covariance_ratio_width,
+              })
+          PY
+          python - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          root = Path("formal-B-output")
+          manifest = {
+              "source_run_id": 44681433965,
+              "source_artifact_id": 14607350801,
+              "source_artifact_sha256": "a570bbf81119e8b7b87526c51b7012d056c0c07e290618bb7e12469b43571194",
+              "B_form_factor_source": "Borah et al. PRD 102, 074012 (2020), arXiv:2003.13640",
+              "transfer_convention": "t_N=t_A=-2*m_A*E_R; Q_A^2=2*m_A*E_R+E_R^2",
+              "draws": int(os.environ["B_DRAWS"]),
+              "seed": int(os.environ["B_SEED"]),
+              "status": "COMPUTED_AND_VALIDATED",
+          }
+          (root/"RUN_MANIFEST.json").write_text(json.dumps(manifest, indent=2)+"\n")
+          files = sorted(p for p in root.rglob("*") if p.is_file() and p.name != "SHA256SUMS")
+          with (root/"SHA256SUMS").open("w") as f:
+              for p in files:
+                  h = hashlib.sha256(p.read_bytes()).hexdigest()
+                  f.write(f"{h}  {p.relative_to(root).as_posix()}\n")
+          PY
+
+      - name: Upload formal B halo-reweight outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr86-formal-B-halo-reweight
+          path: formal-B-output/
+          if-no-files-found: error
+          retention-days: 90

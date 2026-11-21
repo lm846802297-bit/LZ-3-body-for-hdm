@@ -1,0 +1,2 @@
+88d3d2a1ec84ecb801cd696c83498da7bfba352eb0cdcbd3fd777a227bfc5684  lz_2026_B_detector_yield_EM_covariance.csv
+06fcaeaa0a762362a95740638bd06bd5732e23af7553abd2ec60e8e402799795  metadata.json
