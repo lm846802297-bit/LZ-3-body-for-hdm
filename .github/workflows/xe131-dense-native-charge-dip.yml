@@ -38,3 +38,7 @@ jobs:
           if doc["status"] != "PASS_NATIVE_XE131_DENSE_CHARGE_DIP":
               raise SystemExit(1)
           PY
+
+      - name: Verify dense native provenance manifest
+        run: |
+          python research/afh_full_response_database/verify_xe131_dense_charge_dip_provenance.py

@@ -147,6 +147,14 @@ committed native numbers; it does not execute Mathematica, because hosted
 runners do not carry the AFH package or a Wolfram licence. Reproduction
 therefore requires Wolfram 14.2.0 locally.
 
+Pinned hashes and the explicit scope boundary are recorded in
+`output/xe131-dense-charge-dip/PROVENANCE.md` (section 8.3,
+data provenance) and `output/xe131-dense-charge-dip/sha256_manifest.json`.
+`verify_xe131_dense_charge_dip_provenance.py` re-hashes every manifest entry
+and checks that the validation scope is limited to the Xe-131
+\(W_M\), \(W_{\Phi''}\), \(W_{M\Phi''}\) responses; it does not certify the
+spatial multipoles or the seven-isotope eight-response database.
+
 ## 6. Acceptance gates
 
 A Python internal-consistency PASS is not a native AFH validation. The
