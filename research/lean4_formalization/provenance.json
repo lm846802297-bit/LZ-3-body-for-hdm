@@ -1,0 +1,35 @@
+{
+  "task_id": "20261121-lean4-p0-formalization",
+  "repository": "lm846802297-bit/LZ-3-body-for-hdm",
+  "baseline_branch": "main",
+  "baseline_commit": "d2407050ed0f4975387bc6c05bc4509ccf375c31",
+  "development_branch": "research/lean4-formalization-p0-20261121",
+  "source_blobs": {
+    "AGENTS.md": "1a8c76fc54fa5b0101df904b5698a5b4ee3752f2",
+    "research/docs/01_model_and_amplitude.md": "8d8daf3e6d45235040c98bf3e3ed374c449baa2d",
+    "research/nucleon_form_factor_B_baseline/CM_RAW_NORMALIZATION_AND_AFH_M_RESPONSE.md": "04f53726979d2ab936932de3ead85e78eb3ebfb3",
+    "research/nucleon_form_factor_B_baseline/P0_VS_P_POINTLIKE_DIRAC_BASELINES.md": "a618c2d209e3a19af028e670f155d322cd6ee6a6"
+  },
+  "toolchain": "leanprover/lean4:v4.36.0",
+  "mathlib": {
+    "repository": "https://github.com/leanprover-community/mathlib4",
+    "revision": "v4.36.0"
+  },
+  "execution_environment": {
+    "environment": "ChatGPT Linux container",
+    "os_kernel": "Linux 6.18.57",
+    "lean_available": false,
+    "lake_available": false,
+    "github_dns_available": false
+  },
+  "build": {
+    "command": "lake update && lake build",
+    "status": "NOT_RUN",
+    "reason": "Lean and Lake are not installed and GitHub DNS resolution is unavailable in the active environment."
+  },
+  "numerical_validation": {
+    "status": "NOT_RUN",
+    "reason": "Pending Lean compiler execution."
+  },
+  "sha256": "PENDING_AFTER_COMMIT"
+}
