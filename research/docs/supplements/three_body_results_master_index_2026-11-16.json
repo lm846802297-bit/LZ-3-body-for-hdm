@@ -1056,15 +1056,15 @@
   "files": [
     {
       "path": "paper-source/main.tex",
-      "sha256": "320486060cdea817afc50796752a7803a74db74521e34ecd663de77ad4bd10bc",
-      "bytes": 54755,
-      "role": "current working manuscript source; not modified by the Phase II research integration"
+      "sha256": "d3dec8809b8bb33256c4f7941b7c739c729e3ceaba7549117de4120d3639dbc8",
+      "bytes": 66452,
+      "role": "current manuscript from the 2026-11-19 upload; inventory refreshed 2026-11-20; historical calculations retain their original provenance"
     },
     {
       "path": "paper-source/SHA256SUMS",
-      "sha256": "8ae446bc77d7121d45e8f8ebda34e2a01ad162631f6e83911fba0a89f2d69464",
-      "bytes": 1239,
-      "role": "current manuscript source checksum manifest"
+      "sha256": "f0bde66d88af30888805a662f897d0ffc5a7ba16ac15373486e57557a04a725d",
+      "bytes": 1335,
+      "role": "current manuscript checksum manifest; inventory refreshed 2026-11-20"
     },
     {
       "path": "research/afh_default_density_xe131/input/afh_default_xe131_density_matrix.csv",

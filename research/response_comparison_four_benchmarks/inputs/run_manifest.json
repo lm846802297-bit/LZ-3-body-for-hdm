@@ -1,0 +1,347 @@
+{
+  "status": "PASS",
+  "accepted_at_utc": "2026-11-18T10:44:50Z",
+  "execution": {
+    "mode": "local",
+    "github_self_hosted_runner_used": false,
+    "github_actions_artifact_created": false,
+    "wolfram_source": "native WolframScript execution of ResponseNuclear[y,index,0,0]"
+  },
+  "source": {
+    "repository": "lm846802297-bit/LZ-3-body-for-hdm",
+    "commit": "dcefbeb7ad705b6c03f2b4689200eb1d9252e67b",
+    "package": "v6/dmformfactor-V6.m",
+    "package_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+    "verified_source_files": [
+      {
+        "path": "research/afh_full_response_database/run_afh_full_response_database.py",
+        "sha": "592334e17731278a397cc7a09bd4af7bfe00094b",
+        "bytes": 14699
+      },
+      {
+        "path": "research/afh_full_response_database/validate_afh_full_response_database.py",
+        "sha": "6a5919216788415a5939e11513b96642a6b27ad3",
+        "bytes": 8573
+      },
+      {
+        "path": "research/afh_full_response_database/compare_native_afh_full_response.py",
+        "sha": "9b858cafff6d33dcce95637d914e2b77ab17d2d6",
+        "bytes": 5383
+      },
+      {
+        "path": "research/afh_full_response_database/run_afh_full_response_database.wls",
+        "sha": "efffa3876fc61adfc3c80ea8e5f81296623a18ad",
+        "bytes": 2943
+      },
+      {
+        "path": "research/afh_default_density_xe131/run_afh_spatial_response_audit.py",
+        "sha": "5280eb8844fcb562e783a9f74860aedd4a7f7a4e",
+        "bytes": 14129
+      },
+      {
+        "path": "research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices/afh_default_xe128_density_matrix.csv",
+        "sha": "74904ec6f3419624cfd8092385da9374bc1065b4",
+        "bytes": 564
+      },
+      {
+        "path": "research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices/afh_default_xe129_density_matrix.csv",
+        "sha": "400ba5f474bd8e84784852f942d04589ebf3dc30",
+        "bytes": 1070
+      },
+      {
+        "path": "research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices/afh_default_xe130_density_matrix.csv",
+        "sha": "38ebca82063c8814d9d5e0179a431383eb64eb00",
+        "bytes": 567
+      },
+      {
+        "path": "research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices/afh_default_xe131_density_matrix.csv",
+        "sha": "6b0e59f96c9712fea28495f35dc0401cd4e3fa6c",
+        "bytes": 1815
+      },
+      {
+        "path": "research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices/afh_default_xe132_density_matrix.csv",
+        "sha": "d4ca727a96c0d493bff96336a2fa4e6ae304f1ae",
+        "bytes": 565
+      },
+      {
+        "path": "research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices/afh_default_xe134_density_matrix.csv",
+        "sha": "9a3e71561e04a4ecc77af6764601d6ae010aa853",
+        "bytes": 577
+      },
+      {
+        "path": "research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices/afh_default_xe136_density_matrix.csv",
+        "sha": "0ef0ec7ed4362e02e3533e1ba0a3aa934b7cecdf",
+        "bytes": 588
+      },
+      {
+        "path": "v6/dmformfactor-V6.m",
+        "sha": "91b43b1a4596bebd6073ecd44c0c9464e5dd0c63",
+        "bytes": 94031
+      }
+    ]
+  },
+  "environment": {
+    "wolfram_version": "14.2.0 for Microsoft Windows (64-bit) (December 26, 2024)",
+    "wolframscript": "1.12.0 for Microsoft Windows (64-bit)",
+    "python": "3.14.7",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "sympy": "1.14.0",
+    "operating_system": "Windows 64-bit"
+  },
+  "coverage": {
+    "isotopes": [
+      128,
+      129,
+      130,
+      131,
+      132,
+      134,
+      136
+    ],
+    "response_indices": {
+      "M": 1,
+      "SigmaDoublePrime": 2,
+      "SigmaPrime": 3,
+      "PhiPP": 4,
+      "PhiTildePrime": 5,
+      "Delta": 6,
+      "MPhiPP": 7,
+      "SigmaPrimeDelta": 8
+    },
+    "q_grid": {
+      "points_per_isotope": 2401,
+      "q_min_GeV": 0.0,
+      "q_max_GeV": 0.6,
+      "step_GeV": 0.00025
+    },
+    "rows_per_isotope": {
+      "128": 2401,
+      "129": 2401,
+      "130": 2401,
+      "131": 2401,
+      "132": 2401,
+      "134": 2401,
+      "136": 2401
+    },
+    "total_python_rows": 16807,
+    "total_native_rows": 16807,
+    "rows_compared": 16807
+  },
+  "conventions": {
+    "isospin": "tau1=tau2=0; raw AFH isoscalar package convention",
+    "comparison_columns": "unscaled raw W response columns",
+    "physical_equal_pn_factor_four": "applied only to Python converted physical columns",
+    "native_imaginary_parts": "all eight channels exported and checked against 2e-12"
+  },
+  "python_internal_validation": {
+    "status": "PASS",
+    "native_afh_validated": false,
+    "actual_total_rows": 16807,
+    "failures": []
+  },
+  "native_pointwise_comparison": {
+    "status": "PASS",
+    "scope": "pointwise Python versus native AFH v6.0 ResponseNuclear comparison",
+    "native_afh_validated": true,
+    "isotopes": [
+      128,
+      129,
+      130,
+      131,
+      132,
+      134,
+      136
+    ],
+    "expected_points_per_isotope": 2401,
+    "expected_rows": 16807,
+    "python_rows": 16807,
+    "native_rows": 16807,
+    "rows_compared": 16807,
+    "rtol": 5E-07,
+    "atol": 2E-12,
+    "imaginary_atol": 2E-12,
+    "max_differences": {
+      "M": {
+        "max_abs": 2.0463630789890885E-12,
+        "max_rel": 6.27818232427859E-06,
+        "worst_key": {
+          "A": 131,
+          "q_GeV": 0.021
+        }
+      },
+      "SigmaDoublePrime": {
+        "max_abs": 1.4051260155412137E-16,
+        "max_rel": 1.562895916084343E-13,
+        "worst_key": {
+          "A": 129,
+          "q_GeV": 0.0155
+        }
+      },
+      "SigmaPrime": {
+        "max_abs": 2.949029909160572E-16,
+        "max_rel": 2.1979761662964989E-07,
+        "worst_key": {
+          "A": 129,
+          "q_GeV": 0.0155
+        }
+      },
+      "PhiPP": {
+        "max_abs": 8.526512829121202E-14,
+        "max_rel": 6.00127421681661E-07,
+        "worst_key": {
+          "A": 131,
+          "q_GeV": 0.01075
+        }
+      },
+      "PhiTildePrime": {
+        "max_abs": 1.5959455978986625E-16,
+        "max_rel": 9.145634128837647E-10,
+        "worst_key": {
+          "A": 131,
+          "q_GeV": 0.016
+        }
+      },
+      "Delta": {
+        "max_abs": 2.0816681711721685E-16,
+        "max_rel": 4.20565849988141E-09,
+        "worst_key": {
+          "A": 131,
+          "q_GeV": 0.00425
+        }
+      },
+      "MPhiPP": {
+        "max_abs": 3.126388037344441E-13,
+        "max_rel": 1.2914805490797328E-09,
+        "worst_key": {
+          "A": 131,
+          "q_GeV": 0.00075
+        }
+      },
+      "SigmaPrimeDelta": {
+        "max_abs": 1.6306400674181987E-16,
+        "max_rel": 1.8856824944082545E-10,
+        "worst_key": {
+          "A": 131,
+          "q_GeV": 0.0085
+        }
+      }
+    },
+    "failures": []
+  },
+  "tolerance_diagnostics": {
+    "status": "PASS",
+    "rows_compared": 16807,
+    "rows_per_isotope": {
+      "128": 2401,
+      "129": 2401,
+      "130": 2401,
+      "131": 2401,
+      "132": 2401,
+      "134": 2401,
+      "136": 2401
+    },
+    "responses": {
+      "M": {
+        "max_abs": 2.0463630789890885E-12,
+        "max_rel": 6.27818232427859E-06,
+        "max_tolerance_ratio": 0.0634351970218041,
+        "worst_key": {
+          "A": 131,
+          "q_GeV": 0.021
+        },
+        "max_imaginary_residual": 0.0
+      },
+      "SigmaDoublePrime": {
+        "max_abs": 1.4051260155412137E-16,
+        "max_rel": 1.562895916084343E-13,
+        "max_tolerance_ratio": 3.125791832168686E-07,
+        "worst_key": {
+          "A": 129,
+          "q_GeV": 0.0155
+        },
+        "max_imaginary_residual": 0.0
+      },
+      "SigmaPrime": {
+        "max_abs": 2.949029909160572E-16,
+        "max_rel": 2.1979761662964989E-07,
+        "max_tolerance_ratio": 3.314588153371847E-05,
+        "worst_key": {
+          "A": 129,
+          "q_GeV": 0.0155
+        },
+        "max_imaginary_residual": 0.0
+      },
+      "PhiPP": {
+        "max_abs": 8.526512829121202E-14,
+        "max_rel": 6.00127421681661E-07,
+        "max_tolerance_ratio": 0.0013773977661927662,
+        "worst_key": {
+          "A": 131,
+          "q_GeV": 0.01075
+        },
+        "max_imaginary_residual": 0.0
+      },
+      "PhiTildePrime": {
+        "max_abs": 1.5959455978986625E-16,
+        "max_rel": 9.145634128837647E-10,
+        "max_tolerance_ratio": 3.260229813981802E-06,
+        "worst_key": {
+          "A": 131,
+          "q_GeV": 0.016
+        },
+        "max_imaginary_residual": 0.0
+      },
+      "Delta": {
+        "max_abs": 2.0816681711721685E-16,
+        "max_rel": 4.20565849988141E-09,
+        "max_tolerance_ratio": 1.2499640254424209E-07,
+        "worst_key": {
+          "A": 131,
+          "q_GeV": 0.00425
+        },
+        "max_imaginary_residual": 0.0
+      },
+      "MPhiPP": {
+        "max_abs": 3.126388037344441E-13,
+        "max_rel": 1.2914805490797328E-09,
+        "max_tolerance_ratio": 0.0010117949000182655,
+        "worst_key": {
+          "A": 131,
+          "q_GeV": 0.00075
+        },
+        "max_imaginary_residual": 0.0
+      },
+      "SigmaPrimeDelta": {
+        "max_abs": 1.6306400674181987E-16,
+        "max_rel": 1.8856824944082545E-10,
+        "max_tolerance_ratio": 8.824287530904986E-07,
+        "worst_key": {
+          "A": 131,
+          "q_GeV": 0.0085
+        },
+        "max_imaginary_residual": 0.0
+      }
+    },
+    "rtol": 5E-07,
+    "atol": 2E-12,
+    "imaginary_atol": 2E-12,
+    "tolerance_rule": "abs(delta) <= max(atol, rtol * max(abs(python), abs(native)))"
+  },
+  "warnings": [
+    "Wolfram emitted one non-fatal ClearAll::ssym initialization warning; the fresh-process export completed with exit code 0, all seven files were produced, and both validation stages passed."
+  ],
+  "scope": "Nuclear AFH response database only; finite-t_N nucleon form factors, the three-body L_mu_nu W_A_mu_nu contraction, halo integration, and detector response are outside this gate.",
+  "outputs": [
+    "native/*.csv",
+    "native/native_metadata.txt",
+    "python/afh_v6_full_eight_response_7isotope.csv",
+    "python/metadata.json",
+    "python/validation.json",
+    "native-comparison.json",
+    "comparison-diagnostics.json",
+    "source-files.json",
+    "native-wolfram-transcript.txt",
+    "SHA256SUMS.txt"
+  ]
+}

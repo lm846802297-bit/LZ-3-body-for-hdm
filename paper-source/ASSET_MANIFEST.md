@@ -1,3 +1,5 @@
+> Update 2026-11-19: The historical main_original.tex was removed at the user’s request. Current manuscript equations are in paper-source/main.tex. This document preserves its historical statements.
+
 # Original source asset manifest
 
 Source archive: `3body_for_HDM.zip`  

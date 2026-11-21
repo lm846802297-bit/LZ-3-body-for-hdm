@@ -1,0 +1,57 @@
+[
+  {
+    "path": "inputs/upstream/research/three_body_full_current_nucleon_match/nucleon_vector_form_factors.py",
+    "commit": "07e044e76bdfac2cd5559659fa2d458d49b97255",
+    "sha256": "b9fa7a2df366c6b7413158ad1d9b44d2dda3a1c2ae1f88844f573ce758bec09b"
+  },
+  {
+    "path": "inputs/upstream/research/three_body_full_current_nucleon_match/three_body_phase_space_tensor.py",
+    "commit": "07e044e76bdfac2cd5559659fa2d458d49b97255",
+    "sha256": "12bc17614c17a87c2cde5ae78544011fe50b88ed865ce42d61d82ddaa7e9213f"
+  },
+  {
+    "path": "inputs/upstream/research/three_body_full_current_nucleon_match/three_body_multipole_leptonic_weights.py",
+    "commit": "07e044e76bdfac2cd5559659fa2d458d49b97255",
+    "sha256": "e6ddc390716417f02dd77b6cec53c990cb1f6b16a058df10e6a360a6e40e1f5a"
+  },
+  {
+    "path": "inputs/upstream/research/three_body_spin_resolved_current/spin_resolved_three_body_current.py",
+    "commit": "07e044e76bdfac2cd5559659fa2d458d49b97255",
+    "sha256": "1f4754b169bbd20a1d87caa684e3d2daf523f7d653737d107870692321f27d71"
+  },
+  {
+    "path": "inputs/upstream/research/vector_current_response_audit/vector_current_response_audit.py",
+    "commit": "07e044e76bdfac2cd5559659fa2d458d49b97255",
+    "sha256": "e3bd5a908d49a84085e9eb2f3f6774ef96324fffdb5fcca4c811c1e392a22ea4"
+  },
+  {
+    "path": "inputs/upstream/research/three_body_calculation_and_validation/eq6_kernel.py",
+    "commit": "07e044e76bdfac2cd5559659fa2d458d49b97255",
+    "sha256": "3cdc33ded7bcebc19bba15487de0234a140f13a161f42db5b7bc81163da01619"
+  },
+  {
+    "path": "inputs/upstream/research/three_body_calculation_and_validation/phase_space_convergence.py",
+    "commit": "07e044e76bdfac2cd5559659fa2d458d49b97255",
+    "sha256": "7396b06fb2ea4bc4f857463ea63c48cc60d118ce286a12915cbb7a7a387217b7"
+  },
+  {
+    "path": "inputs/upstream/research/three_body_calculation_and_validation/chi2_decay_width.py",
+    "commit": "07e044e76bdfac2cd5559659fa2d458d49b97255",
+    "sha256": "c54c563d5998ab141151cb19d610c2d2bc3cfc7a3c84da63530f2c4929878ad2"
+  },
+  {
+    "path": "inputs/afh_v6_xe131_eight_response_native.csv",
+    "source": "C:\\Users\\84680\\Documents\\ChatGPT\\3 body HDM\\P0-native-AFH-acceptance-2026-11-18\\native\\afh_v6_xe131_eight_response_native.csv",
+    "sha256": "585ab0f483be0d8131566cefc4cb420c6db7e07bebbcd2b887da568cda2f4ffb"
+  },
+  {
+    "path": "inputs/native-comparison.json",
+    "source": "C:\\Users\\84680\\Documents\\ChatGPT\\3 body HDM\\P0-native-AFH-acceptance-2026-11-18\\native-comparison.json",
+    "sha256": "1d3b68ac621e22788a676a9a2f2c97bd433c70883dc30ceb191f69d4d366a030"
+  },
+  {
+    "path": "inputs/run_manifest.json",
+    "source": "C:\\Users\\84680\\Documents\\ChatGPT\\3 body HDM\\P0-native-AFH-acceptance-2026-11-18\\run_manifest.json",
+    "sha256": "904ae9fbe1a8321018866e7aaa6465c7c7c72b1c42739e92c97bd528ea75f9e6"
+  }
+]
