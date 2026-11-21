@@ -10,6 +10,7 @@ Artifact: `native AFH v6.0 rank-resolved DeltaJ and SigmaPJ multipoles for Xe-12
 | q=0 limit rows | `2acc740c748c889dbe4932d5e97bb3d9e1888d5e433e894e849403ae41165304` |
 | Validation JSON | `d022b70c42ec0c83c38a113cf870a66c658a2aefb3169941d9a2a0c16cc3c605` |
 | P3 native crosscheck JSON | `58e98e72c3b9d0196b90fb428478c249ffc8d28904168d5b87c2cb0558546dbe` |
+| Official P3 artifact zip (run 44911789662, artifact 14709662510) | `a3e1980fdc29a348675b48b442c290e7efb392aa78ba37d7efc711f86635aff2` |
 
 Execution: AFH DMFormFactor v6.0, Wolfram 14.2.0,
 `source_commit=571e3687b495ced48ef64b5f066b82236fea2b27`. The main grid is
@@ -21,9 +22,13 @@ because the native abnormal-parity amplitudes are `0/0` at the origin.
 rank-resolved amplitude rows: Xe-129 rank 1 (2,401) and Xe-131 ranks 1,2,3
 (7,203), with zero imaginary residual and the expected q grid/rank map.
 `PASS_NATIVE_AFH_SPATIAL_MULTIPOLE_CROSSCHECK` additionally compares the native
-archive with the P3-B Python archive over 16,807 total-response rows and the
-same 9,604 rank rows. It does **not** validate the complete three-body tensor
-contraction or a detector-level rate.
+archive with the official P3-B artifact `14709662510` from run `44911789662`:
+16,807 total-response rows and the same 9,604 rank rows. The committed
+`native_crosscheck.json` is byte-identical to the official-artifact comparison
+and to the comparison against the independently regenerated P3 archive; the two
+archives agree pointwise while differing only in CSV/metadata serialization.
+It does **not** validate the complete three-body tensor contraction or a
+detector-level rate.
 
 The machine-readable manifest is `sha256_manifest.json`; CI re-hashes every entry
 and checks `rows=9604`, the rank map, the q=0 analytic-limit declaration, and the

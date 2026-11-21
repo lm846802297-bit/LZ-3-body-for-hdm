@@ -20,7 +20,6 @@
     "q0_method": "analytic Limit[y->0] of native DeltaJ and SigmaPJ OBDME sums",
     "normalization": "raw AFH isoscalar package amplitudes; no physical equal-p/n factor-four rescaling",
     "not_validated_here": [
-      "P3-B Python multipole archive",
       "three-body tensor contraction",
       "detector-level event rate"
     ]
@@ -62,7 +61,7 @@
     },
     "provenance_md": {
       "path": "research/afh_full_response_database/output/native-spatial-multipoles/PROVENANCE.md",
-      "sha256": "248c3e0110c421c1e1d1808b77743329dcf45867bf1bf865b7ae8f87d60198a2"
+      "sha256": "b0d17676ce8634034f3c1a4454dfd203d2e9012abb44c15501cafb6a1c787545"
     },
     "generator_main": {
       "path": "research/afh_full_response_database/run_afh_spatial_multipoles_native.wls",
