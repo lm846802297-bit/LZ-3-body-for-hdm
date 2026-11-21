@@ -16,7 +16,7 @@ class ApplyBToAbsoluteAFHSpectrumTests(unittest.TestCase):
             writer.writeheader()
             writer.writerows(rows)
 
-    def test_exact_A_closure_and_isotope_level_B_resummation(self):
+    def test_exact_P0_closure_and_isotope_level_B_resummation(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             source = root / "source"
@@ -111,7 +111,7 @@ class ApplyBToAbsoluteAFHSpectrumTests(unittest.TestCase):
             )
             self.assertEqual(result["status"], "PASS")
             self.assertLessEqual(
-                result["validation"]["maximum_A_reconstruction_relative_difference"],
+                result["validation"]["maximum_P0_reconstruction_relative_difference"],
                 2.0e-11,
             )
 
@@ -126,9 +126,27 @@ class ApplyBToAbsoluteAFHSpectrumTests(unittest.TestCase):
 
             self.assertEqual(len(rates), 4)
             self.assertEqual(len(isotope_rates), 10)
-            self.assertTrue(all(0.0 < float(row["B_over_A_rate"]) < 1.0 for row in rates))
+            self.assertTrue(all(0.0 < float(row["B_over_P0_rate"]) < 1.0 for row in rates))
+            self.assertTrue(all("c_M_raw" in row and "c_M_hat" in row for row in isotope_rates))
+            self.assertAlmostEqual(
+                float(isotope_rates[0]["c_M_hat"]),
+                float(isotope_rates[0]["c_M_raw"])/3.0,
+                places=12,
+            )
+            self.assertAlmostEqual(
+                float(isotope_rates[0]["F_M"]),
+                float(isotope_rates[0]["c_M_hat"]),
+                places=12,
+            )
             self.assertTrue(all(float(row["nucleon_FF_rate_multiplier"]) > 0.0
                                 for row in isotope_rates))
+            transfer_row = isotope_rates[0]
+            q2_ff = 2.0 * float(transfer_row["mA_GeV"]) * float(transfer_row["ER_keV"]) * 1.0e-6
+            qA2 = q2_ff + (float(transfer_row["ER_keV"]) * 1.0e-6) ** 2
+            self.assertAlmostEqual(float(transfer_row["Q2_form_factor_GeV2"]), q2_ff, places=16)
+            self.assertAlmostEqual(float(transfer_row["Q_A2_GeV2"]), qA2, places=16)
+            self.assertAlmostEqual(float(transfer_row["t_N_GeV2"]), -q2_ff, places=16)
+            self.assertAlmostEqual(float(transfer_row["t_A_GeV2"]), -q2_ff, places=16)
             hybrid_100 = next(
                 row for row in isotope_rates
                 if row["scenario"] == "Hybrid-9 (AFH-7 + Helm-2)"

@@ -1,0 +1,61 @@
+{
+  "additional_reproduction_inputs": [
+    {
+      "artifact_id": 14155360851,
+      "note": "Referenced but not copied into the Git repository because the raw event artifact is approximately 328 MB; the NEST source commit and generator code are pinned.",
+      "role": "NEST stratified response raw event source",
+      "run_id": 43697104437,
+      "sha256": "682e2ba71063d6ef835b37a6d328a84ab7c609f404856aa83d56e4b875794bab"
+    },
+    {
+      "artifact_id": 14596147908,
+      "role": "PR87 formal B production spectra input to the NEST fold",
+      "run_id": 44662497177,
+      "sha256": "f5c1d8d791bffff3159a6e279e5a0e68b705bf07466be6b489ba9a49e29ce7ac",
+      "source_commit": "40a3291ba2d00516ed8d6f8bf69c48531326047d"
+    }
+  ],
+  "archive_status": "NATIVE_OUTPUTS_ARCHIVED_AND_SHA256_VERIFIED",
+  "artifacts": [
+    {
+      "artifact_id": 14607350801,
+      "artifact_name": "halo-seven-isotope-full-vs-ID-full-recoil-scan",
+      "artifact_sha256": "a570bbf81119e8b7b87526c51b7012d056c0c07e290618bb7e12469b43571194",
+      "artifact_size_bytes": 368727,
+      "extracted_path": "native/halo-highorder",
+      "key": "halo-highorder",
+      "run_conclusion": "success",
+      "run_head_sha": "aabaf2f2c8ecb1b9de28cf29c13cc1f92fa10f83",
+      "run_id": 44681433965,
+      "run_name": "Three-body full integral vs I(D), halo and seven isotopes",
+      "zip_path": "source_artifacts/halo-highorder.zip"
+    },
+    {
+      "artifact_id": 14608091362,
+      "artifact_name": "pr86-formal-B-halo-reweight",
+      "artifact_sha256": "b9d261a68a73e480a6e4d84c3aef9c57a0fc5fc80aa1be7079170d0305b6c6c5",
+      "artifact_size_bytes": 900317,
+      "extracted_path": "native/formal-B-highorder-halo",
+      "key": "formal-B-highorder-halo",
+      "run_conclusion": "success",
+      "run_head_sha": "9a9a17467d903eb9059704337c9cbe05bcabbafc",
+      "run_id": 44689438445,
+      "run_name": "Formal B reweight of PR86 seven-isotope halo scan",
+      "zip_path": "source_artifacts/formal-B-highorder-halo.zip"
+    },
+    {
+      "artifact_id": 14605476304,
+      "artifact_name": "lz-2026-formal-B-baseline-nest-fold",
+      "artifact_sha256": "e2cc3a5161850ea189a316769875723783811ace87441dea77debc99b7109c6c",
+      "artifact_size_bytes": 2005877,
+      "extracted_path": "native/formal-B-NEST-fold",
+      "key": "formal-B-NEST-fold",
+      "run_conclusion": "success",
+      "run_head_sha": "74dd75a178f05b83f8107c89180bf75b38ec5bc9",
+      "run_id": 44682999463,
+      "run_name": "LZ 2026 formal B-baseline event-weighted NEST fold",
+      "zip_path": "source_artifacts/formal-B-NEST-fold.zip"
+    }
+  ],
+  "created_from_request": "research/artifact_archives/requests/formal-B-highorder-and-NEST-2026-11-20.json"
+}
