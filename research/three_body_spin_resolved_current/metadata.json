@@ -1,0 +1,27 @@
+{
+  "status": "finite_width_spin_resolved_current_and_fixed_speed_recoil_spectrum_diagnostic",
+  "base_three_body_current_pr": 53,
+  "base_commit": "a56e9c4a1df3ee9777d12d5e8093b4ac4ad78fad",
+  "metric": "(+---)",
+  "width_insertion": "only D_after = W^2-mchi2^2+i*mchi2*Gamma; numerator remains slash(r_after)+mchi2",
+  "finite_width_ward_identity": "qA_mu*T3^mu = (mchi2-mchi1)*ubar'*(N_before/D_before-N_after/(D_after+i*a))*u + i*a/(D_after+i*a)*ubar'*u",
+  "reference_spectrum_parameters": {
+    "mchi_GeV": 1000.0,
+    "ms_keV": 300.0,
+    "mA_GeV": 122.02572741702,
+    "speed_km_s": 776.0,
+    "mV_reference_GeV": 10.0
+  },
+  "width_models": [
+    "zero diagnostic",
+    "pole width as in manuscript",
+    "running scalar-channel absorptive width diagnostic"
+  ],
+  "limitations": [
+    "Point-nucleus current only; internal nuclear spin and orbital responses are not included.",
+    "No AFH Sigma', Sigma'', Delta matching.",
+    "Fixed-speed reduced kernel, not a halo-folded event rate.",
+    "Conditional scalar-only width; no complete vector-sector self-energy.",
+    "On-shell chi2-accessible recoil points excluded from off-shell near-pole scan."
+  ]
+}

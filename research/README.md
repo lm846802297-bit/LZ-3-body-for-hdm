@@ -26,6 +26,8 @@ Read [WORKFLOW.md](WORKFLOW.md), the mandatory [research source hierarchy](RESEA
 - [lz_detector_response/](lz_detector_response/README.md): LZ 2026 public-input and NEST provenance, NR/ER response audits, event-level and two-dimensional three-body response folds, paired Parametric/Full S1 ten-seed statistics and bootstrap, Fig. S2 rate-level folds, and selection-stage diagnostics. The [extended NR/ER archive index](lz_detector_response/lz_2026_extended_nr/README.md) distinguishes the reproducible intermediate NEST proxy from the missing official waveform-level selected PDF and likelihood.
 - [lz_inelastic_2to2_afh_reference/](lz_inelastic_2to2_afh_reference/README.md): AFH v6.0 natural-xenon O1 inelastic 2-to-2 reference-spectrum comparison against approximate points digitized from LZ Figure 1; separate from the three-body model and not an exact LZ reproduction.
 - [figure_packs/](figure_packs/README.md): curated scientific figure collections, indexes, manifests, checksums, and scope notes; metadata does not imply that every image binary is committed.
+- [three_body_spin_resolved_current/](three_body_spin_resolved_current/README.md): spin-resolved 2x2 three-body current, finite-width Ward identity, conserved-current projection, and fixed-speed recoil-kernel scan with zero/pole/running widths.
+- [run_natural_xenon_width_comparison.py](three_body_calculation_and_validation/run_natural_xenon_width_comparison.py): selected-point natural-xenon halo-folded comparison of zero, pole, and running chi2 widths using the existing GCN/JJ55 W_M response grids.
 ## Current result layers
 
 Keep the following quantities separate:
