@@ -242,7 +242,8 @@
           "additionalProperties": false,
           "required": [
             "commit_sha",
-            "script_path"
+            "script_path",
+            "script_sha256"
           ],
           "properties": {
             "commit_sha": {
@@ -290,10 +291,12 @@
                 "minLength": 1
               },
               "version": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               },
               "path": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               },
               "uri": {
                 "type": "string",
@@ -317,17 +320,33 @@
                 "type": "string"
               }
             },
-            "anyOf": [
+            "allOf": [
               {
-                "required": [
-                  "sha256"
-                ]
+                "if": {
+                  "required": [
+                    "path"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "sha256"
+                  ]
+                }
               },
               {
-                "required": [
-                  "uri",
-                  "version"
-                ]
+                "if": {
+                  "not": {
+                    "required": [
+                      "path"
+                    ]
+                  }
+                },
+                "then": {
+                  "required": [
+                    "uri",
+                    "version"
+                  ]
+                }
               }
             ]
           }
@@ -357,7 +376,9 @@
           "additionalProperties": false,
           "required": [
             "platform",
-            "runtime"
+            "runtime",
+            "dependencies",
+            "hardware"
           ],
           "properties": {
             "platform": {

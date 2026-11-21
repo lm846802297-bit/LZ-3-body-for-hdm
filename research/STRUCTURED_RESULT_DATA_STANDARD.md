@@ -33,9 +33,9 @@ results/<run_label>/
 - `schema_version`、`record_type=run_manifest`、稳定的 `run_id` 和 UTC 时间；
 - 仓库、项目和工作流标识；
 - 实际运行所用 Git commit SHA、分支、入口脚本路径及脚本指纹；
-- 输入文件的来源、版本、格式、路径/URI、大小、SHA-256，以及所有数据转换；若输入字节不可取得，必须提供不可变 URI 和明确版本；
+- 输入文件的来源、版本、格式、路径/URI、大小、SHA-256，以及所有数据转换；本地输入必须同时提供仓库相对路径和 SHA-256；输入字节不可取得时，必须提供不可变 URI 和明确版本；
 - 物理参数、数值参数和约定：质量、耦合、单位、近似、网格、求积阶数、精度、容差、边界条件、随机种子等；
-- 操作系统、运行时、依赖包版本、硬件；
+- 操作系统、运行时、依赖包版本、硬件；Schema 要求提供入口脚本 SHA-256，并显式记录 runtime、dependencies 和 hardware；
 - 精确命令、开始/结束时间、退出码和运行时长；
 - 每个输出文件的相对路径、角色、格式、字节数、SHA-256；CSV 还记录行数、列名和单位；
 - 验证状态、各项检查的实际结果，以及 Git 归档状态。
@@ -141,6 +141,8 @@ python research/schemas/validate_result_records.py --repo-root . <run_manifest.j
 ```
 
 校验器检查 Schema、严格 JSON 数值、引用文件路径/字节数/SHA-256，以及 CSV 的行数、列名、逐列单位和非有限数值。只传入本次实际存在的 JSON 文件。
+
+使用 `python -m unittest discover -s research/schemas/tests -v` 运行回归测试，覆盖非标准 JSON 常量、浮点溢出/下溢以及输入来源定位规则。
 
 `status=passed` 仅在至少有一项检查且所有检查均为 `passed` 时允许使用；部分完成或含失败项必须使用 `partial`、`failed` 或 `inconclusive`。
 

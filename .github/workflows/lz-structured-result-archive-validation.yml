@@ -37,6 +37,10 @@ jobs:
           python -m py_compile research/afh_default_density_natural_xenon_halo/run_afh7_hybrid9_continuous_spectrum.py
           python -m py_compile research/afh_default_density_natural_xenon_halo/run_afh_default_xenon_responses.py
           python -m py_compile research/three_body_calculation_and_validation/phase_space_convergence.py
+      - name: Run strict result-record validator regression tests
+        run: python -m unittest discover -s research/schemas/tests -v
+      - name: Compile result-record validator
+        run: python -m compileall -q research/schemas
       - name: Validate structured archive writer against frozen AFH outputs
         run: python -m unittest -v research/afh_default_density_natural_xenon_halo/tests/test_result_archive.py
       - name: Run AFH-7/Hybrid-9 regression tests

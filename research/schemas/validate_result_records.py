@@ -7,13 +7,14 @@ import csv
 import hashlib
 import json
 import math
+from decimal import Decimal, InvalidOperation
 import sys
 from pathlib import Path
 
 try:
     from jsonschema import Draft202012Validator, FormatChecker
 except ImportError:
-    print("ERROR: install jsonschema>=4.18,<5 first.", file=sys.stderr)
+    print("ERROR: install the pinned dependency with python -m pip install -r docs/schemas/requirements-result-validation.txt.", file=sys.stderr)
     raise SystemExit(2)
 
 
@@ -21,9 +22,27 @@ def reject_nonstandard_constant(value: str):
     raise ValueError(f"non-standard JSON numeric constant is forbidden: {value}")
 
 
+def parse_finite_float(value: str) -> float:
+    """Reject JSON floats that overflow or underflow during binary-float parsing."""
+    try:
+        exact = Decimal(value)
+        numeric = float(exact)
+    except (InvalidOperation, OverflowError, ValueError) as exc:
+        raise ValueError(f"invalid JSON numeric value: {value}") from exc
+    if not math.isfinite(numeric):
+        raise ValueError(f"JSON numeric value overflows a finite float: {value}")
+    if exact != 0 and numeric == 0.0:
+        raise ValueError(f"JSON numeric value underflows to zero: {value}")
+    return numeric
+
+
 def load_json(path: Path):
     with path.open("r", encoding="utf-8") as stream:
-        return json.load(stream, parse_constant=reject_nonstandard_constant)
+        return json.load(
+            stream,
+            parse_constant=reject_nonstandard_constant,
+            parse_float=parse_finite_float,
+        )
 
 
 def referenced_files(record: dict):
