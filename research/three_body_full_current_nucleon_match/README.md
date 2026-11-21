@@ -169,12 +169,17 @@ L_{\mu\nu}^{(3)}=\sum_aG_{\mu a,\nu a}^{(3)}.
 The before-emission, after-emission, and coherent interference Gram
 tensors are archived separately.
 
-Workflow run [44231019823](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44231019823)
-completed successfully. It generated 12 tensors (four fixed-speed
-benchmarks, each with zero, pole, and running widths) and passed the
-23-test full-current regression suite.
+The earlier diagnostic archive from workflow
+[44231019823](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44231019823)
+generated 12 tensors (four fixed-speed benchmarks, each with zero, pole, and
+running widths). It is retained as a historical width-sensitivity comparison.
+The formal-production rerun generates one tensor per benchmark with the
+asymmetric Eq. (19) pole-width prescription only.
 
-| Integrated-tensor diagnostic | Result | Acceptance |
+The numerical table below belongs to the historical multi-width diagnostic
+archive; the pole-only formal rerun has its own artifact and acceptance record.
+
+| Integrated-tensor diagnostic | Historical result | Acceptance |
 |---|---:|---:|
 | Maximum independent Dirac-trace contraction residual | \(1.59813\times10^{-9}\) | \(<2\times10^{-9}\) |
 | Maximum Gram/tensor Hermiticity residual | 0 | \(<10^{-12}\) |
@@ -197,8 +202,9 @@ This is the DM-side tensor, not yet the AFH nuclear response
 The Python module phase_space_tensor_convergence.py compares every complex
 component of the \(16\times16\) Gram tensor (256 entries), every complex
 component of the \(4\times4\) Lorentz tensor (16 entries), and the
-point-nucleus contractions. The stress scan covers three benchmark
-families, each with zero, pole, and running widths:
+point-nucleus contractions. The formal stress scan covers three benchmark families with the pole-width
+prescription only. The earlier zero/running-width rows are diagnostic history,
+not formal-production inputs:
 
 | Benchmark | \(\Delta m\) | \(E_R\) | \(g_2\) | Mapping |
 |---|---:|---:|---:|---|
@@ -213,12 +219,15 @@ The quadrature orders \((n_W,n_z,n_\phi)\) are:
 | Near pole | \(32\times16\times8\) | \(40\times24\times12\) | \(48\times32\times16\) |
 | Off pole | \(24\times16\times8\) | \(32\times24\times12\) | \(40\times32\times16\) |
 
-The total number of nodes across all nine scans and three orders is
-339,456. Acceptance compares medium against high order, with tolerances
+The formal pole-only rerun contains 113,152 quadrature nodes across the three
+benchmark families and three orders. Acceptance compares medium against high order, with tolerances
 \(10^{-3}\) for Frobenius differences, \(10^{-2}\) for active-component
 relative differences, and \(10^{-3}\) for point-nucleus contractions.
 
-**Result: all nine medium-to-high comparisons PASS.**
+The historical three-width scan passed its reported medium-to-high
+comparisons. The formal pole-only scan is rerun by the updated workflow; its
+new result must be read from the newly generated artifact rather than inferred
+from the historical multi-width archive.
 
 | Metric | Worst observed | Tolerance |
 |---|---:|---:|
@@ -608,10 +617,11 @@ For \(m_{\chi_1}=1000\) GeV, \(m_s=300\) keV, \(v_\chi=776\) km/s and
 | 200 keV | 450 keV | 0.77830934 (-22.1691%) |
 | 267 keV | 362 keV | 0.64921591 (-35.0784%) |
 
-Pole/running widths give the same ratio to \(2.3\times10^{-16}\) or better:
-the common \(L_C^{(3)}\) phase-space factor cancels from this ratio. The
-medium-to-high phase-space differences are below \(4.8\times10^{-10}\) for
-both recoil points and both width prescriptions.
+The formal fixed-speed result uses the pole-width prescription only. The
+normalized AFH-to-pointlike ratio is independent of the common
+\(L_C^{(3)}\) phase-space factor because it cancels between numerator and
+denominator. The earlier pole/running comparison remains a historical
+sensitivity diagnostic and is not part of routine production.
 
 The earlier \(-21.48\%\) and \(-34.24\%\) values are historical
 \(F_1^2\)-normalization diagnostics. The updated result uses the matched
@@ -736,8 +746,9 @@ executes the native workflow.
 Workflow 44305980766 passed the fixed-speed AFH response-basis contraction:
 84/84 positive kernels, with rankwise spatial contributions reconstructing
 the total spatial sector to a maximum absolute residual of 1.11e-16. The
-largest spatial/charge ratio in the selected benchmarks is
-7.10e-9 (Xe-131, 267 keV, 776 km/s, near-pole running-width benchmark).
+largest spatial/charge ratio in the selected historical benchmarks was
+7.10e-9 (Xe-131, 267 keV, 776 km/s, near-pole running-width diagnostic); the
+formal pole-only rerun is recorded separately.
 This is a provisional fixed-speed result, not the final P3-C covariant
 equivalence test or a halo-folded prediction.
 
@@ -762,7 +773,7 @@ The full-recoil scan regression is included in the standard unittest discovery: 
 
 The 943-point native-grid charge-kernel figures are regenerated in a consistent serif/LaTeX-style publication format by the charge-scan plotting script. Both SVG and PDF versions are produced.
 
-The fixed-benchmark absolute charge-sector spectrum is calculated by the fixed-benchmark absolute-dsigma script, using one fixed \(\Delta m=450\) keV across the entire kinematic interval, the current bare-nucleus Xe-131 mass convention, the zero-width prescription, the exact invariant mediator denominator \(m_V^2-t_A\), with \(t_A=-2m_AE_R\), while keeping spatial \(Q_A^2=2m_AE_R+E_R^2\) separate for AFH responses and static nucleon form factors, the relativistic incident momentum, and the public Eq. (6) prefactor. It includes the coherent native-AFH \(M+\Phi''+M\Phi''\) charge sector and outputs the full pointwise CSV, metadata, SVG and PDF.
+The fixed-benchmark absolute charge-sector spectrum is calculated by the fixed-benchmark absolute-dsigma script, using one fixed \(\Delta m=450\) keV across the entire kinematic interval, the current bare-nucleus Xe-131 mass convention, the asymmetric Eq. (19) pole-width prescription (first propagator zero-width, second propagator constant pole-width), the exact invariant mediator denominator \(m_V^2-t_A\), with \(t_A=-2m_AE_R\), while keeping spatial \(Q_A^2=2m_AE_R+E_R^2\) separate for AFH responses and static nucleon form factors, the relativistic incident momentum, and the public Eq. (6) prefactor. It includes the coherent native-AFH \(M+\Phi''+M\Phi''\) charge sector and outputs the full pointwise CSV, metadata, SVG and PDF.
 
 - Method and scope: [XE131_FIXED_BENCHMARK_ABSOLUTE_DSIGMA.md](XE131_FIXED_BENCHMARK_ABSOLUTE_DSIGMA.md)
 - Calculation: xe131_fixed_benchmark_absolute_dsigma.py
@@ -780,9 +791,10 @@ Important: the absolute spectrum is charge-sector only. It is not labelled as th
 The fixed-speed Xe-131 six-channel scan now compares the coherent charge
 responses \(M,\Phi'',M\Phi''\) with the leading-static spatial responses
 \(\Delta,\Sigma',\Sigma'\Delta\), at identical recoil points and with the
-full integrated three-body phase-space tensor. The scan contains 140
-accepted recoil/width rows across the \(\Delta m=450\) keV off-pole and
-\(\Delta m=362\) keV near-pole benchmarks.
+full integrated three-body phase-space tensor. The formal scan now evaluates the pole-width prescription only, with one
+row per accepted recoil point across the \(\Delta m=450\) keV off-pole and
+\(\Delta m=362\) keV near-pole benchmarks. The earlier two-width row count
+is retained only as a historical diagnostic.
 
 A separate interpolation audit was added after finding a diffraction
 minimum in \(W_M\) near \(q_A\simeq0.256\) GeV. It compares PCHIP with
@@ -815,3 +827,79 @@ Xe-131 charge scan. The old queued run 44306907993 predates that update;
 a fresh workflow dispatch is required after the Windows/Wolfram runner is
 online. Until that run returns its artifact and validation PASS, the
 diffraction-minimum interpolation gate remains open.
+
+
+## Formal production policy — AFH only, pole width (2026-11-18)
+
+The formal production pipeline is deliberately narrower than the historical
+comparison suite:
+
+- **Nuclear input:** AFH v6.0 native Xe-131 responses and the AFH seven-isotope
+  response/multipole archives. GCN and JJ55 are excluded from formal results,
+  plots, ratios, and acceptance criteria; their old scripts remain separate
+  historical diagnostics and are not called by this pipeline.
+- **Width:** `width_scheme="pole"` is the sole formal-production setting.
+  It implements the asymmetric Eq. (19) prescription: the first `p-k`
+  propagator retains `+i0+`, while the second `p'+k` propagator carries
+  `+i m_chi2 Gamma_chi2(m_chi2)`. Zero-width and running-width calculations
+  are sensitivity controls only.
+- **Fixed-speed Xe-131 charge-sector absolute spectrum:** regenerated by
+  `xe131_fixed_benchmark_absolute_dsigma.py`. This is explicitly the
+  coherent `M + Phi'' + M Phi''` charge sector, not the complete six-channel
+  result.
+- **Fixed-speed six-channel AFH response scan:** regenerated by
+  `xe131_full_afh_fixed_speed_recoil_scan.py`, retaining
+  `M, Phi'', M Phi'', Delta, Sigma', Sigma' Delta` and their signed
+  interference terms. The spatial OBDME archive remains provisional pending
+  native-Wolfram validation and P3-C amplitude-level matching; this scan is
+  therefore not promoted to a final absolute `d sigma/dE_R`.
+- **Integrated three-body tensor and AFH contraction:** the default full-current
+  workflow now emits pole-only `G^(3)`, `L_munu^(3)`, AFH multipole
+  coefficients, and the fixed-speed AFH response contraction.
+  Component-wise quadrature convergence is also rerun with pole width only.
+- **Natural xenon:** the AFH-only hybrid and AME2020 halo-fold workflows already
+  use the constant pole-width prescription. They remain downstream of the
+  fixed-speed Xe-131 acceptance.
+
+All new artifacts must report the width scheme, `g2`, pole width, recoil
+kinematics, AFH source hashes, and convergence checks. Historical
+zero/running-width outputs are not overwritten or relabelled as formal data.
+
+
+### Pole-only rerun — completed artifacts (PR #65)
+
+The PR-triggered full-current workflow
+[44336338072](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44336338072)
+completed successfully. Its artifact is
+[full-three-body-current-nucleon-match-and-phase-space-tensor, artifact 14441427374](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44336338072).
+
+- The phase-space-integrated tensor contains four benchmarks and pole width only.
+- Maximum independent Dirac-trace residual: 1.58784e-9 (acceptance: 2e-9).
+- Minimum Gram eigenvalue: -3.46081e-14 (PSD tolerance: -1e-10).
+- AFH Eq. (107) coefficient extraction: maximum spatial Cauchy-identity residual 1.71779e-16; direct-versus-continuity residual 1.50736e-16.
+- The AFH contraction contains 28 rows (four benchmarks x seven isotopes); all 28 total kernels are positive.
+- Maximum spatial/charge ratio in this provisional contraction: 7.03050e-9.
+- Rank-resolved spatial-response reconstruction residual: 1.11022e-16.
+
+The component-wise pole-only convergence gate also passed in the same workflow.
+Its artifact is
+[three-body-phase-space-component-convergence, artifact 14440069866](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44336338072).
+The worst final medium-to-high Frobenius difference is 1.45488e-8; the worst active-component relative difference is 1.53745e-5.
+
+The fixed-speed charge-sector ratio workflow
+[44336338146](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44336338146)
+also passed. Its artifact is
+[xe131-fixed-speed-charge-sector-dsigma-ratio, artifact 14441996611](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44336338146).
+The pole-only ratios are 0.77830934 at 200 keV (Delta m=450 keV) and
+0.64921591 at 267 keV (Delta m=362 keV). These normalized ratios are
+unchanged by the common pole-width phase-space factor, which cancels between
+numerator and denominator.
+
+**Status qualification:** the seven-isotope AFH-8 charge archive is marked
+PROVISIONAL_PYTHON, and the spatial P3-B archive is marked
+PROVISIONAL_SOURCE_TRANSLATED_AFH_SPATIAL_RESPONSES. The 28-row contraction
+is therefore PROVISIONAL_AFH_CONTRACTION_PASS, not native-Wolfram-validated
+or a final detector prediction. The separate one-point
+`full_current_nucleon_match.json` retains zero/pole/running width controls
+as a current-matching sensitivity diagnostic; those controls are not used
+in the formal pole-only phase-space tensor or AFH contraction.

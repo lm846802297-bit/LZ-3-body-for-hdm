@@ -19,10 +19,10 @@ from three_body_phase_space_tensor import (
     integrate_spin_resolved_tensor,
 )
 
-WIDTH_SCHEMES = ("zero", "pole", "running")
+WIDTH_SCHEMES = ("pole",)
 
-# Stress points: the narrow-width near-pole cases, plus the established
-# off-pole green benchmark. All are fixed-speed Xe-131 diagnostic points.
+# Formal-production stress points: near-pole and off-pole Xe-131 benchmarks.
+# All convergence levels use the same constant pole-width prescription.
 CASES = (
     {
         "name": "near_pole_g2_0p1",
@@ -293,6 +293,8 @@ def run_convergence_scan(
             "G and L tensors at selected fixed-speed Xe-131 stress benchmarks; "
             "not AFH nuclear matching"
         ),
+        "width_schemes": list(WIDTH_SCHEMES),
+        "formal_width_prescription": "Eq. (19) asymmetric constant pole width in the second chi2 propagator only",
         "benchmarks": case_results,
         "acceptance": {
             "successive_high_order_pair_pass": all_final_pass,

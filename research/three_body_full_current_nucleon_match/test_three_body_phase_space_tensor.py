@@ -11,6 +11,8 @@ import spin_resolved_three_body_current as dm
 
 
 class ThreeBodyPhaseSpaceTensorTests(unittest.TestCase):
+    def test_formal_production_width_policy_is_pole_only(self):
+        self.assertEqual(tensor.FORMAL_WIDTH_SCHEME, "pole")
     def test_q_frame_rotation_is_orthonormal_and_right_handed(self):
         for q in (
             np.asarray([0.0, 0.0, 1.0, 0.0]),

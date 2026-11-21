@@ -5,8 +5,9 @@ The DM-side L_C is obtained from the full phase-space-integrated tensor using
 the nuclear-current continuity relation, conditional on conservation of the
 complete nuclear vector current. Native AFH M/Phi''/M-Phi'' responses are
 contracted with finite-t_N charge coefficients and compared with the original
-pointlike 9 W_M baseline. Transverse nuclear-current multipoles are not
-included in this restricted Coulomb-sector ratio.
+pointlike 9 W_M baseline using the formal constant pole-width prescription.
+Transverse nuclear-current multipoles are not included in this restricted
+Coulomb-sector ratio.
 """
 from __future__ import annotations
 
@@ -48,7 +49,7 @@ BENCHMARKS = {
     200.0: (450.0e-6, (32, 24, 12), (40, 32, 16)),
     267.0: (362.0e-6, (40, 24, 12), (48, 32, 16)),
 }
-WIDTH_SCHEMES = ("pole", "running")
+WIDTH_SCHEMES = ("pole",)
 
 
 def exact_qA_GeV(mA_GeV: float, ER_keV: float) -> float:
@@ -338,11 +339,8 @@ def run(afh_csv: Path) -> dict:
             row["finite_tN_form_factors_and_charge_kernels"]["full_charge_over_pointlike_M"]
             for row in width_rows
         ]
-        if max(ratios) - min(ratios) > 2.0e-13:
-            raise AssertionError(
-                "Coulomb-sector ratio should be independent of pole/running width "
-                "because the common integrated L_C cancels"
-            )
+        if len(width_rows) != 1 or width_rows[0]["width_scheme"] != "pole":
+            raise AssertionError("formal fixed-speed charge result must contain exactly one pole-width scenario")
         results.append({
             "ER_keV": ER_keV,
             "benchmark": {
@@ -365,9 +363,10 @@ def run(afh_csv: Path) -> dict:
                 ]
             ),
             "width_scenarios": width_rows,
-            "width_independence_check": {
-                "ratio_max_minus_min": max(ratios) - min(ratios),
-                "interpretation": "finite widths change the absolute dSigma/dER, but cancel because the same L_C multiplies numerator and denominator",
+            "formal_width_scheme": "pole",
+            "common_factorization_check": {
+                "ratio_uses_same_LC_in_numerator_and_denominator": True,
+                "interpretation": "the common pole-width phase-space factor L_C cancels from this normalized ratio",
             },
         })
     return {
@@ -392,6 +391,7 @@ def run(afh_csv: Path) -> dict:
             "speed_kms": SPEED_KM_S,
             "g2": G2,
             "width_schemes": list(WIDTH_SCHEMES),
+            "formal_width_prescription": "Eq. (19) asymmetric: first p-k propagator remains zero-width (+i0+); second p'+k propagator uses constant pole width evaluated at m_chi2",
         },
         "nuclear_input": {
             "target": "Xe-131",

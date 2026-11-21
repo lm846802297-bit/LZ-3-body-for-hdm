@@ -2,8 +2,10 @@
 """Absolute fixed-benchmark Xe-131 d sigma/dER in the AFH charge sector.
 
 The complete three-body DM phase space is integrated pointwise at fixed
-Delta m=450 keV and zero-width prescription. Public flux, mediator, coupling
-and target-mass prefactors are restored after the coherent AFH charge
+Delta m=450 keV with the formal asymmetric Eq. (19) prescription: the first
+p-k propagator is zero-width (+i0+), while the second p'+k propagator carries
+the constant pole width evaluated at m_chi2. Public flux, mediator, coupling
+and target-mass prefactors are restored after the coherent native-AFH charge
 contraction. Transverse nuclear multipoles are not included.
 """
 from __future__ import annotations
@@ -34,7 +36,7 @@ from xe131_fixed_speed_charge_dsigma import (
 
 DELTA_M_GEV = 450.0e-6
 COUPLING_PRODUCT_SQUARED = 1.0
-WIDTH_SCHEME = "zero"
+WIDTH_SCHEME = "pole"
 MAPPING = "threshold_u2"
 CURVE_ORDER = (20, 16, 12)
 HIGH_ORDER = (40, 32, 16)
@@ -90,6 +92,9 @@ def phase_space_integral(ER_keV: float, order: tuple[int, int, int]) -> dict:
         return {
             "phase_space_open": False, "L00_GeV2": 0.0, "L_C_GeV2": 0.0,
             "pole_clearance_keV": (MCHI_GEV + DELTA_M_GEV - math.sqrt(wmax))*1.0e6,
+            "Gamma_pole_keV": eq6.chi2_width_dirac_scalar(
+                MCHI_GEV, MS_GEV, DELTA_M_GEV, G2
+            ) * 1.0e6,
             "quadrature_points": 0,
         }
     contractions = result["point_nucleus_contractions"]
@@ -108,6 +113,7 @@ def phase_space_integral(ER_keV: float, order: tuple[int, int, int]) -> dict:
         "phase_space_open": True, "L00_GeV2": L00, "L_C_GeV2": LC,
         "L_C_over_L00_minus_one": LC / L00 - 1.0,
         "pole_clearance_keV": float(result["pole_clearance_keV"]),
+        "Gamma_pole_keV": float(result["Gamma_pole_keV"]),
         "quadrature_points": int(result["quadrature_points"]),
     }
 
@@ -170,6 +176,7 @@ def calculate_row(ER_keV: float, response_bundle: dict,
         "W_MPhiPP": responses["MPhiPP"],
         "L00_GeV2": phase["L00_GeV2"], "L_C_GeV2": phase["L_C_GeV2"],
         "pole_clearance_keV": phase["pole_clearance_keV"],
+        "Gamma_pole_keV": phase["Gamma_pole_keV"],
         "quadrature_points": phase["quadrature_points"],
         "nw": order[0], "nz": order[1], "nphi": order[2],
         "pchi_GeV": kin["pchi_GeV"],
@@ -302,7 +309,7 @@ def run(afh_csv: Path, outdir: Path) -> dict:
             MCHI_GEV, MS_GEV, DELTA_M_GEV, MA_XE131_GEV,
             ER * 1.0e-6, SPEED_KM_S,
             nw=LEGACY_ORDER[0], nz=LEGACY_ORDER[1],
-            nphi=LEGACY_ORDER[2], width_scheme="zero",
+            nphi=LEGACY_ORDER[2], width_scheme="pole", g2=G2,
         )
         residual = abs(new["L00_GeV2"] - old) / max(abs(old), 1.0e-300)
         legacy_checks.append({
@@ -351,6 +358,13 @@ def run(afh_csv: Path, outdir: Path) -> dict:
             "mV_GeV": MV_GEV, "speed_km_s": SPEED_KM_S, "g2_for_width": G2,
             "coupling_product_squared_(g1_g2_gVN)^2": COUPLING_PRODUCT_SQUARED,
             "width_scheme": WIDTH_SCHEME,
+            "Gamma_chi2_pole_keV": eq6.chi2_width_dirac_scalar(
+                MCHI_GEV, MS_GEV, DELTA_M_GEV, G2
+            ) * 1.0e6,
+            "propagator_width_policy": (
+                "Eq. (19): first p-k propagator is zero-width (+i0+); "
+                "second p'+k propagator carries +i*m_chi2*Gamma_chi2_pole"
+            ),
             "propagator": "1/(mV^2-t_A), t_A=q_A^2=-2*mA*ER; Q_A^2=2*mA*ER+ER^2 is not used in the mediator denominator",
             "incident_momentum": "p_chi=m_chi*gamma*v/c",
         },
@@ -400,6 +414,7 @@ def run(afh_csv: Path, outdir: Path) -> dict:
             "Single isotope and fixed incident speed only; no halo average, isotope sum, detector response, exposure, event count or exclusion.",
             "Coupling-product-squared is the unit reference normalization; results scale linearly with this quantity.",
             "The six-channel spatial OBDME candidate remains provisional pending native-Wolfram spatial-response validation and P3-C amplitude-level matching.",
+            "The pole width is conditional on Dirac chi2, a real scalar, a pure-scalar off-diagonal Yukawa coupling, and no additional open chi2 decay channels.",
         ],
         "output_files": [
             csv_path.name, metadata_path.name,

@@ -4,6 +4,7 @@ import numpy as np
 
 from xe131_full_afh_fixed_speed_recoil_scan import (
     EXPECTED_CHARGE_RATIOS,
+    FORMAL_WIDTH_SCHEMES,
     RESPONSE_NAMES,
     contract_six_channels,
     recoil_cases,
@@ -61,6 +62,9 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
             "full_over_pointlike_M",
         ):
             self.assertAlmostEqual(a[key], b[key], places=12, msg=key)
+
+    def test_formal_six_channel_scan_uses_pole_width_only(self):
+        self.assertEqual(FORMAL_WIDTH_SCHEMES, ("pole",))
 
     def test_two_recoil_anchors_are_not_mixed_into_one_benchmark(self):
         cases = {case["name"]: case for case in recoil_cases()}
