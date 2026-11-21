@@ -1,6 +1,6 @@
 # AFH v6.0 full response database for natural xenon
 
-**Status: provisional Python implementation; native seven-isotope validation pending.**
+**Status: provisional Python implementation; native seven-isotope validation committed under `output/native/` (16,807/16,807 rows, `PASS`).**
 
 This study extends the existing AFH isotope-response archive from the charge
 and selected spatial channels to the complete set of eight response functions
@@ -154,6 +154,25 @@ data provenance) and `output/xe131-dense-charge-dip/sha256_manifest.json`.
 and checks that the validation scope is limited to the Xe-131
 \(W_M\), \(W_{\Phi''}\), \(W_{M\Phi''}\) responses; it does not certify the
 spatial multipoles or the seven-isotope eight-response database.
+
+### 5.2 Native seven-isotope eight-response archive
+
+`output/native/` contains the committed native Wolfram export for all seven
+isotopes: 2,401 q nodes per isotope and eight `ResponseNuclear` channels
+(16,807 rows). `native_comparison.json` records a pointwise `PASS` against the
+Python reference. `PROVENANCE.md` (section 8.4) and `sha256_manifest.json`
+pin the hashes; `verify_native_full_response_provenance.py` re-hashes the
+archive and checks the comparison gate.
+
+### 5.3 Native rank-resolved spatial multipoles
+
+`output/native-spatial-multipoles/` contains the native Xe-129/Xe-131
+`DeltaJ` and `SigmaPJ` amplitudes: 2,401 q nodes, ranks `129=1` and
+`131=1,2,3`, 9,604 rows. The four `q=0` rows use the analytic `y -> 0` limit;
+the remaining rows use direct native OBDME sums. `PROVENANCE.md` (section 8.5)
+and `sha256_manifest.json` pin the hashes;
+`verify_native_spatial_multipoles_provenance.py` re-hashes the archive and
+checks the row/rank/q=0 metadata.
 
 ## 6. Acceptance gates
 
