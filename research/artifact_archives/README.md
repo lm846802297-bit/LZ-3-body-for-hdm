@@ -1,0 +1,43 @@
+# Research artifact archives
+
+This directory contains versioned requests and standard-library tooling for preserving GitHub Actions numerical artifacts as permanent research records.
+
+## Rules
+
+- A successful workflow artifact is a transport/source record, not a permanent archive.
+- Preserve the exact source workflow run ID, source commit SHA, artifact ID/name, GitHub-reported digest, artifact byte size, and source URL.
+- Download the original artifact ZIP and verify its SHA-256 against GitHub metadata before extraction.
+- Extract and commit native CSV/JSON/TXT outputs; do not rely on the ZIP alone.
+- Generate a run manifest and per-file SHA256SUMS. The checksum list covers the manifest, README, raw ZIP, and extracted files; it excludes only SHA256SUMS itself.
+- Preserve superseded source runs when they establish provenance. If a later rerun has byte-identical extracted files, record the equivalence and keep the canonical extraction unambiguous.
+- Keep archive status separate from scientific validation status and detector-level prediction status.
+
+## PR #78 / PR #80 archive
+
+The request [lz-pr78-pr80-2026-11-20.json](requests/lz-pr78-pr80-2026-11-20.json) pins the original PR #78 artifact, the final PR #74 integration rerun containing the PR #78 work, and the PR #80 B-baseline artifact.
+
+The standard-library builder [build_pr78_pr80_archive.py](build_pr78_pr80_archive.py) verifies run/artifact metadata, source ZIP digests, ZIP member paths, byte-identical halo payloads, expected CSV row counts and isotope grids, B-baseline conventions, covariance settings, and quadrature-convergence summaries. The GitHub Actions workflow .github/workflows/archive-lz-pr78-pr80-artifacts.yml downloads and extracts the pinned artifacts, runs the builder, verifies SHA256SUMS, and commits the native outputs to the integration branch.
+
+The resulting archives live in the corresponding study directories:
+
+- [Halo/seven-isotope output archive](../three_body_phase_space_ID_validation/results/2026-11-19-halo-seven-isotope-full-vs-ID-full-recoil-scan/README.md).
+- [Finite-nucleon B-baseline output archive](../nucleon_form_factor_B_baseline/results/2026-11-19-finite-nucleon-form-factor-B-baseline/README.md).
+
+## Reuse
+
+For another study, create a new request JSON with pinned successful run IDs, artifact IDs, expected SHA-256 digests, source commit SHAs, and destination paths. Add a corresponding narrowly scoped workflow trigger and validator. Do not overwrite a prior archive; create a new dated result directory and link the successor from the study README.
+
+
+The manifest's `file_inventory` intentionally excludes `RUN_MANIFEST.json` itself to avoid a self-referential digest. `SHA256SUMS` does include and verify `RUN_MANIFEST.json`, along with the README, source ZIPs, and extracted native files.
+
+
+## Completed PR #78 / PR #80 archive
+
+The final stable archive execution passed as [workflow run 44581116762](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44581116762). It downloaded the pinned source artifacts, validated their GitHub digests and payloads, extracted native CSV/JSON data, rebuilt both run manifests, verified all 34 SHA-256 entries across the two result packages, and committed the result directories. The embedded file inventories exclude their own manifests; the SHA256SUMS files include and verify those manifests.
+
+
+## PR #85 finite-nucleon B and LZ detector-yield archive
+
+The PR85 archive request is pinned in [lz-pr85-B-2026-11-20.json](requests/lz-pr85-B-2026-11-20.json). The builder [build_pr85_B_archive.py](build_pr85_B_archive.py) verifies the exact source workflow run and GitHub artifact digest, confirms that all 57 ZIP members are extracted byte-for-byte, validates the B-baseline and LZ detector outputs, checks the 3000-draw electromagnetic covariance propagation, and generates the archive manifest and SHA256SUMS.
+
+The native outputs and source snapshots are stored in [the PR85 B-baseline archive](../nucleon_form_factor_B_baseline/results/2026-11-20-B-baseline-PR85/README.md). The archive workflow [44593911420](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44593911420) passed all archive and checksum checks. The archive is committed to the PR85 branch; it becomes the canonical main-branch archive only after PR85 is merged and verified on main.

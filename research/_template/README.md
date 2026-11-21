@@ -32,6 +32,7 @@
 | Results | |
 | Figures | |
 | Audit / derivation | |
+| Research task briefs | task_briefs/<task-id>.md |
 
 ## 5. Environment and reproduction
 

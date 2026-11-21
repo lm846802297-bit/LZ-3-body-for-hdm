@@ -13,6 +13,21 @@
 This stage uses the **built-in AFH/DMFormFactor v6.0 default density matrix** for
 Xe-131, not GCN5082 or JJ55.
 
+**Model-provenance clarification:** AFH is the nuclear-response formalism and
+package, not a shell-model interaction. The original xenon OBDMEs used by the
+AFH work are associated with the Baldridge–Dalton (B&D) shell-model interaction
+in the 50–82 major shell. The later shell-model comparison by Abdel Khaleq
+et al. (Phys. Rev. D 109, 075036 (2024), Sec. III B and Sec. IV B) explicitly
+identifies the original Fitzpatrick/Anand–Fitzpatrick–Haxton calculations as
+using B&D. The precise terminology is therefore **AFH v6.0 formalism/default
+OBDMEs with B&D underlying shell-model provenance**; AFH itself should not be
+called an interaction.
+
+GCN5082 and the archived JJ55-labelled input remain separate sensitivity
+alternatives only. They are not mixed into the AFH mainline. For the exact
+scope and comparison rules, see
+[NUCLEAR_STRUCTURE_BASELINE_POLICY.md](NUCLEAR_STRUCTURE_BASELINE_POLICY.md).
+
 Official source archive supplied for this calculation:
 - ZIP SHA-256: `4e0f70e6e780f3f4a40faa14792cae239d1989cf15d1e211b4fd7389b0460727`
 - source: `v6/dmformfactor-V6.m`
@@ -208,19 +223,6 @@ only as a small-recoil approximation. The natural-xenon 28-point response
 archive uses exact spatial q and is consistent with the exact three-body kinematics; it is only a historical 28-row selected-sample file. The full 16,807-row seven-isotope response grid is now committed separately at `../afh_default_density_natural_xenon_halo/results/full_afh_v6_default_7_isotope_response/`. Numerical differences in the NR approximation are documented in
 
 research/docs/appendices/09G_recoil_momentum_convention_audit.md.
-
-## Preliminary spatial-current response audit
-
-A first source-translated AFH audit for Xe-129 and Xe-131 is available in `run_afh_spatial_response_audit.py`, with selected-q numerical output generated under the requested output directory. The native Mathematica/Wolfram exporter is `run_afh_spatial_response_audit.wls`; it exports AFH response indices 1, 3, 6 and 8 for both isotopes. The report is `audit/AFH_SPATIAL_RESPONSE_FIRST_AUDIT.md`. It computes the AFH isoscalar (W_{\Sigma'}) response and flags a source-level parity-selection conflict in the literal `DeltaJ` implementation. The literal zero from that path is **not** treated as a physical prediction. Native Wolfram cross-check and resolution of the `DeltaJ) parity issue are required before (W_\Delta) or (W_{\Sigma'\Delta}) can be considered validated.
-
-Reproduce the preliminary selected-q calculation with:
-
-```bash
-python research/afh_default_density_xe131/run_afh_spatial_response_audit.py --outdir /tmp/afh-spatial-audit
-python -m unittest research/afh_default_density_xe131/tests/test_afh_spatial_response_audit.py -v
-```
-
-This remains a nuclear-response-only calculation. It does not include the baryon-current Pauli form factors or the three-body (L_{\mu\nu}W_A^{\mu\nu}) contraction.
 
 ## Scope and connection to the three-body calculation
 
@@ -464,53 +466,3 @@ full Mathematica/Python \(d\sigma_A/dE_R\) comparison. See
 [the full mapping audit](output/HISTORICAL_I6_MAPPING_AUDIT.md) and the
 [archived CSV/metadata/checksums](output/historical_i6_mapping_audit/).
 
-
-
-## Xe-131 \(M\), \(\Phi''\), and \(M\Phi''\) native response export
-
-The AFH v6.0 native Wolfram run is complete and archived in
-output/phi_response_native/. It evaluates response indices 1, 4 and 7
-for Xe-131 on the 2,401-point \(q_A=0\)--0.6 GeV grid, using the built-in
-67-entry sdgXe131 density matrix and the AFH default oscillator length.
-
-The raw AFH isoscalar responses are retained. The physical equal-p/n mapping
-\(R_X^{\rm phys}=4R_X^{\rm raw}\) is applied once to \(M\), \(\Phi''\), and
-\(M\Phi''\), with no extra q=0 shape renormalization. The dedicated Python
-validator reports PASS for response bookkeeping and provenance checks.
-A separate Python translation of AFH PhiPPJ also reproduces native Xe-131
-M, PhiPP and signed M-PhiPP at eight selected q anchors, with maximum
-relative differences 2.96e-9, 1.04e-12 and 9.14e-11. This is not a
-2,401-point independent full-grid comparison. The archive is response-level
-only: it does not supply the three-body
-Wilson coefficients, finite-\(t_A\) nucleon form factors, or the full
-\(L_{\mu\nu}W_A^{\mu\nu}\) contraction.
-
-At the second sampled \(M\)-response minimum, \(q_A=0.25625\) GeV,
-\(R_{\Phi''}^{\rm raw}/R_M^{\rm raw}=115.81\). The absolute
-\(R_{\Phi''}^{\rm raw}\) remains small compared with its q=0 value, so this
-ratio must not be interpreted as a 115.8-fold cross-section enhancement.
-See the native response audit
-(audit/AFH_PHI_RESPONSE_XE131_NATIVE_PLAN.md) and the output README
-(output/phi_response_native/README.md).
-
-## Xe-129/Xe-131 spatial responses: provisional Python grid
-
-The development translation can be evaluated on the common 2,401-point grid
-used by the native response work:
-
-\`\`\`bash
-python research/afh_default_density_xe131/run_afh_spatial_response_audit.py \\
-  --outdir /tmp/afh-spatial-full-grid --grid-points 2401 --q-min 0 --q-max 0.6
-
-python research/afh_default_density_xe131/validate_afh_spatial_python_grid.py \\
-  --csv /tmp/afh-spatial-full-grid/afh_spatial_response_full_grid.csv \\
-  --out-json /tmp/afh-spatial-full-grid/validation.json \\
-  --expected-points 2401 --q-min 0 --q-max 0.6
-\`\`\`
-
-The validator checks the q grid, finite values, diagonal positivity, and
-Cauchy–Schwarz bounds. A PASS is an internal Python consistency result only;
-the \(\Sigma'\), \(\Delta\), and \(\Sigma'\Delta\) translations still require
-pointwise comparison with native AFH Wolfram response indices 3, 6, and 8.
-See \`audit/AFH_SPATIAL_RESPONSE_FIRST_AUDIT.md\` for the provisional
-full-grid findings and the native-run status.
