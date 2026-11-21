@@ -1,0 +1,95 @@
+name: LZ 2026 formal-B three-sample signal-rate partition
+
+on:
+  pull_request:
+    paths:
+      - .github/workflows/lz-2026-B-signal-sample-partition.yml
+      - research/lz_detector_response/lz_2026_extended_nr/partition_lz_2026_signal_samples.py
+      - research/lz_detector_response/tests/test_lz_2026_B_signal_sample_partition.py
+      - research/lz_detector_response/lz_2026_extended_nr/LZ_2026_OFFICIAL_RESPONSE_AND_LIKELIHOOD_IMPLEMENTATION_PLAN.md
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  partition:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download pinned PR87 formal-B detector-yield artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: finite-nucleon-form-factor-B-baseline
+          repository: ${{ github.repository }}
+          run-id: 44662497177
+          github-token: ${{ github.token }}
+          path: B-source
+
+      - name: Verify source artifact metadata
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path("B-source/B-detector")
+          models = [
+              "sufian2017_unit_current",
+              "alexandrou2020_charge_weighted_converted",
+              "alexandrou2026_continuum_unit_current",
+          ]
+          import subprocess
+          for model in models:
+              model_root = root / model
+              subprocess.run(["sha256sum", "--check", "SHA256SUMS.txt"], cwd=model_root, check=True)
+              p = model_root / "lz_2026_afh7_hybrid9_rate_level_metadata.json"
+              d = json.loads(p.read_text())
+              assert d["status"] == "PASS", (model, d["status"])
+              assert d["detector_level_scope"]["efficiency_applied"] is True
+              assert d["detector_level_scope"]["energy_resolution_smearing_applied"] is False
+              assert d["detector_level_scope"]["two_dimensional_signal_pdf_applied"] is False
+              assert d["detector_level_scope"]["background_likelihood_applied"] is False
+          print("Pinned B-detector inputs: PASS")
+          PY
+
+      - name: Run rate-level three-sample partition and tests
+        env:
+          PYTHONPATH: research/lz_detector_response/lz_2026_extended_nr
+        run: |
+          set -euo pipefail
+          python research/lz_detector_response/lz_2026_extended_nr/partition_lz_2026_signal_samples.py --input-root B-source --output-dir output
+          python -m unittest discover -s research/lz_detector_response/tests -p 'test_lz_2026_B_signal_sample_partition.py' -v
+          python - <<'PY'
+          import csv
+          from pathlib import Path
+          p = Path("output/lz_2026_B_signal_three_sample_partition.csv")
+          rows = list(csv.DictReader(p.open()))
+          assert len(rows) == 24, len(rows)
+          for row in rows:
+              total = float(row["expected_events_after_FigS2_before_veto"])
+              parts = sum(float(row[k]) for k in (
+                  "expected_events_science",
+                  "expected_events_prompt_veto",
+                  "expected_events_delayed_veto",
+              ))
+              assert abs(parts-total) <= max(1e-300, abs(total)*2e-15), row["benchmark"]
+          print({"rows": len(rows), "sample_partition": "PASS"})
+          PY
+
+      - name: Create and verify checksums
+        run: |
+          set -euo pipefail
+          cd output
+          find . -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > SHA256SUMS
+          sha256sum --check SHA256SUMS
+
+      - name: Upload partition output
+        uses: actions/upload-artifact@v4
+        with:
+          name: lz-2026-B-signal-three-sample-partition
+          path: output/
+          if-no-files-found: error
+          retention-days: 90

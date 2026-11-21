@@ -1,0 +1,21 @@
+{
+  "status": "RATE_LEVEL_SAMPLE_PARTITION_DIAGNOSTIC",
+  "workflow_run_id": 44693403267,
+  "artifact_id": 14610035783,
+  "artifact_name": "lz-2026-B-signal-three-sample-partition",
+  "artifact_sha256": "8840fbdd0f3201942f74210ac53c55447822936bde8ab1ae45b41d2c56ae8cb3",
+  "source_input": {
+    "workflow_run_id": 44662497177,
+    "artifact_id": 14596147908,
+    "artifact_sha256": "f5c1d8d791bffff3159a6e279e5a0e68b705bf07466be6b489ba9a49e29ce7ac"
+  },
+  "rows": 24,
+  "sample_fractions": {
+    "science": 0.9713,
+    "prompt_veto": 0.0001,
+    "delayed_veto": 0.0286
+  },
+  "max_abs_sample_sum_closure": 5.551115123125783e-17,
+  "scope": "Fig. S2-folded formal-B rate-level yields partitioned into the three LZ samples using published random-coincidence fractions. No 2D signal PDF, FV map, event-level veto simulation, background likelihood, confidence interval, or exclusion is included.",
+  "canonical_bytes": "The downloadable Actions artifact is the canonical byte-for-byte output and carries the SHA-256 above. The committed CSV is a text-normalized convenience copy."
+}

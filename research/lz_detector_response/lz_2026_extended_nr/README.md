@@ -109,3 +109,15 @@ The formal-B event-weighted NEST fold has now passed independent GitHub reproduc
 - [Expected event spectrum](B_BASELINE_RECOIL_FIGURES.md) — four Sufian-input AFH-7 benchmark curves, in expected rate-level events per 1 keV bin for 2.84 tonne-year.
 
 The first figure uses relative-rate normalization and is not an absolute cross-section plot. The event-count figure is before WS-ROI; the report records the exposure, NEST family, and selection convention.
+
+
+## Official LZ three-sample response and likelihood bridge
+
+The next-stage implementation is tracked in [LZ_2026_OFFICIAL_RESPONSE_AND_LIKELIHOOD_IMPLEMENTATION_PLAN.md](LZ_2026_OFFICIAL_RESPONSE_AND_LIKELIHOOD_IMPLEMENTATION_PLAN.md). It distinguishes the already-completed Fig. S2 rate-level fold from the still-incomplete official 2D response and likelihood.
+
+- Formal-B Fig. S2 rate-yield source: PR #87 artifact 14596147908; 24 rows across three strange-current models, four benchmarks, AFH-7 and Hybrid-9.
+- Signal sample partition implementation: [partition_lz_2026_signal_samples.py](partition_lz_2026_signal_samples.py).
+- Regression tests: [test_lz_2026_B_signal_sample_partition.py](../tests/test_lz_2026_B_signal_sample_partition.py).
+- Independent workflow: [lz-2026-B-signal-sample-partition.yml](../../../.github/workflows/lz-2026-B-signal-sample-partition.yml).
+
+The published central random-coincidence fractions are used to partition the already Fig. S2-folded signal rate into science, prompt-veto, and delayed-veto counts. This is a rate-level migration result only. The official FV map, position reconstruction, event-level Skin/OD response, sample-specific 2D PDFs, background component PDFs, and profile likelihood remain separate tasks.
