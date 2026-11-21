@@ -1,6 +1,6 @@
 # AFH v6.0 full response database for natural xenon
 
-**Status: provisional Python implementation; native seven-isotope validation committed under `output/native/` (16,807/16,807 rows, `PASS`).**
+**Status: provisional Python implementation; native seven-isotope eight-response archive committed under `output/native/` (16,807/16,807 rows, `PASS`), with native rank-resolved spatial multipoles and a P3-B cross-check under `output/native-spatial-multipoles/`.**
 
 This study extends the existing AFH isotope-response archive from the charge
 and selected spatial channels to the complete set of eight response functions
@@ -172,7 +172,10 @@ archive and checks the comparison gate.
 the remaining rows use direct native OBDME sums. `PROVENANCE.md` (section 8.5)
 and `sha256_manifest.json` pin the hashes;
 `verify_native_spatial_multipoles_provenance.py` re-hashes the archive and
-checks the row/rank/q=0 metadata.
+checks the row/rank/q=0 metadata. The committed `native_crosscheck.json` records
+`PASS_NATIVE_AFH_SPATIAL_MULTIPOLE_CROSSCHECK`: all 16,807 total-response rows
+and all 9,604 rank-resolved rows agree with the P3-B Python archive, with native
+imaginary residual zero.
 
 ## 6. Acceptance gates
 
