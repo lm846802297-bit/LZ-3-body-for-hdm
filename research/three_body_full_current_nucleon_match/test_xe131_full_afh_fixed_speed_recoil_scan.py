@@ -3,10 +3,12 @@ import unittest
 import numpy as np
 
 from xe131_full_afh_fixed_speed_recoil_scan import (
-    EXPECTED_ORIGINAL_AFH_RATIOS,
+    EXPECTED_FORMAL_IMPULSE_AFH_RATIOS,
+    EXPECTED_STATIC_QN0_AFH_RATIOS,
     FORMAL_WIDTH_SCHEMES,
     FORM_FACTOR_PRESCRIPTIONS,
     RESPONSE_NAMES,
+    charge_only_ratio_from_responses,
     contract_six_channels,
     nucleon_form_factors,
     recoil_cases,
@@ -127,14 +129,63 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
         cases = {case["name"]: case for case in recoil_cases()}
         self.assertEqual(cases["off_pole_dm450"]["delta_m_GeV"], 450.0e-6)
         self.assertEqual(cases["near_pole_dm362"]["delta_m_GeV"], 362.0e-6)
-        self.assertIn(
+        expected_keys = {
             ("isoscalar_zexp", "off_pole_dm450", 200.0),
-            EXPECTED_ORIGINAL_AFH_RATIOS,
-        )
-        self.assertIn(
             ("isoscalar_zexp", "near_pole_dm362", 267.0),
-            EXPECTED_ORIGINAL_AFH_RATIOS,
+        }
+        self.assertEqual(set(EXPECTED_STATIC_QN0_AFH_RATIOS), expected_keys)
+        self.assertEqual(set(EXPECTED_FORMAL_IMPULSE_AFH_RATIOS), expected_keys)
+
+    def test_historical_anchor_values_are_static_qN0_diagnostics(self):
+        self.assertAlmostEqual(
+            EXPECTED_STATIC_QN0_AFH_RATIOS[
+                ("isoscalar_zexp", "off_pole_dm450", 200.0)
+            ],
+            0.778309339441481,
+            places=14,
         )
+        self.assertAlmostEqual(
+            EXPECTED_STATIC_QN0_AFH_RATIOS[
+                ("isoscalar_zexp", "near_pole_dm362", 267.0)
+            ],
+            0.649215910707624,
+            places=14,
+        )
+
+    def test_formal_impulse_anchors_are_distinct_from_static_diagnostic(self):
+        key_200 = ("isoscalar_zexp", "off_pole_dm450", 200.0)
+        key_267 = ("isoscalar_zexp", "near_pole_dm362", 267.0)
+        self.assertAlmostEqual(
+            EXPECTED_FORMAL_IMPULSE_AFH_RATIOS[key_200],
+            0.7783094918005908,
+            places=14,
+        )
+        self.assertAlmostEqual(
+            EXPECTED_FORMAL_IMPULSE_AFH_RATIOS[key_267],
+            0.6492161323414921,
+            places=14,
+        )
+        self.assertGreater(
+            EXPECTED_FORMAL_IMPULSE_AFH_RATIOS[key_200]
+            - EXPECTED_STATIC_QN0_AFH_RATIOS[key_200],
+            0.0,
+        )
+        self.assertGreater(
+            EXPECTED_FORMAL_IMPULSE_AFH_RATIOS[key_267]
+            - EXPECTED_STATIC_QN0_AFH_RATIOS[key_267],
+            0.0,
+        )
+
+    def test_static_and_formal_transfer_reconstructions_are_not_interchanged(self):
+        static = charge_only_ratio_from_responses(
+            self.q, 200.0, self.responses, "isoscalar_zexp",
+            static_nucleon=True,
+        )
+        formal = charge_only_ratio_from_responses(
+            self.q, 200.0, self.responses, "isoscalar_zexp",
+            static_nucleon=False,
+        )
+        self.assertNotAlmostEqual(static, formal, places=10)
 
 
 if __name__ == "__main__":
