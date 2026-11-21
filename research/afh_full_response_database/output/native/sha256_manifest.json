@@ -85,7 +85,7 @@
     },
     "native_gate_manifest": {
       "path": "research/afh_full_response_database/output/native/native_gate_manifest.json",
-      "sha256": "e270933f7a618a80e8409471bc4911c72357b1d62a1663489c82f074f4f205ef"
+      "sha256": "061c87566eb1c32ff80f72b02ba63cd7890b2f93ec4a416b60d036af64e6b89f"
     },
     "afh_source": {
       "path": "v6/dmformfactor-V6.m",
