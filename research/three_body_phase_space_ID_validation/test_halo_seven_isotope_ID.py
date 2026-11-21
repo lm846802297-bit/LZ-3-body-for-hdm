@@ -51,12 +51,12 @@ class HaloSevenIsotopeApproximationTests(unittest.TestCase):
         mA, ER, speed = 121.90971983538435, 200e-6, 776.0
         coarse = psc.integrate_i6(
             mchi, ms, delta_m, mA, ER, speed,
-            nW=6, nz=6, nphi=4, mapping="threshold_u2",
+            nW=6, nz=6, nphi=4, mapping="threshold_energy_u2",
             width_scheme="zero",
         )
         reference = psc.integrate_i6(
             mchi, ms, delta_m, mA, ER, speed,
-            nW=48, nz=24, nphi=16, mapping="threshold_u2",
+            nW=48, nz=24, nphi=16, mapping="threshold_energy_u2",
             width_scheme="zero",
         )
         self.assertGreater(coarse, 0.0)

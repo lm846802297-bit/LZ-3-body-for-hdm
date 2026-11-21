@@ -125,3 +125,12 @@ The earlier formal-B output artifact was generated from a prior Halo source arti
 
 
 The formal-B high-order reweight is now complete and independently reproduced in [workflow run 44689438445](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44689438445). Its output artifact is 14608091362 (SHA-256 `b9d261a68a73e480a6e4d84c3aef9c57a0fc5fc80aa1be7079170d0305b6c6c5`). All 19 baseline regression tests and all numerical gates passed. The downloaded artifact ZIP and all nine native output-file checksums were verified. This is the canonical B reweight of the accepted high-order Halo source.
+
+
+## 2026-11-20 threshold-variable unification
+
+The follow-up task brief is [20261120-threshold-energy-u2-unification](task_briefs/20261120-threshold-energy-u2-unification.md). It aligns the halo runner with the fixed-speed transformation
+`epsilon = W - W_min = D_exact*u^2` and its Jacobian
+`dW^2/du = 4*W*D_exact*u`. The original PR #78 archive is preserved unchanged; the new full-range scan will be archived as a separate version after its baseline/high-order comparison completes.
+
+The detector-level work is a separate layer: PR #85 now supplies the B-corrected, Fig. S2 efficiency/exposure-weighted rate-level event yields. The existing NEST two-dimensional response archive uses earlier GCN/JJ55 spectra, so the B-corrected NEST event-weighted fold remains to be connected to the adopted B baseline.

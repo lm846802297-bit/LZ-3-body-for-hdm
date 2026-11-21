@@ -52,13 +52,26 @@ mu_A=rac{m_{chi_1}m_A}{m_{chi_1}+m_A}.
 
 The exact four-vector threshold defines the common physical halo integration domain. If (D_{NR}) is negative at a point where exact kinematics is open, the approximation contributes zero there; the point is retained in the comparison.
 
-The full (W^2) integral uses the independently audited threshold-regularized mapping
+The original fixed-speed 943-point implementation uses the exact energy excess
+`epsilon = W - W_min = D_exact*t^2`. The current halo runner is being aligned to that same variable:
 
 [
-W^2=W_{min}^2+(W_{max}^2-W_{min}^2)u^2,qquad 0leq uleq1,
+W=W_{min}+D_{exact}u^2,\qquad
+W^2=(W_{min}+D_{exact}u^2)^2,
 ]
 
-implemented in `phase_space_convergence.py`. This removes the square-root endpoint behavior from direct linear-(W^2) quadrature and uses the stable (Delta W^2) point builder.
+[
+\frac{dW^2}{du}=4W D_{exact}u,\qquad 0\leq u\leq1.
+]
+
+The factorized form
+`Delta_W2 = epsilon*(2*W_min + epsilon)`
+is used in the stable point builder to avoid subtracting two quantities of order
+`m_chi^2`. The previous PR #78 archive used the distinct
+`threshold_u2` map
+`W^2 = W_min^2 + (W_max^2-W_min^2)*u^2`; it remains preserved as the historical
+comparison and is not overwritten. The 2026-11-20 follow-up reruns the full scan
+with `threshold_energy_u2` and records both mappings' numerical difference.
 
 The common rate weight (eta f_{lab}(v)/p_chi(v)^2) is retained. The isotope contributions are multiplied by their natural atom fraction, (m_A), the direct AFH physical (M)-response, and the vector-mediator denominator ((m_V^2+2m_AE_R)^2) before summing natural xenon.
 
@@ -110,8 +123,23 @@ python research/three_body_phase_space_ID_validation/compare_halo_quadrature.py 
   --out-dir results/halo-quadrature-comparison
 ```
 
-## Validation status
+## Validation status and archived numerical result
 
-The initial 180--320 keV baseline run completed and produced an Actions artifact. Its higher-order follow-up exposed a missing comparison dependency and a need to regularize the full (W^2) integration consistently with the independent phase-space audit. The current PR version corrects both and expands the scan. The full-range results and convergence summary are pending the updated workflow.
+The PR #78 / PR #74 full-range calculation is **completed and archived on main**. It contains 208 recoil energies per scan, 1,456 isotope-level rows, and 208 natural-xenon rows. The baseline and higher-order runs have zero support mismatches.
 
-This is a pre-detector-response rate-ratio validation. It does not yet include finite-(t_N) nucleon form factors, detector efficiency, energy resolution, exposure, cuts or likelihood.
+For the archived higher-order result:
+
+- Natural-xenon maximum full-versus-`I(D_NR)` difference in 180--320 keV: **0.035519% at 320 keV**.
+- Natural-xenon maximum over 5--800 keV: **0.352762% at 695 keV**; this endpoint-region value is kept separate from the candidate interval.
+- Per-isotope candidate-region maxima range from **0.032592% (Xe-128)** to **0.037722% (Xe-136)**; all occur at 320 keV.
+- Across the 1,456 isotope-energy rows, the maximum baseline-to-high-order shifts are (1.0109\times10^{-5}\%) for the full rate and (3.1057\times10^{-5}\%) for (I(D_{NR})); the maximum change in the full-versus-(I(D_{NR})) error is (2.8424\times10^{-5}) percentage points.
+
+These values belong to the archived `threshold_u2` map. The 2026-11-20 follow-up now implements the exact fixed-speed `epsilon = D_exact*u^2` map in the shared integration module and switches the halo runner to it. The new baseline/high-order scan is **in progress**; its outputs will be stored in a new versioned result directory, leaving the PR #78 archive unchanged.
+
+The scan retains `width_scheme="zero"` to reproduce the PR #78 far-off-pole numerical-comparison benchmark. It is not relabelled as the formal finite-pole-width production result; that work continues separately in the P3/P4 branch.
+
+## Relation to the B baseline and detector response
+
+The finite-nucleon B baseline and LZ 2026 Fig. S2 efficiency/exposure-weighted rate-level event yields are now archived in [the B-baseline numerical report](../nucleon_form_factor_B_baseline/B_BASELINE_NUMERICAL_RESULTS.md) and [PR #85](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/pull/85). Those rate-level event-yield records do not apply energy-resolution smearing or construct a B-weighted two-dimensional signal PDF.
+
+A separate NEST-based two-dimensional response fold exists under `research/lz_detector_response/`, but its archived three-body spectra predate the finite-nucleon B update and use the earlier GCN/JJ55 response comparison. The next detector-stage task is to feed the B-corrected AFH spectra into the existing event-weighted NEST response without multiplying the scalar Fig. S2 efficiency a second time. An official waveform-level LZ likelihood remains outside this rate-level calculation.

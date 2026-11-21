@@ -2,6 +2,7 @@
 
 The committed eq6_kernel.py remains the amplitude baseline. This module
 independently changes the W^2 parameterization and phase-space measure:
+  * fixed-speed-matched threshold-energy map W = W_min + D_exact*u^2;
   * threshold-regularized W^2 = W_min^2 + Delta*u^2;
   * linear-W with the explicit dW^2 = 2 W dW Jacobian;
   * raw, unaveraged dPhi_3 integration to reconstruct the Eq. (6) prefactor.
@@ -139,6 +140,19 @@ def _integrate(
         delta_values = delta * u_values * u_values
         W2_values = wmin2 + delta_values
         W2_weights = u_weights * (2.0 * delta * u_values)
+    elif mapping == "threshold_energy_u2":
+        # Match the independent fixed-speed audit exactly:
+        # epsilon = W - W_min = D_exact*u^2, with dW^2/du = 4*W*D_exact*u.
+        Wmin, Wmax = math.sqrt(wmin2), math.sqrt(wmax2)
+        D_exact = Wmax - Wmin
+        u_values = 0.5 * (xW + 1.0)
+        u_weights = 0.5 * wW
+        epsilon_values = D_exact * u_values * u_values
+        W_values = Wmin + epsilon_values
+        # Factorized delta_W2 avoids subtracting two O(m_chi^2) quantities.
+        delta_values = epsilon_values * (2.0 * Wmin + epsilon_values)
+        W2_values = wmin2 + delta_values
+        W2_weights = u_weights * (4.0 * W_values * D_exact * u_values)
     elif mapping == "sine2":
         # Clusters quadrature nodes at both W^2 endpoints:
         # W^2 = Wmin^2 + Delta*sin^2(pi*u/2).
