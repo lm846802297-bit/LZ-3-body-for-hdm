@@ -36,6 +36,7 @@ from xe131_fixed_speed_charge_dsigma import (
     XE131_MASS_RECORD, exact_qA_GeV, load_native_xe131_responses,
     interpolate_responses,
 )
+from xe131_full_afh_fixed_speed_recoil_scan import overlay_dense_native_charge_grid
 
 DELTA_M_GEV = 450.0e-6
 COUPLING_PRODUCT_SQUARED = 1.0
@@ -316,9 +317,22 @@ def write_csv(path: Path, rows: list[dict]) -> None:
         writer.writeheader()
         writer.writerows(rows)
 
-def run(afh_csv: Path, outdir: Path) -> dict:
+def run(
+    afh_csv: Path, outdir: Path,
+    dense_native_csv: Path | None = None,
+    dense_native_metadata: Path | None = None,
+    dense_native_validation: Path | None = None,
+) -> dict:
     outdir.mkdir(parents=True, exist_ok=True)
     response_bundle, provenance = load_native_xe131_responses(afh_csv)
+    dense_args = (dense_native_csv, dense_native_metadata, dense_native_validation)
+    if any(item is not None for item in dense_args):
+        if not all(item is not None for item in dense_args):
+            raise ValueError("dense native overlay requires CSV, metadata, and validation JSON together")
+        response_bundle, provenance = overlay_dense_native_charge_grid(
+            response_bundle, provenance, dense_native_csv,
+            dense_native_metadata, dense_native_validation,
+        )
     er_min, er_max = find_open_interval()
     energies = make_recoil_grid(er_min, er_max)
     rows = [calculate_row(float(ER), response_bundle, CURVE_ORDER) for ER in energies]
@@ -425,7 +439,12 @@ def run(afh_csv: Path, outdir: Path) -> dict:
                 "native physical equal-proton/neutron columns include factor four once; "
                 "loader applies common OBDME C0 once to all three charge responses"
             ),
-            "interpolation": "PCHIP on provenance-pinned 2401-point q grid",
+            "interpolation": (
+                "PCHIP on merged 2,509-point native grid: 2,401-point coarse archive "
+                "with the 121-point native Xe-131 dense dip grid replacing 13 overlap nodes"
+                if provenance.get("dense_native_overlay")
+                else "PCHIP on provenance-pinned 2401-point q grid"
+            ),
             "finite_tN_form_factors": "adopted Bishara-linear raw u+d+s F1 slope plus constant raw F2 anchor; both divided by three in the external-gVN effective nucleon basis",
             "native_provenance": provenance,
         },
@@ -477,9 +496,15 @@ def run(afh_csv: Path, outdir: Path) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--afh-csv", type=Path, required=True)
+    parser.add_argument("--dense-native-csv", type=Path)
+    parser.add_argument("--dense-native-metadata", type=Path)
+    parser.add_argument("--dense-native-validation", type=Path)
     parser.add_argument("--outdir", type=Path, required=True)
     args = parser.parse_args()
-    result = run(args.afh_csv, args.outdir)
+    result = run(
+        args.afh_csv, args.outdir, args.dense_native_csv,
+        args.dense_native_metadata, args.dense_native_validation,
+    )
     print(json.dumps({
         "status": result["status"], "benchmark": result["benchmark"],
         "recoil_interval_keV": result["recoil_interval_keV"],
