@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Write v1.0.0 research result records around existing LZ numerical outputs."""
 from __future__ import annotations
-import csv, hashlib, importlib.metadata, json, os, platform, shlex, subprocess, sys, time
+import csv, hashlib, importlib.metadata, json, os, platform, shlex, shutil, subprocess, sys, time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -68,12 +68,13 @@ def csv_units(column: str) -> str:
         "R_AFH_over_A2": "1", "R_Helm_over_A2": "1",
         "direct_minus_PCHIP_over_A2": "1", "relative_direct_vs_PCHIP": "1",
         "AFH_minus_Helm_over_A2": "1",
+        "b_A_fm_archived": "fm", "b_A_fm_recomputed": "fm",
     }
     if column in exact:
         return exact[column]
     suffixes = (
         ("_events_kg_day_keV", "events kg^-1 day^-1 keV^-1"),
-        ("_GeVminus3", "GeV^-3"), ("_km_s", "km s^-1"),
+        ("_GeVminus3", "GeV^-3"), ("_GeV_minus3", "GeV^-3"), ("_km_s", "km s^-1"),
         ("_keV", "keV"), ("_MeV", "MeV"), ("_GeV", "GeV"), ("_fm", "fm"),
     )
     for suffix, unit in suffixes:
