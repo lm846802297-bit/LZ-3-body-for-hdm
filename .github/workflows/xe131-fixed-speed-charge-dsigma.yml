@@ -34,11 +34,18 @@ jobs:
           ref: e6d9dee3527cab200ee6b21198d577b987282fac
           path: afh-native
           token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout the independently validated 121-point native Xe-131 dense grid
+        uses: actions/checkout@v4
+        with:
+          repository: lm846802297-bit/LZ-3-body-for-hdm
+          ref: 571e3687b495ced48ef64b5f066b82236fea2b27
+          path: afh-dense
+          token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.13"
       - name: Install numerical dependencies
-        run: python -m pip install numpy==2.3.5 scipy==1.17.0
+        run: python -m pip install numpy==2.3.5 scipy==1.17.0 sympy==1.14.0
       - name: Run focused regression tests
         run: |
           python -m unittest discover \
@@ -54,6 +61,9 @@ jobs:
         run: |
           python research/three_body_full_current_nucleon_match/xe131_fixed_speed_charge_dsigma.py \
             --afh-csv afh-native/research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_native.csv \
+            --dense-native-csv afh-dense/research/afh_full_response_database/output/xe131-dense-charge-dip/xe131_dense_charge_response_dip_native.csv \
+            --dense-native-metadata afh-dense/research/afh_full_response_database/output/xe131-dense-charge-dip/xe131_dense_charge_response_dip_metadata.txt \
+            --dense-native-validation afh-dense/research/afh_full_response_database/output/xe131-dense-charge-dip/xe131_dense_charge_dip_validation.json \
             --out /tmp/xe131-fixed-speed-charge-dsigma-bishara-linear.json
       - name: Upload reproducible numerical result
         uses: actions/upload-artifact@v4
