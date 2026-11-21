@@ -1,0 +1,78 @@
+{
+  "status": "reproducible_diagnostic_pending_AFH_nuclear_response_contraction",
+  "source_kernel": "research/three_body_calculation_and_validation/eq6_kernel.py",
+  "source_commit": "c0cd9a566b570a8f317abfdd20fc7fcdfdde298e",
+  "natural_units": "GeV, (+---)",
+  "target_mass_convention": "mA=131*u with u=0.93149410242 GeV (matching fixed-speed Xe-131 archive)",
+  "amplitude": "Gamma^mu = gamma^mu (slash(p-k_s)+mchi2)/D_before + (slash(p'+k_s)+mchi2) gamma^mu/D_after",
+  "tensor": "L^{mu nu}=1/2 Tr[(slash(p')+mchi) Gamma^mu (slash(p)+mchi) barGamma^nu]",
+  "nuclear_current": "coherent point-charge current representative J_A^mu=(P+P')^mu; F_A factored out",
+  "width_assumptions": "zero/pole/running widths use the existing conditional Dirac, real-scalar, pure-scalar, single-open-channel chi2->chi1+s prescription; running is diagnostic",
+  "phase_space_mappings": {
+    "threshold_u2": "W2=Wmin2+DeltaW2*u^2",
+    "sine2": "W2=Wmin2+DeltaW2*sin(pi*u/2)^2"
+  },
+  "benchmarks": [
+    {
+      "benchmark": "green_450keV",
+      "ms": 0.0003,
+      "delta_m": 0.00045,
+      "ER": 0.0002,
+      "speed_kms": 776.0,
+      "g2": 1.0,
+      "mapping": "threshold_u2",
+      "nw": 24,
+      "nz": 16,
+      "nphi": 8
+    },
+    {
+      "benchmark": "green_1MeV",
+      "ms": 0.0003,
+      "delta_m": 0.001,
+      "ER": 0.0002,
+      "speed_kms": 776.0,
+      "g2": 1.0,
+      "mapping": "threshold_u2",
+      "nw": 24,
+      "nz": 16,
+      "nphi": 8
+    },
+    {
+      "benchmark": "near_pole_362keV_g2_0p1",
+      "ms": 0.0003,
+      "delta_m": 0.000362,
+      "ER": 0.000267,
+      "speed_kms": 776.0,
+      "g2": 0.1,
+      "mapping": "sine2",
+      "nw": 32,
+      "nz": 16,
+      "nphi": 8
+    },
+    {
+      "benchmark": "near_pole_362keV_g2_1",
+      "ms": 0.0003,
+      "delta_m": 0.000362,
+      "ER": 0.000267,
+      "speed_kms": 776.0,
+      "g2": 1.0,
+      "mapping": "sine2",
+      "nw": 32,
+      "nz": 16,
+      "nphi": 8
+    }
+  ],
+  "environment": {
+    "python": "3.13.18",
+    "numpy": "2.3.5"
+  },
+  "result_file": "vector_current_response_audit.csv",
+  "result_sha256": "1836fb8fdd6477534a9332a457aa8d45c43fe7750904fe4e48f9ad0971866c09",
+  "scope_limitations": [
+    "The coherent point-charge current includes only elastic centre-of-mass convection; it does not include internal nuclear orbital or magnetization matrix elements.",
+    "The vN=0.1..0.3 and q/(2mN) columns are per-nucleon kinematic amplitude estimates, not AFH nuclear-response ratios.",
+    "No AFH Sigma-prime, Sigma-double-prime, or Delta response has been contracted with the three-body tensor.",
+    "No mediator propagator, halo integral, isotope abundance sum, detector response, or likelihood is included.",
+    "The scalar-only chi2 width omits the unspecified vector-sector self-energy contribution."
+  ]
+}

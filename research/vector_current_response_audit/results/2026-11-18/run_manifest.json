@@ -1,0 +1,51 @@
+{
+  "study": "vector_current_response_audit",
+  "status": "reproducible_diagnostic_pending_AFH_nuclear_response_contraction",
+  "baseline_main_commit": "c0cd9a566b570a8f317abfdd20fc7fcdfdde298e",
+  "source_files": {
+    "research/three_body_calculation_and_validation/eq6_kernel.py": {
+      "git_blob_sha": "68a9f6b3767728898b97494382234f77fc063c79",
+      "role": "baseline Eq. (6) kinematics, temporal spin trace, chi2 width"
+    },
+    "research/vector_current_response_audit/vector_current_response_audit.py": {
+      "sha256": "e3bd5a908d49a84085e9eb2f3f6774ef96324fffdb5fcca4c811c1e392a22ea4",
+      "role": "four-component current tensor and coherent point-charge-current contraction"
+    },
+    "research/vector_current_response_audit/test_vector_current_response_audit.py": {
+      "sha256": "c83de7c12831f34b81e2706de4ef4d242e238eeb968597f84eeb53e37f3594f0",
+      "role": "unit, temporal-trace equivalence, tensor-positivity, current-conservation and independent-integrator tests"
+    },
+    ".github/workflows/vector-current-response-audit.yml": {
+      "git_blob_sha": "9263338943504d1e6729a60852b151f171a88476",
+      "role": "Python 3.13 CI reproduction, independent Eq. (6) checks and archived-table comparison"
+    }
+  },
+  "commands": {
+    "tests": "python -m unittest discover -s research/vector_current_response_audit -p 'test_*.py' -v",
+    "reproduction": "python research/vector_current_response_audit/vector_current_response_audit.py --outdir research/vector_current_response_audit/results/2026-11-18"
+  },
+  "quadrature": {
+    "green_450keV": "threshold_u2, 24x16x8",
+    "green_1MeV": "threshold_u2, 24x16x8",
+    "near_pole_362keV": "sine2, 32x16x8",
+    "convergence_archive": "quadrature_convergence.csv"
+  },
+  "outputs_sha256": {
+    "vector_current_response_audit.csv": "1836fb8fdd6477534a9332a457aa8d45c43fe7750904fe4e48f9ad0971866c09",
+    "quadrature_convergence.csv": "b9aee860c4ea2e137fcd396eaa83982818bf87ea9b49dddb000ec9759af6e5f4",
+    "metadata.json": "af8abf4c9d79a1950443f6d3ae2e2e8d63d598fe4bc1b4387481aaaf81b7b007",
+    "RESULTS.md": "4b564ea17ea8b8a01233b67909d3123250d13c9db86e0493dde72f7d33fbd487"
+  },
+  "runtime": {
+    "python": "3.13.18",
+    "numpy": "2.3.5",
+    "repository_source_ci": "PASS: workflow run 44170287270 at source revision 28ff13722b7b33ba6145fb7caa3548c365f086e5; 8/8 tests passed; all 12 rows regenerated; archived-versus-regenerated maximum relative difference 0; artifact ID 14368350485"
+  },
+  "limitations": [
+    "No AFH Sigma-prime, Sigma-double-prime, or Delta nuclear response has been numerically contracted with the three-body tensor.",
+    "The coherent point-charge current includes centre-of-mass convection only, not internal nuclear currents of spinful Xe isotopes.",
+    "The per-nucleon vN and q/(2mN) factors are kinematic estimates, not AFH nuclear-response ratios.",
+    "The chi2 width is conditional on Dirac, real-scalar, pure-scalar and single-open-channel assumptions; the vector self-energy is not included.",
+    "The calculation is fixed-speed and single-isotope; no halo, isotope sum, detector response or likelihood is included."
+  ]
+}
