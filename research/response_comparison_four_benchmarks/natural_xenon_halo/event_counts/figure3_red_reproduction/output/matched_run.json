@@ -1,0 +1,32 @@
+{
+  "baseline_commit": "b9c9a3dcd702b28017cd6266153e9a218058a4c6",
+  "supplied_figure_sha256": "ab3e375a2803db8860b9de46fa9a1d66b53bcc1d0e8f00a0a78ab10e1aa0d984",
+  "comparison_inputs": {
+    "research/afh_default_density_xe131/output/ame2020_exact_spatial_xe131_partial/xenon_isotope_ame2020_masses.csv": "81502f862963ac47e582fc17a49a97e8d9610fca1242be52bc8d14f602b9138f",
+    "research/three_body_natural_xenon/dmformfactor-V6.m": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/inputs/afh_v6/native/afh_v6_xe128_eight_response_native.csv": "7c492562fca01cdfd2a185e671755c84b04bf6b5e34cc1a313f8e76b628a8abb",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/inputs/afh_v6/native/afh_v6_xe129_eight_response_native.csv": "80684a3f1201bc312c1c60af3b5b263e1480ab5a05874743a738cce9b86dc532",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/inputs/afh_v6/native/afh_v6_xe130_eight_response_native.csv": "36534761e2b061e4e3cff14d3f3ec0f679f68fa3455f8596e23a654f21cbe44a",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/inputs/afh_v6/native/afh_v6_xe131_eight_response_native.csv": "585ab0f483be0d8131566cefc4cb420c6db7e07bebbcd2b887da568cda2f4ffb",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/inputs/afh_v6/native/afh_v6_xe132_eight_response_native.csv": "7f03e4a14c1e646e624b2d53f8c5ca42f0538c45f4670c524d9a1e39fe8d768e",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/inputs/afh_v6/native/afh_v6_xe134_eight_response_native.csv": "031b30c6b7b0e9e720b155979fc7c9ab37665303e7c9fbf8678bde78f39f3885",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/inputs/afh_v6/native/afh_v6_xe136_eight_response_native.csv": "c00ec4ce6c55fd7fa925a2bf2c3436057a3f54ad31710e1c8f555d7622c7dea4"
+  },
+  "red_fit_parameters": 0,
+  "halo_density_GeV_cm3": 0.3,
+  "gVN": 0.04857,
+  "g1": 0.1,
+  "g2": 1.725,
+  "exposure_kg_day": 1037310.0,
+  "efficiency": 1,
+  "target_nuclei_per_kg": 4.586803340411977e+24,
+  "direct_ID_max_relative": 6.646239114616037e-12,
+  "sha256": {
+    "matched_comparisons.csv": "67de00925f52b1d9a0c3f47dc5afb64e2afdc653f57e3cc0d7f4322869884b12",
+    "matched_spectra.csv.gz": "832beb7bf39bfa2712aab5f24f76eb63a0613ae068755853449dd47576ff6bfc",
+    "matched_isotopes_248keV.csv": "5c53f775933ed28d21d9028827d807c29294f5b571f61444c96bd08d710ed320",
+    "matched_selected_energies.csv": "79853c8342112e864dbe47f9a2571d850f1ce9fee9214b8214f14c8433187d4b",
+    "independent_ID_checks.csv": "6c4b1e5c17516e1c4999cf8dcded16048f33e764da499d05d752d22bcd728aca",
+    "xe131_fixed_248keV.csv": "9bef8a2c86e45a78030bf467499530a2385aeecd686e5d98459fabaa66817d15"
+  }
+}

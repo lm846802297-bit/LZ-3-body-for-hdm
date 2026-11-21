@@ -1,5 +1,7 @@
 # 2026-11-21 新版论文图 3 核查
 
+**后续计算**采用另一组有文献出处的 halo 参数和 AFH 的核质量约定，用完整振幅将两个能窗都复现到 2.3% 以内。下文记录在先的 AME 质量、776 km/s 速度上限核查。[后续红线复现及两页曲线对照](../figure3_red_reproduction/README.md)
+
 这次交付的原图、ZIP 内的图和编译论文第 4 页使用同一张图。原图红线的 393 个矢量顶点与上一版全部相同。当前项目的静态电荷重算在两个能窗内得到独立数值验证，但尚未复现论文的三体红线。新版图注还存在一个可直接从红、蓝两条原图曲线检验的归一化差异。
 
 [两页对照图](output/pdf/figure3_audit.pdf) · [能窗结果](output/windows.csv) · [逐点绝对谱](output/independent_absolute_points.csv) · [九种同位素的端点](output/all_isotope_thresholds.csv) · [矢量点](output/figure_vertices.csv) · [运行数据和 SHA-256](output/audit.json)

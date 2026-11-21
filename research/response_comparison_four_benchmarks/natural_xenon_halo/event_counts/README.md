@@ -1,5 +1,7 @@
 # 单位探测效率下的天然氙三体信号事例数
 
+**图 3 红线的后续复现。** 在图面质量、耦合和曝光量固定时，公开 halo 参数与式 (22) 给出的两个能窗事例数为 6.12533、0.98687 例。用原图蓝线约束 halo 并采用正文的常振幅近似，结果为 5.99901、0.97195 例。原红线相应为 5.98978、0.97362 例。[新复算的程序、输入和验证](figure3_red_reproduction/README.md) · [绝对谱、比值和累计事例数（两页 PDF）](figure3_red_reproduction/output/pdf/figure3_red_reproduction.pdf)
+
 2026-11-21 收到的论文图 3 保留了原红线，更新了蓝线和下框比值。新附件与编译论文、红蓝面积和静态电荷绝对事例数的独立对照见[新版图 3 核查](figure3_source_audit/README.md)。以下归档保留本次核查前的源码版本和数值。
 
 [随反冲能变化的事例谱与累计事例数（三页 PDF）](output/pdf/xenon_count_spectra_vs_recoil.pdf) · [新版正文基准的绝对谱与比值](output/recoil_curves/manuscript_event_spectrum.png) · [两个能窗的累计事例数曲线](output/recoil_curves/manuscript_window_count_curves.png) · [同包四组参数的逐组谱图](output/recoil_curves/four_benchmark_event_spectra.png)

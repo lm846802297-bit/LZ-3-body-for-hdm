@@ -1,0 +1,55 @@
+{
+  "baseline_commit": "b9c9a3dcd702b28017cd6266153e9a218058a4c6",
+  "execution_checkout": "8b8df1e00c24ece4b5c716251f34c30624590494",
+  "program_sha256": {
+    "convention_controls.py": "45e5cfed68c5201e4089c0a31269ed3c02b86f4d08e3b884ffe0151d0be27b83",
+    "make_figures.py": "d5eeb53117b182649e44bc5f00b48b4beab6bc83282df1ac833778a11c950626",
+    "paper_kernels.py": "7ff7dbeb4754c275650e83e1ed0dd91e7940519b32f09144b80f3638ff546996",
+    "reproduce.py": "a664fb77157cf7f3a434e7b78bebd0c638c37ee53bf466a1ba52b77b6cf36e12",
+    "verify_predictions.py": "b5410a5bc330211e265518db09ece86f7bf9ca2a36ab84b16442f6a7f5413d6b"
+  },
+  "selected_by_blue_holdout": "blue_09",
+  "comparisons": [
+    {
+      "model": "paper_example",
+      "halo_probability": 1.0,
+      "max_fold_rel": 9.106212568269635e-14
+    },
+    {
+      "model": "modern_mean",
+      "halo_probability": 1.0,
+      "max_fold_rel": 4.025714464849989e-13
+    },
+    {
+      "model": "modern_annual",
+      "halo_probability": 1.0,
+      "max_fold_rel": 5.4556545104565345e-05
+    },
+    {
+      "model": "blue_09",
+      "halo_probability": 1.0,
+      "max_fold_rel": 1.7206574653405385e-13
+    }
+  ],
+  "max_cross_section_relative_difference": 1.1974404934278482e-07,
+  "pole_width_MeV": 4.733651656458141,
+  "recoil_grid_step_keV": 0.5,
+  "python": "3.14.7 (tags/v3.14.7:823f032, Aug  5 2026, 10:51:32) [MSC v.1944 64 bit (AMD64)]",
+  "numpy": "2.5.4",
+  "scipy": "1.18.1",
+  "pandas": "3.1.1",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+  "logical_cpus": 16,
+  "device_used": "CPU",
+  "blas_threads_env": "1",
+  "reference_vertices_sha256": "20fd2c0fed51b487e8226d5ba08fb471860f7736eb7682d2fd6488bc411dbc45",
+  "output_sha256": {
+    "blue_shape_fits.csv": "6aa7a604fcd5862f0fca2db81750afe98e718a2ad0b0394be5b53af61bf9d644",
+    "exact_kernel_grid.csv.gz": "8bcbabefe29bdb7861d2a3ac8cf9cc14fe19b3d8d97ef63654c0bf2c223012ab",
+    "fixed_speed_cross_sections.csv": "a88ed7492296c3f51811a0b64fdf4d787e08725ea70401b7d78d1d97ad3f569e",
+    "red_prediction_scores.csv": "40d86946ba3557b0564354e54a6d558ab7a9844725729a3f8f212e037c2b4c84",
+    "spectra.csv.gz": "6c4cabf1f5cc0cfc5e82ae090263dc0e2736575a07e46b68a90cc11047381f5f",
+    "isotope_halo_248keV.csv": "7af3995e6c97f007baab214e3fc90e37c56f6abbee028e7badde153a75e380aa"
+  }
+}
