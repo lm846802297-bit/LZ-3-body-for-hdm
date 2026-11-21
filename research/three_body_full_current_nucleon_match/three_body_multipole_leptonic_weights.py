@@ -15,6 +15,8 @@ from pathlib import Path
 
 import numpy as np
 
+from nucleon_vector_form_factors import transfer_kinematics_from_q_omega
+
 
 RAW_F1_UDS0 = 3.0
 RAW_F2_UDS0 = -0.552
@@ -318,10 +320,9 @@ def extract_afh_vector_coefficients(
     if hermiticity > 1e-10:
         raise ValueError(f"L is not Hermitian: relative residual {hermiticity:.6g}")
 
-    Q2 = qA_GeV * qA_GeV
-    tN = omega_GeV * omega_GeV - Q2
-    if tN > 1.0e-14:
-        raise ValueError("formal one-body nucleon transfer must be spacelike")
+    transfer = transfer_kinematics_from_q_omega(qA_GeV, omega_GeV)
+    Q2 = transfer["Q_A2_GeV2"]
+    tN = transfer["tN_GeV2"]
     LT = float(np.real(L[1, 1] + L[2, 2]))
     L00 = float(np.real(L[0, 0]))
     if LT < -1e-10 or L00 < -1e-10:
@@ -363,6 +364,7 @@ def extract_afh_vector_coefficients(
     )
 
     return {
+        **transfer,
         "qA_GeV": float(qA_GeV),
         "omega_GeV": float(omega_GeV),
         "omega_over_Q": float(omega_over_Q),

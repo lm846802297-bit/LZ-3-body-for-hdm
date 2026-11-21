@@ -5,6 +5,83 @@ import nucleon_vector_form_factors as ff
 
 
 class VectorFormFactorTests(unittest.TestCase):
+    def test_formal_recoil_transfer_stores_both_four_vectors_and_invariants(self):
+        mA = 121.90971983538435
+        ER_keV = 200.0
+        transfer = ff.recoil_transfer_kinematics(mA, ER_keV)
+        qA = math.sqrt(2.0*mA*200.0e-6 + (200.0e-6)**2)
+        expected_t = -2.0*mA*200.0e-6
+        self.assertAlmostEqual(transfer["qA_four_vector_GeV"][0], 200.0e-6, places=18)
+        self.assertEqual(transfer["qA_four_vector_GeV"][1:3], [0.0, 0.0])
+        self.assertAlmostEqual(transfer["qA_four_vector_GeV"][3], qA, places=15)
+        self.assertEqual(transfer["qN_four_vector_GeV"], transfer["qA_four_vector_GeV"])
+        self.assertAlmostEqual(transfer["tA_GeV2"], expected_t, places=16)
+        self.assertAlmostEqual(transfer["tN_GeV2"], expected_t, places=16)
+        self.assertAlmostEqual(transfer["Q_A2_GeV2"], qA*qA, places=16)
+        self.assertNotAlmostEqual(transfer["tN_GeV2"], -transfer["Q_A2_GeV2"], places=10)
+        self.assertEqual(transfer["metric_signature"], "+---")
+        self.assertEqual(
+            transfer["nucleon_transfer_scheme_id"],
+            "one_body_impulse_external_transfer_qN_equals_qA",
+        )
+
+    def test_static_qN0_zero_is_a_separate_diagnostic(self):
+        mA = 121.90971983538435
+        ER_keV = 200.0
+        transfer = ff.recoil_transfer_kinematics(
+            mA, ER_keV,
+            nucleon_transfer_scheme=ff.STATIC_NUCLEON_TRANSFER_SCHEME,
+        )
+        self.assertAlmostEqual(transfer["qA_four_vector_GeV"][0], 200.0e-6, places=18)
+        self.assertEqual(transfer["qN_four_vector_GeV"][0], 0.0)
+        self.assertAlmostEqual(
+            transfer["tN_GeV2"], -transfer["Q_A2_GeV2"], places=16
+        )
+        self.assertAlmostEqual(
+            transfer["tA_GeV2"], -2.0*mA*ER_keV*1.0e-6, places=16
+        )
+        self.assertNotAlmostEqual(transfer["tN_GeV2"], transfer["tA_GeV2"], places=10)
+
+    def test_formal_qN_is_external_vertex_transfer_not_bound_state_reconstruction(self):
+        transfer = ff.recoil_transfer_kinematics(121.90971983538435, 200.0)
+        definition = transfer["qN_definition"]
+        self.assertIn("external four-momentum", definition)
+        self.assertIn("one-body nucleon-current vertex", definition)
+        self.assertIn("not a microscopic bound-nucleon", definition)
+
+    def test_static_approximation_has_sub_ppm_effect_on_B_over_A(self):
+        mA = 121.90971983538435
+        for ER_keV in (200.0, 267.0):
+            formal = ff.recoil_transfer_kinematics(mA, ER_keV)
+            static = ff.recoil_transfer_kinematics(
+                mA, ER_keV,
+                nucleon_transfer_scheme=ff.STATIC_NUCLEON_TRANSFER_SCHEME,
+            )
+            self.assertAlmostEqual(
+                abs(formal["tN_GeV2"] - static["tN_GeV2"])
+                / abs(formal["tN_GeV2"]),
+                ER_keV * 1.0e-6 / (2.0 * mA),
+                places=13,
+            )
+            f1_formal_raw, f2_formal_raw = ff.bishara_linear(-formal["tN_GeV2"])
+            f1_static_raw, f2_static_raw = ff.bishara_linear(-static["tN_GeV2"])
+            f1_formal, f2_formal = ff.effective_nucleon_form_factors(
+                f1_formal_raw, f2_formal_raw
+            )
+            f1_static, f2_static = ff.effective_nucleon_form_factors(
+                f1_static_raw, f2_static_raw
+            )
+            cm_formal, _ = ff.charge_coefficients(
+                formal["Q_A_GeV"], F1=f1_formal, F2=f2_formal,
+                tN_GeV2=formal["tN_GeV2"],
+            )
+            cm_static, _ = ff.charge_coefficients(
+                static["Q_A_GeV"], F1=f1_static, F2=f2_static,
+                tN_GeV2=static["tN_GeV2"],
+            )
+            relative_B_over_A_shift = (cm_static / cm_formal)**2 - 1.0
+            self.assertLess(abs(relative_B_over_A_shift), 1.0e-6)
+
     def test_zero_momentum_raw_bishara_anchor(self):
         f1, f2 = ff.bishara_linear(0.0)
         self.assertAlmostEqual(f1, 3.0, places=12)

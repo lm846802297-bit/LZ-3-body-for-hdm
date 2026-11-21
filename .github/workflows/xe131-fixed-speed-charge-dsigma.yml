@@ -50,15 +50,15 @@ jobs:
           python -m unittest discover \
             -s research/three_body_full_current_nucleon_match \
             -p 'test_xe131_fixed_speed_charge_dsigma.py' -v
-      - name: Integrate fixed-speed Xe-131 charge sector with the adopted B baseline
+      - name: Integrate the adopted B finite-tN Xe-131 charge-sector baseline
         run: |
           python research/three_body_full_current_nucleon_match/xe131_fixed_speed_charge_dsigma.py \
             --afh-csv afh-native/research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_native.csv \
-            --out /tmp/xe131-fixed-speed-charge-dsigma-bishara-linear.json
+            --out /tmp/xe131-fixed-speed-charge-dsigma-B-baseline.json
       - name: Upload reproducible numerical result
         uses: actions/upload-artifact@v4
         with:
-          name: xe131-fixed-speed-charge-sector-dsigma-ratio
-          path: /tmp/xe131-fixed-speed-charge-dsigma-bishara-linear.json
+          name: xe131-fixed-speed-charge-sector-B-baseline
+          path: /tmp/xe131-fixed-speed-charge-dsigma-B-baseline.json
           if-no-files-found: error
           retention-days: 90

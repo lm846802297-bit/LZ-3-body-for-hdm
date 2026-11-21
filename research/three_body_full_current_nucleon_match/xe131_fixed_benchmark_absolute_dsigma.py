@@ -28,7 +28,7 @@ if str(CALC_DIR) not in sys.path:
 import eq6_kernel  # noqa: E402
 from nucleon_vector_form_factors import (
     RAW_F1_UDS0, RAW_F2_UDS0, bishara_linear, charge_coefficients,
-    effective_nucleon_form_factors,
+    effective_nucleon_form_factors, recoil_transfer_kinematics,
 )
 from three_body_phase_space_tensor import eq6, integrate_spin_resolved_tensor
 from xe131_fixed_speed_charge_dsigma import (
@@ -58,11 +58,11 @@ def kinematic_prefactor_GeVminus5(
     mV_GeV: float = MV_GEV,
     coupling_product_squared: float = COUPLING_PRODUCT_SQUARED,
 ) -> dict:
-    qA = exact_qA_GeV(mA_GeV, ER_keV)
+    transfer = recoil_transfer_kinematics(mA_GeV, ER_keV)
+    qA = transfer["Q_A_GeV"]
     pchi = incident_momentum_GeV(mchi_GeV, speed_km_s)
-    ER_GeV = ER_keV * 1.0e-6
-    Q_A_squared = qA * qA
-    t_A = -2.0 * mA_GeV * ER_GeV
+    t_A = transfer["tA_GeV2"]
+    Q_A_squared = transfer["Q_A2_GeV2"]
     # The propagator carries the invariant transfer t_A=q_A^2, not the
     # spatial three-momentum squared Q_A^2.
     minus_t_A = -t_A
@@ -71,6 +71,7 @@ def kinematic_prefactor_GeVminus5(
         256.0 * math.pi**3 * pchi * pchi * denominator
     )
     return {
+        **transfer,
         "qA_GeV": qA,
         "Q_A_squared_GeV2": Q_A_squared,
         "t_A_GeV2": t_A,
@@ -121,10 +122,10 @@ def phase_space_integral(ER_keV: float, order: tuple[int, int, int]) -> dict:
     }
 
 def nuclear_charge_kernels(ER_keV: float, LC: float, responses: dict[str, float]) -> dict:
-    qA = exact_qA_GeV(MA_XE131_GEV, ER_keV)
-    ER_GeV = ER_keV * 1.0e-6
-    tN_GeV2 = -2.0 * MA_XE131_GEV * ER_GeV
-    Q_A2_GeV2 = qA * qA
+    transfer = recoil_transfer_kinematics(MA_XE131_GEV, ER_keV)
+    qA = transfer["Q_A_GeV"]
+    tN_GeV2 = transfer["tN_GeV2"]
+    Q_A2_GeV2 = transfer["Q_A2_GeV2"]
 
     # Raw universal u+d+s form factors are divided by three because the
     # public prefactor is already expressed with g_VN=3*g_Vq.
@@ -157,6 +158,7 @@ def nuclear_charge_kernels(ER_keV: float, LC: float, responses: dict[str, float]
         raise ArithmeticError("A/B/C charge ratios do not factorize")
 
     return {
+        **transfer,
         "F1V_quark_sum": F1_raw,
         "F2V_quark_sum": F2_raw,
         "F1N_effective": F1,
@@ -212,6 +214,11 @@ def calculate_row(ER_keV: float, response_bundle: dict,
         "nw": order[0], "nz": order[1], "nphi": order[2],
         "pchi_GeV": kin["pchi_GeV"],
         "Q_A_squared_GeV2": kin["Q_A_squared_GeV2"],
+        "qA_four_vector_GeV": kin["qA_four_vector_GeV"],
+        "qN_four_vector_GeV": kin["qN_four_vector_GeV"],
+        "tA_GeV2": kin["tA_GeV2"],
+        "tN_GeV2": kin["tN_GeV2"],
+        "nucleon_transfer_scheme": kin["nucleon_transfer_scheme"],
         "t_A_GeV2": kin["t_A_GeV2"],
         "minus_t_A_GeV2": kin["minus_t_A_GeV2"],
         "mediator_denominator_GeV4": kin["mediator_denominator_GeV4"],

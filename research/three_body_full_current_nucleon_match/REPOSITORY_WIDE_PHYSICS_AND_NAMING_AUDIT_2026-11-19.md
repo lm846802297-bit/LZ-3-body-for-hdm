@@ -39,7 +39,7 @@ with no \(\Phi''\), \(\Delta\), \(\Sigma'\), \(\Sigma''\), or interference respo
 | \(F_A(q_A)\) | Reserve for a scalar coherent whole-nucleus form factor in the manuscript | \(F_1^N,F_2^N\) |
 | point_nucleus_contractions | Idealized point-target tensor/current identity for a convention check | Physical AFH \(W_M\) evaluation |
 
-For the formal one-body impulse prescription:
+For the formal one-body impulse-current external-transfer prescription:
 \[
 q_N^\mu=q_A^\mu,\quad
 t_N=t_A=-2m_AE_R,\quad Q_N^2=-t_N=2m_AE_R.
@@ -48,7 +48,21 @@ The exact spatial nuclear momentum is instead
 \[
 Q_A^2=2m_AE_R+E_R^2,\quad y_A=b_A^2Q_A^2/4.
 \]
-The static diagnostic \(q_N^0=0\), giving \(t_N=-Q_A^2\), is a distinct approximation and must not enter formal B production.
+In the q-aligned frame and metric \((+---)\), formal B uses
+\[
+q_A^\mu=(E_R,0,0,Q_A),\qquad q_N^\mu=q_A^\mu.
+\]
+Here \(q_N^\mu\) denotes the external four-momentum flowing through the
+one-body nucleon-current vertex. For a free on-shell impulse benchmark it
+can be represented as \(k_N'^\mu-k_N^\mu\); for a bound nucleus the B
+prescription assigns the external nuclear transfer to the one-body current
+and does not reconstruct each nucleon's microscopic off-shell momentum
+change. The static diagnostic instead assigns
+\(q_{N,\rm static}^\mu=(0,0,0,Q_A)\), giving
+\(t_{N,\rm static}=-Q_A^2\); it is a distinct low-energy approximation
+and must not enter formal B production. B/P4 outputs serialize
+\texttt{qA\_four\_vector\_GeV}, \texttt{qN\_four\_vector\_GeV},
+\texttt{tA\_GeV2}, and \texttt{tN\_GeV2} separately.
 
 The mediator propagator uses
 \[

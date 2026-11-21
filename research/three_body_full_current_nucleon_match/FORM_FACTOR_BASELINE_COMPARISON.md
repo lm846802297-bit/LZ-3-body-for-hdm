@@ -98,7 +98,29 @@ Q_A^2=|\boldsymbol q_A|^2
 =2m_AE_R+E_R^2.
 \]
 
-The adopted one-body impulse prescription for B is
+Choose the q-aligned coordinate frame with \(\boldsymbol q_A\) along +z.
+With metric \((+---)\), the four-vector components are
+
+\[
+\boxed{q_A^\mu=(E_R,0,0,Q_A).}
+\]
+
+The formal B one-body impulse-current external-transfer prescription
+routes the external nuclear transfer through the one-body nucleon-current
+vertex:
+\[
+q_{\rm 1B}^\mu\equiv q_N^\mu=q_A^\mu.
+\]
+For a free on-shell impulse benchmark this can be realized as
+\(k_N'^\mu-k_N^\mu=q_A^\mu\). In a bound nucleus, \(q_N^\mu\) is the
+external four-momentum argument of the one-body current; this prescription
+does not reconstruct the microscopic off-shell initial and final
+four-momenta of each bound nucleon. The code stores the external components
+as \texttt{qA\_four\_vector\_GeV} and
+\texttt{qN\_four\_vector\_GeV}, and stores \texttt{tA\_GeV2} and
+\texttt{tN\_GeV2} independently.
+
+The adopted one-body impulse-current external-transfer assignment for B is
 
 \[
 q_N^\mu=q_A^\mu,
@@ -114,9 +136,45 @@ Consequently:
 - the mediator propagator uses \((m_V^2-t_A)^2
   =(m_V^2+2m_AE_R)^2\).
 
-The separate static diagnostic \(q_N^0=0\), for which
-\(t_N=-Q_A^2\), must never be substituted into the formal B production
-path.
+The separate static diagnostic assigns
+\(q_N^\mu=(0,0,0,Q_A)\), so \(t_N=-Q_A^2\). It remains a useful
+comparison but must not be substituted into formal B production. The AFH
+Fourier convention \(\boldsymbol q_{\rm AFH}=-\boldsymbol q_A\) is
+separate from the nucleon-current transfer convention.
+
+### Why the full external energy transfer is the formal B choice
+
+The static alternative sets \(q_{N,\rm static}^\mu=(0,\boldsymbol q_A)\),
+so
+\[
+t_{N,\rm static}=-Q_A^2=t_A-E_R^2.
+\]
+It drops the known nuclear recoil energy from the current-vertex transfer.
+The full-transfer prescription is the consistent choice for the covariant
+Dirac--Pauli vertex and its Pauli term; the static prescription is its
+leading low-energy approximation. The free on-shell energy-transfer-matched
+impulse scan documented in the project README realizes
+\(k_N'-k_N=q_A\) with a small longitudinal internal momentum. Its largest
+free-current Ward residual is \(2.40\times10^{-16}\) when evaluated with
+the matched \(q_N\), while the static \(q_N^0=0\) current gives a
+\(5.35\times10^{-4}\) residual when tested against the physical external
+\(q_A\). This directly probes the four-vector entering the Pauli term,
+not merely the tiny change in the scalar invariant argument. This is a
+kinematic consistency check, not a bound-nucleus/off-shell calculation.
+
+For the current Xe-131 Bishara-linear \(F_1\), constant \(F_2\) benchmark,
+the difference between the two prescriptions is numerically negligible:
+
+| \(E_R\) | \(Q_A\) [GeV] | \(t_A\) [GeV\(^2\)] | \(-Q_A^2\) [GeV\(^2\)] | \(E_R/(2m_A)\) | \((B/A)_{\rm static}/(B/A)_{\rm formal}-1\) |
+|---:|---:|---:|---:|---:|---:|
+| 200 keV | 0.220825560 | -0.048763887934 | -0.048763927934 | \(8.20\times10^{-7}\) | \(-2.65\times10^{-7}\) |
+| 267 keV | 0.255146745 | -0.065099790392 | -0.065099861681 | \(1.10\times10^{-6}\) | \(-4.97\times10^{-7}\) |
+
+The last column compares only the matched B/A charge-kernel factor with the
+adopted Bishara-linear Dirac slope and constant Pauli anchor. It is not a
+new full-rate result. The tiny difference supports using the covariant
+full-transfer definition as the convention, while retaining the static
+choice as a labelled approximation/sensitivity check.
 
 ## 4. The A / B / C / D hierarchy
 

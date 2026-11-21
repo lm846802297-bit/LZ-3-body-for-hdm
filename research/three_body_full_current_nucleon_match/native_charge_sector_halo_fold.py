@@ -41,6 +41,8 @@ from nucleon_vector_form_factors import (  # noqa: E402
     isoscalar_zexp,
     charge_coefficients,
     effective_nucleon_form_factors,
+    recoil_transfer_kinematics,
+    transfer_kinematics_from_q_omega,
 )
 from three_body_phase_space_tensor import integrate_spin_resolved_tensor  # noqa: E402
 from three_body_multipole_leptonic_weights import (  # noqa: E402
@@ -117,19 +119,16 @@ def load_isotope_inputs(path: Path = HALO_INPUT / "natural_xenon_isotope_weights
 
 
 def exact_qA_GeV(mA_GeV: float, ER_keV: float) -> float:
-    """Exact spatial recoil momentum from P'^2=P^2=m_A^2."""
-    ER = float(ER_keV) * 1.0e-6
-    if ER < 0.0 or mA_GeV <= 0.0:
-        raise ValueError("invalid recoil or nuclear mass")
-    return math.sqrt(2.0 * mA_GeV * ER + ER * ER)
+    """Exact spatial recoil momentum from the canonical transfer helper."""
+    return float(recoil_transfer_kinematics(mA_GeV, ER_keV)["Q_A_GeV"])
 
 
 def mediator_denominator_squared_GeV4(mV_GeV: float, mA_GeV: float, ER_keV: float) -> float:
     """Return (mV^2-t_A)^2 with t_A=-2*m_A*E_R, never spatial Q_A^2."""
     if min(mV_GeV, mA_GeV) <= 0.0 or ER_keV < 0.0:
         raise ValueError("invalid mediator or nuclear recoil kinematics")
-    ER_GeV = ER_keV * 1.0e-6
-    tA_GeV2 = -2.0 * mA_GeV * ER_GeV
+    transfer = recoil_transfer_kinematics(mA_GeV, ER_keV)
+    tA_GeV2 = transfer["tA_GeV2"]
     return (mV_GeV * mV_GeV - tA_GeV2) ** 2
 
 
@@ -722,15 +721,15 @@ def form_factor_values(
     independent spatial Q_A^2. Raw universal u+d+s form factors are divided
     by three exactly once because the external prefactor contains g_VN=3*g_Vq.
     """
-    QN2 = -float(tN_GeV2)
-    if QN2 < 0.0 or not math.isfinite(QN2):
-        raise ValueError("nucleon invariant Q_N^2 must be finite and non-negative")
+    minus_tN_GeV2 = -float(tN_GeV2)
+    if minus_tN_GeV2 < 0.0 or not math.isfinite(minus_tN_GeV2):
+        raise ValueError("spacelike nucleon invariant -t_N must be finite and non-negative")
     if prescription == "q0_anchor":
         raw = (RAW_F1_UDS0, RAW_F2_UDS0)
     elif prescription == "bishara_linear":
-        raw = bishara_linear(QN2)
+        raw = bishara_linear(minus_tN_GeV2)
     elif prescription == "isoscalar_zexp":
-        raw = isoscalar_zexp(QN2)
+        raw = isoscalar_zexp(minus_tN_GeV2)
     else:
         raise ValueError(f"unknown form-factor prescription: {prescription}")
     return effective_nucleon_form_factors(*raw)
@@ -768,11 +767,16 @@ def charge_kernel_from_coulomb_weight(
     C_extension = sum(terms.values())
     if min(A_reference, B_baseline, C_extension) <= 0.0:
         raise ValueError("non-positive A/B/C charge kernel")
-    raw_F1, raw_F2 = (
-        (RAW_F1_UDS0, RAW_F2_UDS0) if form_factor_prescription == "q0_anchor"
-        else (bishara_linear(-tN_GeV2) if form_factor_prescription == "bishara_linear"
-              else isoscalar_zexp(-tN_GeV2))
-    )
+    if form_factor_prescription == "q0_anchor":
+        raw_F1, raw_F2 = RAW_F1_UDS0, RAW_F2_UDS0
+    elif form_factor_prescription == "bishara_linear":
+        raw_F1, raw_F2 = bishara_linear(-tN_GeV2)
+    elif form_factor_prescription == "isoscalar_zexp":
+        raw_F1, raw_F2 = isoscalar_zexp(-tN_GeV2)
+    else:
+        raise ValueError(
+            f"unknown form-factor prescription: {form_factor_prescription}"
+        )
     return {
         "form_factor_prescription": form_factor_prescription,
         "F1V_quark_sum": raw_F1,
@@ -780,7 +784,7 @@ def charge_kernel_from_coulomb_weight(
         "F1N_effective": F1hat,
         "F2N_effective": F2hat,
         "tN_GeV2": float(tN_GeV2),
-        "Q_N2_GeV2": -float(tN_GeV2),
+        "minus_tN_GeV2": -float(tN_GeV2),
         "cM": cM,
         "cPhiPP": cPhi,
         "L_C": float(L_C),
@@ -814,7 +818,8 @@ def leading_static_vector_current_kernel_from_tensor(
     if pairs.shape != (4, 4, 2) or not np.all(np.isfinite(pairs)):
         raise ValueError("integrated q-aligned Lorentz tensor must have shape (4,4,2)")
     L = pairs[:, :, 0] + 1j * pairs[:, :, 1]
-    tN_GeV2 = omega_GeV * omega_GeV - qA_GeV * qA_GeV
+    transfer = transfer_kinematics_from_q_omega(qA_GeV, omega_GeV)
+    tN_GeV2 = transfer["tN_GeV2"]
     F1, F2 = form_factor_values(
         qA_GeV, form_factor_prescription, tN_GeV2=tN_GeV2
     )
@@ -916,6 +921,7 @@ def leading_static_vector_current_kernel_from_tensor(
             f"charge-sector reconstruction mismatch: {charge_residual:.6g}"
         )
     return {
+        **transfer,
         "F1N_effective": F1,
         "F2N_effective": F2,
         "tN_GeV2": tN_GeV2,
@@ -1091,12 +1097,14 @@ def fold(
             for A in ISOTOPES:
                 xA = isotope_data[A]["abundance"]
                 mA = isotope_data[A]["mA_GeV"]
-                qA = exact_qA_GeV(mA, ER_keV)
+                transfer = recoil_transfer_kinematics(mA, ER_keV)
+                qA = transfer["Q_A_GeV"]
                 vmin = vmin_three_body_km_s(mchi, ms, mA, ER_keV)
                 if vmin >= vmax:
                     isotope_rows.append({
                         "A": A, "abundance": xA, "open": False,
                         "vmin_km_s": vmin, "qA_GeV": qA,
+                        **transfer,
                     })
                     continue
                 vs = 0.5 * (vmax + vmin) + 0.5 * (vmax - vmin) * speed_nodes
@@ -1144,11 +1152,8 @@ def fold(
                         max_interp_difference,
                         max(response["pchip_linear_relative_difference"].values()),
                     )
-                    tA_GeV2 = ER * ER - qA * qA
-                    tA_expected_GeV2 = -2.0 * mA * ER
-                    if not math.isclose(tA_GeV2, tA_expected_GeV2, rel_tol=2.0e-12, abs_tol=2.0e-18):
-                        raise ArithmeticError("q_A, E_R and m_A violate the exact nuclear mass-shell transfer")
-                    tN_GeV2 = tA_GeV2
+                    tA_GeV2 = transfer["tA_GeV2"]
+                    tN_GeV2 = transfer["tN_GeV2"]
                     kernel = charge_kernel_from_coulomb_weight(
                         coulomb_result["L_C"], qA,
                         response["physical_equal_pn"],
@@ -1209,6 +1214,7 @@ def fold(
                 isotope_row = {
                     "A": A, "abundance": xA, "open": True,
                     "mA_GeV": mA, "qA_GeV": qA, "vmin_km_s": vmin,
+                    **transfer,
                     "baseline_A_original_AFH_M_halo_integral": halo_A_reference,
                     "baseline_B_finite_tN_M_halo_integral": halo_B_baseline,
                     "extension_C_MplusPhiPP_halo_integral": halo_charge,
@@ -1400,6 +1406,11 @@ def fold(
         "mediator_denominator": "(m_V^2-t_A)^2=(m_V^2+2*m_A*E_R)^2; t_A=-2*m_A*E_R",
         "nuclear_spatial_momentum": "Q_A^2=2*mA*ER+ER^2; used only in AFH y_A and spatial NR coefficients",
         "nucleon_transfer_scheme": "one-body impulse-current external-transfer assignment q_N^mu=q_A^mu; t_N=t_A=-2*m_A*E_R",
+        "transfer_vector_storage": (
+            "Each isotope row stores qA_four_vector_GeV and qN_four_vector_GeV "
+            "in the q-aligned (+z) frame, together with tA_GeV2 and tN_GeV2; "
+            "metric signature is +---."
+        ),
         "coupling_basis": "external (g1*g2*gVN)^2 with gVN=3*gVq; use Fhat_i=F_i^(u+d+s)/3",
         "primary_baseline": "B: finite-t_N effective nucleon current times finite-size AFH W_M(y_A) only",
         "A_reference": "q=0 effective nucleon current times the same finite-size AFH W_M(y_A)",
