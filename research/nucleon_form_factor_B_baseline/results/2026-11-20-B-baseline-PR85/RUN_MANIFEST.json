@@ -1,0 +1,644 @@
+{
+  "manifest_schema_version": 1,
+  "archive_generated_at_utc": "2026-11-19T19:01:25.671387+00:00",
+  "repository": "lm846802297-bit/LZ-3-body-for-hdm",
+  "archive_status": "ARCHIVED_AND_INTEGRITY_CHECKED",
+  "scientific_validation_status": "COMPUTED; regression suite passed and numerical closure checks passed",
+  "study": "Corrected finite-nucleon Dirac-Pauli B baseline with AFH-7/Hybrid-9 spectra and LZ 2026 efficiency-weighted rate-level fold",
+  "source_workflow": {
+    "workflow_run": {
+      "id": 44590382197,
+      "name": "Finite nucleon form factors B baseline",
+      "conclusion": "success",
+      "event": "pull_request",
+      "head_branch": "research/nucleon-form-factor-B-baseline-20261120",
+      "head_sha": "f6a01b7735c2373848510657826503484dd118d5",
+      "workflow_id": 424067604,
+      "created_at": "2026-11-19T18:40:56Z",
+      "updated_at": "2026-11-19T18:41:25Z",
+      "url": "https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44590382197"
+    },
+    "artifact": {
+      "id": 14564076631,
+      "name": "finite-nucleon-form-factor-B-baseline",
+      "size_in_bytes": 2479447,
+      "digest": "sha256:aa68535b595ec656c0eaa154d2215329d1fd70cde7f0e5f8f51bfd9c7e815c41",
+      "digest_verified": true,
+      "created_at": "2026-11-19T18:41:22Z",
+      "expires_at_at_source": "2027-02-17T18:40:56Z",
+      "url": "https://api.github.com/repos/lm846802297-bit/LZ-3-body-for-hdm/actions/artifacts/14564076631"
+    }
+  },
+  "source_run": {
+    "run_id": 44590382197,
+    "workflow_name": "Finite nucleon form factors B baseline",
+    "head_sha": "f6a01b7735c2373848510657826503484dd118d5",
+    "head_branch": "research/nucleon-form-factor-B-baseline-20261120",
+    "conclusion": "success",
+    "created_at": "2026-11-19T18:40:56Z",
+    "updated_at": "2026-11-19T18:41:25Z",
+    "upstream_halo": {
+      "run_id": 44560087038,
+      "workflow_name": "Three-body full integral vs I(D), halo and seven isotopes",
+      "head_sha": "9ca1801cdded7002c93776f8a0f5bce894135356",
+      "artifact_id": 14551462445,
+      "artifact_name": "halo-seven-isotope-full-vs-ID-full-recoil-scan",
+      "artifact_sha256": "6d3d711341cdd33200721fc9371c0dcac2ba3b0354043c09c903d89650b40103",
+      "size_in_bytes": 368745,
+      "url": "https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44560087038"
+    }
+  },
+  "upstream_halo": {
+    "run_id": 44560087038,
+    "workflow_name": "Three-body full integral vs I(D), halo and seven isotopes",
+    "head_sha": "9ca1801cdded7002c93776f8a0f5bce894135356",
+    "artifact_id": 14551462445,
+    "artifact_name": "halo-seven-isotope-full-vs-ID-full-recoil-scan",
+    "artifact_sha256": "6d3d711341cdd33200721fc9371c0dcac2ba3b0354043c09c903d89650b40103",
+    "size_in_bytes": 368745,
+    "url": "https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44560087038"
+  },
+  "source_artifact_payload": {
+    "member_file_count": 57,
+    "extracted_payload_matches_source_zip": true
+  },
+  "input_and_code_snapshots": {
+    "source_inputs": "AFH-7/Hybrid-9 A spectrum and isotope kernels, natural-xenon isotope weights, AFH v6.0 source, Borah2020 electromagnetic coefficients/covariance, and LZ 2026 efficiency files are copied into source-inputs/.",
+    "source_code": "The B form-factor implementation, continuous-spectrum postprocessor, correlated covariance propagator, quadrature comparator, detector-fold script, and convention audit are copied into source-code/."
+  },
+  "result_summary": {
+    "status": "COMPUTED; regression suite passed and numerical closure checks passed",
+    "electromagnetic_form_factor_source": "Borah et al. (2020), separate proton/neutron low-Q2 z-expansion",
+    "strange_current_models": [
+      "sufian2017_unit_current",
+      "alexandrou2020_charge_weighted_converted",
+      "alexandrou2026_continuum_unit_current"
+    ],
+    "recoil_points": 208,
+    "isotopes": [
+      128,
+      129,
+      130,
+      131,
+      132,
+      134,
+      136
+    ],
+    "natural_atom_fraction_AFH_coverage": 0.998158,
+    "abundances_not_renormalized": true,
+    "baseline_and_highorder_row_counts": {
+      "B-baseline/sufian2017_unit_current": {
+        "seven_isotope_rows": 1456,
+        "natural_xenon_rows": 208
+      },
+      "B-baseline/alexandrou2020_charge_weighted_converted": {
+        "seven_isotope_rows": 1456,
+        "natural_xenon_rows": 208
+      },
+      "B-baseline/alexandrou2026_continuum_unit_current": {
+        "seven_isotope_rows": 1456,
+        "natural_xenon_rows": 208
+      },
+      "B-highorder/sufian2017_unit_current": {
+        "seven_isotope_rows": 1456,
+        "natural_xenon_rows": 208
+      },
+      "B-highorder/alexandrou2020_charge_weighted_converted": {
+        "seven_isotope_rows": 1456,
+        "natural_xenon_rows": 208
+      },
+      "B-highorder/alexandrou2026_continuum_unit_current": {
+        "seven_isotope_rows": 1456,
+        "natural_xenon_rows": 208
+      }
+    },
+    "highorder_summaries": {
+      "sufian2017_unit_current": {
+        "recoil_points": 208,
+        "max_abs_full_vs_ID_error_B_pct": 0.3527618038037472,
+        "max_abs_B_over_A_full_rate_shift_pct": 56.434565058677265
+      },
+      "alexandrou2020_charge_weighted_converted": {
+        "recoil_points": 208,
+        "max_abs_full_vs_ID_error_B_pct": 0.3527618038037472,
+        "max_abs_B_over_A_full_rate_shift_pct": 58.24813231553334
+      },
+      "alexandrou2026_continuum_unit_current": {
+        "recoil_points": 208,
+        "max_abs_full_vs_ID_error_B_pct": 0.3527618038037472,
+        "max_abs_B_over_A_full_rate_shift_pct": 56.33008509994637
+      }
+    },
+    "max_abs_full_vs_ID_error_B_pct": 0.3527725958885508,
+    "max_abs_B_over_A_full_rate_shift_pct_by_model": {
+      "sufian2017_unit_current": 56.434565058677265,
+      "alexandrou2020_charge_weighted_converted": 58.24813231553334,
+      "alexandrou2026_continuum_unit_current": 56.33008509994637
+    },
+    "quadrature_convergence": {
+      "max_abs_full_B_rate_shift_pct": 9.885057661307428e-06,
+      "max_abs_I_D_B_rate_shift_pct": 1.7092129711571147e-05,
+      "max_abs_approximation_error_shift_pp": 1.0792084803590285e-05
+    },
+    "absolute_AFH7_Hybrid9_outputs": {
+      "sufian2017_unit_current": {
+        "natural_xenon_spectrum_rows": 672,
+        "isotope_contribution_rows": 3102,
+        "maximum_A_reconstruction_relative_difference": 5.551115123125783e-16,
+        "internal_checksum_entries": 3,
+        "benchmarks": [
+          "red_ms200_dm1",
+          "green_ms300_dm1",
+          "black_ms360_dm1",
+          "blue_ms300_dm10"
+        ]
+      },
+      "alexandrou2020_charge_weighted_converted": {
+        "natural_xenon_spectrum_rows": 672,
+        "isotope_contribution_rows": 3102,
+        "maximum_A_reconstruction_relative_difference": 5.551115123125783e-16,
+        "internal_checksum_entries": 3,
+        "benchmarks": [
+          "red_ms200_dm1",
+          "green_ms300_dm1",
+          "black_ms360_dm1",
+          "blue_ms300_dm10"
+        ]
+      },
+      "alexandrou2026_continuum_unit_current": {
+        "natural_xenon_spectrum_rows": 672,
+        "isotope_contribution_rows": 3102,
+        "maximum_A_reconstruction_relative_difference": 5.551115123125783e-16,
+        "internal_checksum_entries": 3,
+        "benchmarks": [
+          "red_ms200_dm1",
+          "green_ms300_dm1",
+          "black_ms360_dm1",
+          "blue_ms300_dm10"
+        ]
+      }
+    },
+    "LZ_2026_efficiency_weighted_rate_level_fold": {
+      "sufian2017_unit_current": {
+        "event_yield_rows": 8,
+        "exposure_tonne_year": 2.84,
+        "efficiency_source": "LZ 2026 Fig. S2 digitized central final WIMP-search ROI NR efficiency and gray envelope",
+        "integration_method": "exact analytic integral of piecewise-linear rate times piecewise-linear efficiency over the union of their knots",
+        "energy_resolution_smearing_applied": false,
+        "two_dimensional_signal_pdf_applied": false,
+        "background_likelihood_applied": false,
+        "is_exclusion_limit": false,
+        "internal_checksum_entries": 2
+      },
+      "alexandrou2020_charge_weighted_converted": {
+        "event_yield_rows": 8,
+        "exposure_tonne_year": 2.84,
+        "efficiency_source": "LZ 2026 Fig. S2 digitized central final WIMP-search ROI NR efficiency and gray envelope",
+        "integration_method": "exact analytic integral of piecewise-linear rate times piecewise-linear efficiency over the union of their knots",
+        "energy_resolution_smearing_applied": false,
+        "two_dimensional_signal_pdf_applied": false,
+        "background_likelihood_applied": false,
+        "is_exclusion_limit": false,
+        "internal_checksum_entries": 2
+      },
+      "alexandrou2026_continuum_unit_current": {
+        "event_yield_rows": 8,
+        "exposure_tonne_year": 2.84,
+        "efficiency_source": "LZ 2026 Fig. S2 digitized central final WIMP-search ROI NR efficiency and gray envelope",
+        "integration_method": "exact analytic integral of piecewise-linear rate times piecewise-linear efficiency over the union of their knots",
+        "energy_resolution_smearing_applied": false,
+        "two_dimensional_signal_pdf_applied": false,
+        "background_likelihood_applied": false,
+        "is_exclusion_limit": false,
+        "internal_checksum_entries": 2
+      }
+    },
+    "LZ_2026_detector_yield_EM_covariance": {
+      "sufian2017_unit_current": {
+        "event_yield_covariance_rows": 8,
+        "draws": 3000,
+        "seed": 20261119,
+        "maximum_central_detector_yield_closure_relative_difference": 0.0,
+        "maximum_A_spectrum_reconstruction_relative_difference": 5.551115123125783e-16,
+        "nonfinite_draw_count": 0,
+        "internal_checksum_entries": 2
+      },
+      "alexandrou2020_charge_weighted_converted": {
+        "event_yield_covariance_rows": 8,
+        "draws": 3000,
+        "seed": 20261119,
+        "maximum_central_detector_yield_closure_relative_difference": 0.0,
+        "maximum_A_spectrum_reconstruction_relative_difference": 5.551115123125783e-16,
+        "nonfinite_draw_count": 0,
+        "internal_checksum_entries": 2
+      },
+      "alexandrou2026_continuum_unit_current": {
+        "event_yield_covariance_rows": 8,
+        "draws": 3000,
+        "seed": 20261119,
+        "maximum_central_detector_yield_closure_relative_difference": 0.0,
+        "maximum_A_spectrum_reconstruction_relative_difference": 5.551115123125783e-16,
+        "nonfinite_draw_count": 0,
+        "internal_checksum_entries": 2
+      }
+    },
+    "scope": "Rate-level B baseline plus efficiency-weighted rate-level yields; no energy resolution, 2D signal PDF, background likelihood, or exclusion construction."
+  },
+  "file_inventory": [
+    {
+      "path": "README.md",
+      "size_bytes": 1272,
+      "sha256": "e1da575c9e592b01ed0f26080f52625a8f653d15b0ff89233e2e6d90ccb7986e"
+    },
+    {
+      "path": "extracted/B-absolute/alexandrou2020_charge_weighted_converted/SHA256SUMS.txt",
+      "size_bytes": 293,
+      "sha256": "2a93fb8df416243a2383126256941c4082e0aa70ae912d5867ec4b9e495bdce6"
+    },
+    {
+      "path": "extracted/B-absolute/alexandrou2020_charge_weighted_converted/afh_hybrid9_B_isotope_contributions.csv",
+      "size_bytes": 754308,
+      "sha256": "fcb32826f68c58876f52a198ca3e2d3e209d6fe14781a0cb92452e6dd090e629"
+    },
+    {
+      "path": "extracted/B-absolute/alexandrou2020_charge_weighted_converted/afh_hybrid9_B_natural_xenon_spectrum.csv",
+      "size_bytes": 301961,
+      "sha256": "a48bc90848e14acb7cf2ecab969bbd92a3d7f7fe7ea8c7d37373f6389653866a"
+    },
+    {
+      "path": "extracted/B-absolute/alexandrou2020_charge_weighted_converted/metadata.json",
+      "size_bytes": 9981,
+      "sha256": "b62f6db81bde64b0e45c693c199c47bb82a150a3eba7c5416d6f99ca7cedcdaf"
+    },
+    {
+      "path": "extracted/B-absolute/alexandrou2026_continuum_unit_current/SHA256SUMS.txt",
+      "size_bytes": 293,
+      "sha256": "03fa1ee93c94eb2bd5e64f15caee67d61f3f077d571cb8f3d1bcc7c639b31495"
+    },
+    {
+      "path": "extracted/B-absolute/alexandrou2026_continuum_unit_current/afh_hybrid9_B_isotope_contributions.csv",
+      "size_bytes": 754418,
+      "sha256": "9b5ebb3018fd57d69fce54033a89b215d6cbbcf5956cda206bd66e9bbe3396ca"
+    },
+    {
+      "path": "extracted/B-absolute/alexandrou2026_continuum_unit_current/afh_hybrid9_B_natural_xenon_spectrum.csv",
+      "size_bytes": 302024,
+      "sha256": "9965cc82b748125e618ee1bd408f4db19e9c1d55f9f84c8b4f034cfa95a04100"
+    },
+    {
+      "path": "extracted/B-absolute/alexandrou2026_continuum_unit_current/metadata.json",
+      "size_bytes": 10235,
+      "sha256": "ab288ba2826fa35e9a3c86808345db4b180c7dd68e9edd14560aca7d895c7a90"
+    },
+    {
+      "path": "extracted/B-absolute/sufian2017_unit_current/SHA256SUMS.txt",
+      "size_bytes": 293,
+      "sha256": "cc32c9bd48cc95cb9ce355144dfc054ecc8f3210fa8cbce0e1d94ad9873c264d"
+    },
+    {
+      "path": "extracted/B-absolute/sufian2017_unit_current/afh_hybrid9_B_isotope_contributions.csv",
+      "size_bytes": 754125,
+      "sha256": "85f27e84b75bd4547a2f2b605236da1785e0329977c1dc503078527936570249"
+    },
+    {
+      "path": "extracted/B-absolute/sufian2017_unit_current/afh_hybrid9_B_natural_xenon_spectrum.csv",
+      "size_bytes": 301958,
+      "sha256": "a9427eb6909f3a1ec03f0bb75bbffc4ac7729e56bb8e97b366316878afeb38bd"
+    },
+    {
+      "path": "extracted/B-absolute/sufian2017_unit_current/metadata.json",
+      "size_bytes": 9825,
+      "sha256": "fa95b5e164da694f37d88415d8c0986d40b7b42709eb218c8f555c2486cdaf2b"
+    },
+    {
+      "path": "extracted/B-baseline/alexandrou2020_charge_weighted_converted/metadata.json",
+      "size_bytes": 1821,
+      "sha256": "5ba6419e07369f8d388bc4609682e0be734977a0e42e9c6dc9237adce6c2c6d3"
+    },
+    {
+      "path": "extracted/B-baseline/alexandrou2020_charge_weighted_converted/natural_xenon_B_baseline.csv",
+      "size_bytes": 70773,
+      "sha256": "593d51d8eae5d5da6def2e25afd62e8eea966d844e6487cf19c29ea1134ae828"
+    },
+    {
+      "path": "extracted/B-baseline/alexandrou2020_charge_weighted_converted/seven_isotope_B_baseline.csv",
+      "size_bytes": 670387,
+      "sha256": "6bca04bc2935274262091ff8c8b42337637063e660b281c4f4cc4320a84a9bb3"
+    },
+    {
+      "path": "extracted/B-baseline/alexandrou2026_continuum_unit_current/metadata.json",
+      "size_bytes": 2075,
+      "sha256": "8de917ae0dccd17180bb87cb72eafc2a56a61a3fabe80890e4f4759566ff8d72"
+    },
+    {
+      "path": "extracted/B-baseline/alexandrou2026_continuum_unit_current/natural_xenon_B_baseline.csv",
+      "size_bytes": 70766,
+      "sha256": "b54ad4c3aa83349fc583458219f6ab82273a3b6ea20ab7145db4ded738a1d0d3"
+    },
+    {
+      "path": "extracted/B-baseline/alexandrou2026_continuum_unit_current/seven_isotope_B_baseline.csv",
+      "size_bytes": 670135,
+      "sha256": "063d6cfdb5fcc2a9e31f849119d29f32ef42815490a81cf57ce6bf32a2e03f08"
+    },
+    {
+      "path": "extracted/B-baseline/sufian2017_unit_current/metadata.json",
+      "size_bytes": 1667,
+      "sha256": "c498e78a1ba137dae9031bfb198f0ff7f89244dabacbc3c04fe89ea10b2d7b08"
+    },
+    {
+      "path": "extracted/B-baseline/sufian2017_unit_current/natural_xenon_B_baseline.csv",
+      "size_bytes": 70783,
+      "sha256": "9d6989c967d7db5e96babedbf0837dcebb642c06d57a4abf1319489e620fbabb"
+    },
+    {
+      "path": "extracted/B-baseline/sufian2017_unit_current/seven_isotope_B_baseline.csv",
+      "size_bytes": 670250,
+      "sha256": "d15a7a7151c38f14f3ce8f7778322a192184b27b01bc4b7ce78a7af77cbc927c"
+    },
+    {
+      "path": "extracted/B-detector/alexandrou2020_charge_weighted_converted/SHA256SUMS.txt",
+      "size_bytes": 227,
+      "sha256": "53d903aca8d5b915985065fbbdd4261dd176b3de930e1638441c49c8737af40a"
+    },
+    {
+      "path": "extracted/B-detector/alexandrou2020_charge_weighted_converted/lz_2026_afh7_hybrid9_rate_level_event_yields.csv",
+      "size_bytes": 8350,
+      "sha256": "0eaf790889dc6141b3bac9386491609f0610447e256eff02d63b510345f14841"
+    },
+    {
+      "path": "extracted/B-detector/alexandrou2020_charge_weighted_converted/lz_2026_afh7_hybrid9_rate_level_metadata.json",
+      "size_bytes": 4596,
+      "sha256": "4c006562c3b1e6ef6f276f62640bd3995fc925d761223f00732311e3f37d4b71"
+    },
+    {
+      "path": "extracted/B-detector/alexandrou2026_continuum_unit_current/SHA256SUMS.txt",
+      "size_bytes": 227,
+      "sha256": "a98671159ecfe6745e31b22d88934297833528e92b060e5ee180cddd4cfc9a0d"
+    },
+    {
+      "path": "extracted/B-detector/alexandrou2026_continuum_unit_current/lz_2026_afh7_hybrid9_rate_level_event_yields.csv",
+      "size_bytes": 8343,
+      "sha256": "e0c702cfba86a1b47e738de643629ff6c966069c1bf7c0f94fce2e259850f178"
+    },
+    {
+      "path": "extracted/B-detector/alexandrou2026_continuum_unit_current/lz_2026_afh7_hybrid9_rate_level_metadata.json",
+      "size_bytes": 4588,
+      "sha256": "58063f3d0eafa499f7fd22d5cf75c86299f70fac59e76e3e62c7487534deb692"
+    },
+    {
+      "path": "extracted/B-detector/sufian2017_unit_current/SHA256SUMS.txt",
+      "size_bytes": 227,
+      "sha256": "9c6372ff09276ffc63c0af8bf1ff03e71f644a5ec2f13d5a3fbe239f854a9fc4"
+    },
+    {
+      "path": "extracted/B-detector/sufian2017_unit_current/lz_2026_afh7_hybrid9_rate_level_event_yields.csv",
+      "size_bytes": 8360,
+      "sha256": "98643ee484ce051de5d015ac0056591a647153ce2cdaa800319d675cb8883292"
+    },
+    {
+      "path": "extracted/B-detector/sufian2017_unit_current/lz_2026_afh7_hybrid9_rate_level_metadata.json",
+      "size_bytes": 4546,
+      "sha256": "3058cc2504cc6e87b7ee6ef98a771fda58a518cdc1e93ce7a8dfde5b2a07d4da"
+    },
+    {
+      "path": "extracted/B-detector-covariance/alexandrou2020_charge_weighted_converted/SHA256SUMS.txt",
+      "size_bytes": 189,
+      "sha256": "6c9508a66507a804329543cff78477d711b248c71a2862f184718181267028cf"
+    },
+    {
+      "path": "extracted/B-detector-covariance/alexandrou2020_charge_weighted_converted/lz_2026_B_detector_yield_EM_covariance.csv",
+      "size_bytes": 2619,
+      "sha256": "88d3d2a1ec84ecb801cd696c83498da7bfba352eb0cdcbd3fd777a227bfc5684"
+    },
+    {
+      "path": "extracted/B-detector-covariance/alexandrou2020_charge_weighted_converted/metadata.json",
+      "size_bytes": 2861,
+      "sha256": "06fcaeaa0a762362a95740638bd06bd5732e23af7553abd2ec60e8e402799795"
+    },
+    {
+      "path": "extracted/B-detector-covariance/alexandrou2026_continuum_unit_current/SHA256SUMS.txt",
+      "size_bytes": 189,
+      "sha256": "696893d290c60959549e107f874b5e236340055c875925f766ebc3e6e50d1aca"
+    },
+    {
+      "path": "extracted/B-detector-covariance/alexandrou2026_continuum_unit_current/lz_2026_B_detector_yield_EM_covariance.csv",
+      "size_bytes": 2598,
+      "sha256": "4b63192c3cb989b7f2c7e4c29200d98464c0b05efa88f2e91f3bc7a6c7ee89b8"
+    },
+    {
+      "path": "extracted/B-detector-covariance/alexandrou2026_continuum_unit_current/metadata.json",
+      "size_bytes": 2846,
+      "sha256": "da9e668d7b319ba733e55d3ab86527135646100180deed5ea983827b78b2b61a"
+    },
+    {
+      "path": "extracted/B-detector-covariance/sufian2017_unit_current/SHA256SUMS.txt",
+      "size_bytes": 189,
+      "sha256": "e657d047ab12ee5a62353f314302268fc27b1969920a43bad47aee73967ea479"
+    },
+    {
+      "path": "extracted/B-detector-covariance/sufian2017_unit_current/lz_2026_B_detector_yield_EM_covariance.csv",
+      "size_bytes": 2485,
+      "sha256": "d24287acca1c740ec65da7dca27d7a1279c8fb7e0d43f2093fd3e785f629cbaf"
+    },
+    {
+      "path": "extracted/B-detector-covariance/sufian2017_unit_current/metadata.json",
+      "size_bytes": 2776,
+      "sha256": "9a914ffc1957ad21e05f28c3cd4e1742abfe4ac5f00d6ed507073a0881903639"
+    },
+    {
+      "path": "extracted/B-highorder/alexandrou2020_charge_weighted_converted/metadata.json",
+      "size_bytes": 1822,
+      "sha256": "e86874978e79ea48af05723e86ece45c5fe88b7097632925cadfaaae8d014301"
+    },
+    {
+      "path": "extracted/B-highorder/alexandrou2020_charge_weighted_converted/natural_xenon_B_baseline.csv",
+      "size_bytes": 70696,
+      "sha256": "8783050a9a18b89eefcc3ed25c35cb9854bd132f13c3fa23741f173650d3613c"
+    },
+    {
+      "path": "extracted/B-highorder/alexandrou2020_charge_weighted_converted/seven_isotope_B_baseline.csv",
+      "size_bytes": 670303,
+      "sha256": "a95b517fe6223a9a465ef4d63ba4a7261d091170ddd4d85f9cd3915cb818531f"
+    },
+    {
+      "path": "extracted/B-highorder/alexandrou2026_continuum_unit_current/metadata.json",
+      "size_bytes": 2076,
+      "sha256": "6d05a7d0fdfd2f8e3d849804c9295ba3a480fcd02d71bde302ca38943d578955"
+    },
+    {
+      "path": "extracted/B-highorder/alexandrou2026_continuum_unit_current/natural_xenon_B_baseline.csv",
+      "size_bytes": 70693,
+      "sha256": "d5c7996d90a787e3698100d28e92287512095a9d9685295d9e90fd4b458cc6eb"
+    },
+    {
+      "path": "extracted/B-highorder/alexandrou2026_continuum_unit_current/seven_isotope_B_baseline.csv",
+      "size_bytes": 670039,
+      "sha256": "9f78838baf91b12ddb63cab2e41b849ead365e4722c654f4a62d13998f811955"
+    },
+    {
+      "path": "extracted/B-highorder/sufian2017_unit_current/metadata.json",
+      "size_bytes": 1668,
+      "sha256": "7a8d34bd1a23c9e3c08aa28a721550d268506a4ce033a11a7a6a89fcbce75de4"
+    },
+    {
+      "path": "extracted/B-highorder/sufian2017_unit_current/natural_xenon_B_baseline.csv",
+      "size_bytes": 70677,
+      "sha256": "c7f54c48dd25ecdc156c8f6d38242332e80f546b6c70705858b2e5c3384ee677"
+    },
+    {
+      "path": "extracted/B-highorder/sufian2017_unit_current/seven_isotope_B_baseline.csv",
+      "size_bytes": 670135,
+      "sha256": "ff00f22b9958797743341481b1a4eb23b300b1a2b56432357267740f5132f71d"
+    },
+    {
+      "path": "extracted/B-quadrature-comparison/alexandrou2020_charge_weighted_converted/natural_xenon_B_quadrature_comparison.csv",
+      "size_bytes": 38848,
+      "sha256": "49181916882982754f74ed411331ea5104b049991dd2a903fdfcb0b1c7de27ff"
+    },
+    {
+      "path": "extracted/B-quadrature-comparison/alexandrou2020_charge_weighted_converted/seven_isotope_B_quadrature_comparison.csv",
+      "size_bytes": 123803,
+      "sha256": "a6527df314a68d44255b8363c65a33a6b92b607716b9a9d67d302f59f636d4ce"
+    },
+    {
+      "path": "extracted/B-quadrature-comparison/alexandrou2020_charge_weighted_converted/summary.json",
+      "size_bytes": 281,
+      "sha256": "f41080bbd33f53abedc406d6f5b7304925a1125a64ce0273d60b5816c46ec5df"
+    },
+    {
+      "path": "extracted/B-quadrature-comparison/alexandrou2026_continuum_unit_current/natural_xenon_B_quadrature_comparison.csv",
+      "size_bytes": 38879,
+      "sha256": "ef3cef21aebced57d40d6e1b05d4b811ee568a616c15d34f1989f1d5df2097fa"
+    },
+    {
+      "path": "extracted/B-quadrature-comparison/alexandrou2026_continuum_unit_current/seven_isotope_B_quadrature_comparison.csv",
+      "size_bytes": 123831,
+      "sha256": "b723464e8b98f80f602e0f94c6931c8b7392207b5a14baeef028b07c47cced4a"
+    },
+    {
+      "path": "extracted/B-quadrature-comparison/alexandrou2026_continuum_unit_current/summary.json",
+      "size_bytes": 281,
+      "sha256": "e5317be2362e61ece333b4fec768e05431029bd4c7a157eba805d5715299ace6"
+    },
+    {
+      "path": "extracted/B-quadrature-comparison/sufian2017_unit_current/natural_xenon_B_quadrature_comparison.csv",
+      "size_bytes": 38895,
+      "sha256": "f2b32eecb7ca22fe75477a933b1542b201717c81e34f837b1b556e220571fb92"
+    },
+    {
+      "path": "extracted/B-quadrature-comparison/sufian2017_unit_current/seven_isotope_B_quadrature_comparison.csv",
+      "size_bytes": 123825,
+      "sha256": "b9484255bc1456ef7828f54ed5e8caa0dd61767f5e3ef32fd49cdf7263b62eca"
+    },
+    {
+      "path": "extracted/B-quadrature-comparison/sufian2017_unit_current/summary.json",
+      "size_bytes": 281,
+      "sha256": "da161622c4916a08dbc01770d415e78bbead168b4395ae14fbb163a3ca709933"
+    },
+    {
+      "path": "source-artifact-pr85.zip",
+      "size_bytes": 2479447,
+      "sha256": "aa68535b595ec656c0eaa154d2215329d1fd70cde7f0e5f8f51bfd9c7e815c41"
+    },
+    {
+      "path": "source-code/apply_B_to_afh_hybrid9_continuous_spectrum.py",
+      "size_bytes": 16776,
+      "sha256": "51e5dd742c83d0c087f8adf4c851d0c50565efa828426f51a7185e7b40ef1e1c"
+    },
+    {
+      "path": "source-code/apply_nucleon_form_factors_B.py",
+      "size_bytes": 8730,
+      "sha256": "f936b02b15df2b882d2ad41e691a25881e6d63e6ad41d035d1cf0de5c18bd74e"
+    },
+    {
+      "path": "source-code/borah2020_lowq2.py",
+      "size_bytes": 12386,
+      "sha256": "38642265b457375df91273aa362cf1d8e3a697e1462ecd58c838c42ec4dbf4a6"
+    },
+    {
+      "path": "source-code/compare_B_quadrature.py",
+      "size_bytes": 4350,
+      "sha256": "c6620906dcb091ca5aca6c69d00840984c7a168411c37468e125bbb4e01e2973"
+    },
+    {
+      "path": "source-code/fold_lz_2026_afh_hybrid9_rate_level.py",
+      "size_bytes": 19609,
+      "sha256": "3cd1f443240f286cc24841320a0f7b43462d629424996a63a4e4c90214751dd9"
+    },
+    {
+      "path": "source-code/propagate_B_covariance_to_lz_yields.py",
+      "size_bytes": 19381,
+      "sha256": "b7ec454eb4ed645b5a95be3d03d358628b1f6a9c031605b111eb26fd37389bf8"
+    },
+    {
+      "path": "source-code/strange_current_convention_audit.md",
+      "size_bytes": 5805,
+      "sha256": "20d9f5409608b0651f6990cca0701c4a59e1b64f85f3963549e0690f2db8ed78"
+    },
+    {
+      "path": "source-code/test_apply_B_to_afh_hybrid9_continuous_spectrum.py",
+      "size_bytes": 6174,
+      "sha256": "3417a0a0b2606a1af5bd7110ff4d2813c17ad0d3ba08253d76167ff00c8f8ac9"
+    },
+    {
+      "path": "source-code/test_apply_nucleon_form_factors_B.py",
+      "size_bytes": 2902,
+      "sha256": "2e8173ef52d4db107e235297a1dd4555a06692293f50945b390b8a5ab8b28570"
+    },
+    {
+      "path": "source-code/test_borah2020_lowq2.py",
+      "size_bytes": 4659,
+      "sha256": "b99869bf982bd159712086e34885069e558eb084ad7b4b3c6330810317107404"
+    },
+    {
+      "path": "source-code/test_propagate_B_covariance_to_lz_yields.py",
+      "size_bytes": 1860,
+      "sha256": "4a7e31a608938fae02e5f289252b42f32069f3634098365902f8372764944e6d"
+    },
+    {
+      "path": "source-inputs/afh_hybrid9_isotope_kernel_integrals.csv",
+      "size_bytes": 640118,
+      "sha256": "ec257f8d402a2f5757910703be4dc6470065a88517a36b2edad9681a1f21ed02"
+    },
+    {
+      "path": "source-inputs/afh_hybrid9_metadata.json",
+      "size_bytes": 5330,
+      "sha256": "05bd6ed2a9126f7d0c477d601064dd15a1047bb952b79183c414fb809cfbc991"
+    },
+    {
+      "path": "source-inputs/afh_hybrid9_natural_xenon_spectrum.csv",
+      "size_bytes": 359511,
+      "sha256": "12508b7710fafa006f4a9748370b697d6be622f7ee58f2f4e14e69c47df4f4ad"
+    },
+    {
+      "path": "source-inputs/borah2020_ELZExpFF.dat",
+      "size_bytes": 4160,
+      "sha256": "044097e0190d815a2f37c6f3192c3ce6c6fb6fce014da6428a862dc92985dbbd"
+    },
+    {
+      "path": "source-inputs/borah2020_parameters.json",
+      "size_bytes": 1853,
+      "sha256": "6dfba4a914259e4dd48bb670b26ab892d53dde75a6e013a79914dde1e40f7281"
+    },
+    {
+      "path": "source-inputs/dmformfactor-V6.m",
+      "size_bytes": 94031,
+      "sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372"
+    },
+    {
+      "path": "source-inputs/lz_2026_nr_efficiency_digitized.csv",
+      "size_bytes": 27259,
+      "sha256": "a0917cd29eef20fbbdc9383b81012f4bd9a669859779e39a8b6ccf47dd8a47ed"
+    },
+    {
+      "path": "source-inputs/lz_2026_nr_efficiency_metadata.json",
+      "size_bytes": 2935,
+      "sha256": "79cc439938dab45435cfa19f779f5856c2c7d28154f6a92a87d60c4cc7d94a24"
+    },
+    {
+      "path": "source-inputs/natural_xenon_isotope_weights.csv",
+      "size_bytes": 863,
+      "sha256": "fd1bb996e5f582c74c3c86d129f1d2dded510c65237d0a7b2ba08861f1d8c991"
+    }
+  ]
+}
