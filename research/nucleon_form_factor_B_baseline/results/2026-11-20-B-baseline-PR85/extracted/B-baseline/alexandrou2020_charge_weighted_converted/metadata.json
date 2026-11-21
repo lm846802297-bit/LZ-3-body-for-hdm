@@ -1,0 +1,40 @@
+{
+  "status": "COMPUTED",
+  "baseline": "B = finite nucleon F1(t_N), F2(t_N) times finite-size AFH W_M(y_A)",
+  "input_halo_directory": "artifacts/source/halo-seven-isotope-baseline",
+  "strange_form_factor_model": "alexandrou2020_charge_weighted_converted",
+  "strange_input_metadata": {
+    "model": "alexandrou2020_charge_weighted_converted",
+    "source_current": "e_s*sbar gamma_mu s with e_s=-1/3",
+    "conversion_to_unit_current": "divide G_E^s and G_M^s by e_s=-1/3",
+    "mu_s_charge_weighted": -0.017,
+    "rE2_charge_weighted_fm2": -0.0048,
+    "rM2_charge_weighted_fm2": -0.015,
+    "GM_s_Q2_dependence": "linear low-Q2 expansion from the published magnetic radius"
+  },
+  "electromagnetic_form_factor_source": "Borah et al., Phys. Rev. D 102, 074012 (2020), arXiv:2003.13640; pinned coefficients/covariance distributed by GENIE",
+  "strange_input_convention": "model-specific; see strange_current_convention_audit.md",
+  "momentum_transfer": {
+    "Q_A2_GeV2": "2*m_A*E_R+E_R^2",
+    "t_N_GeV2": "-Q_A^2",
+    "q_NR_used_for_FF": false
+  },
+  "matching": {
+    "F_i_uds": "3*(F_i_EM,p+F_i_EM,n+F_i_s,unit)",
+    "c_M": "F1_uds+t_N/(8*m_N^2)*(F1_uds+2*F2_uds)",
+    "normalized_nucleon_factor": "F_M=c_M/3",
+    "rate_multiplier": "|F_M|^2",
+    "nuclear_response": "AFH v6.0 finite-size W_M; no point-nucleus replacement"
+  },
+  "uncertainty": {
+    "Borah2020_EM_form_factor_covariance_draws": 3000,
+    "seed": 20261119,
+    "strange_lattice_errors": "not sampled in this first pass; central-value scenarios are kept separate and source uncertainties are recorded in the form-factor metadata",
+    "detector_response_applied": false
+  },
+  "summary": {
+    "recoil_points": 208,
+    "max_abs_full_vs_ID_error_B_pct": 0.3527725958885286,
+    "max_abs_B_over_A_full_rate_shift_pct": 58.24813231553334
+  }
+}

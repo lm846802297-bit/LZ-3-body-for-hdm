@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "repository": "lm846802297-bit/LZ-3-body-for-hdm",
+  "purpose": "Permanently preserve the PR85 finite-nucleon B-baseline native outputs, LZ 2026 efficiency-weighted yields, correlated electromagnetic covariance propagation, and exact GitHub Actions provenance.",
+  "archive_directory": "research/nucleon_form_factor_B_baseline/results/2026-11-20-B-baseline-PR85",
+  "run_id": 44590382197,
+  "workflow_name": "Finite nucleon form factors B baseline",
+  "head_branch": "research/nucleon-form-factor-B-baseline-20261120",
+  "head_sha": "f6a01b7735c2373848510657826503484dd118d5",
+  "workflow_path": ".github/workflows/nucleon-form-factor-B-baseline.yml",
+  "workflow_url": "https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44590382197",
+  "artifact_id": 14564076631,
+  "artifact_name": "finite-nucleon-form-factor-B-baseline",
+  "artifact_sha256": "aa68535b595ec656c0eaa154d2215329d1fd70cde7f0e5f8f51bfd9c7e815c41",
+  "artifact_size_bytes": 2479447,
+  "expected_member_count": 57,
+  "pr_url": "https://github.com/lm846802297-bit/LZ-3-body-for-hdm/pull/85",
+  "afh_source_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+  "source_run": {
+    "run_id": 44590382197,
+    "workflow_name": "Finite nucleon form factors B baseline",
+    "head_sha": "f6a01b7735c2373848510657826503484dd118d5",
+    "head_branch": "research/nucleon-form-factor-B-baseline-20261120",
+    "conclusion": "success",
+    "created_at": "2026-11-19T18:40:56Z",
+    "updated_at": "2026-11-19T18:41:25Z"
+  },
+  "upstream_halo": {
+    "run_id": 44560087038,
+    "workflow_name": "Three-body full integral vs I(D), halo and seven isotopes",
+    "head_sha": "9ca1801cdded7002c93776f8a0f5bce894135356",
+    "artifact_id": 14551462445,
+    "artifact_name": "halo-seven-isotope-full-vs-ID-full-recoil-scan",
+    "artifact_sha256": "6d3d711341cdd33200721fc9371c0dcac2ba3b0354043c09c903d89650b40103",
+    "size_in_bytes": 368745,
+    "url": "https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44560087038"
+  },
+  "archive_request_revision": "trigger-2",
+  "archive_request_note": "The pinned artifact includes B-baseline and high-order 208-point halo scans, 84-point absolute AFH-7/Hybrid-9 spectra, LZ 2026 efficiency-weighted event yields, and 3000-draw correlated Borah 2020 electromagnetic covariance propagation. Native files, exact source-code/input snapshots, source artifact digest, and SHA256SUMS are archived and validated."
+}

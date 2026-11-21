@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="700" viewBox="0 0 1000 700">
+<rect width="100%" height="100%" fill="#fff"/>
+<style>text{font-family:Arial,sans-serif;fill:#222}.t{font-size:22px;font-weight:bold}.a{font-size:17px}.s{font-size:14px}.g{stroke:#ddd;stroke-width:1}.axis{stroke:#222;stroke-width:1.4}</style>
+<text class="t" x="500.0" y="34" text-anchor="middle">Natural-xenon recoil spectrum: pointlike A vs finite-nucleon B</text>
+<line class="g" x1="100" y1="585" x2="972" y2="585"/>
+<text class="s" x="88" y="590" text-anchor="end">10^-11</text>
+<line class="g" x1="100" y1="462" x2="972" y2="462"/>
+<text class="s" x="88" y="467" text-anchor="end">10^-9</text>
+<line class="g" x1="100" y1="340" x2="972" y2="340"/>
+<text class="s" x="88" y="345" text-anchor="end">10^-7</text>
+<line class="g" x1="100" y1="217" x2="972" y2="217"/>
+<text class="s" x="88" y="222" text-anchor="end">10^-5</text>
+<line class="g" x1="100" y1="94" x2="972" y2="94"/>
+<text class="s" x="88" y="99" text-anchor="end">10^-3</text>
+<line class="g" x1="95" y1="76" x2="95" y2="585"/>
+<text class="s" x="95" y="609" text-anchor="middle">0</text>
+<line class="g" x1="204" y1="76" x2="204" y2="585"/>
+<text class="s" x="204" y="609" text-anchor="middle">100</text>
+<line class="g" x1="314" y1="76" x2="314" y2="585"/>
+<text class="s" x="314" y="609" text-anchor="middle">200</text>
+<line class="g" x1="424" y1="76" x2="424" y2="585"/>
+<text class="s" x="424" y="609" text-anchor="middle">300</text>
+<line class="g" x1="533" y1="76" x2="533" y2="585"/>
+<text class="s" x="533" y="609" text-anchor="middle">400</text>
+<line class="g" x1="643" y1="76" x2="643" y2="585"/>
+<text class="s" x="643" y="609" text-anchor="middle">500</text>
+<line class="g" x1="753" y1="76" x2="753" y2="585"/>
+<text class="s" x="753" y="609" text-anchor="middle">600</text>
+<line class="g" x1="862" y1="76" x2="862" y2="585"/>
+<text class="s" x="862" y="609" text-anchor="middle">700</text>
+<line class="g" x1="972" y1="76" x2="972" y2="585"/>
+<text class="s" x="972" y="609" text-anchor="middle">800</text>
+<line x1="292" y1="76" x2="292" y2="585" stroke="#555" stroke-dasharray="4 5"/>
+<line x1="446" y1="76" x2="446" y2="585" stroke="#555" stroke-dasharray="4 5"/>
+<line class="axis" x1="100" y1="76" x2="100" y2="585"/>
+<line class="axis" x1="100" y1="585" x2="972" y2="585"/>
+<polyline points="210,394 243,140 265,99 292,83 295,83 297,83 301,83 304,83 307,84 309,85 313,86 316,87 318,88 322,90 325,92 327,94 330,96 334,99 337,102 339,105 342,108 346,112 348,115 351,120 354,125 357,129 360,135 363,142 365,148 369,156 372,165 375,175 378,182 381,192 384,199 386,199 390,195 393,187 395,181 398,173 402,165 405,159 407,155 410,149 414,145 416,142 419,139 422,136 425,134 428,131 431,129 433,128 437,126 440,125 443,123 446,123 473,120 506,127 528,137 561,158 594,188 616,214 648,270 681,344 714,316 736,317 769,340 802,384 824,429 857,581" fill="none" stroke="#1f77b4" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round" stroke-dasharray="8 6"/>
+<polyline points="210,397 243,144 265,104 292,89 295,89 297,89 301,89 304,90 306,90 309,91 313,93 315,94 318,95 322,97 325,99 327,101 330,104 334,106 336,109 339,112 342,116 345,119 348,123 351,128 353,131 357,137 360,143 362,148 365,156 369,164 371,170 374,180 378,191 380,198 383,206 386,208 390,204 392,199 395,190 398,182 401,177 404,170 407,164 409,161 413,156 416,152 418,150 421,146 425,144 427,142 430,140 433,138 436,137 439,135 442,134 444,134 462,131 495,136 528,150 550,163 583,191 616,229 637,264 670,344 703,340 725,334 758,349 791,387 813,425 846,525" fill="none" stroke="#ff7f0e" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="210,397 243,145 265,105 292,89 295,89 297,89 301,90 304,90 306,91 309,92 313,93 315,94 318,95 322,97 325,100 327,101 330,104 334,107 336,109 339,112 342,116 345,119 348,123 351,128 353,132 357,137 360,144 362,148 365,156 369,164 371,171 374,181 378,191 380,198 383,206 386,208 390,204 392,199 395,191 398,182 401,177 404,170 407,165 409,161 413,156 416,152 418,150 421,147 425,144 427,142 430,140 433,138 436,137 439,136 442,135 444,134 462,131 495,136 528,150 550,164 583,192 616,230 637,265 670,345 703,341 725,334 758,350 791,388 813,426 846,526" fill="none" stroke="#2ca02c" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+<polyline points="210,397 243,144 265,104 292,89 295,89 297,89 301,89 304,90 306,90 309,91 313,93 315,94 318,95 322,97 325,99 327,101 330,104 334,106 336,109 339,112 342,116 345,119 348,123 351,128 353,131 357,137 360,143 362,148 365,156 369,164 371,170 374,180 378,191 380,198 383,206 386,208 390,204 392,199 395,190 398,182 401,177 404,170 407,164 409,161 413,156 416,152 418,150 421,146 425,144 427,142 430,140 433,138 436,137 439,135 442,134 444,134 462,131 495,136 528,150 550,163 583,191 616,229 637,264 670,344 703,340 725,334 758,349 791,387 813,425 846,525" fill="none" stroke="#d62728" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+<rect x="652" y="77" width="300" height="122" fill="#fff" fill-opacity=".93" stroke="#aaa"/>
+<line x1="662" y1="92" x2="696" y2="92" stroke="#1f77b4" stroke-width="2.6" stroke-dasharray="8 6"/>
+<text class="s" x="706" y="97">A: pointlike nucleon</text>
+<line x1="662" y1="119" x2="696" y2="119" stroke="#ff7f0e" stroke-width="2.6"/>
+<text class="s" x="706" y="124">Sufian 2017 (B)</text>
+<line x1="662" y1="146" x2="696" y2="146" stroke="#2ca02c" stroke-width="2.6"/>
+<text class="s" x="706" y="151">Alexandrou 2020 (B)</text>
+<line x1="662" y1="173" x2="696" y2="173" stroke="#d62728" stroke-width="2.6"/>
+<text class="s" x="706" y="178">Alexandrou 2026 (B)</text>
+<text class="a" x="536.0" y="645" text-anchor="middle">Recoil energy E_R [keV]</text>
+<text class="a" transform="translate(25 330.5) rotate(-90)" text-anchor="middle">Relative differential rate [arbitrary units]</text>
+<text class="s" x="500.0" y="683" text-anchor="middle" fill="#555">Relative-rate output, not an absolute cross section; dotted lines mark 180-320 keV.</text>
+</svg>
