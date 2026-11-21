@@ -1,0 +1,85 @@
+{
+  "scope": "Xe-131, coherent charge sector only; no halo or detector fold",
+  "reference_commit": "c5bfcf6c5494d036b078af8299a2fca2e86248ce",
+  "reference_run": 44324056946,
+  "artifact_id": 14437568189,
+  "upstream_zip_bytes": 170529,
+  "upstream_zip_sha256": "6f4267d1f0bb5536e5a403b84ec19e778fd42f8c94f84ec1735cbc4e045869a9",
+  "baseline_main": "7456b7743adbed46b09b430ea2a54e8d0545aaa6",
+  "mass_scheme": "130.90508406 u minus 54 electron masses, no electronic binding correction",
+  "parameters": {
+    "mA_GeV": 121.90971983538435,
+    "mchi_GeV": 1000.0,
+    "ms_keV": 300,
+    "delta_m_keV": 450,
+    "v_km_s": 776.0,
+    "mV_GeV": 10.0,
+    "coupling_product_squared": 1,
+    "g2_width": 1.0
+  },
+  "central_width": "zero",
+  "pole_width_control_keV": 53.3821547234874,
+  "quadrature": {
+    "W2": "threshold u^2 Gauss",
+    "z": "Gauss on [-1,1]",
+    "phi": "uniform periodic mean",
+    "orders": [
+      12,
+      6,
+      4
+    ],
+    "anchor_orders": [
+      24,
+      12,
+      8
+    ]
+  },
+  "rows": 299,
+  "open": 297,
+  "endpoints_keV": [
+    109.38223177717748,
+    653.7019137946834
+  ],
+  "minimum_sampled_pole_clearance_keV": 85.97237182421107,
+  "max_relative_error_vs_reference_open_grid": {
+    "L00_GeV2": 7.954796110709594e-08,
+    "LC_GeV2": 7.954796088505134e-08,
+    "LC_over_L00_minus_one": 1.669062665854426e-10,
+    "dsigma_ch_cm2_per_keV": 7.954796044096213e-08,
+    "full_over_point_M": 3.219646771412954e-15
+  },
+  "max_relative_refinement_over_seven_components": {
+    "110.0": 3.7969627442180354e-14,
+    "200.0": 3.430589146091734e-14,
+    "267.0": 3.0375701953744283e-13,
+    "324.0": 8.506528814677949e-13,
+    "546.0": 1.532107773982716e-14,
+    "652.0": 2.4513724383723456e-13
+  },
+  "correction_range_ppm_open_grid": [
+    -7.8117887128908015,
+    -3.3655896657923554
+  ],
+  "runtime": {
+    "python": "3.14.7",
+    "numpy": "2.5.4",
+    "scipy": "1.18.1",
+    "matplotlib": "3.11.2"
+  },
+  "hash_policy": "SHA-256, canonical LF for text, raw bytes for PNG",
+  "sha256": {
+    "xe131_fixed_benchmark_absolute_dsigma_450keV.csv": "af963a90e40bf0e68d2e7df171c0b1ba930fb63732d596ff64d2261deab76285",
+    "xe131_fixed_benchmark_absolute_dsigma_450keV_metadata.json": "a03ff43f23b43fa765d162632835b9c9bc757b862d40aaae51571e9d3896201e",
+    "afh_default_xe131_M_PhiPP_native.csv": "b1b65708cd103058c3bcaea50bf65550d5671a88e97000b94f2536fbc60a59ff",
+    "run_scan.py": "f43340867ac6b438fc074185854727a38f7678c58faf82e7dcec319fbcc16313",
+    "project_charge.py": "7b27dfb16bb48038f3686f00e6ed7b89d07afe3801977b1b96a1c521b651b684",
+    "plot_weights.py": "760a5ca9d65f61ea20e1ccb7bf3d7a8cdafa78def3cc2900e23ce218867801d4",
+    "eq6_kernel.py": "3cdc33ded7bcebc19bba15487de0234a140f13a161f42db5b7bc81163da01619",
+    "phase_space_convergence.py": "7396b06fb2ea4bc4f857463ea63c48cc60d118ce286a12915cbb7a7a387217b7",
+    "isotope_mass_schemes.py": "0cd57fbb6a1fe3aa04e54d335ce29d3abeb600f911a031181ea1fea835aa9528",
+    "weights.csv": "ef9a6b88f5087556773e2893ce2171ac39577547cc64ecb8b7770520f20ba4c2",
+    "controls.csv": "32dbf6ff09c62ae6be97d63118314202d9714bb9d45686d9e48a9fb29b155282",
+    "charge_weights.png": "0c7295310746ed84c232f6c9801f27481c3d1cb516e53814dd2c195bafba6578",
+    "point_charge_comparison.png": "2ccb43c2fb030406c0d851f1bedb1780fd29258e2c6d86ca00ae24721c67cfe3"
+  }
+}

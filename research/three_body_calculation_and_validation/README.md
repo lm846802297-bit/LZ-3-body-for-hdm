@@ -16,6 +16,8 @@ This directory contains the Eq. (6) particle-physics kernel and the numerical ru
 
 ## Core Eq. (6) implementation
 
+For the 450-keV Xe-131 **charge–longitudinal projection**, see [the calculation and comparison](charge_longitudinal/README.md). It separates charge–longitudinal interference from interference between the two radiation diagrams and reproduces the archived, fixed-speed, **zero-width** charge-sector spectrum with native AFH responses. The asymmetric Eq. (19) pole width is checked at six recoil energies only; the 299-point curve is not a finite-width production spectrum. The nuclear mass is 121.90971983538435 GeV, not the historical `131u` approximation.
+
 The kernel uses the interaction/current written in paper-source/main.tex and explicitly records the Dirac-spinor baseline. It does not silently assume a Majorana implementation or supply missing UV/gauge-sector information.
 
 - Exact reconstruction of \(p,p',k,q\) in the target-rest frame from \((v,E_R,W^2,z,\phi_*)\).
