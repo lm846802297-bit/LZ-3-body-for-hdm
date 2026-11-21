@@ -57,7 +57,20 @@ jobs:
           python -m py_compile research/three_body_calculation_and_validation/phase_space_convergence.py
           python -m py_compile research/afh_default_density_xe131/compare_afh_mathematica_python.py
           python -m py_compile research/afh_default_density_xe131/compare_full_dsigma_mathematica.py
+          python -m py_compile research/afh_default_density_xe131/compare_er_grid_convergence.py
           python -m py_compile research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py
+
+      - name: Parse native Windows ER-grid PowerShell runner
+        shell: pwsh
+        run: |
+          $path = "research/afh_default_density_xe131/run_afh_er_grid_convergence.ps1"
+          $tokens = $null
+          $errors = $null
+          [System.Management.Automation.Language.Parser]::ParseFile($path, [ref]$tokens, [ref]$errors) | Out-Null
+          if ($errors.Count -gt 0) {
+            $errors | Format-List
+            exit 1
+          }
 
       - name: Run Xe-131 AFH and three-body regression tests
         run: |

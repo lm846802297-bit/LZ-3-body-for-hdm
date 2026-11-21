@@ -466,3 +466,18 @@ full Mathematica/Python \(d\sigma_A/dE_R\) comparison. See
 [the full mapping audit](output/HISTORICAL_I6_MAPPING_AUDIT.md) and the
 [archived CSV/metadata/checksums](output/historical_i6_mapping_audit/).
 
+
+
+## Fixed-speed Xe-131 recoil-energy grid convergence (execution pending)
+
+The native runner compares a 5-keV grid with a 1-keV grid over 5--800 keV for the four fixed-speed Xe-131 benchmarks. Each grid is first evaluated by the Wolfram Language Eq. (6) runner and independently checked point-by-point by the Python comparator; only then does the grid comparator assess common-node agreement, integrated recoil area, peak height/location, and the three AFH response-minimum windows.
+
+The settings are fixed at \((n_W,n_z,n_\phi)=(16,16,8)\), `threshold_u2`, and pole width. This is a fixed-speed Xe-131 sampling audit, not a natural-xenon halo fold or detector-level calculation. It retains the archived fixed-speed Xe-131 `A u` nuclear-mass convention for direct benchmark comparison; it must not be conflated with the NIST isotope-specific mass convention used by the natural-xenon halo notebook.
+
+Run on the Windows/Wolfram machine:
+
+~~~powershell
+powershell -ExecutionPolicy Bypass -File research/afh_default_density_xe131/run_afh_er_grid_convergence.ps1
+~~~
+
+Outputs are written locally under `research/afh_default_density_xe131/output/er_grid_convergence_2026-11-15/`. No native 5-keV/1-keV run or numerical PASS is claimed yet. CI only compiles the comparator, runs its synthetic unit tests, and parses the PowerShell runner; it does not execute Mathematica.
