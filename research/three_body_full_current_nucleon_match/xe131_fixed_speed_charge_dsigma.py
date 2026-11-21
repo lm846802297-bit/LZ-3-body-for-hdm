@@ -27,6 +27,7 @@ from nucleon_vector_form_factors import (
 )
 from native_charge_sector_halo_fold import load_isotope_inputs
 from three_body_phase_space_tensor import integrate_spin_resolved_tensor
+from xe131_full_afh_fixed_speed_recoil_scan import overlay_dense_native_charge_grid
 
 MCHI_GEV = 1000.0
 MS_GEV = 300.0e-6
@@ -366,8 +367,21 @@ def integrate_LC(
         "quadrature_points": int(result["quadrature_points"]),
         "order": {"nw": nw, "nz": nz, "nphi": nphi},
     }
-def run(afh_csv: Path) -> dict:
+def run(
+    afh_csv: Path,
+    dense_native_csv: Path | None = None,
+    dense_native_metadata: Path | None = None,
+    dense_native_validation: Path | None = None,
+) -> dict:
     bundle, provenance = load_native_xe131_responses(afh_csv)
+    dense_args = (dense_native_csv, dense_native_metadata, dense_native_validation)
+    if any(item is not None for item in dense_args):
+        if not all(item is not None for item in dense_args):
+            raise ValueError("dense native overlay requires CSV, metadata, and validation JSON together")
+        bundle, provenance = overlay_dense_native_charge_grid(
+            bundle, provenance, dense_native_csv,
+            dense_native_metadata, dense_native_validation,
+        )
     results = []
     for ER_keV, (delta_m, medium_order, high_order) in BENCHMARKS.items():
         qA = exact_qA_GeV(MA_XE131_GEV, ER_keV)
@@ -500,9 +514,15 @@ def run(afh_csv: Path) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--afh-csv", type=Path, required=True)
+    parser.add_argument("--dense-native-csv", type=Path)
+    parser.add_argument("--dense-native-metadata", type=Path)
+    parser.add_argument("--dense-native-validation", type=Path)
     parser.add_argument("--out", type=Path, required=True)
     args = parser.parse_args()
-    result = run(args.afh_csv)
+    result = run(
+        args.afh_csv, args.dense_native_csv,
+        args.dense_native_metadata, args.dense_native_validation,
+    )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     print(json.dumps({
