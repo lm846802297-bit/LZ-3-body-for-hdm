@@ -287,7 +287,7 @@ def plot_absolute(rows: list[dict], outdir: Path) -> None:
                 label=r"B: finite-$t_N$ $M$-only baseline")
     ax.semilogy(er, [r["C_MplusPhiPP_cm2_per_keV"] for r in opened],
                 linestyle="-.", linewidth=1.5,
-                label=r"C: $M+\\Phi''$ charge extension")
+                label=r"$\mathrm{C:}\ M+\Phi''\ \mathrm{charge\ extension}$")
     ax.axvline(200.0, color="0.45", linestyle="--", linewidth=0.85,
                label=r"$E_R=200~\mathrm{keV}$")
     ax.axvline(267.0, color="0.60", linestyle=":", linewidth=1.0,
