@@ -1,5 +1,5 @@
 (* Dense native AFH v6.0 Xe-131 charge-response export around the W_M diffraction minimum. *)
-ClearAll["Global" <> FromCharacterCode[96] <> "*"];
+ClearAll["Global`*"];
 
 scriptDir = DirectoryName[$InputFileName];
 repoRoot = DirectoryName[DirectoryName[scriptDir]];
@@ -11,6 +11,13 @@ packagePath = If[StringQ[envPath] && envPath =!= "",
 If[!FileExistsQ[packagePath],
   Print["ERROR: AFH source not found: ", packagePath];
   Exit[2]
+];
+
+(* Keep the committed provenance path repository-relative. The SHA-256 below
+   still pins the exact package bytes used for this export. *)
+sourceRel = If[StringQ[envPath] && envPath =!= "",
+  packagePath,
+  "v6/dmformfactor-V6.m"
 ];
 
 Get[packagePath];
@@ -73,7 +80,7 @@ metadata = StringRiffle[{
   "normalization=raw AFH package response; no physical equal-p/n factor-four rescaling",
   "imaginary_parts=exported separately for all three response functions",
   "max_imaginary_residual=" <> ToString[InputForm[maxImaginaryResidual]],
-  "AFH_source_path=" <> packagePath,
+  "AFH_source_path=" <> sourceRel,
   "AFH_source_sha256=" <> IntegerString[FileHash[packagePath, "SHA256"], 16, 64],
   "source_commit=" <> ToString[Environment["AFH_SOURCE_COMMIT"]],
   "wolfram_version=" <> $Version,

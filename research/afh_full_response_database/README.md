@@ -118,6 +118,35 @@ python research/afh_full_response_database/compare_native_afh_full_response.py \
   --out-json /tmp/afh-full-response/native_comparison.json
 ```
 
+### 5.1 Dense Xe-131 native charge-dip export
+
+`run_xe131_dense_charge_dip_native.wls` executes the AFH v6.0
+`ResponseNuclear` package at 121 uniform nodes,
+\(q_A=0.2545\)--\(0.2575\ \mathrm{GeV}\) with
+\(\Delta q_A=0.000025\ \mathrm{GeV}\), and exports the real and imaginary
+parts of \(W_M\), \(W_{\Phi''}\) and \(W_{M\Phi''}\). Thirteen nodes coincide
+with the 2,401-node native coarse grid; the validator compares those nodes at
+`rtol=5e-7`, `atol=2e-12`.
+
+```bash
+export AFH_SOURCE_COMMIT=$(git rev-parse HEAD)
+wolframscript -file \
+  research/afh_full_response_database/run_xe131_dense_charge_dip_native.wls
+
+python research/afh_full_response_database/validate_xe131_dense_charge_dip.py \
+  --dense-csv research/afh_full_response_database/output/xe131-dense-charge-dip/xe131_dense_charge_response_dip_native.csv \
+  --dense-metadata research/afh_full_response_database/output/xe131-dense-charge-dip/xe131_dense_charge_response_dip_metadata.txt \
+  --coarse-csv research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_native.csv \
+  --out-json /tmp/xe131_dense_charge_dip_validation.json
+```
+
+The committed 121-node CSV, metadata and validation JSON under
+`output/xe131-dense-charge-dip/` are checked by
+`.github/workflows/xe131-dense-native-charge-dip.yml`. CI validates the
+committed native numbers; it does not execute Mathematica, because hosted
+runners do not carry the AFH package or a Wolfram licence. Reproduction
+therefore requires Wolfram 14.2.0 locally.
+
 ## 6. Acceptance gates
 
 A Python internal-consistency PASS is not a native AFH validation. The

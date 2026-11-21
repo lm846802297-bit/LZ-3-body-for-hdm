@@ -79,6 +79,26 @@ class ValidateXe131DenseChargeDipTests(unittest.TestCase):
         self.assertEqual(result["common_nodes_compared"], 13)
         self.assertTrue(result["native_afh_dense_q_validated"])
 
+    def test_accepts_legacy_coarse_imaginary_column_names(self):
+        with self.coarse_csv.open(newline="", encoding="utf-8") as f:
+            rows = list(csv.DictReader(f))
+        fields = list(rows[0])
+        alias = {
+            "Im_W_M00_AFH": "Im_W_M00",
+            "Im_W_PhiPP00_AFH": "Im_W_PhiPP00",
+            "Im_W_MPhiPP00_AFH": "Im_W_MPhiPP00",
+        }
+        legacy_fields = [alias.get(name, name) for name in fields]
+        with self.coarse_csv.open("w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=legacy_fields)
+            writer.writeheader()
+            for row in rows:
+                writer.writerow({alias.get(k, k): v for k, v in row.items()})
+
+        result = validate(self.dense_csv, self.meta_txt, self.coarse_csv)
+        self.assertEqual(result["status"], "PASS_NATIVE_XE131_DENSE_CHARGE_DIP")
+        self.assertEqual(result["common_nodes_compared"], 13)
+
     def test_rejects_mismatched_common_native_node(self):
         with self.dense_csv.open(newline="", encoding="utf-8") as f:
             rows = list(csv.DictReader(f))

@@ -51,6 +51,21 @@ def parse_wolfram_float(value: str) -> float:
     return float(value.strip().replace("*^", "e"))
 
 
+def resolve_coarse_column(row: dict[str, str], column: str) -> str:
+    """Resolve the canonical or legacy native coarse-header spelling.
+
+    The 2,401-node ``phi_response_native`` export labels the three imaginary
+    components ``Im_W_M00``, ``Im_W_PhiPP00`` and ``Im_W_MPhiPP00``. The dense
+    export uses the suffixed AFH names. Both label the same native entries.
+    """
+    if column in row:
+        return column
+    legacy = column[:-4] if column.endswith("_AFH") else column
+    if legacy in row:
+        return legacy
+    raise ValueError(f"missing native response column {column!r}")
+
+
 def close(a: float, b: float) -> bool:
     return abs(a - b) <= ATOL + RTOL * max(abs(a), abs(b))
 
@@ -127,7 +142,9 @@ def validate(dense_csv: Path, dense_metadata: Path, coarse_csv: Path) -> dict:
             for name, (real_col, imag_col) in CHANNELS.items():
                 for column in (real_col, imag_col):
                     a = parse_wolfram_float(row[column])
-                    b = parse_wolfram_float(coarse_row[column])
+                    b = parse_wolfram_float(
+                        coarse_row[resolve_coarse_column(coarse_row, column)]
+                    )
                     diff = abs(a - b)
                     rel = diff / max(abs(a), abs(b), 1e-300)
                     if not close(a, b):
