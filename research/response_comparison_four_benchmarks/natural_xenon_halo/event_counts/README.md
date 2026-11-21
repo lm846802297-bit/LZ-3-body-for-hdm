@@ -1,5 +1,7 @@
 # 单位探测效率下的天然氙三体信号事例数
 
+2026-11-21 收到的论文图 3 保留了原红线，更新了蓝线和下框比值。新附件与编译论文、红蓝面积和静态电荷绝对事例数的独立对照见[新版图 3 核查](figure3_source_audit/README.md)。以下归档保留本次核查前的源码版本和数值。
+
 [随反冲能变化的事例谱与累计事例数（三页 PDF）](output/pdf/xenon_count_spectra_vs_recoil.pdf) · [新版正文基准的绝对谱与比值](output/recoil_curves/manuscript_event_spectrum.png) · [两个能窗的累计事例数曲线](output/recoil_curves/manuscript_window_count_curves.png) · [同包四组参数的逐组谱图](output/recoil_curves/four_benchmark_event_spectra.png)
 
 第一页将新版论文正文的三体信号红线与按相同质量、耦合重算的 $dN/dE_R$ 叠在一起，单位为本次曝光下的例/keV。第二页的 $N([E_{\min},E_R])$ 从每个能窗的左端开始累计，单位为例。第三页逐一对照新版压缩包另附的四组固定耦合曲线。另存的[能窗积分总数图](output/pdf/xenon_expected_counts.pdf)可按窗查阅总数。
