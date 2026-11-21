@@ -35,9 +35,11 @@ theorem deficit_nonneg_iff_minimum_speed
   rw [deficit_factorization (ne_of_gt hq) (ne_of_gt hmu)]
   constructor
   · intro h
-    have hgap : 0 ≤ v - minimumSpeed q mu mS :=
-      (mul_nonneg_iff_of_pos_left hq).mp h
-    linarith
+    by_contra hnot
+    have hneg : v - minimumSpeed q mu mS < 0 := lt_of_not_ge hnot
+    have hprod : 0 < q * (-(v - minimumSpeed q mu mS)) :=
+      mul_pos hq (neg_pos.mpr hneg)
+    nlinarith
   · intro hv
     apply mul_nonneg hq
     linarith
