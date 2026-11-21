@@ -1,0 +1,45 @@
+{
+  "archive_directory": "research/lz_detector_response/results/2026-11-20-formal-B-highorder-and-NEST",
+  "artifacts": [
+    {
+      "key": "halo-highorder",
+      "run_id": 44681433965,
+      "artifact_id": 14607350801,
+      "sha256": "a570bbf81119e8b7b87526c51b7012d056c0c07e290618bb7e12469b43571194"
+    },
+    {
+      "key": "formal-B-highorder-halo",
+      "run_id": 44689438445,
+      "artifact_id": 14608091362,
+      "sha256": "b9d261a68a73e480a6e4d84c3aef9c57a0fc5fc80aa1be7079170d0305b6c6c5"
+    },
+    {
+      "key": "formal-B-NEST-fold",
+      "run_id": 44682999463,
+      "artifact_id": 14605476304,
+      "sha256": "e2cc3a5161850ea189a316769875723783811ace87441dea77debc99b7109c6c"
+    }
+  ],
+  "additional_reproduction_inputs": [
+    {
+      "role": "NEST stratified response raw event source",
+      "run_id": 43697104437,
+      "artifact_id": 14155360851,
+      "sha256": "682e2ba71063d6ef835b37a6d328a84ab7c609f404856aa83d56e4b875794bab",
+      "note": "Referenced but not copied into the Git repository because the raw event artifact is approximately 328 MB; the NEST source commit and generator code are pinned."
+    },
+    {
+      "role": "PR87 formal B production spectra input to the NEST fold",
+      "run_id": 44662497177,
+      "artifact_id": 14596147908,
+      "sha256": "f5c1d8d791bffff3159a6e279e5a0e68b705bf07466be6b489ba9a49e29ce7ac",
+      "source_commit": "40a3291ba2d00516ed8d6f8bf69c48531326047d"
+    }
+  ],
+  "source_pins": {
+    "halo_highorder_commit": "aabaf2f2c8ecb1b9de28cf29c13cc1f92fa10f83",
+    "formal_B_reweight_commit": "9a9a17467d903eb9059704337c9cbe05bcabbafc",
+    "NEST_commit": "541b6430dae6ea289cf110c99f174a9187f7fdee"
+  },
+  "archive_version": 2
+}

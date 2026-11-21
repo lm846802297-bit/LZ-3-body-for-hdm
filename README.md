@@ -9,9 +9,11 @@
 ## 研究文档入口
 
 - [AFH Xe-131 核响应、三体散射与天然氙反冲率主报告](research/docs/09_afh_xe131_three_body_scattering_natural_xenon.md)：完整正文及正式附录 A–H。
+- [VV 核子流匹配与 Xe-131 \\(W_{\\Phi''}\\) 响应审计](research/afh_vv_phi_xe131/README.md)：AFH 自旋—轨道响应、质量—轨道干涉、2401 点数值结果及三体振幅匹配边界。
 - [研究文档索引](research/docs/README.md)：主报告、独立附录、公式索引和补充记录。
 - [公式—符号—正文—程序—结果交叉引用](research/docs/formula_symbol_code_cross_reference.md)：F1–F12 公式、单位、程序入口、输出和适用边界。
 - [研究目录索引](research/README.md)：各专题的内容和科学状态。
+- [核子 \(c_M\) 原始/归一化定义与 AFH \(W_M\) 区分](research/nucleon_form_factor_B_baseline/CM_RAW_NORMALIZATION_AND_AFH_M_RESPONSE.md)：说明因子 3、外部核子耦合、P0/P 匹配系数和核多体响应之间的关系。
 - [Figure 2 数值结果总索引](research/docs/supplements/three_body_results_master_index_2026-11-16.md)：main 当前的 13 组结果、91 个已提交文件 SHA-256/大小记录及 1 个外部高阶谱归档校验项（共 92 项）；2026-11-13 旧索引保留为历史快照。
 - [Phase 1 科学内容审查](research/docs/supplements/scientific_content_audit_2026-11-16.md)：AFH-7 全网格、旧/新相空间积分差异、GCN/JJ55 数值精度边界。
 - [Figure 2 科学状态表](research/docs/supplements/three_body_scientific_status_2026-11-13.md)：明确各项验证的适用范围和未完成边界。
@@ -31,6 +33,7 @@
 
 ## 贡献与研究规范
 
+- 科研计算执行规范：[RESEARCH_COMPUTE_POLICY.md](RESEARCH_COMPUTE_POLICY.md)：普通 GPT 聊天模式使用 ChatGPT Linux；Codex/Work 可使用 Windows 本地环境或 GPT 管理的云端计算机；GitHub 负责归档，Actions 只做独立验证。
 - 仓库级强制任务规范：[AGENTS.md](AGENTS.md)
 - 科研任务交接规范与统一任务单：[research/RESEARCH_TASK_HANDOFF_STANDARD.md](research/RESEARCH_TASK_HANDOFF_STANDARD.md)；可复制模板：[research/_template/RESEARCH_TASK_BRIEF.md](research/_template/RESEARCH_TASK_BRIEF.md)
 - 研究依据优先级与论文草稿边界：[research/RESEARCH_GOVERNANCE_AND_SOURCE_HIERARCHY.md](research/RESEARCH_GOVERNANCE_AND_SOURCE_HIERARCHY.md)
@@ -58,7 +61,6 @@
 - [构建与图像审计](research/docs/07_source_build_and_figure_audit.md)
 - [\(\chi_2\to\chi_1s\) pole width 推导与验证](research/docs/08_chi2_decay_width.md)
 - [AFH v6.0、Eq. (6)、天然氙与 LZ rate-level 主报告](research/docs/09_afh_xe131_three_body_scattering_natural_xenon.md)
-- [VV 核子流匹配与 Xe-131 \(W_{\Phi''}\) 响应审计](research/afh_vv_phi_xe131/README.md)：AFH 自旋—轨道响应、质量—轨道干涉、2401 点数值结果及三体振幅匹配边界。
 
 ## 当前科学状态（2026-11-16）
 
