@@ -1,0 +1,24 @@
+Lean environment probe — 2026-11-21
+Execution target: ChatGPT Linux container
+Kernel: Linux 6.18.57 x86_64
+CPU: AMD EPYC 9V74 80-Core Processor (5 logical CPUs exposed)
+Memory: 6,090,668 KiB
+
+Commands and results:
+  command -v lean   -> no output (not installed)
+  command -v lake   -> no output (not installed)
+  command -v elan   -> no output (not installed)
+  find / -type f \( -name lean -o -name lake -o -name elan \) -> no executable found
+  curl -IL --max-time 12 https://github.com/leanprover/elan/releases/latest
+    -> curl: (6) Could not resolve host: github.com
+  getent hosts github.com -> no result
+
+Pinned versions requested by repository:
+  leanprover/lean4:v4.36.0
+  Mathlib v4.36.0
+
+Build command not run:
+  lake update && lake build
+Reason: Lean/Lake/Elan are absent and the active execution environment cannot resolve github.com to download the pinned toolchain and dependency.
+
+Status: BLOCKED / NOT RUN. No compile or theorem-kernel PASS is claimed.
