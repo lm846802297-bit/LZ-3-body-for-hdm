@@ -142,3 +142,25 @@ The candidate-window tail (E_R=225\text{--}269.9\,\mathrm{keV}) has been integra
 The comparison keeps AFH-7, Hybrid-9, Helm-9, GCN and JJ55 distinct. In particular, Helm-9 is a full nine-isotope phenomenological model; Hybrid-9 uses Helm only for Xe-124/Xe-126 and retains AFH for the other seven isotopes. The AFH response has deep high-q diffraction minima, so relative response ratios near these minima are more informative than an absolute difference divided by (A^2) alone. Numerical-method caveat: AFH-7/Hybrid-9 use threshold-u^2 integration, while the archived GCN/JJ55 spectra use legacy linear-W^2 8x8x4 integration; their 16x16x8 spot checks reach a maximum kernel-order difference of 2.18895e-4. Recompute GCN/JJ55 with the same threshold-u^2 mapping before treating sub-percent Hybrid-9 shifts as precision final values.
 
 All yields remain one-dimensional efficiency-weighted rate-level expectations. They are not energy-resolution-smeared event predictions or an LZ likelihood.
+
+## Structured result records
+
+The AFH-7/Hybrid-9 continuous-spectrum runner now writes the standard v1.0.0 records by default when its output directory is inside the repository:
+
+```powershell
+python research/afh_default_density_natural_xenon_halo/run_afh7_hybrid9_continuous_spectrum.py --outdir research/afh_default_density_natural_xenon_halo/results/<run-label>
+```
+
+The runner preserves its original physics CSVs, metadata and SHA-256 file, then adds `run_manifest.json`, `result_summary.json`, `validation_report.json`, `README.md` and a standard `SHA256SUMS.txt`. It records the three-body kernel/halo-integral tables and exact-spatial-q AFH response comparisons without changing the physics calculation. The archive validator is `research/schemas/validate_result_records.py`; the shared writer is `research/result_archive.py`.
+
+For a temporary smoke run outside the repository, pass `--no-standard-archive`; such a run is not treated as a repository archive. The generated manifest starts with `archive.status=local_only` and must only be updated after the files are actually committed and verified.
+
+Implementation task brief: [2026-11-20 LZ structured result archive](../docs/task_briefs/20261120-lz-standard-result-archive.md). Validation-only workflow: `.github/workflows/lz-structured-result-archive-validation.yml`.
+
+The standalone seven-isotope response-grid generator is also wired to the same writer:
+
+```powershell
+python research/afh_default_density_natural_xenon_halo/run_afh_default_xenon_responses.py --matrix-dir research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices --out-dir research/afh_default_density_natural_xenon_halo/output/afh_default_xenon_responses
+```
+
+It archives the 16,807-row AFH response grid, selected-sample regression CSV, interpolation diagnostic, matrix-input hashes, and the native-Mathematica re-execution state. A pending native Mathematica cross-check remains `not_run`, so the standard validation status stays `partial` rather than promoting the Python translation to independently validated.

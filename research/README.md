@@ -63,3 +63,11 @@ Keep the following quantities separate:
 ## PR #78 / PR #80 permanent archive status
 
 The final stable archive pass [44581116762](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44581116762) passed source-artifact download, digest verification, native-file extraction, metadata validation, manifest generation, and all SHA-256 checks. The Halo archive contains 12 inventoried files and 13 checksum entries; the finite-nucleon B archive contains 20 inventoried files and 21 checksum entries. Both manifests are marked `ARCHIVED_AND_INTEGRITY_CHECKED`; the embedded inventories exclude their own manifests, while SHA256SUMS includes them.
+
+## Structured numerical result records
+
+New calculations use the [Structured Research Result Data Standard](STRUCTURED_RESULT_DATA_STANDARD.md). The shared Draft 2020-12 record schema is stored in `research/schemas/research-result-record-v1.0.0.schema.json`. This applies to new run manifests, result summaries, validation reports, and pointwise tables; legacy files remain unchanged.
+
+## Structured result archive interface
+
+The shared writer is [result_archive.py](result_archive.py). It is wired into the independent three-body phase-space audit and the AFH-7/Hybrid-9 continuous-spectrum runner. New standard records are validated against [the v1.0.0 schema](schemas/research-result-record-v1.0.0.schema.json) with [the local validator](schemas/validate_result_records.py). The implementation task brief is [2026-11-20 LZ structured result archive](docs/task_briefs/20261120-lz-standard-result-archive.md).

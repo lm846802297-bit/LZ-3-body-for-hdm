@@ -31,6 +31,7 @@ The kernel uses the interaction/current written in paper-source/main.tex and exp
 - The AFH-7/Hybrid-9 84-point spectra are archived in the sibling `research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/`. Their production uses direct finite-sum AFH responses at exact spatial (q) and threshold-(u^2) integration. The high-order audit reports (6.47\times10^{-6}) maximum baseline-to-final spectrum difference.
 - The two paths are not yet matched in their phase-space mapping or numerical precision. The GCN/JJ55 tail differences of 12–19% are much larger than their reported quadrature difference; the 0.66–1.16% Hybrid-9 shifts have less margin. Recompute GCN/JJ55 with threshold-(u^2) before publishing precision cross-model comparisons.
 - The native Wolfram 14.2.0 / independent Python full Mathematica–Python \(d\sigma_A/dE_R\) comparison has completed: 652 rows (500 open, 152 closed), four fixed-speed Xe-131 benchmarks, 16×16×8 quadrature; comparator JSON PASS and scientific status PASS_WITH_NOTES. The 2401-node AFH response-level comparison is a separate validation layer. See `research/afh_default_density_xe131/output/MATHEMATICA_PYTHON_FULL_DSIGMA_CROSSCHECK_REVIEW.md`.
+- The full-dsigma checksum manifest tracks the current `phase_space_convergence.py` (`e9ae5b52...`) and its imported archive writer `research/result_archive.py` (`a5f7a35c...`). The previous `7396b06f...` checksum matched the older 28,176-character source at commit `0cfdac0a`; the current 36,680-character revision adds structured run-record archiving. The native Mathematica WLS input and 652-row full-dsigma CSV are unchanged in this PR. The read-only workflow recomputes the Python/Mathematica full-grid comparison after checking these source hashes.
 - None of these theory spectra is an official LZ likelihood or a detector-level exclusion.
 
 ## Fixed-speed Fig. 2 target-mass reproduction trial (2026-11-19)
@@ -302,3 +303,14 @@ The runner writes mapping, angular, threshold-neighborhood, raw-\(d\Phi_3\) pref
 
 The audit covers four fixed-speed benchmarks, five v_min-offset checks, the historical 800 km/s mass-convention anchor, and an off-shell near-pole scan at E_R=267 keV and v=776 km/s. The latter compares zero-width, constant pole-width and diagnostic running-width prescriptions for g2=0.1,1, while keeping the chi2 pole above Wmax. The sine-squared map provides a second endpoint-focused quadrature check. This P1 audit is not a full continuous-grid convergence proof for GCN/JJ55 or a full Mathematica/Python cross-section validation; the separate AFH-7/Hybrid-9 84-point grid has its own high-order convergence audit. It is not a complete halo fold for all nuclear models or a detector likelihood. The nine-test module reuses the existing Dirac spin trace and is not an independent second amplitude calculation.
 
+## Structured phase-space result records
+
+The independent Eq. (6) phase-space audit writes standard v1.0.0 records after each selected run. Example:
+
+```powershell
+python research/three_body_calculation_and_validation/phase_space_convergence.py --mode all --output-dir research/three_body_calculation_and_validation/results/phase_space_convergence_2026-11-14
+```
+
+The archive contains the mode-specific CSV tables, the original phase-space metadata and checksum file, plus `run_manifest.json`, `result_summary.json`, and `validation_report.json`. The raw Lorentz-invariant phase-space prefactor reconstruction and off-shell near-pole condition are recorded as explicit checks when those modes are run. A subset run records only the modes executed in that invocation; stale CSVs in a reused output directory are excluded from the run manifest.
+
+Use `--no-standard-archive` only for temporary diagnostic runs whose output directory is outside the repository. The common writer is `research/result_archive.py`, and the validator is `research/schemas/validate_result_records.py`. This packaging layer does not change the Eq. (6) amplitude, phase-space measure, width prescription, or numerical outputs.
