@@ -1,0 +1,219 @@
+{
+  "status": "PASS_NATIVE_AFH_SPATIAL_MULTIPOLE_CROSSCHECK",
+  "scope": "native Wolfram AFH total responses plus rank-resolved DeltaJ/SigmaPJ amplitudes",
+  "native_afh_validated": true,
+  "native_source_commit": "3af0ff843461dfaf3c59a306e06bbba6799fc483",
+  "native_wolfram_version": "14.2.0 for Microsoft Windows (64-bit) (December 26, 2024)",
+  "afh_source_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+  "native_control_run_id": null,
+  "native_control_run_attempt": null,
+  "total_response_comparison": {
+    "passed": true,
+    "rows_compared": 16807,
+    "channels": {
+      "Delta": {
+        "raw_package": {
+          "passed": true,
+          "failed_points": 0,
+          "max_absolute_difference": 2.0816681711721685e-16,
+          "max_relative_difference": 4.20565849988141e-09,
+          "worst_point": {
+            "A": 131,
+            "q_GeV": 0.00425,
+            "P3": 0.06393565833254428,
+            "native": 0.06393565833254448
+          }
+        },
+        "physical_equal_pn_C0_corrected": {
+          "passed": true,
+          "failed_points": 0,
+          "max_absolute_difference": 2.55351295663786e-15,
+          "max_relative_difference": 4.205658583539366e-09,
+          "worst_point": {
+            "A": 131,
+            "q_GeV": 0.00425,
+            "P3": 0.8035054857600455,
+            "native_scaled": 0.8035054857600481
+          }
+        }
+      },
+      "SigmaPrime": {
+        "raw_package": {
+          "passed": true,
+          "failed_points": 0,
+          "max_absolute_difference": 3.0184188481996443e-16,
+          "max_relative_difference": 2.1979737166307972e-07,
+          "worst_point": {
+            "A": 129,
+            "q_GeV": 0.0155,
+            "P3": 0.019415548331284498,
+            "native": 0.0194155483312848
+          }
+        },
+        "physical_equal_pn_C0_corrected": {
+          "passed": true,
+          "failed_points": 0,
+          "max_absolute_difference": 7.549516567451064e-15,
+          "max_relative_difference": 2.1979737173812724e-07,
+          "worst_point": {
+            "A": 129,
+            "q_GeV": 0.0155,
+            "P3": 0.4880197859294975,
+            "native_scaled": 0.48801978592950507
+          }
+        }
+      },
+      "SigmaPrimeDelta": {
+        "raw_package": {
+          "passed": true,
+          "failed_points": 0,
+          "max_absolute_difference": 1.6306400674181987e-16,
+          "max_relative_difference": 1.8856918269013608e-10,
+          "worst_point": {
+            "A": 131,
+            "q_GeV": 0.0085,
+            "P3": 0.030118060080202028,
+            "native": 0.03011806008020219
+          }
+        },
+        "physical_equal_pn_C0_corrected": {
+          "passed": true,
+          "failed_points": 0,
+          "max_absolute_difference": 2.0539125955565396e-15,
+          "max_relative_difference": 1.8856919427406511e-10,
+          "worst_point": {
+            "A": 131,
+            "q_GeV": 0.0085,
+            "P3": 0.3785059405977019,
+            "native_scaled": 0.3785059405977039
+          }
+        }
+      }
+    }
+  },
+  "rank_resolved_multipole_comparison": {
+    "passed": true,
+    "rows_compared": 9604,
+    "rank_map": {
+      "129": [
+        1
+      ],
+      "131": [
+        1,
+        2,
+        3
+      ]
+    },
+    "max_y_absolute_difference": 7.105427357601002e-15,
+    "max_native_imaginary_residual": 0.0,
+    "imaginary_tolerance": 2e-12,
+    "comparisons": {
+      "M_Delta_J": {
+        "max_abs": 8.881784197001252e-16,
+        "max_rel": 3.7544465636018555e-12,
+        "worst": {
+          "A": 131,
+          "q_GeV": 0.00125,
+          "J": 1,
+          "P3": -0.5063497301746207,
+          "native_reconstructed": -0.5063497301746216
+        },
+        "failed": 0
+      },
+      "M_SigmaPrime_J": {
+        "max_abs": 2.0539125955565396e-15,
+        "max_rel": 9.036159096823994e-12,
+        "worst": {
+          "A": 129,
+          "q_GeV": 0.043,
+          "J": 1,
+          "P3": 0.21947327765378388,
+          "native_reconstructed": 0.21947327765378594
+        },
+        "failed": 0
+      },
+      "W_Delta_J_AFH_package": {
+        "max_abs": 2.220446049250313e-16,
+        "max_rel": 7.508934796300912e-12,
+        "worst": {
+          "A": 131,
+          "q_GeV": 0.00125,
+          "J": 1,
+          "P3": 0.0640975123119778,
+          "native_reconstructed": 0.06409751231197802
+        },
+        "failed": 0
+      },
+      "W_SigmaPrime_J_AFH_package": {
+        "max_abs": 2.5326962749261384e-16,
+        "max_rel": 1.8072330407603913e-11,
+        "worst": {
+          "A": 129,
+          "q_GeV": 0.00875,
+          "J": 1,
+          "P3": 0.020355429491056797,
+          "native_reconstructed": 0.02035542949105705
+        },
+        "failed": 0
+      },
+      "W_SigmaPrimeDelta_J_AFH_package": {
+        "max_abs": 1.491862189340054e-16,
+        "max_rel": 9.037669844992589e-12,
+        "worst": {
+          "A": 131,
+          "q_GeV": 0.0085,
+          "J": 1,
+          "P3": 0.030118042582180378,
+          "native_reconstructed": 0.030118042582180527
+        },
+        "failed": 0
+      },
+      "R_Delta_J_equal_pn": {
+        "max_abs": 2.7755575615628914e-15,
+        "max_rel": 7.508815317933485e-12,
+        "worst": {
+          "A": 131,
+          "q_GeV": 0.00125,
+          "J": 1,
+          "P3": 0.8055395707098009,
+          "native_reconstructed": 0.8055395707098036
+        },
+        "failed": 0
+      },
+      "R_SigmaPrime_J_equal_pn": {
+        "max_abs": 6.328271240363392e-15,
+        "max_rel": 1.8072573235402288e-11,
+        "worst": {
+          "A": 129,
+          "q_GeV": 0.00875,
+          "J": 1,
+          "P3": 0.5116441819323736,
+          "native_reconstructed": 0.5116441819323799
+        },
+        "failed": 0
+      },
+      "R_SigmaPrimeDelta_J_equal_pn": {
+        "max_abs": 1.887379141862766e-15,
+        "max_rel": 9.037666158525386e-12,
+        "worst": {
+          "A": 131,
+          "q_GeV": 0.0085,
+          "J": 1,
+          "P3": 0.3785057206929296,
+          "native_reconstructed": 0.3785057206929315
+        },
+        "failed": 0
+      }
+    }
+  },
+  "C0_by_isotope": {
+    "128": 1.0000924953327093,
+    "129": 1.0001103230777202,
+    "130": 1.0001260610682259,
+    "131": 1.0000825298069376,
+    "132": 1.0000445028489864,
+    "134": 1.000206825819274,
+    "136": 1.0000015063597723
+  },
+  "acceptance_note": "PASS validates P3-B spatial response totals and signed rankwise AFH OBDME multipole amplitudes against native Wolfram AFH v6.0. It does not alone validate the complete three-body covariant many-body amplitude or a halo/detector rate."
+}

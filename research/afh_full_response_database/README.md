@@ -1,6 +1,6 @@
 # AFH v6.0 full response database for natural xenon
 
-**Status: provisional Python implementation; native seven-isotope validation pending.**
+**Status: provisional Python implementation; native seven-isotope eight-response archive committed under `output/native/` (16,807/16,807 rows, `PASS`), with native rank-resolved spatial multipoles and a P3-B cross-check under `output/native-spatial-multipoles/`.**
 
 This study extends the existing AFH isotope-response archive from the charge
 and selected spatial channels to the complete set of eight response functions
@@ -117,6 +117,65 @@ python research/afh_full_response_database/compare_native_afh_full_response.py \
   --native-dir /path/to/native/afh/exports \
   --out-json /tmp/afh-full-response/native_comparison.json
 ```
+
+### 5.1 Dense Xe-131 native charge-dip export
+
+`run_xe131_dense_charge_dip_native.wls` executes the AFH v6.0
+`ResponseNuclear` package at 121 uniform nodes,
+\(q_A=0.2545\)--\(0.2575\ \mathrm{GeV}\) with
+\(\Delta q_A=0.000025\ \mathrm{GeV}\), and exports the real and imaginary
+parts of \(W_M\), \(W_{\Phi''}\) and \(W_{M\Phi''}\). Thirteen nodes coincide
+with the 2,401-node native coarse grid; the validator compares those nodes at
+`rtol=5e-7`, `atol=2e-12`.
+
+```bash
+export AFH_SOURCE_COMMIT=$(git rev-parse HEAD)
+wolframscript -file \
+  research/afh_full_response_database/run_xe131_dense_charge_dip_native.wls
+
+python research/afh_full_response_database/validate_xe131_dense_charge_dip.py \
+  --dense-csv research/afh_full_response_database/output/xe131-dense-charge-dip/xe131_dense_charge_response_dip_native.csv \
+  --dense-metadata research/afh_full_response_database/output/xe131-dense-charge-dip/xe131_dense_charge_response_dip_metadata.txt \
+  --coarse-csv research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_native.csv \
+  --out-json /tmp/xe131_dense_charge_dip_validation.json
+```
+
+The committed 121-node CSV, metadata and validation JSON under
+`output/xe131-dense-charge-dip/` are checked by
+`.github/workflows/xe131-dense-native-charge-dip.yml`. CI validates the
+committed native numbers; it does not execute Mathematica, because hosted
+runners do not carry the AFH package or a Wolfram licence. Reproduction
+therefore requires Wolfram 14.2.0 locally.
+
+Pinned hashes and the explicit scope boundary are recorded in
+`output/xe131-dense-charge-dip/PROVENANCE.md` (section 8.3,
+data provenance) and `output/xe131-dense-charge-dip/sha256_manifest.json`.
+`verify_xe131_dense_charge_dip_provenance.py` re-hashes every manifest entry
+and checks that the validation scope is limited to the Xe-131
+\(W_M\), \(W_{\Phi''}\), \(W_{M\Phi''}\) responses; it does not certify the
+spatial multipoles or the seven-isotope eight-response database.
+
+### 5.2 Native seven-isotope eight-response archive
+
+`output/native/` contains the committed native Wolfram export for all seven
+isotopes: 2,401 q nodes per isotope and eight `ResponseNuclear` channels
+(16,807 rows). `native_comparison.json` records a pointwise `PASS` against the
+Python reference. `PROVENANCE.md` (section 8.4) and `sha256_manifest.json`
+pin the hashes; `verify_native_full_response_provenance.py` re-hashes the
+archive and checks the comparison gate.
+
+### 5.3 Native rank-resolved spatial multipoles
+
+`output/native-spatial-multipoles/` contains the native Xe-129/Xe-131
+`DeltaJ` and `SigmaPJ` amplitudes: 2,401 q nodes, ranks `129=1` and
+`131=1,2,3`, 9,604 rows. The four `q=0` rows use the analytic `y -> 0` limit;
+the remaining rows use direct native OBDME sums. `PROVENANCE.md` (section 8.5)
+and `sha256_manifest.json` pin the hashes;
+`verify_native_spatial_multipoles_provenance.py` re-hashes the archive and
+checks the row/rank/q=0 metadata. The committed `native_crosscheck.json` records
+`PASS_NATIVE_AFH_SPATIAL_MULTIPOLE_CROSSCHECK`: all 16,807 total-response rows
+and all 9,604 rank-resolved rows agree with the P3-B Python archive, with native
+imaginary residual zero.
 
 ## 6. Acceptance gates
 

@@ -1,0 +1,57 @@
+{
+  "schema": "xe131-dense-charge-dip-provenance-v1",
+  "artifact": "121-node native Xe-131 charge-response export near the W_M diffraction minimum",
+  "scope": {
+    "isotope": "Xe-131",
+    "responses": ["W_M", "W_PhiPP", "W_MPhiPP"],
+    "q_min_GeV": 0.2545,
+    "q_max_GeV": 0.2575,
+    "q_step_GeV": 0.000025,
+    "nodes": 121,
+    "overlap_nodes_with_2401_grid": 13,
+    "not_validated_here": [
+      "spatial AFH multipoles",
+      "seven-isotope eight-response native database",
+      "three-body tensor contraction"
+    ]
+  },
+  "execution": {
+    "engine": "AFH DMFormFactor v6.0 via Wolfram ResponseNuclear[y,index,0,0]",
+    "wolfram_version": "14.2.0 for Microsoft Windows (64-bit) (December 26, 2024)",
+    "source_commit": "3b0dd39a58ee6ce9e91ab748bcbecf11edcf2356",
+    "afh_source_path": "v6/dmformfactor-V6.m"
+  },
+  "files": {
+    "afh_source": {
+      "path": "v6/dmformfactor-V6.m",
+      "sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372"
+    },
+    "dense_csv": {
+      "path": "research/afh_full_response_database/output/xe131-dense-charge-dip/xe131_dense_charge_response_dip_native.csv",
+      "sha256": "d3a6b418ec5565850884ea44ffceb2e2c0a3684c0a8ec13744c54b65a5141b14"
+    },
+    "dense_metadata": {
+      "path": "research/afh_full_response_database/output/xe131-dense-charge-dip/xe131_dense_charge_response_dip_metadata.txt",
+      "sha256": "865a67afe87923ba82babdfca4204830d416d241bb447ca301fb68634d77cc7d"
+    },
+    "validation_json": {
+      "path": "research/afh_full_response_database/output/xe131-dense-charge-dip/xe131_dense_charge_dip_validation.json",
+      "sha256": "b93c851ac8af0a6b0797fca31d4a8293d1e6bf7162d7bb935709fcf8dd1d7eb0"
+    },
+    "coarse_native_csv": {
+      "path": "research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_native.csv",
+      "sha256": "b1b65708cd103058c3bcaea50bf65550d5671a88e97000b94f2536fbc60a59ff"
+    }
+  },
+  "validation": {
+    "status": "PASS_NATIVE_XE131_DENSE_CHARGE_DIP",
+    "rows": 121,
+    "common_nodes_compared": 13,
+    "max_imaginary_residual": 0.0,
+    "max_common_node_relative_difference": {
+      "M": 1.208521481002755e-09,
+      "PhiPP": 2.6907729577639136e-13,
+      "MPhiPP": 3.960127765137761e-11
+    }
+  }
+}

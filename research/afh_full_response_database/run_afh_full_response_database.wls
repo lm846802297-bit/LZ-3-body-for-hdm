@@ -1,5 +1,5 @@
 (* Native AFH v6.0 export: seven xenon isotopes, all eight ResponseNuclear channels. *)
-ClearAll["Global" <> FromCharacterCode[96] <> "*"];
+ClearAll["Global`*"];
 
 scriptDir = DirectoryName[$InputFileName];
 repoRoot = DirectoryName[DirectoryName[scriptDir]];
@@ -12,6 +12,13 @@ If[!FileExistsQ[packagePath],
   Print["ERROR: AFH source not found: ", packagePath];
   Exit[2]
 ];
+
+sourceRel = If[StringQ[envPath] && envPath =!= "",
+  packagePath,
+  "v6/dmformfactor-V6.m"
+];
+sourceCommit = Environment["AFH_SOURCE_COMMIT"];
+If[!StringQ[sourceCommit] || sourceCommit === "", sourceCommit = "unspecified"];
 
 Get[packagePath];
 
@@ -87,8 +94,9 @@ metadata = StringRiffle[{
   "isospin=tau1=tau2=0; raw AFH isoscalar package convention",
   "normalization=no physical equal-p/n factor-four rescaling in native W columns",
   "imaginary_parts=exported separately for all eight response functions",
-  "AFH_source_path=" <> packagePath,
+  "AFH_source_path=" <> sourceRel,
   "AFH_source_sha256=" <> IntegerString[FileHash[packagePath, "SHA256"], 16, 64],
+  "source_commit=" <> sourceCommit,
   "wolfram_version=" <> $Version,
   "rows=" <> ToString[Length[nativeRows]]
 }, "\n"];

@@ -1,0 +1,374 @@
+{
+  "status": "PASS",
+  "scope": "Python internal consistency only; native AFH comparison is a separate acceptance gate",
+  "native_afh_validated": false,
+  "isotopes": [
+    128,
+    129,
+    130,
+    131,
+    132,
+    134,
+    136
+  ],
+  "expected_points_per_isotope": 2401,
+  "expected_total_rows": 16807,
+  "actual_total_rows": 16807,
+  "q_min_GeV": 0.0,
+  "q_max_GeV": 0.6,
+  "step_GeV": 0.00025,
+  "normalization": "R_raw=4*pi/(2J_A+1)*W_AFH; R_physical_equal_pn=4*R_raw",
+  "isotope_summaries": {
+    "128": {
+      "rows": 2401,
+      "J_A": 0.0,
+      "q_min_GeV": 0.0,
+      "q_max_GeV": 0.6,
+      "zero_momentum_M_normalization": {
+        "R_M_raw_q0": 4095.6211741568454,
+        "expected_A2_over_4": 4096.0,
+        "relative_error": 9.248677811390937e-05,
+        "tolerance": 0.0003
+      },
+      "max_cauchy_schwarz_excess": {
+        "M-PhiPP": 9.094947017729282e-13,
+        "SigmaPrime-Delta": 0.0
+      },
+      "response_ranges": {
+        "W_M00_AFH": {
+          "min": 9.679510197564698e-11,
+          "max": 325.91917744944715
+        },
+        "W_SigmaDoublePrime00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_SigmaPrime00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_PhiPP00_AFH": {
+          "min": 1.4503986389556025e-11,
+          "max": 8.16148708836583
+        },
+        "W_PhiTildePrime00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_Delta00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_MPhiPP00_AFH": {
+          "min": -51.57504395155155,
+          "max": 0.035751867909477056
+        },
+        "W_SigmaPrimeDelta00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    "129": {
+      "rows": 2401,
+      "J_A": 0.5,
+      "q_min_GeV": 0.0,
+      "q_max_GeV": 0.6,
+      "zero_momentum_M_normalization": {
+        "R_M_raw_q0": 4159.791079045487,
+        "expected_A2_over_4": 4160.25,
+        "relative_error": 0.00011031090788123434,
+        "tolerance": 0.0003
+      },
+      "max_cauchy_schwarz_excess": {
+        "M-PhiPP": 3.637978807091713e-12,
+        "SigmaPrime-Delta": 6.776263578034403e-21
+      },
+      "response_ranges": {
+        "W_M00_AFH": {
+          "min": 2.9007897669346513e-09,
+          "max": 662.0513124596584
+        },
+        "W_SigmaDoublePrime00_AFH": {
+          "min": 9.423661438667852e-08,
+          "max": 0.010404436144595594
+        },
+        "W_SigmaPrime00_AFH": {
+          "min": 9.04852061700038e-11,
+          "max": 0.020808872289191187
+        },
+        "W_PhiPP00_AFH": {
+          "min": 1.7583597918947262e-10,
+          "max": 19.217321879831314
+        },
+        "W_PhiTildePrime00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_Delta00_AFH": {
+          "min": 6.192438536009734e-13,
+          "max": 0.0011820311074370717
+        },
+        "W_MPhiPP00_AFH": {
+          "min": -112.79562567981982,
+          "max": 0.08904432294171682
+        },
+        "W_SigmaPrimeDelta00_AFH": {
+          "min": -0.004959509487490597,
+          "max": 0.0001043235954390153
+        }
+      }
+    },
+    "130": {
+      "rows": 2401,
+      "J_A": 0.0,
+      "q_min_GeV": 0.0,
+      "q_max_GeV": 0.6,
+      "zero_momentum_M_normalization": {
+        "R_M_raw_q0": 4224.467459119418,
+        "expected_A2_over_4": 4225.0,
+        "relative_error": 0.0001260451788359808,
+        "tolerance": 0.0003
+      },
+      "max_cauchy_schwarz_excess": {
+        "M-PhiPP": 9.094947017729282e-13,
+        "SigmaPrime-Delta": 0.0
+      },
+      "response_ranges": {
+        "W_M00_AFH": {
+          "min": 2.1636626865761537e-10,
+          "max": 336.17243902485734
+        },
+        "W_SigmaDoublePrime00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_SigmaPrime00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_PhiPP00_AFH": {
+          "min": 2.267085881440618e-11,
+          "max": 9.925074275312076
+        },
+        "W_PhiTildePrime00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_Delta00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_MPhiPP00_AFH": {
+          "min": -57.76275985991778,
+          "max": 0.036576980040439744
+        },
+        "W_SigmaPrimeDelta00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    "131": {
+      "rows": 2401,
+      "J_A": 1.5,
+      "q_min_GeV": 0.0,
+      "q_max_GeV": 0.6,
+      "zero_momentum_M_normalization": {
+        "R_M_raw_q0": 4289.895955714993,
+        "expected_A2_over_4": 4290.25,
+        "relative_error": 8.25229963305515e-05,
+        "tolerance": 0.0003
+      },
+      "max_cauchy_schwarz_excess": {
+        "M-PhiPP": 0.0,
+        "SigmaPrime-Delta": 1.0842021724855044e-19
+      },
+      "response_ranges": {
+        "W_M00_AFH": {
+          "min": 2.2818701871771122e-05,
+          "max": 1365.5162934039433
+        },
+        "W_SigmaDoublePrime00_AFH": {
+          "min": 2.053640083551664e-06,
+          "max": 0.0077993623079669165
+        },
+        "W_SigmaPrime00_AFH": {
+          "min": 2.9976114059141634e-06,
+          "max": 0.014707821388042728
+        },
+        "W_PhiPP00_AFH": {
+          "min": 1.6525293879748225e-07,
+          "max": 47.51550032254743
+        },
+        "W_PhiTildePrime00_AFH": {
+          "min": 1.906088136755237e-09,
+          "max": 0.04768969765901301
+        },
+        "W_Delta00_AFH": {
+          "min": 1.5844068735182225e-08,
+          "max": 0.06411286031263146
+        },
+        "W_MPhiPP00_AFH": {
+          "min": -254.63655637049627,
+          "max": 0.19232311654145925
+        },
+        "W_SigmaPrimeDelta00_AFH": {
+          "min": -0.0018401555423468606,
+          "max": 0.03070766188029816
+        }
+      }
+    },
+    "132": {
+      "rows": 2401,
+      "J_A": 0.0,
+      "q_min_GeV": 0.0,
+      "q_max_GeV": 0.6,
+      "zero_momentum_M_normalization": {
+        "R_M_raw_q0": 4355.806154216505,
+        "expected_A2_over_4": 4356.0,
+        "relative_error": 4.4500868570915445e-05,
+        "tolerance": 0.0003
+      },
+      "max_cauchy_schwarz_excess": {
+        "M-PhiPP": 9.094947017729282e-13,
+        "SigmaPrime-Delta": 0.0
+      },
+      "response_ranges": {
+        "W_M00_AFH": {
+          "min": 2.19669969797942e-10,
+          "max": 346.6240402968277
+        },
+        "W_SigmaDoublePrime00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_SigmaPrime00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_PhiPP00_AFH": {
+          "min": 3.632894377128472e-11,
+          "max": 12.26748466538426
+        },
+        "W_PhiTildePrime00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_Delta00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_MPhiPP00_AFH": {
+          "min": -65.20893419612736,
+          "max": 0.03963800539485501
+        },
+        "W_SigmaPrimeDelta00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    "134": {
+      "rows": 2401,
+      "J_A": 0.0,
+      "q_min_GeV": 0.0,
+      "q_max_GeV": 0.6,
+      "zero_momentum_M_normalization": {
+        "R_M_raw_q0": 4488.071750883163,
+        "expected_A2_over_4": 4489.0,
+        "relative_error": 0.00020678305120002747,
+        "tolerance": 0.0003
+      },
+      "max_cauchy_schwarz_excess": {
+        "M-PhiPP": 1.8189894035458565e-12,
+        "SigmaPrime-Delta": 0.0
+      },
+      "response_ranges": {
+        "W_M00_AFH": {
+          "min": 4.021760841932636e-10,
+          "max": 357.1494020520764
+        },
+        "W_SigmaDoublePrime00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_SigmaPrime00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_PhiPP00_AFH": {
+          "min": 6.81179134209689e-11,
+          "max": 16.25227836511579
+        },
+        "W_PhiTildePrime00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_Delta00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_MPhiPP00_AFH": {
+          "min": -76.1872134946869,
+          "max": 0.05044127101423142
+        },
+        "W_SigmaPrimeDelta00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    },
+    "136": {
+      "rows": 2401,
+      "J_A": 0.0,
+      "q_min_GeV": 0.0,
+      "q_max_GeV": 0.6,
+      "zero_momentum_M_normalization": {
+        "R_M_raw_q0": 4623.993034602906,
+        "expected_A2_over_4": 4624.0,
+        "relative_error": 1.5063575030414184e-06,
+        "tolerance": 0.0003
+      },
+      "max_cauchy_schwarz_excess": {
+        "M-PhiPP": 1.8189894035458565e-12,
+        "SigmaPrime-Delta": 0.0
+      },
+      "response_ranges": {
+        "W_M00_AFH": {
+          "min": 9.55660399349985e-10,
+          "max": 367.965674139773
+        },
+        "W_SigmaDoublePrime00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_SigmaPrime00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_PhiPP00_AFH": {
+          "min": 4.612825295432381e-12,
+          "max": 16.750216995635064
+        },
+        "W_PhiTildePrime00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_Delta00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        },
+        "W_MPhiPP00_AFH": {
+          "min": -78.50799251532509,
+          "max": 0.046129132928354105
+        },
+        "W_SigmaPrimeDelta00_AFH": {
+          "min": 0.0,
+          "max": 0.0
+        }
+      }
+    }
+  },
+  "failures": []
+}

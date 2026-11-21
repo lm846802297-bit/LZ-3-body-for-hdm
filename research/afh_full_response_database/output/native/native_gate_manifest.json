@@ -1,0 +1,39 @@
+{
+  "repository": "lm846802297-bit/LZ-3-body-for-hdm",
+  "source_commit": "3af0ff843461dfaf3c59a306e06bbba6799fc483",
+  "native_package": "AFH DMFormFactor v6.0",
+  "isotopes": [128, 129, 130, 131, 132, 134, 136],
+  "q_grid": {
+    "points": 2401,
+    "q_min_GeV": 0.0,
+    "q_max_GeV": 0.6,
+    "step_GeV": 0.00025
+  },
+  "comparison": {
+    "status": "PASS",
+    "native_afh_validated": true,
+    "rows_compared": 16807
+  },
+  "native_spatial_multipoles": {
+    "rows": 9604,
+    "csv_sha256": "5b02bd1b8db73b450e328a27dba5e0b2434487c6861579dc3d7da3b3e0938c17",
+    "metadata_sha256": "9750d8fb2b25c3b78428c190f11b505e42aada07bbbb432227e0dfe345e65fb2"
+  },
+  "p3_archive": {
+    "repository": "lm846802297-bit/LZ-3-body-for-hdm",
+    "run_id": "44911789662",
+    "artifact_id": "14709662510",
+    "artifact_name": "provisional-afh-spatial-obdme-responses",
+    "artifact_zip_sha256": "a3e1980fdc29a348675b48b442c290e7efb392aa78ba37d7efc711f86635aff2",
+    "total_response_csv_sha256": "4e0a23c18d29df3af04a2531e75b7bffeaa3251d0efe97674b2287cf3c25e7e3",
+    "multipole_csv_sha256": "e83f7499cd0af4ec8f1974238f09daf4899ca1b87205ec837ae0964a2e8532c6",
+    "metadata_sha256": "41914b33d9c23fd0f10653ded01c115236466936ec338532ab04848eba14c59d",
+    "validation_sha256": "c24f8f60956a9b4003604803df08927942e25d0cb0983097ced9c3a25f2331d0",
+    "validation_status": "PASS_AFH_SPATIAL_MULTIPOLE_ARCHIVE",
+    "generator": "research/three_body_full_current_nucleon_match/afh_spatial_obdme_responses.py",
+    "generator_branch": "research/p4-provisional-halo-fold-20261119",
+    "committed_in_this_pr": false
+  },
+  "control_run_id": null,
+  "control_run_attempt": null
+}

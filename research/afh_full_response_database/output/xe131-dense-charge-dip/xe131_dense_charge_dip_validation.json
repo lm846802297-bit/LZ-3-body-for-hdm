@@ -1,0 +1,40 @@
+{
+  "status": "PASS_NATIVE_XE131_DENSE_CHARGE_DIP",
+  "scope": "native Wolfram AFH v6.0 Xe-131 M/PhiPP/M-PhiPP response export and overlap consistency",
+  "native_afh_dense_q_validated": true,
+  "native_afh_full_seven_isotope_gate": "separate gate; this result does not replace it",
+  "isotope": "Xe-131",
+  "response_indices": {
+    "M": 1,
+    "PhiPP": 4,
+    "MPhiPP": 7
+  },
+  "rows": 121,
+  "q_min_GeV": 0.2545,
+  "q_max_GeV": 0.2575,
+  "q_step_GeV": 2.5e-05,
+  "coarse_rows": 2401,
+  "common_nodes_compared": 13,
+  "max_imaginary_residual": 0.0,
+  "imaginary_tolerance": 2e-12,
+  "common_node_max_absolute_difference": {
+    "M": 2.2033227022391633e-13,
+    "PhiPP": 2.7807617319908218e-15,
+    "MPhiPP": 4.4069132024149305e-14
+  },
+  "common_node_max_relative_difference": {
+    "M": 1.208521481002755e-09,
+    "PhiPP": 2.6907729577639136e-13,
+    "MPhiPP": 3.960127765137761e-11
+  },
+  "rtol": 5e-07,
+  "atol": 2e-12,
+  "AFH_source_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+  "source_commit": "3b0dd39a58ee6ce9e91ab748bcbecf11edcf2356",
+  "wolfram_version": "14.2.0 for Microsoft Windows (64-bit) (December 26, 2024)",
+  "dense_csv_sha256": "d3a6b418ec5565850884ea44ffceb2e2c0a3684c0a8ec13744c54b65a5141b14",
+  "dense_metadata_sha256": "865a67afe87923ba82babdfca4204830d416d241bb447ca301fb68634d77cc7d",
+  "coarse_native_csv_sha256": "b1b65708cd103058c3bcaea50bf65550d5671a88e97000b94f2536fbc60a59ff",
+  "normalization": "raw AFH isoscalar package response; no equal-p/n factor-four conversion in exported columns",
+  "acceptance_note": "This validates the dense Xe-131 charge-response export and its 13 overlapping coarse-grid nodes. It does not validate the spatial AFH multipoles or the three-body tensor contraction."
+}

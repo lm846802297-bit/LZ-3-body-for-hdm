@@ -1,0 +1,87 @@
+{
+  "artifact": "AFH v6.0 native rank-resolved spatial multipoles for Xe-129/Xe-131",
+  "afh_source_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+  "scope": {
+    "isotopes": [
+      129,
+      131
+    ],
+    "ranks": {
+      "129": [
+        1
+      ],
+      "131": [
+        1,
+        2,
+        3
+      ]
+    },
+    "q_grid": "2401 uniform nodes from 0 to 0.6 GeV, step 0.00025 GeV",
+    "q0_method": "analytic Limit[y->0] of native DeltaJ and SigmaPJ OBDME sums",
+    "normalization": "raw AFH isoscalar package amplitudes; no physical equal-p/n factor-four rescaling",
+    "not_validated_here": [
+      "three-body tensor contraction",
+      "detector-level event rate"
+    ]
+  },
+  "validation": {
+    "status": "PASS_NATIVE_AFH_SPATIAL_MULTIPOLES",
+    "rows": 9604
+  },
+  "crosscheck": {
+    "status": "PASS_NATIVE_AFH_SPATIAL_MULTIPOLE_CROSSCHECK",
+    "rows_total_responses": 16807,
+    "rows_rank_resolved": 9604,
+    "native_afh_validated": true
+  },
+  "files": {
+    "csv": {
+      "path": "research/afh_full_response_database/output/native-spatial-multipoles/afh_v6_xe129_xe131_spatial_multipoles_native.csv",
+      "sha256": "5b02bd1b8db73b450e328a27dba5e0b2434487c6861579dc3d7da3b3e0938c17"
+    },
+    "metadata": {
+      "path": "research/afh_full_response_database/output/native-spatial-multipoles/native_spatial_multipole_metadata.txt",
+      "sha256": "9750d8fb2b25c3b78428c190f11b505e42aada07bbbb432227e0dfe345e65fb2"
+    },
+    "q0_csv": {
+      "path": "research/afh_full_response_database/output/native-spatial-multipoles/afh_v6_spatial_multipoles_q0.csv",
+      "sha256": "2acc740c748c889dbe4932d5e97bb3d9e1888d5e433e894e849403ae41165304"
+    },
+    "validation_json": {
+      "path": "research/afh_full_response_database/output/native-spatial-multipoles/spatial_multipoles_validation.json",
+      "sha256": "d022b70c42ec0c83c38a113cf870a66c658a2aefb3169941d9a2a0c16cc3c605"
+    },
+    "native_crosscheck": {
+      "path": "research/afh_full_response_database/output/native-spatial-multipoles/native_crosscheck.json",
+      "sha256": "58e98e72c3b9d0196b90fb428478c249ffc8d28904168d5b87c2cb0558546dbe"
+    },
+    "readme": {
+      "path": "research/afh_full_response_database/output/native-spatial-multipoles/README.md",
+      "sha256": "e09c03448257540da73ceadf5f4d5b2c1e37fe09549ff61a0f68ef07ecbb6cca"
+    },
+    "provenance_md": {
+      "path": "research/afh_full_response_database/output/native-spatial-multipoles/PROVENANCE.md",
+      "sha256": "b0d17676ce8634034f3c1a4454dfd203d2e9012abb44c15501cafb6a1c787545"
+    },
+    "generator_main": {
+      "path": "research/afh_full_response_database/run_afh_spatial_multipoles_native.wls",
+      "sha256": "290140f5e790f186ca838e2781508158ec80f2892cbbd26366881850ea4892e2"
+    },
+    "generator_q0": {
+      "path": "research/afh_full_response_database/run_afh_spatial_multipoles_q0.wls",
+      "sha256": "45a331e49928e239b798d50043ea7a738a36abcd0568f774c077fb1118cedd2d"
+    },
+    "merger": {
+      "path": "research/afh_full_response_database/merge_afh_spatial_multipoles_q0.py",
+      "sha256": "71d01d0a061576d066bc6bed4ed26c04ea9d4479c919caac0beed1af6c21992d"
+    },
+    "validator": {
+      "path": "research/afh_full_response_database/validate_afh_spatial_multipoles_native.py",
+      "sha256": "25fef549e605332a52b9b3be60df8e7a9084847630a2ce8e09c7ba2b09870e4b"
+    },
+    "afh_source": {
+      "path": "v6/dmformfactor-V6.m",
+      "sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372"
+    }
+  }
+}

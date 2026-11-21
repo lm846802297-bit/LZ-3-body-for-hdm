@@ -1,0 +1,44 @@
+name: Xe-131 dense native AFH charge-dip validation
+
+on:
+  pull_request:
+    paths:
+      - "research/afh_full_response_database/**"
+      - "research/afh_default_density_xe131/output/phi_response_native/**"
+      - ".github/workflows/xe131-dense-native-charge-dip.yml"
+  workflow_dispatch:
+
+jobs:
+  validate-dense-native-charge-dip:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Run dense native export validator tests
+        run: |
+          python -m unittest discover \
+            -s research/afh_full_response_database/tests \
+            -p 'test_validate_xe131_dense_charge_dip.py' -v
+
+      - name: Validate committed 121-node native charge-dip export
+        run: |
+          python research/afh_full_response_database/validate_xe131_dense_charge_dip.py \
+            --dense-csv research/afh_full_response_database/output/xe131-dense-charge-dip/xe131_dense_charge_response_dip_native.csv \
+            --dense-metadata research/afh_full_response_database/output/xe131-dense-charge-dip/xe131_dense_charge_response_dip_metadata.txt \
+            --coarse-csv research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_native.csv \
+            --out-json /tmp/xe131_dense_charge_dip_validation.json
+          python - <<'PY'
+          import json
+          doc = json.loads(open("/tmp/xe131_dense_charge_dip_validation.json", encoding="utf-8").read())
+          print(json.dumps({k: doc[k] for k in ("status", "rows", "q_min_GeV", "q_max_GeV", "common_nodes_compared", "max_imaginary_residual")}, indent=2))
+          if doc["status"] != "PASS_NATIVE_XE131_DENSE_CHARGE_DIP":
+              raise SystemExit(1)
+          PY
+
+      - name: Verify dense native provenance manifest
+        run: |
+          python research/afh_full_response_database/verify_xe131_dense_charge_dip_provenance.py

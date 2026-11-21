@@ -1,0 +1,12 @@
+source=AFH DMFormFactor v6.0 native Wolfram execution
+responses=ResponseNuclear[y,index,0,0], index=1..8
+isotopes=128,129,130,131,132,134,136
+q_grid=2401 uniform nodes from 0 to 0.6 GeV, step 0.00025 GeV
+isospin=tau1=tau2=0; raw AFH isoscalar package convention
+normalization=no physical equal-p/n factor-four rescaling in native W columns
+imaginary_parts=exported separately for all eight response functions
+AFH_source_path=v6/dmformfactor-V6.m
+AFH_source_sha256=dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372
+source_commit=571e3687b495ced48ef64b5f066b82236fea2b27
+wolfram_version=14.2.0 for Microsoft Windows (64-bit) (December 26, 2024)
+rows=16807

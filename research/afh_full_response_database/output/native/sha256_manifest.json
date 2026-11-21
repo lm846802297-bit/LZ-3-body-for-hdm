@@ -1,0 +1,99 @@
+{
+  "artifact": "AFH v6.0 seven-isotope eight-response native archive",
+  "afh_source_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+  "scope": {
+    "isotopes": [
+      128,
+      129,
+      130,
+      131,
+      132,
+      134,
+      136
+    ],
+    "responses": [
+      "M",
+      "SigmaDoublePrime",
+      "SigmaPrime",
+      "PhiPP",
+      "PhiTildePrime",
+      "Delta",
+      "MPhiPP",
+      "SigmaPrimeDelta"
+    ],
+    "normalization": "raw AFH isoscalar package convention; no physical equal-p/n factor-four rescaling",
+    "not_validated_here": [
+      "rank-resolved native spatial multipoles",
+      "three-body tensor contraction",
+      "detector-level event rate"
+    ]
+  },
+  "validation": {
+    "status": "PASS",
+    "rows": 16807,
+    "rows_compared": 16807,
+    "native_afh_validated": true
+  },
+  "files": {
+    "xe128_native_csv": {
+      "path": "research/afh_full_response_database/output/native/afh_v6_xe128_eight_response_native.csv",
+      "sha256": "7c492562fca01cdfd2a185e671755c84b04bf6b5e34cc1a313f8e76b628a8abb"
+    },
+    "xe129_native_csv": {
+      "path": "research/afh_full_response_database/output/native/afh_v6_xe129_eight_response_native.csv",
+      "sha256": "80684a3f1201bc312c1c60af3b5b263e1480ab5a05874743a738cce9b86dc532"
+    },
+    "xe130_native_csv": {
+      "path": "research/afh_full_response_database/output/native/afh_v6_xe130_eight_response_native.csv",
+      "sha256": "36534761e2b061e4e3cff14d3f3ec0f679f68fa3455f8596e23a654f21cbe44a"
+    },
+    "xe131_native_csv": {
+      "path": "research/afh_full_response_database/output/native/afh_v6_xe131_eight_response_native.csv",
+      "sha256": "585ab0f483be0d8131566cefc4cb420c6db7e07bebbcd2b887da568cda2f4ffb"
+    },
+    "xe132_native_csv": {
+      "path": "research/afh_full_response_database/output/native/afh_v6_xe132_eight_response_native.csv",
+      "sha256": "7f03e4a14c1e646e624b2d53f8c5ca42f0538c45f4670c524d9a1e39fe8d768e"
+    },
+    "xe134_native_csv": {
+      "path": "research/afh_full_response_database/output/native/afh_v6_xe134_eight_response_native.csv",
+      "sha256": "031b30c6b7b0e9e720b155979fc7c9ab37665303e7c9fbf8678bde78f39f3885"
+    },
+    "xe136_native_csv": {
+      "path": "research/afh_full_response_database/output/native/afh_v6_xe136_eight_response_native.csv",
+      "sha256": "c00ec4ce6c55fd7fa925a2bf2c3436057a3f54ad31710e1c8f555d7622c7dea4"
+    },
+    "native_metadata": {
+      "path": "research/afh_full_response_database/output/native/native_metadata.txt",
+      "sha256": "05d6e55a8069aba8361c5b4850429c6b8c3a1d06b35798967a998a7815fdb7a6"
+    },
+    "python_validation": {
+      "path": "research/afh_full_response_database/output/native/python_validation.json",
+      "sha256": "ea1073dcef2ed959b25373e613f1140ef340c2043c16e8e5d044b612e457ef23"
+    },
+    "native_comparison": {
+      "path": "research/afh_full_response_database/output/native/native_comparison.json",
+      "sha256": "1d3b68ac621e22788a676a9a2f2c97bd433c70883dc30ceb191f69d4d366a030"
+    },
+    "readme": {
+      "path": "research/afh_full_response_database/output/native/README.md",
+      "sha256": "fa3d0dd78a827cc3e542d068ecadb399e096158bca59078f306cc24bd5c438a0"
+    },
+    "provenance_md": {
+      "path": "research/afh_full_response_database/output/native/PROVENANCE.md",
+      "sha256": "1e08e7a6a2f69c4c225bb8896bfb9ffe170a19bd3520a28c9bbb61816b8bdf2f"
+    },
+    "native_gate_manifest": {
+      "path": "research/afh_full_response_database/output/native/native_gate_manifest.json",
+      "sha256": "061c87566eb1c32ff80f72b02ba63cd7890b2f93ec4a416b60d036af64e6b89f"
+    },
+    "afh_source": {
+      "path": "v6/dmformfactor-V6.m",
+      "sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372"
+    },
+    "generator": {
+      "path": "research/afh_full_response_database/run_afh_full_response_database.wls",
+      "sha256": "7c417865b3a1cfcfe01d267a92ae004f1ebbfb8324ab9e8903c2d796d614ae98"
+    }
+  }
+}
