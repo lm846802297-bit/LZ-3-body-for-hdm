@@ -8,14 +8,16 @@
 
 ## 研究文档入口
 
-- [AFH Xe-131 核响应、三体散射与天然氙反冲率主报告](research/docs/09_afh_xe131_three_body_scattering_natural_xenon.md)：完整正文及正式附录 A–H。
+- [AFH Xe-131 核响应、三体散射与天然氙反冲率主报告](research/docs/09_afh_xe131_three_body_scattering_natural_xenon.md)：完整正文及正式附录 A–I。
 - [研究文档索引](research/docs/README.md)：主报告、独立附录、公式索引和补充记录。
-- [公式—符号—正文—程序—结果交叉引用](research/docs/formula_symbol_code_cross_reference.md)：F1–F12 公式、单位、程序入口、输出和适用边界。
+- [公式—符号—正文—程序—结果交叉引用](research/docs/formula_symbol_code_cross_reference.md)：F1–F13 公式、单位、程序入口、输出和适用边界。
 - [研究目录索引](research/README.md)：各专题的内容和科学状态。
-- [核子 \(c_M\) 原始/归一化定义与 AFH \(W_M\) 区分](research/nucleon_form_factor_B_baseline/CM_RAW_NORMALIZATION_AND_AFH_M_RESPONSE.md)：说明因子 3、外部核子耦合、P0/P 匹配系数和核多体响应之间的关系。
+- [核子 \\(c_M\\) 原始/归一化定义与 AFH \\(W_M\\) 区分](research/nucleon_form_factor_B_baseline/CM_RAW_NORMALIZATION_AND_AFH_M_RESPONSE.md)：说明因子 3、外部核子耦合、P0/P 匹配系数和核多体响应之间的关系。
 - [Figure 2 数值结果总索引](research/docs/supplements/three_body_results_master_index_2026-11-16.md)：main 当前的 13 组结果、91 个已提交文件 SHA-256/大小记录及 1 个外部高阶谱归档校验项（共 92 项）；2026-11-13 旧索引保留为历史快照。
 - [Phase 1 科学内容审查](research/docs/supplements/scientific_content_audit_2026-11-16.md)：AFH-7 全网格、旧/新相空间积分差异、GCN/JJ55 数值精度边界。
 - [Figure 2 科学状态表](research/docs/supplements/three_body_scientific_status_2026-11-13.md)：明确各项验证的适用范围和未完成边界。
+- [附录 I：三体 VV 核子流与 AFH 非 (M) 响应](research/docs/appendices/09I_three_body_vv_nucleon_current_afh_responses.md)：Dirac–Pauli 匹配、(Phi'')、(MPhi'')、(Delta)、(Sigma') 及数值证据边界。
+- [完整理论讨论档案](research/afh_isotope_response_equivalence/docs/QUARK_TO_NUCLEON_VECTOR_CURRENT_MATCHING.md)：保留完整推导、备选解释和历史诊断。
 - [Eq. (6) kernel 与 Figure 2 数值复现入口](research/three_body_calculation_and_validation/README.md)。
 - [LZ detector-response 研究档案](research/lz_detector_response/README.md)，以及 [2026 NR/ER 响应、二维折叠与统计审计索引](research/lz_detector_response/lz_2026_extended_nr/README.md)。
 
@@ -61,10 +63,10 @@
 - [\(\chi_2\to\chi_1s\) pole width 推导与验证](research/docs/08_chi2_decay_width.md)
 - [AFH v6.0、Eq. (6)、天然氙与 LZ rate-level 主报告](research/docs/09_afh_xe131_three_body_scattering_natural_xenon.md)
 
-## 当前科学状态（2026-11-16）
+## 当前科学状态（2026-11-18）
 
 - **Eq. (6) kernel：** 已有 Dirac-spinor 实现、运动学/自旋迹检查和数值积分测试；模型的 Dirac/Majorana、完整矢量扇区等输入仍须按具体 benchmark 明确。
-- **核响应与天然氙：** AFH Xe-131 的 2401 点响应已通过 60 位 mpmath 检查和 Wolfram 14.0.0 原生 Mathematica/Python 逐点比较（最大相对差异 $3.59\times10^{-9}$）。七种官方 AFH default 同位素的 16,807 行响应网格及 AFH-7/Hybrid-9 的 84 点全范围反冲谱已归档；高阶摘要的最大基准—最终谱差异为 $6.47\times10^{-6}$。这仍是七同位素 AFH-7，不是 AFH-9；最终 1,344 行高阶谱 ZIP 目前仅有外部 checksum，未提交完整内容。Xe-124/Xe-126 仍无官方 AFH default density matrix，不伪造输入。
+- **核响应与天然氙：** AFH Xe-131 的 2401 点 \(M\) 响应已通过 60 位 mpmath 检查和 Wolfram 14.0.0 原生 Mathematica/Python 逐点比较（最大相对差异 \(3.59\times10^{-9}\)）。此外，PR #51 已归档 Wolfram 14.2.0 原生 Xe-131 \(M,\Phi'',M\Phi''\) 的 2401 点响应，专用 validator PASS；在 \(q_A=256.25\) MeV 处 \(R_{\Phi''}/R_M=115.81\)，但该比值由 \(M\) 深极小值造成，不是截面增强倍数。完整 VV 核流收缩、有限 \(t_A\) form factor 和空间响应仍未完成。七同位素 AFH \(M\) 响应、16,807 行网格及 AFH-7/Hybrid-9 的 84 点全范围反冲谱已归档；高阶摘要最大基准—最终谱差异为 \(6.47\times10^{-6}\)。这仍是 AFH-7，不是 AFH-9；Xe-124/Xe-126 仍无官方 AFH default density matrix。
 - **LZ 探测器响应：** 已归档公开 NEST `541b643` 的 EFT2024 配置候选、NR/ER 响应审计、三体二维响应折叠、Fig. S2 rate-level folds，以及十独立种子的 paired S1 响应和 100,000 次 seed-cluster bootstrap。1-keV 仍是全范围数值参考；独立全范围 1/5-keV 比较未通过 1% 二维 TV 门槛。黑色 360-keV benchmark 的点估计低于 1%，但 bootstrap 和 leave-one-out 不支持稳健等价性声明。以上均为中间 NEST 响应诊断，不是官方 waveform-level selected PDF、profile likelihood 或 90% CL exclusion。
 - **450 keV benchmark：** 已归档一个条件性 pointwise \(\mathcal L_{00}\)/\(I_6\) 验证，以及一个独立的 Xe-131 固定速度、零宽度、\(A u\) 质量近似曲线。后者只覆盖 130–650 keV 的内部网格，不能当作天然氙 halo rate。
 - **高能尾部核模型敏感性：** 225–269.9 keV 效率加权尾部已比较 AFH-7、Hybrid-9、GCN、JJ55 和 Helm-9。GCN/JJ55 的 8×8×4 linear-W² kernel 与 16×16×8 spot-check 最大差异为 $2.19\times10^{-4}$；AFH-7/Hybrid-9 使用 threshold-u²，二者尚未匹配数值积分方案。GCN/JJ55 的 12–19% 尾部变化远大于该差异，但 0.66–1.16% 的 Hybrid-9 变化应在统一积分后再作为精密结果。所有结果仍是 rate-level 诊断，不是 likelihood。

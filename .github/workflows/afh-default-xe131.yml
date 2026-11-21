@@ -56,6 +56,8 @@ jobs:
           python -m py_compile research/three_body_calculation_and_validation/eq6_kernel.py
           python -m py_compile research/three_body_calculation_and_validation/phase_space_convergence.py
           python -m py_compile research/afh_default_density_xe131/compare_afh_mathematica_python.py
+          python -m py_compile research/afh_default_density_xe131/run_afh_spatial_response_audit.py
+          python -m py_compile research/afh_default_density_xe131/compare_afh_spatial_response.py
           python -m py_compile research/afh_default_density_xe131/compare_full_dsigma_mathematica.py
           python -m py_compile research/afh_default_density_natural_xenon_halo/run_afh_natural_xenon_halo_fold.py
 
