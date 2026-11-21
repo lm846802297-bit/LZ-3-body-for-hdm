@@ -1,0 +1,47 @@
+{
+  "status": "PASS",
+  "calculation": "correlated Borah electromagnetic form-factor covariance propagated through the isotope-resolved B recoil spectra and LZ 2026 NR efficiency",
+  "strange_form_factor_model": "alexandrou2020_charge_weighted_converted",
+  "n_draws": 3000,
+  "seed": 20261119,
+  "roi_keV": [
+    5.4,
+    269.9
+  ],
+  "exposure_tonne_year": 2.84,
+  "exposure_kg_day": 1037310.0,
+  "uncertainty_scope": {
+    "Borah2020_EM_coefficient_covariance": true,
+    "cross_recoil_and_cross_isotope_correlations_preserved": true,
+    "strange_lattice_uncertainties_sampled": false,
+    "LZ_efficiency_gray_envelope_sampled": false,
+    "energy_resolution_smearing": false,
+    "two_dimensional_signal_pdf": false,
+    "background_likelihood": false
+  },
+  "validation": {
+    "maximum_central_detector_yield_closure_relative_difference": 0.0,
+    "maximum_A_spectrum_reconstruction_relative_difference": 5.551115123125783e-16,
+    "maximum_isotope_A_contribution_relative_difference": 0.0,
+    "central_detector_yield_closure_tolerance": 2e-10,
+    "nonfinite_draw_count": 0
+  },
+  "source_files": {
+    "isotope_kernel_csv": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/afh_hybrid9_isotope_kernel_integrals.csv",
+    "isotope_kernel_sha256": "ec257f8d402a2f5757910703be4dc6470065a88517a36b2edad9681a1f21ed02",
+    "source_metadata_json": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/metadata.json",
+    "source_metadata_sha256": "05bd6ed2a9126f7d0c477d601064dd15a1047bb952b79183c414fb809cfbc991",
+    "B_spectrum_csv": "artifacts/B-absolute/alexandrou2020_charge_weighted_converted/afh_hybrid9_B_natural_xenon_spectrum.csv",
+    "B_spectrum_sha256": "a48bc90848e14acb7cf2ecab969bbd92a3d7f7fe7ea8c7d37373f6389653866a",
+    "B_isotope_contributions_csv": "artifacts/B-absolute/alexandrou2020_charge_weighted_converted/afh_hybrid9_B_isotope_contributions.csv",
+    "B_isotope_contributions_sha256": "fcb32826f68c58876f52a198ca3e2d3e209d6fe14781a0cb92452e6dd090e629",
+    "B_metadata_json": "artifacts/B-absolute/alexandrou2020_charge_weighted_converted/metadata.json",
+    "B_metadata_sha256": "b62f6db81bde64b0e45c693c199c47bb82a150a3eba7c5416d6f99ca7cedcdaf",
+    "efficiency_csv": "research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv",
+    "efficiency_sha256": "a0917cd29eef20fbbdc9383b81012f4bd9a669859779e39a8b6ccf47dd8a47ed",
+    "detector_yield_csv": "artifacts/B-detector/alexandrou2020_charge_weighted_converted/lz_2026_afh7_hybrid9_rate_level_event_yields.csv",
+    "detector_yield_sha256": "0eaf790889dc6141b3bac9386491609f0610447e256eff02d63b510345f14841"
+  },
+  "output_csv": "lz_2026_B_detector_yield_EM_covariance.csv",
+  "output_csv_sha256": "88d3d2a1ec84ecb801cd696c83498da7bfba352eb0cdcbd3fd777a227bfc5684"
+}
