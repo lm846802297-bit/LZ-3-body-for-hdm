@@ -1,0 +1,127 @@
+{
+  "task_id": "20261121-lean4-p0-formalization",
+  "validation_id": "sympy-p0-c-sachs-20261121-01",
+  "status": "PASS",
+  "scope": [
+    "recoil deficit factorization",
+    "minimum-speed sign equivalence sampled under q>0 and mu>0",
+    "AFH spatial Q_A^2 versus invariant Q_N^2 distinction",
+    "raw/normalized c_M algebra",
+    "Sachs <-> Dirac-Pauli conversion",
+    "P0/P/A0/B normalized coefficient identities",
+    "coherent two-diagram interference algebra",
+    "reduced two-diagram Ward cancellation",
+    "AFH Gram response positive-semidefinite construction",
+    "AFH factor-four zero-momentum normalization"
+  ],
+  "excluded_claims": [
+    "does not derive the c_M matching formula from the full covariant current",
+    "does not validate physical input form-factor fits",
+    "does not validate the impulse prescription itself",
+    "does not compute three-body phase-space, AFH OBDME, halo, or detector rates"
+  ],
+  "repository": "lm846802297-bit/LZ-3-body-for-hdm",
+  "baseline_commit": "d2407050ed0f4975387bc6c05bc4509ccf375c31",
+  "development_branch": "research/lean4-formalization-p0-20261121",
+  "source_blob_shas": {
+    "CM_RAW_NORMALIZATION_AND_AFH_M_RESPONSE.md": "04f53726979d2ab936932de3ead85e78eb3ebfb3",
+    "P0_VS_P_POINTLIKE_DIRAC_BASELINES.md": "a618c2d209e3a19af028e670f155d322cd6ee6a6",
+    "POINTLIKE_NUCLEON_P_A_B_COMPARISON.md": "af87bfc15b00d17131735b2215ce9b5ae1d25551",
+    "01_model_and_amplitude.md": "8d8daf3e6d45235040c98bf3e3ed374c449baa2d"
+  },
+  "input_data": [],
+  "symbolic_checks": {
+    "D_factorization": "0",
+    "QA2_minus_QN2_equals_ER2": "0",
+    "tN_impulse_minus_spatial_alternative_equals_ER2": "0",
+    "raw_normalized_cM_equivalence": "0",
+    "raw_cM_zero_transfer": "0",
+    "normalized_cM_zero_transfer": "0",
+    "P_zero_transfer_equals_P0": "0",
+    "A0_zero_transfer_equals_P0": "0",
+    "Sachs_E_reconstruction": "0",
+    "Sachs_M_reconstruction": "0",
+    "Sachs_F1_at_zero": "0",
+    "Sachs_F2_at_zero": "0",
+    "B_at_zero_transfer_matches_A0": "0",
+    "P_rate_ratio_expansion": "0",
+    "B_Sachs_cM_definition": "0",
+    "two_ordering_kernel_factorization": "0",
+    "two_ordering_kernel_degenerate_limit": "0",
+    "reduced_two_diagram_ward_cancellation": "0",
+    "coherent_square_interference_identity": "0",
+    "AFH_C0_factor_four_zero_momentum_identity": "0"
+  },
+  "numeric_checks": {
+    "random_seed": 20261121,
+    "random_samples": 10000,
+    "max_relative_deficit_factorization_residual": 4.8183679268731794e-14,
+    "minimum_speed_sign_mismatches": 0,
+    "AFH_Gram_trials": 1000,
+    "AFH_Gram_dimensions": [5, 4],
+    "AFH_Gram_failures": 0
+  },
+  "xe131_reference": {
+    "mA_GeV": 121.933,
+    "mN_GeV": 0.938919,
+    "F2hat_zero_Sufian2017": -0.1868323435,
+    "rows": [
+      {
+        "ER_keV": 5.4,
+        "QN_MeV": 36.28879165803128,
+        "tau_N": 0.00037344682221872647,
+        "P_cMhat": 0.9998132765888906,
+        "P_over_P0_rate_ratio": 0.9996265880434135,
+        "A0_cMhat_Sufian2017": 0.9998830485338583
+      },
+      {
+        "ER_keV": 50.0,
+        "QN_MeV": 110.42327653171681,
+        "tau_N": 0.003457840946469689,
+        "P_cMhat": 0.9982710795267652,
+        "P_over_P0_rate_ratio": 0.9965451482195331,
+        "A0_cMhat_Sufian2017": 0.9989171160542444
+      },
+      {
+        "ER_keV": 100.0,
+        "QN_MeV": 156.1620952728286,
+        "tau_N": 0.006915681892939378,
+        "P_cMhat": 0.9965421590535303,
+        "P_over_P0_rate_ratio": 0.9930962747710717,
+        "A0_cMhat_Sufian2017": 0.9978342321084887
+      },
+      {
+        "ER_keV": 200.0,
+        "QN_MeV": 220.84655306343362,
+        "tau_N": 0.013831363785878755,
+        "P_cMhat": 0.9930843181070607,
+        "P_over_P0_rate_ratio": 0.9862164628701656,
+        "A0_cMhat_Sufian2017": 0.9956684642169774
+      },
+      {
+        "ER_keV": 269.9,
+        "QN_MeV": 256.5529836115729,
+        "tau_N": 0.01866542542904338,
+        "P_cMhat": 0.9906672872854783,
+        "P_over_P0_rate_ratio": 0.9814216740975683,
+        "A0_cMhat_Sufian2017": 0.994154592460811
+      }
+    ]
+  },
+  "environment": {
+    "execution_target": "ChatGPT Linux container",
+    "timestamp_utc": "2026-11-21T14:43:19.246393+00:00",
+    "os": "Linux-6.18.57-x86_64-with-glibc2.41",
+    "kernel": "6.18.57",
+    "architecture": "x86_64",
+    "cpu_model": "AMD EPYC 9V74 80-Core Processor",
+    "logical_cpu_count": 5,
+    "memory_total_kib": 6090668,
+    "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+    "sympy": "1.14.0",
+    "lean": null,
+    "lake": null,
+    "nvidia_smi": null
+  },
+  "source_script_sha256": "b6c38755f4f3588fe0a7614aa9662b0420710f7744f96e1e6edacd6a33943058"
+}
