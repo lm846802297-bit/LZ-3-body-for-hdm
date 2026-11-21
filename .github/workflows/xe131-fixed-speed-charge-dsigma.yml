@@ -1,0 +1,55 @@
+name: Xe-131 fixed-speed charge-sector differential cross-section ratio
+
+on:
+  pull_request:
+    paths:
+      - "research/three_body_full_current_nucleon_match/xe131_fixed_speed_charge_dsigma.py"
+      - "research/three_body_full_current_nucleon_match/test_xe131_fixed_speed_charge_dsigma.py"
+      - ".github/workflows/xe131-fixed-speed-charge-dsigma.yml"
+      - "research/three_body_full_current_nucleon_match/three_body_phase_space_tensor.py"
+      - "research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py"
+      - "research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv"
+      - "research/three_body_full_current_nucleon_match/native_charge_sector_halo_fold.py"
+      - "research/afh_default_density_natural_xenon_halo/input/isotope_masses.csv"
+      - "research/three_body_spin_resolved_current/**"
+      - "research/vector_current_response_audit/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  fixed-speed-xe131:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Checkout the native Xe-131 AFH source archive
+        uses: actions/checkout@v4
+        with:
+          repository: lm846802297-bit/LZ-3-body-for-hdm
+          ref: e6d9dee3527cab200ee6b21198d577b987282fac
+          path: afh-native
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install numerical dependencies
+        run: python -m pip install numpy==2.3.5 scipy==1.17.0
+      - name: Run focused regression tests
+        run: |
+          python -m unittest discover \
+            -s research/three_body_full_current_nucleon_match \
+            -p 'test_xe131_fixed_speed_charge_dsigma.py' -v
+      - name: Integrate fixed-speed Xe-131 three-body charge-sector cross sections
+        run: |
+          python research/three_body_full_current_nucleon_match/xe131_fixed_speed_charge_dsigma.py \
+            --afh-csv afh-native/research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_native.csv \
+            --out /tmp/xe131-fixed-speed-charge-dsigma.json
+      - name: Upload reproducible numerical result
+        uses: actions/upload-artifact@v4
+        with:
+          name: xe131-fixed-speed-charge-sector-dsigma-ratio
+          path: /tmp/xe131-fixed-speed-charge-dsigma.json
+          if-no-files-found: error
+          retention-days: 90
