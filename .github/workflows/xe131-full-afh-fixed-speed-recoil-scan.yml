@@ -32,12 +32,19 @@ jobs:
     timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
-      - name: Checkout the provenance-pinned native Xe-131 charge response
+      - name: Checkout the provenance-pinned native Xe-131 coarse charge response
         uses: actions/checkout@v4
         with:
           repository: lm846802297-bit/LZ-3-body-for-hdm
           ref: e6d9dee3527cab200ee6b21198d577b987282fac
           path: afh-native
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout the independently validated 121-point native Xe-131 dense grid
+        uses: actions/checkout@v4
+        with:
+          repository: lm846802297-bit/LZ-3-body-for-hdm
+          ref: 571e3687b495ced48ef64b5f066b82236fea2b27
+          path: afh-dense
           token: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/setup-python@v5
         with:
@@ -68,6 +75,9 @@ jobs:
         run: |
           python research/three_body_full_current_nucleon_match/xe131_full_afh_fixed_speed_recoil_scan.py \
             --native-charge-csv afh-native/research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_native.csv \
+            --dense-native-csv afh-dense/research/afh_full_response_database/output/xe131-dense-charge-dip/xe131_dense_charge_response_dip_native.csv \
+            --dense-native-metadata afh-dense/research/afh_full_response_database/output/xe131-dense-charge-dip/xe131_dense_charge_response_dip_metadata.txt \
+            --dense-native-validation afh-dense/research/afh_full_response_database/output/xe131-dense-charge-dip/xe131_dense_charge_dip_validation.json \
             --outdir /tmp/xe131-full-afh-recoil-scan
       - name: Audit six-channel response interpolation around the Xe-131 diffraction minimum
         run: |
@@ -119,6 +129,9 @@ jobs:
               "native_xe131_charge_csv": "afh-native/research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_native.csv",
               "native_xe131_metadata_json": "afh-native/research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_metadata.json",
               "native_xe131_validation_json": "afh-native/research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_validation.json",
+              "dense_xe131_native_csv": "afh-dense/research/afh_full_response_database/output/xe131-dense-charge-dip/xe131_dense_charge_response_dip_native.csv",
+              "dense_xe131_native_metadata": "afh-dense/research/afh_full_response_database/output/xe131-dense-charge-dip/xe131_dense_charge_response_dip_metadata.txt",
+              "dense_xe131_native_validation": "afh-dense/research/afh_full_response_database/output/xe131-dense-charge-dip/xe131_dense_charge_dip_validation.json",
               "afh_v6_source": "afh-native/v6/dmformfactor-V6.m",
               "xe131_spatial_density_matrix": "research/afh_default_density_natural_xenon_halo/results/full_afh_v6_default_7_isotope_response/density_matrices/afh_default_xe131_density_matrix.csv",
               "spatial_response_metadata": "research/afh_default_density_natural_xenon_halo/results/full_afh_v6_default_7_isotope_response/metadata.json",
@@ -138,6 +151,7 @@ jobs:
               f"pull_request_head_sha={os.environ.get('PR_HEAD_SHA', 'unknown')}",
               f"checked_out_repository_sha={git_head('.')}",
               f"pinned_afh_repository_sha={git_head('afh-native')}",
+              f"pinned_dense_afh_repository_sha={git_head('afh-dense')}",
               f"python={sys.version.replace(chr(10), ' ')}",
               f"numpy={numpy.__version__}",
               f"scipy={scipy.__version__}",
