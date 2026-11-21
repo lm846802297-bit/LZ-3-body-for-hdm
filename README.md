@@ -1,5 +1,7 @@
 # LZ 3-body dark matter interpretation
 
+- Mandatory research compute architecture and reproducibility policy: [RESEARCH_COMPUTE_POLICY.md](RESEARCH_COMPUTE_POLICY.md)
+
 本仓库研究暗物质三体辐射过程
 \[
 \chi_1 + A \longrightarrow \chi_1 + A + s
