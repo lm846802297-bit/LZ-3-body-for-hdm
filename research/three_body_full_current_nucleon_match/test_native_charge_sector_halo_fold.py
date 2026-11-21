@@ -407,7 +407,7 @@ class NativeChargeSectorHaloFoldTests(unittest.TestCase):
             self.assertIn("W_M(y_A)", result["primary_baseline"])
             self.assertIn("t_A=-2*m_A*E_R", result["mediator_denominator"])
             self.assertEqual(result["nucleon_transfer_scheme"],
-                "strict one-body impulse q_N^mu=q_A^mu; t_N=t_A=-2*m_A*E_R")
+                "one-body impulse-current external-transfer assignment q_N^mu=q_A^mu; t_N=t_A=-2*m_A*E_R")
             self.assertGreater(
                 mb["rate_leading_static_vector_candidate_events_kg_day_keV"], 0.0
             )
