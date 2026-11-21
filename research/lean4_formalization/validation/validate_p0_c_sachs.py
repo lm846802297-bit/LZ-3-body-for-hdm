@@ -56,6 +56,8 @@ cM_hat_from_normalized = F1hat + tN / (8 * mN**2) * (F1hat + 2 * F2hat)
 # Sachs conversion with tau = Q_N^2/(4 m_N^2) = -t_N/(4m_N^2).
 F1_from_sachs = (GE + tau * GM) / (1 + tau)
 F2_from_sachs = (GM - GE) / (1 + tau)
+GE_from_dirac_pauli = F1hat - tau * F2hat
+GM_from_dirac_pauli = F1hat + F2hat
 
 # Four project baselines, using normalized form factors.
 P0 = sp.Integer(1)
@@ -64,9 +66,9 @@ A0 = 1 + tN / (8 * mN**2) * (1 + 2 * kappa)
 B = F1_from_sachs + tN / (8 * mN**2) * (
     F1_from_sachs + 2 * F2_from_sachs
 )
+B_tau_form = sp.factor(B.subs(tN, -4 * mN**2 * tau))
 
 checks: dict[str, str] = {}
-
 
 def exact_check(name: str, expr: sp.Expr) -> None:
     residual = sp.factor(sp.together(sp.simplify(expr)))
@@ -74,41 +76,22 @@ def exact_check(name: str, expr: sp.Expr) -> None:
     if residual != 0:
         raise AssertionError(f"{name}: nonzero symbolic residual {residual}")
 
-
 exact_check("D_factorization", D - D_factorized)
 exact_check("QA2_minus_QN2_equals_ER2", QA2 - QN2 - ER**2)
-exact_check(
-    "tN_impulse_minus_spatial_alternative_equals_ER2",
-    tN_impulse - tN_spatial_substitution - ER**2,
-)
+exact_check("tN_impulse_minus_spatial_alternative_equals_ER2", tN_impulse - tN_spatial_substitution - ER**2)
 exact_check(
     "raw_normalized_cM_equivalence",
     cM_hat_from_raw.subs({F1raw: 3 * F1hat, F2raw: 3 * F2hat})
     - cM_hat_from_normalized,
 )
 exact_check("raw_cM_zero_transfer", cM_raw.subs({F1raw: 3, tN: 0}) - 3)
-exact_check(
-    "normalized_cM_zero_transfer",
-    cM_hat_from_raw.subs({F1raw: 3, tN: 0}) - 1,
-)
+exact_check("normalized_cM_zero_transfer", cM_hat_from_raw.subs({F1raw: 3, tN: 0}) - 1)
 exact_check("P_zero_transfer_equals_P0", P.subs(tN, 0) - P0)
 exact_check("A0_zero_transfer_equals_P0", A0.subs(tN, 0) - P0)
-exact_check(
-    "Sachs_E_reconstruction",
-    sp.together(F1_from_sachs - tau * F2_from_sachs - GE),
-)
-exact_check(
-    "Sachs_M_reconstruction",
-    sp.together(F1_from_sachs + F2_from_sachs - GM),
-)
-exact_check(
-    "Sachs_F1_at_zero",
-    F1_from_sachs.subs({tau: 0, GE: 1, GM: 1 + kappa}) - 1,
-)
-exact_check(
-    "Sachs_F2_at_zero",
-    F2_from_sachs.subs({tau: 0, GE: 1, GM: 1 + kappa}) - kappa,
-)
+exact_check("Sachs_E_reconstruction", sp.together(F1_from_sachs - tau * F2_from_sachs - GE))
+exact_check("Sachs_M_reconstruction", sp.together(F1_from_sachs + F2_from_sachs - GM))
+exact_check("Sachs_F1_at_zero", F1_from_sachs.subs({tau: 0, GE: 1, GM: 1 + kappa}) - 1)
+exact_check("Sachs_F2_at_zero", F2_from_sachs.subs({tau: 0, GE: 1, GM: 1 + kappa}) - kappa)
 exact_check(
     "B_at_zero_transfer_matches_A0",
     B.subs({tN: 0, tau: 0, GE: 1, GM: 1 + kappa})
@@ -119,6 +102,9 @@ exact_check(
     (1 - QN2 / (8 * mN**2))**2
     - (1 - QN2 / (4 * mN**2) + (QN2 / (8 * mN**2))**2),
 )
+
+# Confirm the B expression is exactly the project c_M expression after Sachs
+# conversion; no extra factor of three is introduced in the normalized basis.
 exact_check(
     "B_Sachs_cM_definition",
     B - (F1_from_sachs + tN / (8 * mN**2) * (F1_from_sachs + 2 * F2_from_sachs)),
@@ -147,7 +133,8 @@ exact_check(
     - b_complex * sp.conjugate(a_complex),
 )
 
-# AFH factor-four zero-momentum normalization.
+# AFH Gram-matrix positivity: exact integer-valued independent checks over
+# deterministic random amplitude arrays.
 A_symbol, R0_symbol = sp.symbols("A R0", real=True, nonzero=True)
 exact_check(
     "AFH_C0_factor_four_zero_momentum_identity",
@@ -173,17 +160,13 @@ for _ in range(10000):
     if (d >= 0.0) != (vv >= vm):
         max_sign_mismatch += 1
 if max_sign_mismatch:
-    raise AssertionError(
-        f"minimum-speed sign equivalence failed {max_sign_mismatch} times"
-    )
+    raise AssertionError(f"minimum-speed sign equivalence failed {max_sign_mismatch} times")
 
 # Exact finite-dimensional Gram checks (5 final-state amplitudes x 4 channels).
 gram_trials = 1000
 for trial in range(gram_trials):
     rows, cols = 5, 4
-    amp = sp.Matrix(
-        [[rng.randint(-7, 7) for _ in range(cols)] for _ in range(rows)]
-    )
+    amp = sp.Matrix([[rng.randint(-7, 7) for _ in range(cols)] for _ in range(rows)])
     coeff = sp.Matrix([rng.randint(-5, 5) for _ in range(cols)])
     W = amp.T * amp
     lhs = (coeff.T * W * coeff)[0]
@@ -204,9 +187,7 @@ for er_keV in recoils_keV:
     tau_value = qn2_value / (4.0 * mN_value**2)
     p_value = 1.0 - qn2_value / (8.0 * mN_value**2)
     p_ratio = p_value**2
-    a0_value = 1.0 - qn2_value / (8.0 * mN_value**2) * (
-        1.0 + 2.0 * kappa_sufian2017
-    )
+    a0_value = 1.0 - qn2_value / (8.0 * mN_value**2) * (1.0 + 2.0 * kappa_sufian2017)
     benchmark_rows.append({
         "ER_keV": er_keV,
         "QN_MeV": qn_value * 1000.0,
@@ -216,17 +197,14 @@ for er_keV in recoils_keV:
         "A0_cMhat_Sufian2017": a0_value,
     })
 
-
+# Environment and source provenance. No external numerical data files are read.
 def command_output(cmd: list[str]) -> str | None:
     if shutil.which(cmd[0]) is None:
         return None
     try:
-        return subprocess.run(
-            cmd, check=True, capture_output=True, text=True, timeout=5
-        ).stdout.strip()
-    except Exception as exc:
+        return subprocess.run(cmd, check=True, capture_output=True, text=True, timeout=5).stdout.strip()
+    except Exception as exc:  # record environment query failure without hiding it
         return f"ERROR: {type(exc).__name__}: {exc}"
-
 
 cpu_model = None
 try:
@@ -315,10 +293,7 @@ metadata = {
 
 (OUT / "sympy_validation.json").write_text(json.dumps(metadata, indent=2) + "\n")
 with (OUT / "xe131_p_p0_a0_spotchecks.csv").open("w", encoding="utf-8") as f:
-    f.write(
-        "ER_keV,QN_MeV,tau_N,P_cMhat,"
-        "P_over_P0_rate_ratio,A0_cMhat_Sufian2017\n"
-    )
+    f.write("ER_keV,QN_MeV,tau_N,P_cMhat,P_over_P0_rate_ratio,A0_cMhat_Sufian2017\n")
     for row in benchmark_rows:
         f.write(",".join(str(row[k]) for k in [
             "ER_keV", "QN_MeV", "tau_N", "P_cMhat",
