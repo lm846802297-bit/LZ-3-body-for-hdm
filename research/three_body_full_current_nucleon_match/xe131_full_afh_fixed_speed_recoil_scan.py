@@ -43,9 +43,17 @@ MS_GEV = 300.0e-6
 SPEED_KM_S = 776.0
 G2 = 1.0
 FORMAL_WIDTH_SCHEMES = ("pole",)
-EXPECTED_ORIGINAL_AFH_RATIOS = {
+# Historical values are the static-nucleon diagnostic q_N^0=0, t_N=-Q_A^2.
+# They are retained as regression anchors, but are not the formal B/impulse result.
+EXPECTED_STATIC_QN0_AFH_RATIOS = {
     ("isoscalar_zexp", "off_pole_dm450", 200.0): 0.778309339441481,
     ("isoscalar_zexp", "near_pole_dm362", 267.0): 0.649215910707624,
+}
+# Formal one-body impulse uses q_N^mu=q_A^mu and t_N=t_A=-2*m_A*E_R.
+# These values use the same pinned native AFH response and exact mass-shell q_A.
+EXPECTED_FORMAL_IMPULSE_AFH_RATIOS = {
+    ("isoscalar_zexp", "off_pole_dm450", 200.0): 0.7783094918005908,
+    ("isoscalar_zexp", "near_pole_dm362", 267.0): 0.6492161323414921,
 }
 FORM_FACTOR_PRESCRIPTIONS = ("bishara_linear", "isoscalar_zexp")
 RESPONSE_NAMES = ("M", "PhiPP", "MPhiPP", "Delta", "SigmaPrime", "SigmaPrimeDelta")
@@ -66,6 +74,50 @@ def nucleon_form_factors(
     if prescription == "isoscalar_zexp":
         return isoscalar_zexp(Q2)
     raise ValueError(f"unknown nucleon form-factor prescription: {prescription}")
+
+
+def charge_only_ratio_from_responses(
+    qA_GeV: float,
+    ER_keV: float,
+    responses: dict[str, float],
+    prescription: str,
+    *,
+    static_nucleon: bool,
+) -> float:
+    """Independent charge-kernel ratio for static q_N^0=0 or formal q_N=q_A.
+
+    The denominator is the same finite-size AFH W_M response. Only the
+    nucleon transfer invariant changes:
+      static diagnostic: t_N=-|q_A|^2;
+      formal impulse:    t_N=E_R^2-|q_A|^2=-2*m_A*E_R.
+    """
+    ER_GeV = float(ER_keV) * 1.0e-6
+    tN_GeV2 = (
+        -qA_GeV * qA_GeV
+        if static_nucleon
+        else ER_GeV * ER_GeV - qA_GeV * qA_GeV
+    )
+    F1_raw, F2_raw = nucleon_form_factors(
+        qA_GeV, prescription, tN_GeV2=tN_GeV2
+    )
+    F1, F2 = effective_nucleon_form_factors(F1_raw, F2_raw)
+    cM, cPhiPP = charge_coefficients(
+        qA_GeV,
+        F1=F1,
+        F2=F2,
+        mN_GeV=DEFAULT_MN_GEV,
+        tN_GeV2=tN_GeV2,
+    )
+    WM = float(responses["M"])
+    WPhiPP = float(responses["PhiPP"])
+    WMPhiPP = float(responses["MPhiPP"])
+    if not math.isfinite(WM) or WM <= 0.0:
+        raise ValueError("charge-kernel anchor requires positive finite W_M")
+    return (
+        cM * cM
+        + 2.0 * cM * cPhiPP * WMPhiPP / WM
+        + cPhiPP * cPhiPP * WPhiPP / WM
+    )
 
 
 def sha256(path: Path) -> str:
@@ -444,7 +496,8 @@ def run(native_charge_csv: Path, outdir: Path) -> dict:
         raise RuntimeError("no open off-shell recoil points were integrated")
 
     anchor_checks = []
-    for (form_factor, case_name, ER_keV), expected in EXPECTED_ORIGINAL_AFH_RATIOS.items():
+    for key, expected_static in EXPECTED_STATIC_QN0_AFH_RATIOS.items():
+        form_factor, case_name, ER_keV = key
         match = [
             row for row in accepted
             if row["form_factor_prescription"] == form_factor
@@ -454,19 +507,65 @@ def run(native_charge_csv: Path, outdir: Path) -> dict:
         ]
         if len(match) != 1:
             raise RuntimeError(f"missing unique anchor point {(case_name, ER_keV)}")
-        actual = float(match[0]["charge_only_over_AFH_finite_size_M_baseline"])
-        residual = abs(actual - expected)
+        row = match[0]
+        responses = {
+            name: float(row[f"W_{name}"])
+            for name in ("M", "PhiPP", "MPhiPP")
+        }
+        qA_GeV = float(row["qA_GeV"])
+
+        # Preserve the historical q_N^0=0 result as a separate diagnostic.
+        static_actual = charge_only_ratio_from_responses(
+            qA_GeV, ER_keV, responses, form_factor, static_nucleon=True
+        )
+        static_residual = abs(static_actual - expected_static)
+
+        # The production contraction must match an independent coefficient
+        # reconstruction using the formal one-body impulse invariant.
+        formal_expected = EXPECTED_FORMAL_IMPULSE_AFH_RATIOS[key]
+        formal_recomputed = charge_only_ratio_from_responses(
+            qA_GeV, ER_keV, responses, form_factor, static_nucleon=False
+        )
+        formal_production = float(
+            row["charge_only_over_AFH_finite_size_M_baseline"]
+        )
+        formal_anchor_residual = abs(formal_production - formal_expected)
+        formal_crosscheck_residual = abs(formal_production - formal_recomputed)
+
         anchor_checks.append({
             "form_factor_prescription": form_factor,
-            "benchmark": case_name, "ER_keV": ER_keV,
-            "expected_previous_charge_ratio": expected,
-            "recomputed_charge_ratio": actual,
-            "absolute_residual": residual,
-            "status": "PASS" if residual < 2.0e-8 else "FAIL",
+            "benchmark": case_name,
+            "ER_keV": ER_keV,
+            "historical_static_qN0_expected": expected_static,
+            "static_qN0_recomputed": static_actual,
+            "static_qN0_absolute_residual": static_residual,
+            "formal_impulse_expected": formal_expected,
+            "formal_impulse_independent_reconstruction": formal_recomputed,
+            "formal_impulse_production_contraction": formal_production,
+            "formal_impulse_anchor_residual": formal_anchor_residual,
+            "production_vs_independent_coefficient_residual": formal_crosscheck_residual,
+            "status": (
+                "PASS"
+                if static_residual < 2.0e-8
+                and formal_anchor_residual < 2.0e-8
+                and formal_crosscheck_residual < 2.0e-12
+                else "FAIL"
+            ),
         })
-        if residual >= 2.0e-8:
+        if static_residual >= 2.0e-8:
             raise AssertionError(
-                f"charge-only anchor mismatch at {case_name}, ER={ER_keV}: {residual}"
+                f"static q_N^0 historical anchor mismatch at {case_name}, "
+                f"ER={ER_keV}: {static_residual}"
+            )
+        if formal_anchor_residual >= 2.0e-8:
+            raise AssertionError(
+                f"formal impulse anchor mismatch at {case_name}, "
+                f"ER={ER_keV}: {formal_anchor_residual}"
+            )
+        if formal_crosscheck_residual >= 2.0e-12:
+            raise AssertionError(
+                f"production/independent charge-coefficient mismatch at {case_name}, "
+                f"ER={ER_keV}: {formal_crosscheck_residual}"
             )
 
     max_spatial_fraction = max(abs(float(row["spatial_over_charge_only"])) for row in accepted)
@@ -529,7 +628,7 @@ def run(native_charge_csv: Path, outdir: Path) -> dict:
         "form_factor_prescriptions": list(FORM_FACTOR_PRESCRIPTIONS),
         "formal_width_prescription": "Eq. (19) asymmetric: first p-k propagator remains zero-width (+i0+); second p'+k propagator uses the constant pole width evaluated at m_chi2. Running width is not a production input.",
         "response_metadata": response_bundle["metadata"],
-        "anchor_checks_against_previous_AFH_finite_size_M_baseline": anchor_checks,
+        "anchor_checks_static_qN0_and_formal_impulse": anchor_checks,
         "accepted_recoil_rows": len(accepted),
         "all_rows_including_closed_or_on_shell": len(rows),
         "maximum_absolute_spatial_over_charge_candidate": max_spatial_fraction,
@@ -581,7 +680,7 @@ def main() -> None:
         "all_rows": result["all_rows_including_closed_or_on_shell"],
         "max_abs_spatial_over_charge_candidate": result["maximum_absolute_spatial_over_charge_candidate"],
         "max_pchip_linear_difference": result["maximum_PCHIP_vs_linear_response_difference"],
-        "anchor_checks": result["anchor_checks_against_previous_AFH_finite_size_M_baseline"],
+        "anchor_checks": result["anchor_checks_static_qN0_and_formal_impulse"],
         "output": str(args.outdir),
     }, indent=2))
 
