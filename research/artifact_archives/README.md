@@ -34,3 +34,10 @@ The manifest's `file_inventory` intentionally excludes `RUN_MANIFEST.json` itsel
 ## Completed PR #78 / PR #80 archive
 
 The final stable archive execution passed as [workflow run 44581116762](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44581116762). It downloaded the pinned source artifacts, validated their GitHub digests and payloads, extracted native CSV/JSON data, rebuilt both run manifests, verified all 34 SHA-256 entries across the two result packages, and committed the result directories. The embedded file inventories exclude their own manifests; the SHA256SUMS files include and verify those manifests.
+
+
+## PR #85 finite-nucleon B and LZ detector-yield archive
+
+The PR85 archive request is pinned in [lz-pr85-B-2026-11-20.json](requests/lz-pr85-B-2026-11-20.json). The builder [build_pr85_B_archive.py](build_pr85_B_archive.py) verifies the exact source workflow run and GitHub artifact digest, confirms that all 57 ZIP members are extracted byte-for-byte, validates the B-baseline and LZ detector outputs, checks the 3000-draw electromagnetic covariance propagation, and generates the archive manifest and SHA256SUMS.
+
+The native outputs and source snapshots are stored in [the PR85 B-baseline archive](../nucleon_form_factor_B_baseline/results/2026-11-20-B-baseline-PR85/README.md). The archive workflow [44593911420](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44593911420) passed all archive and checksum checks. The archive is committed to the PR85 branch; it becomes the canonical main-branch archive only after PR85 is merged and verified on main.
