@@ -27,7 +27,7 @@ from nucleon_vector_form_factors import (
 )
 from native_charge_sector_halo_fold import load_isotope_inputs
 from three_body_phase_space_tensor import integrate_spin_resolved_tensor
-from xe131_full_afh_fixed_speed_recoil_scan import overlay_dense_native_charge_grid
+from xe131_dense_native_afh_overlay import overlay_dense_native_charge_grid
 
 MCHI_GEV = 1000.0
 MS_GEV = 300.0e-6
