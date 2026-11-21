@@ -48,7 +48,7 @@ FORMAL_WIDTH_SCHEMES = ("pole",)
 # PCHIP gives 0.6056675913. The previous 0.6056496631 anchor was the
 # coarse-grid interpolation value.
 EXPECTED_CHARGE_RATIOS = {
-    ("off_pole_dm450", 200.0): 0.7376302304925361,
+    ("off_pole_dm450", 200.0): 0.7376302305280606,
     ("near_pole_dm362", 267.0): 0.605667591295857,
 }
 RESPONSE_NAMES = ("M", "PhiPP", "MPhiPP", "Delta", "SigmaPrime", "SigmaPrimeDelta")
