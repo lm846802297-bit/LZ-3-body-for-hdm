@@ -36,7 +36,7 @@ from xe131_fixed_speed_charge_dsigma import (
     XE131_MASS_RECORD, exact_qA_GeV, load_native_xe131_responses,
     interpolate_responses,
 )
-from xe131_full_afh_fixed_speed_recoil_scan import overlay_dense_native_charge_grid
+from xe131_dense_native_afh_overlay import overlay_dense_native_charge_grid
 
 DELTA_M_GEV = 450.0e-6
 COUPLING_PRODUCT_SQUARED = 1.0
