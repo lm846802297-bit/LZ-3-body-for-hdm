@@ -130,7 +130,7 @@ def run_audit(
     kernels["full_pchip"] = kernels["charge_pchip"] + kernels["spatial_pchip"]
     kernels["full_cheb10"] = kernels["charge_cheb10"] + kernels["spatial_cheb10"]
     original_afh_pchip = np.asarray([
-        float(r["kernel_original_AFH_M_baseline"]) for r in scan
+        float(r["kernel_AFH_finite_size_M_baseline"]) for r in scan
     ])
     original_afh_coeff = original_afh_pchip / pchip_values["M"]
     original_afh_cheb10 = original_afh_coeff * cheb10_values["M"]
