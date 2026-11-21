@@ -15,7 +15,7 @@ For a target isotope with recoil energy \(E_R\),
 \[
 Q_A^2\equiv |\mathbf q_A|^2=2m_AE_R+E_R^2,
 \qquad
-t_N=-Q_A^2.
+t_N=t_A=-2m_AE_R.
 \]
 
 The same calculation also keeps the invariant transfer in the mediator propagator separate:
@@ -27,7 +27,7 @@ t_A=q_A^2=-2m_AE_R,
 =\frac{1}{(m_V^2+2m_AE_R)^2}.
 \]
 
-Thus \(Q_A^2\) is used for the AFH spatial momentum and the finite nucleon form factors, while \(t_A\) is used in the mediator propagator.
+Thus \(Q_A^2\) is used for the AFH spatial momentum only. The nucleon form factors use \(-t_N=2m_AE_R\), with the formal impulse identification \(t_N=t_A\); the same invariant \(t_A\) enters the mediator propagator.
 
 For universal unit \(u,d,s\) vector coupling, the flavor sum is reconstructed as
 
@@ -41,23 +41,42 @@ F_i^{\mathrm{EM},p}(t_N)
 \right].
 \]
 
-The charge-like NR coefficient used by this B rate-level implementation is
+The charge-like NR coefficient used by this B rate-level implementation is the raw flavor-summed coefficient
 
 \[
-c_M(t_N)=F_1^{uds,N}(t_N)
+c_M^{\rm raw}(t_N)=F_1^{uds,N}(t_N)
 +\frac{t_N}{8m_N^2}
 \left[F_1^{uds,N}(t_N)+2F_2^{uds,N}(t_N)\right].
 \]
 
-Since the equal-coupling pointlike normalization is \(c_M(0)=3\), define
+For the universal unit \(u,d,s\) current, \(F_1^{uds,N}(0)=3\), so
+\(c_M^{\rm raw}(0)=3\). The external coupling convention in this project is
+\(g_{VN}=3g_{Vq}\). Therefore the coefficient paired with the external
+nucleon coupling is normalized as
 
 \[
-F_M(t_N)=\frac{c_M(t_N)}{3},
+\widehat c_M(t_N)\equiv F_M(t_N)
+=\frac{c_M^{\rm raw}(t_N)}{3},
 \qquad
-\mathcal C_N(Q_A^2)=|F_M(t_N)|^2.
+g_{Vq}c_M^{\rm raw}=g_{VN}\widehat c_M.
 \]
 
-Each isotope's already-computed three-body rate contribution is multiplied by \(\mathcal C_N\), then the natural-xenon sum is reconstructed. The finite-size AFH \(W_M(y_A)\) response is retained unchanged; it is not replaced by a point-nucleus response.
+The rate multiplier is
+
+\[
+\mathcal C_N(t_N)=|\widehat c_M(t_N)|^2=|F_M(t_N)|^2.
+\]
+
+Thus \(c_M^{\rm raw}(0)=3\), while \(\widehat c_M(0)=F_M(0)=1\).
+The factor three is counted exactly once: do not combine the already
+three-valence-quark-normalized coupling \(g_{VN}\) with the unnormalized
+\(c_M^{\rm raw}\).
+
+Each isotope's already-computed three-body rate contribution is multiplied
+by \(\mathcal C_N\), then the natural-xenon sum is reconstructed. The finite-size
+AFH \(W_M(y_A)\) response is retained unchanged; it is not replaced by a
+point-nucleus response. The full derivation and naming convention are in
+[CM_RAW_NORMALIZATION_AND_AFH_M_RESPONSE.md](CM_RAW_NORMALIZATION_AND_AFH_M_RESPONSE.md).
 
 ## Electromagnetic proton and neutron inputs
 
@@ -102,7 +121,7 @@ This postprocessor uses the isotope-level CSV from the seven-isotope halo workfl
 
 ## Applying B to the archived absolute AFH-7/Hybrid-9 spectra
 
-The absolute-spectrum postprocessor reconstructs the published A spectrum from the isotope-resolved three-body kernels before applying B. It requires the reconstructed A spectrum to close against the archived natural-xenon A spectrum at relative tolerance \(2\times10^{-11}\).
+The absolute-spectrum postprocessor reconstructs the archived leading-order P0 spectrum from the isotope-resolved three-body kernels before applying B. It requires the reconstructed P0 spectrum to close against the archived natural-xenon P0 spectrum at relative tolerance \(2\times10^{-11}\).
 
     for model in sufian2017_unit_current alexandrou2020_charge_weighted_converted alexandrou2026_continuum_unit_current; do
       python research/nucleon_form_factor_B_baseline/apply_B_to_afh_hybrid9_continuous_spectrum.py \
@@ -118,7 +137,7 @@ It writes:
 - metadata.json
 - SHA256SUMS.txt
 
-The isotope output records \(Q_A^2\), \(t_N\), \(t_A\), \(c_M\), \(F_M\), and the individual A/B rate contributions. The metadata records the exact source-file hashes and the electromagnetic covariance sampling seed.
+The isotope output records \(Q_A^2\), \(t_N\), \(t_A\), \(c_M\), \(F_M\), and the individual P0/B rate contributions. The metadata records the exact source-file hashes and the electromagnetic covariance sampling seed.
 
 ## LZ 2026 efficiency fold
 
@@ -143,9 +162,55 @@ The detector fold reports the central B event yield. The separate covariance pro
       --out-dir results/B-detector-covariance/sufian2017_unit_current \
       --strange-model sufian2017_unit_current --draws 3000
 
+## P0 versus P: pointlike Dirac nucleon precision levels
+
+The raw-versus-normalized coefficient convention and its relation to the external coupling and AFH (W_M) are fixed in [CM_RAW_NORMALIZATION_AND_AFH_M_RESPONSE.md](CM_RAW_NORMALIZATION_AND_AFH_M_RESPONSE.md).
+
+P0 and P use the same pointlike Dirac form factors, \(\widehat F_1=1\) and \(\widehat F_2=0\). Their difference is the matching order:
+
+\[
+\widehat c_M^{P0}=F_M^{P0}=1,\qquad
+\widehat c_M^P=F_M^P=1+\frac{t_N}{8m_N^2}
+=1-\frac{Q_N^2}{8m_N^2},\qquad c_M^{\rm raw}=3\widehat c_M.
+\]
+
+P0 is the archived leading-order charge-only spectrum. P retains the finite-transfer correction in the current M-only charge matching prescription. Both retain the same finite-size AFH \(W_M\), three-body/halo kernels and isotope sum. Thus P0 is the leading-order approximation to P, not a different nucleon-structure model.
+
+The detailed derivation, momentum-transfer definitions, fixed-isotope rate ratio, natural-xenon folding, Xe-131 numerical check and detector-level comparison are recorded in [P0_VS_P_POINTLIKE_DIRAC_BASELINES.md](P0_VS_P_POINTLIKE_DIRAC_BASELINES.md). The full four-level P0/P/A0/B numerical comparison remains in [POINTLIKE_NUCLEON_P_A_B_COMPARISON.md](POINTLIKE_NUCLEON_P_A_B_COMPARISON.md).
+
+## Four-level P0/P/A0/B nucleon-current comparison
+
+The original PR85 source spectrum labelled A is the leading-order charge-only reference P0:
+\[
+\widehat F_1=1,\qquad \widehat F_2=0,\qquad \widehat c_M=F_M=1 \ (c_M^{\rm raw}=3).
+\]
+It is not the zero-transfer Dirac–Pauli approximation.
+
+The four comparisons are:
+
+- P0: archived leading-order charge-only rate, \(\widehat c_M=F_M=1\) (raw \(c_M^{\rm raw}=3\)).
+- P: pointlike Dirac nucleon, \(\widehat F_1=1\), \(\widehat F_2=0\), retaining the finite-transfer recoil matching term.
+- A0: freeze \(\widehat F_1(0)=1\) and the model-specific \(\widehat F_2(0)\), while retaining the actual recoil matching term.
+- B: finite-momentum Borah proton/neutron Dirac–Pauli form factors plus the selected unit-strange-current input.
+
+All four retain the same finite-size AFH \(W_M(y_A)\) response and the same three-body/halo kernels. The formal impulse prescription is \(t_N=t_A=-2m_AE_R\); \(Q_A^2=2m_AE_R+E_R^2\) remains the AFH spatial Fourier variable.
+
+See [POINTLIKE_NUCLEON_P_A_B_COMPARISON.md](POINTLIKE_NUCLEON_P_A_B_COMPARISON.md) for the formulas, detector-level event yields, three strange-current scenarios, AFH-7/Hybrid-9 comparison, and numerical interpretation.
+
+Run the calculation with:
+
+~~~bash
+python research/nucleon_form_factor_B_baseline/compare_pointlike_A_B_nucleon_baselines.py \
+  --source-dir research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14 \
+  --efficiency-csv research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv \
+  --out-dir results/nucleon-P0-P-A0-B
+~~~
+
+The workflow [.github/workflows/pointlike-nucleon-A-P-B.yml](../../.github/workflows/pointlike-nucleon-A-P-B.yml) runs the regression suite and uploads the four-baseline spectra and detector yields.
+
 ## Validation and scope
 
-Regression tests cover zero-momentum normalization, Sachs-to-Dirac/Pauli conversion, the \(z\)-expansion sum rules, covariance properties, strange-current conventions, magnetic-radius normalization, exact A-spectrum closure, isotope-level B multiplication, and natural-xenon resummation.
+Regression tests cover zero-momentum normalization, Sachs-to-Dirac/Pauli conversion, the \(z\)-expansion sum rules, covariance properties, strange-current conventions, magnetic-radius normalization, exact P0-spectrum closure, model-dependent \(\widehat F_2(0)\) inputs, four-level P0/P/A0/B spectra, isotope-level B multiplication, and natural-xenon resummation.
 
 This stage includes finite nucleon \(F_1,F_2\), the finite-size AFH \(W_M\) response, the three-body/halo spectrum, and the LZ NR efficiency fold. It does not include additional AFH responses such as \(W_{\Phi''}\) or \(W_{M\Phi''}\), energy-resolution smearing, S1c/\(\log_{10}S2_c\) signal PDFs, background likelihood, or a confidence-level exclusion.
 
