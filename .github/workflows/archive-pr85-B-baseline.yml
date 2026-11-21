@@ -1,0 +1,194 @@
+name: Archive PR85 finite-nucleon B and LZ detector outputs
+
+on:
+  push:
+    branches:
+      - research/nucleon-form-factor-B-baseline-20261120
+    paths:
+      - research/artifact_archives/requests/lz-pr85-B-2026-11-20.json
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: lz-pr85-B-archive
+  cancel-in-progress: false
+
+jobs:
+  archive-native-results:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Check out PR85 integration branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Download pinned source artifact and provenance
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPOSITORY: ${{ github.repository }}
+          RUNNER_TEMP: ${{ runner.temp }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          import pathlib
+          import subprocess
+          import shutil
+
+          root = pathlib.Path.cwd()
+          request_path = root / "research/artifact_archives/requests/lz-pr85-B-2026-11-20.json"
+          request = json.loads(request_path.read_text(encoding="utf-8"))
+          repo = os.environ["GH_REPOSITORY"]
+          token = os.environ["GH_TOKEN"]
+          meta_dir = pathlib.Path(os.environ["RUNNER_TEMP"]) / "lz-pr85-B-metadata"
+          meta_dir.mkdir(parents=True, exist_ok=True)
+
+          def curl_json(url, destination):
+              subprocess.run([
+                  "curl", "--fail", "--silent", "--show-error", "--location",
+                  "-H", "Accept: application/vnd.github+json",
+                  "-H", f"Authorization: Bearer {token}",
+                  "-H", "X-GitHub-Api-Version: 2022-11-28",
+                  url, "-o", str(destination)
+              ], check=True)
+
+          def download_artifact(url, destination):
+              headers = destination.with_suffix(destination.suffix + ".headers")
+              subprocess.run([
+                  "curl", "--silent", "--show-error", "--dump-header", str(headers),
+                  "--output", "/dev/null",
+                  "-H", "Accept: application/vnd.github+json",
+                  "-H", f"Authorization: Bearer {token}",
+                  "-H", "X-GitHub-Api-Version: 2022-11-28",
+                  url
+              ], check=True)
+              location = ""
+              for line in headers.read_text(encoding="utf-8", errors="replace").splitlines():
+                  if line.lower().startswith("location:"):
+                      location = line.split(":", 1)[1].strip()
+              headers.unlink(missing_ok=True)
+              if not location:
+                  raise RuntimeError(f"No artifact download redirect returned for {url}")
+              destination.parent.mkdir(parents=True, exist_ok=True)
+              subprocess.run([
+                  "curl", "--fail", "--silent", "--show-error", "--location",
+                  location, "--output", str(destination)
+              ], check=True)
+
+          archive = root / request["archive_directory"]
+          if archive.exists():
+              extracted = archive / "extracted"
+              if extracted.exists():
+                  shutil.rmtree(extracted)
+          archive.mkdir(parents=True, exist_ok=True)
+
+          curl_json(
+              f"https://api.github.com/repos/{repo}/actions/runs/{request['run_id']}",
+              meta_dir / "source_run.json",
+          )
+          curl_json(
+              f"https://api.github.com/repos/{repo}/actions/artifacts/{request['artifact_id']}",
+              meta_dir / "source_artifact.json",
+          )
+          zip_path = archive / "source-artifact-pr85.zip"
+          download_artifact(
+              f"https://api.github.com/repos/{repo}/actions/artifacts/{request['artifact_id']}/zip",
+              zip_path,
+          )
+
+          extracted = archive / "extracted"
+          if extracted.exists():
+              shutil.rmtree(extracted)
+          extracted.mkdir(parents=True, exist_ok=True)
+          subprocess.run(["unzip", "-oq", str(zip_path), "-d", str(extracted)], check=True)
+
+          source_code = archive / "source-code"
+          source_inputs = archive / "source-inputs"
+          for directory in (source_code, source_inputs):
+              if directory.exists():
+                  shutil.rmtree(directory)
+              directory.mkdir(parents=True, exist_ok=True)
+
+          code_files = {
+              "borah2020_lowq2.py": "research/nucleon_form_factor_B_baseline/borah2020_lowq2.py",
+              "apply_nucleon_form_factors_B.py": "research/nucleon_form_factor_B_baseline/apply_nucleon_form_factors_B.py",
+              "apply_B_to_afh_hybrid9_continuous_spectrum.py": "research/nucleon_form_factor_B_baseline/apply_B_to_afh_hybrid9_continuous_spectrum.py",
+              "propagate_B_covariance_to_lz_yields.py": "research/nucleon_form_factor_B_baseline/propagate_B_covariance_to_lz_yields.py",
+              "compare_B_quadrature.py": "research/nucleon_form_factor_B_baseline/compare_B_quadrature.py",
+              "strange_current_convention_audit.md": "research/nucleon_form_factor_B_baseline/strange_current_convention_audit.md",
+              "test_borah2020_lowq2.py": "research/nucleon_form_factor_B_baseline/test_borah2020_lowq2.py",
+              "test_apply_nucleon_form_factors_B.py": "research/nucleon_form_factor_B_baseline/test_apply_nucleon_form_factors_B.py",
+              "test_apply_B_to_afh_hybrid9_continuous_spectrum.py": "research/nucleon_form_factor_B_baseline/test_apply_B_to_afh_hybrid9_continuous_spectrum.py",
+              "test_propagate_B_covariance_to_lz_yields.py": "research/nucleon_form_factor_B_baseline/test_propagate_B_covariance_to_lz_yields.py",
+              "fold_lz_2026_afh_hybrid9_rate_level.py": "research/three_body_calculation_and_validation/fold_lz_2026_afh_hybrid9_rate_level.py",
+          }
+          input_files = {
+              "borah2020_parameters.json": "research/nucleon_form_factor_B_baseline/data/borah2020/parameters.json",
+              "borah2020_ELZExpFF.dat": "research/nucleon_form_factor_B_baseline/data/borah2020/ELZExpFF.dat",
+              "lz_2026_nr_efficiency_digitized.csv": "research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv",
+              "lz_2026_nr_efficiency_metadata.json": "research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_metadata.json",
+              "afh_hybrid9_natural_xenon_spectrum.csv": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/afh_hybrid9_natural_xenon_spectrum.csv",
+              "afh_hybrid9_isotope_kernel_integrals.csv": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/afh_hybrid9_isotope_kernel_integrals.csv",
+              "afh_hybrid9_metadata.json": "research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14/metadata.json",
+              "natural_xenon_isotope_weights.csv": "research/afh_default_density_natural_xenon_halo/input/natural_xenon_isotope_weights.csv",
+              "dmformfactor-V6.m": "v6/dmformfactor-V6.m",
+          }
+          for name, rel in code_files.items():
+              shutil.copy2(root / rel, source_code / name)
+          for name, rel in input_files.items():
+              shutil.copy2(root / rel, source_inputs / name)
+
+          print(f"Downloaded source artifact: {zip_path.stat().st_size} bytes")
+          print(f"Extracted members: {sum(1 for p in extracted.rglob('*') if p.is_file())}")
+          print(f"Source code snapshots: {len(code_files)}; input snapshots: {len(input_files)}")
+          readme = archive / "README.md"
+          readme.write_text("""# PR85 finite-nucleon B-baseline archive
+
+          **Status:** native outputs extracted and SHA-256 checked. This is a reproducible rate-level B calculation, not an LZ exclusion.
+
+          - PR: https://github.com/lm846802297-bit/LZ-3-body-for-hdm/pull/85
+          - Source workflow: https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44590382197
+          - Source commit: `f6a01b7735c2373848510657826503484dd118d5`
+          - Artifact ID: `14564076631`; artifact digest is pinned in the request JSON.
+
+          The B baseline applies finite nucleon Dirac-Pauli form factors at (t_N=-Q_A^2), with (Q_A^2=2m_AE_R+E_R^2), while preserving the finite-size AFH (W_M(y_A)) response. The mediator propagator uses the separate invariant transfer (t_A=-2m_AE_R).
+
+          The detector fold uses the LZ 2026 Fig. S2 NR efficiency, 2.84 tonne-year exposure, and 5.4--269.9 keV ROI. The Borah 2020 proton/neutron coefficient covariance is propagated with 3000 correlated draws (seed 20261119), preserving correlations across recoil energies and isotopes.
+
+          The detector-level output does not include energy-resolution smearing, a two-dimensional S1c/log10(S2c) signal PDF, background likelihood, profile likelihood, or a confidence-level exclusion. Strange-lattice uncertainty and the LZ gray efficiency envelope are not sampled.
+
+          """, encoding="utf-8")
+          PY
+
+      - name: Validate numerical outputs and generate run manifest
+        env:
+          RUNNER_TEMP: ${{ runner.temp }}
+        run: |
+          python research/artifact_archives/build_pr85_B_archive.py \
+            --metadata-dir "$RUNNER_TEMP/lz-pr85-B-metadata"
+
+      - name: Verify complete archive checksum list
+        run: |
+          set -euo pipefail
+          cd research/nucleon_form_factor_B_baseline/results/2026-11-20-B-baseline-PR85
+          sha256sum -c SHA256SUMS
+
+      - name: Commit PR85 native outputs and provenance
+        env:
+          TARGET_BRANCH: ${{ github.ref_name }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/nucleon_form_factor_B_baseline/results/2026-11-20-B-baseline-PR85
+          if git diff --cached --quiet; then
+            echo "No archive changes to commit."
+            exit 0
+          fi
+          git commit -m "Archive PR85 finite-nucleon B outputs"
+          git push origin "HEAD:${TARGET_BRANCH}"
