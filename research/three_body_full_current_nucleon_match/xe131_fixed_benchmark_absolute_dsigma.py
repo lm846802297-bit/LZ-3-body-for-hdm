@@ -388,7 +388,7 @@ def run(
     # PCHIP gives 0.6056675913. The previous 0.6056496631 anchor was the
     # coarse-grid interpolation value.
     expected_charge_ratios = {
-        200.0: 0.7376302304925361,
+        200.0: 0.7376302305280606,
         267.0: 0.605667591295857,
     }
     ratio_checks = []
