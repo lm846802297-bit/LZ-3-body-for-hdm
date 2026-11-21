@@ -41,22 +41,15 @@ jobs:
           python -m unittest discover \
             -s research/three_body_full_current_nucleon_match \
             -p 'test_xe131_fixed_speed_charge_dsigma.py' -v
-      - name: Integrate fixed-speed Xe-131 charge sector with low-Q2 and z-exp form factors
+      - name: Integrate fixed-speed Xe-131 charge sector with the adopted B baseline
         run: |
           python research/three_body_full_current_nucleon_match/xe131_fixed_speed_charge_dsigma.py \
             --afh-csv afh-native/research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_native.csv \
-            --form-factor bishara_linear \
             --out /tmp/xe131-fixed-speed-charge-dsigma-bishara-linear.json
-          python research/three_body_full_current_nucleon_match/xe131_fixed_speed_charge_dsigma.py \
-            --afh-csv afh-native/research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_native.csv \
-            --form-factor isoscalar_zexp \
-            --out /tmp/xe131-fixed-speed-charge-dsigma-isoscalar-zexp.json
       - name: Upload reproducible numerical result
         uses: actions/upload-artifact@v4
         with:
           name: xe131-fixed-speed-charge-sector-dsigma-ratio
-          path: |
-            /tmp/xe131-fixed-speed-charge-dsigma-bishara-linear.json
-            /tmp/xe131-fixed-speed-charge-dsigma-isoscalar-zexp.json
+          path: /tmp/xe131-fixed-speed-charge-dsigma-bishara-linear.json
           if-no-files-found: error
           retention-days: 90
