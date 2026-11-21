@@ -1,0 +1,31 @@
+{
+  "atol": 2e-10,
+  "interpolation": "none; exact q-grid match required",
+  "mathematica_csv_sha256": "1c13d56ae1a8cb4abe7720ccb0f76d9a595d52e28b7f4e4b5179f72d65bbf254",
+  "passed": true,
+  "points": 2401,
+  "python_csv_sha256": "eeb29e778cc9976cd2fddab2f770eb169d6ee4345ac377179e8370a8b8b43929",
+  "q_grid_match": "exact node equality after rounding both grids to the Python CSV 8-decimal precision; no interpolation",
+  "q_grid_max_abs_difference_GeV": 1.1102230246251565e-16,
+  "responses": {
+    "W_M00_AFH": {
+      "max_abs_difference": 1.5916157281026244e-12,
+      "max_scaled_difference": 3.796289278999827e-09,
+      "passed": true,
+      "worst_q_GeV": 0.2565
+    },
+    "W_MPhiPP_AFH": {
+      "max_abs_difference": 3.694822225952521e-13,
+      "max_scaled_difference": 9.047744923272576e-10,
+      "passed": true,
+      "worst_q_GeV": 0.36425
+    },
+    "W_PhiPP_AFH": {
+      "max_abs_difference": 9.947598300641403e-14,
+      "max_scaled_difference": 3.5167769109819346e-11,
+      "passed": true,
+      "worst_q_GeV": 0.42025
+    }
+  },
+  "rtol": 2e-08
+}

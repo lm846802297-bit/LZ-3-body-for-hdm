@@ -9,6 +9,7 @@
 ## 研究文档入口
 
 - [AFH Xe-131 核响应、三体散射与天然氙反冲率主报告](research/docs/09_afh_xe131_three_body_scattering_natural_xenon.md)：完整正文及正式附录 A–H。
+- [VV 核子流匹配与 Xe-131 \\(W_{\\Phi''}\\) 响应审计](research/afh_vv_phi_xe131/README.md)：AFH 自旋—轨道响应、质量—轨道干涉、2401 点数值结果及三体振幅匹配边界。
 - [研究文档索引](research/docs/README.md)：主报告、独立附录、公式索引和补充记录。
 - [公式—符号—正文—程序—结果交叉引用](research/docs/formula_symbol_code_cross_reference.md)：F1–F12 公式、单位、程序入口、输出和适用边界。
 - [研究目录索引](research/README.md)：各专题的内容和科学状态。

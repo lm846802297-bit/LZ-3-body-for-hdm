@@ -1,0 +1,72 @@
+{
+  "precision_digits": 60,
+  "points": 4,
+  "records": [
+    {
+      "q_MeV": 157.93577836052026,
+      "mp_dps": 60,
+      "rank_amplitudes": {
+        "0": {
+          "mpmath": "-0.9551904019773734334822295",
+          "scipy_double": "-0.9551904019773714",
+          "relative_difference": "2.12887632167e-15"
+        },
+        "2": {
+          "mpmath": "0.06215881957784178073904436",
+          "scipy_double": "0.06215881957784176",
+          "relative_difference": "3.33646045713e-16"
+        }
+      }
+    },
+    {
+      "q_MeV": 256.27186761670686,
+      "mp_dps": 60,
+      "rank_amplitudes": {
+        "0": {
+          "mpmath": "0.1983672304522195884582383",
+          "scipy_double": "0.19836723045222",
+          "relative_difference": "2.07464590169e-15"
+        },
+        "2": {
+          "mpmath": "0.02805035001530448151583184",
+          "scipy_double": "0.028050350015304475",
+          "relative_difference": "2.32290571813e-16"
+        }
+      }
+    },
+    {
+      "q_MeV": 365.066569451198,
+      "mp_dps": 60,
+      "rank_amplitudes": {
+        "0": {
+          "mpmath": "-0.04292685481190471490408767",
+          "scipy_double": "-0.04292685481190467",
+          "relative_difference": "1.04606051082e-15"
+        },
+        "2": {
+          "mpmath": "0.009032387971767578835895206",
+          "scipy_double": "0.009032387971767584",
+          "relative_difference": "5.7173195059e-16"
+        }
+      }
+    },
+    {
+      "q_MeV": 499.37188567194676,
+      "mp_dps": 60,
+      "rank_amplitudes": {
+        "0": {
+          "mpmath": "0.007863021797162745801438888",
+          "scipy_double": "0.007863021797162736",
+          "relative_difference": "1.24652317403e-15"
+        },
+        "2": {
+          "mpmath": "0.001072564961197309483019468",
+          "scipy_double": "0.0010725649611973101",
+          "relative_difference": "5.75238381473e-16"
+        }
+      }
+    }
+  ],
+  "max_relative_difference": 2.12887632167e-15,
+  "note": "Independent mpmath hypergeometric and 60-digit Wigner-symbol evaluation at the four archived mass-response minima."
+}

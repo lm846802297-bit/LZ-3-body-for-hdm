@@ -1,0 +1,85 @@
+name: AFH Xe-131 VV Phi-double-prime reproduction
+
+concurrency:
+  group: afh-vv-phi-xe131-reproduce
+  cancel-in-progress: false
+
+on:
+  push:
+    branches:
+      - research/vv-phi-xe131-audit-20261118
+    paths:
+      - 'research/afh_vv_phi_xe131/**'
+      - 'research/afh_default_density_xe131/input/afh_default_xe131_density_matrix.csv'
+      - 'research/afh_default_density_xe131/output/minima.csv'
+      - 'research/afh_default_density_xe131/output/afh_default_xe131_WM00.csv'
+      - 'v6/dmformfactor-V6.m'
+
+permissions:
+  contents: write
+
+jobs:
+  reproduce:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out research branch
+        uses: actions/checkout@v4
+        with:
+          ref: research/vv-phi-xe131-audit-20261118
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: pip
+          cache-dependency-path: research/afh_vv_phi_xe131/requirements.txt
+
+      - name: Install numerical dependencies
+        run: python -m pip install -r research/afh_vv_phi_xe131/requirements.txt
+
+      - name: Reproduce 2401-point AFH response grid
+        run: python research/afh_vv_phi_xe131/afh_vv_phi_xe131.py
+
+      - name: Compare native Mathematica AFH responses pointwise
+        run: |
+          python research/afh_vv_phi_xe131/compare_native_phi_xe131.py \
+            --python-csv research/afh_vv_phi_xe131/output/afh_vv_phi_xe131_full_grid.csv \
+            --mathematica-csv research/afh_vv_phi_xe131/output/native_mathematica/afh_vv_phi_xe131_native.csv \
+            --output research/afh_vv_phi_xe131/output/native_mathematica/comparison.json
+
+      - name: Refresh run manifest with native comparison result
+        run: python research/afh_vv_phi_xe131/afh_vv_phi_xe131.py
+
+      - name: Compute M plus Phi-double-prime charge-sector benchmark
+        run: |
+          python research/afh_vv_phi_xe131/phi_charge_response_match.py \
+            --grid research/afh_vv_phi_xe131/output/afh_vv_phi_xe131_full_grid.csv \
+            --selected research/afh_vv_phi_xe131/output/afh_vv_phi_xe131_selected_points.csv \
+            --outdir research/afh_vv_phi_xe131/output/
+
+      - name: Compile charge-matching code
+        run: |
+          python -m py_compile \
+            research/afh_vv_phi_xe131/phi_charge_response_match.py \
+            research/afh_vv_phi_xe131/tests/test_phi_charge_response_match.py
+
+      - name: Run regression tests
+        run: python -m unittest discover -s research/afh_vv_phi_xe131/tests -v
+
+      - name: Run 60-digit mpmath spot checks
+        run: python research/afh_vv_phi_xe131/verify_phi_mpmath.py
+
+      - name: Archive native numerical outputs on the research branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add research/afh_vv_phi_xe131/output/
+          if git diff --cached --quiet; then
+            echo "No generated output changes to archive."
+          else
+            git commit -m "Archive Xe-131 Phi-double-prime response grid"
+            git fetch origin research/vv-phi-xe131-audit-20261118
+            git rebase origin/research/vv-phi-xe131-audit-20261118
+            git push origin HEAD:research/vv-phi-xe131-audit-20261118
+          fi
