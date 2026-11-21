@@ -1,0 +1,67 @@
+[
+  {
+    "path": "research/afh_full_response_database/run_afh_full_response_database.py",
+    "sha": "592334e17731278a397cc7a09bd4af7bfe00094b",
+    "bytes": 14699
+  },
+  {
+    "path": "research/afh_full_response_database/validate_afh_full_response_database.py",
+    "sha": "6a5919216788415a5939e11513b96642a6b27ad3",
+    "bytes": 8573
+  },
+  {
+    "path": "research/afh_full_response_database/compare_native_afh_full_response.py",
+    "sha": "9b858cafff6d33dcce95637d914e2b77ab17d2d6",
+    "bytes": 5383
+  },
+  {
+    "path": "research/afh_full_response_database/run_afh_full_response_database.wls",
+    "sha": "efffa3876fc61adfc3c80ea8e5f81296623a18ad",
+    "bytes": 2943
+  },
+  {
+    "path": "research/afh_default_density_xe131/run_afh_spatial_response_audit.py",
+    "sha": "5280eb8844fcb562e783a9f74860aedd4a7f7a4e",
+    "bytes": 14129
+  },
+  {
+    "path": "research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices/afh_default_xe128_density_matrix.csv",
+    "sha": "74904ec6f3419624cfd8092385da9374bc1065b4",
+    "bytes": 564
+  },
+  {
+    "path": "research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices/afh_default_xe129_density_matrix.csv",
+    "sha": "400ba5f474bd8e84784852f942d04589ebf3dc30",
+    "bytes": 1070
+  },
+  {
+    "path": "research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices/afh_default_xe130_density_matrix.csv",
+    "sha": "38ebca82063c8814d9d5e0179a431383eb64eb00",
+    "bytes": 567
+  },
+  {
+    "path": "research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices/afh_default_xe131_density_matrix.csv",
+    "sha": "6b0e59f96c9712fea28495f35dc0401cd4e3fa6c",
+    "bytes": 1815
+  },
+  {
+    "path": "research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices/afh_default_xe132_density_matrix.csv",
+    "sha": "d4ca727a96c0d493bff96336a2fa4e6ae304f1ae",
+    "bytes": 565
+  },
+  {
+    "path": "research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices/afh_default_xe134_density_matrix.csv",
+    "sha": "9a3e71561e04a4ecc77af6764601d6ae010aa853",
+    "bytes": 577
+  },
+  {
+    "path": "research/afh_default_density_natural_xenon_halo/input/afh_default_density_matrices/afh_default_xe136_density_matrix.csv",
+    "sha": "0ef0ec7ed4362e02e3533e1ba0a3aa934b7cecdf",
+    "bytes": 588
+  },
+  {
+    "path": "v6/dmformfactor-V6.m",
+    "sha": "91b43b1a4596bebd6073ecd44c0c9464e5dd0c63",
+    "bytes": 94031
+  }
+]

@@ -1,0 +1,178 @@
+{
+  "3body_for_HDM.zip": {
+    "bytes": 582387,
+    "sha256": "658d9a3972e416128d30759d3963efbd417629bb3462092e7ef1c4c06a366f50"
+  },
+  "3body_for_HDM.pdf": {
+    "bytes": 781210,
+    "sha256": "978c35cf0f8a220ffb6f60a18cf4ccd9f1c52221db3b2ed0c3f66ecec21e83fd"
+  },
+  "DM_signal_v2.pdf": {
+    "bytes": 61759,
+    "sha256": "ab3e375a2803db8860b9de46fa9a1d66b53bcc1d0e8f00a0a78ab10e1aa0d984"
+  },
+  "ZIP_members": {
+    "main.tex": "a05f68e76bf87a7a3f06c12d47840137dbdf252d046e5c5c4847e31e92ce5a94",
+    "figures/3_body_contour_ms_deltam_1.pdf": "bd8616c441074030fefdeb3b3154d92e507cdb206476c6382fdd1504715eff0c",
+    "figures/3_body_contour_ms_coupling_2.pdf": "d87ff3d86ecc450e627f1fef0dbb026e284cc7af803b102ae1bccef105f43edd",
+    "figures/DM_signal_v2.pdf": "ab3e375a2803db8860b9de46fa9a1d66b53bcc1d0e8f00a0a78ab10e1aa0d984",
+    "figures/ratio_supp.pdf": "f40cf8a45c48baaa9d102bad573fce6d89d5c5e3d9df9dadb02677a770c0854d",
+    "figures/fixed_speed_recoil_spectra_v2.pdf": "9eb61ea4dc77c6a23af29aa1d2887b692488daa9e997d59f0c7aea28c8be9df1",
+    "figures/fixed_speed_recoil_spectra.pdf": "2d093b7c9906eaf15c6f6cd157668b6de0111fc873007f14187524ed4e95b294",
+    "figures/DM_signal.pdf": "3b8117cbeb12fcac51d3fb85c1a5c421022cc05bc202ebb1ebd4cbd7a1d410fe",
+    "figures/3_body_contour_ms_deltam_2.pdf": "4fa6eb0f1750310dba256750f70b88368f6b61cb73926577c573c05d77a1e6ed",
+    "figures/3_body_contour_ms_coupling_1.pdf": "88044dd57d06ada3cf465650157d6a13dca784d25a68d8d0675d72a351960d08",
+    "figures/LZ_3body_DM_signal.pdf": "9907d8fceca7fc98bb5267bfdcf0991b386854ad98e73fee913faa36d06ec2a0",
+    "figures/LZ_3body_DM_signal_2.pdf": "37e09180b70a2a160fcac7dd617443efc25bc11d359a4b182e40e7d012e7d91b",
+    "ref.bib": "b73d33d3f3ca84d7a2353e9aa3f08ef22397fa3ba3b6811b6b1ea35ce35e2dbe",
+    "utphys28mod.bst": "60d7cf6ab83ae2d63aa14e84f96459289b4747cbc58ae4cd90d6302721b6ca78"
+  },
+  "paper_pages": 19,
+  "fig3_page": 4,
+  "identical_form_stream_bytes": 185717,
+  "identical_form_stream_sha256": "a989d303d242770dc84097795976e4dd88858bb26492fa5f409066b0fed91435",
+  "embedded_path_residual_pt": {
+    "red": 1.591356323160653e-05,
+    "blue": 1.5726920082670404e-05,
+    "ratio": 3.22089882729415e-05,
+    "elastic": 1.835269796401917e-05
+  },
+  "earlier_figure_sha256": "4f8d91b56dc504ea0d1f32ce4ae617de3d6887add9199f7aa44db91a9ee49c97",
+  "supplied": {
+    "red_vertices": 393,
+    "blue_vertices": 538,
+    "ratio_vertices": 386,
+    "ratio_at_248_from_spectra": 1.6041753252331115,
+    "ratio_at_248_from_lower_panel": 1.6046001742194018,
+    "visible_red_area": 10.876548565389346,
+    "visible_blue_area": 9.479088748448124,
+    "common_interval_keV": [
+      90.99616867737352,
+      796.0016460408278
+    ],
+    "red_over_blue_area_on_common_interval": 1.1474258099160584
+  },
+  "earlier": {
+    "red_vertices": 393,
+    "blue_vertices": 542,
+    "ratio_vertices": 391,
+    "ratio_at_248_from_spectra": 1.3969470004953752,
+    "ratio_at_248_from_lower_panel": 1.396464014614578,
+    "visible_red_area": 10.876548565389346,
+    "visible_blue_area": 10.891293299590565,
+    "common_interval_keV": [
+      90.99616867737352,
+      796.0016460408278
+    ],
+    "red_over_blue_area_on_common_interval": 0.9986464220131913
+  },
+  "red_vertices_identical": true,
+  "elastic_vertices_identical": true,
+  "poppler_raster_check": {
+    "axis_px": [
+      391,
+      2148,
+      48,
+      1452
+    ],
+    "red": {
+      "measured_x_columns": 1540,
+      "visible_keV": [
+        90.15367103016506,
+        797.2680705748435
+      ],
+      "area": 10.814709237663381
+    },
+    "blue": {
+      "measured_x_columns": 1086,
+      "visible_keV": [
+        86.96642003414912,
+        798.1787137165624
+      ],
+      "area": 9.326423483051572
+    },
+    "red_over_blue_area": 1.1595773296501488
+  },
+  "new_over_earlier_blue_120_700_keV": {
+    "median": 0.8702462634597443,
+    "percentile_1_99": [
+      0.8701337398235937,
+      0.8707710933274222
+    ]
+  },
+  "new_ratio_unity_crossings_keV": [
+    171.24478448274343,
+    604.2047828526722
+  ],
+  "endpoints": {
+    "all_nine_union_keV": [
+      100.88747618290071,
+      702.8929830312167
+    ],
+    "least_speed_at_750_km_s": 787.7481968927505,
+    "paper_density_at_750_events_per_keV": 1.35439537094994e-07,
+    "visible_events_below_support": 1.9342634760839386e-05,
+    "visible_events_above_support": 6.316320618911559e-05,
+    "first_last_plotted_red_points": [
+      {
+        "ER_keV": 90.99616867737352,
+        "events_per_keV": 2.418915933287601e-08,
+        "min_required_speed_km_s": 795.076772105989
+      },
+      {
+        "ER_keV": 796.0016460408278,
+        "events_per_keV": 8.218991142893069e-12,
+        "min_required_speed_km_s": 799.2580969860468
+      }
+    ]
+  },
+  "halo_pdf_integral": 1.0000000000000036,
+  "pole_width_MeV": 4.733651656458141,
+  "benchmark": {
+    "mchi_GeV": 1000.0,
+    "mV_GeV": 5.0,
+    "ms_keV": 300.0,
+    "gap_MeV": 10.0,
+    "g1": 0.1,
+    "g2": 1.725,
+    "gVN": 0.04857,
+    "rho_GeV_cm3": 0.3,
+    "exposure_kg_day": 1037310.0,
+    "v0_vesc_vlab_km_s": [
+      220.0,
+      544.0,
+      232.0
+    ],
+    "efficiency": 1
+  },
+  "environment": {
+    "python": "3.14.7 (tags/v3.14.7:823f032, Aug  5 2026, 10:51:32) [MSC v.1944 64 bit (AMD64)]",
+    "platform": "Windows-11-10.0.26300-SP0",
+    "cpu": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+    "scipy": "1.18.1",
+    "numpy": "2.5.4",
+    "pymupdf": "1.28.2",
+    "pandas": "3.1.1",
+    "pillow": "12.3.0",
+    "poppler": "pdftoppm version 26.07.0"
+  },
+  "source_commit": "4541f1ab07ec017bd41924e69870a4124b1b0053",
+  "shared_or_archived_inputs": {
+    "research/afh_default_density_xe131/output/ame2020_exact_spatial_xe131_partial/xenon_isotope_ame2020_masses.csv": "81502f862963ac47e582fc17a49a97e8d9610fca1242be52bc8d14f602b9138f",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/event_counts/output/recoil_curves/manuscript_window_comparison.csv": "5de1c8d06c977ec58e33cdf3856c0690a16b64e6908f31d6c27e02f346393754",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/event_counts/output/recoil_curves/recoil_event_spectra.csv": "e8ca2f0ae78986e3d24a0de627a3751e48cdbd3c8e21605341cca4b28058ad7a",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/inputs/afh_v6/native/afh_v6_xe128_eight_response_native.csv": "7c492562fca01cdfd2a185e671755c84b04bf6b5e34cc1a313f8e76b628a8abb",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/inputs/afh_v6/native/afh_v6_xe129_eight_response_native.csv": "80684a3f1201bc312c1c60af3b5b263e1480ab5a05874743a738cce9b86dc532",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/inputs/afh_v6/native/afh_v6_xe130_eight_response_native.csv": "36534761e2b061e4e3cff14d3f3ec0f679f68fa3455f8596e23a654f21cbe44a",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/inputs/afh_v6/native/afh_v6_xe131_eight_response_native.csv": "585ab0f483be0d8131566cefc4cb420c6db7e07bebbcd2b887da568cda2f4ffb",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/inputs/afh_v6/native/afh_v6_xe132_eight_response_native.csv": "7f03e4a14c1e646e624b2d53f8c5ca42f0538c45f4670c524d9a1e39fe8d768e",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/inputs/afh_v6/native/afh_v6_xe134_eight_response_native.csv": "031b30c6b7b0e9e720b155979fc7c9ab37665303e7c9fbf8678bde78f39f3885",
+    "research/response_comparison_four_benchmarks/natural_xenon_halo/inputs/afh_v6/native/afh_v6_xe136_eight_response_native.csv": "c00ec4ce6c55fd7fa925a2bf2c3436057a3f54ad31710e1c8f555d7622c7dea4"
+  },
+  "local_numerical_outputs": {
+    "all_isotope_thresholds.csv": "d5a2a818d8959728fab1bfc3504d59c6cf006d93c247c9882920d183e67af6b1",
+    "figure_vertices.csv": "20fd2c0fed51b487e8226d5ba08fb471860f7736eb7682d2fd6488bc411dbc45",
+    "independent_absolute_points.csv": "79f47c8ec0a9a5fe6bcaca64d6aceb5248a44b802a7a03baf9dbc88d58580683",
+    "windows.csv": "74eb0c549e4c1b3f9864a616cd4fc44f848a6a364f416c96cda3cfc6137dec77"
+  }
+}
