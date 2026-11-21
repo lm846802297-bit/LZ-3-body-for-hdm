@@ -4,41 +4,110 @@
   "baseline_branch": "main",
   "baseline_commit": "d2407050ed0f4975387bc6c05bc4509ccf375c31",
   "development_branch": "research/lean4-formalization-p0-20261121",
-  "source_blobs": {
+  "source_revisions": {
     "AGENTS.md": "1a8c76fc54fa5b0101df904b5698a5b4ee3752f2",
     "research/docs/01_model_and_amplitude.md": "8d8daf3e6d45235040c98bf3e3ed374c449baa2d",
     "research/nucleon_form_factor_B_baseline/CM_RAW_NORMALIZATION_AND_AFH_M_RESPONSE.md": "04f53726979d2ab936932de3ead85e78eb3ebfb3",
-    "research/nucleon_form_factor_B_baseline/P0_VS_P_POINTLIKE_DIRAC_BASELINES.md": "a618c2d209e3a19af028e670f155d322cd6ee6a6"
+    "research/nucleon_form_factor_B_baseline/P0_VS_P_POINTLIKE_DIRAC_BASELINES.md": "a618c2d209e3a19af028e670f155d322cd6ee6a6",
+    "research/nucleon_form_factor_B_baseline/POINTLIKE_NUCLEON_P_A_B_COMPARISON.md": "af87bfc15b00d17131735b2215ce9b5ae1d25551"
   },
-  "toolchain": "leanprover/lean4:v4.36.0",
-  "mathlib": {
-    "repository": "https://github.com/leanprover-community/mathlib4",
-    "revision": "v4.36.0"
+  "user_supplied_source_files": {
+    "3body_for_HDM.pdf": {
+      "sha256": "b4fc7bd73265df2bc2ce1640cbf8847b63323ec1dda220f9e7903f4620b871bb",
+      "role": "Dirac benchmark, (+---) metric, two-diagram amplitude and nonrelativistic ordering-kernel source"
+    }
   },
-  "execution_environment": {
-    "environment": "ChatGPT Linux container",
-    "os_kernel": "Linux 6.18.57",
-    "lean_available": false,
-    "lake_available": false,
-    "github_dns_available": false
+  "toolchain": {
+    "lean": "leanprover/lean4:v4.36.0",
+    "mathlib_repository": "https://github.com/leanprover-community/mathlib4",
+    "mathlib_revision": "v4.36.0"
   },
-  "build": {
+  "lean_build": {
+    "status": "BLOCKED_NOT_RUN",
     "command": "lake update && lake build",
-    "status": "NOT_RUN",
-    "reason": "Lean and Lake are not installed and GitHub DNS resolution is unavailable in the active environment."
+    "lean_installed": false,
+    "lake_installed": false,
+    "elan_installed": false,
+    "network_test": "curl -IL --max-time 12 https://github.com/leanprover/elan/releases/latest",
+    "network_result": "curl: (6) Could not resolve host: github.com",
+    "no_kernel_checked_claim": true
   },
-  "numerical_validation": {
-    "status": "NOT_RUN",
-    "reason": "Pending Lean compiler execution."
+  "python_sympy_validation": {
+    "status": "PASS",
+    "validation_id": "sympy-p0-c-sachs-20261121-01",
+    "execution_target": "ChatGPT Linux container",
+    "timestamp_utc": "2026-11-21T14:43:19.246393+00:00",
+    "os": "Linux 6.18.57 x86_64 with glibc 2.41",
+    "cpu": "AMD EPYC 9V74 80-Core Processor",
+    "logical_cpus_exposed": 5,
+    "memory_total_kib": 6090668,
+    "gpu": "No nvidia-smi executable; no GPU use claimed",
+    "python": "3.13.5",
+    "sympy": "1.14.0",
+    "symbolic_identities": 20,
+    "random_threshold_samples": 10000,
+    "threshold_sign_mismatches": 0,
+    "max_relative_factorization_residual": 4.8183679268731794e-14,
+    "gram_matrix_trials": 1000,
+    "gram_matrix_dimensions": [
+      5,
+      4
+    ],
+    "gram_matrix_failures": 0,
+    "xe131_recoil_points_keV": [
+      5.4,
+      50,
+      100,
+      200,
+      269.9
+    ],
+    "validation_script_sha256": "b6c38755f4f3588fe0a7614aa9662b0420710f7744f96e1e6edacd6a33943058",
+    "validation_json_sha256": "6d4eaedaea22e287c1252702e92e45fc4c33ce0c6ff9e8a72d6137800e93568b",
+    "xe131_csv_sha256": "27029fab86b56ae0baa40234ef07656ccb5728ff20137a6c87b4f3e75528bb4e"
   },
-  "formalization_git_blob_shas": {
+  "formalization_git_blob_sha1": {
     "lean-toolchain": "00f848359b1cdaf7c12cd6b7acc5b4364752e154",
     "lakefile.toml": "d0d36049d3028d12dc440a1d0e8775cdeebc8643",
-    "ThreeBody.lean": "0a54a69372f9f042d8e3c43bf3d4c7056f8e0d0a",
-    "ThreeBody/Kinematics.lean": "5b5836d88c4c709b00d739fdf643ac68d9292a5b",
-    "ThreeBody/NucleonCurrent/Normalization.lean": "597eb95c2e5088f06c638eedb959874d9fd90c89",
-    "README.md": "07fe5c2a3bc18872fbe015fccb8e406d53d363c8",
-    "task_briefs/20261121-lean4-p0-formalization.md": "957a1ac3cca4a3df001e59e2790c7965b21e7457"
+    "README.md": "bfc7013fd03451992b6877600319cf29e1ca987b",
+    "ThreeBody.lean": "02464624a3ed793fd14355335e2047e1f6ab933b",
+    "ThreeBody/Kinematics.lean": "d505dc5754162ce5335825afecc6d6ffcd3486d0",
+    "ThreeBody/NucleonCurrent/Normalization.lean": "330a931b1a2ff540c172e185bd2c09a46500115b",
+    "ThreeBody/NucleonCurrent/SachsConversion.lean": "836827e2b79ad106de615aae70707ac884d4a09b",
+    "ThreeBody/NucleonCurrent/Baselines.lean": "9f33366ac82027b21d38416d5d04b73332ede35f",
+    "ThreeBody/Amplitude/DiracClifford.lean": "d68710df99afd540efd6b93735d33e6490e614b3",
+    "ThreeBody/Amplitude/TwoDiagram.lean": "7b8ff58c00b2275fab3bba84c50003744cee070d",
+    "ThreeBody/AFH/ResponseMatrix.lean": "4aa340fd294028ba18e06a7bd671da3c70e75b90",
+    "validation/lean_environment_probe.txt": "e26c46f6ad2308f4f4f48fc6ed38504f014dc805",
+    "validation/sympy_validation.json": "cf1f56f9f12650f58cc454955a1b54e970809b79",
+    "validation/validate_p0_c_sachs.py": "1e57a6f4060d761b021288e4cc6dac09ff20e05d",
+    "validation/xe131_p_p0_a0_spotchecks.csv": "13b0b3560c3fee64065c7167955ffe2823da8e46",
+    "task_briefs/20261121-lean4-p0-formalization.md": "d5fadc6e4416f95071a68baeedbbb16788babdfa"
   },
-  "content_identity": "Git blob object IDs are recorded for all source and formalization files. No numerical input datasets are consumed in this first algebraic formalization slice."
+  "formalization_sha256": {
+    "README.md": "ba2943ffc5c7674269ffc41cdb501db62feaba80bc691fcc4bd4543e4f64e0e9",
+    "ThreeBody.lean": "20f17543824fcda3b8185b2865ab75eb408c7b4d36ca17bbad65db9294dffa0c",
+    "ThreeBody/Kinematics.lean": "d1ffa1fe917e8356b0f0b38267875f1dd93294c568e72deea777ff649de68cb7",
+    "ThreeBody/NucleonCurrent/Normalization.lean": "6aa060b5742f29bd66bba835dd0ae6deff5010e907bf548c4d5b88ca04fab3f3",
+    "ThreeBody/NucleonCurrent/SachsConversion.lean": "62223a07a140436942e08f93d3df2bc45355aa61edc48df3bad07b46ace49079",
+    "ThreeBody/NucleonCurrent/Baselines.lean": "3a90874e2ede0c23b8fe0e962cee5b6ae3009a89a74d426ceff869048e58ea76",
+    "ThreeBody/Amplitude/DiracClifford.lean": "736dafedbef9fec0243d823baa6d7fc6005f77a1ab0427fef62e2b21dee30755",
+    "ThreeBody/Amplitude/TwoDiagram.lean": "4b24891467052ee4491f0405eb71f05a05b9adc67388193b3788f4eb0e4fa737",
+    "ThreeBody/AFH/ResponseMatrix.lean": "69858c41783feff67fc38c791b75e73f65eddf54374fdfb8fac73ed9ad7c88ae",
+    "validation/lean_environment_probe.txt": "b579535b269bf81174115c048a2555274da05b14add94b0bb98c26850a8af085",
+    "validation/sympy_validation.json": "6d4eaedaea22e287c1252702e92e45fc4c33ce0c6ff9e8a72d6137800e93568b",
+    "validation/validate_p0_c_sachs.py": "b6c38755f4f3588fe0a7614aa9662b0420710f7744f96e1e6edacd6a33943058",
+    "validation/xe131_p_p0_a0_spotchecks.csv": "27029fab86b56ae0baa40234ef07656ccb5728ff20137a6c87b4f3e75528bb4e"
+  },
+  "scientific_scope": {
+    "P0_C": "Sachs conversion and normalized P0/P/A0/B M-only rate-level coefficients",
+    "P1_amplitude": "Dirac-Clifford interface, conditional external-current Ward identity, coherent two-diagram sum and interference, leading nonrelativistic two-ordering cancellation; full q_A_mu T_3^mu derivation remains pending",
+    "P1_AFH": "real Gram-response positive semidefinite theorem, off-diagonal interference structure, M-only factorization and AFH factor-four zero-momentum normalization",
+    "excluded": [
+      "physical derivation of c_M from the full covariant Dirac-Pauli current",
+      "concrete 4x4 gamma-matrix representation instance",
+      "full two-diagram Ward contraction derived from the complete Clifford representation",
+      "AFH isotope OBDME generation and nuclear input validation",
+      "three-body phase-space, halo and detector numerical calculations"
+    ]
+  }
 }
