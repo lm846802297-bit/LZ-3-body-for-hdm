@@ -439,7 +439,7 @@ def run(native_charge_csv: Path, outdir: Path) -> dict:
                 f"charge-only anchor mismatch at {case_name}, ER={ER_keV}: {residual}"
             )
 
-    max_spatial_fraction = max(abs(float(row["spatial_over_charge_only"])) for row in accepted)
+    max_spatial_fraction = max(abs(float(row["spatial_over_C_charge_only"])) for row in accepted)
     max_interp = max(
         float(row[f"pchip_linear_rel_{name}"])
         for row in accepted for name in RESPONSE_NAMES
