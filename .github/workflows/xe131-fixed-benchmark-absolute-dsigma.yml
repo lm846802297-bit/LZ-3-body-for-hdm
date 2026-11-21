@@ -39,28 +39,28 @@ jobs:
         with:
           python-version: "3.13"
       - name: Install numerical and plotting dependencies
-        run: python -m pip install numpy==2.3.5 scipy==1.17.0 matplotlib==3.10.8
+        run: python -m pip install numpy==2.3.5 scipy==1.17.0 matplotlib==3.10.8 pandas==2.3.3
       - name: Compile calculation, plot and regression modules
         run: |
-          python -m py_compile \
-            research/three_body_full_current_nucleon_match/xe131_fixed_benchmark_absolute_dsigma.py \
-            research/three_body_full_current_nucleon_match/test_xe131_fixed_benchmark_absolute_dsigma.py \
-            research/three_body_full_current_nucleon_match/paper_plot_style.py \
+          python -m py_compile \\
+            research/three_body_full_current_nucleon_match/xe131_fixed_benchmark_absolute_dsigma.py \\
+            research/three_body_full_current_nucleon_match/test_xe131_fixed_benchmark_absolute_dsigma.py \\
+            research/three_body_full_current_nucleon_match/paper_plot_style.py \\
             research/three_body_full_current_nucleon_match/build_xe131_full_recoil_charge_scan.py
       - name: Run absolute cross-section benchmark tests
         run: |
-          python -m unittest discover \
-            -s research/three_body_full_current_nucleon_match \
+          python -m unittest discover \\
+            -s research/three_body_full_current_nucleon_match \\
             -p 'test_xe131_fixed_benchmark_absolute_dsigma.py' -v
-      - name: Rebuild publication-style charge-kernel figures
+      - name: Rebuild publication-style charge-kernel figures from the pinned native AFH response
         run: |
-          python research/three_body_full_current_nucleon_match/build_xe131_full_recoil_charge_scan.py \
-            --csv research/three_body_full_current_nucleon_match/results/2026-11-18/xe131_charge_kernel_full_recoil_scan.csv \
+          python research/three_body_full_current_nucleon_match/build_xe131_full_recoil_charge_scan.py \\
+            --native afh-native/research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_native.csv \\
             --outdir /tmp/xe131-absolute-dsigma
       - name: Compute fixed Delta m=450 keV absolute dSigma/dER curve
         run: |
-          python research/three_body_full_current_nucleon_match/xe131_fixed_benchmark_absolute_dsigma.py \
-            --afh-csv afh-native/research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_native.csv \
+          python research/three_body_full_current_nucleon_match/xe131_fixed_benchmark_absolute_dsigma.py \\
+            --afh-csv afh-native/research/afh_default_density_xe131/output/phi_response_native/afh_default_xe131_M_PhiPP_native.csv \\
             --outdir /tmp/xe131-absolute-dsigma
       - name: Upload paper figures, absolute spectrum, and full numerical tables
         uses: actions/upload-artifact@v4
