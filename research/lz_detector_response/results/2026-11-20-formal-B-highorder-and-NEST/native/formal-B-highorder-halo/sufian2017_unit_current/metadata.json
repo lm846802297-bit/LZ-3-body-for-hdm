@@ -1,0 +1,44 @@
+{
+  "status": "COMPUTED",
+  "baseline": "B = finite nucleon F1(t_N), F2(t_N) times finite-size AFH W_M(y_A)",
+  "input_halo_directory": "halo-artifact/halo-seven-isotope-highorder",
+  "strange_form_factor_model": "sufian2017_unit_current",
+  "strange_input_metadata": {
+    "model": "sufian2017_unit_current",
+    "current": "unit strange current sbar gamma_mu s",
+    "mu_s_unit": -0.064,
+    "rE2_unit_fm2": -0.0043,
+    "GM_s_Q2_dependence": "constant frozen-moment benchmark; magnetic radius not supplied by this fit"
+  },
+  "electromagnetic_form_factor_source": "Borah et al., Phys. Rev. D 102, 074012 (2020), arXiv:2003.13640; pinned coefficients/covariance distributed by GENIE",
+  "strange_input_convention": "model-specific; see strange_current_convention_audit.md",
+  "momentum_transfer": {
+    "Q_A2_GeV2": "2*m_A*E_R+E_R^2 (exact spatial transfer; AFH only)",
+    "Q2_form_factor_GeV2": "2*m_A*E_R=-t_N",
+    "t_N_GeV2": "-2*m_A*E_R",
+    "t_A_GeV2": "-2*m_A*E_R",
+    "q_NR_used_for_FF": false
+  },
+  "matching": {
+    "F_i_uds": "3*(F_i_EM,p+F_i_EM,n+F_i_s,unit)",
+    "c_M_raw": "F1_uds+t_N/(8*m_N^2)*(F1_uds+2*F2_uds)",
+    "c_M_hat": "c_M_raw/3 = F_M; normalized coefficient paired with g_VN=3*g_Vq",
+    "c_M": "legacy alias for c_M_raw",
+    "F_M_normalized": "legacy alias for c_M_hat",
+    "coupling_normalization": "g_Vq*c_M_raw = g_VN*c_M_hat; factor three is counted exactly once",
+    "normalized_nucleon_factor": "F_M=c_M_hat=c_M_raw/3",
+    "rate_multiplier": "|c_M_hat|^2",
+    "nuclear_response": "AFH v6.0 finite-size W_M; no point-nucleus replacement"
+  },
+  "uncertainty": {
+    "Borah2020_EM_form_factor_covariance_draws": 3000,
+    "seed": 20261119,
+    "strange_lattice_errors": "not sampled in this first pass; central-value scenarios are kept separate and source uncertainties are recorded in the form-factor metadata",
+    "detector_response_applied": false
+  },
+  "summary": {
+    "recoil_points": 208,
+    "max_abs_full_vs_ID_error_B_pct": 0.3527618038037472,
+    "max_abs_B_over_A_full_rate_shift_pct": 56.43447621844029
+  }
+}

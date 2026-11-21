@@ -73,7 +73,10 @@ class Borah2020LowQ2Tests(unittest.TestCase):
         ):
             result = ff.cM_and_factor(0.0, model)
             self.assertAlmostEqual(float(result["F1uds"]), 3.0, places=10)
-            self.assertAlmostEqual(float(result["F_M"]), 1.0, places=10)
+            self.assertAlmostEqual(float(result["cM_raw"]), 3.0, places=10)
+            self.assertAlmostEqual(float(result["cM"]), float(result["cM_raw"]), places=12)
+            self.assertAlmostEqual(float(result["cM_hat"]), 1.0, places=10)
+            self.assertAlmostEqual(float(result["F_M"]), float(result["cM_hat"]), places=12)
             self.assertAlmostEqual(float(result["rate_multiplier"]), 1.0, places=10)
 
     def test_covariance_matrices_are_positive(self):
