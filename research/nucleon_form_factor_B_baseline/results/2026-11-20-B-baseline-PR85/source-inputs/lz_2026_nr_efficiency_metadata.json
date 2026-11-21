@@ -1,0 +1,50 @@
+{
+  "source": "LZ Collaboration, arXiv:2609.02823v1 (2026), Fig. S2, PDF page 14",
+  "data_release_doi": "10.17182/hepdata.182472.v1",
+  "pdf_sha256": "54ae96529a3765ea5e285e9fc225b5517d594aebc4d6e272125a2d6254609dbd",
+  "extraction_method": "vector-path extraction of the black central final WIMP-search ROI curve and gray uncertainty-envelope polygon",
+  "svg_path_selector": {
+    "stroke": "rgb(0%, 0%, 0%)",
+    "parent_clip_path": "url(#clip-16)",
+    "minimum_path_data_length": 1000
+  },
+  "axis_calibration_local_svg_units": {
+    "x_0keV": 51.087864,
+    "x_300keV": 497.85035,
+    "y_efficiency_0": 62.457768,
+    "y_efficiency_1": 349.147721
+  },
+  "raw_vector_point_count": 160,
+  "raw_uncertainty_band_polygon_point_count": 1170,
+  "sampled_csv_point_count": 303,
+  "mean_final_roi_efficiency_14_250": 0.9547104518957983,
+  "mean_lower_envelope_efficiency_14_250": 0.8929982679346409,
+  "mean_upper_envelope_efficiency_14_250": 0.9898149583107922,
+  "published_text_mean_efficiency_14_250": 0.96,
+  "central_efficiency_at_248_keV": 0.9456875755002285,
+  "lower_envelope_at_248_keV": 0.8835461149899179,
+  "upper_envelope_at_248_keV": 0.9800028962119275,
+  "central_efficiency_at_269_9_keV": 0.4988195353969035,
+  "lower_envelope_at_269_9_keV": 0.4659891611322288,
+  "upper_envelope_at_269_9_keV": 0.5168651730538417,
+  "crossings_at_50_percent_keV": [
+    5.089721891590893,
+    269.86778867044467
+  ],
+  "published_low_energy_50_percent_anchor_keV": 5.4,
+  "published_high_energy_50_percent_anchor_keV": 269.9,
+  "uncertainty_envelope_interpretation": "The gray Fig. S2 envelope is retained as a detector-efficiency systematic range; the publication does not assign a confidence level to the envelope.",
+  "digitization_note": "The central vector curve gives a low-energy 50% crossing near 5.09 keV, whereas the paper text/caption quotes 5.4 keV from Ref. [5]. The central high-energy crossing near 269.87 keV agrees with 269.9 keV. The central mean final-ROI efficiency over 14--250 keV is 95.47%, about 0.53 percentage points below the rounded published 96%; the curve is not rescaled. The gray uncertainty envelope is also digitized.",
+  "hepdata_api_status": "HEPData YAML download failed or returned HTML: HTTP 403 (curl status 0).\nHEPData JSON download failed or returned HTML: HTTP 403 (curl status 0).\nThe official data-release DOI is https://doi.org/10.17182/hepdata.182472.v1.\n54ae96529a3765ea5e285e9fc225b5517d594aebc4d6e272125a2d6254609dbd  /home/runner/work/_temp/lz_hepdata/lz_2026_extended_nr_search.pdf",
+  "independent_digitization_crosscheck": {
+    "source": "arXiv:2609.02608v2, Appendix D",
+    "central_efficiency_at_248_keV_published": 0.9457,
+    "lower_envelope_at_248_keV_published": 0.8835,
+    "upper_envelope_at_248_keV_published": 0.98
+  },
+  "not_included": [
+    "S1c/log10(S2c) two-dimensional signal PDFs",
+    "NEST nuisance-parameter covariance",
+    "background likelihood"
+  ]
+}
