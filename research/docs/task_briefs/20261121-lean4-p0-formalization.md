@@ -126,3 +126,52 @@ Initial source files are authored. Lean compilation, Python spot checks, and the
 | Date | Revision | Change |
 |---|---|---|
 | 2026-11-21 | 0.1 | Initial P0 formalization task |
+
+
+---
+
+# Dated execution update — 2026-11-21 (revision 0.2)
+
+## Completed in this update
+
+1. Reopened and audited the exact repository sources: `AGENTS.md`, the model/amplitude note, the canonical raw/normalized `c_M` note, the P0/P baseline note, and the P0/P/A0/B comparison note. The user-supplied `3body_for_HDM.pdf` was also inspected; SHA-256 is recorded in the formalization provenance.
+2. Ran the independent Python/SymPy validation. It passed 20 exact symbolic checks, 10,000 deterministic threshold samples (zero sign mismatches; maximum relative factorization residual `4.8183679268731794e-14`), and 1,000 exact Gram-matrix checks (5×4; zero failures). Five Xe-131 recoil points were recomputed.
+3. Authored the Sachs conversion and the normalized P0/P/A0/B baseline definitions. `tau_N` is tied to `-t_N` and is not an independent input; AFH `Q_A^2` remains a separate spatial variable.
+4. Authored a (+---) Dirac-Clifford representation interface, the external-current Ward identity conditional on the Dirac equations, coherent two-diagram amplitude definitions with the current asymmetric width prescription, the exact interference identity, the leading nonrelativistic two-ordering cancellation, and the reduced two-diagram Ward cancellation.
+5. Authored the AFH real-Gram response matrix, its sum-of-squares positive-semidefinite representation, M-only factorization, and the package-to-physical factor-four normalization.
+
+## Status distinctions
+
+| Task | Status | Evidence |
+|---|---|---|
+| P0-A Lean installation and `lake update && lake build` | BLOCKED / NOT RUN | Lean/Lake/Elan absent; GitHub DNS failure recorded in `research/lean4_formalization/validation/lean_environment_probe.txt` |
+| P0-B independent algebra | PASS | `validation/sympy_validation.json`, Python script and CSV |
+| P0-C Sachs and four baselines | SOURCE AUTHORED / NOT COMPILED | Lean source modules; compilation awaits P0-A environment |
+| P1 two diagrams and interference | SOURCE AUTHORED / NOT COMPILED | `ThreeBody/Amplitude/TwoDiagram.lean` |
+| P1 Ward identity | PARTIAL FORMALIZATION | External-current identity is conditional on Dirac equations; reduced two-diagram cancellation is algebraic after numerator reductions. Deriving those reductions from the full Clifford algebra and exact three-body momenta remains pending |
+| P1 AFH response matrix | SOURCE AUTHORED / NOT COMPILED | Real Gram matrix and factor-four normalization module |
+
+## Frozen physical conventions
+
+- Dirac benchmark; metric `(+---)`; source spinor normalization `u_bar u=2m`.
+- Two scalar-emission diagrams are summed coherently.
+- Production propagator convention from current `AGENTS.md`: before-emission line `r_before=p-k` is zero-width; after-emission line `r_after=p'+k` uses the pole width.
+- The manuscript PDF's displayed zero-width expression is retained as the source expression; it does not override the current formal-production width policy.
+- Sachs variable `tau_N=-t_N/(4m_N^2)=Q_N^2/(4m_N^2)`; `t_N=-2m_A E_R`; AFH uses `Q_A^2=2m_AE_R+E_R^2` separately.
+- Raw and normalized coefficients remain distinct: `c_M_raw(0)=3`, `c_M_hat(0)=1`, with `g_VN=3g_Vq` counting the common factor three once.
+- P0/P/A0/B are M-only rate-level baselines sharing AFH finite-size `W_M`; they are not the complete covariant nuclear-current response.
+- AFH positive semidefiniteness is asserted for a response matrix constructed as a Gram matrix over common final states/multipoles, not for arbitrary unrelated tabulated values.
+
+## Remaining work
+
+1. Obtain a network-enabled or pre-provisioned ChatGPT Linux execution environment with the pinned Lean 4.36.0 toolchain and Mathlib v4.36.0; run `lake update && lake build` and fix every compiler error.
+2. Instantiate the abstract Clifford interface with concrete 4×4 gamma matrices and kernel-check the Clifford relations.
+3. Derive the full `q_A_mu T_3^mu` contraction from the exact three-body four-momenta and the two propagator numerators; connect it to the reduced Ward identity.
+4. Complete and compile the AFH Gram quadratic-form rearrangement; then add AFH operator/channel-specific interference and M-only reduction lemmas.
+5. Link each Lean theorem to the corresponding Python/SymPy test and rerun after every source change.
+
+## Change log
+
+| Date | Revision | Change |
+|---|---|---|
+| 2026-11-21 | 0.2 | Added P0-B independent SymPy validation, P0-C Sachs/P0/P/A0/B modules, P1 amplitude/Dirac/AFH formalization sources; recorded Lean environment blocker and validation provenance |
