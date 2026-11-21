@@ -1,0 +1,10 @@
+source = official AFH DMFormFactor v6.0 source file
+isotope = Xe-131; A=131; Z=54; J=3/2
+SetIsotope[54,131,"default","default"]
+response index 4 = Phi''; index 7 = M Phi'' (AFH ResponseNuclear mapping)
+isospin = (tau1,tau2)=(0,0); raw AFH package convention; no extra normalization applied
+q = 0..0.600 GeV, step 0.00025 GeV, 2401 inclusive nodes
+y=(q*b_A/2)^2; b_A uses AFH default oscillator prescription and 5.0677 GeV^-1/fm
+b_A_fm = 2.2923417985218975
+W_M00, W_PhiPP00, W_M_PhiPP00 are direct native ResponseNuclear outputs
+W_M00 included to evaluate the response-matrix Cauchy-Schwarz bound pointwise
