@@ -8,7 +8,7 @@ interference terms.  The formal nucleon invariant is t_N=t_A=-2*m_A*E_R.
 The DM-side L_C uses nuclear-current continuity conditionally on
 conservation of the complete nuclear vector current.  Transverse nuclear
 multipoles are not included in this restricted Coulomb-sector comparison.
-""
+"""
 from __future__ import annotations
 
 import argparse
