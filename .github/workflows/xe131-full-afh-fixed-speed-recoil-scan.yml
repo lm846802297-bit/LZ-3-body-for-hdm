@@ -97,7 +97,7 @@ jobs:
               return hashlib.sha256(raw).hexdigest()
 
           def canonical_sha256(path):
-              raw = Path(path).read_bytes().replace(b"\\r\\n", b"\\n")
+              raw = Path(path).read_bytes().replace(b"\r\n", b"\n")
               return hashlib.sha256(raw).hexdigest()
 
           def git_head(path="."):
@@ -151,7 +151,7 @@ jobs:
               gpu = subprocess.check_output(
                   ["nvidia-smi", "--query-gpu=name,driver_version,memory.total",
                    "--format=csv,noheader"], text=True, stderr=subprocess.STDOUT
-              ).strip().replace("\\n", " | ")
+              ).strip().replace("\n", " | ")
           except Exception:
               gpu = "not exposed to this runner"
           lines.append(f"gpu={gpu}")
@@ -171,7 +171,7 @@ jobs:
           )
           for name, path in sources.items():
               lines.append(f"source.{name}.sha256={sha256(path)}")
-          (out / "provenance.txt").write_text("\\n".join(lines) + "\\n", encoding="utf-8")
+          (out / "provenance.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
           PY
       - name: Finalize and verify SHA-256 manifest for every output
         run: |
