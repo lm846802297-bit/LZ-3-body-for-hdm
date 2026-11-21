@@ -1,6 +1,20 @@
-# P3-C: C0-consistent fixed-speed three-body × AFH contraction
+# P3-C precursor: C0-consistent three-body × AFH response contraction
 
-**Status: PROVISIONAL_AFH_CONTRACTION_PASS — 84/84 benchmark/isotope rows pass.**  
+> **Current formal-width status (2026-11-19):** the pole-only rerun is
+> [workflow 44432440600](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44432440600),
+> full-current artifact 14486904025. It contains 28 response-level rows
+> (four benchmarks × seven isotopes), all positive, with maximum
+> \(|K_{\rm spatial}/K_{\rm charge}|=7.0304970964\times10^{-9}\) and
+> maximum rank-sum reconstruction residual \(1.11022\times10^{-16}\).
+> The run uses Pole width only.
+>
+> **The response-level contraction is not, by itself, the requested full
+> P3-C amplitude-level PASS.** A separate Xe-131 spatial helicity-amplitude
+> subgate now passes at the four formal Pole-width benchmarks; see
+> [P3C_SPATIAL_AMPLITUDE_LEVEL_HELICITY_RESULTS.md](P3C_SPATIAL_AMPLITUDE_LEVEL_HELICITY_RESULTS.md).
+> The seven-isotope and spatial AFH inputs remain Python translations until
+> the native Wolfram gate passes. The older 84-row, three-width results below
+> are retained as historical diagnostics and are not formal-production results.  
 **Workflow:** [44305980766](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44305980766)  
 **PR head:** 1201d03c11030d71c7259277ee98937bf41c8025  
 **Contraction artifact:** 14428247140  
@@ -87,7 +101,7 @@ isotope. The P3-B archive has 16,807 total-response rows and 9,604
 rank-resolved multipole rows. The source-translated AFH-8 and P3-B
 metadata both explicitly set native AFH validation to false.
 
-## 4. Benchmark coverage and numerical acceptance
+## 4. Historical benchmark coverage (superseded by the pole-only rerun)
 
 The phase-space calculation supplies 12 coefficient sets:
 - green_450keV, \(E_R=200\) keV, \(q_A=0.2209306022\) GeV;
@@ -191,9 +205,7 @@ This is **not** a global upper bound on the physical natural-xenon rate.
 The calculation:
 1. uses provisional Python translations of AFH v6.0 responses, not a
    native Wolfram seven-isotope/eight-response PASS;
-2. uses constant zero-momentum anchors
-   \(F_1^V(0)=3\), \(F_2^V(0)=-0.552\), \(m_N=0.938918\) GeV, not
-   finite-\(t_N\) form factors;
+2. uses constant zero-momentum anchors in this historical structural diagnostic. The archived input values \(F_1^{uds}(0)=3\), \(F_2^{uds}(0)=-0.552\) are raw flavor sums. In the external-\(g_{VN}=3g_{Vq}\) rate convention, the corresponding coefficient inputs are \(\\widehat F_1^N(0)=1\), \(\\widehat F_2^N(0)=-0.184\). The dimensionless spatial-to-charge ratios are unchanged by the common factor-three rescaling, but the old raw absolute coefficients must not be used with an external \(g_{VN}\) prefactor;
 3. evaluates 12 fixed-speed benchmark tensors, not a continuous
    recoil-energy or halo-velocity integral;
 4. does not include the mediator/coupling prefactors, detector efficiency,
@@ -210,16 +222,91 @@ and do not label this a full P3 pass or a final natural-xenon prediction.
 ## 7. Remaining gates
 
 1. Complete the native Wolfram seven-isotope/eight-response comparison.
-   The most recent private native workflow is
-   [44306907993](https://github.com/lm846802297-bit/research-compute-control/actions/runs/44306907993),
-   currently queued on the self-hosted Windows/X64/research-gpu runner;
-   no native artifact is available yet.
+   The current native P3-B workflow is
+   [44346207069](https://github.com/lm846802297-bit/research-compute-control/actions/runs/44346207069),
+   configured by [research-compute-control PR #2](https://github.com/lm846802297-bit/research-compute-control/pull/2).
+   It is pinned to native exporter source commit
+   `5afc500a3102b857dd16e29432db8e6e068d65d1` and P3 artifact
+   run `44337928314`, artifact `14443055701`. The run is queued on the
+   self-hosted Windows/X64/research-gpu runner and currently has no assigned
+   runner; no native artifact is available yet.
 2. Implement the selected-point many-body comparison
    \(\mathcal A_{\rm cov}^{\rm nuclear}\) versus the q-frame and AFH
    spherical-multipole amplitudes using identical OBDMEs, phases,
    normalization, and current truncation.
-3. Replace the constant \(q=0\) form-factor anchors with the approved
-   finite-\(t_N\) \(F_1^V(t_N)\), \(F_2^V(t_N)\) prescription.
-4. Only after the native and pointwise P3 gates pass, perform the
-   natural-xenon halo fold and compare the pointlike-M, finite-\(t_N\)-M,
-   Coulomb-sector, and full matched-current spectra separately.
+3. Complete the selected-point direct covariant-current to AFH multipole
+   amplitude reconstruction, retaining the OBDME phases, Wigner-Eckart
+   factors, and signed \(\Sigma'\)-\(\Delta\) interference.
+4. The P3-C structural subgate now uses the normalized q=0 effective anchors
+   \(\\widehat F_1^N=1\), \(\\widehat F_2^N=-0.184\) in the external
+   \(g_{VN}\) basis. The adopted B production path separately uses the
+   finite-\(t_N\) Bishara Dirac slope and leading Pauli term; keep the P3-C
+   algebraic subgate distinct from the B absolute-rate calculation.
+5. Only after native P3-B and amplitude-level P3-C pass, perform the
+   seven-isotope natural-xenon halo fold and compare the q=0 M reference,
+   finite-\(t_N\)-M, Coulomb-sector, and full matched-current spectra.
+
+
+## 7. P3-C spatial amplitude-level helicity reconstruction
+
+A new amplitude-level subgate has been implemented in
+`p3c_amplitude_level_helicity_crosscheck.py`. It starts from the full
+complex phase-space Gram tensor
+\[
+G_{\mu a,\nu b}^{(3)}
+=\int d\Phi_3\,c_a^\mu c_b^{\nu *},
+\]
+retains the four DM Pauli channels, and contracts the signed Xe-131
+\(\Delta_J\) and \(\Sigma'_J\) reduced amplitudes rank by rank. The
+helicity amplitudes are formed before summing over the two transverse
+polarizations, DM spin channels, or nuclear multipole ranks.
+
+For the AFH convention \(\boldsymbol q_{\rm AFH}=-\boldsymbol q_A\), the
+helicity reconstruction reproduces all three Eq. (107) coefficients,
+including the signed \(\Sigma'\)-\(\Delta\) interference. The direct
+Cartesian Eq. (107) kernel and the helicity-amplitude kernel agree at
+\(10^{-16}\) relative precision for all four Xe-131 Pole-width benchmarks.
+
+| Benchmark | \(E_R\) | \(K_{\rm helicity}\), PCHIP amplitudes | Amp-vs-Cartesian residual |
+|---|---:|---:|---:|
+| green_450keV | 200 keV | 0.00835366938272 | \(2.08\times10^{-16}\) |
+| green_1MeV | 200 keV | 0.000514111110719 | \(4.22\times10^{-16}\) |
+| near_pole_362keV_g2_0p1 | 267 keV | 0.610748897628 | \(5.45\times10^{-16}\) |
+| near_pole_362keV_g2_1 | 267 keV | 0.136728078354 | \(6.09\times10^{-16}\) |
+
+The maximum relative residuals are
+\[
+\max\delta_{\rm amp/cart}=6.09\times10^{-16},\qquad
+\max\delta_{C_{\rm Eq.(107)}}=8.53\times10^{-16}.
+\]
+The full \(G^{(3)}\) Gram matrix is Hermitian; its most negative numerical
+eigenvalue is \(-3.20\times10^{-14}\), within the existing
+\(-10^{-10}\) PSD tolerance.
+
+### Interpolation cross-check
+
+The existing response-level contraction linearly interpolates the total
+\(\Delta,\Sigma',\Sigma'\Delta\) responses. The new amplitude-level
+calculation interpolates the signed reduced multipole amplitudes and then
+reconstructs the responses. At these four selected benchmarks:
+
+- PCHIP-amplitude versus linear-response kernel differs by at most
+  \(5.53\times10^{-6}\);
+- linear-amplitude versus linear-response kernel differs by at most
+  \(1.95\times10^{-6}\);
+- PCHIP versus linear-amplitude kernel differs by at most
+  \(3.58\times10^{-6}\).
+
+These are few-ppm differences at the selected points, not a global
+interpolation bound. The formal recoil engine should interpolate the signed
+rank amplitudes and reconstruct the diagonal and interference responses
+consistently; the full q-grid interpolation audit remains required.
+
+**Scope qualification:** this is a spatial-sector amplitude-level
+reconstruction using the provisional source-translated AFH amplitudes. It
+does not yet validate the charge multipoles \(M,\Phi''\) at amplitude
+level, an independent direct coordinate-space bound-nucleus current, or
+the native Wolfram AFH source. Therefore it is a **P3-C spatial subgate
+PASS**, not a full P3-C PASS. The full P3-C gate remains open until the
+native P3-B comparison and the independent covariant/q-frame/AFH nuclear
+amplitude comparison are completed.

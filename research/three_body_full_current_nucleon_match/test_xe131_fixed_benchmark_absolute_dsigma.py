@@ -12,7 +12,7 @@ from xe131_fixed_benchmark_absolute_dsigma import (
     COUPLING_PRODUCT_SQUARED, DELTA_M_GEV, GEV_MINUS3_TO_CM2_PER_KEV,
     G2, WIDTH_SCHEME, MA_XE131_GEV, MCHI_GEV, MV_GEV, SPEED_KM_S, exact_qA_GeV,
     incident_momentum_GeV, kinematic_prefactor_GeVminus5, find_open_interval,
-    write_csv,
+    nuclear_charge_kernels, write_csv,
 )
 
 class TestXe131FixedBenchmarkAbsoluteDsigmadER(unittest.TestCase):
@@ -44,12 +44,56 @@ class TestXe131FixedBenchmarkAbsoluteDsigmadER(unittest.TestCase):
         self.assertAlmostEqual(result["t_A_GeV2"], -minus_tA, places=14)
         self.assertNotAlmostEqual(result["mediator_denominator_GeV4"], (MV_GEV**2+q*q)**2, places=12)
 
+    def test_B_baseline_is_finite_tN_times_native_AFH_WM_only(self):
+        responses = {"M": 12.0, "PhiPP": 0.5, "MPhiPP": -0.8}
+        LC = 2.5
+        out = nuclear_charge_kernels(200.0, LC, responses)
+        self.assertEqual(out["form_factor_prescription"], "bishara_linear")
+        self.assertAlmostEqual(
+            out["A_original_AFH_M_reference"], LC * responses["M"], places=14
+        )
+        self.assertAlmostEqual(
+            out["B_baseline_M_only"],
+            out["cM_effective"] ** 2 * LC * responses["M"],
+            places=14,
+        )
+        self.assertAlmostEqual(out["F1N_effective"], out["F1V_quark"] / 3.0, places=14)
+        self.assertAlmostEqual(out["F2N_effective"], out["F2V_quark"] / 3.0, places=14)
+        self.assertAlmostEqual(
+            out["tN_GeV2"],
+            (200.0e-6)**2 - exact_qA_GeV(MA_XE131_GEV, 200.0)**2,
+            places=18,
+        )
+        self.assertAlmostEqual(
+            out["C_over_A"],
+            out["C_charge_extension"] / out["A_original_AFH_M_reference"],
+            places=14,
+        )
+        self.assertAlmostEqual(
+            out["C_over_B"],
+            out["C_charge_extension"] / out["B_baseline_M_only"],
+            places=14,
+        )
+        self.assertAlmostEqual(
+            out["A_original_AFH_M_reference"],
+            out["A_original_AFH_M_reference"], places=14
+        )
+        self.assertAlmostEqual(
+            out["A_original_AFH_M_reference"], out["A_original_AFH_M_reference"], places=14
+        )
+        self.assertAlmostEqual(
+            out["B_baseline_M_only"], out["B_baseline_M_only"], places=14
+        )
+        self.assertAlmostEqual(
+            out["C_charge_extension"], out["C_charge_extension"], places=14
+        )
+
     def test_write_csv_unions_open_and_closed_row_fields(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "mixed.csv"
             write_csv(path, [
                 {"ER_keV": 109.0, "phase_space_open": False},
-                {"ER_keV": 110.0, "phase_space_open": True, "full_charge_cm2_per_keV": 1.25},
+                {"ER_keV": 110.0, "phase_space_open": True, "C_charge_extension_cm2_per_keV": 1.25},
             ])
             with path.open(newline="", encoding="utf-8") as stream:
                 reader = csv.DictReader(stream)
@@ -57,10 +101,10 @@ class TestXe131FixedBenchmarkAbsoluteDsigmadER(unittest.TestCase):
                 fieldnames = reader.fieldnames
             self.assertEqual(
                 fieldnames,
-                ["ER_keV", "phase_space_open", "full_charge_cm2_per_keV"],
+                ["ER_keV", "phase_space_open", "C_charge_extension_cm2_per_keV"],
             )
-            self.assertEqual(rows[0]["full_charge_cm2_per_keV"], "")
-            self.assertEqual(rows[1]["full_charge_cm2_per_keV"], "1.25")
+            self.assertEqual(rows[0]["C_charge_extension_cm2_per_keV"], "")
+            self.assertEqual(rows[1]["C_charge_extension_cm2_per_keV"], "1.25")
 
     def test_unit_conversion(self):
         self.assertAlmostEqual(GEV_MINUS3_TO_CM2_PER_KEV, 3.893793721e-34, places=45)

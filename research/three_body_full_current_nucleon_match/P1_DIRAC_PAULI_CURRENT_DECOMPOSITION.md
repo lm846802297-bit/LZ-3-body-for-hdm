@@ -23,6 +23,15 @@ J_N^\mu=\bar u_N(k_N')
 \left[F_1^V(t_N)\gamma^\mu+
 \frac{iF_2^V(t_N)}{2m_N}\sigma^{\mu\nu}q_{N,\nu}\right]u_N(k_N).
 \]
+**Rate-normalization convention for the adopted B baseline.** The formulas
+below are written for generic flavor-summed \(F_1^V,F_2^V\). When the
+public rate prefactor is expressed with \(g_{VN}=3g_{Vq}\), the coefficients
+must use \(\widehat F_i=F_i^{uds}/3\), so that
+\(\widehat F_1(0)=1\) and \(\widehat F_2(0)=-0.184\). This is a
+coupling-basis conversion only; it does not alter the Dirac-Pauli current
+or the AFH nuclear response. Never combine raw \(F_i^{uds}\) with an
+external \(g_{VN}\) prefactor.
+
 The AFH Fourier momentum used later is \(\boldsymbol q_{\rm AFH}=-\boldsymbol q_A\), whereas the nucleon vertex above uses \(\boldsymbol q_N=+\boldsymbol q_A\) in the impulse matching slice. These signs are not interchangeable.
 
 Before matching to AFH one-body operators, divide the covariant spinor matrix element by \(2\sqrt{E_NE_N'}\). The exact code path is the nucleon_current_matrices function followed by nonrel_state_normalization.
@@ -135,6 +144,45 @@ The free on-shell slice enforces \(q_N^0=E_R\). The transverse internal momentum
 Errors are Frobenius-norm relative differences, with the exact normalized spinor current in the denominator. The transverse spatial error is the relevant truncation diagnostic for the leading \(\Delta,\Sigma'\) matching. The larger relative error in the small longitudinal component is not used as a replacement for the exact continuity relation.
 
 For all eight points, the exact free-nucleon Ward residual is below \(2\times10^{-12}\), the exact longitudinal-current/continuity residual is below \(2\times10^{-12}\), and \(|q_N^0-E_R|<2\times10^{-13}\) GeV. The corresponding regression is implemented in run_one_body_nr_matching_scan and test_one_body_nr_current_expansion.py.
+
+
+## Production convention used downstream (2026-11-19)
+
+The formal fixed-speed and P4 production slice is the energy-transfer-matched
+one-body impulse prescription
+\[
+q_N^\mu=q_A^\mu=(E_R,\boldsymbol q_A),\qquad
+t_N=t_A=-2m_AE_R.
+\]
+The static slice \(q_N^0=0\), \(t_N=-Q_A^2\), remains a diagnostic for
+isolating transverse convection and magnetization operators; it is not the
+formal production transfer. Neither slice is a complete bound-nucleon
+many-body current.
+
+Keep
+\[
+Q_A^2=|\boldsymbol q_A|^2=2m_AE_R+E_R^2,\qquad
+t_A=-2m_AE_R
+\]
+separate. AFH \(y_A=(b_AQ_A/2)^2\) uses the spatial \(Q_A\), while the
+mediator and formal nucleon form-factor arguments use \(t_A=t_N\).
+
+The \(F_1^V,F_2^V\) symbols in the Pauli-reduction equations denote the
+full universal \(u+d+s\) quark-current form factors:
+\(F_1^V(0)=3\), \(F_2^V(0)=-0.552\). When these coefficients multiply the
+paper's external \((g_1g_2g_{VN})^2\) prefactor, use
+\[
+\widehat F_i^V(t_N)=F_i^V(t_N)/3,\qquad
+\widehat F_1^V(0)=1,\quad \widehat F_2^V(0)=-0.184.
+\]
+Equivalently, keep the full \(F_i^V\) and use \(g_{Vq}=g_{VN}/3\).
+Do not combine full \(F_i^V(0)=3\) with an external \(g_{VN}\) prefactor.
+This quark-current factor three is independent of the AFH raw-to-physical
+response factor four.
+
+The nuclear baseline remains the finite-size native AFH \(W_M(y_A)\);
+the Dirac--Pauli nucleon form factors are an additional one-body current
+layer and never replace or multiply away the AFH nuclear response.
 
 ## 5. What this closes, and what it does not
 

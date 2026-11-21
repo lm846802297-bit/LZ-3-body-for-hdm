@@ -817,6 +817,8 @@ def run_diagnostic() -> dict:
     q_a_ward_residual = nucleon_ward_residual(q_a4, jn)
     return {
         "status": "static_one_nucleon_full_current_matching_diagnostic",
+        "calculation_role": "free on-shell one-nucleon P3-C matching diagnostic only; q=0 form-factor anchors; not B production",
+        "primary_B_baseline_included": False,
         "form_factor_benchmark": {
             "F1_over_F1zero": 1.0,
             "F2_over_F1zero": -0.184,

@@ -1,5 +1,7 @@
 # Xe-131 six-channel response interpolation audit
 
+> **Baseline clarification (2026-11-19):** The interpolation-stability checks remain useful for the AFH response grid, but this artifact predates the adopted B normalization. Its ratio denominator and form-factor prescription must not be treated as the current B production baseline; rerun the recoil scan with Bishara B and report B/A, C/B, and C/A separately.
+
 **Status: PASS_LOCAL_INTERPOLATION_STABILITY_DIAGNOSTIC.**  
 **Scientific promotion:** not a native dense-q AFH validation.  
 **Source scan:** [workflow 44307471788](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44307471788), artifact 14430267797.  

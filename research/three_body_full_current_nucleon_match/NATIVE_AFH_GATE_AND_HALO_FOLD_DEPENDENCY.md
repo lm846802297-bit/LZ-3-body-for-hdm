@@ -1,6 +1,6 @@
 # Native AFH gate and Coulomb-sector halo-fold dependency
 
-**Updated: 2026-11-18**
+**Updated: 2026-11-19**
 
 ## 1. Acceptance state
 
@@ -83,32 +83,64 @@ validate the three-body particle-side coefficients or the full
 
 ## 4. What the current halo engine computes
 
-The engine consumes the complete native artifact root but, in its current
-restricted mode, reads the three charge-sector responses \(W_M\),
-\(W_{\Phi''}\), and signed \(W_{M\Phi''}\). Its leptonic Coulomb weight is
+The adopted primary output is **B**, the finite-\(t_N\) nucleon-current
+correction contracted with the native finite-size AFH M response only:
+\[
+R_B(E_R)=
+\mathcal P_3(E_R)\,
+\widehat c_M(t_N)^2\,
+L_C^{(3)}\,
+W_M^{\rm phys}(y_A).
+\]
+The B baseline does not include \(W_{\Phi''}\), \(W_\Delta\),
+\(W_{\Sigma'}\), \(W_{\Sigma''}\), or any additional AFH interference.
+
+The same fold also reports a separate **C extension**,
+\[
+R_C=\mathcal P_3L_C^{(3)}
+\left[
+\widehat c_M^2W_M+
+\widehat c_{\Phi''}^2W_{\Phi''}+
+2\widehat c_M\widehat c_{\Phi''}W_{M\Phi''}
+\right],
+\]
+so that C/B isolates the additional charge multipoles at fixed nucleon
+form factors. A is retained as a reference:
+\[
+R_A=\mathcal P_3L_C^{(3)}W_M^{\rm phys}(y_A),
+\]
+with \(\widehat F_1(0)=1\). All three use the same finite-size AFH
+\(W_M(y_A)\); no extra Helm or whole-nucleus form factor is multiplied.
+
+The leptonic Coulomb weight is
 \[
 L_C^{(3)}=L_{00}^{(3)}
 -\frac{E_R}{Q_A}(L_{03}^{(3)}+L_{30}^{(3)})
 +\left(\frac{E_R}{Q_A}\right)^2L_{33}^{(3)}.
 \]
-Thus it includes the nuclear longitudinal current through the conserved
-one-body nuclear-current relation, conditional on that continuity
+Thus the engine includes the nuclear longitudinal current through the
+conserved one-body nuclear-current relation, conditional on that continuity
 assumption. It is not an \(L_{00}\)-only calculation.
 
-The engine computes \(M+\Phi''+M\Phi''\) with exact isotope-specific
-\(q_A(E_R)\), finite-\(t_N\) form factors, and the full three-body
-phase-space tensor. It omits the transverse \(\Delta\), \(\Sigma'\), and
-\(\Sigma'\)-\(\Delta\) multipoles. Its status is
-\`COMPUTED_WITHIN_COULOMB_SECTOR_APPROXIMATION\`, with
-\`full_current_complete=false\`.
-
-The provisional fixed-speed Python AFH contraction gives
+The adopted default nucleon form-factor prescription is the first-order
+Bishara flavor-separated low-\(Q_N^2\) expansion:
 \[
-\max |R_{\rm spatial}/R_{\rm Coulomb}|=7.09596\times10^{-9}
+F_1^{uds}(t_N)=3+8.392t_N+\mathcal O(t_N^2),\qquad
+F_2^{uds}(t_N)=-0.552+\mathcal O(t_N).
 \]
-over 84 tested rows only. This is not a global halo-integrated bound and is
-not a reason to omit the spatial terms from the final kernel.
+Because the public prefactor uses \((g_1g_2g_{VN})^2\) with
+\(g_{VN}=3g_{Vq}\), the coefficients use
+\(\widehat F_i=F_i^{uds}/3\). The isoscalar_zexp prescription is
+retained only as a sensitivity model. The formal one-body impulse
+prescription is \(t_N=t_A=-2m_AE_R\), while AFH \(y_A\) uses
+\(Q_A^2=2m_AE_R+E_R^2\).
 
+The engine omits the transverse \(\Delta\), \(\Sigma'\), and
+\(\Sigma'\)-\(\Delta\) multipoles from B and C. Its full-vector
+candidate remains provisional until the native spatial-response and P3-C
+amplitude-level gates pass. The natural-xenon halo fold is still blocked
+from production promotion by the seven-isotope/eight-response native
+AFH gate.
 ## 5. Separate single-isotope Xe-131 native charge archive
 
 The independent Xe-131 archive used for the fixed-speed diagnostic is
@@ -130,12 +162,28 @@ The archive checks:
   \`6d199ac9fd4d7fdace93292d1dded1c98d9f49c2836244ee9d2e3ddd334e8333\`.
 
 The fixed-speed Xe-131 result is a Coulomb-sector ratio only, not a halo
-fold or a substitute for the seven-isotope/eight-response gate:
+fold or a substitute for the seven-isotope/eight-response gate. The original
+calculation's finite-q AFH nuclear form factor is retained through
+\(W_M^{\rm phys}(Q_A)\). In the external \(g_{VN}\) coupling basis,
+the original AFH reference uses \(\widehat F_1(0)=1\), not an extra
+\(F_1^{uds}(0)^2=9\). The AFH factor four is already included once in
+the physical equal-\(p=n\) response. We report all three ratios in the
+A/B/C hierarchy: B/A isolates the nucleon-current correction, C/B
+isolates the additional nuclear response at fixed nucleon form factors,
+and C/A is the total change from the original finite-size AFH reference.
 
-| \(E_R\) | \(q_A\) (GeV) | ratio to pointlike \(9W_M\) |
-|---:|---:|---:|
-| 200 keV | 0.220825560 | 0.77830934 (-22.1691%) |
-| 267 keV | 0.255146745 | 0.64921591 (-35.0784%) |
+| \(E_R\) | \(q_A\) (GeV) | Form factor | \(B/A\) | \(C/B\) | \(C/A\) |
+|---:|---:|---|---:|---:|---:|
+| 200 keV | 0.220825560 | bishara_linear | 0.739883 | 0.99695540 | 0.737630 |
+| 200 keV | 0.220825560 | isoscalar_zexp | 0.780997 | 0.99655805 | 0.778309 |
+| 267 keV | 0.255146745 | bishara_linear | 0.662175 | 0.91463689 | 0.605649 |
+| 267 keV | 0.255146745 | isoscalar_zexp | 0.721663 | 0.89961039 | 0.649216 |
+
+The common integrated \(L_C^{(3)}\) cancels in these normalized ratios.
+The dual-form-factor fixed-speed workflow passed (run 44443361283,
+artifact 14491448839; 7/7 regression tests).
+
+
 
 At 267 keV, PCHIP-versus-linear interpolation changes the ratio by
 \(7.47\times10^{-4}\), so the deep-\(W_M\)-minimum interpolation sensitivity
@@ -204,8 +252,96 @@ promote native_afh_validated, and it does not close the P3-B direct
 many-body covariant/q-frame/AFH amplitude comparison.
 
 The earlier private run 44222502400 attempt 2 was cancelled without an
-artifact. A newer native workflow,
-[44306907993](https://github.com/lm846802297-bit/research-compute-control/actions/runs/44306907993),
-is currently queued on the self-hosted Windows/X64/research-gpu runner.
-Until it uploads a native comparison artifact with all 16,807 rows passing,
-the seven-isotope native gate remains OPEN.
+artifact. The current native P3-B workflow is
+[44346207069](https://github.com/lm846802297-bit/research-compute-control/actions/runs/44346207069),
+opened from control-repository PR #2 and pinned to the reviewed source
+commit 5afc500a3102b857dd16e29432db8e6e068d65d1. Its job is QUEUED with
+no assigned self-hosted runner. Until it uploads a native comparison
+artifact with all 16,807 total-response rows and all 9,604 rank-resolved
+multipole rows passing, the seven-isotope native gate remains OPEN.
+
+
+## 2026-11-19 update: current PR #65 and native P3-B queue
+
+The formal three-body pipeline has been refreshed to the asymmetric Pole
+prescription: the first \(p-k\) propagator is zero-width and the second
+\(p'+k\) propagator carries the constant \(\Gamma_{\chi_2}(m_{\chi_2})\).
+The latest full-current workflow is
+[44432440600](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/actions/runs/44432440600)
+(artifact 14486904025), and its seven-isotope response-level contraction
+contains 28 rows (four benchmarks × seven isotopes), all positive. Its
+maximum spatial/charge ratio is \(7.0304970964\times10^{-9}\). This does
+not close P3-C because the output is still a response-level contraction,
+not a direct covariant-vs-AFH nuclear-amplitude comparison.
+
+The current P3-B native comparison is prepared in
+[research-compute-control PR #2](https://github.com/lm846802297-bit/research-compute-control/pull/2).
+Its run
+[44346207069](https://github.com/lm846802297-bit/research-compute-control/actions/runs/44346207069)
+is pinned to:
+- native AFH exporter/source commit
+  `5afc500a3102b857dd16e29432db8e6e068d65d1`;
+- LZ P3-B spatial response artifact from run `44337928314`,
+  artifact `14443055701`;
+- AFH source SHA-256
+  `dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372`.
+
+The native job is queued and has no assigned self-hosted runner at the
+latest check. P3-B therefore remains OPEN. Its acceptance target is the
+full 16,807-row seven-isotope/eight-response comparison plus 9,604
+rank-resolved Xe-129/Xe-131 multipole rows, with the comparator's pinned
+normalization, phase, and imaginary-residual tolerances. The 121-point
+Xe-131 dense charge export is also required to resolve the diffraction
+minimum before finalizing the fixed-speed recoil interpolation.
+
+The current interpolation audit is more informative than the old
+PCHIP-versus-linear warning: degree-8 and degree-10 local Chebyshev
+interpolants agree to numerical precision, but PCHIP differs from Cheb10
+by up to 1.6847% in \(W_M\) near
+\(q_A=0.25633847\) GeV. The normalized full/original-AFH-M-baseline ratio changes by
+at most 0.1182% in the selected scan. This is a local interpolation
+stability result, not a native AFH validation; the dense native Xe-131
+export remains the deciding comparison.
+
+P4 is not yet a production result. The existing
+`native_charge_sector_halo_fold.py` already requires a provenance-checked
+native seven-isotope/eight-response bundle, defaults to Pole width, and
+can report both the Coulomb-sector rate and an explicitly unpromoted
+leading-static full-vector candidate. The full-vector result must remain a
+candidate until P3-C passes. The seven-isotope set covers 99.8158% of the
+natural xenon atom fraction; the omitted Xe-124/Xe-126 abundance must remain
+explicit in every rate table.
+
+
+## 2026-11-19 update: P3-C spatial amplitude-level subgate
+
+The new Xe-131 spatial amplitude-level calculation is recorded in
+[P3_C_C0_CONSISTENT_CONTRACTION.md](P3_C_C0_CONSISTENT_CONTRACTION.md)
+and its detailed report
+[P3C_SPATIAL_AMPLITUDE_LEVEL_HELICITY_RESULTS.md](P3C_SPATIAL_AMPLITUDE_LEVEL_HELICITY_RESULTS.md).
+Using the pole-only full-current artifact 14486904025 and spatial response
+artifact 14486014588, the Cartesian Eq. (107) contraction and the
+helicity-resolved \(\Delta_J+\Sigma'_J\) amplitude reconstruction agree
+to a maximum relative residual of \(6.09\times10^{-16}\) over four Xe-131
+benchmarks. The maximum Eq. (107)-coefficient residual is
+\(8.53\times10^{-16}\).
+
+The selected-point interpolation comparison finds at most
+\(5.53\times10^{-6}\) relative difference between PCHIP interpolation of
+signed rank amplitudes and the existing linear interpolation of total
+responses. This supports interpolating signed multipole amplitudes before
+reconstructing responses, but is not a global interpolation acceptance.
+
+This is a **spatial amplitude-level subgate PASS only**. The calculation
+still uses provisional Python AFH amplitudes, does not rank-resolve the
+charge \(M,\Phi''\) amplitudes, and does not yet compare against an
+independently integrated coordinate-space bound-nucleus current. Full
+P3-C remains OPEN. The full-current workflow now runs this check and
+archives its JSON output; the CI rerun on the new PR branch will provide
+the reproducible hosted test result.
+
+
+The PR #66 CI rerun regenerated the spatial archive with the same response
+and multipole CSV SHA-256 values as the PR #65 archive. The private native
+workflow remains pinned to artifact 14443055701; its input files are
+byte-identical to the PR #66 spatial artifact 14486014588.

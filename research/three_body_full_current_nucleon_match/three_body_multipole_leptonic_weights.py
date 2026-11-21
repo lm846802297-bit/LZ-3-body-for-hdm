@@ -16,8 +16,9 @@ from pathlib import Path
 import numpy as np
 
 
-DEFAULT_F1 = 3.0
-DEFAULT_F2 = -0.552
+# The public rate prefactor uses g_VN=3*g_Vq, so coefficients use Fhat_i=F_i^{uds}/3.
+DEFAULT_F1 = 1.0
+DEFAULT_F2 = -0.184
 DEFAULT_MN_GEV = 0.938918
 
 
@@ -216,8 +217,8 @@ def afh_eq107_spatial_coefficients_from_amplitudes(
         "spin_channel_count": int(amplitudes.shape[0]),
         "spin_average": True,
         "spin_average_denominator": float(spin_average_denominator),
-        "F1V": float(f1),
-        "F2V": float(f2),
+        "F1N_effective": float(f1),
+        "F2N_effective": float(f2),
         "mN_GeV": float(mN_GeV),
         "transverse_DM_norm_L_T": float(np.sum(
             np.sum(np.abs(amplitudes) ** 2, axis=1)
@@ -293,8 +294,12 @@ def extract_afh_vector_coefficients(
     """AFH Eq. (107) coefficients for the leading static Dirac--Pauli current.
 
     Convention: q_AFH=-q_A, q_N=+q_A, metric (+---). The coefficients
-    multiply the physical equal-p/n AFH response columns. The default F1/F2
-    are provisional q=0 anchors, not finite-t form factors.
+    multiply physical equal-p/n AFH response columns and the external
+    g_VN=3*g_Vq prefactor. Hence f1,f2 are effective factors
+    Fhat_i=F_i^{uds}/3; defaults are Fhat_1(0)=1 and Fhat_2(0)=-0.184.
+    With omega_GeV=E_R, strict one-body impulse gives
+    t_N=omega^2-|q_A|^2=t_A. Passing omega_GeV=0 selects the distinct
+    static-nucleon diagnostic t_N=-|q_A|^2.
     """
     if not np.isfinite(qA_GeV) or qA_GeV < 0:
         raise ValueError("qA_GeV must be finite and non-negative")
@@ -313,7 +318,9 @@ def extract_afh_vector_coefficients(
         raise ValueError(f"L is not Hermitian: relative residual {hermiticity:.6g}")
 
     Q2 = qA_GeV * qA_GeV
-    tN = -Q2
+    if not np.isfinite(omega_GeV) or omega_GeV < 0.0:
+        raise ValueError("omega_GeV must be finite and non-negative")
+    tN = omega_GeV * omega_GeV - Q2
     LT = float(np.real(L[1, 1] + L[2, 2]))
     L00 = float(np.real(L[0, 0]))
     if LT < -1e-10 or L00 < -1e-10:
@@ -364,10 +371,13 @@ def extract_afh_vector_coefficients(
         "charge_continuity_relative_correction": float(
             L_C / max(abs(L00), 1.0e-300) - 1.0
         ),
-        "F1V_input": float(f1),
-        "F2V_input": float(f2),
+        "F1N_effective_input": float(f1),
+        "F2N_effective_input": float(f2),
         "mN_GeV": float(mN_GeV),
-        "form_factor_status": "constant provisional q=0 anchors; finite-t dependence not included",
+        "form_factor_status": (
+            "constant provisional q=0 anchors; t_N uses the supplied energy transfer "
+            "and spatial q_A separately"
+        ),
         "AFH_q_convention": "q_AFH=-q_A; q_N=+q_A",
         "response_column_convention": "physical equal-p/n AFH columns; factor four belongs to response columns exactly once",
         "C_M": float(C_M),
@@ -547,11 +557,15 @@ def analyze_tensor_archive(
             "leading static vector-current particle coefficients from AFH Eq. (107); "
             "not yet contracted with AFH nuclear response values"
         ),
+        "calculation_role": "P3-C amplitude-level structural matching diagnostic with q=0 effective nucleon-current anchors; not the adopted B production rate",
+        "primary_B_baseline_included": False,
+        "coupling_basis": "external g_VN=3*g_Vq",
+        "form_factor_normalization": "Fhat_i=F_i^(u+d+s)/3",
         "form_factor_input": {
-            "F1V": f1,
-            "F2V": f2,
+            "F1N_effective": f1,
+            "F2N_effective": f2,
             "mN_GeV": mN_GeV,
-            "status": "constant provisional q=0 anchors; finite-t dependence not included",
+            "status": "constant effective-nucleon q=0 anchors (Fhat_1=1, Fhat_2=-0.184) in the external g_VN basis; finite-t dependence not included",
         },
         "benchmarks": rows,
         "summary": {

@@ -1,29 +1,29 @@
 #!/usr/bin/env python3
-"""Finite-t diagnostic for the universal light-quark vector nucleon current.
+"""Low-momentum flavor-resolved nucleon vector form factors for the B baseline.
 
-The model current is J_q^mu = ubar gamma^mu u + dbar gamma^mu d
-+ sbar gamma^mu s.  At Q^2=0 the proton and neutron form factors are
-F1^V=3 and F2^V=-0.552.
+The quark current is J_q^mu = ubar gamma^mu u + dbar gamma^mu d
++ sbar gamma^mu s. Bishara et al., JHEP 11 (2017) 059,
+arXiv:1707.06998, Appendix A.1, provide the first-order flavor-separated
+Dirac slopes and the zero-transfer Pauli inputs:
+  F1^{uds}(t_N) = 3 + 8.392 t_N + O(t_N^2),
+  F2^{uds}(t_N) = -0.552 + O(t_N).
+The leading B-baseline prescription therefore keeps the F1 slope and the
+available leading F2 value; it does not invent an F2 slope.
 
-Two diagnostic finite-Q^2 prescriptions are provided:
+The AFH W_M(y_A) response describes the finite spatial distribution of
+nucleons in the whole nucleus. These nucleon form factors describe the
+quark-current matrix element inside an individual nucleon. Both enter B,
+and neither may replace or duplicate the other.
 
-1. bishara_linear:
-   use the slopes of the flavor-separated Dirac form factors quoted in
-   Bishara et al. (JHEP 11 (2017) 059, arXiv:1707.06998), while holding F2
-   at its q=0 value.  This is a first-order low-Q^2 diagnostic.
+The physical rate prefactor is written with g_VN=3*g_Vq outside the
+nucleon-current coefficients. Thus every absolute-rate caller must use
+Fhat_i=F_i^{uds}/3, with Fhat_1(0)=1 and Fhat_2(0)=-0.184.
+The raw quark-summed form factors remain available for provenance and
+flavor-level checks.
 
-2. isoscalar_zexp:
-   reconstruct the light-flavor sum from the isoscalar electromagnetic
-   proton+neutron form factors of Borah et al. (PRD 102, 074012 (2020))
-   plus the strange-current q=0/slope inputs from Bishara et al.  The
-   strange Pauli form factor is kept at its q=0 value because the cited
-   Bishara input does not provide a finite-Q^2 F2^s curve.
-
-Neither prescription is the final model-specific finite-t form factor.
-They are controlled diagnostics for the size of the form-factor effect
-relative to the old pointlike F1(0)=3, F2(0)=-0.552 benchmark.
+The isoscalar_zexp option is retained as an alternative form-factor
+sensitivity model, not as the default B prescription.
 """
-
 from __future__ import annotations
 
 import math
@@ -31,15 +31,35 @@ import math
 M_N_GEV = 0.938918
 F1V0 = 3.0
 F2V0 = -0.552
+F1N0 = 1.0
+F2N0 = F2V0 / 3.0
+DEFAULT_FORM_FACTOR_PRESCRIPTION = "bishara_linear"
 
-# Bishara et al. Appendix A.1:
-# F1^{u/p}'(0)=5.57(9), F1^{d/p}'(0)=2.84(5),
-# F1^{s/p}'(0)=-0.018(9), in GeV^{-2}.
-F1_SLOPE_BISHARA = 5.57 + 2.84 - 0.018
-F1_SLOPE_BISHARA_ERR = math.sqrt(0.09**2 + 0.05**2 + 0.009**2)
 
-# F2^{s/p}(0)=-0.064(17), while the universal sum is -0.552.
-F2S0 = -0.064
+def effective_nucleon_form_factors(F1_quark: float, F2_quark: float) -> tuple[float, float]:
+    """Normalize the universal u+d+s current to the external effective g_VN.
+
+    The paper/Mathematica rate prefactor contains g_VN=3*g_Vq. Therefore the
+    full quark-current form factors (F1(0)=3, F2(0)=-0.552) must be divided
+    by three before they enter Dirac-Pauli coefficients multiplying that
+    g_VN-normalized prefactor. This gives Fhat1(0)=1 and Fhat2(0)=-0.184.
+    """
+    if not math.isfinite(F1_quark) or not math.isfinite(F2_quark):
+        raise ValueError("quark-current form factors must be finite")
+    if F1V0 != 3.0:
+        raise ArithmeticError("universal u+d+s normalization changed; revisit g_VN=3*g_Vq")
+    return F1_quark / F1V0, F2_quark / F1V0
+
+# Bishara et al., Appendix A.1, Eqs. (A6)-(A8):
+# flavor-separated proton Dirac slopes in GeV^{-2}.
+BISHARA_F1_SLOPES = {"u": 5.57, "d": 2.84, "s": -0.018}
+BISHARA_F1_SLOPE_ERRORS = {"u": 0.09, "d": 0.05, "s": 0.009}
+F1_SLOPE_BISHARA = sum(BISHARA_F1_SLOPES.values())
+F1_SLOPE_BISHARA_ERR = math.sqrt(sum(x * x for x in BISHARA_F1_SLOPE_ERRORS.values()))
+
+# Bishara et al., Appendix A.1, Eqs. (A3)-(A5): F2^{s/p}(0), F2^{u/p}(0), F2^{d/p}(0).
+BISHARA_F2_ZERO = {"u": 1.609, "d": -2.097, "s": -0.064}
+F2S0 = BISHARA_F2_ZERO["s"]
 
 # Borah et al. isoscalar Sachs z expansion, Q^2 < 1 GeV^2 default fit.
 M_PI_GEV = 0.13957
@@ -87,11 +107,31 @@ def isoscalar_em_dirac_pauli(Q2: float, *, mN_GeV: float = M_N_GEV) -> tuple[flo
     F2 = (GM - GE) / (1.0 + tau)
     return F1, F2
 
-def bishara_linear(Q2: float) -> tuple[float, float]:
+def bishara_flavor_components(Q2: float) -> dict:
+    """Flavor-resolved low-Q_N^2 Dirac-Pauli inputs from Bishara et al.
+
+    With t_N=-Q_N^2, use F1^{q/p}(t_N)=F1^{q/p}(0)+t_N F1'^{q/p}(0)
+    and the quoted F2^{q/p}(0). Neutron values follow p->n, u<->d.
+    """
     if Q2 < 0.0:
         raise ValueError("Q2 must be non-negative")
-    F1 = F1V0 - Q2 * F1_SLOPE_BISHARA
-    return F1, F2V0
+    F1_zero = {"u": 2.0, "d": 1.0, "s": 0.0}
+    F1 = {
+        flavor: F1_zero[flavor] - Q2 * slope
+        for flavor, slope in BISHARA_F1_SLOPES.items()
+    }
+    F2 = dict(BISHARA_F2_ZERO)
+    return {
+        "F1_by_flavor": F1,
+        "F2_by_flavor": F2,
+        "F1V": sum(F1.values()),
+        "F2V": sum(F2.values()),
+    }
+
+
+def bishara_linear(Q2: float) -> tuple[float, float]:
+    components = bishara_flavor_components(Q2)
+    return components["F1V"], components["F2V"]
 
 def isoscalar_zexp(Q2: float) -> tuple[float, float]:
     """Central finite-Q^2 benchmark for the universal light-quark current.
@@ -109,36 +149,72 @@ def isoscalar_zexp(Q2: float) -> tuple[float, float]:
     F2s = F2S0
     return 3.0 * (F1S + F1s), 3.0 * (F2S + F2s)
 
-def charge_coefficients(qA_GeV: float, *, F1: float, F2: float, mN_GeV: float = M_N_GEV) -> tuple[float, float]:
+def charge_coefficients(
+    qA_GeV: float,
+    *,
+    F1: float,
+    F2: float,
+    mN_GeV: float = M_N_GEV,
+    tN_GeV2: float | None = None,
+) -> tuple[float, float]:
+    """Return charge-sector coefficients with separate spatial Q_A^2 and t_N.
+
+    If tN_GeV2 is omitted, retain the legacy static-nucleon diagnostic
+    q_N^0=0, t_N=-|q_A|^2.  The strict one-body impulse prescription passes
+    tN_GeV2=t_A=-2 m_A E_R, while the spatial Q_A^2 remains exact.
+    """
     if qA_GeV < 0.0 or mN_GeV <= 0.0:
         raise ValueError("invalid qA or nucleon mass")
-    Q2 = qA_GeV * qA_GeV
-    tN = -Q2
+    Q_A2 = qA_GeV * qA_GeV
+    tN = -Q_A2 if tN_GeV2 is None else float(tN_GeV2)
+    if not math.isfinite(tN):
+        raise ValueError("tN_GeV2 must be finite")
     cM = F1 + tN * (F1 + 2.0 * F2) / (8.0 * mN_GeV**2)
-    cPhiPP = Q2 * (F1 + 2.0 * F2) / (4.0 * mN_GeV**2)
+    cPhiPP = Q_A2 * (F1 + 2.0 * F2) / (4.0 * mN_GeV**2)
     return cM, cPhiPP
 
-def pointlike_baseline_correction(qA_GeV: float, W_phi_over_WM: float, W_Mphi_over_WM: float, *, prescription: str = "isoscalar_zexp") -> dict:
-    Q2 = qA_GeV * qA_GeV
+def q0_anchor_baseline_correction(
+    qA_GeV: float,
+    W_phi_over_WM: float,
+    W_Mphi_over_WM: float,
+    *,
+    prescription: str = DEFAULT_FORM_FACTOR_PRESCRIPTION,
+    tN_GeV2: float | None = None,
+) -> dict:
+    """Compare the finite-t_N M+Phi'' kernel with the A (q=0-current) M baseline.
+
+    The AFH W_M(Q_A) factor is present in both numerator and denominator.
+    The returned coefficients use Fhat_i=F_i^{uds}/3 because the public
+    prefactor is expressed with g_VN=3*g_Vq.
+    """
+    Q2 = qA_GeV * qA_GeV if tN_GeV2 is None else -float(tN_GeV2)
+    if Q2 < 0.0 or not math.isfinite(Q2):
+        raise ValueError("nucleon form-factor Q_N^2 must be finite and non-negative")
     if prescription == "bishara_linear":
-        F1, F2 = bishara_linear(Q2)
+        F1_quark, F2_quark = bishara_linear(Q2)
     elif prescription == "isoscalar_zexp":
-        F1, F2 = isoscalar_zexp(Q2)
+        F1_quark, F2_quark = isoscalar_zexp(Q2)
     else:
         raise ValueError("unknown form-factor prescription")
-    cM, cPhi = charge_coefficients(qA_GeV, F1=F1, F2=F2)
+    F1, F2 = effective_nucleon_form_factors(F1_quark, F2_quark)
+    cM, cPhi = charge_coefficients(
+        qA_GeV, F1=F1, F2=F2, tN_GeV2=tN_GeV2
+    )
     eta = cPhi / cM
     Qphi = 1.0 + 2.0 * eta * W_Mphi_over_WM + eta * eta * W_phi_over_WM
     return {
         "qA_GeV": qA_GeV,
-        "Q2_GeV2": Q2,
-        "F1V": F1,
-        "F2V": F2,
+        "Q_N2_GeV2": Q2,
+        "tN_GeV2": -Q2,
+        "F1V_quark_sum": F1_quark,
+        "F2V_quark_sum": F2_quark,
+        "F1N_effective": F1,
+        "F2N_effective": F2,
         "cM": cM,
         "cPhiPP": cPhi,
         "eta": eta,
         "Q_phiPP": Qphi,
-        "relative_to_pointlike_M": (cM * cM / F1V0**2) * Qphi - 1.0,
-        "relative_to_finite_t_M": Qphi - 1.0,
+        "relative_to_A_AFH_finite_size_M": cM * cM * Qphi - 1.0,
+        "relative_to_B_finite_tN_M": Qphi - 1.0,
         "prescription": prescription,
     }

@@ -56,5 +56,13 @@
     "tests": 16,
     "finite_width_scenarios": 6,
     "conclusion": "success"
+  },
+  "role": "static one-nucleon full-current matching diagnostic only; not the adopted B baseline",
+  "adopted_B_baseline": {
+    "prescription": "Bishara first-order flavor-resolved F1 plus leading constant F2",
+    "effective_form_factors": "Fhat_i=F_i^(u+d+s)/3 in the external gVN prefactor convention",
+    "nuclear_response": "finite-size AFH W_M(y_A) only",
+    "additional_afh_responses_in_baseline": false,
+    "formal_transfer": "t_N=t_A=-2*m_A*E_R; static q_N^0=0 in this metadata remains a separate diagnostic"
   }
 }

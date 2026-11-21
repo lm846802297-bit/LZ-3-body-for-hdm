@@ -3,10 +3,14 @@ import unittest
 import numpy as np
 
 from xe131_full_afh_fixed_speed_recoil_scan import (
-    EXPECTED_CHARGE_RATIOS,
+    EXPECTED_FORMAL_IMPULSE_AFH_RATIOS,
+    EXPECTED_STATIC_QN0_AFH_RATIOS,
     FORMAL_WIDTH_SCHEMES,
+    FORM_FACTOR_PRESCRIPTIONS,
     RESPONSE_NAMES,
+    charge_only_ratio_from_responses,
     contract_six_channels,
+    nucleon_form_factors,
     recoil_cases,
 )
 
@@ -54,14 +58,69 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
             17.0 * self.L, self.q, self.ER, self.responses, self.F1, self.F2
         )
         for key in (
-            "finite_t_M_over_pointlike_M",
-            "charge_only_over_pointlike_M",
+            "nucleon_finite_t_M_only_over_AFH_finite_size_M_baseline",
+            "charge_only_over_finite_t_M",
+            "full_over_finite_t_M",
             "PhiPP_over_finite_t_M_correction",
             "full_over_charge_only",
             "spatial_over_charge_only",
-            "full_over_pointlike_M",
+            "charge_only_over_AFH_finite_size_M_baseline",
+            "full_over_AFH_finite_size_M_baseline",
         ):
             self.assertAlmostEqual(a[key], b[key], places=12, msg=key)
+
+    def test_full_six_channel_ratio_uses_same_finite_t_M_baseline(self):
+        result = contract_six_channels(
+            self.L, self.q, self.ER, self.responses, self.F1, self.F2
+        )
+        self.assertAlmostEqual(
+            result["charge_only_over_finite_t_M"],
+            result["PhiPP_over_finite_t_M_correction"] + 1.0,
+            places=14,
+        )
+        self.assertAlmostEqual(
+            result["full_over_finite_t_M"],
+            result["full_six_channel_candidate"] / result["nucleon_finite_t_M_only"],
+            places=14,
+        )
+        self.assertNotAlmostEqual(
+            result["full_over_finite_t_M"],
+            result["full_over_AFH_finite_size_M_baseline"],
+            places=6,
+        )
+
+    def test_original_afh_baseline_retains_finite_q_nuclear_response(self):
+        result = contract_six_channels(
+            self.L, self.q, self.ER, self.responses, 3.0, -0.552
+        )
+        LC = result["coefficients"]["L_C_continuity_adjusted_charge_weight"]
+        self.assertAlmostEqual(
+            result["AFH_finite_size_M_baseline"],
+            LC * self.responses["M"],
+            places=12,
+        )
+        self.assertAlmostEqual(
+            result["nucleon_q0_M_only"], result["AFH_finite_size_M_baseline"], places=14
+        )
+        self.assertAlmostEqual(result["F1N_effective"], 1.0, places=14)
+        self.assertAlmostEqual(result["F2N_effective"], -0.184, places=14)
+
+    def test_low_order_form_factor_uses_full_one_body_tN(self):
+        qA = 0.22
+        omega = 200.0e-6
+        tN = omega * omega - qA * qA
+        f1, f2 = nucleon_form_factors(
+            qA, "bishara_linear", tN_GeV2=tN
+        )
+        self.assertAlmostEqual(f1, 3.0 - 8.392 * (-tN), places=13)
+        self.assertAlmostEqual(f2, -0.552, places=13)
+
+    def test_both_low_order_and_zexp_form_factor_inputs_are_available(self):
+        self.assertEqual(FORM_FACTOR_PRESCRIPTIONS, ("bishara_linear", "isoscalar_zexp"))
+        f1_linear, f2_linear = nucleon_form_factors(self.q, "bishara_linear")
+        f1_zexp, f2_zexp = nucleon_form_factors(self.q, "isoscalar_zexp")
+        self.assertNotAlmostEqual(f1_linear, f1_zexp, places=5)
+        self.assertNotAlmostEqual(f2_linear, f2_zexp, places=5)
 
     def test_formal_six_channel_scan_uses_pole_width_only(self):
         self.assertEqual(FORMAL_WIDTH_SCHEMES, ("pole",))
@@ -70,8 +129,63 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
         cases = {case["name"]: case for case in recoil_cases()}
         self.assertEqual(cases["off_pole_dm450"]["delta_m_GeV"], 450.0e-6)
         self.assertEqual(cases["near_pole_dm362"]["delta_m_GeV"], 362.0e-6)
-        self.assertIn(("off_pole_dm450", 200.0), EXPECTED_CHARGE_RATIOS)
-        self.assertIn(("near_pole_dm362", 267.0), EXPECTED_CHARGE_RATIOS)
+        expected_keys = {
+            ("isoscalar_zexp", "off_pole_dm450", 200.0),
+            ("isoscalar_zexp", "near_pole_dm362", 267.0),
+        }
+        self.assertEqual(set(EXPECTED_STATIC_QN0_AFH_RATIOS), expected_keys)
+        self.assertEqual(set(EXPECTED_FORMAL_IMPULSE_AFH_RATIOS), expected_keys)
+
+    def test_historical_anchor_values_are_static_qN0_diagnostics(self):
+        self.assertAlmostEqual(
+            EXPECTED_STATIC_QN0_AFH_RATIOS[
+                ("isoscalar_zexp", "off_pole_dm450", 200.0)
+            ],
+            0.778309339441481,
+            places=14,
+        )
+        self.assertAlmostEqual(
+            EXPECTED_STATIC_QN0_AFH_RATIOS[
+                ("isoscalar_zexp", "near_pole_dm362", 267.0)
+            ],
+            0.649215910707624,
+            places=14,
+        )
+
+    def test_formal_impulse_anchors_are_distinct_from_static_diagnostic(self):
+        key_200 = ("isoscalar_zexp", "off_pole_dm450", 200.0)
+        key_267 = ("isoscalar_zexp", "near_pole_dm362", 267.0)
+        self.assertAlmostEqual(
+            EXPECTED_FORMAL_IMPULSE_AFH_RATIOS[key_200],
+            0.7783094918005908,
+            places=14,
+        )
+        self.assertAlmostEqual(
+            EXPECTED_FORMAL_IMPULSE_AFH_RATIOS[key_267],
+            0.6492161323414921,
+            places=14,
+        )
+        self.assertGreater(
+            EXPECTED_FORMAL_IMPULSE_AFH_RATIOS[key_200]
+            - EXPECTED_STATIC_QN0_AFH_RATIOS[key_200],
+            0.0,
+        )
+        self.assertGreater(
+            EXPECTED_FORMAL_IMPULSE_AFH_RATIOS[key_267]
+            - EXPECTED_STATIC_QN0_AFH_RATIOS[key_267],
+            0.0,
+        )
+
+    def test_static_and_formal_transfer_reconstructions_are_not_interchanged(self):
+        static = charge_only_ratio_from_responses(
+            self.q, 200.0, self.responses, "isoscalar_zexp",
+            static_nucleon=True,
+        )
+        formal = charge_only_ratio_from_responses(
+            self.q, 200.0, self.responses, "isoscalar_zexp",
+            static_nucleon=False,
+        )
+        self.assertNotAlmostEqual(static, formal, places=10)
 
 
 if __name__ == "__main__":

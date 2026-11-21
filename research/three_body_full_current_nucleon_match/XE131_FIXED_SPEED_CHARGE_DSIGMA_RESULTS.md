@@ -1,6 +1,6 @@
-# Xe-131 fixed-speed charge-sector differential cross-section ratio
+# Xe-131 fixed-speed charge-sector ratio — isoscalar-zexp sensitivity
 
-**Status:** PASS — workflow 44262472992, commit
+**Status:** PASS as an alternate isoscalar_zexp sensitivity diagnostic; not the adopted B baseline. Workflow 44262472992, commit
 a25efe7025f2cc0d530685291146248fb24f64aa.
 
 ## 1. Scope and benchmark
@@ -20,21 +20,25 @@ average. The benchmark is:
 The benchmark-specific mass splitting is 450 keV at \(E_R=200\) keV and
 362 keV at \(E_R=267\) keV.
 
-The numerator includes native AFH v6.0 \(M,\Phi'',M\Phi''\) responses,
-finite-\(t_N\) Dirac--Pauli coefficients \(c_M,c_{\Phi''}\), and the signed
-interference. The denominator is the original pointlike \(9W_M\) baseline:
+The numerator is the C charge-response extension using native AFH v6.0
+\(M,\Phi'',M\Phi''\) responses and finite-\(t_N\) Dirac--Pauli
+coefficients with the isoscalar_zexp sensitivity model. The denominator is
+A, the q=0 effective-current reference with the same finite-size AFH
+\(W_M(y_A)\):
 \[
-\mathcal Q(E_R)=
-\frac{(d\sigma/dE_R)_{\rm finite-t_N,\ M+\Phi''}}
-     {(d\sigma/dE_R)_{\rm pointlike,\ M}}.
+\mathcal Q(E_R)=C/A=
+\frac{(d\sigma/dE_R)_{M+\Phi''+M\Phi''}}
+     {(d\sigma/dE_R)_{A,\,W_M(y_A)}}.
 \]
+This is not B. The adopted B baseline uses the Bishara low-momentum
+flavor-separated form factors and only AFH \(W_M(y_A)\).
 
 ## 2. Numerical result
 
-| \(E_R\) | \(\Delta m\) | \(\mathcal Q(E_R)\) | Relative change |
-|---:|---:|---:|---:|
-| 200 keV | 450 keV | 0.7783093394 | -22.1691% |
-| 267 keV | 362 keV | 0.6492159107 | -35.0784% |
+| \(E_R\) | \(\Delta m\) | \(B/A\) | \(C/B\) | \(C/A\) |
+|---:|---:|---:|---:|---:|
+| 200 keV | 450 keV | 0.78099749 | 0.99655805 | 0.77830934 |
+| 267 keV | 362 keV | 0.72166342 | 0.89961039 | 0.64921591 |
 
 The result is identical for pole/running width choices within numerical
 precision: the ratio max-minus-min is \(2.22\times10^{-16}\) at 200 keV
@@ -46,17 +50,21 @@ would still depend on the width through the common phase-space factor.
 | Quantity | 200 keV | 267 keV |
 |---|---:|---:|
 | \(q_A\) (GeV) | 0.220825559966 | 0.255146745386 |
-| \(F_1^V(t_N)\) | 2.66316341 | 2.56388626 |
-| \(F_2^V(t_N)\) | -0.46805344 | -0.44977451 |
-| \(c_M\) | 2.65122188 | 2.54852325 |
-| \(c_{\Phi''}\) | 0.02388306 | 0.03072600 |
+| raw \(F_1^{uds}(t_N)\) | 2.66316341 | 2.56388626 |
+| raw \(F_2^{uds}(t_N)\) | -0.46805344 | -0.44977451 |
+| effective \(\widehat F_1\) | 0.88772114 | 0.85462875 |
+| effective \(\widehat F_2\) | -0.15601781 | -0.14992483 |
+| effective \(\widehat c_M\) | 0.88374063 | 0.84950775 |
+| effective \(\widehat c_{\Phi''}\) | 0.00796102 | 0.01024200 |
 | \(W_{\Phi''}/W_M\) | 0.03695594 | 19.84506258 |
 | \(W_{M\Phi''}/W_M\) | -0.19120930 | -4.28296439 |
-| \(Q_{\Phi''}\), relative to finite-\(t_N\) M-only | 0.99655805 | 0.89961039 |
-| finite-\(t_N\) M-only / pointlike M | 0.78099749 | 0.72166342 |
-| full coherent charge ratio | 0.77830934 | 0.64921591 |
+| \(C/B\), additional \(\Phi''\) correction | 0.99655805 | 0.89961039 |
+| \(B/A\), nucleon-current correction | 0.78099749 | 0.72166342 |
+| \(C/A\), total relative to A | 0.77830934 | 0.64921591 |
 
-The coherent charge kernel is
+These are isoscalar_zexp sensitivity values only. The adopted Bishara B
+results are stored in the current workflow outputs and the canonical
+baseline comparison document. The coherent charge kernel is
 \[
 K_{\rm ch}=L_C^{(3)}
 \left[c_M^2W_M+2c_Mc_{\Phi''}W_{M\Phi''}

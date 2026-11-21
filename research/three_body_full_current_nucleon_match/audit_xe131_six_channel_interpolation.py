@@ -61,6 +61,7 @@ def local_chebyshev_value(
 def point_record(scan: list[dict], metric: np.ndarray, i: int) -> dict:
     row = scan[i]
     return {
+        "form_factor_prescription": row.get("form_factor_prescription", "legacy_single_model"),
         "benchmark": row["benchmark"],
         "ER_keV": float(row["ER_keV"]),
         "qA_GeV": float(row["qA_GeV"]),
@@ -128,11 +129,13 @@ def run_audit(
         kernels[f"{sector}_cheb10"] = sum(coeff[n] * cheb10_values[n] for n in names)
     kernels["full_pchip"] = kernels["charge_pchip"] + kernels["spatial_pchip"]
     kernels["full_cheb10"] = kernels["charge_cheb10"] + kernels["spatial_cheb10"]
-    pointlike_pchip = np.asarray([float(r["kernel_pointlike_M"]) for r in scan])
-    pointlike_coeff = pointlike_pchip / pchip_values["M"]
-    pointlike_cheb10 = pointlike_coeff * cheb10_values["M"]
-    kernels["full_over_pointlike_pchip"] = kernels["full_pchip"] / pointlike_pchip
-    kernels["full_over_pointlike_cheb10"] = kernels["full_cheb10"] / pointlike_cheb10
+    original_afh_pchip = np.asarray([
+        float(r["kernel_AFH_finite_size_M_baseline"]) for r in scan
+    ])
+    original_afh_coeff = original_afh_pchip / pchip_values["M"]
+    original_afh_cheb10 = original_afh_coeff * cheb10_values["M"]
+    kernels["full_over_original_AFH_pchip"] = kernels["full_pchip"] / original_afh_pchip
+    kernels["full_over_original_AFH_cheb10"] = kernels["full_cheb10"] / original_afh_cheb10
 
     for sector in ("charge", "spatial", "full"):
         p, c = kernels[f"{sector}_pchip"], kernels[f"{sector}_cheb10"]
@@ -144,10 +147,11 @@ def run_audit(
             "worst_point": point_record(scan, rel, worst),
         }
     ratio_rel = np.abs(
-        kernels["full_over_pointlike_cheb10"] / kernels["full_over_pointlike_pchip"] - 1.0
+        kernels["full_over_original_AFH_cheb10"]
+        / kernels["full_over_original_AFH_pchip"] - 1.0
     )
     ratio_worst = int(np.argmax(ratio_rel))
-    summaries["ratio_full_over_pointlike_M"] = {
+    summaries["ratio_full_over_original_AFH_M_baseline"] = {
         "max_relative_pchip_vs_cheb10": float(ratio_rel[ratio_worst]),
         "worst_point": point_record(scan, ratio_rel, ratio_worst),
     }
@@ -171,7 +175,10 @@ def run_audit(
 
     output = []
     for i, row in enumerate(scan):
-        item = {k: row[k] for k in ("benchmark", "ER_keV", "qA_GeV", "width_scheme")}
+        item = {
+            k: row[k]
+            for k in ("form_factor_prescription", "benchmark", "ER_keV", "qA_GeV", "width_scheme")
+        }
         for name in CHANNELS:
             item[f"W_{name}_pchip"] = float(pchip_values[name][i])
             item[f"W_{name}_cheb8"] = float(cheb8_values[name][i])
@@ -181,11 +188,15 @@ def run_audit(
             item[f"K_{sector}_pchip"] = float(p)
             item[f"K_{sector}_cheb10"] = float(c)
             item[f"K_{sector}_cheb10_over_pchip_minus_1"] = float(c/p - 1.0)
-        item["full_over_pointlike_M_pchip"] = float(kernels["full_over_pointlike_pchip"][i])
-        item["full_over_pointlike_M_cheb10"] = float(kernels["full_over_pointlike_cheb10"][i])
-        item["full_over_pointlike_M_cheb10_over_pchip_minus_1"] = float(
-            kernels["full_over_pointlike_cheb10"][i] /
-            kernels["full_over_pointlike_pchip"][i] - 1.0
+        item["full_over_original_AFH_M_baseline_pchip"] = float(
+            kernels["full_over_original_AFH_pchip"][i]
+        )
+        item["full_over_original_AFH_M_baseline_cheb10"] = float(
+            kernels["full_over_original_AFH_cheb10"][i]
+        )
+        item["full_over_original_AFH_M_baseline_cheb10_over_pchip_minus_1"] = float(
+            kernels["full_over_original_AFH_cheb10"][i] /
+            kernels["full_over_original_AFH_pchip"][i] - 1.0
         )
         output.append(item)
     write_csv(out_csv, output)
@@ -209,6 +220,10 @@ def run_audit(
         "native_afh_spatial_validated": False,
         "phase_space_reintegrated": False,
         "scan_rows": len(scan),
+        "form_factor_prescriptions": sorted({
+            row.get("form_factor_prescription", "legacy_single_model") for row in scan
+        }),
+        "unique_recoil_q_points": len(np.unique(q_scan)),
         "response_grid_points": len(q_grid),
         "response_q_min_GeV": float(q_grid[0]),
         "response_q_max_GeV": float(q_grid[-1]),
@@ -244,7 +259,7 @@ def main() -> None:
         "status": result["status"],
         "scan_rows": result["scan_rows"],
         "max_full_kernel_relative_difference": result["channel_summaries"]["kernel_full"]["max_relative_pchip_vs_cheb10"],
-        "max_full_over_pointlike_ratio_relative_difference": result["channel_summaries"]["ratio_full_over_pointlike_M"]["max_relative_pchip_vs_cheb10"],
+        "max_full_over_original_AFH_ratio_relative_difference": result["channel_summaries"]["ratio_full_over_original_AFH_M_baseline"]["max_relative_pchip_vs_cheb10"],
         "max_charge_kernel_relative_difference": result["channel_summaries"]["kernel_charge"]["max_relative_pchip_vs_cheb10"],
         "max_spatial_kernel_relative_difference": result["channel_summaries"]["kernel_spatial"]["max_relative_pchip_vs_cheb10"],
     }, indent=2))

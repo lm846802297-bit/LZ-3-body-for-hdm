@@ -179,22 +179,24 @@ content is:
 | Coulomb charge | \(M\) | \(C_M=c_M^2L_C\) |
 | Charge spin-orbit correction | \(\Phi''\) | \(C_{\Phi''}=c_{\Phi''}^2L_C\) |
 | Charge interference | \(M\Phi''\) | \(C_{M\Phi''}=2c_Mc_{\Phi''}L_C\) |
-| Transverse convection | \(\Delta\) | \(C_\Delta\propto F_1^2Q_A^2L_T\) |
-| Transverse magnetization | \(\Sigma'\) | \(C_{\Sigma'}\propto(F_1+F_2)^2Q_A^2L_T\) |
-| Convection-magnetization interference | \(\Sigma'\Delta\) | \(C_{\Sigma'\Delta}\propto-F_1(F_1+F_2)Q_A^2L_T\) |
+| Transverse convection | \(\Delta\) | \(C_\Delta\propto \widehat F_1^2Q_A^2L_T\) |
+| Transverse magnetization | \(\Sigma'\) | \(C_{\Sigma'}\propto(\widehat F_1+\widehat F_2)^2Q_A^2L_T\) |
+| Convection-magnetization interference | \(\Sigma'\Delta\) | \(C_{\Sigma'\Delta}\propto-\widehat F_1(\widehat F_1+\widehat F_2)Q_A^2L_T\) |
 
 The explicit leading-static coefficients in the current convention are
 \[
 \begin{aligned}
-C_\Delta&=\frac{(F_1^V)^2Q_A^2}{2m_N^2}L_T^{(3)},\\
-C_{\Sigma'}&=\frac{(F_1^V+F_2^V)^2Q_A^2}{8m_N^2}L_T^{(3)},\\
-C_{\Sigma'\Delta}&=-\frac{F_1^V(F_1^V+F_2^V)Q_A^2}{2m_N^2}L_T^{(3)}.
+C_\Delta&=\frac{(\widehat F_1^N)^2Q_A^2}{2m_N^2}L_T^{(3)},\\
+C_{\Sigma'}&=\frac{(\widehat F_1^N+\widehat F_2^N)^2Q_A^2}{8m_N^2}L_T^{(3)},\\
+C_{\Sigma'\Delta}&=-\frac{\widehat F_1^N(\widehat F_1^N+\widehat F_2^N)Q_A^2}{2m_N^2}L_T^{(3)}.
 \end{aligned}
 \]
-For \(F_1^V(F_1^V+F_2^V)>0\),
+For \(\widehat F_1^N(\widehat F_1^N+\widehat F_2^N)>0\),
 \[
 C_{\Sigma'\Delta}=-2\sqrt{C_\Delta C_{\Sigma'}}.
 \]
+Here the coefficients are written in the adopted external-\(g_{VN}=3g_{Vq}\) convention, so the symbols are the effective form factors \(\widehat F_i^N=F_i^{uds,N}/3\). The raw universal flavor sums \(F_1^{uds}(0)=3\), \(F_2^{uds}(0)=-0.552\) must not be inserted into these coefficients while retaining the external \(g_{VN}\) prefactor.
+
 The latest 12-benchmark extraction satisfies this particle-side identity
 with maximum relative residual \(1.72121\times10^{-16}\).
 
@@ -237,6 +239,8 @@ a leading static matching layer. In particular, setting
 \(C_{\Sigma''}=C_{\widetilde\Phi'}=0\) is a result of that truncation, not a
 proof that every corresponding contribution vanishes in the full
 three-body multipole problem.
+
+The form-factor and \(c_M\) entries in this table are raw flavor-summed values. For the adopted external-\(g_{VN}\) convention, divide each of them by three before constructing an absolute kernel; the corresponding kernel is smaller by a factor of nine. Because this section reports ratios with the same common normalization in numerator and denominator, its dimensionless ratios are unchanged. This table uses the isoscalar z-expansion alternative and is not the adopted Bishara-linear B production curve.
 
 The earlier spatial-sector bound
 \(|R_{\rm spatial}/R_{\rm charge}|<7.1\times10^{-9}\) applies to its
@@ -353,9 +357,9 @@ shown below. The ratio is
 \[
 \mathcal Q(E_R)=
 \frac{(d\sigma/dE_R)_{\rm finite-t_N,\ M+\Phi''}}
-     {(d\sigma/dE_R)_{\rm pointlike,\ M}},
+     {(d\sigma/dE_R)_{q=0\ {\rm nucleon},\ M}},
 \]
-where the denominator is the original pointlike \(9W_M\) baseline.
+where the denominator retains the same finite-size AFH \(W_M(y_A)\) and is the zero-transfer nucleon-current reference. The historical computation expressed both numerator and denominator in the raw flavor-summed basis, so the denominator was written as \(9W_M\); the equivalent external-\(g_{VN}\) convention divides every nucleon-current coefficient by three and uses \(W_M\). The dimensionless ratio is unchanged, but the raw absolute kernel is not suitable for an external-\(g_{VN}\) prefactor.
 
 | \(E_R\) | \(\Delta m\) | \(\mathcal Q(E_R)\) | Relative change |
 |---:|---:|---:|---:|
@@ -372,14 +376,14 @@ The decomposition of the dimensionless charge-sector ratio is:
 
 | Quantity | 200 keV | 267 keV |
 |---|---:|---:|
-| \(F_1^V(t_N)\) | 2.66316341 | 2.56388626 |
-| \(F_2^V(t_N)\) | -0.46805344 | -0.44977451 |
-| \(c_M\) | 2.65122188 | 2.54852325 |
-| \(c_{\Phi''}\) | 0.02388306 | 0.03072600 |
+| Raw \(F_1^{uds}(t_N)\) | 2.66316341 | 2.56388626 |
+| Raw \(F_2^{uds}(t_N)\) | -0.46805344 | -0.44977451 |
+| Raw \(c_M^{uds}\) | 2.65122188 | 2.54852325 |
+| Raw \(c_{\Phi''}^{uds}\) | 0.02388306 | 0.03072600 |
 | \(W_{\Phi''}/W_M\) | 0.03695594 | 19.84506258 |
 | \(W_{M\Phi''}/W_M\) | -0.19120930 | -4.28296439 |
 | \(Q_{\Phi''}\), relative to finite-\(t_N\) M-only | 0.99655805 | 0.89961039 |
-| finite-\(t_N\) M-only / pointlike M | 0.78099749 | 0.72166342 |
+| finite-\(t_N\) M-only / q=0 nucleon M-only | 0.78099749 | 0.72166342 |
 | full coherent charge ratio | 0.77830934 | 0.64921591 |
 
 The earlier \(-21.48\%\) and \(-34.24\%\) numbers in §45.2--45.3 are

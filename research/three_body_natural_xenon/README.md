@@ -2,6 +2,10 @@
 
 本目录包含整理后的 Mathematica 主笔记本和计算所需的 AFH v6 氙核响应输入。主计算代码直接保存在 notebook 中，按顺序从物理参数、FeynCalc 振幅与自旋迹、三体相空间 `NIntegrate`，推进到同位素/速度平均、总截面和天然氙事件率。
 
+## 2026-11-19 基准状态
+
+Mathematica notebook 保留为原始 AFH 有限尺寸 A 参考；本次正式采用的 B 基准是在相同 AFH (W_M(y_A)) 上加入低动量核子 Dirac–Pauli 形状因子 (widehat F_1(t_N),widehat F_2(t_N))，不加入其他 AFH 响应。原 notebook 的历史主 rate 路径不能直接视为已经完成 B。B 的统一公式、(g_{VN}) factor-three 归一化、AFH factor-four 账本和 Python 实现见 `research/three_body_full_current_nucleon_match/NUCLEAR_FINITE_SIZE_BASELINE_POLICY.md`。
+
 ## 文件
 
 - `矢量耦合暗物质三体散射与天然氙反冲率.nb`：主计算及末尾分组的验证。

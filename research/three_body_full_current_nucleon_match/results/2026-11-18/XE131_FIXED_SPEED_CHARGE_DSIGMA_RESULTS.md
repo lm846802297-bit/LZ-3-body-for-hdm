@@ -1,5 +1,7 @@
 # Xe-131 fixed-speed native AFH Coulomb-sector differential cross-section ratio
 
+> **SUPERSEDED FOR PRODUCTION NORMALIZATION (2026-11-19):** This archived result used the old (9W_M) M-only normalization label. (W_M(Q_A)) itself is finite-size AFH, not a point nucleus; however, in the adopted external-(g_{VN}) convention the raw (F_1^{uds}(0)=3) must be divided by three before entering the current coefficient. Do not use this artifact's absolute normalization as B. Recompute with (widehat F_i=F_i^{uds}/3), Bishara low-(Q_N^2), and B-only (W_M(y_A)). Its dimensionless old-prescription ratios are historical diagnostics only.
+
 **Status:** \`PASS_XE131_FIXED_SPEED_COULOMB_SECTOR_RATIO\`
 
 **Workflow:** run 44262472992  
