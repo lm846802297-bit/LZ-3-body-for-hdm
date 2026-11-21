@@ -1,5 +1,8 @@
 # Repository instructions — LZ three-body dark-matter research
 
+> **Mandatory compute architecture:** Follow [RESEARCH_COMPUTE_POLICY.md](RESEARCH_COMPUTE_POLICY.md) for all numerical and computational work. Select the primary environment by actual execution target: ordinary GPT chat uses ChatGPT Linux; Codex/Work local execution uses the user's Windows environment; Codex/Work cloud-computer execution uses the GPT-managed cloud environment. GitHub is the canonical source/result archive; GitHub Actions is reserved for independent verification and CI, not the primary calculation engine.
+
+
 > **Research communication standard:** Follow the canonical [project-wide decision policy](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/blob/main/AGENTS.md#research-communication-and-decision-policy) and [research reporting workflow](https://github.com/lm846802297-bit/LZ-3-body-for-hdm/blob/main/research/WORKFLOW.md#9-research-reporting-and-communication-standard). These are maintained on `main`; do not fork or duplicate the policy text.
 
 These instructions are mandatory for all agents and contributors. They complement [CONTRIBUTING.md](CONTRIBUTING.md), [research/WORKFLOW.md](research/WORKFLOW.md), and the research-result archival policy.
