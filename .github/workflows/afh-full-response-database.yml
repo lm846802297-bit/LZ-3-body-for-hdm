@@ -31,7 +31,12 @@ jobs:
             research/afh_full_response_database/run_afh_full_response_database.py \
             research/afh_full_response_database/validate_afh_full_response_database.py \
             research/afh_full_response_database/compare_native_afh_full_response.py \
-            research/afh_full_response_database/tests/test_afh_full_response_database.py
+            research/afh_full_response_database/verify_native_full_response_provenance.py \
+            research/afh_full_response_database/verify_native_spatial_multipoles_provenance.py \
+            research/afh_full_response_database/validate_afh_spatial_multipoles_native.py \
+            research/afh_full_response_database/merge_afh_spatial_multipoles_q0.py \
+            research/afh_full_response_database/tests/test_afh_full_response_database.py \
+            research/afh_full_response_database/tests/test_afh_spatial_multipoles_native.py
       - name: Run AFH eight-response regression tests
         run: |
           python -m unittest discover \
@@ -46,6 +51,25 @@ jobs:
           python research/afh_full_response_database/validate_afh_full_response_database.py \
             --csv "$RUNNER_TEMP/afh-full-response/afh_v6_full_eight_response_7isotope.csv" \
             --out-json "$RUNNER_TEMP/afh-full-response/validation.json"
+      - name: Compare committed native AFH exports with regenerated Python reference
+        run: |
+          python research/afh_full_response_database/compare_native_afh_full_response.py \
+            --python-csv "$RUNNER_TEMP/afh-full-response/afh_v6_full_eight_response_7isotope.csv" \
+            --native-dir research/afh_full_response_database/output/native \
+            --out-json "$RUNNER_TEMP/afh-full-response/native_comparison.json"
+      - name: Verify native AFH provenance and seven-isotope comparison gate
+        run: |
+          python research/afh_full_response_database/verify_native_full_response_provenance.py \
+            --comparison "$RUNNER_TEMP/afh-full-response/native_comparison.json"
+      - name: Validate committed native rank-resolved spatial multipoles
+        run: |
+          python research/afh_full_response_database/validate_afh_spatial_multipoles_native.py \
+            --csv research/afh_full_response_database/output/native-spatial-multipoles/afh_v6_xe129_xe131_spatial_multipoles_native.csv \
+            --metadata research/afh_full_response_database/output/native-spatial-multipoles/native_spatial_multipole_metadata.txt \
+            --out-json "$RUNNER_TEMP/afh-full-response/spatial_multipoles_validation.json"
+      - name: Verify native spatial multipole provenance manifest
+        run: |
+          python research/afh_full_response_database/verify_native_spatial_multipoles_provenance.py
       - name: Record source identity and SHA-256 checksums
         run: |
           git rev-parse HEAD > "$RUNNER_TEMP/afh-full-response/source_commit.txt"

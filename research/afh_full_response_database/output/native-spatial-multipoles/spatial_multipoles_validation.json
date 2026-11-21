@@ -1,0 +1,35 @@
+{
+  "status": "PASS_NATIVE_AFH_SPATIAL_MULTIPOLES",
+  "scope": "native AFH v6.0 rank-resolved DeltaJ and SigmaPJ amplitudes",
+  "isotopes": [
+    129,
+    131
+  ],
+  "rows": 9604,
+  "expected_rows": 9604,
+  "isotope_summaries": {
+    "129": {
+      "rows": 2401,
+      "ranks": [
+        1
+      ],
+      "q_points": 2401,
+      "q_min_GeV": 0.0,
+      "q_max_GeV": 0.6,
+      "max_abs_imaginary": 0.0
+    },
+    "131": {
+      "rows": 7203,
+      "ranks": [
+        1,
+        2,
+        3
+      ],
+      "q_points": 2401,
+      "q_min_GeV": 0.0,
+      "q_max_GeV": 0.6,
+      "max_abs_imaginary": 0.0
+    }
+  },
+  "failures": []
+}
