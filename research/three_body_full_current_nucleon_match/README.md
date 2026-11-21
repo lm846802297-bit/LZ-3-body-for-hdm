@@ -519,12 +519,14 @@ anchors are:
 | \(E_R\) | \(B/A\) | \(C/B\) | \(C/A\) |
 |---:|---:|---:|---:|
 | 200 keV | 0.7398828761 | 0.9969554024 | 0.7376302305 |
-| 267 keV | 0.6621749872 | 0.9146368782 | 0.6056496631 |
+| 267 keV | 0.6621749872 | 0.9146639874 | 0.6056676141 |
+
+The 267 keV row uses the exact native AFH responses at q(267 keV)=0.255146745 GeV. The merged 2,509-point dense-grid PCHIP anchor is C/A=0.6056675913, a 2.3e-8 interpolation residual.
 
 Thus the finite nucleon form-factor correction changes A to B by
 \(-26.01\%\) at 200 keV and \(-33.78\%\) at 267 keV. The additional
 \(\Phi''\) charge extension changes B by approximately
-\(-0.3045\%\) and \(-8.5363\%\), respectively. The large local
+\(-0.3045\%\) and \(-8.5336\%\), respectively. The large local
 correction near 267 keV is associated with the small \(W_M\) denominator;
 it must be interpreted together with the absolute responses.
 

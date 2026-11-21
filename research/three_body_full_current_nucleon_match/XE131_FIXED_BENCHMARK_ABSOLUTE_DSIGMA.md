@@ -168,7 +168,9 @@ ratios, independent of the common three-body phase-space factor:
 | \(E_R\) | \(B/A\) | \(C/B\) | \(C/A\) |
 |---:|---:|---:|---:|
 | 200 keV | 0.7398828761 | 0.9969554024 | 0.7376302305 |
-| 267 keV | 0.6621749872 | 0.9146368782 | 0.6056496631 |
+| 267 keV | 0.6621749872 | 0.9146639874 | 0.6056676141 |
+
+The 267 keV row uses the exact native AFH responses at q(267 keV)=0.255146745 GeV. The merged 2,509-point dense-grid PCHIP anchor is C/A=0.6056675913, a 2.3e-8 interpolation residual.
 
 These anchors are regression targets for the absolute-spectrum code.
 They are not themselves absolute cross sections or halo-averaged rates.

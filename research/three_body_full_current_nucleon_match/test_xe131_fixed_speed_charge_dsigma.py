@@ -74,13 +74,15 @@ class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
         self.assertGreater(terms["C_M_plus_PhiPP"], 0.0)
 
     def test_native_AFH_A_B_C_ratio_anchors(self):
-        # PCHIP response ratios from the provenance-pinned native AFH v6.0
-        # Xe-131 grid. The common C0 and factor-four normalizations cancel.
+        # Exact native AFH response ratios at q(267 keV)=0.255146745 GeV.
+        # The merged dense-grid PCHIP gives C/A=0.6056675913, 2.3e-8 below
+        # the exact value; that interpolation residual is checked in the
+        # full/absolute scan anchors.
         anchors = {
             200.0: (0.036955940801758985, -0.19120929699010936,
                     0.7398828761262942, 0.9969554024414953, 0.7376302305280606),
-            267.0: (19.84506258174282, -4.282964386166763,
-                    0.6621749872241893, 0.9146368782933962, 0.6056496631987021),
+            267.0: (19.8387449002865, -4.28160415158773,
+                    0.6621749872241892, 0.9146639873570406, 0.6056676141425744),
         }
         for er_keV, (wphi_over_wm, wmphi_over_wm, expected_ba,
                      expected_cb, expected_ca) in anchors.items():

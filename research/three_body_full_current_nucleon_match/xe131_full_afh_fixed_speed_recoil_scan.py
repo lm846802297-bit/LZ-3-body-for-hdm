@@ -42,9 +42,14 @@ MS_GEV = 300.0e-6
 SPEED_KM_S = 776.0
 G2 = 1.0
 FORMAL_WIDTH_SCHEMES = ("pole",)
+# The 267 keV anchor is evaluated on the merged 2,509-point grid with the
+# 121-point native Xe-131 dip overlay. Direct native AFH at
+# q(267 keV)=0.255146745 GeV gives 0.6056676141; the 0.000025 GeV dense
+# PCHIP gives 0.6056675913. The previous 0.6056496631 anchor was the
+# coarse-grid interpolation value.
 EXPECTED_CHARGE_RATIOS = {
     ("off_pole_dm450", 200.0): 0.7376302304925361,
-    ("near_pole_dm362", 267.0): 0.6056496631467666,
+    ("near_pole_dm362", 267.0): 0.605667591295857,
 }
 RESPONSE_NAMES = ("M", "PhiPP", "MPhiPP", "Delta", "SigmaPrime", "SigmaPrimeDelta")
 

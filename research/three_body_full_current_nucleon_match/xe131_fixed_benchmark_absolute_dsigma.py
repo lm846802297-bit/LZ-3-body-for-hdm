@@ -382,9 +382,14 @@ def run(
     # These anchors reproduce the previously validated fixed-speed ratio
     # calculation, although the full absolute curve keeps Delta m=450 keV
     # fixed at every recoil.
+    # The 267 keV anchor is evaluated on the merged 2,509-point grid with the
+    # 121-point native Xe-131 dip overlay. Direct native AFH at
+    # q(267 keV)=0.255146745 GeV gives 0.6056676141; the 0.000025 GeV dense
+    # PCHIP gives 0.6056675913. The previous 0.6056496631 anchor was the
+    # coarse-grid interpolation value.
     expected_charge_ratios = {
         200.0: 0.7376302304925361,
-        267.0: 0.6056496631467666,
+        267.0: 0.605667591295857,
     }
     ratio_checks = []
     for ER, expected in expected_charge_ratios.items():
