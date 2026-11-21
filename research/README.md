@@ -26,6 +26,7 @@ Read [WORKFLOW.md](WORKFLOW.md), the mandatory [research source hierarchy](RESEA
 - [lz_detector_response/](lz_detector_response/README.md): LZ 2026 public-input and NEST provenance, NR/ER response audits, event-level and two-dimensional three-body response folds, paired Parametric/Full S1 ten-seed statistics and bootstrap, Fig. S2 rate-level folds, and selection-stage diagnostics. The [extended NR/ER archive index](lz_detector_response/lz_2026_extended_nr/README.md) distinguishes the reproducible intermediate NEST proxy from the missing official waveform-level selected PDF and likelihood.
 - [lz_inelastic_2to2_afh_reference/](lz_inelastic_2to2_afh_reference/README.md): AFH v6.0 natural-xenon O1 inelastic 2-to-2 reference-spectrum comparison against approximate points digitized from LZ Figure 1; separate from the three-body model and not an exact LZ reproduction.
 - [figure_packs/](figure_packs/README.md): curated scientific figure collections, indexes, manifests, checksums, and scope notes; metadata does not imply that every image binary is committed.
+- [three_body_phi_charge_contraction/](three_body_phi_charge_contraction/README.md): exploratory unmatched charge-projection sensitivity test using AFH M, Phi-double-prime, and M-Phi-double-prime responses; not a physical three-body rate correction.
 ## Current result layers
 
 Keep the following quantities separate:

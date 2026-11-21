@@ -1,0 +1,46 @@
+name: Three-body Phi-double-prime charge contraction
+
+on:
+  push:
+    branches:
+      - research/three-body-phi-charge-contraction-20261118
+  pull_request:
+    paths:
+      - "research/three_body_phi_charge_contraction/**"
+      - "research/vector_current_response_audit/**"
+      - ".github/workflows/three-body-phi-charge-contraction.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  charge-contraction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Compile calculation and tests
+        run: |
+          python -m py_compile \
+            research/three_body_phi_charge_contraction/phi_charge_contraction.py \
+            research/three_body_phi_charge_contraction/test_phi_charge_contraction.py
+      - name: Run regression tests
+        run: |
+          python -m unittest discover \
+            -s research/three_body_phi_charge_contraction \
+            -p 'test_*.py' -v
+      - name: Generate charge-sector contraction
+        run: |
+          python research/three_body_phi_charge_contraction/phi_charge_contraction.py \
+            --outdir /tmp/three-body-phi-charge-contraction
+      - name: Upload generated contraction grids and benchmark tables
+        uses: actions/upload-artifact@v4
+        with:
+          name: three-body-phi-charge-contraction
+          path: /tmp/three-body-phi-charge-contraction/
+          if-no-files-found: error
+          retention-days: 30

@@ -1,0 +1,32 @@
+{
+  "status": "exploratory_unmatched_charge_projection_stress_test",
+  "three_body_source": {
+    "pr": 53,
+    "branch": "research/vector-current-response-audit-20261118",
+    "head_commit": "a56e9c4a1df3ee9777d12d5e8093b4ac4ad78fad",
+    "source_scan_sha256": "1836fb8fdd6477534a9332a457aa8d45c43fe7750904fe4e48f9ad0971866c09"
+  },
+  "afh_source": {
+    "pr": 54,
+    "branch": "research/vv-phi-xe131-audit-20261118",
+    "pr_head_commit": "5d0588c4f413556cc949f3f236d6f3e1b0528319",
+    "run_manifest_source_commit": "842b40039c8d67946e8572fa34d61c85ad914e9b",
+    "full_grid_sha256": "246cdc078f1b56cc730bd7b06693b8e0520a11092e577d74468efbe44fe0ab26",
+    "selected_points_sha256": "2b8e50f1ec4c291a0c4bd695ea5ed8504f53a51f21db192fce8a8ea2d4f0a7cf",
+    "native_mathematica_phi_crosscheck": "PENDING"
+  },
+  "trial_coefficient_map": {
+    "equation": "M_C/F1=(1-eta/2), PhiPP_C/F1=eta",
+    "eta": "qA^2/(4*mN^2)*(1+2*F2/F1)",
+    "status": "UNMATCHED_TRIAL_ANSATZ_NOT_A_PHYSICAL_THREE_BODY_COEFFICIENT"
+  },
+  "F2_over_F1_scenarios": [0.0, -0.14, -0.15, -0.17],
+  "scope_limitations": [
+    "The charge-only projection is not the full T3^mu J_N_mu amplitude.",
+    "Spatial-current terms may modify or cancel the charge-piece spin-orbit contribution.",
+    "The reported R_charge values are sensitivity diagnostics, not physical rate corrections.",
+    "Finite-t F2/F1 is not determined.",
+    "The AFH Phi'' native Mathematica cross-check remains pending.",
+    "No physical AFH coefficients, absolute cross section, halo fold, isotope sum, detector response, or likelihood are claimed."
+  ]
+}
