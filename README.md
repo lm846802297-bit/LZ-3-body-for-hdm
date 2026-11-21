@@ -12,6 +12,7 @@
 - [研究文档索引](research/docs/README.md)：主报告、独立附录、公式索引和补充记录。
 - [公式—符号—正文—程序—结果交叉引用](research/docs/formula_symbol_code_cross_reference.md)：F1–F12 公式、单位、程序入口、输出和适用边界。
 - [研究目录索引](research/README.md)：各专题的内容和科学状态。
+- [核子 \(c_M\) 原始/归一化定义与 AFH \(W_M\) 区分](research/nucleon_form_factor_B_baseline/CM_RAW_NORMALIZATION_AND_AFH_M_RESPONSE.md)：说明因子 3、外部核子耦合、P0/P 匹配系数和核多体响应之间的关系。
 - [Figure 2 数值结果总索引](research/docs/supplements/three_body_results_master_index_2026-11-16.md)：main 当前的 13 组结果、91 个已提交文件 SHA-256/大小记录及 1 个外部高阶谱归档校验项（共 92 项）；2026-11-13 旧索引保留为历史快照。
 - [Phase 1 科学内容审查](research/docs/supplements/scientific_content_audit_2026-11-16.md)：AFH-7 全网格、旧/新相空间积分差异、GCN/JJ55 数值精度边界。
 - [Figure 2 科学状态表](research/docs/supplements/three_body_scientific_status_2026-11-13.md)：明确各项验证的适用范围和未完成边界。
@@ -31,6 +32,7 @@
 
 ## 贡献与研究规范
 
+- 科研计算执行规范：[RESEARCH_COMPUTE_POLICY.md](RESEARCH_COMPUTE_POLICY.md)：普通 GPT 聊天模式使用 ChatGPT Linux；Codex/Work 可使用 Windows 本地环境或 GPT 管理的云端计算机；GitHub 负责归档，Actions 只做独立验证。
 - 仓库级强制任务规范：[AGENTS.md](AGENTS.md)
 - 科研任务交接规范与统一任务单：[research/RESEARCH_TASK_HANDOFF_STANDARD.md](research/RESEARCH_TASK_HANDOFF_STANDARD.md)；可复制模板：[research/_template/RESEARCH_TASK_BRIEF.md](research/_template/RESEARCH_TASK_BRIEF.md)
 - 研究依据优先级与论文草稿边界：[research/RESEARCH_GOVERNANCE_AND_SOURCE_HIERARCHY.md](research/RESEARCH_GOVERNANCE_AND_SOURCE_HIERARCHY.md)

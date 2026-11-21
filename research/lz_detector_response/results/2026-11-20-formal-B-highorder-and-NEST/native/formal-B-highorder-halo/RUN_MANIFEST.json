@@ -1,0 +1,10 @@
+{
+  "source_run_id": 44681433965,
+  "source_artifact_id": 14607350801,
+  "source_artifact_sha256": "a570bbf81119e8b7b87526c51b7012d056c0c07e290618bb7e12469b43571194",
+  "B_form_factor_source": "Borah et al. PRD 102, 074012 (2020), arXiv:2003.13640",
+  "transfer_convention": "t_N=t_A=-2*m_A*E_R; Q_A^2=2*m_A*E_R+E_R^2",
+  "draws": 3000,
+  "seed": 20261119,
+  "status": "COMPUTED_AND_VALIDATED"
+}
