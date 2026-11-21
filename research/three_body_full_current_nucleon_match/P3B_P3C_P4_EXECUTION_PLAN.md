@@ -9,10 +9,11 @@
 | Stage | Current state | Evidence / blocker |
 |---|---|---|
 | P3-B native AFH comparison | QUEUED / OPEN | [control run 44346207069](https://github.com/lm846802297-bit/research-compute-control/actions/runs/44346207069); self-hosted Windows/X64/research-gpu runner has no assigned runner |
-| P3-C response-level contraction | PROVISIONAL PASS | 28 pole-only rows; all total kernels positive; maximum spatial/charge ratio \(7.03050\times10^{-9}\) |
-| P3-C spatial amplitude subgate | PASS (provisional Python AFH) | Four Xe-131 Pole-width benchmarks; maximum helicity-vs-Cartesian residual \(6.09\times10^{-16}\) |
+| P3-C response-level contraction | PROVISIONAL / HISTORICAL NORMALIZATION | 28 pole-only rows; spatial/charge ratios are retained, but archived absolute coefficients used raw flavor sums and are not physical g_VN-normalized rates; effective-basis rerun required |
+| P3-C spatial amplitude subgate | STRUCTURAL PASS (provisional Python AFH; normalized rerun pending) | Four Xe-131 Pole-width benchmarks; relative helicity-vs-Cartesian residual is scale-invariant, but archived coefficient output used raw form factors |
 | P3-C full covariant nuclear amplitude | OPEN | Charge multipoles are not yet rank-resolved; independent coordinate-space bound-nucleus current and native AFH comparison remain required |
-| P4 native seven-isotope halo fold | PREPARED / BLOCKED | Native charge-fold engine exists; must wait for P3-B and P3-C acceptance |
+| P4 native seven-isotope halo fold | PREPARED / BLOCKED | Native production input still waits for local MMA comparison |
+| P4 provisional seven-isotope halo fold | PRIOR WORKFLOW PASS; CURRENT B/C0 HEAD UNVALIDATED | Explicit source-translated AFH-8 + P3-B loader, hash/C0/Cauchy gates, Pole-only halo integration, exact Lorentz-invariant t_A mediator denominator; output remains provisional |
 
 ## P3-B — native Wolfram AFH comparison
 
@@ -36,7 +37,7 @@ The comparator's tolerances are fixed in the version-pinned script. Do not relax
 
 ### Interpolation disposition
 
-The current local interpolation audit finds Cheb8/Cheb10 stability at the selected q points, while PCHIP differs from Cheb10 by up to 1.6847% for \(W_M\) near the Xe-131 diffraction minimum. The corresponding normalized full/original-AFH-M-baseline ratio difference is at most 0.1182% in the selected scan. The denominator retains the native finite-q \(W_M(Q_A)\) response. This is not a native result. After the native dense export arrives, regenerate the absolute and ratio curves with native dense \(M,\Phi'',M\Phi''\) values in the dip region; do not smooth or fit away the minimum.
+The current local interpolation audit finds Cheb8/Cheb10 stability at the selected q points, while PCHIP differs from Cheb10 by up to 1.6847% for \(W_M\) near the Xe-131 diffraction minimum. The corresponding normalized full/A-reference ratio difference is at most 0.1182% in the selected scan. This is not a native result. After the native dense export arrives, regenerate the absolute and ratio curves with native dense \(M,\Phi'',M\Phi''\) values in the dip region; do not smooth or fit away the minimum.
 
 ## P3-C — amplitude-level covariant-to-AFH validation
 
@@ -74,8 +75,14 @@ interference, residuals, and source hashes.
 ## P4 — seven-isotope natural-xenon halo fold
 
 The existing `native_charge_sector_halo_fold.py` is the P4 engine. It
-loads a provenance-checked native seven-isotope/eight-response bundle,
-uses isotope-specific exact q kinematics, applies the Pole-width three-body
+supports a provenance-checked native seven-isotope/eight-response bundle
+and a separate, explicitly provisional Python AFH bundle. The latter loads
+the AFH-8 charge responses and the P3-B spatial OBDME responses, applies the
+common C0 correction to charge responses exactly once, and never labels the
+result native. The native path independently derives C0(A) from the raw
+M(q_A=0) anchor and applies the factor four and C0 once to all eight channels.
+The engine uses the exact spatial magnitude
+Q_A=sqrt(2*m_A*E_R+E_R^2), the invariant t_A=-2*m_A*E_R, applies the Pole-width three-body
 phase-space integral at each halo-speed node, and computes abundance-weighted
 rates.
 
@@ -86,32 +93,8 @@ Formal P4 requirements:
   outside the AFH default-density set;
 - use native AFH response columns only; no GCN/JJ55 substitution;
 - use `width_scheme="pole"` only;
-- **B is the primary P4 baseline:** use the first-order Bishara
-  flavor-resolved nucleon current
-  \(\widehat F_1(t_N),\widehat F_2(t_N)\) and only the native finite-size
-  AFH response \(W_M^{\rm phys}(y_A)\):
-  \(\widehat c_M(t_N)^2L_C^{(3)}W_M^{\rm phys}(y_A)\);
-- retain A only as the historical reference:
-  \(L_C^{(3)}W_M^{\rm phys}(y_A)\) with
-  \(\widehat F_1(0)=1\); A and B use the identical finite-size AFH response;
-- retain C as a separate extension (B plus \(\Phi''\) and signed
-  \(M-\Phi''\) interference); D remains the full allowed AFH response
-  contraction after P3-C validation;
-- preserve the native finite-q AFH nuclear shape factor \(W_M(y_A)\) in
-  every denominator; native equal-\(p=n\) responses already include the
-  AFH factor four exactly once; never add another whole-nucleus form factor;
-- use the effective-nucleon coupling basis \(g_{VN}=3g_{Vq}\) in the
-  external prefactor and \(\widehat F_i=F_i^{uds}/3\) in current
-  coefficients; do not combine the factor-three quark normalization with
-  the independent AFH factor-four conversion;
-- use strict one-body impulse \(t_N=t_A=-2m_AE_R\) for form factors,
-  while \(Q_A^2=2m_AE_R+E_R^2\) enters AFH \(y_A\) and spatial NR
-  coefficients; static \(q_N^0=0\) remains diagnostic-only;
-- report B/A (single-nucleon form-factor correction), C/B (additional
-  nuclear-response correction at fixed \(\widehat F_i\)), and C/A (total
-  change relative to the original finite-size AFH baseline);
-- retain isoscalar_zexp only as an alternative sensitivity model, not as
-  the default B prescription;
+- report separately A-reference \(M\), finite-\(t_N\) \(M\), Coulomb
+  \(M+\Phi''\), and the full matched-current result;
 - include both the truncated SHM and untruncated Maxwellian halo scenarios;
 - run speed, three-body phase-space, and recoil-grid convergence;
 - verify positivity, both response Cauchy-Schwarz inequalities, and the
@@ -119,28 +102,20 @@ Formal P4 requirements:
 - retain the seven-isotope abundance coverage and the isotope-by-isotope
   contributions in the output.
 
-For exact recoil kinematics, keep the two momentum invariants separate:
-\[
-t_A=q_A^\mu q_{A,\mu}=-2m_AE_R,\qquad
-Q_A^2=|\boldsymbol q_A|^2=2m_AE_R+E_R^2.
-\]
-The vector-mediator propagator uses \((m_V^2-t_A)^2\). The formal
-one-body impulse form-factor argument uses \(t_N=t_A\), so
-\(Q_N^2=-t_N=2m_AE_R\); the spatial \(Q_A^2\) remains
-\(2m_AE_R+E_R^2\) in the AFH/NR spatial coefficients. The alternative
-static \(q_N^0=0\) prescription gives \(t_N=-Q_A^2\) and is diagnostic
-only. Do not substitute spatial \(Q_A^2\) into the invariant mediator
-propagator or conflate it with \(t_N\).
-
-The Coulomb-sector halo result can be reported after native P3-B validation
-as a separately labelled baseline. The full-vector halo spectrum must not
-be promoted until the P3-C amplitude-level gate passes. Detector efficiency,
+Before local MMA comparison, the provisional engine can calculate a
+selected-grid Coulomb baseline and a leading-static six-channel candidate.
+These are end-to-end numerical diagnostics only; they are not native AFH
+results or a full P3-C PASS. The final full-vector halo spectrum must not be
+promoted until the local native AFH comparison and the full P3-C
+amplitude-level gate pass. Detector efficiency,
 energy resolution, exposure, and likelihood are a later detector-level stage.
 
 ## Stop conditions
 
 - Native runner unavailable: keep P3-B queued; do not replace native results
-  with the Python translation.
+  with the Python translation. The provisional P4 path may still be run for
+  pipeline completion, but all outputs must retain
+  `native_afh_validated=false` until the user's local MMA comparison.
 - P3-B mismatch: stop P3-C and P4 promotion until source, phase, or
   normalization discrepancies are resolved.
 - P3-C amplitude mismatch: do not infer that the small response-level
@@ -149,7 +124,7 @@ energy resolution, exposure, and likelihood are a later detector-level stage.
   affected isotope/speed/recoil nodes only.
 
 
-## P3-C spatial amplitude-level subgate — completed locally
+## P3-C spatial amplitude-level subgate — previous provisional structural run
 
 The new reproducible calculation
 [`p3c_amplitude_level_helicity_crosscheck.py`](p3c_amplitude_level_helicity_crosscheck.py)
@@ -165,59 +140,41 @@ summing over transverse helicity and multipole rank.
   \(8.53\times10^{-16}\).
 - Maximum PCHIP-amplitude versus existing linear-response interpolation
   difference: \(5.53\times10^{-6}\).
-- Four unit tests pass, including a deliberate sign-flip test showing that
-  the wrong \(\Sigma'\)-helicity phase reverses the signed interference.
+- The previous raw-normalization run reported four unit tests passing,
+  including a deliberate sign-flip test. The tests now use the effective
+  nucleon basis; that updated test set still requires a fresh workflow run.
 
 This closes only the **spatial helicity reconstruction subgate**. It is not
 an independent coordinate-space many-body current calculation, and the
-charge \(M,\Phi''\) multipoles are not yet rank-resolved. The native
-Wolfram AFH comparison also remains queued. Full P3-C therefore remains
-OPEN.
+charge \(M,\Phi''\) multipoles are not yet rank-resolved. The archived
+coefficient output used raw \(F_1^{uds}=3\), \(F_2^{uds}=-0.552\); the
+current producer and P3-C consumer now use explicit effective-nucleon
+fields \(\widehat F_{1,2}^{N}\). The relative structural residuals are
+unchanged by a common normalization, but the serialized output must be
+regenerated in the effective basis. The native Wolfram AFH comparison
+also remains queued. Full P3-C therefore remains OPEN.
 
 The workflow now runs this subgate after the C0-consistent response
 contraction and appends its JSON result to the
 `full-three-body-current-nucleon-match-and-phase-space-tensor` artifact.
 
+## Latest-head validation boundary (2026-11-19)
 
-## 2026-11-19 update: non-Mathematica work completed/prepared
+The prior workflow set at commit `cb89294c891cfa6ac7ffa52ba89065df84823c28`
+passed the full-current regression, provisional P4 halo fold, fixed-speed
+charge-sector, and continuous-spectrum jobs. PR #67 has since received
+additional changes to the adopted B finite-\(t_N\) form factors, explicit
+raw/effective field names, native AFH \(C_0(A)\) handling, and the Xe-131
+absolute A/B/C workflow. No workflow run is currently attached to the
+latest PR head. Therefore the earlier PASS is historical and does not
+validate the current B/C0 code; rerun all affected workflows before merge.
 
-The user will run the native Mathematica/Wolfram comparison locally later.
-Until that comparison is supplied, do not claim native P3-B PASS or full
-P3-C PASS. The remaining work that does not depend on Mathematica has been
-advanced as follows:
-
-1. The formal natural-xenon halo engine now rejects every width setting
-   except `pole` at the Python API boundary. Its CLI exposes only
-   `--width-scheme pole`. This prevents a zero- or running-width result
-   from accidentally entering formal production.
-2. A regression test explicitly checks that both `zero` and `running`
-   are rejected before native files are loaded.
-3. A manual P4 workflow,
-   `.github/workflows/p4-native-afh-natural-xenon-pole-halo.yml`, has been
-   added. It consumes a completed native AFH artifact by run ID and artifact
-   ID, runs the seven-isotope fold for both SHM-cutoff and untruncated
-   Maxwellian halos, and archives two separate outputs:
-   - the Coulomb-sector result;
-   - the leading-static full-vector candidate, explicitly unpromoted.
-4. The workflow is intentionally manual and cannot run until the user's
-   local native AFH comparison has produced an artifact with a PASS
-   provenance manifest. No synthetic or Python-translated response archive
-   is accepted as a substitute.
-
-The P4 workflow defaults to (m_\chi=1\) TeV, (m_s=450\) keV,
-\(\delta m=450\) keV, and recoil nodes 101, 200, 267, and 542 keV.
-These are workflow defaults for a reproducible diagnostic, not a scan
-over the model's preferred parameter space. The quadrature orders are
-higher than the earlier smoke-test settings; a separate convergence
-comparison is still required before treating any spectrum as numerically
-final.
-
-### Local Mathematica handoff
-
-When the local comparison is complete, provide the complete native archive
-root containing `native-comparison.json`, `run_manifest.json`,
-`SHA256SUMS.txt`, `native/`, `native-spatial-multipoles/`, and
-`native-dense-charge-dip/`. The P4 workflow must use the native response
-artifact from that run, not a provisional Python archive. If the native
-comparison fails, preserve the failed artifact and diagnose it; do not
-force a PASS or relax tolerances.
+The adopted production convention is B:
+\[
+\widehat c_M(t_N)^2\,W_M^{\rm phys}(y_A),\qquad
+t_N=t_A=-2m_AE_R,\qquad
+y_A=b_A^2Q_A^2/4.
+\]
+A is the zero-transfer nucleon-current reference with the same finite-size
+AFH \(W_M\); C is a separate \(\Phi''\) charge extension; D remains the
+full one-body-current target, not yet complete.

@@ -2,10 +2,13 @@ import unittest
 
 from xe131_fixed_speed_charge_dsigma import (
     MA_XE131_GEV,
+    MN_GEV,
     WIDTH_SCHEMES,
     canonical_sha256,
     exact_qA_GeV,
     charge_sector_kernels,
+    xe131_common_matrix_normalization_c0,
+    apply_xe131_common_matrix_normalization,
 )
 
 
@@ -15,115 +18,110 @@ class TestXe131FixedSpeedChargeDifferentialCrossSection(unittest.TestCase):
 
     def test_exact_recoil_momenta(self):
         self.assertAlmostEqual(MA_XE131_GEV, 121.90971983538435, places=12)
-        self.assertAlmostEqual(exact_qA_GeV(MA_XE131_GEV, 200.0), 0.22082555996567457, places=13)
-        self.assertAlmostEqual(exact_qA_GeV(MA_XE131_GEV, 267.0), 0.25514674538605275, places=13)
+        self.assertAlmostEqual(
+            exact_qA_GeV(MA_XE131_GEV, 200.0),
+            0.22082555996567457,
+            places=13,
+        )
+        self.assertAlmostEqual(
+            exact_qA_GeV(MA_XE131_GEV, 267.0),
+            0.25514674538605275,
+            places=13,
+        )
 
-    def test_ratio_is_independent_of_common_LC(self):
+    def test_A_B_C_ratios_are_independent_of_common_LC(self):
         responses = {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3}
-        a = charge_sector_kernels(1.0, 0.22, responses)
-        b = charge_sector_kernels(1.0e8, 0.22, responses)
-        self.assertAlmostEqual(
-            a["full_charge_over_finite_t_M"],
-            b["full_charge_over_finite_t_M"],
-            places=13,
-        )
-        self.assertAlmostEqual(
-            a["full_charge_over_AFH_finite_size_M_baseline"],
-            b["full_charge_over_AFH_finite_size_M_baseline"],
-            places=13,
-        )
-        self.assertAlmostEqual(
-            a["full_charge_over_AFH_finite_size_M_baseline"],
-            b["full_charge_over_AFH_finite_size_M_baseline"],
-            places=13,
-        )
-
-    def test_bishara_form_factor_uses_full_one_body_tN(self):
         qA = exact_qA_GeV(MA_XE131_GEV, 200.0)
-        ER = 200.0e-6
-        tN = ER * ER - qA * qA
-        result = charge_sector_kernels(
-            1.0, qA, {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3},
-            "bishara_linear", tN_GeV2=tN,
-        )
-        QN2 = -tN
-        self.assertAlmostEqual(result["F1V_quark_finite_t"], 3.0 - 8.392 * QN2, places=13)
-        self.assertAlmostEqual(result["F2V_quark_finite_t"], -0.552, places=13)
-        self.assertAlmostEqual(result["F1N_effective_finite_t"], result["F1V_quark_finite_t"] / 3.0, places=14)
-        self.assertAlmostEqual(result["F2N_effective_finite_t"], result["F2V_quark_finite_t"] / 3.0, places=14)
-        self.assertNotAlmostEqual(QN2, qA * qA, places=12)
+        a = charge_sector_kernels(1.0, qA, responses, ER_keV=200.0)
+        b = charge_sector_kernels(1.0e8, qA, responses, ER_keV=200.0)
+        for key in (
+            "B_over_A_reference",
+            "C_over_B_baseline",
+            "C_over_A_reference",
+        ):
+            self.assertAlmostEqual(a[key], b[key], places=13)
 
-    def test_low_q2_and_zexp_form_factors_are_distinct_inputs(self):
-        f1_linear, f2_linear = charge_sector_kernels(
-            1.0, 0.22, {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3},
-            "bishara_linear",
-        )["F1V_quark_finite_t"], charge_sector_kernels(
-            1.0, 0.22, {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3},
-            "bishara_linear",
-        )["F2V_quark_finite_t"]
-        f1_zexp, f2_zexp = charge_sector_kernels(
-            1.0, 0.22, {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3},
-            "isoscalar_zexp",
-        )["F1V_quark_finite_t"], charge_sector_kernels(
-            1.0, 0.22, {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3},
-            "isoscalar_zexp",
-        )["F2V_quark_finite_t"]
-        self.assertNotAlmostEqual(f1_linear, f1_zexp, places=5)
-        self.assertNotAlmostEqual(f2_linear, f2_zexp, places=5)
+    def test_formal_tN_is_tA_not_minus_spatial_qA2(self):
+        responses = {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3}
+        er_keV = 200.0
+        qA = exact_qA_GeV(MA_XE131_GEV, er_keV)
+        out = charge_sector_kernels(1.0, qA, responses, ER_keV=er_keV)
+        expected_tN = -2.0 * MA_XE131_GEV * er_keV * 1.0e-6
+        self.assertAlmostEqual(out["tN_GeV2"], expected_tN, places=15)
+        self.assertNotAlmostEqual(out["tN_GeV2"], -(qA * qA), places=10)
+        self.assertAlmostEqual(
+            out["F1N_effective"], out["F1V_quark_sum"] / 3.0, places=14
+        )
+        self.assertAlmostEqual(
+            out["F2N_effective"], out["F2V_quark_sum"] / 3.0, places=14
+        )
+
+    def test_B_over_A_reproduces_adopted_bishara_baseline(self):
+        responses = {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3}
+        expected = {200.0: 0.7398828761262942, 267.0: 0.6621749872241893}
+        for er_keV, value in expected.items():
+            qA = exact_qA_GeV(MA_XE131_GEV, er_keV)
+            out = charge_sector_kernels(1.0, qA, responses, ER_keV=er_keV)
+            self.assertAlmostEqual(out["B_over_A_reference"], value, places=12)
 
     def test_interference_is_signed_and_retained(self):
         responses = {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3}
-        out = charge_sector_kernels(1.0, 0.22, responses)
+        out = charge_sector_kernels(
+            1.0, exact_qA_GeV(MA_XE131_GEV, 200.0), responses, ER_keV=200.0
+        )
         terms = out["kernels_with_common_LC"]
         self.assertLess(terms["M_Phi_interference"], 0.0)
-        self.assertGreater(terms["finite_t_M_plus_PhiPP"], 0.0)
-        self.assertAlmostEqual(
-            terms["AFH_finite_size_M_baseline"],
-            out["AFH_finite_size_M_baseline_kernel"],
-            places=14,
+        self.assertGreater(terms["C_M_plus_PhiPP"], 0.0)
+
+    def test_native_AFH_A_B_C_ratio_anchors(self):
+        # Exact native AFH response ratios at q(267 keV)=0.255146745 GeV.
+        # The merged dense-grid PCHIP gives C/A=0.6056675913, 2.3e-8 below
+        # the exact value; that interpolation residual is checked in the
+        # full/absolute scan anchors.
+        anchors = {
+            200.0: (0.036955940801758985, -0.19120929699010936,
+                    0.7398828761262942, 0.9969554024414953, 0.7376302305280606),
+            267.0: (19.8387449002865, -4.28160415158773,
+                    0.6621749872241892, 0.9146639873570406, 0.6056676141425744),
+        }
+        for er_keV, (wphi_over_wm, wmphi_over_wm, expected_ba,
+                     expected_cb, expected_ca) in anchors.items():
+            qA = exact_qA_GeV(MA_XE131_GEV, er_keV)
+            result = charge_sector_kernels(
+                1.0, qA,
+                {"M": 1.0, "PhiPP": wphi_over_wm, "MPhiPP": wmphi_over_wm},
+                ER_keV=er_keV,
+            )
+            self.assertAlmostEqual(result["B_over_A_reference"], expected_ba, places=11)
+            self.assertAlmostEqual(result["C_over_B_baseline"], expected_cb, places=11)
+            self.assertAlmostEqual(result["C_over_A_reference"], expected_ca, places=11)
+
+    def test_native_C0_is_derived_from_raw_M_zero_anchor(self):
+        raw_m_zero = 4289.895955714992
+        c0 = xe131_common_matrix_normalization_c0(raw_m_zero)
+        self.assertAlmostEqual(c0, 1.0000825298069376, places=14)
+
+    def test_native_C0_is_applied_once_to_all_three_physical_channels(self):
+        raw_m_zero = 4289.895955714992
+        c0 = xe131_common_matrix_normalization_c0(raw_m_zero)
+        physical_before = {
+            "M": [4.0 * raw_m_zero, 4.0 * 149.2743467449586],
+            "PhiPP": [4.0 * 149.2743467449586, 4.0 * 120.0],
+            "MPhiPP": [4.0 * -799.9643348289546, 4.0 * -500.0],
+        }
+        physical_after, used_c0 = apply_xe131_common_matrix_normalization(
+            physical_before, raw_m_zero
         )
-        self.assertAlmostEqual(
-            out["full_charge_over_AFH_finite_size_M_baseline"],
-            out["kernels_with_common_LC"]["finite_t_M_plus_PhiPP"]
-            / out["kernels_with_common_LC"]["AFH_finite_size_M_baseline"],
-            places=14,
-        )
+        self.assertAlmostEqual(used_c0, c0, places=15)
+        self.assertAlmostEqual(physical_after["M"][0], 131.0**2, places=10)
+        for name in ("M", "PhiPP", "MPhiPP"):
+            for before, after in zip(physical_before[name], physical_after[name]):
+                self.assertAlmostEqual(after / before, c0, places=14)
 
     def test_native_csv_hash_is_line_ending_stable(self):
         lf = b"q,value\n0.1,2\n"
         crlf = b"q,value\r\n0.1,2\r\n"
         self.assertEqual(canonical_sha256(lf), canonical_sha256(crlf))
-
-    def test_gVN_basis_removes_the_quark_factor_three_from_absolute_kernel(self):
-        responses = {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3}
-        out = charge_sector_kernels(1.0, 0.22, responses, "q0_anchor")
-        self.assertAlmostEqual(
-            out["AFH_finite_size_M_baseline_kernel"],
-            1.0 * responses["M"],
-            places=14,
-        )
-        self.assertAlmostEqual(
-            out["nucleon_q0_M_only_kernel"],
-            out["AFH_finite_size_M_baseline_kernel"],
-            places=14,
-        )
-        self.assertAlmostEqual(
-            out["F1N_effective_finite_t"], 1.0, places=14
-        )
-        self.assertAlmostEqual(
-            out["F2N_effective_finite_t"], -0.184, places=14
-        )
-        self.assertAlmostEqual(
-            out["full_charge_over_nucleon_finite_t_M_only"],
-            out["full_charge_over_finite_t_M"],
-            places=14,
-        )
-        self.assertAlmostEqual(
-            out["full_charge_over_AFH_finite_size_M_baseline"],
-            out["kernels_with_common_LC"]["finite_t_M_plus_PhiPP"]
-            / out["kernels_with_common_LC"]["AFH_finite_size_M_baseline"],
-            places=14,
-        )
 
 
 if __name__ == "__main__":

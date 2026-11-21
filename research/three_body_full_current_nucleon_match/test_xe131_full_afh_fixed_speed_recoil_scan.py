@@ -1,17 +1,20 @@
 import unittest
 
+import csv
+import hashlib
+import json
+import tempfile
+from pathlib import Path
+
 import numpy as np
 
 from xe131_full_afh_fixed_speed_recoil_scan import (
-    EXPECTED_FORMAL_IMPULSE_AFH_RATIOS,
-    EXPECTED_STATIC_QN0_AFH_RATIOS,
+    EXPECTED_CHARGE_RATIOS,
     FORMAL_WIDTH_SCHEMES,
-    FORM_FACTOR_PRESCRIPTIONS,
     RESPONSE_NAMES,
-    charge_only_ratio_from_responses,
     contract_six_channels,
-    nucleon_form_factors,
     recoil_cases,
+    overlay_dense_native_charge_grid,
 )
 
 
@@ -19,8 +22,8 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
     def setUp(self):
         self.q = 0.22
         self.ER = 200.0e-6
-        self.F1 = 2.66
-        self.F2 = -0.468
+        self.F1 = 2.66 / 3.0
+        self.F2 = -0.468 / 3.0
         self.L = np.diag([1.0e5, 1.0e-3, 1.0e-3, 1.0e-5]).astype(complex)
         self.responses = {
             "M": 100.0,
@@ -45,8 +48,8 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
         # C_{Sigma' Delta} and W_{Sigma' Delta} are both negative here.
         self.assertGreater(result["spatial_terms"]["SigmaPrimeDelta"], 0.0)
         self.assertAlmostEqual(
-            result["full_six_channel_candidate"],
-            result["charge_only"] + result["spatial_candidate"],
+            result["D_full_six_channel_candidate"],
+            result["C_charge_only"] + result["spatial_candidate"],
             places=10,
         )
 
@@ -58,69 +61,94 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
             17.0 * self.L, self.q, self.ER, self.responses, self.F1, self.F2
         )
         for key in (
-            "nucleon_finite_t_M_only_over_AFH_finite_size_M_baseline",
-            "charge_only_over_finite_t_M",
-            "full_over_finite_t_M",
-            "PhiPP_over_finite_t_M_correction",
-            "full_over_charge_only",
-            "spatial_over_charge_only",
-            "charge_only_over_AFH_finite_size_M_baseline",
-            "full_over_AFH_finite_size_M_baseline",
+            "B_over_A_reference",
+            "C_over_A_reference",
+            "PhiPP_over_B_correction",
+            "D_over_C_charge_only",
+            "spatial_over_C_charge_only",
+            "D_over_A_reference",
         ):
             self.assertAlmostEqual(a[key], b[key], places=12, msg=key)
 
-    def test_full_six_channel_ratio_uses_same_finite_t_M_baseline(self):
+    def test_A_B_C_D_hierarchy_is_normalized_to_effective_nucleon_current(self):
         result = contract_six_channels(
             self.L, self.q, self.ER, self.responses, self.F1, self.F2
         )
         self.assertAlmostEqual(
-            result["charge_only_over_finite_t_M"],
-            result["PhiPP_over_finite_t_M_correction"] + 1.0,
-            places=14,
+            result["B_over_A_reference"],
+            result["coefficients"]["C_M"] * self.responses["M"] /
+            (result["A_reference_M"]),
+            places=13,
         )
         self.assertAlmostEqual(
-            result["full_over_finite_t_M"],
-            result["full_six_channel_candidate"] / result["nucleon_finite_t_M_only"],
-            places=14,
+            result["D_over_A_reference"],
+            result["D_full_six_channel_candidate"] /
+            result["A_reference_M"],
+            places=13,
         )
-        self.assertNotAlmostEqual(
-            result["full_over_finite_t_M"],
-            result["full_over_AFH_finite_size_M_baseline"],
-            places=6,
-        )
+        self.assertGreater(result["A_reference_M"], 0.0)
 
-    def test_original_afh_baseline_retains_finite_q_nuclear_response(self):
-        result = contract_six_channels(
-            self.L, self.q, self.ER, self.responses, 3.0, -0.552
-        )
-        LC = result["coefficients"]["L_C_continuity_adjusted_charge_weight"]
-        self.assertAlmostEqual(
-            result["AFH_finite_size_M_baseline"],
-            LC * self.responses["M"],
-            places=12,
-        )
-        self.assertAlmostEqual(
-            result["nucleon_q0_M_only"], result["AFH_finite_size_M_baseline"], places=14
-        )
-        self.assertAlmostEqual(result["F1N_effective"], 1.0, places=14)
-        self.assertAlmostEqual(result["F2N_effective"], -0.184, places=14)
-
-    def test_low_order_form_factor_uses_full_one_body_tN(self):
-        qA = 0.22
-        omega = 200.0e-6
-        tN = omega * omega - qA * qA
-        f1, f2 = nucleon_form_factors(
-            qA, "bishara_linear", tN_GeV2=tN
-        )
-        self.assertAlmostEqual(f1, 3.0 - 8.392 * (-tN), places=13)
-        self.assertAlmostEqual(f2, -0.552, places=13)
-
-    def test_both_low_order_and_zexp_form_factor_inputs_are_available(self):
-        self.assertEqual(FORM_FACTOR_PRESCRIPTIONS, ("bishara_linear", "isoscalar_zexp"))
-        f1_linear, f2_linear = nucleon_form_factors(self.q, "bishara_linear")
-        f1_zexp, f2_zexp = nucleon_form_factors(self.q, "isoscalar_zexp")
-        self.assertNotAlmostEqual(f1_linear, f1_zexp, places=5)
-        self.assertNotAlmostEqual(f2_linear, f2_zexp, places=5)
+    def test_dense_native_grid_replaces_coarse_dip_nodes_and_preserves_normalization(self):
+        q_coarse = np.linspace(0.0, 0.6, 2401)
+        native = {
+            "q": q_coarse,
+            "responses": {
+                "M": 100.0 + q_coarse,
+                "PhiPP": 10.0 + q_coarse,
+                "MPhiPP": -2.0 - q_coarse,
+            },
+        }
+        provenance = {"common_matrix_normalization_C0": 1.1}
+        q_dense = 0.2545 + np.arange(121) * 0.000025
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            csv_path = root / "dense.csv"
+            meta_path = root / "dense.txt"
+            validation_path = root / "validation.json"
+            rows = []
+            for q in q_dense:
+                rows.append({
+                    "A": 131, "q_GeV": f"{q:.12g}", "y": "0.0",
+                    "W_M00_AFH": "1.0", "W_PhiPP00_AFH": "2.0",
+                    "W_MPhiPP00_AFH": "-0.5",
+                    "Im_W_M00_AFH": "0", "Im_W_PhiPP00_AFH": "0",
+                    "Im_W_MPhiPP00_AFH": "0",
+                })
+            with csv_path.open("w", newline="", encoding="utf-8") as stream:
+                writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
+                writer.writeheader()
+                writer.writerows(rows)
+            meta = (
+                "source=AFH DMFormFactor v6.0 native Wolfram execution\n"
+                "isotope=Xe-131\nZ=54\n"
+                "response_map=M=1;PhiPP=4;MPhiPP=7\n"
+                "q_grid=121 uniform nodes from 0.2545 to 0.2575 GeV, step 0.000025 GeV\n"
+                "normalization=raw AFH package response; no physical equal-p/n factor-four rescaling\n"
+                "AFH_source_sha256=dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372\n"
+                "rows=121\nmax_imaginary_residual=0\n"
+            )
+            meta_path.write_text(meta, encoding="utf-8")
+            validation = {
+                "status": "PASS_NATIVE_XE131_DENSE_CHARGE_DIP",
+                "rows": 121, "common_nodes_compared": 13,
+                "max_imaginary_residual": 0.0,
+                "AFH_source_sha256": "dc0742f1c50b0a478adab62f2ddef6c82978ee034c1f177e0ed917deab5dd372",
+                "dense_csv_sha256": hashlib.sha256(csv_path.read_bytes()).hexdigest(),
+                "dense_metadata_sha256": hashlib.sha256(meta_path.read_bytes()).hexdigest(),
+                "common_node_max_relative_difference": {"M": 0.0, "PhiPP": 0.0, "MPhiPP": 0.0},
+            }
+            validation_path.write_text(json.dumps(validation), encoding="utf-8")
+            merged, updated_provenance = overlay_dense_native_charge_grid(
+                native, provenance, csv_path, meta_path, validation_path
+            )
+        self.assertEqual(len(merged["q"]), 2509)
+        self.assertEqual(updated_provenance["dense_native_points"], 121)
+        self.assertEqual(updated_provenance["merged_response_grid_points"], 2509)
+        factor = 4.0 * np.pi * 1.1
+        first = int(np.argmin(np.abs(merged["q"] - 0.2545)))
+        self.assertAlmostEqual(merged["responses"]["M"][first], factor)
+        self.assertAlmostEqual(merged["responses"]["PhiPP"][first], 2.0 * factor)
+        self.assertAlmostEqual(merged["responses"]["MPhiPP"][first], -0.5 * factor)
 
     def test_formal_six_channel_scan_uses_pole_width_only(self):
         self.assertEqual(FORMAL_WIDTH_SCHEMES, ("pole",))
@@ -129,63 +157,8 @@ class Xe131FullAFHRecoilScanTests(unittest.TestCase):
         cases = {case["name"]: case for case in recoil_cases()}
         self.assertEqual(cases["off_pole_dm450"]["delta_m_GeV"], 450.0e-6)
         self.assertEqual(cases["near_pole_dm362"]["delta_m_GeV"], 362.0e-6)
-        expected_keys = {
-            ("isoscalar_zexp", "off_pole_dm450", 200.0),
-            ("isoscalar_zexp", "near_pole_dm362", 267.0),
-        }
-        self.assertEqual(set(EXPECTED_STATIC_QN0_AFH_RATIOS), expected_keys)
-        self.assertEqual(set(EXPECTED_FORMAL_IMPULSE_AFH_RATIOS), expected_keys)
-
-    def test_historical_anchor_values_are_static_qN0_diagnostics(self):
-        self.assertAlmostEqual(
-            EXPECTED_STATIC_QN0_AFH_RATIOS[
-                ("isoscalar_zexp", "off_pole_dm450", 200.0)
-            ],
-            0.778309339441481,
-            places=14,
-        )
-        self.assertAlmostEqual(
-            EXPECTED_STATIC_QN0_AFH_RATIOS[
-                ("isoscalar_zexp", "near_pole_dm362", 267.0)
-            ],
-            0.649215910707624,
-            places=14,
-        )
-
-    def test_formal_impulse_anchors_are_distinct_from_static_diagnostic(self):
-        key_200 = ("isoscalar_zexp", "off_pole_dm450", 200.0)
-        key_267 = ("isoscalar_zexp", "near_pole_dm362", 267.0)
-        self.assertAlmostEqual(
-            EXPECTED_FORMAL_IMPULSE_AFH_RATIOS[key_200],
-            0.7783094918005908,
-            places=14,
-        )
-        self.assertAlmostEqual(
-            EXPECTED_FORMAL_IMPULSE_AFH_RATIOS[key_267],
-            0.6492161323414921,
-            places=14,
-        )
-        self.assertGreater(
-            EXPECTED_FORMAL_IMPULSE_AFH_RATIOS[key_200]
-            - EXPECTED_STATIC_QN0_AFH_RATIOS[key_200],
-            0.0,
-        )
-        self.assertGreater(
-            EXPECTED_FORMAL_IMPULSE_AFH_RATIOS[key_267]
-            - EXPECTED_STATIC_QN0_AFH_RATIOS[key_267],
-            0.0,
-        )
-
-    def test_static_and_formal_transfer_reconstructions_are_not_interchanged(self):
-        static = charge_only_ratio_from_responses(
-            self.q, 200.0, self.responses, "isoscalar_zexp",
-            static_nucleon=True,
-        )
-        formal = charge_only_ratio_from_responses(
-            self.q, 200.0, self.responses, "isoscalar_zexp",
-            static_nucleon=False,
-        )
-        self.assertNotAlmostEqual(static, formal, places=10)
+        self.assertIn(("off_pole_dm450", 200.0), EXPECTED_CHARGE_RATIOS)
+        self.assertIn(("near_pole_dm362", 267.0), EXPECTED_CHARGE_RATIOS)
 
 
 if __name__ == "__main__":

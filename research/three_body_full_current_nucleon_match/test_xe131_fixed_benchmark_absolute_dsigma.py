@@ -44,56 +44,36 @@ class TestXe131FixedBenchmarkAbsoluteDsigmadER(unittest.TestCase):
         self.assertAlmostEqual(result["t_A_GeV2"], -minus_tA, places=14)
         self.assertNotAlmostEqual(result["mediator_denominator_GeV4"], (MV_GEV**2+q*q)**2, places=12)
 
-    def test_B_baseline_is_finite_tN_times_native_AFH_WM_only(self):
-        responses = {"M": 12.0, "PhiPP": 0.5, "MPhiPP": -0.8}
-        LC = 2.5
-        out = nuclear_charge_kernels(200.0, LC, responses)
-        self.assertEqual(out["form_factor_prescription"], "bishara_linear")
+    def test_B_baseline_uses_effective_form_factors_and_formal_tN(self):
+        responses = {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3}
+        result = nuclear_charge_kernels(200.0, 1.0, responses)
+        expected_tN = -2.0 * MA_XE131_GEV * 200.0e-6
+        self.assertAlmostEqual(result["tN_GeV2"], expected_tN, places=15)
         self.assertAlmostEqual(
-            out["A_original_AFH_M_reference"], LC * responses["M"], places=14
+            result["F1N_effective"], result["F1V_quark_sum"] / 3.0, places=14
         )
         self.assertAlmostEqual(
-            out["B_baseline_M_only"],
-            out["cM_effective"] ** 2 * LC * responses["M"],
+            result["F2N_effective"], result["F2V_quark_sum"] / 3.0, places=14
+        )
+        self.assertAlmostEqual(result["B_over_A_reference"], 0.7398828761262942, places=12)
+        self.assertAlmostEqual(
+            result["C_over_A_reference"],
+            result["B_over_A_reference"] * result["C_over_B_baseline"],
             places=14,
         )
-        self.assertAlmostEqual(out["F1N_effective"], out["F1V_quark"] / 3.0, places=14)
-        self.assertAlmostEqual(out["F2N_effective"], out["F2V_quark"] / 3.0, places=14)
-        self.assertAlmostEqual(
-            out["tN_GeV2"],
-            (200.0e-6)**2 - exact_qA_GeV(MA_XE131_GEV, 200.0)**2,
-            places=18,
+
+    def test_B_over_A_at_second_recoil_anchor(self):
+        result = nuclear_charge_kernels(
+            267.0, 1.0, {"M": 2.0, "PhiPP": 0.2, "MPhiPP": -0.3}
         )
-        self.assertAlmostEqual(
-            out["C_over_A"],
-            out["C_charge_extension"] / out["A_original_AFH_M_reference"],
-            places=14,
-        )
-        self.assertAlmostEqual(
-            out["C_over_B"],
-            out["C_charge_extension"] / out["B_baseline_M_only"],
-            places=14,
-        )
-        self.assertAlmostEqual(
-            out["A_original_AFH_M_reference"],
-            out["A_original_AFH_M_reference"], places=14
-        )
-        self.assertAlmostEqual(
-            out["A_original_AFH_M_reference"], out["A_original_AFH_M_reference"], places=14
-        )
-        self.assertAlmostEqual(
-            out["B_baseline_M_only"], out["B_baseline_M_only"], places=14
-        )
-        self.assertAlmostEqual(
-            out["C_charge_extension"], out["C_charge_extension"], places=14
-        )
+        self.assertAlmostEqual(result["B_over_A_reference"], 0.6621749872241893, places=12)
 
     def test_write_csv_unions_open_and_closed_row_fields(self):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "mixed.csv"
             write_csv(path, [
                 {"ER_keV": 109.0, "phase_space_open": False},
-                {"ER_keV": 110.0, "phase_space_open": True, "C_charge_extension_cm2_per_keV": 1.25},
+                {"ER_keV": 110.0, "phase_space_open": True, "full_charge_cm2_per_keV": 1.25},
             ])
             with path.open(newline="", encoding="utf-8") as stream:
                 reader = csv.DictReader(stream)
@@ -101,10 +81,10 @@ class TestXe131FixedBenchmarkAbsoluteDsigmadER(unittest.TestCase):
                 fieldnames = reader.fieldnames
             self.assertEqual(
                 fieldnames,
-                ["ER_keV", "phase_space_open", "C_charge_extension_cm2_per_keV"],
+                ["ER_keV", "phase_space_open", "full_charge_cm2_per_keV"],
             )
-            self.assertEqual(rows[0]["C_charge_extension_cm2_per_keV"], "")
-            self.assertEqual(rows[1]["C_charge_extension_cm2_per_keV"], "1.25")
+            self.assertEqual(rows[0]["full_charge_cm2_per_keV"], "")
+            self.assertEqual(rows[1]["full_charge_cm2_per_keV"], "1.25")
 
     def test_unit_conversion(self):
         self.assertAlmostEqual(GEV_MINUS3_TO_CM2_PER_KEV, 3.893793721e-34, places=45)

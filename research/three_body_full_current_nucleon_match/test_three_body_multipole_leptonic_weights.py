@@ -10,6 +10,12 @@ import three_body_multipole_leptonic_weights as weights
 
 
 class LeptonicMultipoleWeightTests(unittest.TestCase):
+    def test_default_form_factors_are_effective_gVN_normalized(self):
+        self.assertAlmostEqual(weights.DEFAULT_F1, 1.0, places=14)
+        self.assertAlmostEqual(weights.DEFAULT_F2, -0.184, places=14)
+        self.assertAlmostEqual(weights.RAW_F1_UDS0 / 3.0, weights.DEFAULT_F1)
+        self.assertAlmostEqual(weights.RAW_F2_UDS0 / 3.0, weights.DEFAULT_F2)
+
     def test_symmetric_tensor_has_zero_helicity_odd_weight(self):
         L = np.diag([100.0, 2.0, 6.0, 3.0]).astype(complex)
         result = weights.extract_leptonic_weights(L)
@@ -78,8 +84,8 @@ class LeptonicMultipoleWeightTests(unittest.TestCase):
         )
         tN = 0.01**2 - 0.2**2
         cM = 1.0 + tN * (1.0 + 2.0 * -0.184) / (8.0 * 0.938918**2)
-        self.assertAlmostEqual(afh["tN_GeV2"], tN, places=15)
         self.assertAlmostEqual(afh["C_M"], cM**2 * expected)
+        self.assertAlmostEqual(afh["tN_GeV2"], tN)
 
     def test_zero_transfer_limit_keeps_the_charge_weight(self):
         L = np.diag([100.0, 2.0, 2.0, 3.0]).astype(complex)

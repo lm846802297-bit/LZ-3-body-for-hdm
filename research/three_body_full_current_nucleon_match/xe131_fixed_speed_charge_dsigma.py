@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
-"""Fixed-speed Xe-131 differential cross-section ratio in the Coulomb sector.
+"""Fixed-speed Xe-131 A/B/C differential cross-section comparison.
 
-The DM-side L_C is obtained from the full phase-space-integrated tensor using
-the nuclear-current continuity relation, conditional on conservation of the
-complete nuclear vector current. Native AFH M/Phi''/M-Phi'' responses are
-contracted with finite-t_N charge coefficients and compared with the original
-AFH M-only baseline, W_M(Q_A), which retains the finite-q nuclear response.
-The q=0 nucleon-current normalization is not a point-nucleus approximation.
-Transverse nuclear-current multipoles are not included in this restricted
-Coulomb-sector ratio.
+A and B both retain the finite-size AFH W_M response.  A uses the q=0
+effective nucleon-current anchor; B is the adopted finite-t_N M-only
+production baseline; C adds the Phi'' diagonal and signed M-Phi''
+interference terms.  The formal nucleon invariant is t_N=t_A=-2*m_A*E_R.
+The DM-side L_C uses nuclear-current continuity conditionally on
+conservation of the complete nuclear vector current.  Transverse nuclear
+multipoles are not included in this restricted Coulomb-sector comparison.
 """
 from __future__ import annotations
 
@@ -23,15 +22,12 @@ import numpy as np
 from scipy.interpolate import PchipInterpolator
 
 from nucleon_vector_form_factors import (
-    F1V0,
-    F2V0,
-    bishara_linear,
-    charge_coefficients,
+    RAW_F1_UDS0, RAW_F2_UDS0, bishara_linear, charge_coefficients,
     effective_nucleon_form_factors,
-    isoscalar_zexp,
 )
 from native_charge_sector_halo_fold import load_isotope_inputs
 from three_body_phase_space_tensor import integrate_spin_resolved_tensor
+from xe131_dense_native_afh_overlay import overlay_dense_native_charge_grid
 
 MCHI_GEV = 1000.0
 MS_GEV = 300.0e-6
@@ -63,6 +59,39 @@ WIDTH_SCHEMES = ("pole",)
 def exact_qA_GeV(mA_GeV: float, ER_keV: float) -> float:
     ER = ER_keV * 1.0e-6
     return math.sqrt(2.0 * mA_GeV * ER + ER * ER)
+
+
+def xe131_common_matrix_normalization_c0(raw_m_zero: float) -> float:
+    """Return C0 so the physical equal-p/n Xe-131 M response has M(0)=A^2.
+
+    The native export already contains R_physical=4*R_raw but records
+    shape_renormalization_applied=false.  Here R_raw is
+    4*pi*W_M(0)/(2J+1), so C0=A^2/(4*R_raw).
+    """
+    if not math.isfinite(raw_m_zero) or raw_m_zero <= 0.0:
+        raise ValueError("raw Xe-131 M(q=0) must be positive and finite")
+    return 131.0**2 / (4.0 * raw_m_zero)
+
+
+def apply_xe131_common_matrix_normalization(
+    physical_responses: dict[str, np.ndarray], raw_m_zero: float
+) -> tuple[dict[str, np.ndarray], float]:
+    """Apply the same OBDME C0 once to all physical equal-p/n channels."""
+    required = {"M", "PhiPP", "MPhiPP"}
+    if set(physical_responses) != required:
+        raise ValueError(f"expected native charge responses {sorted(required)}")
+    c0 = xe131_common_matrix_normalization_c0(raw_m_zero)
+    normalized = {}
+    for name, values in physical_responses.items():
+        array = np.asarray(values, dtype=float)
+        if not np.all(np.isfinite(array)):
+            raise ValueError(f"non-finite native Xe-131 {name} response")
+        normalized[name] = c0 * array
+    if not math.isclose(
+        float(normalized["M"][0]), 131.0**2, rel_tol=2.0e-13, abs_tol=2.0e-10
+    ):
+        raise ArithmeticError("C0-corrected native Xe-131 M(q=0) does not equal A^2")
+    return normalized, c0
 
 
 def load_native_xe131_responses(path: Path) -> tuple[dict, dict]:
@@ -126,6 +155,10 @@ def load_native_xe131_responses(path: Path) -> tuple[dict, dict]:
         raise ValueError("native Xe-131 dq is not 0.00025 GeV")
     if metadata.get("factor_four_applied_once") is not True:
         raise ValueError("native Xe-131 equal-p/n factor-four bookkeeping is not certified")
+    if metadata.get("shape_renormalization_applied") is not False:
+        raise ValueError(
+            "native Xe-131 source must be the raw OBDME normalization before C0"
+        )
     if "14.2.0" not in str(metadata.get("wolfram_version", "")):
         raise ValueError("native Xe-131 Wolfram version is not 14.2.0")
     if metadata.get("csv_sha256") != NATIVE_CSV_SHA256:
@@ -154,12 +187,29 @@ def load_native_xe131_responses(path: Path) -> tuple[dict, dict]:
         "PhiPP": "R_PhiPP_physical_equal_pn",
         "MPhiPP": "R_MPhiPP_physical_equal_pn",
     }
-    responses = {
+    responses_raw_to_physical = {
         name: np.asarray([float(row[column]) for row in rows], dtype=float)
         for name, column in columns.items()
     }
-    if not all(np.all(np.isfinite(values)) for values in responses.values()):
+    if not all(np.all(np.isfinite(values)) for values in responses_raw_to_physical.values()):
         raise ValueError("native AFH response archive contains non-finite values")
+    raw_m_zero = float(rows[0]["R_M_raw"])
+    metadata_raw_m_zero = float(metadata.get("measured_R_M_raw_q0", math.nan))
+    validation_raw_m_zero = float(validation.get("R_M_raw_q0", math.nan))
+    for label, value in (
+        ("metadata", metadata_raw_m_zero),
+        ("validation", validation_raw_m_zero),
+    ):
+        if not math.isfinite(value) or not math.isclose(
+            raw_m_zero, value, rel_tol=0.0, abs_tol=2.0e-10
+        ):
+            raise ValueError(f"native Xe-131 raw M(q=0) disagrees with {label}")
+    # The native file has already applied the independent equal-p/n factor
+    # four, but explicitly records shape_renormalization_applied=false.
+    # Apply the OBDME common correction C0 once so M_phys(0)=A^2.
+    responses, c0 = apply_xe131_common_matrix_normalization(
+        responses_raw_to_physical, raw_m_zero
+    )
     return {"q": q, "responses": responses}, {
         "sha256_policy": "UTF-8 text normalized to LF before SHA-256",
         "sha256_canonical_lf": canonical_digest,
@@ -173,7 +223,13 @@ def load_native_xe131_responses(path: Path) -> tuple[dict, dict]:
         "afh_source_sha256": metadata["afh_source_sha256"],
         "density_matrix_csv_sha256": metadata["density_matrix_csv_sha256"],
         "response_columns": columns,
-        "normalization": "physical equal-p/n columns; factor four applied once",
+        "normalization": (
+            "source CSV already contains physical equal-p/n columns with factor four; "
+            "loader applies C0= A^2/(4*R_M_raw(q=0)) once to all three responses"
+        ),
+        "common_matrix_normalization_C0": c0,
+        "raw_M_zero_package_response": raw_m_zero,
+        "physical_M_zero_after_C0": float(responses["M"][0]),
         "mass_record": XE131_MASS_RECORD,
         "mass_convention": "bare nucleus: (atomic_mass_u - Z*m_e[u])*u_GeV",
     }
@@ -193,88 +249,72 @@ def interpolate_responses(bundle: dict, qA_GeV: float) -> dict:
 
 
 def charge_sector_kernels(
-    L_C: float, qA_GeV: float, responses: dict[str, float],
-    form_factor_prescription: str = "bishara_linear",
+    L_C: float,
+    qA_GeV: float,
+    responses: dict[str, float],
     *,
-    tN_GeV2: float | None = None,
+    ER_keV: float,
 ) -> dict:
-    """Return finite-t_N M+Phi'' and original AFH M-only Coulomb kernels."""
-    tN_used = -qA_GeV * qA_GeV if tN_GeV2 is None else float(tN_GeV2)
-    Q2 = -tN_used
-    if Q2 < 0.0 or not math.isfinite(Q2):
-        raise ValueError("nucleon form-factor Q_N^2 must be finite and non-negative")
-    if form_factor_prescription == "q0_anchor":
-        F1, F2 = F1V0, F2V0
-    elif form_factor_prescription == "bishara_linear":
-        F1, F2 = bishara_linear(Q2)
-    elif form_factor_prescription == "isoscalar_zexp":
-        F1, F2 = isoscalar_zexp(Q2)
-    else:
-        raise ValueError(f"unknown form-factor prescription: {form_factor_prescription}")
-    F1_effective, F2_effective = effective_nucleon_form_factors(F1, F2)
+    """Return A reference, adopted B baseline, and C charge extension."""
+    ER_GeV = float(ER_keV) * 1.0e-6
+    tN_GeV2 = -2.0 * MA_XE131_GEV * ER_GeV
+    Q_A2 = qA_GeV * qA_GeV
+    F1_raw, F2_raw = bishara_linear(-tN_GeV2)
+    F1, F2 = effective_nucleon_form_factors(F1_raw, F2_raw)
+    F1hat0, _ = effective_nucleon_form_factors(RAW_F1_UDS0, RAW_F2_UDS0)
     cM, cPhi = charge_coefficients(
         qA_GeV,
-        F1=F1_effective,
-        F2=F2_effective,
+        F1=F1,
+        F2=F2,
+        tN_GeV2=tN_GeV2,
         mN_GeV=MN_GEV,
-        tN_GeV2=tN_used,
     )
     WM, WPhi, WMPhi = responses["M"], responses["PhiPP"], responses["MPhiPP"]
-    if WM <= 0.0:
-        raise ValueError(f"non-positive native W_M at q_A={qA_GeV:.12g} GeV")
+    if WM <= 0.0 or WPhi < -1.0e-12:
+        raise ValueError(f"invalid native AFH M/Phi'' response at q_A={qA_GeV:.12g} GeV")
     if not math.isfinite(L_C) or L_C <= 0.0:
         raise ValueError("invalid continuity-adjusted Coulomb weight L_C")
 
-    finite_t_M_kernel = cM * cM * L_C * WM
+    A_reference = F1hat0 * F1hat0 * L_C * WM
+    B_baseline = cM * cM * L_C * WM
     interference_kernel = 2.0 * cM * cPhi * L_C * WMPhi
     phi_kernel = cPhi * cPhi * L_C * WPhi
-    full_charge_kernel = finite_t_M_kernel + interference_kernel + phi_kernel
-    original_AFH_M_baseline_kernel = L_C * WM
-    if original_AFH_M_baseline_kernel <= 0.0 or full_charge_kernel <= 0.0:
-        raise ValueError("non-positive numerator or denominator kernel")
+    C_extension = B_baseline + interference_kernel + phi_kernel
+    if min(A_reference, B_baseline, C_extension) <= 0.0:
+        raise ValueError("non-positive A/B/C charge kernel")
 
     eta = cPhi / cM
-    Qphi = 1.0 + 2.0 * eta * (WMPhi / WM) + eta * eta * (WPhi / WM)
-    ratio_direct = full_charge_kernel / original_AFH_M_baseline_kernel
-    ratio_finite_t_M = full_charge_kernel / finite_t_M_kernel
-    ratio_factorized = (cM * cM) * Qphi
-    if not math.isclose(ratio_direct, ratio_factorized, rel_tol=2e-13, abs_tol=2e-15):
-        raise AssertionError("direct and factorized Coulomb-sector ratios disagree")
+    C_over_B = 1.0 + 2.0 * eta * (WMPhi / WM) + eta * eta * (WPhi / WM)
+    B_over_A = (cM * cM) / (F1hat0 * F1hat0)
+    C_over_A = C_extension / A_reference
+    if not math.isclose(C_over_A, B_over_A * C_over_B, rel_tol=2e-13, abs_tol=2e-15):
+        raise AssertionError("direct and factorized A/B/C ratios disagree")
 
     return {
-        "form_factor_prescription": form_factor_prescription,
-        "F1V_quark_finite_t": F1,
-        "F2V_quark_finite_t": F2,
-        "F1N_effective_finite_t": F1_effective,
-        "F2N_effective_finite_t": F2_effective,
-        "tN_GeV2": tN_used,
-        "Q_N2_GeV2": -tN_used,
-        "nucleon_transfer_scheme": (
-            "strict one-body impulse" if tN_GeV2 is not None else "static q_N^0=0 diagnostic"
-        ),
+        "form_factor_prescription": "bishara_linear",
+        "F1V_quark_sum": F1_raw,
+        "F2V_quark_sum": F2_raw,
+        "F1N_effective": F1,
+        "F2N_effective": F2,
+        "tN_GeV2": tN_GeV2,
+        "Q_A2_GeV2": Q_A2,
         "cM": cM,
         "cPhiPP": cPhi,
         "eta_cPhi_over_cM": eta,
         "W_PhiPP_over_W_M": WPhi / WM,
         "W_MPhiPP_over_W_M": WMPhi / WM,
-        "Q_PhiPP_relative_to_finite_t_M": Qphi,
-        "nucleon_finite_t_M_only_over_AFH_finite_size_M_baseline": cM * cM,
-        "full_charge_over_finite_t_M": ratio_finite_t_M,
-        "relative_change_vs_finite_t_M_percent": 100.0 * (ratio_finite_t_M - 1.0),
-        "AFH_finite_size_M_baseline_kernel": original_AFH_M_baseline_kernel,
-        "nucleon_q0_M_only_kernel": original_AFH_M_baseline_kernel,
-        "full_charge_over_AFH_finite_size_M_baseline": ratio_direct,
-        "relative_change_vs_AFH_finite_size_M_baseline_percent": 100.0 * (ratio_direct - 1.0),
-        "full_charge_over_nucleon_finite_t_M_only": ratio_finite_t_M,
-        "relative_change_vs_nucleon_finite_t_M_only_percent": 100.0 * (ratio_finite_t_M - 1.0),
-        "nucleon_finite_t_M_only_over_AFH_finite_size_M_baseline": cM * cM,
+        "B_over_A_reference": B_over_A,
+        "C_over_B_baseline": C_over_B,
+        "C_over_A_reference": C_over_A,
+        "relative_B_vs_A_percent": 100.0 * (B_over_A - 1.0),
+        "relative_C_vs_B_percent": 100.0 * (C_over_B - 1.0),
+        "relative_C_vs_A_percent": 100.0 * (C_over_A - 1.0),
         "kernels_with_common_LC": {
-            "AFH_finite_size_M_baseline": original_AFH_M_baseline_kernel,
-            "nucleon_q0_M_only": original_AFH_M_baseline_kernel,
-            "nucleon_finite_t_M_only": finite_t_M_kernel,
+            "A_reference_M_only": A_reference,
+            "B_finite_tN_M_only": B_baseline,
             "M_Phi_interference": interference_kernel,
             "PhiPP_diagonal": phi_kernel,
-            "finite_t_M_plus_PhiPP": full_charge_kernel,
+            "C_M_plus_PhiPP": C_extension,
         },
     }
 def integrate_LC(
@@ -327,8 +367,21 @@ def integrate_LC(
         "quadrature_points": int(result["quadrature_points"]),
         "order": {"nw": nw, "nz": nz, "nphi": nphi},
     }
-def run(afh_csv: Path, form_factor_prescription: str = "bishara_linear") -> dict:
+def run(
+    afh_csv: Path,
+    dense_native_csv: Path | None = None,
+    dense_native_metadata: Path | None = None,
+    dense_native_validation: Path | None = None,
+) -> dict:
     bundle, provenance = load_native_xe131_responses(afh_csv)
+    dense_args = (dense_native_csv, dense_native_metadata, dense_native_validation)
+    if any(item is not None for item in dense_args):
+        if not all(item is not None for item in dense_args):
+            raise ValueError("dense native overlay requires CSV, metadata, and validation JSON together")
+        bundle, provenance = overlay_dense_native_charge_grid(
+            bundle, provenance, dense_native_csv,
+            dense_native_metadata, dense_native_validation,
+        )
     results = []
     for ER_keV, (delta_m, medium_order, high_order) in BENCHMARKS.items():
         qA = exact_qA_GeV(MA_XE131_GEV, ER_keV)
@@ -346,16 +399,8 @@ def run(afh_csv: Path, form_factor_prescription: str = "bishara_linear") -> dict
                     f"phase-space medium/high convergence failed: ER={ER_keV}, "
                     f"width={width}, LC={convergence_LC:.6g}, L00={convergence_L00:.6g}"
                 )
-            ER_GeV = float(ER_keV) * 1.0e-6
-            tN_GeV2 = ER_GeV * ER_GeV - qA * qA
-            kernels = charge_sector_kernels(
-                high["L_C"], qA, high_response, form_factor_prescription,
-                tN_GeV2=tN_GeV2,
-            )
-            linear_kernels = charge_sector_kernels(
-                high["L_C"], qA, linear_response, form_factor_prescription,
-                tN_GeV2=tN_GeV2,
-            )
+            kernels = charge_sector_kernels(high["L_C"], qA, high_response, ER_keV=ER_keV)
+            linear_kernels = charge_sector_kernels(high["L_C"], qA, linear_response, ER_keV=ER_keV)
             width_rows.append({
                 "width_scheme": width,
                 "g2": G2,
@@ -372,28 +417,22 @@ def run(afh_csv: Path, form_factor_prescription: str = "bishara_linear") -> dict
                     "atomic_mass_u": XE131_MASS_RECORD["atomic_mass_u"],
                     "ER_keV": ER_keV,
                     "qA_exact_GeV": qA,
-                    "tN_GeV2": tN_GeV2,
-                "nucleon_transfer_scheme": "strict one-body impulse q_N^mu=q_A^mu",
+                    "tN_GeV2_formal": -2.0 * MA_XE131_GEV * ER_keV * 1.0e-6,
+                    "tN_GeV2_static_diagnostic": -(qA * qA),
                 },
                 "native_AFH_responses_pchip": high_response,
                 "native_AFH_responses_linear_check": linear_response,
                 "finite_tN_form_factors_and_charge_kernels": kernels,
                 "linear_interpolation_cross_section_ratio": (
-                    linear_kernels["full_charge_over_finite_t_M"]
+                    linear_kernels["C_over_A_reference"]
                 ),
                 "pchip_minus_linear_ratio": (
-                    kernels["full_charge_over_finite_t_M"]
-                    - linear_kernels["full_charge_over_finite_t_M"]
-                ),
-                "linear_interpolation_ratio_vs_AFH_finite_size_baseline": (
-                    linear_kernels["full_charge_over_AFH_finite_size_M_baseline"]
-                ),
-                "pchip_ratio_vs_AFH_finite_size_baseline": (
-                    kernels["full_charge_over_AFH_finite_size_M_baseline"]
+                    kernels["C_over_A_reference"]
+                    - linear_kernels["C_over_A_reference"]
                 ),
             })
         ratios = [
-            row["finite_tN_form_factors_and_charge_kernels"]["full_charge_over_finite_t_M"]
+            row["finite_tN_form_factors_and_charge_kernels"]["C_over_A_reference"]
             for row in width_rows
         ]
         if len(width_rows) != 1 or width_rows[0]["width_scheme"] != "pole":
@@ -409,19 +448,14 @@ def run(afh_csv: Path, form_factor_prescription: str = "bishara_linear") -> dict
                 "mV_GeV_common_prefactor_only": MV_GEV,
                 "target": "Xe-131",
             },
-            "fixed_speed_differential_cross_section_ratio": (
+            "extension_C_over_A_reference": (
                 width_rows[0]["finite_tN_form_factors_and_charge_kernels"][
-                    "full_charge_over_finite_t_M"
+                    "C_over_A_reference"
                 ]
             ),
-            "relative_change_percent": (
+            "relative_C_vs_A_percent": (
                 width_rows[0]["finite_tN_form_factors_and_charge_kernels"][
-                    "relative_change_vs_finite_t_M_percent"
-                ]
-            ),
-            "ratio_vs_AFH_finite_size_M_baseline": (
-                width_rows[0]["finite_tN_form_factors_and_charge_kernels"][
-                    "full_charge_over_AFH_finite_size_M_baseline"
+                    "relative_C_vs_A_percent"
                 ]
             ),
             "width_scenarios": width_rows,
@@ -432,32 +466,17 @@ def run(afh_csv: Path, form_factor_prescription: str = "bishara_linear") -> dict
             },
         })
     return {
-        "status": "PASS_XE131_FIXED_SPEED_B_BASELINE_AND_C_OVER_B_RATIO",
-        "primary_baseline": "B: finite-t_N nucleon Dirac-Pauli current times the finite-size AFH W_M(y_A), with no additional AFH responses",
-        "A_reference": "q=0 effective nucleon-current normalization times the same finite-size AFH W_M(y_A)",
-        "C_extension": "M+Phi''+signed M-Phi'' charge-sector extension; ratio to B is the primary response-only diagnostic",
+        "status": "PASS_XE131_FIXED_SPEED_ABC_CHARGE_SECTOR",
         "scope": (
-            "fixed-speed Xe-131 differential cross-section ratio in the "
-            "M+Phi''+M-Phi'' Coulomb sector; the complete 2->3 DM phase space "
-            "is integrated with both scalar-radiation diagrams and finite chi2 "
-            "widths, while native AFH transverse-current responses are not included"
+            "fixed-speed Xe-131 A/B/C comparison in the M+Phi''+M-Phi'' Coulomb sector; "
+            "B is the adopted finite-t_N M-only production baseline, C is a separate "
+            "charge-response extension, and native AFH transverse-current responses are not included"
         ),
         "ratio_definition": (
-            "(dSigma_C/dER)_[M+Phi'' charge extension] / "
-            "(dSigma_B/dER)_[finite-t_N M-only baseline with identical F1,F2]"
-        ),
-        "AFH_finite_size_M_baseline_definition": (
-            "g_VN-prefactor times the physical equal-p=n finite-q AFH W_M(Q_A); "
-            "the nucleon q=0 normalization is Fhat_1(0)=1, with no extra factor nine"
-        ),
-        "nucleon_form_factor_normalization": "Fhat_i=F_i^(u+d+s)/3 for the external g_VN coupling basis",
-        "primary_response_ratio_definition": (
-            "(dSigma/dER)_[M+Phi'' charge sector with finite-t nucleon current] / "
-            "(dSigma/dER)_[M-only with the same finite-t nucleon current and same AFH W_M(Q_A)]"
-        ),
-        "total_ratio_definition": (
-            "(dSigma/dER)_[M+Phi'' charge sector with finite-t nucleon current] / "
-            "(dSigma/dER)_[original finite-size AFH M-only baseline]"
+            "A=q=0 effective nucleon current times finite-size W_M; "
+            "B=finite-t_N M-only production baseline; "
+            "C=B plus Phi'' and signed M-Phi'' interference. "
+            "Report B/A, C/B, and C/A separately."
         ),
         "factorization": (
             "The same continuity-adjusted L_C^(3), propagator, flux, and phase-space "
@@ -476,21 +495,18 @@ def run(afh_csv: Path, form_factor_prescription: str = "bishara_linear") -> dict
             "mA_bare_nucleus_GeV": MA_XE131_GEV,
             "mass_record": XE131_MASS_RECORD,
             "AFH_native_provenance": provenance,
-            "recoil_momentum_convention": "q_A=sqrt(2*m_A*E_R+E_R^2)",
-            "nucleon_invariant_convention": "strict one-body impulse q_N^mu=q_A^mu, t_N=t_A=E_R^2-Q_A^2=-2*m_A*E_R",
+            "recoil_momentum_convention": "Q_A=|boldsymbol q_A|=sqrt(2*m_A*E_R+E_R^2); qA_GeV in the legacy Python API denotes this magnitude",
+            "nucleon_invariant_convention": "formal B: q_N^mu=q_A^mu and t_N=t_A=-2*m_A*E_R; static t_N=-q_A^2 is diagnostic only",
         },
-        "form_factor_prescription": form_factor_prescription,
-        "form_factor_status": (
-            "full quark-current form factors are computed first, then divided by three before entering coefficients with the external g_VN prefactor; bishara_linear uses F1^uds(t_N)=3+8.392 t_N and F2^uds(0)=-0.552"
-        ),
-        "nucleon_transfer_scheme": (
-            "strict one-body impulse q_N^mu=q_A^mu, t_N=t_A=E_R^2-Q_A^2=-2m_AE_R"
+        "form_factor_prescription": (
+            "adopted B: Bishara linear raw u+d+s F1 slope and constant raw F2 anchor, "
+            "converted to the external-gVN effective basis by dividing both form factors by three"
         ),
         "results": results,
         "limitations": [
             "This is not the complete L_mu_nu W_A^mu_nu result because native Delta/Sigma transverse responses are not included.",
             "The spatial-current sector was previously found negligible in provisional fixed-speed contractions, but that does not replace native spatial-response validation.",
-            "Bishara_linear is the adopted low-Q_N^2 B prescription: F1^uds(t_N)=3+8.392*t_N+O(t_N^2), F2^uds(t_N)=-0.552+O(t_N); no F2 slope is assumed.",
+            "B uses the adopted low-momentum Bishara F1 slope and constant F2 anchor; no unsupported F2 slope is assumed.",
             "No halo velocity average, isotope sum, detector response, or absolute coupling normalization is included.",
             "The common phase-space factor in this ratio is L_C, not L00 alone.",
         ],
@@ -498,13 +514,15 @@ def run(afh_csv: Path, form_factor_prescription: str = "bishara_linear") -> dict
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--afh-csv", type=Path, required=True)
+    parser.add_argument("--dense-native-csv", type=Path)
+    parser.add_argument("--dense-native-metadata", type=Path)
+    parser.add_argument("--dense-native-validation", type=Path)
     parser.add_argument("--out", type=Path, required=True)
-    parser.add_argument(
-        "--form-factor", choices=("bishara_linear", "isoscalar_zexp"),
-        default="bishara_linear",
-    )
     args = parser.parse_args()
-    result = run(args.afh_csv, args.form_factor)
+    result = run(
+        args.afh_csv, args.dense_native_csv,
+        args.dense_native_metadata, args.dense_native_validation,
+    )
     args.out.parent.mkdir(parents=True, exist_ok=True)
     args.out.write_text(json.dumps(result, indent=2, allow_nan=False) + "\n", encoding="utf-8")
     print(json.dumps({
@@ -513,8 +531,8 @@ def main() -> None:
         "results": [
             {
                 "ER_keV": row["ER_keV"],
-                "ratio": row["fixed_speed_differential_cross_section_ratio"],
-                "relative_change_percent": row["relative_change_percent"],
+                "ratio": row["extension_C_over_A_reference"],
+                "relative_C_vs_A_percent": row["relative_C_vs_A_percent"],
             }
             for row in result["results"]
         ],

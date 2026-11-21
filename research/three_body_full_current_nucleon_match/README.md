@@ -48,48 +48,10 @@ current comparison remains to be implemented. The direct many-body comparison
 \]
 remains the next physics gate.
 
-The adopted production baseline is **B**: the low-momentum flavor-resolved
-Bishara Dirac-Pauli current \(\widehat F_1(t_N),\widehat F_2(t_N)\)
-contracted with the native finite-size AFH \(W_M(y_A)\), and no additional
-AFH response. The external prefactor uses \((g_1g_2g_{VN})^2\), so the
-current coefficients use \(\widehat F_i=F_i^{uds}/3\). The
-isoscalar_zexp prescription is retained only as an alternative sensitivity
-model. C and D are separate nuclear-response extensions relative to B.
-The P3-C amplitude subgate still uses constant \(q=0\) anchors and does not
-validate the B bound-nucleus current. P1 does not claim a bound-nucleus or
-off-shell current.
-
-## Adopted production baseline B (2026-11-19)
-
-The primary fixed-speed and natural-xenon calculation is now
-[
-\frac{d\sigma_B}{dE_R}\propto
-\mathcal P_3L_C^{(3)}
-\widehat c_M(t_N)^2W_M^{\rm phys}(y_A),
-]
-with the finite-(t_N) effective nucleon Dirac–Pauli current and the
-native finite-size AFH (M) response only. B contains no
-(Phi''), (Delta), (Sigma'), (Sigma''), or response interference.
-A is retained only as the q=0-current reference; C and D are separate
-nuclear-response extensions.
-
-The default B nucleon form-factor prescription is the Bishara et al.
-Appendix A.1 low-momentum flavor sum:
-[
-F_1^{uds,N}(t_N)=3+8.392t_N+mathcal O(t_N^2),qquad
-F_2^{uds,N}(t_N)=-0.552+mathcal O(t_N).
-]
-With the external ((g_1g_2g_{VN})^2) prefactor and
-(g_{VN}=3g_{Vq}), all current coefficients use
-(widehat F_i=F_i^{uds}/3). The (F_2) input is leading-order constant;
-no unverified Pauli slope is assumed. The isoscalar_zexp model is
-sensitivity-only.
-
-Formal one-body impulse uses (t_N=t_A=-2m_AE_R); AFH (y_A) uses
-(Q_A^2=2m_AE_R+E_R^2). The AFH factor four and the quark-current factor
-three are independent normalization ledgers. See
-[NUCLEAR_FINITE_SIZE_BASELINE_POLICY.md](NUCLEAR_FINITE_SIZE_BASELINE_POLICY.md)
-for the single source of truth.
+Finite-\(t_N\) form factors, a continuous recoil/halo fold, natural-xenon
+spectra, and detector-level predictions remain downstream tasks. The
+current P3-C result uses constant \(q=0\) form-factor anchors and fixed
+speed points only. P1 does not claim a bound-nucleus/off-shell current.
 
 ## 1. Purpose and amplitude
 
@@ -116,24 +78,24 @@ The nuclear transfer and one-nucleon transfer are kept distinct:
 q_A^\mu=P_A'^\mu-P_A^\mu,\qquad
 q_N^\mu=k_N'^\mu-k_N^\mu.
 \]
-The static-free-nucleon diagnostic sets
+In the static one-body impulse diagnostic,
 \[
 q_N^0=0,\qquad
 \boldsymbol q_N=\boldsymbol q_A,\qquad
-t_N^{\rm static}=-Q_A^2.
+t_N=-|\boldsymbol q_A|^2.
 \]
-The formal one-body impulse prescription instead carries the full external
-four-transfer,
+This is a separate diagnostic approximation. The adopted B production
+prescription instead uses the full one-body transfer
 \[
 q_N^\mu=q_A^\mu,\qquad
-t_N=t_A=-2m_AE_R,\qquad
-Q_N^2=-t_N=2m_AE_R.
+t_N=t_A=-2m_AE_R,
 \]
-The spatial recoil remains
-\(Q_A^2=|\boldsymbol q_A|^2=2m_AE_R+E_R^2\), and enters the AFH/NR
-spatial coefficients separately. The Xe-131 fixed-speed and P4 formal
-calculations now use the full-transfer prescription; the static choice is
-retained only as a diagnostic. The AFH Fourier convention used in the matching note is
+while AFH uses the exact spatial momentum
+\[
+Q_A^2=2m_AE_R+E_R^2,\qquad y_A=b_A^2Q_A^2/4.
+\]
+The nucleon form factors are evaluated at \(t_N\), not at \(-Q_A^2\).
+The AFH Fourier convention used in the matching note is
 \(\boldsymbol q_{\rm AFH}=-\boldsymbol q_A\). The emitted scalar momentum
 is not part of the nuclear Fourier transfer:
 \[
@@ -355,12 +317,12 @@ extractor. This confirms the **particle-side** signed coefficient; it
 does not yet validate the complete many-body AFH OBDME contraction. The
 Cauchy--Schwarz check bounds response magnitude and is a separate test.
 
-For the universal \(u+d+s\) current the raw quark-summed anchors are
-\(F_1^{uds}(0)=3\), \(F_2^{uds}(0)=-0.552\). In the external
-\(g_{VN}=3g_{Vq}\) rate convention the coefficients above use
-\(\widehat F_1(0)=1\), \(\widehat F_2(0)=-0.184\), and
-\(m_N=0.938918\) GeV. The coefficient ratios relative to
-\\(C_M=(\\widehat F_1^N)^2L^{00}\\) over the 12 archived benchmarks are:
+For the universal u+d+s current the raw zero-momentum sums are
+\(F_1^{uds}(0)=3\), \(F_2^{uds}(0)=-0.552\). With the external
+\(g_{VN}=3g_{Vq}\) prefactor, the coefficients use
+\(\widehat F_1^N(0)=1\), \(\widehat F_2^N(0)=-0.184\).
+The coefficient ratios relative to
+\(C_M=(\widehat F_1^N)^2L^{00}\) over the 12 archived benchmarks are:
 
 | Spatial coefficient | Range relative to \(C_M\) |
 |---|---:|
@@ -393,11 +355,10 @@ is also consistent with zero at floating-point precision. It is a
 different multipole factor and does not set the AFH
 \(C_{\Sigma'\Delta}^{(3)}\) coefficient to zero.
 
-The coefficient ratios above use constant zero-momentum effective
-form-factor anchors. The adopted B calculation uses finite-\(t_N\)
-\(\widehat F_1(t_N)\) and the leading Pauli value
-\(\widehat F_2(t_N)=-0.184+\mathcal O(t_N)\), and contracts with the
-physical equal-\(p=n\) AFH response columns so the factor of four is applied once.
+The coefficient ratios above use constant zero-momentum form-factor
+anchors. The final calculation must use finite-\(t_N\)
+\(\widehat F_1^N(t_N)\) and \(\widehat F_2^N(t_N)\), and must contract with the physical
+equal-\(p=n\) AFH response columns so the factor of four is applied once.
 
 ## 6. Provisional seven-isotope AFH fixed-speed contraction (P0-C2)
 
@@ -417,8 +378,12 @@ natural-xenon atom-fraction coverage. Its native_afh_validated flag is
 false, so the contraction is explicitly provisional. The spatial-to-charge values below also use the candidate \(C_{\Sigma'\Delta}\) sign; treat them as provisional until P3 confirms the particle-side phase.
 
 The 12 three-body tensors times seven isotopes give 84 fixed-speed
-benchmark/isotope contractions. Using the historical raw flavor-summed anchors
-\\(F_1^{uds}(0)=3\\), \\(F_2^{uds}(0)=-0.552\\), and \\(m_N=0.938918\\) GeV. In the external-\\(g_{VN}=3g_{Vq}\\) basis the equivalent coefficient inputs are \\(\\widehat F_1^N=1\\), \\(\\widehat F_2^N=-0.184\\). The old spatial-to-charge ratios are unchanged by this common rescaling, but the old raw absolute coefficients are nine times too large at the kernel level if combined with the external-\\(g_{VN}\\) prefactor; the current P3-C workflow and all B production modules use \\(\\widehat F_i\\):
+benchmark/isotope contractions. The archived P0-C2 output used the raw
+anchors \(F_1^{uds}(0)=3\), \(F_2^{uds}(0)=-0.552\), before conversion
+to the external-\(g_{VN}\) effective basis. Its absolute coefficients
+are therefore legacy raw-normalization values; the ratios are unaffected
+by the common factor of nine. The current script defaults to
+\(\widehat F_1(0)=1\), \(\widehat F_2(0)=-0.184\).
 
 - all 84 combined response kernels are non-negative;
 - all interpolated diagonal spatial responses are non-negative;
@@ -453,73 +418,155 @@ are zero-momentum anchors rather than finite-\(t_N\) functions. No
 recoil-grid scan, natural-abundance sum, halo fold, detector response, or
 likelihood is included.
 
-## 7. Mandatory finite-size AFH baseline and nucleon-current corrections
+## 7. Adopted B baseline: finite nucleon form factors times finite-size AFH charge response
 
-The original calculation already contains the finite-size nuclear finite-size response:
+The production baseline is
+
 \[
-R_{A,M}^{\rm phys}(Q_A)
-=A^2\frac{W_M^{00}(y_A)}{W_M^{00}(0)},\qquad
-y_A=\left(\frac{Q_A b_A}{2}\right)^2,\qquad
+\boxed{
+B:\quad
+\widehat c_M(t_N)^2 W_M^{\rm phys}(y_A)
+}
+\]
+
+with the finite-size AFH response retained at every recoil. The zero-transfer
+reference is
+
+\[
+A:\quad
+W_M^{\rm phys}(y_A),
+\]
+
+and the separate charge-multipole extension is
+
+\[
+C:\quad
+\widehat c_M^2W_M^{\rm phys}
++2\widehat c_M\widehat c_{\Phi''}W_{M\Phi''}^{\rm phys}
++\widehat c_{\Phi''}^2W_{\Phi''}^{\rm phys}.
+\]
+
+A is **not** a point nucleus. A, B, and C all use the same finite-size
+AFH \(W_M(y_A)\). The distinction between A and B is solely the finite
+single-nucleon Dirac--Pauli current.
+
+### 7.1 Form-factor normalization and formal transfer
+
+The raw universal light-flavor sums have the zero-transfer anchors
+
+\[
+F_1^{uds,N}(0)=3,\qquad F_2^{uds,N}(0)=-0.552.
+\]
+
+Because the external coupling is written as
+\(g_{VN}=3g_{Vq}\), the current coefficients use
+
+\[
+\boxed{
+\widehat F_i^N(t_N)=\frac{F_i^{uds,N}(t_N)}{3}
+}
+\]
+
+so that \(\widehat F_1^N(0)=1\) and
+\(\widehat F_2^N(0)=-0.184\). The raw form-factor sum and the external
+factor of three must never both be retained in the same current coefficient.
+
+The adopted low-momentum prescription uses the Bishara flavor-separated
+Dirac slope and the available constant Pauli anchor:
+
+\[
+F_1^{uds,N}(t_N)=3+8.392\,t_N+O(t_N^2),
+\qquad
+F_2^{uds,N}(t_N)=-0.552+O(t_N).
+\]
+
+No unsupported \(F_2\) slope is introduced. The alternate isoscalar
+electromagnetic z-expansion is retained as a sensitivity diagnostic, not
+as the B production input.
+
+For formal B,
+
+\[
+t_N=t_A=-2m_AE_R,
+\qquad
 Q_A^2=2m_AE_R+E_R^2.
 \]
-The native AFH equal-\(p=n\) response used by the Python engine has the raw-to-physical factor four applied exactly once and satisfies \(R_{A,M}^{\rm phys}(0)=A^2\). This finite-\(Q_A\) \(W_M(y_A)\) is mandatory in the baseline. Do not replace it by \(W_M(0)\), and do not multiply an additional Helm or other whole-nucleus form factor onto AFH.
 
-The original paper and Mathematica benchmark use the effective nucleon coupling in the external prefactor:
+The first invariant enters \(\widehat F_{1,2}^N(t_N)\) and
+\(\widehat c_M\); the second enters \(y_A\) and the
+\(\Phi''\) coefficient. The static diagnostic
+\(t_N=-Q_A^2\) is not used in production.
+
+The matched charge coefficients are
+
 \[
-g_{VN}=3g_{Vq},\qquad (g_1g_2g_{VN})^2.
+\widehat c_M(t_N)=
+\widehat F_1^N(t_N)+
+\frac{t_N[\widehat F_1^N(t_N)+2\widehat F_2^N(t_N)]}{8m_N^2},
 \]
-The full universal quark-current nucleon form factors obey \(F_1^{uds}(0)=3\) and \(F_2^{uds}(0)=-0.552\). Therefore the effective-nucleon coefficients in a \(g_{VN}\)-prefactor calculation must use
+
 \[
-\widehat F_i(t_N)=F_i^{uds}(t_N)/3,\qquad
-\widehat F_1(0)=1,\quad \widehat F_2(0)=-0.184.
+\widehat c_{\Phi''}(t_N,Q_A^2)=
+\frac{Q_A^2[\widehat F_1^N(t_N)+2\widehat F_2^N(t_N)]}{4m_N^2}.
 \]
-The AFH factor four and the quark-current factor three are independent normalization ledgers. Never combine them.
 
-For every fixed-speed and halo-fold result, report the following A/B/C hierarchy, always retaining the same finite-size AFH \(W_M(Q_A)\):
+### 7.2 Xe-131 fixed-speed charge anchors
 
-- **A — AFH finite-size M-only reference:** \(L_C^{(3)}W_M^{\rm phys}(Q_A)\), with \(\widehat F_1(0)=1\).
-- **B — finite-\(t_N\) nucleon M-only:** \(\widehat c_M(t_N)^2L_C^{(3)}W_M^{\rm phys}(Q_A)\).
-- **C — charge-response extension:** B plus \(\Phi''\) and the signed \(M-\Phi''\) interference.
+Using the adopted Bishara-linear B prescription and the native AFH
+\(W_M,W_{\Phi''},W_{M\Phi''}\) response ratios, the expected A/B/C
+anchors are:
 
-The three ratios answer different questions:
+| \(E_R\) | \(B/A\) | \(C/B\) | \(C/A\) |
+|---:|---:|---:|---:|
+| 200 keV | 0.7398828761 | 0.9969554024 | 0.7376302305 |
+| 267 keV | 0.6621749872 | 0.9146639874 | 0.6056676141 |
+
+The 267 keV row uses the exact native AFH responses at q(267 keV)=0.255146745 GeV. The merged 2,509-point dense-grid PCHIP anchor is C/A=0.6056675913, a 2.3e-8 interpolation residual.
+
+Thus the finite nucleon form-factor correction changes A to B by
+\(-26.01\%\) at 200 keV and \(-33.78\%\) at 267 keV. The additional
+\(\Phi''\) charge extension changes B by approximately
+\(-0.3045\%\) and \(-8.5336\%\), respectively. The large local
+correction near 267 keV is associated with the small \(W_M\) denominator;
+it must be interpreted together with the absolute responses.
+
+These are fixed-speed, single-isotope charge-sector ratios. They do not
+include the native transverse \(\Delta,\Sigma'\) sector, the halo
+average, natural-xenon isotope sum, detector response, or event counts.
+The absolute B spectrum is a separate output of
+xe131_fixed_benchmark_absolute_dsigma.py; the C curve is an
+extension, not the adopted baseline.
+
+### 7.3 Historical results retained but not promoted to B
+
+The earlier values
+
 \[
-B/A-1:\ \text{single-nucleon finite-}t_N\text{ correction},
+C/A=0.77830934\quad(200~\mathrm{keV}),\qquad
+C/A=0.64921591\quad(267~\mathrm{keV})
 \]
-\[
-C/B-1:\ \text{additional AFH charge-response correction at fixed }\widehat F_i,
-\]
-\[
-C/A-1:\ \text{total change relative to the original finite-size AFH baseline}.
-\]
-The first ratio must not be called a nuclear-response correction; the second must not be called the total change.
 
-The current Python engine compares two finite-\(t_N\) prescriptions:
+came from the alternate isoscalar-z-exp form factors, the static
+\(t_N=-Q_A^2\) prescription, and the legacy raw-flavor
+\(9W_M\) reference. They are retained as historical sensitivity
+diagnostics and are **not** the adopted B result.
 
-- **bishara_linear:** \(F_1^{uds}(t_N)=3+8.392t_N+O(t_N^2)\) and \(F_2^{uds}(0)=-0.552\), using the flavor-separated first-order Dirac slopes from Bishara et al. Appendix A.1.
-- **isoscalar_zexp:** a central isoscalar electromagnetic Sachs \(z\)-expansion reconstruction with strange-current inputs, used as an alternative sensitivity diagnostic.
+Likewise, the earlier \(-21.5\%\) and \(-34.2\%\) values are
+legacy raw-\(F_1^2\) normalization diagnostics. They are not the B/A
+correction. The old calculations are not deleted; their provenance and
+numerical values remain available for comparison.
 
-The full quark-current values are divided by three before they enter the \(g_{VN}\)-normalized current coefficients. The Bishara slope is a local expansion about \(t_N=0\), not an all-orders fit; the quoted \(F_2(0)\) does not determine an F2 slope. The adopted B truncation is \(F_2^{uds}(t_N)=F_2^{uds}(0)+\mathcal O(t_N)\). The formal production path uses \(t_N=t_A=-2m_AE_R\) for the declared one-body impulse prescription. The static diagnostic \(q_N^0=0\), \(t_N=-Q_A^2\), is separate and must not be mixed into the formal curve.
-
-The Xe-131 fixed-speed Pole-width calculation gives:
-
-| \(E_R\) | Prescription | \(B/A\) | \(C/B\) | \(C/A\) |
-|---:|---|---:|---:|---:|
-| 200 keV | bishara_linear | 0.739883 | 0.996955 | 0.737630 |
-| 200 keV | isoscalar_zexp | 0.780997 | 0.996558 | 0.778309 |
-| 267 keV | bishara_linear | 0.662175 | 0.914637 | 0.605649 |
-| 267 keV | isoscalar_zexp | 0.721663 | 0.899610 | 0.649216 |
-
-The finite-\(Q_N^2\) single-nucleon normalization changes the M-only kernel by approximately 22–34% relative to A. Once that effect is factored out, the additional \(\Phi''\) plus signed \(M-\Phi''\) interference changes the charge sector by 0.30–0.34% at 200 keV and 8.54–10.04% at 267 keV, where \(W_M\) is near a diffraction minimum.
-
-These are fixed-speed Xe-131 charge-sector results. They do not include the validated spatial-current response or a natural-xenon halo fold. The original Mathematica calculation contains the finite-size AFH response, but its recorded rate-engine path uses a constant effective nucleon coupling; it does not by itself establish a separate finite-\(t_N\) flavor-resolved Dirac-Pauli insertion.
-
-The canonical detailed policy is in NUCLEAR_FINITE_SIZE_BASELINE_POLICY.md.
+The original P0-C2 spatial-coefficient archive also used raw
+\(F_1^{uds}=3\), \(F_2^{uds}=-0.552\) in fields labelled effective.
+Its absolute particle coefficients are therefore larger by a factor of
+nine when combined with the external \(g_{VN}\) prefactor. Spatial-to-charge
+ratios are unchanged by this common normalization. The current code
+defaults to \(\widehat F_1=1\), \(\widehat F_2=-0.184\); the old
+archive remains historical until the normalized rerun is completed.
 
 ## 8. Leading AFH response content and remaining work
 
-Here “leading-static” refers to the leading nonrelativistic one-body current expansion; it does not mean the static-nucleon transfer choice q_N^0=0. The formal nucleon form-factor transfer remains t_N=t_A.
-
-At leading one-body vector-current order, the candidate response set
+At leading static one-body vector-current order, the candidate response set
 is
 \[
 M,\quad \Phi'',\quad M\Phi'',\quad
@@ -628,47 +675,29 @@ Latest integrated-tensor archive check (12 benchmark/width rows):
 These are kinematic and algebraic checks, not a claim that the many-body
 continuity problem is closed.
 
-## 8. Fixed-speed Xe-131 differential cross-section ratio
+## 8. Historical fixed-speed Xe-131 result (not the adopted B baseline)
 
-The dedicated fixed-speed Xe-131 calculation is archived in
-XE131_FIXED_SPEED_CHARGE_DSIGMA_RESULTS.md. It uses native AFH v6.0
-\(M,\Phi'',M\Phi''\) responses, finite-\(t_N\) Dirac-Pauli charge
-coefficients \(c_M,c_{\Phi''}\), signed \(M-\Phi''\) interference, and the
-full \(2\to3\) phase-space integral.
+The earlier fixed-speed Xe-131 output is preserved in
+XE131_FIXED_SPEED_CHARGE_DSIGMA_RESULTS.md. Its numerical ratios were
+`C/A=0.77830934` at 200 keV and `C/A=0.64921591` at 267 keV, but this
+was a historical diagnostic, not the adopted B calculation. It used the
+alternate isoscalar-z-expansion prescription, the static
+\(t_N=-Q_A^2\) approximation, and the legacy raw-flavor
+\(9W_M\) reference. The AFH \(W_M\) in that reference was still a
+finite-size nuclear response; it was not a point nucleus.
 
-The primary ratio is the finite-\(t_N\) charge-sector result divided by the
-\(M\)-only kernel evaluated with the **same** \(F_1^V(t_N),F_2^V(t_N)\).
-The \(q=0\) \(M\)-only reference is reported separately:
+The historical result record now carries an explicit banner and retains
+its original CSVs, values, and provenance. Do not cite those ratios as
+the B/A, C/B, or C/A values of the adopted production chain.
 
-| \(E_R\) | \(\Delta m\) | Form factor | \(R_{\rm charge}/R_{t_N,M}\) | \(R_{\rm charge}/R_{q=0,M}\) |
-|---:|---:|---|---:|---:|
-| 200 keV | 450 keV | bishara_linear | 0.99695540 (-0.30446%) | 0.737630 |
-| 200 keV | 450 keV | isoscalar_zexp | 0.99655805 (-0.34420%) | 0.778309 |
-| 267 keV | 362 keV | bishara_linear | 0.91463689 (-8.53631%) | 0.605649 |
-| 267 keV | 362 keV | isoscalar_zexp | 0.89961039 (-10.03896%) | 0.649216 |
-
-The Xe-131 dual-form-factor workflow passed on 2026-11-19
-(run 44443361283, artifact 14491448839; 7/7 regression tests). The common
-continuity-adjusted \(L_C^{(3)}\), propagator, flux, and phase-space factors
-cancel in each normalized ratio. Here the q=0 single-nucleon-current
-reference is the original AFH M-only baseline because it retains the same
-finite-q native \(W_M(Q_A)\); it is not a point-nucleus approximation.
-
-The full six-channel Xe-131 recoil scan now computes both bishara_linear
-and isoscalar_zexp contractions after one shared phase-space tensor
-integration at each recoil point. Each row carries both the
-same-finite-\(t_N\) M-only ratio and the total ratio to the original AFH
-M-only baseline. The spatial-response portion remains provisional until
-the native Wolfram/P3-C gates pass; the new workflow run must pass before
-these expanded rows are used as numerical results.
-
-The earlier \(-21.48\%\) and \(-34.24\%\) numbers are historical
-\(F_1^2\)-normalization diagnostics. The updated matched-\(c_M\) result
-retains \(M,\Phi'',M\Phi''\) coherently. This remains a fixed-speed Xe-131
-Coulomb-sector ratio, not an absolute differential cross section,
-natural-xenon halo average, complete eight-response three-body contraction,
-or detector prediction.
-
+The corrected fixed-speed code now uses formal
+\(t_N=t_A=-2m_AE_R\), effective
+\(\widehat F_i=F_i^{uds}/3\), and the physical AFH response with its
+common \(C_0(131)\) correction. Its new B anchors and the separate C
+extension are recorded in Section 7.2 and
+FORM_FACTOR_BASELINE_COMPARISON.md. The fresh fixed-speed run and
+absolute-spectrum run still require workflow validation on the latest
+PR #67 head before their output artifacts are promoted.
 
 ## 10. Energy-transfer-matched free on-shell nucleon scan
 
@@ -794,7 +823,7 @@ A 943-point scan has been added using the native Xe-131 AFH v6.0 \(W_M\), \(W_{\
 - Correction-ratio curves: [xe131_charge_kernel_full_recoil_ratios.svg](results/2026-11-18/xe131_charge_kernel_full_recoil_ratios.svg)
 - Regeneration script: [build_xe131_full_recoil_charge_scan.py](build_xe131_full_recoil_charge_scan.py)
 
-At the exact benchmark recoils, the full charge-sector kernel relative to the finite-\(Q^2\) \(M\)-only kernel is 0.99655805 at 200 keV and 0.89961039 at 267 keV for the isoscalar_zexp prescription. These are the same normalized charge-sector ratios reported in Section 8; the fixed-speed calculation additionally integrates the full \(2\to3\) phase space, whose common \(L_C^{(3)}\) factor cancels in the ratio. The present scan is not an absolute \(d\sigma/dE_R\), a halo-folded natural-xenon spectrum, or a detector prediction. Spatial multipoles remain outside this charge-sector plot.
+At the exact benchmark recoils, the full charge-sector kernel relative to the finite-\(Q^2\) \(M\)-only kernel is 0.99655805 at 200 keV and 0.89961039 at 267 keV. This is **not** the same observable as the fixed-speed three-body cross-section ratio in Section 8, whose denominator is the original legacy q=0 \(9W_M\) baseline. The present scan is not an absolute \(d\sigma/dE_R\), a halo-folded natural-xenon spectrum, or a detector prediction. Spatial multipoles remain outside this charge-sector plot.
 
 The full-recoil scan regression is included in the standard unittest discovery: `test_xe131_full_recoil_charge_scan.py`. Rebuilding its CSV and SVG plots requires Python 3.12+, NumPy, pandas, and Matplotlib.
 
@@ -802,7 +831,7 @@ The full-recoil scan regression is included in the standard unittest discovery: 
 
 The 943-point native-grid charge-kernel figures are regenerated in a consistent serif/LaTeX-style publication format by the charge-scan plotting script. Both SVG and PDF versions are produced.
 
-The fixed-benchmark absolute charge-sector spectrum is calculated by the fixed-benchmark absolute-dsigma script, using one fixed \(\Delta m=450\) keV across the entire kinematic interval, the current bare-nucleus Xe-131 mass convention, the asymmetric Eq. (19) pole-width prescription (first propagator zero-width, second propagator constant pole-width), the exact invariant mediator denominator \(m_V^2-t_A\), with \(t_A=-2m_AE_R\), while keeping spatial \(Q_A^2=2m_AE_R+E_R^2\) separate for AFH responses for AFH y_A and using the formal one-body impulse t_N=t_A for nucleon form factors (the static q_N^0=0 choice is diagnostic only), the relativistic incident momentum, and the public Eq. (6) prefactor. It outputs the adopted B finite-t_N M-only baseline and the C coherent native-AFH M+Phi''+M-Phi'' charge-sector extension as separate curves, with the full pointwise CSV, metadata, SVG and PDF.
+The fixed-benchmark absolute charge-sector spectrum is calculated by the fixed-benchmark absolute-dsigma script, using one fixed \(\Delta m=450\) keV across the entire kinematic interval, the current bare-nucleus Xe-131 mass convention, the asymmetric Eq. (19) pole-width prescription (first propagator zero-width, second propagator constant pole-width), the exact invariant mediator denominator \(m_V^2-t_A\), with \(t_A=-2m_AE_R\), and formal B nucleon transfer \(t_N=t_A\), while keeping spatial \(Q_A^2=2m_AE_R+E_R^2\) separate for AFH responses, the relativistic incident momentum, and the public Eq. (6) prefactor. It includes the coherent native-AFH \(M+\Phi''+M\Phi''\) charge sector and outputs the full pointwise CSV, metadata, SVG and PDF.
 
 - Method and scope: [XE131_FIXED_BENCHMARK_ABSOLUTE_DSIGMA.md](XE131_FIXED_BENCHMARK_ABSOLUTE_DSIGMA.md)
 - Calculation: xe131_fixed_benchmark_absolute_dsigma.py
@@ -830,10 +859,7 @@ minimum in \(W_M\) near \(q_A\simeq0.256\) GeV. It compares PCHIP with
 local degree-8 and degree-10 Chebyshev interpolation on the archived
 2,401-point AFH grid. The full charge-dominated kernel changes by at most
 1.6589% under this interpolation comparison; the normalized full /
-original-AFH-M-baseline ratio changes by at most 0.1182%. This baseline
-retains finite-q \(W_M(Q_A)\); the finite-\(t_N\) correction is also
-reported separately in the scan output.
-The spatial kernel changes
+legacy q=0-\(M\) ratio changes by at most 0.1182%. The spatial kernel changes
 by less than 1 ppm. These are interpolation diagnostics, not a dense native
 AFH validation.
 
@@ -970,3 +996,21 @@ Its full-current artifact is 14486904025 and its spatial-response artifact
 is 14486014588. The response and multipole CSV SHA-256 hashes are identical
 to the earlier PR #65 P3-B archive, so the native control workflow's pinned
 input remains byte-identical.
+
+
+## 2026-11-19: provisional P4 halo-fold path
+
+`native_charge_sector_halo_fold.py` now supports a separate provisional
+input mode that combines the pinned source-translated AFH-8 charge archive
+with the P3-B rank-reconstructed spatial archive. It verifies both artifact
+hashes, the shared AFH v6.0 source, all seven 2,401-point isotope grids,
+the C0 normalization, and the charge/spatial Cauchy bounds. It never reports
+`native_afh_validated=true`.
+
+The workflow
+`.github/workflows/p4-provisional-seven-isotope-halo-fold.yml` computes
+seven-isotope natural-xenon Pole-width halo spectra on a selected recoil
+grid and separately refines speed and three-body phase-space quadratures.
+The current benchmark is \(m_{\chi_1}=1\) TeV,
+\(m_s=200\) keV, \(\Delta m=1\) keV, and \(m_V=10\) GeV. The outputs
+remain provisional until the user's local Mathematica comparison is complete.

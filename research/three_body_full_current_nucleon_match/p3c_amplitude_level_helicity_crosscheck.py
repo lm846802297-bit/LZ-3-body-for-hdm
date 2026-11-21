@@ -91,24 +91,6 @@ def kernel(coeff,amps,C0,JA,by_helicity=None):
         out[int(J)]=factor*float(value)
     return sum(out.values()),out
 
-def effective_form_factor_inputs(weights):
-    """Read the effective nucleon form factors used with the external g_VN prefactor."""
-    if weights.get("coupling_basis") != "external g_VN=3*g_Vq":
-        raise ValueError("P3-C weights must use the external g_VN=3*g_Vq coupling basis")
-    if weights.get("form_factor_normalization") != "Fhat_i=F_i^(u+d+s)/3":
-        raise ValueError("P3-C weights do not declare the required Fhat_i normalization")
-    data = weights.get("form_factor_input", {})
-    try:
-        f1 = float(data["F1N_effective"])
-        f2 = float(data["F2N_effective"])
-        mN = float(data["mN_GeV"])
-    except (KeyError, TypeError, ValueError) as exc:
-        raise ValueError("P3-C weights lack finite effective F1N/F2N/mN inputs") from exc
-    if not all(math.isfinite(x) for x in (f1, f2, mN)) or mN <= 0.0:
-        raise ValueError("P3-C effective nucleon form-factor inputs must be finite")
-    return f1, f2, mN
-
-
 def run(tensor_path,spatial_dir,contraction_path,weights_path):
     phase=json.loads(tensor_path.read_text()); contraction=json.loads(contraction_path.read_text()); weights=json.loads(weights_path.read_text())
     if phase.get("status")!="PASS_SPIN_RESOLVED_DM_TENSOR" or phase.get("width_schemes")!=["pole"]: raise ValueError("formal three-body tensor must be pole-only and accepted")
@@ -127,7 +109,7 @@ def run(tensor_path,spatial_dir,contraction_path,weights_path):
         interp[J]=(q,d,s,PchipInterpolator(q,d),PchipInterpolator(q,s))
     iso=next(x for x in meta["isotope_metadata"] if int(x["A"])==131)
     C0=float(iso["common_matrix_normalization"]); JA=float(iso["J_A"])
-    f1,f2,mN=effective_form_factor_inputs(weights)
+    f1=float(weights["form_factor_input"]["F1N_effective"]); f2=float(weights["form_factor_input"]["F2N_effective"]); mN=float(weights["form_factor_input"]["mN_GeV"])
     targets={(x["benchmark"],int(x["A"])):x for x in contraction["benchmarks"]}
     out=[]
     for b in phase["benchmarks"]:
@@ -162,10 +144,7 @@ def run(tensor_path,spatial_dir,contraction_path,weights_path):
       "native_afh_validated":False,"full_covariant_nuclear_amplitude_validated":False,"formal_width_scheme":"pole",
       "AFH_source_sha256":AFH_SHA,"AFH_native_status":meta["status"],"spatial_source_run_id":contraction.get("spatial_afh_source",{}).get("artifact_run_id"),
       "spatial_source_artifact_id":contraction.get("spatial_afh_source",{}).get("artifact_id"),
-      "coupling_basis":"external g_VN=3*g_Vq",
-      "form_factor_normalization":"Fhat_i=F_i^(u+d+s)/3",
-      "form_factor_input":{"F1N_effective":f1,"F2N_effective":f2,"mN_GeV":mN},
-      "form_factor_status":"constant q=0 effective anchors in the external g_VN basis; finite-t_N dependence not included","benchmark_count":len(out),
+      "form_factor_status":"constant q=0 anchors; finite-t_N dependence not included","benchmark_count":len(out),
       "max_amplitude_vs_cartesian_relative_residual":max(x["PCHIP_amplitude_vs_cartesian_relative_residual"] for x in out),
       "max_Eq107_vs_helicity_coefficient_relative_residual":max(max(x["Eq107_vs_helicity_coefficient_relative_residuals"].values()) for x in out),
       "results":out,"limitations":[

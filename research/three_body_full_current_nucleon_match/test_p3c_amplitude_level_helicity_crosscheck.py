@@ -12,27 +12,6 @@ class P3CAmplitudeLevelTests(unittest.TestCase):
         c=rng.normal(size=(4,4))+1j*rng.normal(size=(4,4))
         self.G=np.einsum("ma,nb->manb",c,c.conj())
         self.Q=.2552681134213372; self.f1=1.; self.f2=-.184; self.mN=.938918
-    def test_p3c_requires_effective_gvn_basis_inputs(self):
-        weights = {
-            "coupling_basis": "external g_VN=3*g_Vq",
-            "form_factor_normalization": "Fhat_i=F_i^(u+d+s)/3",
-            "form_factor_input": {
-                "F1N_effective": 1.0,
-                "F2N_effective": -0.184,
-                "mN_GeV": 0.938918,
-            },
-        }
-        self.assertEqual(p3c.effective_form_factor_inputs(weights), (1.0, -0.184, 0.938918))
-        raw_only = {
-            "coupling_basis": "external g_VN=3*g_Vq",
-            "form_factor_normalization": "Fhat_i=F_i^(u+d+s)/3",
-            "form_factor_input": {
-                "F1V": 3.0, "F2V": -0.552, "mN_GeV": 0.938918,
-            },
-        }
-        with self.assertRaisesRegex(ValueError, "effective F1N/F2N"):
-            p3c.effective_form_factor_inputs(raw_only)
-
     def test_afh_q_minus_axis_basis_is_right_handed(self):
         e=p3c.basis()
         self.assertEqual(set(e),{-1,1})

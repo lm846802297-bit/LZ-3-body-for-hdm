@@ -1,94 +1,82 @@
-# Native-AFH finite-size charge-sector and full-current natural-xenon halo fold
+# Native-AFH Coulomb-sector and leading-static vector-current natural-xenon halo fold
 
-**Status:** B is the adopted primary baseline; charge-sector C is a separate extension. Production promotion waits for the native seven-isotope AFH gate and P3-C amplitude-level acceptance.  
-**Formal nuclear input:** native AFH v6.0 only.  
-**Formal width:** asymmetric Pole width only.  
-**Coupling basis:** external \((g_1g_2g_{VN})^2\), with \(\widehat F_i=F_i^{uds}/3\).
+## Status
 
-## 1. Mandatory finite-size AFH input
+**Engine implemented; production result pending the native seven-isotope AFH gate.**
 
-The engine consumes the provenance-checked native seven-isotope/eight-response AFH bundle. It does not accept the provisional Python-translated AFH response table as a production input.
+This stage is deliberately downstream of the PR #58 full-current validation and
+upstream of any detector-level prediction. It computes only
 
-For each isotope and recoil energy,
 \[
-Q_A^2=|\boldsymbol q_A|^2=2m_AE_R+E_R^2,\qquad
-y_A=\left(\frac{b_AQ_A}{2}\right)^2.
+M+\Phi''+M\Phi''
 \]
-The nuclear response is evaluated at this finite \(y_A\). The original AFH M-only reference is
+
+with the exact three-body phase-space tensor and isotope-specific nuclear
+kinematics.
+
+The transverse \(\Delta,\Sigma'\) sector is not silently set to zero in
+the theory record; it is excluded from this Coulomb-sector engine pending
+the full leading-static multipole promotion. The provisional fixed-speed
+PR #58 contraction gives
 \[
-\boxed{
-R_{A,M}^{\rm phys}(Q_A)
-=A^2\frac{W_M^{00}(y_A)}{W_M^{00}(0)},\qquad
-R_{A,M}^{\rm phys}(0)=A^2.
-}
+|R_{\rm spatial}/R_{\rm Coulomb}|<7.1\times10^{-9}
 \]
-The physical equal-\(p=n\) native response columns already include the raw-to-physical AFH factor four exactly once. Do not multiply by four again.
+over the tested 84 rows only. This is not a global halo-integrated bound.
+The seven-isotope native gate validates all eight response inputs, but does
+not by itself validate or fold the transverse three-body coefficients.
 
-AFH \(W_M(y_A)\) already contains the finite nuclear size through the isotope OBDMEs, oscillator wave functions, Bessel functions, and multipole sums. Do not multiply a Helm, Fermi, Gaussian, or other whole-nucleus form factor on top of AFH.
+## 1. Native AFH input gate
 
-## 2. Exact isotope kinematics and transfer ledger
+The engine refuses to consume the provisional Python AFH table. Pass the
+extracted root of the private native artifact, which contains:
 
-For every isotope and recoil,
+- native/ with seven CSV files, Xe-128/129/130/131/132/134/136;
+- native/native_metadata.txt;
+- native-comparison.json;
+- run_manifest.json;
+- SHA256SUMS.txt.
+
+The comparison must report status=PASS, native_afh_validated=true, and
+rows_compared=16807. All eight response channels, all 2,401 q nodes per
+isotope, the pinned source commit, package identity, run metadata, and SHA-256
+checksums are validated before the three Coulomb-sector response values are
+read.
+
+## 2. Exact isotope kinematics
+
+For every isotope and every requested recoil,
+
 \[
-q_A^\mu=(E_R,\boldsymbol q_A),\qquad
-t_A=q_A^2=-2m_AE_R,\qquad
-Q_A^2=|\boldsymbol q_A|^2=2m_AE_R+E_R^2.
+q_A(E_R)=\sqrt{2m_AE_R+E_R^2}.
 \]
-The isotope mass is obtained from the canonical atomic-mass input,
+
+The nuclear mass is obtained from the repository's canonical NIST input,
+
 \[
 m_A=[M_{\rm atom}(A)-54m_e]u.
 \]
-No average xenon mass is used in isotope kinematics.
 
-- AFH \(y_A\) and spatial NR coefficients use \(Q_A^2\).
-- The vector-mediator propagator uses \(t_A\):
-  \[
-  (m_V^2-t_A)^2=(m_V^2+2m_AE_R)^2.
-  \]
-- The formal one-body impulse prescription uses \(q_N^\mu=q_A^\mu\), hence \(t_N=t_A\).
-- The static-nucleon diagnostic \(q_N^0=0\) gives \(t_N=-Q_A^2\). It is not the formal P4 production prescription.
+No average xenon mass is used in the isotope kinematics, and no selected
+0.25-MeV AFH grid point is substituted for the exact recoil momentum.
 
-The one-body impulse prescription is an explicit bound-nucleon approximation; it does not by itself include binding corrections, exchange currents, or two-body currents.
+The AFH response is evaluated at that exact \(q_A\). The engine uses PCHIP
+interpolation of the **absolute** native response functions and retains a
+linear-interpolation result as a numerical diagnostic. Ratios such as
+\(W_{\Phi''}/W_M\) are formed only after the three absolute responses have
+been interpolated.
 
-## 3. Coupling normalization
+## 3. Coulomb-sector contraction
 
-The original paper and Mathematica rate convention use
-\[
-g_{VN}=3g_{Vq},\qquad (g_1g_2g_{VN})^2
-\]
-in the external cross-section prefactor. The full universal quark-current form factors satisfy
-\[
-F_1^{uds}(0)=3,\qquad F_2^{uds}(0)=-0.552.
-\]
-Therefore the coefficients multiplying the external \(g_{VN}\) prefactor use
-\[
-\widehat F_i(t_N)=F_i^{uds}(t_N)/3,\qquad
-\widehat F_1(0)=1,\quad \widehat F_2(0)=-0.184.
-\]
-The AFH factor four and the quark-current factor three are independent normalization operations. The code applies the former in the AFH response conversion and the latter in the definition of \(\widehat F_i\).
+The phase-space calculation supplies the full q-aligned tensor. For a
+conserved one-body nuclear vector current, use
 
-The adopted B form-factor prescription is the Bishara et al. Appendix A.1
-low-momentum flavor sum:
-\[
-F_1^{uds,N}(t_N)=3+8.392t_N+\mathcal O(t_N^2),\qquad
-F_2^{uds,N}(t_N)=-0.552+\mathcal O(t_N).
-\]
-Only the first-order Dirac slope and leading Pauli constant are used; no
-unverified \(F_2'\) is introduced. In the external-\(g_{VN}\) basis this is
-\[
-\widehat F_1(t_N)=1+\frac{8.392}{3}t_N+\mathcal O(t_N^2),\qquad
-\widehat F_2(t_N)=-0.184+\mathcal O(t_N).
-\]
-The alternative isoscalar_zexp option is sensitivity-only, not the B default.
-
-## 4. Coulomb-sector contraction
-
-For a conserved one-body nuclear vector current,
 \[
 q_A^\mu=(E_R,0,0,Q_A),\qquad
 J_A^3=\frac{E_R}{Q_A}J_A^0.
 \]
-The continuity-reduced DM weight is
+
+The effective Coulomb weight is therefore
+
 \[
 \boxed{
 L_C^{(3)}
@@ -97,103 +85,290 @@ L_C^{(3)}
 +\left(\frac{E_R}{Q_A}\right)^2L_{33}^{(3)}.
 }
 \]
-This is a condition on the complete nuclear one-body vector current. It is not a Ward identity imposed on the inelastic DM transition current.
 
-The charge coefficients use the effective-nucleon form factors:
+This is nuclear-current continuity, not a Ward identity imposed on the
+inelastic DM transition current. The point-nucleus contraction independently
+checks that \((2m_A+E_R)^2L_C\) equals the direct charge plus longitudinal
+plus interference contraction.
+
+For the separate **static diagnostic** with \(q_N^0=0\), one sets
+\(t_N=-Q_A^2\). Its coefficients must nevertheless use the effective
+nucleon form factors \(\widehat F_i=F_i^{uds}/3\), because the external
+rate prefactor already contains \(g_{VN}=3g_{Vq}\):
+
 \[
-\widehat c_M=
-\widehat F_1(t_N)
-+\frac{t_N[\widehat F_1(t_N)+2\widehat F_2(t_N)]}{8m_N^2},
-\]
-\[
-\widehat c_{\Phi''}
-=\frac{Q_A^2[\widehat F_1(t_N)+2\widehat F_2(t_N)]}{4m_N^2}.
-\]
-The invariant \(t_N\) and spatial \(Q_A^2\) are intentionally different.
-
-## 5. A/B/C response hierarchy
-
-**B is the adopted production baseline.** The engine records three nested
-charge-sector kernels, all retaining the same finite-\(Q_A\) AFH response.
-B includes only the finite-\(t_N\) effective nucleon current and AFH
-\(W_M\); no additional AFH response is present in B.
-
-**A — original finite-size AFH M-only reference**
-\[
-\mathcal K_A=L_C^{(3)}W_M^{\rm phys}(Q_A).
-\]
-The effective nucleon current is frozen at \(\widehat F_1(0)=1\).
-
-**B — finite-\(t_N\) nucleon M-only**
-\[
-\mathcal K_B=L_C^{(3)}\widehat c_M(t_N)^2W_M^{\rm phys}(Q_A).
+c_M^{\rm static} =
+\widehat F_1+
+\frac{t_N(\widehat F_1+2\widehat F_2)}{8m_N^2},
 \]
 
-**C — M+\(\Phi''\) charge response**
 \[
-\mathcal K_C=L_C^{(3)}\left[
+c_{\Phi''}^{\rm static}
+=
+\frac{Q_A^2(\widehat F_1+2\widehat F_2)}{4m_N^2},
+\qquad
+t_N=-Q_A^2.
+\]
+
+This static prescription is retained only as a diagnostic. It is **not**
+the adopted B production prescription; formal B uses \(t_N=t_A\), as
+specified in Section 5.
+
+Therefore
+
+\[
+C_M=c_M^2L_C^{(3)},
+\]
+
+\[
+C_{\Phi''}=c_{\Phi''}^2L_C^{(3)},
+\]
+
+\[
+C_{M\Phi''}=2c_Mc_{\Phi''}L_C^{(3)}.
+\]
+
+The nuclear charge-sector kernel is
+
+\[
+\boxed{
+{\cal K}_{\rm charge}
+=
+C_MR_M
++C_{\Phi''}R_{\Phi''}
++C_{M\Phi''}R_{M\Phi''}.
+}
+\]
+
+The physical equal-\(p=n\) AFH response convention is used. Two independent
+normalizations are required: the isospin factor four and the common OBDME
+correction \(C_0(A)\). For raw AFH v6.0 output,
+\[
+R_{\rm raw}(q_A)=\frac{4\pi}{2J_A+1}W_{\rm raw}(y_A),
+\qquad
+R_{\rm phys}(q_A)=4C_0(A)R_{\rm raw}(q_A),
+\]
+with \(C_0(A)=A^2/[4R_{M,\rm raw}(0)]\), so that
+\(R_M^{\rm phys}(0)=A^2\). The factor four and \(C_0\) are each
+applied exactly once to every response channel.
+
+## 4. Adopted A/B/C hierarchy
+
+The halo fold reports three distinct quantities, all retaining the same finite-size AFH response:
+
+\[
+R_A=L_C^{(3)}W_M^{\rm phys}(y_A),
+\]
+
+\[
+R_B=\widehat c_M(t_N)^2L_C^{(3)}W_M^{\rm phys}(y_A),
+\]
+
+\[
+R_C=L_C^{(3)}\left[
 \widehat c_M^2W_M^{\rm phys}
 +2\widehat c_M\widehat c_{\Phi''}W_{M\Phi''}^{\rm phys}
 +\widehat c_{\Phi''}^2W_{\Phi''}^{\rm phys}
 \right].
 \]
 
-The output reports:
+A is the zero-transfer effective-nucleon-current reference, B is the adopted
+finite-\(t_N\) M-only production baseline, and C is the additional charge
+multipole extension. Report B/A (single-nucleon form-factor correction),
+C/B (additional AFH charge-response correction at fixed nucleon current),
+and C/A (combined change). Do not call A a point-nucleus response: it
+contains the same finite-size AFH \(W_M(y_A)\) as B and C.
+
+The spatial-current candidate is a separate provisional D extension. It is
+not a completed full-current prediction until the P3-C covariant-to-AFH
+nuclear-amplitude gate passes.
+
+## 5. Nucleon form-factor prescriptions and kinematics
+
+The CLI requires an explicit prescription:
+
+- \`q0_anchor\`: \(\widehat F_1(0)=1,\widehat F_2(0)=-0.184\), the A reference;
+- \`bishara_linear\`: adopted B low-momentum flavor-resolved Dirac slope
+  with the available leading constant Pauli term;
+- \`isoscalar_zexp\`: alternate finite-\(Q_N^2\) sensitivity model.
+
+The external rate prefactor uses \((g_1g_2g_{VN})^2\), with
+\(g_{VN}=3g_{Vq}\). Therefore the full universal quark-current form
+factors must be divided by three before they enter the nucleon-current
+coefficients: \(\widehat F_i=F_i^{uds}/3\). The AFH raw-to-physical
+factor four is independent of the common OBDME correction \(C_0(A)\);
+each is applied exactly once. The native loader derives \(C_0(A)\) from
+\(R_{M,\rm raw}(0)\), while the provisional path imports the matched
+P3-B value and applies it to charge responses only once.
+
+The seven-isotope provisional P3-B artifact records:
+
+| Isotope | \(C_0(A)\) |
+|---:|---:|
+| Xe-128 | 1.0000924953327093 |
+| Xe-129 | 1.0001103230777202 |
+| Xe-130 | 1.0001260610682259 |
+| Xe-131 | 1.0000825298069376 |
+| Xe-132 | 1.0000445028489864 |
+| Xe-134 | 1.0002068258192740 |
+| Xe-136 | 1.0000015063597723 |
+
+These are source-translated P3-B OBDME normalization values, not a
+substitute for the pending native seven-isotope Mathematica comparison.
+The independently derived Xe-131 native charge value matches the P3-B
+Xe-131 value at the stored precision.
+
+For the formal one-body impulse prescription,
 \[
-B/A-1:\ \text{single-nucleon finite-}t_N\text{ correction},
+t_N=t_A=-2m_AE_R,\qquad Q_N^2=-t_N.
 \]
+The AFH response instead uses the spatial transfer
 \[
-C/B-1:\ \text{additional AFH charge-response correction at fixed }\widehat F_i,
+Q_A^2=2m_AE_R+E_R^2,\qquad y_A=b_A^2Q_A^2/4.
 \]
+The static diagnostic \(q_N^0=0\), giving \(t_N=-Q_A^2\), is
+not the formal production prescription.
+
+The mediator denominator is the Lorentz-invariant
 \[
-C/A-1:\ \text{total change relative to the original finite-size AFH baseline}.
+(m_V^2-t_A)^2=(m_V^2+2m_AE_R)^2,
 \]
-The \(C/B\) ratio is not the total change. The \(C/A\) ratio is not a pure multipole correction.
+not \( (m_V^2+Q_A^2)^2\).
 
-## 6. Optional leading one-body spatial-current candidate
+## 6. Halo fold
 
-The optional spatial mode adds only the terms produced by the current-matching implementation:
-\[
-\mathcal K_{\rm full}
-=\mathcal K_C
-+C_\Delta W_\Delta^{\rm phys}
-+C_{\Sigma'}W_{\Sigma'}^{\rm phys}
-+C_{\Sigma'\Delta}W_{\Sigma'\Delta}^{\rm phys}
-+\cdots .
-\]
-The \(\Sigma'-\Delta\) interference is signed and must not be replaced by its absolute value. This candidate remains provisional until native Wolfram spatial-response comparison and the P3-C covariant-to-AFH amplitude-level gate pass.
+For each isotope the code evaluates its own
 
-In code and metadata, “leading-static” means the leading nonrelativistic one-body nuclear-current expansion. It does **not** mean the static-nucleon transfer \(q_N^0=0\).
-
-## 7. Native AFH input gate
-
-The engine validates:
-- seven isotopes: Xe-128, Xe-129, Xe-130, Xe-131, Xe-132, Xe-134, Xe-136;
-- 2,401 native \(q\) nodes per isotope;
-- all eight AFH response channels;
-- native source commit, package identity, metadata, and SHA-256 checksums;
-- physical equal-\(p=n\) normalization and factor-four bookkeeping;
-- absolute-response interpolation before any response ratios are formed.
-
-The native comparison must report PASS, **native_afh_validated=true**, and the expected 16,807 total-response rows. The separate dense Xe-131 diffraction-minimum export is used to validate interpolation around the \(W_M\) minimum. Do not smooth or fit away the minimum to force agreement.
-
-## 8. Halo fold
-
-For each isotope the engine evaluates its own
 \[
 v_{\min,A}(E_R),\qquad m_A,\qquad q_A(E_R),
 \]
-then performs the velocity integral and abundance weighting. The natural-xenon target normalization uses the complete natural abundance convention, while the AFH response sum retains only isotopes with validated native response inputs; missing isotopes are not silently renormalized into the AFH set.
 
-The output records the truncated Standard Halo Model and the untruncated shifted Maxwell-Boltzmann diagnostic separately. The canonical halo convention is the production result; the untruncated case is a sensitivity/control comparison.
+then performs the velocity integral. The natural-xenon target normalization
+uses the complete nine-isotope average atomic mass, while the AFH response
+sum retains the seven available isotope abundances without renormalizing
+them.
 
-The engine stores the finite-size AFH reference, finite-\(t_N\) M-only layer, charge-response layer, and optional spatial candidate separately. Each row records \(Q_A^2,t_A,t_N\), the coupling basis, AFH normalization, form-factor prescription, width scheme, and interpolation provenance.
+The output contains both:
 
-## 9. Promotion boundary
+- truncated Standard Halo Model;
+- untruncated shifted Maxwell-Boltzmann diagnostic.
 
-The charge-sector halo fold can be reported as a separately labelled result after the native P3-B AFH gate passes. The full-vector halo spectrum must not be promoted until P3-C amplitude-level validation passes. Detector efficiency, energy resolution, exposure, event counts, and likelihood analysis are later detector-level stages.
+The production spectrum should use the project's canonical halo convention;
+the untruncated result is retained only as a sensitivity/control comparison.
 
-The engine status remains:
+## 7. Current limitation
+
+The engine now has two strictly separated input paths:
+
+1. **Native production path:** requires the provenance-pinned native
+   seven-isotope/eight-response Wolfram artifact and its 16,807-row
+   pointwise comparison PASS. The loader derives each isotope's \(C_0(A)\)
+   from its raw \(M(q_A=0)\) anchor, applies \(C_0\) to all eight
+   channels after the independent factor four, and verifies
+   \(R_M^{\\rm phys}(0)=A^2\).
+2. **Provisional calculation path:** accepts only the pinned source-translated
+   AFH-8 charge archive plus the independently rank-reconstructed P3-B
+   spatial archive. It checks both artifact hashes, the shared AFH source
+   commit, all 16,807 charge/spatial q-grid keys, C0 normalization, and the
+   two response Cauchy-Schwarz bounds. Its output is explicitly marked
+   `native_afh_validated=false`.
+
+The provisional path exists to finish the end-to-end numerical workflow
+before the user's local Mathematica run. It is not a substitute for native
+AFH validation and cannot be promoted to a paper-final nuclear prediction.
+
+The formal three-body width is restricted to the asymmetric Pole prescription:
+the first \(p-k\) \(\chi_2\) propagator is zero-width and the second
+\(p'+k\) propagator carries the constant pole width. The mediator denominator
+uses the Lorentz invariant
 \[
-\boxed{\text{charge-sector engine implemented; native AFH/P3-C promotion gates open}.}
+(m_V^2-t_A)^2=(m_V^2+2m_AE_R)^2,
+\qquad t_A=-2m_AE_R.
 \]
+The exact spatial momentum
+\[
+Q_A^2=2m_AE_R+E_R^2
+\]
+is used in the AFH variable \(y_A=b_A^2Q_A^2/4\), not in the mediator
+denominator. Formal B also uses \(t_N=t_A\), not the static
+\(t_N=-Q_A^2\) diagnostic.
+
+The present engine includes the charge/longitudinal sector through \(L_C\)
+but still omits the transverse \(\Delta\), \(\Sigma'\), and mixed
+\(\Sigma'\)-\(\Delta\) nuclear-current multipoles. It is not the full
+vector-current rate. No natural-xenon percentage is inferred from the
+Xe-131 local \(200\) or \(267\) keV diagnostics.
+
+
+## Important scope clarification (2026-11-18)
+
+The engine now uses the continuity-reduced Coulomb weight L_C, which
+includes L00, L03, L30, and L33 under the conserved one-body nuclear
+vector-current relation. It therefore does not use L00 alone.
+
+The transverse nuclear-current multipoles, including Delta, Sigma', and
+their interference, remain outside this engine. The fixed-speed spatial
+sector bound quoted above applies only to its tested 84 rows; it is not a
+global bound over the halo integral.
+
+The code output explicitly sets full_current_complete=false and labels its
+status COMPUTED_WITHIN_COULOMB_SECTOR_APPROXIMATION. It remains a restricted
+Coulomb-sector diagnostic, not the final natural-xenon spectrum.
+
+
+## 8. Separate Xe-131 native fixed-speed diagnostic
+
+A separate native AFH v6.0 / Wolfram 14.2.0 Xe-131 archive has passed its
+three-response integrity and response-level checks. Its factor-four
+physical columns are additionally corrected by the loader's common
+\(C_0(131)\), enforcing \(R_M^{\rm phys}(0)=131^2\). It supports the
+fixed-speed Coulomb-sector benchmark in
+\`XE131_FIXED_SPEED_CHARGE_DSIGMA_RESULTS.md\`, but does not replace the
+seven-isotope/eight-response gate or validate transverse multipoles.
+
+
+## 2026-11-19 update: provisional AFH input path for pre-Mathematica P4 work
+
+The engine accepts either the native AFH archive or an explicit pair of
+provisional Python artifacts. The provisional pair is:
+- AFH-8 charge archive: run 44222087512, artifact 14391456283;
+- P3-B spatial OBDME archive: run 44432440600, artifact 14486014588.
+
+The loader does not manufacture a native comparison manifest. It requires
+both source-translated status flags, verifies the SHA-256 hashes and common
+AFH v6.0 source, applies the P3-B common \(C_0(A)\) factor to charge
+responses exactly once, and uses the already C0-corrected spatial responses
+from P3-B. It also checks the complete seven-isotope 2,401-point q grids
+and both \(M\)-\(\Phi''\) and \(\Sigma'\)-\(\Delta\) Cauchy bounds.
+
+A provisional P4 workflow is defined in
+`.github/workflows/p4-provisional-seven-isotope-halo-fold.yml`. Its selected
+recoil grid is \(E_R=150,200,267,350,400\) keV, with separate speed and
+three-body phase-space refinement runs. The first production benchmark uses
+\(m_{\chi_1}=1\) TeV, \(m_s=200\) keV,
+\(\Delta m=1\) keV, \(m_V=10\) GeV, and the formal Pole prescription.
+It records A (q=0 nucleon-current reference with finite-size AFH \(W_M\)), B (finite-\(t_N\) M-only baseline), C (charge-response extension),
+and the leading-static six-channel candidate. Both truncated SHM and
+untruncated Maxwellian folds are retained.
+
+Until the local Mathematica comparison is run, every resulting spectrum is
+labelled provisional and `native_afh_validated=false`. No GCN/JJ55
+response enters this path.
+
+## 2026-11-18 update: optional leading-static vector-current candidate mode
+
+The previous sections describe the default Coulomb-only mode. A second,
+explicitly opt-in mode is now implemented in native_charge_sector_halo_fold.py
+with the flag --include-leading-static-vector-candidate. It uses the full
+integrated q-aligned tensor and interpolates all eight native AFH responses.
+Its six candidate nonzero channels are M, Phi'', M-Phi'', Delta, Sigma', and
+Sigma'-Delta. Sigma'' and PhiTilde' remain loaded; their coefficients are
+zero only at the declared leading-static one-body vector-current order.
+
+This mode is still a candidate, not a promoted full-current result. The
+exact AFH spherical-multipole phase validation and P3 direct
+covariant-versus-AFH tensor comparison remain open. Both modes require the
+provenance-pinned native seven-isotope/eight-response 16,807-point gate.
+The current native runner is queued and has not produced an artifact.
+See NATIVE_LEADING_STATIC_VECTOR_CURRENT_HALO_CANDIDATE.md for the formula,
+acceptance conditions, and execution command.

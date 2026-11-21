@@ -16,9 +16,11 @@ from pathlib import Path
 import numpy as np
 
 
-# The public rate prefactor uses g_VN=3*g_Vq, so coefficients use Fhat_i=F_i^{uds}/3.
-DEFAULT_F1 = 1.0
-DEFAULT_F2 = -0.184
+RAW_F1_UDS0 = 3.0
+RAW_F2_UDS0 = -0.552
+# The public prefactor already contains g_VN=3*g_Vq.
+DEFAULT_F1 = RAW_F1_UDS0 / 3.0
+DEFAULT_F2 = RAW_F2_UDS0 / 3.0
 DEFAULT_MN_GEV = 0.938918
 
 
@@ -294,12 +296,11 @@ def extract_afh_vector_coefficients(
     """AFH Eq. (107) coefficients for the leading static Dirac--Pauli current.
 
     Convention: q_AFH=-q_A, q_N=+q_A, metric (+---). The coefficients
-    multiply physical equal-p/n AFH response columns and the external
-    g_VN=3*g_Vq prefactor. Hence f1,f2 are effective factors
-    Fhat_i=F_i^{uds}/3; defaults are Fhat_1(0)=1 and Fhat_2(0)=-0.184.
-    With omega_GeV=E_R, strict one-body impulse gives
-    t_N=omega^2-|q_A|^2=t_A. Passing omega_GeV=0 selects the distinct
-    static-nucleon diagnostic t_N=-|q_A|^2.
+    multiply the physical equal-p/n AFH response columns. F1/F2 are in the
+    external-gVN effective nucleon basis. The charge coefficient uses the
+    formal impulse invariant t_N=t_A=omega^2-Q_A^2; the spatial AFH
+    coefficients use Q_A^2. The default F1/F2 are q=0 anchors, not
+    finite-t form factors.
     """
     if not np.isfinite(qA_GeV) or qA_GeV < 0:
         raise ValueError("qA_GeV must be finite and non-negative")
@@ -318,9 +319,9 @@ def extract_afh_vector_coefficients(
         raise ValueError(f"L is not Hermitian: relative residual {hermiticity:.6g}")
 
     Q2 = qA_GeV * qA_GeV
-    if not np.isfinite(omega_GeV) or omega_GeV < 0.0:
-        raise ValueError("omega_GeV must be finite and non-negative")
     tN = omega_GeV * omega_GeV - Q2
+    if tN > 1.0e-14:
+        raise ValueError("formal one-body nucleon transfer must be spacelike")
     LT = float(np.real(L[1, 1] + L[2, 2]))
     L00 = float(np.real(L[0, 0]))
     if LT < -1e-10 or L00 < -1e-10:
@@ -365,7 +366,9 @@ def extract_afh_vector_coefficients(
         "qA_GeV": float(qA_GeV),
         "omega_GeV": float(omega_GeV),
         "omega_over_Q": float(omega_over_Q),
+        "Q_A2_GeV2": float(Q2),
         "tN_GeV2": float(tN),
+        "nucleon_transfer_convention": "formal one-body impulse: t_N=t_A=omega^2-Q_A^2",
         "L00_charge_weight": float(L00),
         "L_C_continuity_adjusted_charge_weight": float(L_C),
         "charge_continuity_relative_correction": float(
@@ -374,10 +377,7 @@ def extract_afh_vector_coefficients(
         "F1N_effective_input": float(f1),
         "F2N_effective_input": float(f2),
         "mN_GeV": float(mN_GeV),
-        "form_factor_status": (
-            "constant provisional q=0 anchors; t_N uses the supplied energy transfer "
-            "and spatial q_A separately"
-        ),
+        "form_factor_status": "constant effective-nucleon q=0 anchors (Fhat_1=1, Fhat_2=-0.184) in the external g_VN basis; finite-t dependence not included",
         "AFH_q_convention": "q_AFH=-q_A; q_N=+q_A",
         "response_column_convention": "physical equal-p/n AFH columns; factor four belongs to response columns exactly once",
         "C_M": float(C_M),
@@ -557,15 +557,11 @@ def analyze_tensor_archive(
             "leading static vector-current particle coefficients from AFH Eq. (107); "
             "not yet contracted with AFH nuclear response values"
         ),
-        "calculation_role": "P3-C amplitude-level structural matching diagnostic with q=0 effective nucleon-current anchors; not the adopted B production rate",
-        "primary_B_baseline_included": False,
-        "coupling_basis": "external g_VN=3*g_Vq",
-        "form_factor_normalization": "Fhat_i=F_i^(u+d+s)/3",
         "form_factor_input": {
             "F1N_effective": f1,
             "F2N_effective": f2,
             "mN_GeV": mN_GeV,
-            "status": "constant effective-nucleon q=0 anchors (Fhat_1=1, Fhat_2=-0.184) in the external g_VN basis; finite-t dependence not included",
+            "status": "constant provisional q=0 anchors; finite-t dependence not included",
         },
         "benchmarks": rows,
         "summary": {
