@@ -19,6 +19,14 @@
     "csv_sha256": "5b02bd1b8db73b450e328a27dba5e0b2434487c6861579dc3d7da3b3e0938c17",
     "metadata_sha256": "9750d8fb2b25c3b78428c190f11b505e42aada07bbbb432227e0dfe345e65fb2"
   },
+  "p3_archive": {
+    "generator": "research/three_body_full_current_nucleon_match/afh_spatial_obdme_responses.py",
+    "generator_branch": "research/p4-provisional-halo-fold-20261119",
+    "total_response_csv_sha256": "7e99f6b8d2c5d66ac9bb54c44e824d1b89b9507114e42e629308093ee15481ec",
+    "multipole_csv_sha256": "eb556aea24e6d03a22254b242f79e24f4e77db67134f22aa3d13585fef43be50",
+    "validation_status": "PASS_AFH_SPATIAL_MULTIPOLE_ARCHIVE",
+    "committed_in_this_pr": false
+  },
   "control_run_id": null,
   "control_run_attempt": null
 }
