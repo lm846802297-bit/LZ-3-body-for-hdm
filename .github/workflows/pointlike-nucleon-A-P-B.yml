@@ -1,0 +1,39 @@
+name: Four-level nucleon-current comparison P0 P A0 B
+
+on:
+  pull_request:
+    paths:
+      - "research/nucleon_form_factor_B_baseline/**"
+      - ".github/workflows/pointlike-nucleon-A-P-B.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  nucleon-P0-P-A0-B:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install numerical dependency
+        run: python -m pip install --upgrade numpy
+      - name: Run nucleon-form-factor regression suite
+        run: python -m unittest discover -s research/nucleon_form_factor_B_baseline -v
+      - name: Compute isotope-resolved P0/P/A0/B spectra and LZ detector yields
+        run: |
+          python research/nucleon_form_factor_B_baseline/compare_pointlike_A_B_nucleon_baselines.py \
+            --source-dir research/afh_default_density_natural_xenon_halo/results/afh7_hybrid9_continuous_2026-11-14 \
+            --efficiency-csv research/lz_detector_response/lz_2026_extended_nr/lz_2026_nr_efficiency_digitized.csv \
+            --out-dir artifacts/nucleon-P0-P-A0-B \
+            --roi-min-keV 5.4 --roi-max-keV 269.9 --exposure-tonne-year 2.84
+      - name: Upload P0/P/A0/B numerical outputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: nucleon-P0-P-A0-B-natural-xenon-and-LZ
+          path: artifacts/nucleon-P0-P-A0-B/
+          if-no-files-found: error
+          retention-days: 90
