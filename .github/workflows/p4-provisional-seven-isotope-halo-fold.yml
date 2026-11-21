@@ -84,7 +84,7 @@ jobs:
             --out /tmp/p4/baseline-five-recoil.json \
             --mchi-GeV 1000 \
             --ms-keV 200 \
-            --delta-m-keV 1 \
+            --delta-m-keV 1000 \
             --mV-GeV 10 \
             --g2 1 \
             --coupling-product-squared 1e-8 \
@@ -101,7 +101,7 @@ jobs:
             --provisional-charge-dir /tmp/p4/charge \
             --provisional-spatial-dir /tmp/p4/spatial \
             --out /tmp/p4/speed-refined.json \
-            --mchi-GeV 1000 --ms-keV 200 --delta-m-keV 1 --mV-GeV 10 \
+            --mchi-GeV 1000 --ms-keV 200 --delta-m-keV 1000 --mV-GeV 10 \
             --g2 1 --coupling-product-squared 1e-8 --rho-GeV-cm3 0.3 \
             --ER-keV 200 267 \
             --nv 12 --nw 8 --nz 6 --nphi 4 \
@@ -114,7 +114,7 @@ jobs:
             --provisional-charge-dir /tmp/p4/charge \
             --provisional-spatial-dir /tmp/p4/spatial \
             --out /tmp/p4/speed-ultra-refined.json \
-            --mchi-GeV 1000 --ms-keV 200 --delta-m-keV 1 --mV-GeV 10 \
+            --mchi-GeV 1000 --ms-keV 200 --delta-m-keV 1000 --mV-GeV 10 \
             --g2 1 --coupling-product-squared 1e-8 --rho-GeV-cm3 0.3 \
             --ER-keV 200 267 \
             --nv 24 --nw 8 --nz 6 --nphi 4 \
@@ -127,7 +127,7 @@ jobs:
             --provisional-charge-dir /tmp/p4/charge \
             --provisional-spatial-dir /tmp/p4/spatial \
             --out /tmp/p4/speed-48.json \
-            --mchi-GeV 1000 --ms-keV 200 --delta-m-keV 1 --mV-GeV 10 \
+            --mchi-GeV 1000 --ms-keV 200 --delta-m-keV 1000 --mV-GeV 10 \
             --g2 1 --coupling-product-squared 1e-8 --rho-GeV-cm3 0.3 \
             --ER-keV 200 267 \
             --nv 48 --nw 8 --nz 6 --nphi 4 \
@@ -140,7 +140,7 @@ jobs:
             --provisional-charge-dir /tmp/p4/charge \
             --provisional-spatial-dir /tmp/p4/spatial \
             --out /tmp/p4/kernel-refined.json \
-            --mchi-GeV 1000 --ms-keV 200 --delta-m-keV 1 --mV-GeV 10 \
+            --mchi-GeV 1000 --ms-keV 200 --delta-m-keV 1000 --mV-GeV 10 \
             --g2 1 --coupling-product-squared 1e-8 --rho-GeV-cm3 0.3 \
             --ER-keV 200 267 \
             --nv 8 --nw 10 --nz 8 --nphi 6 \
